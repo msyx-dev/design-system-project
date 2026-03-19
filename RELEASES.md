@@ -15,11 +15,6 @@
 - 2 nouveaux liens sidebar dans la section Formulaires
 - Compteur composants mis a jour (27 -> 29)
 
-## 1.0.0 — 2026-03-05 20:00
-- Showcase de la charte graphique msyx.design
-- Composants Tailwind + palette de couleurs
-- Deploy sur os-livedemo.msyx.fr
-
 ## 1.1.0 — 2026-03-07
 - Ajout categorie TEMPLATES dans la sidebar (4 liens)
 - Kanban Board : 4 colonnes avec drag & drop HTML5 natif
@@ -27,3 +22,8 @@
 - Backlog : liste filtrable par priorite (haute/moyenne/basse)
 - Sprint Board : header stats, 3 colonnes, burndown chart SVG anime
 - Compteur composants mis a jour (23 -> 27)
+
+## 1.0.0 — 2026-03-05 20:00
+- Showcase de la charte graphique msyx.design
+- Composants Tailwind + palette de couleurs
+- Deploy sur os-livedemo.msyx.fr
