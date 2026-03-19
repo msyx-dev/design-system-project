@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback — msyx.design</title>
+    <meta name="description" content="Alertes, toasts, modals, skeleton, drawer et spinners du design system msyx.fr.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -110,7 +111,7 @@
                         <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
                     </div>
                     <div class="drawer-body">
-                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom</label><input class="input" type="text" value="os-livedemo"></div>
+                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom</label><input class="input" type="text" value="design-system"></div>
                         <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
                         <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Description du projet..."></textarea></div>
                     </div>
@@ -136,7 +137,7 @@
                     </div>
                     <div class="drawer-body" style="padding:0;">
                         <div class="list">
-                            <div class="list-item"><span style="color:var(--success);font-size:1rem;">&#10003;</span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">os-livedemo.msyx.fr — il y a 5 min</div></div></div>
+                            <div class="list-item"><span style="color:var(--success);font-size:1rem;">&#10003;</span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">design-system.msyx.fr — il y a 5 min</div></div></div>
                             <div class="list-item"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
                             <div class="list-item"><span style="color:var(--info);font-size:1rem;">&#8505;</span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
                         </div>
