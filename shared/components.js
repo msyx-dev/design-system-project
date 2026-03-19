@@ -7,9 +7,18 @@ function initComponents() {
         if (g.dataset.bound) return;
         g.dataset.bound = '1';
         g.querySelectorAll('.tab').forEach(t => {
+            t.setAttribute('role', 'tab');
+            t.setAttribute('tabindex', '0');
             t.addEventListener('click', () => {
                 g.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
                 t.classList.add('active');
+            });
+            t.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    g.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                }
             });
         });
     });
@@ -18,6 +27,14 @@ function initComponents() {
     document.querySelectorAll('.accordion-header').forEach(h => {
         if (h.dataset.bound) return;
         h.dataset.bound = '1';
+        h.setAttribute('role', 'button');
+        h.setAttribute('tabindex', '0');
+        h.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                h.parentElement.classList.toggle('open');
+            }
+        });
         h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
     });
 
