@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès — Live Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0f1e;
+            --accent: #3b82f6;
+            --surface: rgba(30, 41, 59, 0.6);
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --border: rgba(59, 130, 246, 0.08);
+            --radius-lg: 24px;
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .orb {
+            position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none;
+        }
+        .orb-1 { width: 500px; height: 500px; background: #3b82f6; top: -150px; right: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: #8b5cf6; bottom: -100px; left: -100px; }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            width: 90%; max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+            position: relative; z-index: 1;
+        }
+        .logo {
+            width: 56px; height: 56px; margin: 0 auto 1.5rem;
+            background: var(--gradient-1); border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: 700; color: white;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text); font-size: 1.4rem; margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;
+        }
+        form { display: flex; flex-direction: column; gap: 0.75rem; }
+        input {
+            padding: 0.75rem 1rem; border-radius: 10px;
+            border: 1px solid var(--border); background: var(--primary);
+            color: var(--text); font-size: 0.95rem; outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+        input:focus { border-color: var(--accent); }
+        input::placeholder { color: var(--text-muted); }
+        button {
+            padding: 0.75rem; border-radius: 10px; border: none;
+            background: var(--gradient-1); color: white;
+            font-size: 0.95rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            margin-top: 0.5rem; transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.85; }
+        .error {
+            color: #ef4444; font-size: 0.85rem; margin-top: 1rem;
+            display: none;
+        }
+        .loading { opacity: 0.6; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="card">
+        <div class="logo">LD</div>
+        <h2>Accès restreint</h2>
+        <p class="subtitle">Ce site est en accès privé. Veuillez vous identifier.</p>
+        <form id="auth-form">
+            <input id="auth-user" type="text" placeholder="Identifiant" autocomplete="username" required>
+            <input id="auth-pass" type="password" placeholder="Mot de passe" autocomplete="current-password" required>
+            <button type="submit">Entrer</button>
+        </form>
+        <p id="auth-error" class="error">Identifiants incorrects.</p>
+    </div>
+<script>
+document.getElementById('auth-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var user = document.getElementById('auth-user').value.trim();
+    var pass = document.getElementById('auth-pass').value;
+    var btn = this.querySelector('button');
+    btn.classList.add('loading');
+    btn.textContent = '...';
+    document.getElementById('auth-error').style.display = 'none';
+
+    fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, password: pass })
+    }).then(function(res) {
+        if (res.ok) {
+            window.location.href = '/site.html';
+        } else {
+            throw new Error('401');
+        }
+    }).catch(function() {
+        document.getElementById('auth-error').style.display = 'block';
+        document.getElementById('auth-pass').value = '';
+        btn.classList.remove('loading');
+        btn.textContent = 'Entrer';
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation — msyx.design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+    <div class="main">
+
+<!-- NAV COMPONENTS -->
+<section id="nav-components">
+    <div class="section-header"><span class="overline">Navigation</span><h2>Navigation</h2><p>Tabs, breadcrumbs et menus.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Tabs</span>
+            <div class="tabs"><button class="tab active">General</button><button class="tab">Securite</button><button class="tab">Notifications</button><button class="tab">API</button></div>
+            <p class="typo-small">Contenu de l'onglet selectionne. Underline gradient sur l'element actif.</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Tabs pilule</span>
+            <div style="display:inline-flex;background:var(--primary);border-radius:10px;padding:3px;gap:2px;border:1px solid var(--border);margin-bottom:1rem;">
+                <button style="padding:0.4rem 1rem;border-radius:8px;border:none;background:var(--accent);color:white;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Tous</button>
+                <button style="padding:0.4rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;">Actifs</button>
+                <button style="padding:0.4rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;">Archives</button>
+            </div>
+            <p class="typo-small">Variante pilule avec fond colore sur l'onglet actif.</p>
+        </div>
+    </div>
+</section>
+
+<!-- STEPPER -->
+<section id="stepper">
+    <div class="section-header"><span class="overline">Navigation</span><h2>Stepper</h2><p>Indicateur de progression multi-etapes.</p></div>
+    <div class="demo-box" style="max-width:700px;">
+        <div class="stepper">
+            <div class="step"><div class="step-dot completed">&#10003;</div><span class="step-label">Projet</span></div>
+            <div class="step-line completed"></div>
+            <div class="step"><div class="step-dot completed">&#10003;</div><span class="step-label">Config</span></div>
+            <div class="step-line completed"></div>
+            <div class="step"><div class="step-dot active">3</div><span class="step-label">Deploy</span></div>
+            <div class="step-line"></div>
+            <div class="step"><div class="step-dot pending">4</div><span class="step-label">Verif</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- PAGINATION -->
+<section id="pagination">
+    <div class="section-header"><span class="overline">Navigation</span><h2>Pagination</h2><p>Navigation paginee avec numeros, ellipsis et info.</p></div>
+    <div class="demo-grid demo-grid-1">
+        <div class="demo-box">
+            <span class="demo-label">Standard</span>
+            <div class="pagination">
+                <button class="page-btn nav" disabled>&laquo; Prev</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span class="page-ellipsis">&hellip;</span>
+                <button class="page-btn">12</button>
+                <button class="page-btn nav">Next &raquo;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Avec info</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+                <span class="pagination-info">Affichage 1-10 sur 124 resultats</span>
+                <div class="pagination">
+                    <button class="page-btn nav" disabled>&larr;</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn nav">&rarr;</button>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Compact</span>
+            <div class="pagination">
+                <button class="page-btn nav">&larr;</button>
+                <span style="font-size:0.85rem;color:var(--text-muted);padding:0 0.8rem;">Page 3 sur 12</span>
+                <button class="page-btn nav">&rarr;</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaires — msyx.design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+    <div class="main">
+
+<section id="inputs">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Inputs</h2><p>Champs de saisie avec etats focus, erreur, succes et icones.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom du projet</label><input class="input" type="text" placeholder="mon-projet"><span class="input-hint">Lettres minuscules, chiffres et tirets.</span></div>
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Email (erreur)</label><input class="input input-error" type="email" value="invalid@"><span class="input-error-msg">Format d'email invalide.</span></div>
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Domaine (valide)</label><input class="input input-success" type="text" value="os-livedemo.msyx.fr"></div>
+            <div class="input-group"><label class="input-label">Desactive</label><input class="input input-disabled" type="text" value="Non modifiable" disabled></div>
+        </div>
+        <div class="demo-box">
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Avec icone</label><div class="input-with-icon"><span class="input-icon">&#128269;</span><input class="input" type="text" placeholder="Rechercher..."></div></div>
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Environnement</label><select class="input"><option>Production</option><option>Staging</option><option>Development</option></select></div>
+            <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Decrivez votre projet..."></textarea></div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTROLS -->
+<section id="controls">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Controls</h2><p>Toggles, checkboxes et radios.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Toggles</span>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Mode sombre</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Notifications</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Auto-deploy</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Checkboxes</span>
+            <div style="display:flex;flex-direction:column;gap:0.8rem;">
+                <label class="checkbox"><input type="checkbox" checked> Next.js</label>
+                <label class="checkbox"><input type="checkbox" checked> TypeScript</label>
+                <label class="checkbox"><input type="checkbox"> Python</label>
+                <label class="checkbox"><input type="checkbox"> Go</label>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Radios</span>
+            <div style="display:flex;flex-direction:column;gap:0.8rem;">
+                <label class="radio"><input type="radio" name="env" checked> Production</label>
+                <label class="radio"><input type="radio" name="env"> Staging</label>
+                <label class="radio"><input type="radio" name="env"> Development</label>
+                <label class="radio"><input type="radio" name="env"> Local</label>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LOGIN / AUTH -->
+<section id="login">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Login / Auth</h2><p>Pattern d'authentification msyx.fr. Card glassmorphism, orbes, gradient submit.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Standard</span>
+            <div class="login-preview">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="login-card">
+                    <div class="login-logo">DS</div>
+                    <h3>Acces restreint</h3>
+                    <p class="subtitle">Ce site est en acces prive.</p>
+                    <div class="login-form">
+                        <input type="text" placeholder="Identifiant" disabled>
+                        <input type="password" placeholder="Mot de passe" disabled>
+                        <button class="login-submit">Entrer</button>
+                    </div>
+                    <p class="login-error">Identifiants incorrects.</p>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Avec boutons sociaux</span>
+            <div class="login-preview">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="login-card">
+                    <div class="login-logo">ms</div>
+                    <h3>Se connecter</h3>
+                    <p class="subtitle">Choisissez votre methode de connexion.</p>
+                    <div class="login-form">
+                        <input type="text" placeholder="Identifiant" disabled>
+                        <input type="password" placeholder="Mot de passe" disabled>
+                        <button class="login-submit">Connexion</button>
+                    </div>
+                    <div class="login-divider">ou</div>
+                    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                        <button class="login-social-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Google</button>
+                        <button class="login-social-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.32 2.32-2.12 4.53-3.74 4.25z"/></svg> Apple</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Compact (inline)</span>
+            <div class="login-compact">
+                <input type="text" placeholder="Identifiant" disabled>
+                <input type="password" placeholder="Mot de passe" disabled>
+                <button>Entrer</button>
+            </div>
+            <p class="typo-small" style="margin-top:0.8rem;">Variante bandeau horizontal pour integration dans un header ou une toolbar.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CALENDAR -->
+<section id="calendar">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Calendrier</h2><p>Composants de selection de dates, plages et calendrier avec evenements.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Calendrier mensuel</span>
+            <div class="cal-wrap">
+                <div class="cal-header">
+                    <h4>Mars 2026</h4>
+                    <div class="cal-nav"><button>&#8249;</button><button>&#8250;</button></div>
+                </div>
+                <div class="cal-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
+                <div class="cal-grid">
+                    <div class="cal-day other-month">23</div><div class="cal-day other-month">24</div><div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day">1</div>
+                    <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day today">8</div>
+                    <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day selected">15</div>
+                    <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+                    <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
+                    <div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day other-month">3</div><div class="cal-day other-month">4</div><div class="cal-day other-month">5</div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Mini calendrier</span>
+            <div class="cal-wrap cal-mini" style="max-width:260px;">
+                <div class="cal-header">
+                    <h4>Mars 2026</h4>
+                    <div class="cal-nav"><button>&#8249;</button><button>&#8250;</button></div>
+                </div>
+                <div class="cal-weekdays"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+                <div class="cal-grid">
+                    <div class="cal-day other-month">23</div><div class="cal-day other-month">24</div><div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day">1</div>
+                    <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day today">8</div>
+                    <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day selected">15</div>
+                    <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+                    <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
+                    <div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day other-month">3</div><div class="cal-day other-month">4</div><div class="cal-day other-month">5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Date picker input</span>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div>
+                    <label style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Date de debut</label>
+                    <div class="date-input-wrap">
+                        <input class="input" type="text" value="08/03/2026" style="padding-right:2.5rem;" disabled>
+                        <span class="date-icon">&#128197;</span>
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Date de fin</label>
+                    <div class="date-input-wrap">
+                        <input class="input" type="text" value="15/03/2026" style="padding-right:2.5rem;" disabled>
+                        <span class="date-icon">&#128197;</span>
+                    </div>
+                </div>
+                <div class="date-range-display">&#128197; 08 mars <span class="arrow">&rarr;</span> 15 mars 2026</div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Selection de plage</span>
+            <div class="cal-wrap">
+                <div class="cal-header">
+                    <h4>Mars 2026</h4>
+                    <div class="cal-nav"><button>&#8249;</button><button>&#8250;</button></div>
+                </div>
+                <div class="cal-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
+                <div class="cal-grid">
+                    <div class="cal-day other-month">23</div><div class="cal-day other-month">24</div><div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day">1</div>
+                    <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+                    <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day range-start">12</div><div class="cal-day range">13</div><div class="cal-day range">14</div><div class="cal-day range">15</div>
+                    <div class="cal-day range">16</div><div class="cal-day range">17</div><div class="cal-day range-end">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+                    <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
+                    <div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day other-month">3</div><div class="cal-day other-month">4</div><div class="cal-day other-month">5</div>
+                </div>
+            </div>
+            <div class="date-range-display" style="margin-top:0.8rem;">&#128197; 12 mars <span class="arrow">&rarr;</span> 18 mars 2026</div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Avec evenements</span>
+            <div class="cal-wrap" style="max-width:500px;">
+                <div class="cal-header">
+                    <h4>Mars 2026</h4>
+                    <div class="cal-nav"><button>&#8249;</button><button>&#8250;</button></div>
+                </div>
+                <div class="cal-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
+                <div class="cal-grid">
+                    <div class="cal-day other-month">23</div><div class="cal-day other-month">24</div><div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day">1</div>
+                    <div class="cal-day">2<div class="cal-dots"><span class="cal-dot blue"></span></div></div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5<div class="cal-dots"><span class="cal-dot green"></span></div></div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day today">8<div class="cal-dots"><span class="cal-dot blue"></span><span class="cal-dot red"></span></div></div>
+                    <div class="cal-day">9</div><div class="cal-day">10<div class="cal-dots"><span class="cal-dot blue"></span></div></div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13<div class="cal-dots"><span class="cal-dot green"></span></div></div><div class="cal-day">14</div><div class="cal-day">15</div>
+                    <div class="cal-day">16<div class="cal-dots"><span class="cal-dot blue"></span></div></div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20<div class="cal-dots"><span class="cal-dot green"></span><span class="cal-dot blue"></span></div></div><div class="cal-day">21</div><div class="cal-day">22</div>
+                    <div class="cal-day">23</div><div class="cal-day">24<div class="cal-dots"><span class="cal-dot red"></span></div></div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
+                    <div class="cal-day">30<div class="cal-dots"><span class="cal-dot blue"></span></div></div><div class="cal-day">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day other-month">3</div><div class="cal-day other-month">4</div><div class="cal-day other-month">5</div>
+                </div>
+                <div class="cal-legend">
+                    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--accent);"></span> Deploy</div>
+                    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--success);"></span> Release</div>
+                    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--danger);"></span> Incident</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DROPDOWN -->
+<section id="dropdown">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Dropdown / Select</h2><p>Menus deroulants searchable, single et multi-select.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Simple select</span>
+            <div class="dropdown">
+                <div class="dropdown-trigger"><span class="dropdown-value">Choisir un framework...</span><span class="arrow">&#9662;</span></div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Next.js</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Nuxt.js</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> SvelteKit</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Remix</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Astro</div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Avec recherche</span>
+            <div class="dropdown">
+                <div class="dropdown-trigger"><span class="dropdown-value">Rechercher un pays...</span><span class="arrow">&#9662;</span></div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-search"><input type="text" placeholder="Filtrer..."></div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> France</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Allemagne</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Espagne</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Italie</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Portugal</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Belgique</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Suisse</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Canada</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Multi-select avec tags</span>
+            <div class="dropdown" data-multi="true">
+                <div class="dropdown-trigger"><span class="dropdown-value">Ajouter des technologies...</span><span class="arrow">&#9662;</span></div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-search"><input type="text" placeholder="Filtrer..."></div>
+                    <div class="dropdown-option selected"><span class="check">&#10003;</span> TypeScript</div>
+                    <div class="dropdown-option selected"><span class="check">&#10003;</span> React</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Vue</div>
+                    <div class="dropdown-option selected"><span class="check">&#10003;</span> Tailwind</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> GraphQL</div>
+                    <div class="dropdown-option"><span class="check">&#10003;</span> Prisma</div>
+                </div>
+            </div>
+            <div class="dropdown-tags">
+                <span class="dropdown-tag">TypeScript <button>&times;</button></span>
+                <span class="dropdown-tag">React <button>&times;</button></span>
+                <span class="dropdown-tag">Tailwind <button>&times;</button></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FILE UPLOAD -->
+<section id="file-upload">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>File Upload</h2><p>Zone de depot drag &amp; drop avec liste de fichiers.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Zone de depot</span>
+            <div class="file-upload" id="file-drop-zone">
+                <div class="file-upload-icon">&#128206;</div>
+                <div class="file-upload-text">Deposez vos fichiers ici ou <span class="file-upload-browse">parcourir</span></div>
+                <div class="file-upload-hint">PNG, JPG, PDF — Max 10 Mo</div>
+            </div>
+            <div class="file-list">
+                <div class="file-item">
+                    <span class="file-item-icon">&#128196;</span>
+                    <div class="file-item-info"><div class="file-item-name">design-system.pdf</div><div class="file-item-size">2.4 Mo</div></div>
+                    <div class="progress-bar" style="width:60px;height:4px;"><div class="progress-fill" style="width:100%;background:var(--success);"></div></div>
+                    <button class="file-item-remove">&times;</button>
+                </div>
+                <div class="file-item">
+                    <span class="file-item-icon">&#127912;</span>
+                    <div class="file-item-info"><div class="file-item-name">screenshot.png</div><div class="file-item-size">856 Ko</div></div>
+                    <div class="progress-bar" style="width:60px;height:4px;"><div class="progress-fill" style="width:65%;background:var(--gradient-1);"></div></div>
+                    <button class="file-item-remove">&times;</button>
+                </div>
+                <div class="file-item">
+                    <span class="file-item-icon">&#128196;</span>
+                    <div class="file-item-info"><div class="file-item-name">rapport.docx</div><div class="file-item-size">1.1 Mo</div></div>
+                    <div class="progress-bar" style="width:60px;height:4px;"><div class="progress-fill" style="width:30%;background:var(--gradient-2);"></div></div>
+                    <button class="file-item-remove">&times;</button>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Compact</span>
+            <div style="display:flex;gap:0.8rem;align-items:center;">
+                <button class="btn-secondary btn-sm">&#128206; Choisir un fichier</button>
+                <span class="typo-small">Aucun fichier selectionne</span>
+            </div>
+            <div class="divider"></div>
+            <span class="demo-label">Avec avatar</span>
+            <div style="display:flex;gap:1rem;align-items:center;">
+                <div class="avatar avatar-xl avatar-gradient">MS</div>
+                <div>
+                    <button class="btn-secondary btn-sm">Changer la photo</button>
+                    <p class="typo-xs" style="margin-top:0.4rem;">JPG, PNG — Max 2 Mo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>

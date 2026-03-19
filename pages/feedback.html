@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback — msyx.design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+    <div class="main">
+
+<!-- ALERTS -->
+<section id="alerts">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Alertes</h2><p>Messages contextuels pour informer l'utilisateur.</p></div>
+    <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:650px;">
+        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Nouvelle version disponible. Mettez a jour pour profiter des dernieres fonctionnalites.</span></div>
+        <div class="alert alert-success"><span class="alert-icon">&#10003;</span><span>Deploiement reussi sur production. Temps de build : 34s.</span></div>
+        <div class="alert alert-warning"><span class="alert-icon">&#9888;</span><span>Utilisation CPU elevee (89%). Surveillez les performances.</span></div>
+        <div class="alert alert-danger"><span class="alert-icon">&#10007;</span><span>Echec de connexion a la base de donnees. Retry dans 30s.</span></div>
+    </div>
+</section>
+
+<!-- TOASTS -->
+<section id="toasts">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Toasts</h2><p>Notifications ephemeres non-bloquantes.</p></div>
+    <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:380px;">
+        <div class="toast"><span style="color:var(--success);font-size:1rem;">&#10003;</span><span>Fichier sauvegarde</span><button class="toast-close">&times;</button></div>
+        <div class="toast"><span style="color:var(--danger);font-size:1rem;">&#10007;</span><span>Erreur de connexion</span><button class="toast-close">&times;</button></div>
+        <div class="toast"><span style="color:var(--info);font-size:1rem;">&#8505;</span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
+        <div class="toast"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><span>Session expire dans 5min</span><button class="toast-close">&times;</button></div>
+    </div>
+</section>
+
+<!-- MODALS -->
+<section id="modals">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Modals</h2><p>Dialogues de confirmation et formulaires modaux.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="modal-preview">
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <h3>Confirmer la suppression</h3>
+                    <p>Cette action est irreversible. Le projet et toutes ses donnees seront supprimes definitivement.</p>
+                    <div class="modal-actions"><button class="btn-secondary btn-sm">Annuler</button><button class="btn-primary btn-sm btn-danger">Supprimer</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-preview">
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <h3>Nouveau projet</h3>
+                    <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom</label><input class="input" type="text" placeholder="mon-projet"></div>
+                    <div class="input-group" style="margin-bottom:1.5rem;"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                    <div class="modal-actions"><button class="btn-ghost btn-sm">Annuler</button><button class="btn-primary btn-sm">Creer &rarr;</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SKELETON -->
+<section id="skeleton">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Skeleton loading</h2><p>Placeholders animes pendant le chargement des donnees.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Card skeleton</span>
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+                <div class="skeleton skeleton-avatar"></div>
+                <div style="flex:1;"><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text" style="width:100%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:50%;"></div></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Liste skeleton</span>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div style="display:flex;gap:0.8rem;align-items:center;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skeleton-text" style="width:70%;"></div><div class="skeleton skeleton-text" style="width:40%;margin-bottom:0;"></div></div></div>
+                <div style="display:flex;gap:0.8rem;align-items:center;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skeleton-text" style="width:60%;"></div><div class="skeleton skeleton-text" style="width:35%;margin-bottom:0;"></div></div></div>
+                <div style="display:flex;gap:0.8rem;align-items:center;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:45%;margin-bottom:0;"></div></div></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Boutons skeleton</span>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div class="skeleton" style="height:40px;border-radius:12px;"></div>
+                <div style="display:flex;gap:0.8rem;"><div class="skeleton skeleton-btn"></div><div class="skeleton skeleton-btn" style="width:80px;"></div></div>
+                <div class="skeleton" style="height:80px;border-radius:12px;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DRAWER -->
+<section id="drawer">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Drawer</h2><p>Panneau glissant depuis le cote pour les details ou formulaires.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Drawer droite</span>
+            <div class="drawer-preview" id="drawer-demo-1">
+                <div style="padding:2rem;">
+                    <p class="typo-small" style="margin-bottom:1rem;">Contenu principal de la page</p>
+                    <button class="btn-primary btn-sm" onclick="document.querySelector('#drawer-demo-1 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-1 .drawer-panel').classList.add('open');">Ouvrir le drawer &rarr;</button>
+                </div>
+                <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
+                <div class="drawer-panel">
+                    <div class="drawer-header">
+                        <h3>Details du projet</h3>
+                        <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
+                    </div>
+                    <div class="drawer-body">
+                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom</label><input class="input" type="text" value="os-livedemo"></div>
+                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                        <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Description du projet..."></textarea></div>
+                    </div>
+                    <div class="drawer-footer">
+                        <button class="btn-ghost btn-sm" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-preview').querySelector('.drawer-panel').classList.remove('open');">Annuler</button>
+                        <button class="btn-primary btn-sm">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Drawer avec liste</span>
+            <div class="drawer-preview" id="drawer-demo-2">
+                <div style="padding:2rem;">
+                    <p class="typo-small" style="margin-bottom:1rem;">Notifications et activites</p>
+                    <button class="btn-secondary btn-sm" onclick="document.querySelector('#drawer-demo-2 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-2 .drawer-panel').classList.add('open');">Voir les notifications</button>
+                </div>
+                <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
+                <div class="drawer-panel">
+                    <div class="drawer-header">
+                        <h3>Notifications</h3>
+                        <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
+                    </div>
+                    <div class="drawer-body" style="padding:0;">
+                        <div class="list">
+                            <div class="list-item"><span style="color:var(--success);font-size:1rem;">&#10003;</span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">os-livedemo.msyx.fr — il y a 5 min</div></div></div>
+                            <div class="list-item"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
+                            <div class="list-item"><span style="color:var(--info);font-size:1rem;">&#8505;</span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- EMPTY STATES -->
+<section id="empty-states">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Empty States</h2><p>Etats vides pour guider l'utilisateur quand il n'y a pas de contenu.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#128230;</div>
+                <h3>Aucun projet</h3>
+                <p>Vous n'avez pas encore cree de projet. Commencez par en creer un.</p>
+                <button class="btn-primary btn-sm">&plus; Creer un projet</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#128269;</div>
+                <h3>Aucun resultat</h3>
+                <p>Aucun element ne correspond a votre recherche. Essayez avec d'autres termes.</p>
+                <button class="btn-secondary btn-sm">Effacer les filtres</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#128683;</div>
+                <h3>Page introuvable</h3>
+                <p>La page que vous cherchez n'existe pas ou a ete deplacee.</p>
+                <button class="btn-ghost btn-sm">&larr; Retour a l'accueil</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SPINNERS -->
+<section id="spinners">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Spinners / Loading</h2><p>Indicateurs de chargement pour operations asynchrones.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Cercles</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div style="text-align:center;"><div class="spinner spinner-sm"></div><p class="typo-xs" style="margin-top:0.5rem;">SM</p></div>
+                <div style="text-align:center;"><div class="spinner spinner-md"></div><p class="typo-xs" style="margin-top:0.5rem;">MD</p></div>
+                <div style="text-align:center;"><div class="spinner spinner-lg"></div><p class="typo-xs" style="margin-top:0.5rem;">LG</p></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Dots</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="spinner-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="divider"></div>
+            <span class="demo-label">Barre indeterminee</span>
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Bouton loading</span>
+            <div class="demo-row">
+                <button class="btn-primary btn-loading">Deploiement</button>
+                <button class="btn-secondary btn-loading">Sauvegarde</button>
+            </div>
+        </div>
+        <div class="demo-box" style="position:relative;min-height:150px;">
+            <span class="demo-label">Overlay full</span>
+            <p class="typo-small">Contenu en arriere-plan...</p>
+            <div class="loading-overlay">
+                <div class="spinner spinner-lg"></div>
+                <p>Chargement des donnees...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>

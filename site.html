@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>msyx.design — Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar"></aside>
+<button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+
+<div class="main">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+    <div class="hero-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div><div class="hero-grid-bg"></div></div>
+    <div class="hero-inner">
+        <div style="margin-bottom: 1.5rem;"><span class="badge badge-success"><span class="pulse-dot"></span> Live</span></div>
+        <h1>Design System<br><span class="gradient-text">msyx.design</span></h1>
+        <p class="hero-subtitle">Charte graphique par defaut pour tous les projets msyx.fr. Dark theme, glassmorphism, gradients et micro-interactions.</p>
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="number">37</div><div class="label">Composants</div></div>
+            <div class="hero-stat"><div class="number">8</div><div class="label">Pages</div></div>
+            <div class="hero-stat"><div class="number">12</div><div class="label">Couleurs</div></div>
+            <div class="hero-stat"><div class="number">3</div><div class="label">Fonts</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- HUB GRID -->
+<section id="hub">
+    <div class="section-header">
+        <span class="overline">Explorer</span>
+        <h2>Toutes les categories</h2>
+        <p>Cliquez sur une carte pour explorer les composants de chaque categorie.</p>
+    </div>
+    <div class="hub-grid">
+        <a href="/pages/fondation.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);">&#127912;</div>
+            <h3>Fondation</h3>
+            <p>Couleurs, typographie, spacing, tokens CSS et variables du design system.</p>
+            <span class="hub-card-count">4 sections</span>
+        </a>
+        <a href="/pages/composants.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);">&#9654;</div>
+            <h3>Composants</h3>
+            <p>Boutons, cards glassmorphism, badges, tags et avatars.</p>
+            <span class="hub-card-count">4 sections</span>
+        </a>
+        <a href="/pages/formulaires.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(6,182,212,0.12);">&#9998;</div>
+            <h3>Formulaires</h3>
+            <p>Inputs, controls, login, calendrier, dropdown searchable et file upload.</p>
+            <span class="hub-card-count">6 sections</span>
+        </a>
+        <a href="/pages/navigation.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(236,72,153,0.12);">&#9776;</div>
+            <h3>Navigation</h3>
+            <p>Tabs, breadcrumbs, stepper multi-etapes et pagination.</p>
+            <span class="hub-card-count">3 sections</span>
+        </a>
+        <a href="/pages/data.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(34,197,94,0.12);">#</div>
+            <h3>Data</h3>
+            <p>Stats, barres de progression, tables, charts SVG et listes.</p>
+            <span class="hub-card-count">5 sections</span>
+        </a>
+        <a href="/pages/feedback.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(245,158,11,0.12);">&#9888;</div>
+            <h3>Feedback</h3>
+            <p>Alertes, toasts, modals, skeleton, drawer, empty states et spinners.</p>
+            <span class="hub-card-count">7 sections</span>
+        </a>
+        <a href="/pages/divers.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(59,130,246,0.12);">&#8984;</div>
+            <h3>Divers</h3>
+            <p>Timeline, accordion, code blocks, tooltip/popover et command palette.</p>
+            <span class="hub-card-count">5 sections</span>
+        </a>
+        <a href="/pages/templates.html" class="hub-card">
+            <div class="hub-card-icon" style="background:rgba(139,92,246,0.12);">&#8862;</div>
+            <h3>Templates</h3>
+            <p>Kanban board, roadmap timeline, backlog et sprint board.</p>
+            <span class="hub-card-count">4 sections</span>
+        </a>
+    </div>
+</section>
+
+<footer><p>msyx.design v2.0 &mdash; 37 composants &middot; 8 pages &mdash; Charte graphique msyx.fr &mdash; 2026</p></footer>
+
+</div><!-- /main -->
+
+<script src="/shared/nav.js"></script>
+<script src="/shared/components.js"></script>
+</body>
+</html>

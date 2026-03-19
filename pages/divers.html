@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divers — msyx.design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+    <div class="main">
+
+<!-- TIMELINE -->
+<section id="timeline">
+    <div class="section-header"><span class="overline">Divers</span><h2>Timeline</h2><p>Historique chronologique d'evenements.</p></div>
+    <div style="max-width:500px;">
+        <div class="timeline">
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-date">Mars 2026</div><h4>Design System v1.0</h4><p>Premiere version de la charte graphique msyx.design.</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-date">Mars 2026</div><h4>Pipeline agentique v2</h4><p>8 agents, 9 skills, 10 commandes pour Claude Code.</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-date">Mars 2026</div><h4>VPS Contabo</h4><p>Ubuntu 24.04, Caddy, Docker, infra de deploiement.</p></div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-date">Fevrier 2026</div><h4>Premiere exploration</h4><p>Decouverte de Claude Code et premiers POCs.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ACCORDION -->
+<section id="accordion">
+    <div class="section-header"><span class="overline">Divers</span><h2>Accordion</h2><p>Sections repliables pour FAQ ou documentation.</p></div>
+    <div style="max-width:600px;">
+        <div class="accordion-item open">
+            <div class="accordion-header"><span>Quelle stack est utilisee ?</span><span class="accordion-arrow">&#9660;</span></div>
+            <div class="accordion-body">Next.js 14 (App Router) + TypeScript en frontend, FastAPI en backend, PostgreSQL + Prisma pour la base de donnees, Caddy en reverse proxy et Docker pour l'isolation.</div>
+        </div>
+        <div class="accordion-item">
+            <div class="accordion-header"><span>Comment deployer un projet ?</span><span class="accordion-arrow">&#9660;</span></div>
+            <div class="accordion-body">Utilisez la commande <span class="code-inline">/deploy</span> dans Claude Code. Le skill deploy-caddy configure automatiquement le sous-domaine, le certificat HTTPS et l'auth gate.</div>
+        </div>
+        <div class="accordion-item">
+            <div class="accordion-header"><span>Comment personnaliser la charte ?</span><span class="accordion-arrow">&#9660;</span></div>
+            <div class="accordion-body">Modifiez les variables CSS dans le bloc <span class="code-inline">:root</span>. Les couleurs, gradients, rayons et ombres sont tous parametrables via ces tokens.</div>
+        </div>
+        <div class="accordion-item">
+            <div class="accordion-header"><span>L'auth gate est-elle obligatoire ?</span><span class="accordion-arrow">&#9660;</span></div>
+            <div class="accordion-body">Oui, par defaut tous les projets deployes sur *.msyx.fr sont proteges. Pour la desactiver, retirez le bloc basic_auth du Caddyfile et rechargez Caddy.</div>
+        </div>
+    </div>
+</section>
+
+<!-- CODE -->
+<section id="code">
+    <div class="section-header"><span class="overline">Divers</span><h2>Code blocks</h2><p>Affichage de code avec coloration syntaxique.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">CSS</span>
+            <div class="code-block"><span class="cm">/* Theme tokens */</span><br><span class="kw">:root</span> {<br>&nbsp;&nbsp;<span class="fn">--primary</span>: <span class="str">#0a0f1e</span>;<br>&nbsp;&nbsp;<span class="fn">--accent</span>: <span class="str">#3b82f6</span>;<br>&nbsp;&nbsp;<span class="fn">--radius</span>: <span class="num">16px</span>;<br>}</div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">JavaScript</span>
+            <div class="code-block"><span class="cm">// Deploy function</span><br><span class="kw">async function</span> <span class="fn">deploy</span>(project) {<br>&nbsp;&nbsp;<span class="kw">const</span> url = <span class="str">`${project}.msyx.fr`</span>;<br>&nbsp;&nbsp;<span class="kw">await</span> <span class="fn">caddy</span>.<span class="fn">reload</span>();<br>&nbsp;&nbsp;<span class="kw">return</span> { status: <span class="str">'live'</span>, url };<br>}</div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Python</span>
+            <div class="code-block"><span class="cm"># FastAPI endpoint</span><br><span class="kw">@app</span>.<span class="fn">get</span>(<span class="str">"/health"</span>)<br><span class="kw">async def</span> <span class="fn">health_check</span>():<br>&nbsp;&nbsp;<span class="kw">return</span> {<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"status"</span>: <span class="str">"ok"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"uptime"</span>: <span class="fn">get_uptime</span>()<br>&nbsp;&nbsp;}</div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Shell</span>
+            <div class="code-block"><span class="cm"># Deploy a new project</span><br><span class="fn">docker</span> compose up -d<br><span class="fn">sudo</span> caddy reload \<br>&nbsp;&nbsp;--config <span class="str">/etc/caddy/Caddyfile</span><br><span class="fn">curl</span> -s https://<span class="str">os-livedemo.msyx.fr</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- TOOLTIP / POPOVER -->
+<section id="tooltip">
+    <div class="section-header"><span class="overline">Divers</span><h2>Tooltip &amp; Popover</h2><p>Infobulles au hover et popovers riches au clic.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Tooltips</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm">Hover moi</button><span class="tooltip">Info rapide</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon">&#9881;</button><span class="tooltip">Parametres</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon">&#128276;</button><span class="tooltip">Notifications</span></div>
+                <div class="tooltip-wrap"><span class="badge badge-primary">Beta</span><span class="tooltip">Version beta publique</span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers (clic)</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Plus d'info</button>
+                    <div class="popover">
+                        <h4>Deploiement automatique</h4>
+                        <p>Chaque push sur main declenche un build Docker et un reload Caddy automatique.</p>
+                        <div style="margin-top:0.8rem;"><button class="btn-primary btn-xs">En savoir plus</button></div>
+                    </div>
+                </div>
+                <div class="popover-wrap">
+                    <button class="btn-icon" onclick="this.nextElementSibling.classList.toggle('open')">&#9432;</button>
+                    <div class="popover">
+                        <h4>Aide contextuelle</h4>
+                        <p>Cliquez sur les icones d'aide pour afficher des informations supplementaires.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COMMAND PALETTE -->
+<section id="command-palette">
+    <div class="section-header"><span class="overline">Divers</span><h2>Command Palette</h2><p>Recherche rapide et navigation par raccourci <kbd>&#8984;</kbd><kbd>K</kbd>.</p></div>
+    <div class="demo-box">
+        <span class="demo-label">Apercu statique</span>
+        <div class="cmd-palette-preview">
+            <div class="cmd-palette" style="position:relative;transform:none;">
+                <div class="cmd-input-wrap">
+                    <span class="cmd-input-icon">&#128269;</span>
+                    <input class="cmd-input" type="text" placeholder="Rechercher une page, commande..." disabled>
+                    <div class="cmd-kbd"><kbd>Esc</kbd></div>
+                </div>
+                <div class="cmd-results">
+                    <div class="cmd-group-title">Pages</div>
+                    <div class="cmd-item active"><span class="cmd-item-icon">&#127912;</span><span class="cmd-item-text">Fondation</span><span class="cmd-item-shortcut">4 sections</span></div>
+                    <div class="cmd-item"><span class="cmd-item-icon">&#9654;</span><span class="cmd-item-text">Composants</span><span class="cmd-item-shortcut">4 sections</span></div>
+                    <div class="cmd-item"><span class="cmd-item-icon">&#9998;</span><span class="cmd-item-text">Formulaires</span><span class="cmd-item-shortcut">6 sections</span></div>
+                    <div class="cmd-group-title">Actions</div>
+                    <div class="cmd-item"><span class="cmd-item-icon">&#9776;</span><span class="cmd-item-text">Toggle sidebar</span><span class="cmd-item-shortcut"><kbd>&#8984;</kbd><kbd>B</kbd></span></div>
+                    <div class="cmd-item"><span class="cmd-item-icon">&#128274;</span><span class="cmd-item-text">Logout</span></div>
+                </div>
+                <div class="cmd-footer">
+                    <span>&#8593;&#8595; Naviguer</span>
+                    <span>&#8629; Ouvrir</span>
+                    <span>Esc Fermer</span>
+                </div>
+            </div>
+        </div>
+        <p class="typo-small" style="margin-top:1rem;">Appuyez sur <kbd>&#8984;</kbd><kbd>K</kbd> (ou <kbd>Ctrl</kbd><kbd>K</kbd>) pour ouvrir la palette de commandes.</p>
+    </div>
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+    <script>
+// Command Palette Cmd+K
+document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const overlay = document.getElementById('cmd-overlay');
+        if (overlay) {
+            overlay.classList.toggle('open');
+            if (overlay.classList.contains('open')) overlay.querySelector('.cmd-input').focus();
+        }
+    }
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('cmd-overlay');
+        if (overlay) overlay.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

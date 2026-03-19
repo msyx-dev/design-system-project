@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composants — msyx.design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+    <div class="main">
+<section id="buttons">
+    <div class="section-header"><span class="overline">Composants</span><h2>Boutons</h2><p>Cinq variantes, quatre tailles, etats loading et icones.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Variantes</span>
+        <div class="demo-row" style="margin-bottom:1.5rem;"><button class="btn-primary">Primary</button><button class="btn-secondary">Secondary</button><button class="btn-ghost">Ghost</button><button class="btn-primary btn-danger">Danger</button><button class="btn-primary btn-success">Success</button><button class="btn-primary btn-warning">Warning</button><button class="btn-secondary btn-outline-danger">Outline Danger</button></div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Tailles</span>
+        <div class="demo-row" style="margin-bottom:1.5rem;"><button class="btn-primary btn-xs">XS</button><button class="btn-primary btn-sm">Small</button><button class="btn-primary">Default</button><button class="btn-primary btn-lg">Large</button></div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Etats</span>
+        <div class="demo-row" style="margin-bottom:1.5rem;"><button class="btn-primary">Normal</button><button class="btn-primary" style="opacity:0.5;pointer-events:none;">Disabled</button><button class="btn-primary btn-loading">Loading</button></div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Avec icones</span>
+        <div class="demo-row" style="margin-bottom:1.5rem;"><button class="btn-primary">Deployer &rarr;</button><button class="btn-secondary">&plus; Ajouter</button><button class="btn-ghost">&larr; Retour</button></div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Boutons icones</span>
+        <div class="demo-row"><button class="btn-icon">&#9776;</button><button class="btn-icon">&#10005;</button><button class="btn-icon">&#9998;</button><button class="btn-icon notif-dot">&#128276;</button><div class="tooltip-wrap"><button class="btn-icon">&#9881;</button><span class="tooltip">Parametres</span></div></div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Groupe de boutons</span>
+        <div style="display:inline-flex;border-radius:10px;overflow:hidden;border:1px solid var(--border);"><button class="tab active" style="border:none;border-radius:0;padding:0.5rem 1.2rem;">Jour</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Semaine</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Mois</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Annee</button></div>
+    </div>
+</section>
+
+<section id="cards">
+    <div class="section-header"><span class="overline">Composants</span><h2>Cards</h2><p>Glassmorphism, elevation au hover, gradient top, variantes horizontales et compactes.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Cards standard</span>
+        <div class="demo-grid demo-grid-3">
+            <div class="card"><div class="card-icon" style="background:rgba(59,130,246,0.12);">&#9889;</div><h3>Performance</h3><p>Optimisation des temps de chargement et rendu cote serveur.</p><div class="demo-row" style="margin-top:1rem;"><span class="tag">Next.js</span><span class="tag">SSR</span><span class="tag">Edge</span></div></div>
+            <div class="card"><div class="card-icon" style="background:rgba(139,92,246,0.12);">&#128274;</div><h3>Securite</h3><p>Authentification robuste, chiffrement et protection OWASP.</p><div class="demo-row" style="margin-top:1rem;"><span class="tag">OAuth</span><span class="tag">HTTPS</span><span class="tag">RBAC</span></div></div>
+            <div class="card"><div class="card-icon" style="background:rgba(6,182,212,0.12);">&#127912;</div><h3>Design</h3><p>Interface soignee avec micro-animations et accessibilite.</p><div class="demo-row" style="margin-top:1rem;"><span class="tag">a11y</span><span class="tag">Motion</span><span class="tag">Dark</span></div></div>
+        </div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Card horizontale</span>
+        <div class="card card-horizontal" style="max-width:500px;"><div class="card-icon" style="background:rgba(236,72,153,0.12);">&#128640;</div><div><h3>Deploiement continu</h3><p>Push sur main, deploy automatique via GitHub Actions + Docker.</p></div></div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Cards compactes</span>
+        <div class="demo-grid demo-grid-4">
+            <div class="card card-compact" style="text-align:center;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#9889;</div><p class="typo-small">Fast</p></div>
+            <div class="card card-compact" style="text-align:center;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#128274;</div><p class="typo-small">Secure</p></div>
+            <div class="card card-compact" style="text-align:center;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#127912;</div><p class="typo-small">Beautiful</p></div>
+            <div class="card card-compact" style="text-align:center;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#128736;</div><p class="typo-small">Reliable</p></div>
+        </div>
+    </div>
+</section>
+
+<section id="badges">
+    <div class="section-header"><span class="overline">Composants</span><h2>Badges & Tags</h2><p>Indicateurs visuels pour statuts, categories et metadata.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Badges</span>
+            <div class="demo-row"><span class="badge badge-primary"><span class="pulse-dot"></span> En ligne</span><span class="badge badge-success">Deploye</span><span class="badge badge-warning">En attente</span><span class="badge badge-danger">Erreur</span><span class="badge badge-info">Info</span><span class="badge badge-neutral">Archiv&eacute;</span></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Tags</span>
+            <div class="demo-row"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">PostgreSQL</span><span class="tag">Caddy</span><span class="tag">Prisma</span><span class="tag">Tailwind</span></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Raccourcis clavier</span>
+            <div class="demo-row"><kbd>&#8984;</kbd> <kbd>K</kbd>&nbsp;&nbsp;&nbsp;<kbd>Ctrl</kbd> <kbd>S</kbd>&nbsp;&nbsp;&nbsp;<kbd>Esc</kbd>&nbsp;&nbsp;&nbsp;<kbd>&#8679;</kbd> <kbd>&#8984;</kbd> <kbd>P</kbd></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Breadcrumb</span>
+            <div class="breadcrumb"><a href="#">Accueil</a><span class="sep">/</span><a href="#">Projets</a><span class="sep">/</span><a href="#">os-livedemo</a><span class="sep">/</span><span class="current">Settings</span></div>
+        </div>
+    </div>
+</section>
+
+<section id="avatars">
+    <div class="section-header"><span class="overline">Composants</span><h2>Avatars</h2><p>Toutes tailles, groupes, statuts en ligne et initiales.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Tailles</span>
+            <div class="demo-row"><div class="avatar avatar-xs avatar-gradient">M</div><div class="avatar avatar-sm avatar-gradient">MS</div><div class="avatar avatar-md avatar-gradient">MS</div><div class="avatar avatar-lg avatar-gradient">MS</div><div class="avatar avatar-xl avatar-gradient">MS</div></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Avec statut</span>
+            <div class="demo-row"><div class="avatar-status online"><div class="avatar avatar-md avatar-gradient">A</div></div><div class="avatar-status busy"><div class="avatar avatar-md" style="background:#8b5cf6;">B</div></div><div class="avatar-status offline"><div class="avatar avatar-md" style="background:#06b6d4;">C</div></div></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Groupe</span>
+            <div class="avatar-group"><div class="avatar avatar-md" style="background:var(--accent);">A</div><div class="avatar avatar-md" style="background:#8b5cf6;">B</div><div class="avatar avatar-md" style="background:#06b6d4;">C</div><div class="avatar avatar-md" style="background:#ec4899;">D</div><div class="avatar avatar-md" style="background:var(--surface-light);font-size:0.7rem;color:var(--text-muted);">+5</div></div>
+        </div>
+    </div>
+</section>
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>

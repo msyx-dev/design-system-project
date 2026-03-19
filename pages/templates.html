@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates — msyx.design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+    <button class="sidebar-toggle" id="sidebar-toggle">&#9776;</button>
+    <div class="main">
+
+<section id="kanban">
+    <div class="section-header"><span class="overline">Templates</span><h2>Kanban Board</h2><p>Vue projet en colonnes avec drag &amp; drop natif HTML5.</p></div>
+    <div class="demo-box">
+        <div class="kanban-board">
+            <div class="kanban-column" data-status="backlog">
+                <div class="kanban-column-header"><span class="kanban-column-title">Backlog</span><span class="kanban-count">3</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Configurer auth gate</div><div class="kanban-card-desc">Mettre en place forward_auth Caddy + cookie HMAC</div><div class="kanban-card-footer"><span class="tag">infra</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-danger" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Haute</span><div class="avatar avatar-xs avatar-gradient">MS</div></div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Design page login</div><div class="kanban-card-desc">Template responsive avec charte msyx</div><div class="kanban-card-footer"><span class="tag">design</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-warning" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Moyenne</span><div class="avatar avatar-xs" style="background:#8b5cf6;">CB</div></div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Documenter les tokens</div><div class="kanban-card-desc">Lister toutes les variables CSS disponibles</div><div class="kanban-card-footer"><span class="tag">docs</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-info" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Basse</span><div class="avatar avatar-xs avatar-gradient">MS</div></div></div></div>
+            </div>
+            <div class="kanban-column" data-status="in-progress">
+                <div class="kanban-column-header"><span class="kanban-column-title">En cours</span><span class="kanban-count">2</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Deployer staging</div><div class="kanban-card-desc">Docker compose + Caddy reverse proxy</div><div class="kanban-card-footer"><span class="tag">devops</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-danger" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Haute</span><div class="avatar avatar-xs avatar-gradient">MS</div></div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">API endpoints users</div><div class="kanban-card-desc">CRUD FastAPI avec validation Pydantic</div><div class="kanban-card-footer"><span class="tag">backend</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-warning" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Moyenne</span><div class="avatar avatar-xs" style="background:#06b6d4;">CD</div></div></div></div>
+            </div>
+            <div class="kanban-column" data-status="review">
+                <div class="kanban-column-header"><span class="kanban-column-title">Review</span><span class="kanban-count">1</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Schema Prisma v2</div><div class="kanban-card-desc">Migration relations User/Project/Deploy</div><div class="kanban-card-footer"><span class="tag">backend</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-warning" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Moyenne</span><div class="avatar avatar-xs avatar-gradient">MS</div></div></div></div>
+            </div>
+            <div class="kanban-column" data-status="done">
+                <div class="kanban-column-header"><span class="kanban-column-title">Termine</span><span class="kanban-count">2</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Setup Docker Compose</div><div class="kanban-card-desc">Multi-service avec volumes et networks</div><div class="kanban-card-footer"><span class="tag">devops</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-info" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Basse</span><div class="avatar avatar-xs" style="background:#06b6d4;">CD</div></div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Charte graphique v1</div><div class="kanban-card-desc">Couleurs, typo, composants de base</div><div class="kanban-card-footer"><span class="tag">design</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-danger" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Haute</span><div class="avatar avatar-xs avatar-gradient">MS</div></div></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="roadmap">
+    <div class="section-header"><span class="overline">Templates</span><h2>Roadmap</h2><p>Timeline horizontale scrollable par trimestre.</p></div>
+    <div class="demo-box">
+        <div class="roadmap-container">
+            <div class="roadmap-track">
+                <div class="roadmap-quarter">
+                    <div class="roadmap-quarter-title">Q1 2026</div>
+                    <div class="roadmap-milestone completed">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>Infrastructure VPS</div>
+                        <div class="roadmap-milestone-desc">Setup Contabo, Docker, Caddy, DNS wildcard</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:100%;background:var(--success);"></div></div>
+                    </div>
+                    <div class="roadmap-milestone completed">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>Design System v1</div>
+                        <div class="roadmap-milestone-desc">Charte graphique, composants, tokens CSS</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:100%;background:var(--success);"></div></div>
+                    </div>
+                    <div class="roadmap-milestone completed">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>Auth Gate</div>
+                        <div class="roadmap-milestone-desc">Cookie HMAC, forward_auth, login page</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:100%;background:var(--success);"></div></div>
+                    </div>
+                </div>
+                <div class="roadmap-quarter">
+                    <div class="roadmap-quarter-title">Q2 2026</div>
+                    <div class="roadmap-milestone in-progress">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>Dashboard projet</div>
+                        <div class="roadmap-milestone-desc">Vue kanban, backlog, monitoring deploys</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:45%;background:var(--gradient-1);"></div></div>
+                    </div>
+                    <div class="roadmap-milestone in-progress">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>API FastAPI</div>
+                        <div class="roadmap-milestone-desc">Endpoints CRUD, auth Better Auth, Prisma</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:30%;background:var(--gradient-2);"></div></div>
+                    </div>
+                </div>
+                <div class="roadmap-quarter">
+                    <div class="roadmap-quarter-title">Q3 2026</div>
+                    <div class="roadmap-milestone planned">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>CI/CD Pipeline</div>
+                        <div class="roadmap-milestone-desc">GitHub Actions, tests auto, deploy auto</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:0%;background:var(--text-dim);"></div></div>
+                    </div>
+                    <div class="roadmap-milestone planned">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>Monitoring avance</div>
+                        <div class="roadmap-milestone-desc">Alertes, logs centralises, metriques</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:0%;background:var(--text-dim);"></div></div>
+                    </div>
+                </div>
+                <div class="roadmap-quarter">
+                    <div class="roadmap-quarter-title">Q4 2026</div>
+                    <div class="roadmap-milestone planned">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>SSO Google/Apple</div>
+                        <div class="roadmap-milestone-desc">Better Auth multi-provider, session management</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:0%;background:var(--text-dim);"></div></div>
+                    </div>
+                    <div class="roadmap-milestone planned">
+                        <div class="roadmap-milestone-title"><span class="roadmap-milestone-dot"></span>App mobile PWA</div>
+                        <div class="roadmap-milestone-desc">Version mobile installable, notifications push</div>
+                        <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:0%;background:var(--text-dim);"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="backlog">
+    <div class="section-header"><span class="overline">Templates</span><h2>Backlog</h2><p>Liste de taches avec filtrage par priorite.</p></div>
+    <div class="demo-box">
+        <div class="backlog-filters">
+            <button class="btn-filter active" data-filter="all">Tous</button>
+            <button class="btn-filter" data-filter="high">Haute</button>
+            <button class="btn-filter" data-filter="medium">Moyenne</button>
+            <button class="btn-filter" data-filter="low">Basse</button>
+        </div>
+        <div class="backlog-list">
+            <div class="backlog-item" data-priority="high"><div class="backlog-priority high"></div><div class="backlog-content"><div class="backlog-title">Migrer base PostgreSQL</div><div class="backlog-desc">Exporter les donnees et migrer vers nouveau schema Prisma</div></div><span class="tag">backend</span><div class="backlog-points">8</div><div class="avatar avatar-xs avatar-gradient">MS</div></div>
+            <div class="backlog-item" data-priority="high"><div class="backlog-priority high"></div><div class="backlog-content"><div class="backlog-title">Rate limiting API</div><div class="backlog-desc">Proteger les endpoints publics avec limite par IP</div></div><span class="tag">securite</span><div class="backlog-points">5</div><div class="avatar avatar-xs" style="background:#8b5cf6;">CB</div></div>
+            <div class="backlog-item" data-priority="medium"><div class="backlog-priority medium"></div><div class="backlog-content"><div class="backlog-title">Page settings utilisateur</div><div class="backlog-desc">Formulaire profil, preferences, theme sombre/clair</div></div><span class="tag">frontend</span><div class="backlog-points">5</div><div class="avatar avatar-xs avatar-gradient">MS</div></div>
+            <div class="backlog-item" data-priority="medium"><div class="backlog-priority medium"></div><div class="backlog-content"><div class="backlog-title">Export CSV des deploys</div><div class="backlog-desc">Generer un rapport exportable des deployments</div></div><span class="tag">feature</span><div class="backlog-points">3</div><div class="avatar avatar-xs" style="background:#06b6d4;">CD</div></div>
+            <div class="backlog-item" data-priority="low"><div class="backlog-priority low"></div><div class="backlog-content"><div class="backlog-title">Animations page transitions</div><div class="backlog-desc">Ajouter des transitions fluides entre les vues</div></div><span class="tag">design</span><div class="backlog-points">2</div><div class="avatar avatar-xs avatar-gradient">MS</div></div>
+            <div class="backlog-item" data-priority="high"><div class="backlog-priority high"></div><div class="backlog-content"><div class="backlog-title">Backup automatique BDD</div><div class="backlog-desc">Cron job pg_dump quotidien avec rotation 7 jours</div></div><span class="tag">infra</span><div class="backlog-points">5</div><div class="avatar avatar-xs" style="background:#8b5cf6;">CB</div></div>
+            <div class="backlog-item" data-priority="low"><div class="backlog-priority low"></div><div class="backlog-content"><div class="backlog-title">Dark/Light mode toggle</div><div class="backlog-desc">Switcher de theme avec persistence localStorage</div></div><span class="tag">frontend</span><div class="backlog-points">3</div><div class="avatar avatar-xs avatar-gradient">MS</div></div>
+            <div class="backlog-item" data-priority="medium"><div class="backlog-priority medium"></div><div class="backlog-content"><div class="backlog-title">Webhook notifications</div><div class="backlog-desc">Envoyer des notifications Slack sur deploy/erreur</div></div><span class="tag">feature</span><div class="backlog-points">5</div><div class="avatar avatar-xs" style="background:#06b6d4;">CD</div></div>
+        </div>
+    </div>
+</section>
+
+<section id="sprint">
+    <div class="section-header"><span class="overline">Templates</span><h2>Sprint Board</h2><p>Vue sprint avec capacite, colonnes et burndown chart.</p></div>
+    <div class="sprint-header">
+        <div class="sprint-header-info"><h3>Sprint 12</h3><p>4 mars &mdash; 18 mars 2026 &middot; 10 jours ouvrables</p></div>
+        <div class="sprint-stats">
+            <div style="text-align:center;"><div class="stat-value" style="font-size:1.5rem;">21</div><div class="stat-label">Points</div></div>
+            <div style="text-align:center;"><div class="stat-value" style="font-size:1.5rem;">7</div><div class="stat-label">Taches</div></div>
+            <div style="text-align:center;">
+                <div class="stat-value" style="font-size:1.5rem;">62%</div><div class="stat-label">Avancement</div>
+                <div class="progress-bar" style="height:4px;width:80px;margin-top:0.3rem;"><div class="progress-fill" style="width:62%;background:var(--gradient-1);"></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box">
+        <div class="sprint-board">
+            <div class="kanban-column" data-status="todo">
+                <div class="kanban-column-header"><span class="kanban-column-title">A faire</span><span class="kanban-count">3</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Tests unitaires auth</div><div class="kanban-card-desc">Couvrir les endpoints login/logout/verify</div><div class="kanban-card-footer"><span class="tag">tests</span><div class="backlog-points">3</div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Cache Redis sessions</div><div class="kanban-card-desc">Remplacer le stockage memoire par Redis</div><div class="kanban-card-footer"><span class="tag">backend</span><div class="backlog-points">5</div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Responsive sidebar</div><div class="kanban-card-desc">Adapter la navigation mobile</div><div class="kanban-card-footer"><span class="tag">frontend</span><div class="backlog-points">2</div></div></div>
+            </div>
+            <div class="kanban-column" data-status="doing">
+                <div class="kanban-column-header"><span class="kanban-column-title">En cours</span><span class="kanban-count">2</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">API deploy webhook</div><div class="kanban-card-desc">Endpoint POST /api/deploy avec validation</div><div class="kanban-card-footer"><span class="tag">backend</span><div class="backlog-points">5</div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Dashboard metrics</div><div class="kanban-card-desc">Widgets temps reel CPU/RAM/requetes</div><div class="kanban-card-footer"><span class="tag">frontend</span><div class="backlog-points">3</div></div></div>
+            </div>
+            <div class="kanban-column" data-status="done">
+                <div class="kanban-column-header"><span class="kanban-column-title">Termine</span><span class="kanban-count">2</span></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Schema BDD v2</div><div class="kanban-card-desc">Migration Prisma relations User/Project</div><div class="kanban-card-footer"><span class="tag">backend</span><div class="backlog-points">2</div></div></div>
+                <div class="kanban-card" draggable="true"><div class="kanban-card-title">Caddyfile refactor</div><div class="kanban-card-desc">Snippets reutilisables auth + headers</div><div class="kanban-card-footer"><span class="tag">devops</span><div class="backlog-points">1</div></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="sprint-burndown">
+        <div class="sprint-burndown-title">Burndown Chart</div>
+        <svg class="burndown-animated" viewBox="0 0 400 150" style="width:100%;height:auto;">
+            <line x1="40" y1="10" x2="40" y2="130" stroke="var(--border)" stroke-width="1"/>
+            <line x1="40" y1="130" x2="390" y2="130" stroke="var(--border)" stroke-width="1"/>
+            <text x="15" y="18" fill="var(--text-dim)" font-size="8" font-family="Inter">21</text>
+            <text x="15" y="50" fill="var(--text-dim)" font-size="8" font-family="Inter">15</text>
+            <text x="15" y="90" fill="var(--text-dim)" font-size="8" font-family="Inter">8</text>
+            <text x="15" y="133" fill="var(--text-dim)" font-size="8" font-family="Inter">0</text>
+            <text x="40" y="145" fill="var(--text-dim)" font-size="7" font-family="Inter">J1</text>
+            <text x="110" y="145" fill="var(--text-dim)" font-size="7" font-family="Inter">J3</text>
+            <text x="180" y="145" fill="var(--text-dim)" font-size="7" font-family="Inter">J5</text>
+            <text x="250" y="145" fill="var(--text-dim)" font-size="7" font-family="Inter">J7</text>
+            <text x="320" y="145" fill="var(--text-dim)" font-size="7" font-family="Inter">J9</text>
+            <text x="370" y="145" fill="var(--text-dim)" font-size="7" font-family="Inter">J10</text>
+            <polyline points="40,14 75,26 110,38 145,50 180,62 215,74 250,86 285,98 320,110 355,122 390,130" fill="none" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+            <polyline points="40,14 75,20 110,35 145,42 180,60 215,72 250,88" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="250" cy="88" r="4" fill="var(--accent)" stroke="var(--primary)" stroke-width="2"/>
+        </svg>
+    </div>
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>
