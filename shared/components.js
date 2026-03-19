@@ -131,6 +131,36 @@ function initComponents() {
     });
 }
 
+// Toast system
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 4000;
+    var container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    var icons = { success: '&#10003;', error: '&#10007;', warning: '&#9888;', info: '&#8505;' };
+    var colors = { success: 'var(--success)', error: 'var(--danger)', warning: 'var(--warning)', info: 'var(--info)' };
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + type + ' toast-enter';
+    toast.innerHTML = '<span style="color:' + colors[type] + ';font-size:1rem;">' + icons[type] + '</span><span>' + message + '</span><button class="toast-close">&times;</button>';
+    container.appendChild(toast);
+    var closeBtn = toast.querySelector('.toast-close');
+    function dismiss() {
+        if (toast.parentNode) {
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-exit');
+            setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+        }
+    }
+    closeBtn.addEventListener('click', dismiss);
+    setTimeout(dismiss, duration);
+}
+window.__showToast = showToast;
+
 // Expose for SPA re-init
 window.__initComponents = initComponents;
 

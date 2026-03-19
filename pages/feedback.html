@@ -28,12 +28,24 @@
 
 <!-- TOASTS -->
 <section id="toasts">
-    <div class="section-header"><span class="overline">Feedback</span><h2>Toasts</h2><p>Notifications ephemeres non-bloquantes.</p></div>
-    <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:380px;">
-        <div class="toast"><span style="color:var(--success);font-size:1rem;">&#10003;</span><span>Fichier sauvegarde</span><button class="toast-close">&times;</button></div>
-        <div class="toast"><span style="color:var(--danger);font-size:1rem;">&#10007;</span><span>Erreur de connexion</span><button class="toast-close">&times;</button></div>
-        <div class="toast"><span style="color:var(--info);font-size:1rem;">&#8505;</span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
-        <div class="toast"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><span>Session expire dans 5min</span><button class="toast-close">&times;</button></div>
+    <div class="section-header"><span class="overline">Feedback</span><h2>Toasts</h2><p>Notifications ephemeres non-bloquantes avec auto-dismiss.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Variantes</span>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:380px;">
+            <div class="toast toast-success"><span style="color:var(--success);font-size:1rem;">&#10003;</span><span>Fichier sauvegarde avec succes</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-error"><span style="color:var(--danger);font-size:1rem;">&#10007;</span><span>Erreur de connexion au serveur</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-info"><span style="color:var(--info);font-size:1rem;">&#8505;</span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-warning"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><span>Session expire dans 5 minutes</span><button class="toast-close">&times;</button></div>
+        </div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Demo interactive</span>
+        <div class="demo-row">
+            <button class="btn-primary btn-sm" onclick="window.__showToast('Deploiement reussi !', 'success')">Toast Success</button>
+            <button class="btn-primary btn-sm btn-danger" onclick="window.__showToast('Echec de la connexion', 'error')">Toast Error</button>
+            <button class="btn-primary btn-sm btn-warning" onclick="window.__showToast('Memoire presque pleine', 'warning')">Toast Warning</button>
+            <button class="btn-secondary btn-sm" onclick="window.__showToast('Nouvelle notification', 'info')">Toast Info</button>
+        </div>
     </div>
 </section>
 
