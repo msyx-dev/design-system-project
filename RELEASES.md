@@ -1,5 +1,16 @@
 # Releases
 
+## 2.1.0 — 2026-03-20 — Sprint 1
+- Migration production : pipeline agentique, GitHub board #7, labels, milestone
+- Purge references os-livedemo sur toutes les pages
+- Meta description ajoutee sur les 10 fichiers HTML
+- Auth gate reactivee (forward_auth Caddy)
+- docs/ARCHITECTURE.md cree
+- Variables CSS --space-xs a --space-3xl pour harmoniser les espacements
+- Accessibilite : focus-visible global, contraste WCAG AA (--text-dim #7c8db5), aria-labels, navigation clavier accordeons/tabs
+- Toast notifications interactives : variantes colorees, animations slide-in/out, auto-dismiss, showToast() JS
+- Page tokens mise a jour avec echelle spacing et snippet d'import
+
 ## 2.0.0 — 2026-03-08 23:30
 - Restructuration multi-page : site.html eclate en 8 pages thematiques
 - Architecture shared/ : CSS, nav.js et components.js extraits et partages
