@@ -161,6 +161,25 @@ function showToast(message, type, duration) {
 }
 window.__showToast = showToast;
 
+function initThemeSwitcher() {
+    var select = document.getElementById('theme-select');
+    if (!select) return;
+    var current = document.documentElement.getAttribute('data-theme') || 'msyx';
+    select.value = current;
+    if (select.dataset.bound) return;
+    select.dataset.bound = '1';
+    select.addEventListener('change', function() {
+        var theme = this.value;
+        if (theme === 'msyx') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        localStorage.setItem('msyx-theme', theme);
+    });
+}
+window.__initThemeSwitcher = initThemeSwitcher;
+
 // Expose for SPA re-init
 window.__initComponents = initComponents;
 
