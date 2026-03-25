@@ -710,6 +710,91 @@ footer p { color: var(--text-dim); font-size: 0.78rem; }
 /* Chaque theme surcharge les variables de couleur de :root */
 /* Voir fondation.html#theming pour la documentation complete */
 
+/* ----- Theme ACSSI ----- */
+/* Palette : bleu marine #00345f / or #e0cd1e / blanc #ffffff */
+/* Activation : document.documentElement.dataset.theme = 'acssi' */
+[data-theme="acssi"] {
+    /* Backgrounds */
+    --primary: #00345f;
+    --primary-light: #00457a;
+
+    /* Accent or */
+    --accent: #e0cd1e;
+    --accent-light: #ead92e;
+    --accent-glow: rgba(224, 205, 30, 0.12);
+
+    /* Surfaces */
+    --surface: rgba(0, 69, 122, 0.6);
+    --surface-solid: #00457a;
+    --surface-light: #005a9e;
+
+    /* Textes */
+    --text: #ffffff;
+    --text-muted: #94a3b8;
+    --text-dim: #9eb3c8;
+
+    /* Gradients corporate */
+    --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
+    --gradient-2: linear-gradient(135deg, #00457a, #00345f);
+    --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
+    --gradient-4: linear-gradient(135deg, #e0cd1e, #f59e0b);
+
+    /* Bordures */
+    --border: rgba(224, 205, 30, 0.12);
+    --border-hover: rgba(224, 205, 30, 0.35);
+
+    /* Ombres */
+    --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+    /* Semantiques */
+    --success: #22c55e;
+    --warning: #f97316;
+    --danger: #ef4444;
+    --info: #38bdf8;
+
+    /* Couleurs etendues */
+    --violet: #005a9e;
+    --cyan: #38bdf8;
+    --pink: #f97316;
+
+    /* Semantic light */
+    --success-light: #4ade80;
+    --warning-light: #fb923c;
+    --danger-light: #f87171;
+    --info-light: #7dd3fc;
+
+    /* Semantic dark */
+    --success-dark: #16a34a;
+    --warning-dark: #ea580c;
+    --danger-dark: #dc2626;
+
+    /* Code syntax */
+    --code-keyword: #e0cd1e;
+    --code-string: #4ade80;
+    --code-comment: #5a7a96;
+    --code-function: #38bdf8;
+    --code-number: #fb923c;
+
+    /* Overlays */
+    --overlay: rgba(0, 0, 0, 0.55);
+    --overlay-heavy: rgba(0, 30, 60, 0.85);
+
+    /* Hub card backgrounds */
+    --hub-bg-violet: rgba(0, 90, 158, 0.15);
+    --hub-bg-cyan: rgba(56, 189, 248, 0.12);
+    --hub-bg-pink: rgba(249, 115, 22, 0.12);
+    --hub-bg-success: rgba(34, 197, 94, 0.12);
+    --hub-bg-warning: rgba(224, 205, 30, 0.12);
+
+    /* Chart palette */
+    --chart-1: #e0cd1e;
+    --chart-2: #38bdf8;
+    --chart-3: #4ade80;
+    --chart-4: #f97316;
+    --chart-5: #00457a;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .demo-grid-4, .demo-grid-5 { grid-template-columns: repeat(2, 1fr); }
