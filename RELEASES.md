@@ -1,5 +1,23 @@
 # Releases
 
+## 2.2.0 — 2026-03-26 — Sprint 2
+
+### Added
+- Infrastructure theming CSS : ~30 variables etendues dans :root (semantic, code, overlays, charts, hub)
+- Mecanisme [data-theme] pour switcher les palettes de couleurs
+- Theme ACSSI : palette corporate bleu marine #00345f / or #e0cd1e / blanc #ffffff
+- Selecteur de theme dans la sidebar (MSYX / ACSSI) avec persistance localStorage
+- Anti-FOUC : script inline dans <head> de toutes les pages HTML
+- Section documentation "Theming" dans fondation.html
+- Section demo "Theme Switcher" dans composants.html
+
+### Changed
+- ~40 couleurs hardcodees remplacees par des variables CSS dans styles.css
+- SVG data.html migres vers variables CSS (fill/stroke inline)
+- Hub-card icons site.html tokenises
+- Compteur hero : 37 → 38 composants
+- Contrastes WCAG AA verifies pour le theme ACSSI (15.4:1 texte principal)
+
 ## 2.1.0 — 2026-03-20 — Sprint 1
 - Migration production : pipeline agentique, GitHub board #7, labels, milestone
 - Purge references os-livedemo sur toutes les pages
