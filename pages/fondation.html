@@ -132,6 +132,34 @@
         </div>
     </div>
 </section>
+
+<section id="theming">
+    <div class="section-header"><span class="overline">Fondation</span><h2>Theming</h2><p>Infrastructure de themes via <span class="code-inline">data-theme</span> sur la balise <span class="code-inline">&lt;html&gt;</span>. Chaque theme surcharge les variables de <span class="code-inline">:root</span>.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Mecanisme</span>
+            <p class="typo-small" style="margin-bottom:1rem;">Ajouter <span class="code-inline">data-theme="nom"</span> sur <span class="code-inline">&lt;html&gt;</span> pour activer un theme. Les variables CSS de <span class="code-inline">:root</span> sont surchargees par le selecteur <span class="code-inline">[data-theme="nom"]</span>.</p>
+            <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* Activer un theme */</span><br><span class="kw">&lt;html</span> <span class="fn">data-theme</span>=<span class="str">"light"</span><span class="kw">&gt;</span><br><br><span class="cm">/* Definir un theme dans CSS */</span><br><span class="kw">[data-theme="light"]</span> {<br>&nbsp;&nbsp;<span class="fn">--primary</span>: <span class="str">#ffffff</span>;<br>&nbsp;&nbsp;<span class="fn">--text</span>: <span class="str">#0a0f1e</span>;<br>&nbsp;&nbsp;<span class="fn">--surface</span>: <span class="str">rgba(240,242,247,0.8)</span>;<br>}</div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Variables themables</span>
+            <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span class="typo-small">Surfaces — <span class="code-inline">--primary</span>, <span class="code-inline">--surface</span>, <span class="code-inline">--surface-solid</span></span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span class="typo-small">Texte — <span class="code-inline">--text</span>, <span class="code-inline">--text-muted</span>, <span class="code-inline">--text-dim</span></span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--violet);flex-shrink:0;"></div><span class="typo-small">Accents — <span class="code-inline">--accent</span>, <span class="code-inline">--violet</span>, <span class="code-inline">--cyan</span>, <span class="code-inline">--pink</span></span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;"></div><span class="typo-small">Semantique — <span class="code-inline">--success</span>, <span class="code-inline">--warning</span>, <span class="code-inline">--danger</span>, <span class="code-inline">--info</span></span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--chart-1);flex-shrink:0;"></div><span class="typo-small">Charts — <span class="code-inline">--chart-1</span> a <span class="code-inline">--chart-5</span></span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;"><div style="width:8px;height:8px;border-radius:50%;background:var(--code-keyword);flex-shrink:0;"></div><span class="typo-small">Syntax — <span class="code-inline">--code-keyword</span>, <span class="code-inline">--code-string</span>, etc.</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection" style="margin-top:1.5rem;">
+        <span class="demo-label">Exemple de theme complet</span>
+        <div class="demo-box">
+            <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* shared/styles.css */</span><br><br><span class="kw">[data-theme="light"]</span> {<br>&nbsp;&nbsp;<span class="cm">/* Surfaces */</span><br>&nbsp;&nbsp;<span class="fn">--primary</span>: <span class="str">#f8fafc</span>;<br>&nbsp;&nbsp;<span class="fn">--primary-light</span>: <span class="str">#f1f5f9</span>;<br>&nbsp;&nbsp;<span class="fn">--surface</span>: <span class="str">rgba(255,255,255,0.8)</span>;<br>&nbsp;&nbsp;<span class="fn">--surface-solid</span>: <span class="str">#ffffff</span>;<br>&nbsp;&nbsp;<span class="fn">--surface-light</span>: <span class="str">#e2e8f0</span>;<br><br>&nbsp;&nbsp;<span class="cm">/* Texte */</span><br>&nbsp;&nbsp;<span class="fn">--text</span>: <span class="str">#0f172a</span>;<br>&nbsp;&nbsp;<span class="fn">--text-muted</span>: <span class="str">#475569</span>;<br>&nbsp;&nbsp;<span class="fn">--text-dim</span>: <span class="str">#64748b</span>;<br><br>&nbsp;&nbsp;<span class="cm">/* Bordures */</span><br>&nbsp;&nbsp;<span class="fn">--border</span>: <span class="str">rgba(15,23,42,0.08)</span>;<br>&nbsp;&nbsp;<span class="fn">--border-hover</span>: <span class="str">rgba(15,23,42,0.25)</span>;<br>}</div>
+        </div>
+    </div>
+</section>
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

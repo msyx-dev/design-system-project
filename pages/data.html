@@ -44,8 +44,8 @@
             <span class="demo-label">Indicateurs circulaires</span>
             <div style="display:flex;gap:2rem;justify-content:center;align-items:center;padding-top:0.5rem;">
                 <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="17"></circle></svg><span class="value">92%</span></div>
-                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke:#8b5cf6;"></circle></svg><span class="value">60%</span></div>
-                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke:#06b6d4;"></circle></svg><span class="value">30%</span></div>
+                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke: var(--violet);"></circle></svg><span class="value">60%</span></div>
+                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke: var(--cyan);"></circle></svg><span class="value">30%</span></div>
             </div>
         </div>
     </div>
@@ -77,11 +77,11 @@
     <!-- Shared SVG gradients -->
     <svg width="0" height="0" style="position:absolute;">
         <defs>
-            <linearGradient id="gradBar1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
-            <linearGradient id="gradBar2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
-            <linearGradient id="gradArea1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/></linearGradient>
-            <linearGradient id="gradArea2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.02"/></linearGradient>
-            <linearGradient id="gradLine1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+            <linearGradient id="gradBar1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" style="stop-color: var(--chart-2)"/><stop offset="100%" style="stop-color: var(--chart-1)"/></linearGradient>
+            <linearGradient id="gradBar2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" style="stop-color: var(--chart-3)"/><stop offset="100%" style="stop-color: var(--chart-1)"/></linearGradient>
+            <linearGradient id="gradArea1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" style="stop-color: var(--chart-1)" stop-opacity="0.3"/><stop offset="100%" style="stop-color: var(--chart-1)" stop-opacity="0.02"/></linearGradient>
+            <linearGradient id="gradArea2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" style="stop-color: var(--chart-2)" stop-opacity="0.3"/><stop offset="100%" style="stop-color: var(--chart-2)" stop-opacity="0.02"/></linearGradient>
+            <linearGradient id="gradLine1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" style="stop-color: var(--chart-1)"/><stop offset="100%" style="stop-color: var(--chart-2)"/></linearGradient>
         </defs>
     </svg>
 
@@ -146,18 +146,18 @@
             <div class="demo-box chart-wrap chart-animated">
                 <span class="demo-label">Sources de trafic</span>
                 <svg viewBox="0 0 500 185" role="img" aria-label="Graphique donut des sources de trafic">
-                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" stroke="#3b82f6" stroke-width="28" stroke-dasharray="170.9 256.4" stroke-dashoffset="0" data-label="Direct" data-value="40%"/>
-                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" stroke="#8b5cf6" stroke-width="28" stroke-dasharray="106.8 320.4" stroke-dashoffset="-170.9" data-label="Referral" data-value="25%"/>
-                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" stroke="#06b6d4" stroke-width="28" stroke-dasharray="85.5 341.8" stroke-dashoffset="-277.7" data-label="Search" data-value="20%"/>
-                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" stroke="#ec4899" stroke-width="28" stroke-dasharray="64.1 363.2" stroke-dashoffset="-363.2" data-label="Social" data-value="15%"/>
+                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-1)" stroke-width="28" stroke-dasharray="170.9 256.4" stroke-dashoffset="0" data-label="Direct" data-value="40%"/>
+                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-2)" stroke-width="28" stroke-dasharray="106.8 320.4" stroke-dashoffset="-170.9" data-label="Referral" data-value="25%"/>
+                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-3)" stroke-width="28" stroke-dasharray="85.5 341.8" stroke-dashoffset="-277.7" data-label="Search" data-value="20%"/>
+                    <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-4)" stroke-width="28" stroke-dasharray="64.1 363.2" stroke-dashoffset="-363.2" data-label="Social" data-value="15%"/>
                     <text x="250" y="80" text-anchor="middle" fill="var(--text)" font-size="20" font-weight="700">36.2k</text>
                     <text x="250" y="98" text-anchor="middle" fill="var(--text-muted)" font-size="10">visiteurs</text>
                 </svg>
                 <div class="chart-legend">
-                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#3b82f6;"></div> Direct (40%)</div>
-                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#8b5cf6;"></div> Referral (25%)</div>
-                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#06b6d4;"></div> Search (20%)</div>
-                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#ec4899;"></div> Social (15%)</div>
+                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-1);"></div> Direct (40%)</div>
+                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-2);"></div> Referral (25%)</div>
+                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-3);"></div> Search (20%)</div>
+                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-4);"></div> Social (15%)</div>
                 </div>
             </div>
             <div class="demo-box chart-wrap chart-animated">
@@ -176,12 +176,12 @@
                     <text x="38" y="136" class="chart-axis-label" text-anchor="end">1k</text>
                     <polygon class="chart-area-animated" points="75,76 157,50 239,87 321,37 403,60 485,25 485,132 75,132" fill="url(#gradArea1)"/>
                     <polyline class="chart-line-animated" fill="none" stroke="url(#gradLine1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="75,76 157,50 239,87 321,37 403,60 485,25"/>
-                    <circle class="chart-point" cx="75" cy="76" r="3.5" fill="#3b82f6" data-label="Lun" data-value="3.0k"/>
-                    <circle class="chart-point" cx="157" cy="50" r="3.5" fill="#3b82f6" data-label="Mar" data-value="3.8k"/>
-                    <circle class="chart-point" cx="239" cy="87" r="3.5" fill="#3b82f6" data-label="Mer" data-value="2.5k"/>
-                    <circle class="chart-point" cx="321" cy="37" r="3.5" fill="#3b82f6" data-label="Jeu" data-value="4.2k"/>
-                    <circle class="chart-point" cx="403" cy="60" r="3.5" fill="#3b82f6" data-label="Ven" data-value="3.5k"/>
-                    <circle class="chart-point" cx="485" cy="25" r="3.5" fill="#8b5cf6" data-label="Sam" data-value="4.8k"/>
+                    <circle class="chart-point" cx="75" cy="76" r="3.5" style="fill: var(--chart-1)" data-label="Lun" data-value="3.0k"/>
+                    <circle class="chart-point" cx="157" cy="50" r="3.5" style="fill: var(--chart-1)" data-label="Mar" data-value="3.8k"/>
+                    <circle class="chart-point" cx="239" cy="87" r="3.5" style="fill: var(--chart-1)" data-label="Mer" data-value="2.5k"/>
+                    <circle class="chart-point" cx="321" cy="37" r="3.5" style="fill: var(--chart-1)" data-label="Jeu" data-value="4.2k"/>
+                    <circle class="chart-point" cx="403" cy="60" r="3.5" style="fill: var(--chart-1)" data-label="Ven" data-value="3.5k"/>
+                    <circle class="chart-point" cx="485" cy="25" r="3.5" style="fill: var(--chart-2)" data-label="Sam" data-value="4.8k"/>
                     <text x="75" y="150" class="chart-axis-label" text-anchor="middle">Lun</text>
                     <text x="157" y="150" class="chart-axis-label" text-anchor="middle">Mar</text>
                     <text x="239" y="150" class="chart-axis-label" text-anchor="middle">Mer</text>
@@ -220,13 +220,13 @@
                 <rect class="chart-bar" x="415" y="43" width="55" height="80" rx="4" fill="url(#gradBar1)" opacity="0.7" data-label="Avr" data-value="19k rev"/>
                 <rect class="chart-bar" x="525" y="22" width="55" height="101" rx="4" fill="url(#gradBar1)" opacity="0.7" data-label="Mai" data-value="24k rev"/>
                 <rect class="chart-bar" x="635" y="38" width="55" height="85" rx="4" fill="url(#gradBar1)" opacity="0.7" data-label="Jun" data-value="21k rev"/>
-                <polyline class="chart-line-animated" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="112,62 222,72 332,46 442,55 552,28 662,37"/>
-                <circle class="chart-point" cx="112" cy="62" r="3.5" fill="#ec4899" data-label="Jan" data-value="3.2%"/>
-                <circle class="chart-point" cx="222" cy="72" r="3.5" fill="#ec4899" data-label="Fev" data-value="2.8%"/>
-                <circle class="chart-point" cx="332" cy="46" r="3.5" fill="#ec4899" data-label="Mar" data-value="3.8%"/>
-                <circle class="chart-point" cx="442" cy="55" r="3.5" fill="#ec4899" data-label="Avr" data-value="3.5%"/>
-                <circle class="chart-point" cx="552" cy="28" r="3.5" fill="#ec4899" data-label="Mai" data-value="4.2%"/>
-                <circle class="chart-point" cx="662" cy="37" r="3.5" fill="#ec4899" data-label="Jun" data-value="3.9%"/>
+                <polyline class="chart-line-animated" fill="none" style="stroke: var(--chart-4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="112,62 222,72 332,46 442,55 552,28 662,37"/>
+                <circle class="chart-point" cx="112" cy="62" r="3.5" style="fill: var(--chart-4)" data-label="Jan" data-value="3.2%"/>
+                <circle class="chart-point" cx="222" cy="72" r="3.5" style="fill: var(--chart-4)" data-label="Fev" data-value="2.8%"/>
+                <circle class="chart-point" cx="332" cy="46" r="3.5" style="fill: var(--chart-4)" data-label="Mar" data-value="3.8%"/>
+                <circle class="chart-point" cx="442" cy="55" r="3.5" style="fill: var(--chart-4)" data-label="Avr" data-value="3.5%"/>
+                <circle class="chart-point" cx="552" cy="28" r="3.5" style="fill: var(--chart-4)" data-label="Mai" data-value="4.2%"/>
+                <circle class="chart-point" cx="662" cy="37" r="3.5" style="fill: var(--chart-4)" data-label="Jun" data-value="3.9%"/>
                 <text x="112" y="142" class="chart-axis-label" text-anchor="middle">Jan</text>
                 <text x="222" y="142" class="chart-axis-label" text-anchor="middle">Fev</text>
                 <text x="332" y="142" class="chart-axis-label" text-anchor="middle">Mar</text>
@@ -235,8 +235,8 @@
                 <text x="662" y="142" class="chart-axis-label" text-anchor="middle">Jun</text>
             </svg>
             <div class="chart-legend">
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:linear-gradient(to top,#8b5cf6,#3b82f6);"></div> Revenue</div>
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#ec4899;border-radius:50%;"></div> Conversion %</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:linear-gradient(to top, var(--chart-2), var(--chart-1));"></div> Revenue</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-4);border-radius:50%;"></div> Conversion %</div>
             </div>
         </div>
     </div>
@@ -248,17 +248,17 @@
                 <span class="demo-label">Monitoring</span>
                 <div class="spark-row">
                     <div class="spark-info"><div class="spark-label">CPU</div><div class="spark-value">73%</div></div>
-                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline CPU"><polyline fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12"/><polygon fill="url(#gradArea1)" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12 200,40 0,40"/></svg></div>
+                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline CPU"><polyline fill="none" style="stroke: var(--chart-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12"/><polygon fill="url(#gradArea1)" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12 200,40 0,40"/></svg></div>
                     <span class="spark-change up">+5%</span>
                 </div>
                 <div class="spark-row">
                     <div class="spark-info"><div class="spark-label">RAM</div><div class="spark-value">8.2 Go</div></div>
-                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline RAM"><polyline fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22"/><polygon fill="url(#gradArea2)" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22 200,40 0,40"/></svg></div>
+                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline RAM"><polyline fill="none" style="stroke: var(--chart-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22"/><polygon fill="url(#gradArea2)" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22 200,40 0,40"/></svg></div>
                     <span class="spark-change down">-3%</span>
                 </div>
                 <div class="spark-row">
                     <div class="spark-info"><div class="spark-label">Reseau</div><div class="spark-value">142 Mb/s</div></div>
-                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline Reseau"><polyline fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6"/><polygon fill="url(#gradArea1)" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6 200,40 0,40" opacity="0.5"/></svg></div>
+                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline Reseau"><polyline fill="none" style="stroke: var(--chart-3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6"/><polygon fill="url(#gradArea1)" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6 200,40 0,40" opacity="0.5"/></svg></div>
                     <span class="spark-change up">+12%</span>
                 </div>
             </div>
@@ -277,33 +277,33 @@
                     <text x="38" y="108" class="chart-axis-label" text-anchor="end">200</text>
                     <text x="38" y="136" class="chart-axis-label" text-anchor="end">100</text>
                     <polygon class="chart-area-animated" points="65,76 118,50 171,62 224,30 277,42 330,24 383,36 490,50 490,132 65,132" fill="url(#gradArea1)"/>
-                    <polyline class="chart-line-animated" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="65,76 118,50 171,62 224,30 277,42 330,24 383,36 490,50"/>
+                    <polyline class="chart-line-animated" fill="none" style="stroke: var(--chart-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="65,76 118,50 171,62 224,30 277,42 330,24 383,36 490,50"/>
                     <polygon class="chart-area-animated" points="65,110 118,99 171,104 224,88 277,93 330,83 383,90 490,97 490,132 65,132" fill="url(#gradArea2)"/>
-                    <polyline class="chart-line-animated" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="65,110 118,99 171,104 224,88 277,93 330,83 383,90 490,97"/>
-                    <circle class="chart-point" cx="65" cy="76" r="3" fill="#3b82f6" data-label="00h" data-value="300 GET"/>
-                    <circle class="chart-point" cx="118" cy="50" r="3" fill="#3b82f6" data-label="04h" data-value="400 GET"/>
-                    <circle class="chart-point" cx="171" cy="62" r="3" fill="#3b82f6" data-label="08h" data-value="350 GET"/>
-                    <circle class="chart-point" cx="224" cy="30" r="3" fill="#3b82f6" data-label="12h" data-value="475 GET"/>
-                    <circle class="chart-point" cx="277" cy="42" r="3" fill="#3b82f6" data-label="14h" data-value="425 GET"/>
-                    <circle class="chart-point" cx="330" cy="24" r="3" fill="#3b82f6" data-label="18h" data-value="490 GET"/>
-                    <circle class="chart-point" cx="383" cy="36" r="3" fill="#3b82f6" data-label="20h" data-value="440 GET"/>
-                    <circle class="chart-point" cx="490" cy="50" r="3" fill="#3b82f6" data-label="23h" data-value="400 GET"/>
-                    <circle class="chart-point" cx="65" cy="110" r="3" fill="#8b5cf6" data-label="00h" data-value="100 POST"/>
-                    <circle class="chart-point" cx="118" cy="99" r="3" fill="#8b5cf6" data-label="04h" data-value="150 POST"/>
-                    <circle class="chart-point" cx="171" cy="104" r="3" fill="#8b5cf6" data-label="08h" data-value="125 POST"/>
-                    <circle class="chart-point" cx="224" cy="88" r="3" fill="#8b5cf6" data-label="12h" data-value="200 POST"/>
-                    <circle class="chart-point" cx="277" cy="93" r="3" fill="#8b5cf6" data-label="14h" data-value="175 POST"/>
-                    <circle class="chart-point" cx="330" cy="83" r="3" fill="#8b5cf6" data-label="18h" data-value="225 POST"/>
-                    <circle class="chart-point" cx="383" cy="90" r="3" fill="#8b5cf6" data-label="20h" data-value="188 POST"/>
-                    <circle class="chart-point" cx="490" cy="97" r="3" fill="#8b5cf6" data-label="23h" data-value="162 POST"/>
+                    <polyline class="chart-line-animated" fill="none" style="stroke: var(--chart-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="65,110 118,99 171,104 224,88 277,93 330,83 383,90 490,97"/>
+                    <circle class="chart-point" cx="65" cy="76" r="3" style="fill: var(--chart-1)" data-label="00h" data-value="300 GET"/>
+                    <circle class="chart-point" cx="118" cy="50" r="3" style="fill: var(--chart-1)" data-label="04h" data-value="400 GET"/>
+                    <circle class="chart-point" cx="171" cy="62" r="3" style="fill: var(--chart-1)" data-label="08h" data-value="350 GET"/>
+                    <circle class="chart-point" cx="224" cy="30" r="3" style="fill: var(--chart-1)" data-label="12h" data-value="475 GET"/>
+                    <circle class="chart-point" cx="277" cy="42" r="3" style="fill: var(--chart-1)" data-label="14h" data-value="425 GET"/>
+                    <circle class="chart-point" cx="330" cy="24" r="3" style="fill: var(--chart-1)" data-label="18h" data-value="490 GET"/>
+                    <circle class="chart-point" cx="383" cy="36" r="3" style="fill: var(--chart-1)" data-label="20h" data-value="440 GET"/>
+                    <circle class="chart-point" cx="490" cy="50" r="3" style="fill: var(--chart-1)" data-label="23h" data-value="400 GET"/>
+                    <circle class="chart-point" cx="65" cy="110" r="3" style="fill: var(--chart-2)" data-label="00h" data-value="100 POST"/>
+                    <circle class="chart-point" cx="118" cy="99" r="3" style="fill: var(--chart-2)" data-label="04h" data-value="150 POST"/>
+                    <circle class="chart-point" cx="171" cy="104" r="3" style="fill: var(--chart-2)" data-label="08h" data-value="125 POST"/>
+                    <circle class="chart-point" cx="224" cy="88" r="3" style="fill: var(--chart-2)" data-label="12h" data-value="200 POST"/>
+                    <circle class="chart-point" cx="277" cy="93" r="3" style="fill: var(--chart-2)" data-label="14h" data-value="175 POST"/>
+                    <circle class="chart-point" cx="330" cy="83" r="3" style="fill: var(--chart-2)" data-label="18h" data-value="225 POST"/>
+                    <circle class="chart-point" cx="383" cy="90" r="3" style="fill: var(--chart-2)" data-label="20h" data-value="188 POST"/>
+                    <circle class="chart-point" cx="490" cy="97" r="3" style="fill: var(--chart-2)" data-label="23h" data-value="162 POST"/>
                     <text x="65" y="150" class="chart-axis-label" text-anchor="middle">00h</text>
                     <text x="171" y="150" class="chart-axis-label" text-anchor="middle">08h</text>
                     <text x="277" y="150" class="chart-axis-label" text-anchor="middle">14h</text>
                     <text x="383" y="150" class="chart-axis-label" text-anchor="middle">20h</text>
                 </svg>
                 <div class="chart-legend">
-                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#3b82f6;"></div> GET</div>
-                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#8b5cf6;"></div> POST</div>
+                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-1);"></div> GET</div>
+                    <div class="chart-legend-item"><div class="chart-legend-dot" style="background: var(--chart-2);"></div> POST</div>
                 </div>
             </div>
         </div>
@@ -316,8 +316,8 @@
     <div class="demo-box" style="max-width:600px;">
         <div class="list">
             <div class="list-item"><div class="avatar-status online"><div class="avatar avatar-md avatar-gradient">MS</div></div><div class="list-item-content"><div class="list-item-title">Mickael Soffray</div><div class="list-item-desc">Owner &middot; Derniere activite il y a 2min</div></div><span class="badge badge-success" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Admin</span></div>
-            <div class="list-item"><div class="avatar-status offline"><div class="avatar avatar-md" style="background:#8b5cf6;">CB</div></div><div class="list-item-content"><div class="list-item-title">Claude Bot</div><div class="list-item-desc">Agent &middot; Derniere activite il y a 1h</div></div><span class="badge badge-info" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Bot</span></div>
-            <div class="list-item"><div class="avatar-status busy"><div class="avatar avatar-md" style="background:#06b6d4;">CD</div></div><div class="list-item-content"><div class="list-item-title">Caddy Server</div><div class="list-item-desc">Reverse proxy &middot; CPU 89%</div></div><span class="badge badge-warning" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Charge</span></div>
+            <div class="list-item"><div class="avatar-status offline"><div class="avatar avatar-md" style="background: var(--violet);">CB</div></div><div class="list-item-content"><div class="list-item-title">Claude Bot</div><div class="list-item-desc">Agent &middot; Derniere activite il y a 1h</div></div><span class="badge badge-info" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Bot</span></div>
+            <div class="list-item"><div class="avatar-status busy"><div class="avatar avatar-md" style="background: var(--cyan);">CD</div></div><div class="list-item-content"><div class="list-item-title">Caddy Server</div><div class="list-item-desc">Reverse proxy &middot; CPU 89%</div></div><span class="badge badge-warning" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Charge</span></div>
         </div>
     </div>
 </section>

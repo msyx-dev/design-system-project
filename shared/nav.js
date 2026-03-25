@@ -6,7 +6,8 @@ const NAV_SECTIONS = [
         { label: 'Couleurs', icon: '&#127912;', href: '/pages/fondation.html#colors' },
         { label: 'Typographie', icon: 'Aa', href: '/pages/fondation.html#typography' },
         { label: 'Spacing', icon: '&#9638;', href: '/pages/fondation.html#spacing' },
-        { label: 'Tokens CSS', icon: '{}', href: '/pages/fondation.html#tokens' }
+        { label: 'Tokens CSS', icon: '{}', href: '/pages/fondation.html#tokens' },
+        { label: 'Theming', icon: '&#9775;', href: '/pages/fondation.html#theming' }
     ]},
     { title: 'Composants', links: [
         { label: 'Boutons', icon: '&#9654;', href: '/pages/composants.html#buttons' },
