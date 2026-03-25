@@ -13,7 +13,8 @@ const NAV_SECTIONS = [
         { label: 'Boutons', icon: '&#9654;', href: '/pages/composants.html#buttons' },
         { label: 'Cards', icon: '&#9744;', href: '/pages/composants.html#cards' },
         { label: 'Badges & Tags', icon: '&#9679;', href: '/pages/composants.html#badges' },
-        { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' }
+        { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' },
+        { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' }
     ]},
     { title: 'Formulaires', links: [
         { label: 'Inputs', icon: '&#9998;', href: '/pages/formulaires.html#inputs' },
@@ -65,17 +66,26 @@ let scrollSpyObserver = null;
 function buildSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
-    let html = '<div class="sidebar-logo"><h1>msyx.design</h1><span>Design System v2.0 — 37 composants</span></div>';
+    let html = '<div class="sidebar-logo"><h1>msyx.design</h1><span>Design System v2.0 — 38 composants</span></div>';
     NAV_SECTIONS.forEach(section => {
         if (section.title) html += '<div class="sidebar-section">' + section.title + '</div>';
         section.links.forEach(link => {
             html += '<a href="' + link.href + '" class="sidebar-link" data-href="' + link.href + '"><span class="icon">' + link.icon + '</span> ' + link.label + '</a>';
         });
     });
-    html += '<div class="sidebar-footer"><p>msyx.fr — 2026</p></div>';
+    html += '<div class="sidebar-footer">'
+          + '<div class="theme-switcher">'
+          + '<label class="theme-switcher-label" for="theme-select">&#9775; Theme</label>'
+          + '<select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme">'
+          + '<option value="msyx">MSYX</option>'
+          + '<option value="acssi">ACSSI</option>'
+          + '</select>'
+          + '</div>'
+          + '<p>msyx.fr — 2026</p></div>';
     sidebar.innerHTML = html;
     updateActiveLink();
     bindSidebarClicks();
+    if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
 }
 
 function updateActiveLink(targetUrl) {

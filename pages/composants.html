@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/shared/styles.css">
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);}());</script>
 </head>
 <body>
     <aside class="sidebar" id="sidebar"></aside>
@@ -103,6 +104,26 @@
         <div class="demo-box">
             <span class="demo-label">Groupe</span>
             <div class="avatar-group"><div class="avatar avatar-md" style="background:var(--accent);">A</div><div class="avatar avatar-md" style="background:#8b5cf6;">B</div><div class="avatar avatar-md" style="background:#06b6d4;">C</div><div class="avatar avatar-md" style="background:#ec4899;">D</div><div class="avatar avatar-md" style="background:var(--surface-light);font-size:0.7rem;color:var(--text-muted);">+5</div></div>
+        </div>
+    </div>
+</section>
+
+<section id="theme-switcher">
+    <div class="section-header"><span class="overline">Composants</span><h2>Theme Switcher</h2><p>Selecteur de theme persistant. Bascule entre MSYX et ACSSI via localStorage.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Selecteur de theme</span>
+        <div class="demo-box" style="max-width:220px;">
+            <div class="theme-switcher">
+                <label class="theme-switcher-label" for="theme-select-demo">&#9775; Theme</label>
+                <select id="theme-select-demo" class="theme-switcher-select" aria-label="Demo theme switcher">
+                    <option value="msyx">MSYX</option>
+                    <option value="acssi">ACSSI</option>
+                </select>
+            </div>
+        </div>
+        <span class="demo-label" style="margin-top:var(--space-md);">Usage</span>
+        <div class="demo-box">
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Injecte automatiquement dans la sidebar. Persistance localStorage (cle <code class="code-inline">msyx-theme</code>). Anti-FOUC via script inline dans <code class="code-inline">&lt;head&gt;</code>.</p>
         </div>
     </div>
 </section>
