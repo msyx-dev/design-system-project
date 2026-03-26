@@ -9,38 +9,123 @@ Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 
 ```
 index.html              # Page login auth gate
-site.html               # Hub principal — grille 8 categories
+site.html               # Hub principal + lazy-loader des 8 categories
 pages/
-  fondation.html        # Couleurs, typographie, espacements, ombres
-  composants.html       # Cards, badges, boutons, avatars, alertes, modals, toasts
-  navigation.html       # Sidebar, tabs, breadcrumbs, stepper
+  fondation.html        # Couleurs, typographie, espacements, ombres, theming
+  composants.html       # Cards, badges, boutons, avatars, alertes, modals, toasts, theme switcher
+  navigation.html       # Tabs, breadcrumbs, stepper
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier
   data.html             # Tables, stats, charts, KPI
   templates.html        # Kanban, roadmap, backlog, sprint board
-  feedback.html         # Empty states, spinners, tooltips, pagination
-  divers.html           # Command palette, drawer, dropdown
+  feedback.html         # Empty states, spinners, tooltips, pagination, drawer
+  divers.html           # Command palette, accordion, timeline, code blocks
 shared/
-  styles.css            # CSS global — variables :root, composants, responsive
-  nav.js                # Sidebar dynamique, scroll spy, detection page active
-  components.js         # Composants JS partages (toasts, modals, etc.)
+  styles.css            # CSS global — variables :root (~65), composants, theming, responsive
+  nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
+  components.js         # Composants JS (toasts, modals, tabs, kanban, theme/mode switcher)
 docs/
   ARCHITECTURE.md       # Ce fichier
+  retros/               # Retrospectives de sprint
 ```
+
+## Navigation et layout
+
+### Header fixe (56px)
+- Position fixed, z-index 150, pleine largeur
+- Contenu : logo msyx.design, version, selecteur theme, toggle dark/light
+- Mobile : burger menu integre, version masquee
+- Variable CSS : `--header-h: 56px`
+
+### Sidebar
+- Position fixed, sous le header (`top: var(--header-h)`)
+- Contenu : liens de navigation uniquement (sections des pages)
+- Scroll-spy : highlight automatique de la section visible, auto-scroll sidebar
+- Mobile : drawer (translateX), ouvert/ferme via burger header
+
+### Navigation SPA
+- `navigateTo(href)` : fetch + DOMParser + remplacement `.main` + reinit composants
+- `bindSidebarClicks()` : intercepte les clics, scroll ou navigate selon contexte
+- `popstate` : gere le back/forward navigateur
+
+### LazyLoader (site.html uniquement)
+- 8 placeholders `.lazy-section` sous le hub grid
+- `IntersectionObserver` (rootMargin 200px) trigger `loadSection()` au scroll
+- `loadSection()` : fetch page, DOMParser, inject contenu, reinit composants + scroll spy
+- Deep-links : `#fondation` (categorie) et `#colors` (sub-section) supportes
+- Bouton "Tout charger" pour Ctrl+F global
+- Fade-in animation sur les sections chargees
+- Set `loadedSections` empeche le double-chargement
+
+## Theming
+
+### Architecture 2 axes
+- `data-theme` sur `<html>` : palette de couleurs (msyx, acssi, nhood)
+- `data-mode` sur `<html>` : mode d'affichage (dark, light)
+
+### Cascade CSS 4 couches
+1. `:root` — valeurs par defaut (MSYX dark)
+2. `[data-theme="xxx"]` — palette du theme
+3. `[data-mode="light"]` — mode clair generique (surfaces, textes, borders, shadows)
+4. `[data-theme="xxx"][data-mode="light"]` — overrides specifiques theme+mode
+
+### Themes disponibles
+| Theme | Modes | Accent | Style |
+|-------|-------|--------|-------|
+| MSYX | dark, light | #3b82f6 bleu | Glassmorphism, gradients bleu/violet |
+| ACSSI | dark | #e0cd1e or | Corporate bleu marine/or |
+| Nhood | dark, light | #008837 vert | Corporate vert fonce/menthe |
+
+### Persistance
+- 2 cles localStorage : `msyx-theme` + `msyx-mode`
+- Anti-FOUC : script inline synchrone dans `<head>` de chaque page (sauf index.html)
+- `THEME_CONFIG` dans components.js : modes disponibles par theme
+
+### Toggle UI
+- Selecteur theme : `<select>` dans le header
+- Toggle mode : boutons lune/soleil dans le header, soleil grise si theme dark-only
+
+## Variables CSS
+
+~65 variables dans `:root` de shared/styles.css :
+- **Couleurs** : primary, accent, surface, text, semantic (success/warning/danger/info)
+- **Couleurs etendues** : violet, cyan, pink, success/warning/danger-light/dark
+- **Code syntax** : code-keyword, code-string, code-comment, code-function, code-number
+- **Overlays** : overlay, overlay-heavy
+- **Hub backgrounds** : hub-bg-violet, hub-bg-cyan, hub-bg-pink, hub-bg-success, hub-bg-warning
+- **Chart palette** : chart-1 a chart-5
+- **Gradients** : gradient-1 a gradient-4
+- **Borders** : border, border-hover
+- **Shadows** : shadow, shadow-lg
+- **Sidebar** : sidebar-bg, sidebar-link-hover-bg, sidebar-link-active-bg
+- **Layout** : sidebar-w (260px), header-h (56px), radius (xs/sm/md/lg), space (xs a 3xl)
+
+## Composants JS interactifs
+
+- Toasts (`showToast()`) : variantes colorees, auto-dismiss, stack
+- Modals : overlay + contenu, fermeture ESC/clic overlay
+- Tabs / Accordion : toggle sections, dataset.bound anti-double-bind
+- Kanban : drag & drop natif HTML5 (dragstart, dragover, drop)
+- Backlog filtres : filtrage par priority, search
+- Burndown chart : animation SVG
+- Calendrier : navigation mois, selection date
+- Theme/Mode switcher : THEME_CONFIG, applyMode(), updateModeButtons()
 
 ## Flux de donnees
 
 Aucun backend. Toutes les donnees sont mockees en HTML statique.
-Les composants interactifs (drag & drop kanban, filtres backlog, burndown) utilisent du JS vanilla.
-
-## Conventions cles
-
-- Variables CSS centralisees dans `:root` de `shared/styles.css`
-- Mobile-first : tout composant doit etre responsive
-- Chaque page importe les 3 fichiers shared (styles.css, nav.js, components.js)
-- Nouveaux composants : ajouter dans la page thematique + mettre a jour le compteur hero dans site.html
+Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` pour eviter les double-listeners lors des reinit SPA.
 
 ## Infrastructure
 
 - Servi par Caddy file_server (pas de Docker)
 - Auth gate via forward_auth Caddy + cookie HMAC msyx_auth
 - Security headers importes dans le Caddyfile
+- CSP : `script-src 'self' 'unsafe-inline'` (requis pour anti-FOUC)
+- Deploy : git push → visible immediatement (pas de build)
+
+## Dette technique connue
+
+- ~43 `rgba(59,130,246,...)` hardcodes dans les composants CSS (opacite accent non tokenisees)
+- Avatars hardcodes dans composants.html + templates.html (couleurs directes au lieu de variables)
+- post-merge.sh echoue quand GitHub auto-close l'issue avant le script
+- Board design-system absent de pipeline.json (warnings a chaque create-issue)

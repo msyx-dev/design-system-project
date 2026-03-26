@@ -13,20 +13,20 @@ Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abo
 ## Structure
 ```
 index.html          # Page login auth gate
-site.html           # Hub principal — grille 8 categories
+site.html           # Hub principal + lazy-loader des 8 categories
 pages/
-  fondation.html    # Couleurs, typographie, espacements, ombres
-  composants.html   # Cards, badges, boutons, avatars, alertes, modals, toasts
-  navigation.html   # Sidebar, tabs, breadcrumbs, stepper
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming
+  composants.html   # Cards, badges, boutons, avatars, alertes, modals, toasts, theme switcher
+  navigation.html   # Tabs, breadcrumbs, stepper
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier
   data.html         # Tables, stats, charts, KPI
   templates.html    # Kanban, roadmap, backlog, sprint board
-  feedback.html     # Empty states, spinners, tooltips, pagination
-  divers.html       # Command palette, drawer, dropdown
+  feedback.html     # Empty states, spinners, tooltips, pagination, drawer
+  divers.html       # Command palette, accordion, timeline, code blocks
 shared/
-  styles.css        # CSS global — variables, composants, responsive
-  nav.js            # Sidebar dynamique, scroll spy, detection page active
-  components.js     # Composants JS partages (toasts, modals, etc.)
+  styles.css        # CSS global — ~65 variables :root, composants, theming, responsive
+  nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
+  components.js     # Composants JS partages (toasts, modals, tabs, kanban, theme/mode switcher)
 ```
 
 ## Conventions
@@ -35,8 +35,26 @@ shared/
 - Mobile-first : tout composant doit etre responsive
 - Pas de dependance externe (sauf Google Fonts)
 - Nouveaux composants : ajouter dans la page thematique appropriee + mettre a jour le compteur hero dans `site.html`
+- Anti-double-bind : pattern `dataset.bound` sur tous les event listeners dans components.js
+- Anti-FOUC : script inline synchrone dans `<head>` de chaque page (sauf index.html)
 
-## Charte graphique (reference)
+## Navigation
+- Header fixe 56px : logo + selecteur theme + toggle dark/light (toujours visible)
+- Sidebar : navigation uniquement (liens de sections), scroll-spy auto-scroll
+- SPA : navigateTo() fetch + DOMParser + reinit
+- LazyLoader (site.html) : 8 placeholders, IntersectionObserver, deep-links #categorie et #sub-section
+- Bouton "Tout charger" pour Ctrl+F global
+
+## Theming
+- 2 attributs HTML : `data-theme` (palette) + `data-mode` (dark/light)
+- Cascade CSS 4 couches : `:root` → `[data-theme]` → `[data-mode="light"]` → `[data-theme][data-mode]`
+- 3 themes : MSYX (dark+light), ACSSI (dark only), Nhood (dark+light)
+- `THEME_CONFIG` dans components.js : modes disponibles par theme, extensible
+- 2 cles localStorage : `msyx-theme` + `msyx-mode`
+- Toggle sun/moon dans le header, grise si theme dark-only
+- Ajouter un theme = 1 bloc CSS `[data-theme]` + 1 entree THEME_CONFIG + 1 option select
+
+## Charte graphique MSYX (reference par defaut)
 - Theme dark : `--primary: #0a0f1e`
 - Accent bleu : `--accent: #3b82f6`
 - Gradients : bleu→violet, cyan→bleu, violet→rose
