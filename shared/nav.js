@@ -73,6 +73,11 @@ function buildSidebar() {
           + '<option value="msyx">MSYX</option>'
           + '<option value="acssi">ACSSI</option>'
           + '</select>'
+          + '</div>'
+          + '<div class="mode-toggle">'
+          + '<span class="mode-toggle-label">Mode</span>'
+          + '<button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button>'
+          + '<button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button>'
           + '</div>';
     NAV_SECTIONS.forEach(section => {
         if (section.title) html += '<div class="sidebar-section">' + section.title + '</div>';
@@ -85,6 +90,7 @@ function buildSidebar() {
     updateActiveLink();
     bindSidebarClicks();
     if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
+    if (typeof initModeSwitcher === 'function') initModeSwitcher();
 }
 
 function updateActiveLink(targetUrl) {
