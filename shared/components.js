@@ -163,7 +163,8 @@ window.__showToast = showToast;
 
 var THEME_CONFIG = {
     msyx:  { modes: ['dark', 'light'], defaultMode: 'dark' },
-    acssi: { modes: ['dark'],          defaultMode: 'dark' }
+    acssi: { modes: ['dark'],          defaultMode: 'dark' },
+    nhood: { modes: ['dark', 'light'], defaultMode: 'dark' }
 };
 
 function initThemeSwitcher() {

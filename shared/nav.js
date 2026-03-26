@@ -72,6 +72,7 @@ function buildSidebar() {
           + '<select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme">'
           + '<option value="msyx">MSYX</option>'
           + '<option value="acssi">ACSSI</option>'
+          + '<option value="nhood">Nhood</option>'
           + '</select>'
           + '</div>'
           + '<div class="mode-toggle">'
