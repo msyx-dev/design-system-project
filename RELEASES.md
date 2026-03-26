@@ -1,5 +1,22 @@
 # Releases
 
+## 2.3.0 — 2026-03-26 — Sprint 3
+
+### Added
+- Infrastructure dark/light : layer CSS [data-mode="light"] generique (~30 variables)
+- Toggle sun/moon dans sidebar (grise si theme dark-only)
+- THEME_CONFIG JS extensible (modes disponibles par theme)
+- Theme Nhood : palette vert fonce #008837 / menthe #73c69c (dark + light)
+- Premier theme light du design system
+- Documentation theming mise a jour (2 axes : palette + mode)
+
+### Changed
+- Sidebar tokenisee (--sidebar-bg, --sidebar-link-hover-bg, --sidebar-link-active-bg)
+- Anti-FOUC etendu avec data-mode sur 9 pages
+- Transition html etendue (border-color)
+- Architecture theming : 2 attributs HTML (data-theme + data-mode), cascade CSS 4 couches
+- 2 cles localStorage (msyx-theme + msyx-mode)
+
 ## 2.2.0 — 2026-03-26 — Sprint 2
 
 ### Added
