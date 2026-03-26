@@ -891,6 +891,107 @@ html { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3
     --chart-5: #00457a;
 }
 
+/* ----- Theme Nhood ----- */
+/* Palette : vert fonce #008837 / menthe #73c69c / blanc #ffffff / noir #1a1a1a */
+/* Activation : document.documentElement.dataset.theme = 'nhood' */
+[data-theme="nhood"] {
+    --primary: #0a1a0f;
+    --primary-light: #0f2415;
+    --accent: #008837;
+    --accent-light: #73c69c;
+    --accent-glow: rgba(0, 136, 55, 0.14);
+    --surface: rgba(15, 36, 21, 0.65);
+    --surface-solid: #0f2415;
+    --surface-light: #1a3d22;
+    --text: #f0faf4;
+    --text-muted: #8fbfa0;
+    --text-dim: #6a9e7a;
+    --gradient-1: linear-gradient(135deg, #008837, #73c69c);
+    --gradient-2: linear-gradient(135deg, #005a22, #008837);
+    --gradient-3: linear-gradient(135deg, #008837, #00b84d);
+    --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
+    --border: rgba(0, 136, 55, 0.12);
+    --border-hover: rgba(0, 136, 55, 0.35);
+    --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+    --success: #22c55e;
+    --warning: #f97316;
+    --danger: #ef4444;
+    --info: #38bdf8;
+    --violet: #7c3aed;
+    --cyan: #06b6d4;
+    --pink: #ec4899;
+    --success-light: #4ade80;
+    --warning-light: #fb923c;
+    --danger-light: #f87171;
+    --info-light: #7dd3fc;
+    --success-dark: #16a34a;
+    --warning-dark: #ea580c;
+    --danger-dark: #dc2626;
+    --code-keyword: #73c69c;
+    --code-string: #4ade80;
+    --code-comment: #4a7a56;
+    --code-function: #38bdf8;
+    --code-number: #fb923c;
+    --overlay: rgba(0, 0, 0, 0.55);
+    --overlay-heavy: rgba(10, 26, 15, 0.85);
+    --sidebar-bg: rgba(10, 26, 15, 0.9);
+    --sidebar-link-hover-bg: rgba(0, 136, 55, 0.06);
+    --sidebar-link-active-bg: rgba(0, 136, 55, 0.10);
+    --hub-bg-violet: rgba(124, 58, 237, 0.12);
+    --hub-bg-cyan: rgba(6, 182, 212, 0.10);
+    --hub-bg-pink: rgba(236, 72, 153, 0.10);
+    --hub-bg-success: rgba(0, 136, 55, 0.15);
+    --hub-bg-warning: rgba(249, 115, 22, 0.12);
+    --chart-1: #008837;
+    --chart-2: #73c69c;
+    --chart-3: #38bdf8;
+    --chart-4: #f97316;
+    --chart-5: #7c3aed;
+}
+
+/* ----- Theme Nhood + Mode Light ----- */
+[data-theme="nhood"][data-mode="light"] {
+    --primary: #f5fbf7;
+    --primary-light: #ecf7f0;
+    --accent: #006e2c;
+    --accent-light: #008837;
+    --accent-glow: rgba(0, 110, 44, 0.10);
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-solid: #ffffff;
+    --surface-light: #e6f5eb;
+    --text: #1a1a1a;
+    --text-muted: #3d6b4a;
+    --text-dim: #5a8a68;
+    --gradient-1: linear-gradient(135deg, #006e2c, #008837);
+    --gradient-2: linear-gradient(135deg, #008837, #73c69c);
+    --gradient-3: linear-gradient(135deg, #005a22, #00b84d);
+    --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
+    --border: rgba(0, 110, 44, 0.14);
+    --border-hover: rgba(0, 110, 44, 0.35);
+    --shadow: 0 4px 20px rgba(0, 50, 20, 0.10);
+    --shadow-lg: 0 12px 40px rgba(0, 50, 20, 0.14);
+    --sidebar-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-link-hover-bg: rgba(0, 110, 44, 0.05);
+    --sidebar-link-active-bg: rgba(0, 110, 44, 0.08);
+    --overlay: rgba(0, 0, 0, 0.30);
+    --overlay-heavy: rgba(245, 251, 247, 0.90);
+    --hub-bg-success: rgba(0, 110, 44, 0.10);
+    --hub-bg-warning: rgba(249, 115, 22, 0.08);
+    --hub-bg-violet: rgba(124, 58, 237, 0.07);
+    --hub-bg-cyan: rgba(6, 182, 212, 0.07);
+    --hub-bg-pink: rgba(236, 72, 153, 0.07);
+    --code-keyword: #006e2c;
+    --code-string: #16a34a;
+    --code-comment: #7aaa88;
+    --code-function: #2563eb;
+    --code-number: #d97706;
+}
+
+[data-theme="nhood"][data-mode="light"] .sidebar {
+    border-right-color: rgba(0, 110, 44, 0.12);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .demo-grid-4, .demo-grid-5 { grid-template-columns: repeat(2, 1fr); }
