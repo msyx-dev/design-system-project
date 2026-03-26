@@ -658,7 +658,11 @@ footer p { color: var(--text-dim); font-size: 0.78rem; }
     color: var(--text-dim);
 }
 .lazy-placeholder .spinner { opacity: 0.4; }
-.lazy-loaded { min-height: auto; }
+@keyframes lazyFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.lazy-loaded { min-height: auto; animation: lazyFadeIn 0.4s ease-out; }
 .lazy-error {
     display: flex;
     align-items: center;
