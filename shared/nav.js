@@ -63,23 +63,42 @@ const NAV_SECTIONS = [
 // Current scroll spy observer (so we can disconnect on page swap)
 let scrollSpyObserver = null;
 
+function buildHeader() {
+    var header = document.getElementById('site-header');
+    if (!header) return;
+    header.innerHTML = ''
+        + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
+        + '<a href="/site.html" class="header-logo">msyx.design</a>'
+        + '<span class="header-version">v2.3</span>'
+        + '<span class="header-spacer"></span>'
+        + '<div class="header-controls">'
+        +   '<div class="theme-switcher">'
+        +     '<label class="theme-switcher-label" for="theme-select">Theme</label>'
+        +     '<select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme">'
+        +       '<option value="msyx">MSYX</option>'
+        +       '<option value="acssi">ACSSI</option>'
+        +       '<option value="nhood">Nhood</option>'
+        +     '</select>'
+        +   '</div>'
+        +   '<div class="mode-toggle">'
+        +     '<span class="mode-toggle-label">Mode</span>'
+        +     '<button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button>'
+        +     '<button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button>'
+        +   '</div>'
+        + '</div>';
+    var burger = document.getElementById('header-burger');
+    var sidebar = document.getElementById('sidebar');
+    if (burger && sidebar) {
+        burger.addEventListener('click', function() { sidebar.classList.toggle('open'); });
+    }
+    if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
+    if (typeof initModeSwitcher === 'function') initModeSwitcher();
+}
+
 function buildSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
-    let html = '<div class="sidebar-logo"><h1>msyx.design</h1><span>Design System v2.0 — 38 composants</span></div>'
-          + '<div class="theme-switcher" style="padding:0 var(--space-lg);margin-bottom:var(--space-sm);">'
-          + '<label class="theme-switcher-label" for="theme-select">&#9775; Theme</label>'
-          + '<select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme">'
-          + '<option value="msyx">MSYX</option>'
-          + '<option value="acssi">ACSSI</option>'
-          + '<option value="nhood">Nhood</option>'
-          + '</select>'
-          + '</div>'
-          + '<div class="mode-toggle">'
-          + '<span class="mode-toggle-label">Mode</span>'
-          + '<button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button>'
-          + '<button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button>'
-          + '</div>';
+    let html = '';
     NAV_SECTIONS.forEach(section => {
         if (section.title) html += '<div class="sidebar-section">' + section.title + '</div>';
         section.links.forEach(link => {
@@ -90,8 +109,6 @@ function buildSidebar() {
     sidebar.innerHTML = html;
     updateActiveLink();
     bindSidebarClicks();
-    if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
-    if (typeof initModeSwitcher === 'function') initModeSwitcher();
 }
 
 function updateActiveLink(targetUrl) {
@@ -260,4 +277,4 @@ document.addEventListener('click', e => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => { buildSidebar(); initScrollSpy(); });
+document.addEventListener('DOMContentLoaded', () => { buildHeader(); buildSidebar(); initScrollSpy(); });
