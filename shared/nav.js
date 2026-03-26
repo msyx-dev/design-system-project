@@ -255,6 +255,7 @@ function initScrollSpy() {
                     if (href.endsWith('#' + id)) {
                         document.querySelectorAll('.sidebar-link').forEach(x => x.classList.remove('active'));
                         l.classList.add('active');
+                        l.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
                     }
                 });
                 if (isSiteHub()) {
