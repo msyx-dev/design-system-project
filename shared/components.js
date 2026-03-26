@@ -161,6 +161,11 @@ function showToast(message, type, duration) {
 }
 window.__showToast = showToast;
 
+var THEME_CONFIG = {
+    msyx:  { modes: ['dark', 'light'], defaultMode: 'dark' },
+    acssi: { modes: ['dark'],          defaultMode: 'dark' }
+};
+
 function initThemeSwitcher() {
     var select = document.getElementById('theme-select');
     if (!select) return;
@@ -176,9 +181,59 @@ function initThemeSwitcher() {
             document.documentElement.setAttribute('data-theme', theme);
         }
         localStorage.setItem('msyx-theme', theme);
+        // Check if current mode is compatible with new theme
+        var config = THEME_CONFIG[theme] || THEME_CONFIG.msyx;
+        var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
+        if (config.modes.indexOf(currentMode) === -1) {
+            applyMode(config.defaultMode);
+        }
+        updateModeButtons();
     });
 }
 window.__initThemeSwitcher = initThemeSwitcher;
+
+function applyMode(mode) {
+    if (mode === 'dark') {
+        document.documentElement.removeAttribute('data-mode');
+    } else {
+        document.documentElement.setAttribute('data-mode', mode);
+    }
+    localStorage.setItem('msyx-mode', mode);
+}
+
+function updateModeButtons() {
+    var darkBtn = document.getElementById('mode-dark');
+    var lightBtn = document.getElementById('mode-light');
+    if (!darkBtn || !lightBtn) return;
+    var currentTheme = document.documentElement.getAttribute('data-theme') || 'msyx';
+    var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
+    var config = THEME_CONFIG[currentTheme] || THEME_CONFIG.msyx;
+    var lightAvailable = config.modes.indexOf('light') !== -1;
+    lightBtn.disabled = !lightAvailable;
+    lightBtn.title = lightAvailable ? 'Light' : 'Dark only';
+    darkBtn.classList.toggle('active', currentMode === 'dark');
+    lightBtn.classList.toggle('active', currentMode === 'light');
+}
+
+function initModeSwitcher() {
+    var darkBtn = document.getElementById('mode-dark');
+    var lightBtn = document.getElementById('mode-light');
+    if (!darkBtn || !lightBtn) return;
+    updateModeButtons();
+    if (darkBtn.dataset.bound) return;
+    darkBtn.dataset.bound = '1';
+    lightBtn.dataset.bound = '1';
+    darkBtn.addEventListener('click', function() {
+        applyMode('dark');
+        updateModeButtons();
+    });
+    lightBtn.addEventListener('click', function() {
+        if (lightBtn.disabled) return;
+        applyMode('light');
+        updateModeButtons();
+    });
+}
+window.__initModeSwitcher = initModeSwitcher;
 
 // Expose for SPA re-init
 window.__initComponents = initComponents;

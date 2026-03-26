@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/shared/styles.css">
-    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);}());</script>
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
 </head>
 <body>
     <aside class="sidebar" id="sidebar"></aside>
@@ -135,13 +135,25 @@
 </section>
 
 <section id="theming">
-    <div class="section-header"><span class="overline">Fondation</span><h2>Theming</h2><p>Infrastructure de themes via <span class="code-inline">data-theme</span> sur la balise <span class="code-inline">&lt;html&gt;</span>. Chaque theme surcharge les variables de <span class="code-inline">:root</span>.</p></div>
+    <div class="section-header"><span class="overline">Fondation</span><h2>Theming</h2><p>Infrastructure 2 axes : <span class="code-inline">data-theme</span> pour la palette (MSYX, ACSSI…) et <span class="code-inline">data-mode</span> pour la luminosite (dark / light). Les deux attributs se posent sur la balise <span class="code-inline">&lt;html&gt;</span>.</p></div>
+
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
-            <span class="demo-label">Mecanisme</span>
-            <p class="typo-small" style="margin-bottom:1rem;">Ajouter <span class="code-inline">data-theme="nom"</span> sur <span class="code-inline">&lt;html&gt;</span> pour activer un theme. Les variables CSS de <span class="code-inline">:root</span> sont surchargees par le selecteur <span class="code-inline">[data-theme="nom"]</span>.</p>
-            <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* Activer un theme */</span><br><span class="kw">&lt;html</span> <span class="fn">data-theme</span>=<span class="str">"light"</span><span class="kw">&gt;</span><br><br><span class="cm">/* Definir un theme dans CSS */</span><br><span class="kw">[data-theme="light"]</span> {<br>&nbsp;&nbsp;<span class="fn">--primary</span>: <span class="str">#ffffff</span>;<br>&nbsp;&nbsp;<span class="fn">--text</span>: <span class="str">#0a0f1e</span>;<br>&nbsp;&nbsp;<span class="fn">--surface</span>: <span class="str">rgba(240,242,247,0.8)</span>;<br>}</div>
+            <span class="demo-label">Architecture 2 axes</span>
+            <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* Axe 1 — palette */</span><br><span class="kw">&lt;html</span> <span class="fn">data-theme</span>=<span class="str">"acssi"</span><span class="kw">&gt;</span><br><br><span class="cm">/* Axe 2 — luminosite */</span><br><span class="kw">&lt;html</span> <span class="fn">data-mode</span>=<span class="str">"light"</span><span class="kw">&gt;</span><br><br><span class="cm">/* Combinaison */</span><br><span class="kw">&lt;html</span> <span class="fn">data-theme</span>=<span class="str">"msyx"</span> <span class="fn">data-mode</span>=<span class="str">"light"</span><span class="kw">&gt;</span></div>
         </div>
+        <div class="demo-box">
+            <span class="demo-label">Cascade 4 couches</span>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--accent-light);">1</span><span class="typo-small"><span class="code-inline">:root</span> — valeurs dark MSYX par defaut</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--violet);">2</span><span class="typo-small"><span class="code-inline">[data-theme]</span> — surcharge palette</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--cyan);">3</span><span class="typo-small"><span class="code-inline">[data-mode="light"]</span> — surcharge luminosite</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--pink);">4</span><span class="typo-small"><span class="code-inline">[data-theme][data-mode]</span> — combinaison fine</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
         <div class="demo-box">
             <span class="demo-label">Variables themables</span>
             <div style="display:flex;flex-direction:column;gap:0.4rem;">
@@ -150,13 +162,44 @@
                 <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--violet);flex-shrink:0;"></div><span class="typo-small">Accents — <span class="code-inline">--accent</span>, <span class="code-inline">--violet</span>, <span class="code-inline">--cyan</span>, <span class="code-inline">--pink</span></span></div>
                 <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;"></div><span class="typo-small">Semantique — <span class="code-inline">--success</span>, <span class="code-inline">--warning</span>, <span class="code-inline">--danger</span>, <span class="code-inline">--info</span></span></div>
                 <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--chart-1);flex-shrink:0;"></div><span class="typo-small">Charts — <span class="code-inline">--chart-1</span> a <span class="code-inline">--chart-5</span></span></div>
-                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;"><div style="width:8px;height:8px;border-radius:50%;background:var(--code-keyword);flex-shrink:0;"></div><span class="typo-small">Syntax — <span class="code-inline">--code-keyword</span>, <span class="code-inline">--code-string</span>, etc.</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;border-bottom:1px solid var(--border);"><div style="width:8px;height:8px;border-radius:50%;background:var(--code-keyword);flex-shrink:0;"></div><span class="typo-small">Syntax — <span class="code-inline">--code-keyword</span>, <span class="code-inline">--code-string</span>, etc.</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;"><div style="width:8px;height:8px;border-radius:50%;background:var(--sidebar-bg);border:1px solid var(--border);flex-shrink:0;"></div><span class="typo-small">Sidebar — <span class="code-inline">--sidebar-bg</span>, <span class="code-inline">--sidebar-link-hover-bg</span>, <span class="code-inline">--sidebar-link-active-bg</span></span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Modes disponibles par theme</span>
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                <div style="padding:0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small" style="font-weight:600;">MSYX</span><span class="badge badge-success" style="font-size:0.65rem;">dark + light</span></div>
+                    <span class="typo-xs">Palette bleu profond — les deux modes disponibles via le toggle lune/soleil.</span>
+                </div>
+                <div style="padding:0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small" style="font-weight:600;">ACSSI</span><span class="badge badge-neutral" style="font-size:0.65rem;">dark only</span></div>
+                    <span class="typo-xs">Palette bleu marine/or — le bouton light est grise (dark-only). Extensible en v2.</span>
+                </div>
+                <div style="padding:0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);opacity:0.6;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small" style="font-weight:600;">Futur theme</span><span class="badge badge-primary" style="font-size:0.65rem;">dark + light</span></div>
+                    <span class="typo-xs">Ajouter dans THEME_CONFIG : <span class="code-inline">{ modes: ['dark','light'], defaultMode: 'dark' }</span></span>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Persistance — 2 cles localStorage</span>
+            <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* Cle 1 : palette */</span><br><span class="fn">localStorage</span>.<span class="kw">setItem</span>(<span class="str">'msyx-theme'</span>, <span class="str">'acssi'</span>);<br><br><span class="cm">/* Cle 2 : mode */</span><br><span class="fn">localStorage</span>.<span class="kw">setItem</span>(<span class="str">'msyx-mode'</span>, <span class="str">'light'</span>);<br><br><span class="cm">/* Valeurs par defaut (absentes) */</span><br><span class="cm">/* theme = 'msyx' | mode = 'dark' */</span></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Anti-FOUC — script inline &lt;head&gt;</span>
+            <p class="typo-small" style="margin-bottom:0.75rem;">Charge les deux attributs avant le premier rendu pour eviter le flash de contenu non style.</p>
+            <div class="code-block" style="font-size:0.72rem;line-height:1.7;word-break:break-all;"><span class="kw">&lt;script&gt;</span>(function(){<br>&nbsp;&nbsp;<span class="kw">var</span> <span class="fn">t</span>=<span class="fn">localStorage</span>.<span class="kw">getItem</span>(<span class="str">'msyx-theme'</span>);<br>&nbsp;&nbsp;<span class="kw">if</span>(t&amp;&amp;t!==<span class="str">'msyx'</span>)<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">document.documentElement</span>.<span class="kw">setAttribute</span>(<span class="str">'data-theme'</span>,t);<br>&nbsp;&nbsp;<span class="kw">var</span> <span class="fn">m</span>=<span class="fn">localStorage</span>.<span class="kw">getItem</span>(<span class="str">'msyx-mode'</span>);<br>&nbsp;&nbsp;<span class="kw">if</span>(m&amp;&amp;m!==<span class="str">'dark'</span>)<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">document.documentElement</span>.<span class="kw">setAttribute</span>(<span class="str">'data-mode'</span>,m);<br>}());<span class="kw">&lt;/script&gt;</span></div>
+        </div>
+    </div>
+
     <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
         <div class="demo-box" style="grid-column: 1 / -1;">
-            <span class="demo-label">Theme ACSSI</span>
+            <span class="demo-label">Theme ACSSI — palette dark</span>
             <p class="typo-body" style="margin-bottom:1rem;">Theme corporate inspire de <strong>acssi.fr</strong> — bleu marine, or, blanc.</p>
             <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
                 <div style="width:60px;height:60px;border-radius:12px;background:#00345f;border:1px solid rgba(224,205,30,0.3);"></div>
@@ -165,12 +208,6 @@
                 <div style="width:60px;height:60px;border-radius:12px;background:#ffffff;border:1px solid var(--border);"></div>
             </div>
             <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* Activer le theme ACSSI */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'acssi'</span>;<br><br><span class="cm">/* Revenir au theme MSYX */</span><br><span class="kw">delete</span> <span class="fn">document.documentElement.dataset.theme</span>;</div>
-        </div>
-    </div>
-    <div class="subsection" style="margin-top:1.5rem;">
-        <span class="demo-label">Exemple de theme complet</span>
-        <div class="demo-box">
-            <div class="code-block" style="font-size:0.75rem;line-height:1.8;"><span class="cm">/* shared/styles.css */</span><br><br><span class="kw">[data-theme="light"]</span> {<br>&nbsp;&nbsp;<span class="cm">/* Surfaces */</span><br>&nbsp;&nbsp;<span class="fn">--primary</span>: <span class="str">#f8fafc</span>;<br>&nbsp;&nbsp;<span class="fn">--primary-light</span>: <span class="str">#f1f5f9</span>;<br>&nbsp;&nbsp;<span class="fn">--surface</span>: <span class="str">rgba(255,255,255,0.8)</span>;<br>&nbsp;&nbsp;<span class="fn">--surface-solid</span>: <span class="str">#ffffff</span>;<br>&nbsp;&nbsp;<span class="fn">--surface-light</span>: <span class="str">#e2e8f0</span>;<br><br>&nbsp;&nbsp;<span class="cm">/* Texte */</span><br>&nbsp;&nbsp;<span class="fn">--text</span>: <span class="str">#0f172a</span>;<br>&nbsp;&nbsp;<span class="fn">--text-muted</span>: <span class="str">#475569</span>;<br>&nbsp;&nbsp;<span class="fn">--text-dim</span>: <span class="str">#64748b</span>;<br><br>&nbsp;&nbsp;<span class="cm">/* Bordures */</span><br>&nbsp;&nbsp;<span class="fn">--border</span>: <span class="str">rgba(15,23,42,0.08)</span>;<br>&nbsp;&nbsp;<span class="fn">--border-hover</span>: <span class="str">rgba(15,23,42,0.25)</span>;<br>}</div>
         </div>
     </div>
 </section>
