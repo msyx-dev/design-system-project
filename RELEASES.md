@@ -1,5 +1,21 @@
 # Releases
 
+## 2.4.0 — 2026-03-26 — Sprint 4
+
+### Added
+- Header fixe 56px avec logo, selecteur theme, toggle dark/light (toujours visible)
+- Navigation continue : lazy-load des 8 categories au scroll (IntersectionObserver)
+- Bouton "Tout charger" pour Ctrl+F global sur tous les composants
+- Deep-links sub-section : site.html#colors, site.html#buttons, site.html#kanban etc.
+- Fade-in animation sur les sections lazy-loadees
+
+### Changed
+- Sidebar simplifiee (navigation uniquement, plus de logo/theme)
+- Burger mobile integre dans le header
+- scroll-margin-top sur section[id] pour compenser le header fixe
+- Layout : header au-dessus de sidebar + main
+- Hub-cards scrollent vers la section lazy au lieu de naviguer
+
 ## 2.3.0 — 2026-03-26 — Sprint 3
 
 ### Added
