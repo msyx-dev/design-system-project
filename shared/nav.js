@@ -347,12 +347,38 @@ function initLazyLoader() {
 function handleInitialHash() {
     var hash = location.hash.replace('#', '');
     if (!hash) return;
+
+    // Case 1: hash is a category slug (fondation, composants...)
     if (LAZY_SLUGS[hash]) {
         var container = document.getElementById('lazy-' + hash);
         if (container) {
             loadSection(container).then(function() {
                 setTimeout(function() { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
             });
+        }
+        return;
+    }
+
+    // Case 2: hash is a sub-section ID (colors, buttons, kanban...)
+    // Find which page contains this section by checking sidebar links
+    var sidebarLinks = document.querySelectorAll('.sidebar-link[data-href]');
+    for (var i = 0; i < sidebarLinks.length; i++) {
+        var href = sidebarLinks[i].dataset.href || '';
+        if (href.endsWith('#' + hash)) {
+            var linkPath = href.split('#')[0];
+            var lazyId = PAGE_TO_LAZY[linkPath];
+            if (lazyId) {
+                var container = document.getElementById(lazyId);
+                if (container) {
+                    loadSection(container).then(function() {
+                        setTimeout(function() {
+                            var target = document.getElementById(hash);
+                            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 150);
+                    });
+                }
+                return;
+            }
         }
     }
 }
