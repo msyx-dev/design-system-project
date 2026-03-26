@@ -159,6 +159,26 @@ function bindSidebarClicks() {
             const currentPath = location.pathname;
             const isSamePage = currentPath.endsWith(linkPath);
 
+            // On site.html hub: intercept clicks to scroll to lazy sections
+            if (isSiteHub() && !isSamePage && PAGE_TO_LAZY[linkPath]) {
+                var lazyId = PAGE_TO_LAZY[linkPath];
+                var container = document.getElementById(lazyId);
+                if (container) {
+                    var scrollTarget = linkHash || null;
+                    loadSection(container).then(function() {
+                        setTimeout(function() {
+                            var target = scrollTarget ? document.getElementById(scrollTarget) : container;
+                            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100);
+                    });
+                    var slug = lazyId.replace('lazy-', '');
+                    history.replaceState(null, '', '#' + (linkHash || slug));
+                    updateActiveLink();
+                    sidebar.classList.remove('open');
+                    return;
+                }
+            }
+
             if (isSamePage && linkHash) {
                 // Same page: smooth scroll
                 const target = document.getElementById(linkHash);
@@ -237,10 +257,104 @@ function initScrollSpy() {
                         l.classList.add('active');
                     }
                 });
+                if (isSiteHub()) {
+                    history.replaceState(null, '', '#' + id);
+                }
             }
         });
     }, { rootMargin: '-20% 0px -70% 0px' });
     sections.forEach(s => scrollSpyObserver.observe(s));
+}
+
+// ===== LAZY LOADER (site.html only) =====
+
+function isSiteHub() {
+    return location.pathname === '/' || location.pathname === '/site.html' || location.pathname.endsWith('/site.html');
+}
+
+var loadedSections = new Set();
+var lazyObserver = null;
+
+var PAGE_TO_LAZY = {
+    '/pages/fondation.html': 'lazy-fondation',
+    '/pages/composants.html': 'lazy-composants',
+    '/pages/formulaires.html': 'lazy-formulaires',
+    '/pages/navigation.html': 'lazy-navigation',
+    '/pages/data.html': 'lazy-data',
+    '/pages/feedback.html': 'lazy-feedback',
+    '/pages/divers.html': 'lazy-divers',
+    '/pages/templates.html': 'lazy-templates'
+};
+
+var LAZY_SLUGS = {};
+Object.keys(PAGE_TO_LAZY).forEach(function(path) {
+    LAZY_SLUGS[PAGE_TO_LAZY[path].replace('lazy-', '')] = path;
+});
+
+async function loadSection(container) {
+    var page = container.dataset.page;
+    if (!page || loadedSections.has(page)) return;
+    loadedSections.add(page);
+    try {
+        var resp = await fetch(page);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var html = await resp.text();
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var mainContent = doc.querySelector('.main');
+        if (!mainContent) throw new Error('No .main found');
+        container.innerHTML = mainContent.innerHTML;
+        container.classList.add('lazy-loaded');
+        container.classList.remove('lazy-section');
+        if (typeof window.__initComponents === 'function') window.__initComponents();
+        if (scrollSpyObserver) { scrollSpyObserver.disconnect(); scrollSpyObserver = null; }
+        initScrollSpy();
+    } catch (err) {
+        container.innerHTML = '<div class="lazy-error"><p>Erreur de chargement — <a href="' + page + '">ouvrir la page</a></p></div>';
+        container.classList.add('lazy-loaded');
+        loadedSections.delete(page);
+    }
+}
+
+function loadAllSections() {
+    document.querySelectorAll('.lazy-section[data-page]').forEach(function(c) { loadSection(c); });
+}
+
+function initLazyLoader() {
+    var sections = document.querySelectorAll('.lazy-section[data-page]');
+    if (!sections.length) return;
+    lazyObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                loadSection(entry.target);
+                lazyObserver.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: '200px' });
+    sections.forEach(function(s) { lazyObserver.observe(s); });
+
+    var loadAllBtn = document.getElementById('load-all-sections');
+    if (loadAllBtn) {
+        loadAllBtn.addEventListener('click', function() {
+            loadAllSections();
+            loadAllBtn.disabled = true;
+            loadAllBtn.textContent = 'Chargement...';
+        });
+    }
+    handleInitialHash();
+}
+
+function handleInitialHash() {
+    var hash = location.hash.replace('#', '');
+    if (!hash) return;
+    if (LAZY_SLUGS[hash]) {
+        var container = document.getElementById('lazy-' + hash);
+        if (container) {
+            loadSection(container).then(function() {
+                setTimeout(function() { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+            });
+        }
+    }
 }
 
 // Handle back/forward browser buttons
@@ -273,8 +387,25 @@ document.addEventListener('click', e => {
     const card = e.target.closest('.hub-card');
     if (card && card.href) {
         e.preventDefault();
-        navigateTo(card.getAttribute('href'));
+        var href = card.getAttribute('href');
+        if (isSiteHub() && PAGE_TO_LAZY[href]) {
+            var lazyId = PAGE_TO_LAZY[href];
+            var container = document.getElementById(lazyId);
+            if (container) {
+                loadSection(container).then(function() {
+                    setTimeout(function() { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+                });
+                history.replaceState(null, '', '#' + lazyId.replace('lazy-', ''));
+                return;
+            }
+        }
+        navigateTo(href);
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => { buildHeader(); buildSidebar(); initScrollSpy(); });
+document.addEventListener('DOMContentLoaded', function() {
+    buildHeader();
+    buildSidebar();
+    initScrollSpy();
+    if (isSiteHub()) initLazyLoader();
+});
