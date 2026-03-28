@@ -111,6 +111,105 @@
     </div>
 </section>
 
+<!-- COPY BUTTON -->
+<section id="copy-button">
+    <div class="section-header"><span class="overline">Divers</span><h2>Copy Button</h2><p>Bouton copier dans le presse-papiers avec feedback visuel et tooltip de confirmation.</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Standalone</span>
+            <div class="demo-row" style="gap:1rem;flex-wrap:wrap;align-items:center;">
+                <!-- Bouton icon seul -->
+                <div class="tooltip-wrap">
+                    <button class="copy-btn copy-btn--icon" aria-label="Copier"
+                        data-copy="https://design-system.msyx.fr">
+                        <span class="copy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </span>
+                        <span class="copy-tooltip">Copie !</span>
+                    </button>
+                    <span class="tooltip">Copier l'URL</span>
+                </div>
+                <!-- Bouton avec label -->
+                <button class="copy-btn" aria-label="Copier la commande"
+                    data-copy="pnpm install @msyx/design-system">
+                    <span class="copy-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </span>
+                    Copier
+                    <span class="copy-tooltip">Copie !</span>
+                </button>
+                <!-- Bouton avec texte complet -->
+                <button class="copy-btn" aria-label="Copier le token"
+                    data-copy="var(--accent)">
+                    <span class="copy-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </span>
+                    var(--accent)
+                    <span class="copy-tooltip">Copie !</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Inline dans code block</span>
+            <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:0.8rem;">Hover le bloc pour faire apparaitre le bouton. Le bouton est injecte automatiquement par JS sur tous les <span class="code-inline">.code-block</span>.</p>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="cm"># Lancer le design system</span><br><span class="fn">caddy</span> run --config <span class="str">/etc/caddy/Caddyfile</span><br><span class="fn">git</span> push origin main</div>
+                <button class="copy-btn copy-btn--inline" aria-label="Copier le code" title="Copier"
+                    data-copy="# Lancer le design system&#10;caddy run --config /etc/caddy/Caddyfile&#10;git push origin main">
+                    <span class="copy-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </span>
+                    <span class="copy-tooltip">Copie !</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Avec tooltip de confirmation</span>
+            <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:0.8rem;">Le tooltip "Copie !" apparait automatiquement pendant 2 secondes apres la copie.</p>
+            <div class="demo-row" style="gap:1.5rem;align-items:center;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span class="code-inline">--accent: #3b82f6</span>
+                    <button class="copy-btn copy-btn--icon" aria-label="Copier le token"
+                        data-copy="--accent: #3b82f6">
+                        <span class="copy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </span>
+                        <span class="copy-tooltip">Copie !</span>
+                    </button>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span class="code-inline">border-radius: 16px</span>
+                    <button class="copy-btn copy-btn--icon" aria-label="Copier le token"
+                        data-copy="border-radius: 16px">
+                        <span class="copy-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </span>
+                        <span class="copy-tooltip">Copie !</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Usage HTML</span>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="cm">&lt;!-- Bouton standalone --&gt;</span><br><span class="kw">&lt;button</span> <span class="fn">class</span>=<span class="str">"copy-btn"</span><br>&nbsp;&nbsp;<span class="fn">data-copy</span>=<span class="str">"texte a copier"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;span</span> <span class="fn">class</span>=<span class="str">"copy-icon"</span><span class="kw">&gt;</span>...<span class="kw">&lt;/span&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;span</span> <span class="fn">class</span>=<span class="str">"copy-tooltip"</span><span class="kw">&gt;</span>Copie !<span class="kw">&lt;/span&gt;</span><br><span class="kw">&lt;/button&gt;</span></div>
+                <button class="copy-btn copy-btn--inline" aria-label="Copier le code" title="Copier"
+                    data-copy='<button class="copy-btn" data-copy="texte a copier"><span class="copy-icon">...</span><span class="copy-tooltip">Copie !</span></button>'>
+                    <span class="copy-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </span>
+                    <span class="copy-tooltip">Copie !</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- COMMAND PALETTE -->
 <section id="command-palette">
     <div class="section-header"><span class="overline">Divers</span><h2>Command Palette</h2><p>Recherche rapide et navigation par raccourci <kbd>&#8984;</kbd><kbd>K</kbd>.</p></div>

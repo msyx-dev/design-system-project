@@ -135,6 +135,9 @@ function initComponents() {
 
     // Modals
     initModals();
+
+    // Copy Buttons
+    initCopyButtons();
 }
 
 // Sliders
@@ -259,6 +262,62 @@ window.__openModal = function(config) {
     dialog.showModal();
     return dialog;
 };
+
+// Copy Buttons
+var SVG_CLIPBOARD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+var SVG_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+function doCopy(btn, text) {
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(text).then(function() {
+        btn.classList.add('copy-btn--success');
+        btn.querySelector('.copy-icon').innerHTML = SVG_CHECK;
+        setTimeout(function() {
+            btn.classList.remove('copy-btn--success');
+            btn.querySelector('.copy-icon').innerHTML = SVG_CLIPBOARD;
+        }, 2000);
+    });
+}
+
+function initCopyButtons() {
+    // Boutons copy explicites [data-copy]
+    document.querySelectorAll('[data-copy]').forEach(function(btn) {
+        if (btn.dataset.copyBound) return;
+        btn.dataset.copyBound = 'true';
+        btn.addEventListener('click', function() {
+            doCopy(btn, btn.dataset.copy);
+        });
+    });
+
+    // Injection automatique dans les .code-block non encore wrappés
+    // (ignore ceux déjà dans un .code-block-wrap — bouton statique HTML présent)
+    document.querySelectorAll('.code-block').forEach(function(block) {
+        if (block.dataset.copyBound) return;
+        block.dataset.copyBound = 'true';
+        // Si déjà dans un code-block-wrap, le bouton inline est déjà dans le HTML
+        var parent = block.parentNode;
+        if (parent.classList.contains('code-block-wrap')) return;
+        // Extraire le texte brut du code block
+        var text = block.innerText || block.textContent || '';
+        // Wrapper dans .code-block-wrap
+        var wrap = document.createElement('div');
+        wrap.className = 'code-block-wrap';
+        parent.insertBefore(wrap, block);
+        wrap.appendChild(block);
+        // Créer le bouton inline
+        var inlineBtn = document.createElement('button');
+        inlineBtn.className = 'copy-btn copy-btn--inline';
+        inlineBtn.setAttribute('aria-label', 'Copier le code');
+        inlineBtn.setAttribute('title', 'Copier');
+        inlineBtn.innerHTML = '<span class="copy-icon">' + SVG_CLIPBOARD + '</span><span class="copy-tooltip">Copie !</span>';
+        wrap.appendChild(inlineBtn);
+        inlineBtn.dataset.copyBound = 'true';
+        inlineBtn.addEventListener('click', function() {
+            doCopy(inlineBtn, text);
+        });
+    });
+}
+window.__initCopyButtons = initCopyButtons;
 
 var THEME_CONFIG = {
     msyx:  { modes: ['dark', 'light'], defaultMode: 'dark' },
