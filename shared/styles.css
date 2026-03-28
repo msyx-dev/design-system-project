@@ -525,10 +525,11 @@ dialog.modal-dialog .modal-actions {
 .copy-btn.copy-btn--success .copy-tooltip { opacity: 1; }
 
 /* ===== DIVIDER ===== */
-.divider { height: 1px; background: var(--border); margin: var(--space-xl) 0; }
-.divider-gradient { height: 2px; background: var(--gradient-1); margin: var(--space-xl) 0; border-radius: 2px; }
-.divider-label { display: flex; align-items: center; gap: var(--space-md); color: var(--text-dim); font-size: 0.78rem; }
+.divider { height: 1px; background: var(--border); margin: var(--space-xl) 0; border: none; }
+.divider-gradient { height: 2px; background: var(--gradient-1); margin: var(--space-xl) 0; border-radius: 2px; border: none; }
+.divider-label { display: flex; align-items: center; gap: var(--space-md); color: var(--text-dim); font-size: 0.78rem; margin: var(--space-xl) 0; }
 .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.divider-vertical { display: inline-block; width: 1px; height: 1.5em; background: var(--border); margin: 0 var(--space-sm); vertical-align: middle; align-self: stretch; flex-shrink: 0; }
 
 /* ===== BREADCRUMB ===== */
 .breadcrumb { display: flex; align-items: center; gap: var(--space-sm); font-size: 0.82rem; }

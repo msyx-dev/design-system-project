@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Composants — msyx.design</title>
-    <meta name="description" content="Boutons, cards, badges, avatars et composants UI du design system msyx.fr.">
+    <meta name="description" content="Boutons, cards, badges, chips, dividers, avatars et composants UI du design system msyx.fr.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -127,6 +127,49 @@
                 <input class="chip-input-field" type="text" placeholder="Ajouter un tag..." aria-label="Ajouter un tag" maxlength="32">
             </div>
             <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Entree ou virgule pour ajouter &mdash; Backspace pour supprimer le dernier</p>
+        </div>
+    </div>
+</section>
+
+<section id="dividers">
+    <div class="section-header"><span class="overline">Composants</span><h2>Divider / Separator</h2><p>Ligne de separation stylee entre sections de contenu. 4 variantes : simple, label, vertical et gradient.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Divider simple</span>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.5rem;">Contenu au-dessus</p>
+            <hr class="divider">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0 0;">Contenu en-dessous</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Divider avec label texte</span>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.5rem;">Section precedente</p>
+            <div class="divider-label">ou continuer avec</div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0 0;">Section suivante</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Divider avec icone</span>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.5rem;">Etape precedente</p>
+            <div class="divider-label">&#9679;</div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0 0;">Etape suivante</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Divider gradient</span>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.5rem;">Avant</p>
+            <div class="divider-gradient"></div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0 0;">Apres</p>
+        </div>
+    </div>
+    <div class="subsection" style="margin-top:var(--space-xl);">
+        <span class="demo-label">Divider vertical (layouts flex)</span>
+        <div class="demo-box">
+            <div style="display:flex;align-items:center;gap:var(--space-sm);">
+                <span style="font-size:0.85rem;color:var(--text);">Accueil</span>
+                <span class="divider-vertical"></span>
+                <span style="font-size:0.85rem;color:var(--text);">Projets</span>
+                <span class="divider-vertical"></span>
+                <span style="font-size:0.85rem;color:var(--text);">Contact</span>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-dim);margin:var(--space-md) 0 0;">Utiliser dans un conteneur flex avec <code class="code-inline">align-items: center</code></p>
         </div>
     </div>
 </section>
