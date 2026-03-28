@@ -129,6 +129,41 @@ function initComponents() {
         const si = menu.querySelector('.dropdown-search input');
         if (si) si.addEventListener('input', () => { const q = si.value.toLowerCase(); menu.querySelectorAll('.dropdown-option').forEach(o => { o.style.display = o.textContent.toLowerCase().includes(q) ? '' : 'none'; }); });
     });
+
+    // Sliders
+    initSliders();
+}
+
+// Sliders
+function initSliders() {
+    document.querySelectorAll('.slider-group').forEach(group => {
+        if (group.dataset.bound) return;
+        group.dataset.bound = '1';
+        const track = group.querySelector('.slider-track');
+        const numInput = group.querySelector('.slider-value');
+        const display = group.querySelector('.slider-value-display');
+        if (!track) return;
+
+        function updateFill() {
+            const min = +track.min || 0, max = +track.max || 100, val = +track.value;
+            const pct = ((val - min) / (max - min)) * 100;
+            track.style.setProperty('--slider-fill', pct + '%');
+        }
+
+        track.addEventListener('input', () => {
+            updateFill();
+            if (numInput && numInput.value !== track.value) numInput.value = track.value;
+            if (display) display.textContent = track.value;
+        });
+        if (numInput) {
+            numInput.addEventListener('input', () => {
+                let v = Math.max(+track.min || 0, Math.min(+track.max || 100, +numInput.value || 0));
+                if (+track.value !== v) { track.value = v; }
+                updateFill();
+            });
+        }
+        updateFill(); // init fill on load
+    });
 }
 
 // Toast system
