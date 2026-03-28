@@ -132,6 +132,9 @@ function initComponents() {
 
     // Sliders
     initSliders();
+
+    // Modals
+    initModals();
 }
 
 // Sliders
@@ -195,6 +198,67 @@ function showToast(message, type, duration) {
     setTimeout(dismiss, duration);
 }
 window.__showToast = showToast;
+
+// Modal Dialog
+function initModals() {
+    document.querySelectorAll('[data-modal-trigger]').forEach(btn => {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', () => {
+            var dialogId = btn.dataset.modalTrigger;
+            var dialog = document.getElementById(dialogId);
+            if (dialog) dialog.showModal();
+        });
+    });
+
+    document.querySelectorAll('dialog.modal-dialog').forEach(dialog => {
+        if (dialog.dataset.bound) return;
+        dialog.dataset.bound = '1';
+
+        // Close on backdrop click
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) dialog.close();
+        });
+
+        // Close buttons
+        dialog.querySelectorAll('[data-modal-close]').forEach(btn => {
+            btn.addEventListener('click', () => dialog.close());
+        });
+    });
+}
+
+// API programmatique
+window.__openModal = function(config) {
+    var title = config.title, body = config.body, variant = config.variant, actions = config.actions;
+    var dialog = document.getElementById('ds-dynamic-modal');
+    if (!dialog) {
+        dialog = document.createElement('dialog');
+        dialog.id = 'ds-dynamic-modal';
+        dialog.className = 'modal-dialog';
+        document.body.appendChild(dialog);
+        dialog.addEventListener('click', function(e) { if (e.target === dialog) dialog.close(); });
+    }
+
+    var actionsHtml = '';
+    if (actions) {
+        actionsHtml = '<div class="modal-actions">' + actions.map(function(a) {
+            return '<button class="btn btn-' + (a.style || 'secondary') + '" data-modal-close' + (a.onClick ? ' onclick="' + a.onClick + '"' : '') + '>' + a.label + '</button>';
+        }).join('') + '</div>';
+    } else if (variant === 'confirm') {
+        actionsHtml = '<div class="modal-actions"><button class="btn btn-secondary" data-modal-close>Annuler</button><button class="btn btn-primary" data-modal-close>Confirmer</button></div>';
+    } else {
+        actionsHtml = '<div class="modal-actions"><button class="btn btn-primary" data-modal-close>Fermer</button></div>';
+    }
+
+    dialog.innerHTML = '<div class="modal-header"><h3>' + (title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + (body || '') + '</div>' + actionsHtml;
+
+    dialog.querySelectorAll('[data-modal-close]').forEach(function(btn) {
+        btn.addEventListener('click', function() { dialog.close(); });
+    });
+
+    dialog.showModal();
+    return dialog;
+};
 
 var THEME_CONFIG = {
     msyx:  { modes: ['dark', 'light'], defaultMode: 'dark' },
