@@ -285,6 +285,116 @@
     </div>
 </section>
 
+<!-- BOTTOM SHEET -->
+<section id="bottom-sheet">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Bottom Sheet</h2><p>Panneau slide-up depuis le bas, avec handle de drag et fermeture par swipe ou overlay. Mode demo conteneurise pour simuler le rendu mobile.</p></div>
+
+    <div class="demo-grid demo-grid-3">
+
+        <!-- Demo 1 : simple -->
+        <div class="demo-box">
+            <span class="demo-label">Simple</span>
+            <div class="bottom-sheet-demo-wrap" id="bs-demo-1">
+                <div class="bs-mock-screen">
+                    <p class="typo-small" style="margin-bottom:1rem;color:var(--text-muted);">Contenu de la page</p>
+                    <button class="btn btn-primary btn-sm bottom-sheet-trigger" data-target="bs-panel-1">Ouvrir le panneau</button>
+                </div>
+                <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-1"></div>
+                <div class="bottom-sheet" id="bs-panel-1" role="dialog" aria-modal="true" aria-label="Panneau d'information">
+                    <div class="bottom-sheet-handle-wrap" data-bs-handle="bs-panel-1">
+                        <div class="bottom-sheet-handle"></div>
+                    </div>
+                    <div class="bottom-sheet-header">
+                        <h3>Information</h3>
+                        <button class="bottom-sheet-close" data-bs-close="bs-panel-1" aria-label="Fermer">&times;</button>
+                    </div>
+                    <div class="bottom-sheet-content">
+                        <p style="color:var(--text-muted);line-height:1.7;">Ce bottom sheet presente une information simple. Il peut etre ferme par swipe vers le bas, clic sur le fond ou bouton de fermeture.</p>
+                        <div style="margin-top:var(--space-lg);padding:var(--space-md);background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);">
+                            <p class="typo-small" style="color:var(--accent-light);">&#9432; Tip : swipez vers le bas pour fermer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 2 : avec liste -->
+        <div class="demo-box">
+            <span class="demo-label">Avec liste</span>
+            <div class="bottom-sheet-demo-wrap" id="bs-demo-2">
+                <div class="bs-mock-screen">
+                    <p class="typo-small" style="margin-bottom:1rem;color:var(--text-muted);">Choisir une action</p>
+                    <button class="btn btn-secondary btn-sm bottom-sheet-trigger" data-target="bs-panel-2">Voir les options</button>
+                </div>
+                <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-2"></div>
+                <div class="bottom-sheet" id="bs-panel-2" role="dialog" aria-modal="true" aria-label="Menu d'actions">
+                    <div class="bottom-sheet-handle-wrap" data-bs-handle="bs-panel-2">
+                        <div class="bottom-sheet-handle"></div>
+                    </div>
+                    <div class="bottom-sheet-header">
+                        <h3>Actions du projet</h3>
+                        <button class="bottom-sheet-close" data-bs-close="bs-panel-2" aria-label="Fermer">&times;</button>
+                    </div>
+                    <div class="bottom-sheet-content" style="padding:0;">
+                        <div class="list">
+                            <div class="list-item bs-list-action"><span style="color:var(--accent);font-size:1rem;">&#128203;</span><div class="list-item-content"><div class="list-item-title">Dupliquer</div><div class="list-item-desc">Creer une copie du projet</div></div></div>
+                            <div class="list-item bs-list-action"><span style="color:var(--success);font-size:1rem;">&#10003;</span><div class="list-item-content"><div class="list-item-title">Archiver</div><div class="list-item-desc">Deplacer en archive</div></div></div>
+                            <div class="list-item bs-list-action"><span style="color:var(--warning);font-size:1rem;">&#9993;</span><div class="list-item-content"><div class="list-item-title">Partager</div><div class="list-item-desc">Inviter des collaborateurs</div></div></div>
+                            <div class="list-item bs-list-action"><span style="color:var(--danger);font-size:1rem;">&#10007;</span><div class="list-item-content"><div class="list-item-title">Supprimer</div><div class="list-item-desc">Action irreversible</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 3 : avec formulaire -->
+        <div class="demo-box">
+            <span class="demo-label">Avec formulaire</span>
+            <div class="bottom-sheet-demo-wrap" id="bs-demo-3">
+                <div class="bs-mock-screen">
+                    <p class="typo-small" style="margin-bottom:1rem;color:var(--text-muted);">Saisie rapide</p>
+                    <button class="btn btn-primary btn-sm bottom-sheet-trigger" data-target="bs-panel-3">Ajouter une tache</button>
+                </div>
+                <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-3"></div>
+                <div class="bottom-sheet" id="bs-panel-3" role="dialog" aria-modal="true" aria-label="Formulaire d'ajout">
+                    <div class="bottom-sheet-handle-wrap" data-bs-handle="bs-panel-3">
+                        <div class="bottom-sheet-handle"></div>
+                    </div>
+                    <div class="bottom-sheet-header">
+                        <h3>Nouvelle tache</h3>
+                        <button class="bottom-sheet-close" data-bs-close="bs-panel-3" aria-label="Fermer">&times;</button>
+                    </div>
+                    <div class="bottom-sheet-content">
+                        <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                            <div>
+                                <label class="input-label">Titre</label>
+                                <input class="input" type="text" placeholder="Nom de la tache...">
+                            </div>
+                            <div>
+                                <label class="input-label">Priorite</label>
+                                <select class="input">
+                                    <option>P1 — Critique</option>
+                                    <option>P2 — Haute</option>
+                                    <option>P3 — Normale</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="input-label">Description</label>
+                                <textarea class="input" rows="2" placeholder="Details..."></textarea>
+                            </div>
+                            <div style="display:flex;gap:var(--space-sm);">
+                                <button class="btn btn-secondary btn-sm" style="flex:1;" data-bs-close="bs-panel-3">Annuler</button>
+                                <button class="btn btn-primary btn-sm" style="flex:1;">Ajouter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- SPINNERS -->
 <section id="spinners">
     <div class="section-header"><span class="overline">Feedback</span><h2>Spinners / Loading</h2><p>Indicateurs de chargement pour operations asynchrones.</p></div>

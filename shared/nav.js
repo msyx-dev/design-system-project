@@ -58,6 +58,7 @@ const NAV_SECTIONS = [
         { label: 'Drawer', icon: '&#9646;', href: '/pages/feedback.html#drawer' },
         { label: 'Zone Banner', icon: '&#9646;', href: '/pages/feedback.html#zone-banner' },
         { label: 'Empty States', icon: '&#9744;', href: '/pages/feedback.html#empty-states' },
+        { label: 'Bottom Sheet', icon: '&#9650;', href: '/pages/feedback.html#bottom-sheet' },
         { label: 'Spinners', icon: '&#10227;', href: '/pages/feedback.html#spinners' }
     ]},
     { title: 'Divers', links: [

@@ -174,6 +174,9 @@ function initComponents() {
 
     // Tree View
     initTreeView();
+
+    // Bottom Sheet
+    initBottomSheet();
 }
 
 // Chips
@@ -1448,6 +1451,101 @@ function initTreeView() {
     }
 }
 window.__initTreeView = initTreeView;
+
+// Bottom Sheet
+function initBottomSheet() {
+    // Helpers
+    function openSheet(panelId) {
+        var panel = document.getElementById(panelId);
+        var overlay = document.querySelector('[data-bs-overlay="' + panelId + '"]');
+        if (!panel || !overlay) return;
+        panel.classList.add('open');
+        overlay.classList.add('open');
+        panel.focus && panel.focus();
+    }
+
+    function closeSheet(panelId) {
+        var panel = document.getElementById(panelId);
+        var overlay = document.querySelector('[data-bs-overlay="' + panelId + '"]');
+        if (!panel || !overlay) return;
+        panel.classList.remove('open');
+        overlay.classList.remove('open');
+    }
+
+    // Trigger buttons
+    document.querySelectorAll('.bottom-sheet-trigger').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+            var target = btn.dataset.target;
+            if (target) openSheet(target);
+        });
+    });
+
+    // Overlay click → close
+    document.querySelectorAll('[data-bs-overlay]').forEach(function(overlay) {
+        if (overlay.dataset.bound) return;
+        overlay.dataset.bound = '1';
+        var panelId = overlay.dataset.bsOverlay;
+        overlay.addEventListener('click', function() { closeSheet(panelId); });
+    });
+
+    // Close buttons
+    document.querySelectorAll('[data-bs-close]').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        var panelId = btn.dataset.bsClose;
+        btn.addEventListener('click', function() { closeSheet(panelId); });
+    });
+
+    // Escape → close all open sheets
+    document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.bottom-sheet.open').forEach(function(panel) {
+            closeSheet(panel.id);
+        });
+    });
+
+    // Touch drag on handle → swipe down to close (threshold 100px)
+    document.querySelectorAll('[data-bs-handle]').forEach(function(handleWrap) {
+        if (handleWrap.dataset.bound) return;
+        handleWrap.dataset.bound = '1';
+        var panelId = handleWrap.dataset.bsHandle;
+        var panel = document.getElementById(panelId);
+        if (!panel) return;
+
+        var startY = null;
+        var currentY = null;
+
+        handleWrap.addEventListener('touchstart', function(e) {
+            startY = e.touches[0].clientY;
+            currentY = startY;
+            panel.style.transition = 'none';
+        }, { passive: true });
+
+        handleWrap.addEventListener('touchmove', function(e) {
+            if (startY === null) return;
+            currentY = e.touches[0].clientY;
+            var delta = currentY - startY;
+            if (delta > 0) {
+                panel.style.transform = 'translateY(' + delta + 'px)';
+            }
+        }, { passive: true });
+
+        handleWrap.addEventListener('touchend', function() {
+            if (startY === null) return;
+            var delta = currentY - startY;
+            panel.style.transition = '';
+            panel.style.transform = '';
+            if (delta > 100) {
+                closeSheet(panelId);
+            }
+            startY = null;
+            currentY = null;
+        });
+    });
+}
+window.__initBottomSheet = initBottomSheet;
 
 window.__initComponents = initComponents;
 
