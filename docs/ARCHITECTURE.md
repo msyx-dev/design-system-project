@@ -4,6 +4,7 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
+**57 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
 
 ## Structure
 
@@ -12,20 +13,20 @@ index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 8 categories
 pages/
   fondation.html        # Couleurs, typographie, espacements, ombres, theming
-  composants.html       # Cards, badges, boutons, avatars, alertes, modals, toasts, theme switcher
-  navigation.html       # Tabs, breadcrumbs, stepper
-  formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range
-  data.html             # Tables, stats, charts, KPI
+  composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, FAB, theme switcher
+  navigation.html       # Tabs, breadcrumbs, stepper, segmented control, bottom navigation
+  formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
+  data.html             # Tables, data grid, stats, charts, KPI, tree view
   templates.html        # Kanban, roadmap, backlog, sprint board
-  feedback.html         # Alertes, toasts, modals (<dialog> natif), skeleton, drawer, zone banner, empty states, spinners
-  divers.html           # Command palette, accordion, timeline, code blocks
+  feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet
+  divers.html           # Command palette, accordion, timeline, code blocks, copy button, carousel, lightbox, context menu
 shared/
-  styles.css            # CSS global — ~45 variables :root (+ overrides theme/mode), composants, theming, responsive
+  styles.css            # CSS global — ~75 variables :root (+ overrides theme/mode), composants, theming, responsive
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js         # Composants JS (toasts, modals, tabs, kanban, sliders, dropdowns, theme/mode switcher)
+  components.js         # 20+ composants JS interactifs (voir section dediee)
 docs/
   ARCHITECTURE.md       # Ce fichier
-  retros/               # Retrospectives de sprint
+  retros/               # Retrospectives de sprint + velocity.json
 ```
 
 ## Navigation et layout
@@ -86,7 +87,7 @@ docs/
 
 ## Variables CSS
 
-~45 variables dans `:root` de shared/styles.css (+ overrides dans chaque bloc theme/mode) :
+~75 variables dans `:root` de shared/styles.css (+ overrides dans chaque bloc theme/mode) :
 - **Couleurs** : primary, accent, surface, text, semantic (success/warning/danger/info)
 - **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
 - **Couleurs etendues** : violet, cyan, pink, success/warning/danger-light/dark
@@ -102,20 +103,46 @@ docs/
 
 ## Composants JS interactifs
 
-- Toasts (`showToast()`) : variantes colorees, auto-dismiss, stack
-- Modals (`openModal()`) : `<dialog>` natif HTML avec `.showModal()`, focus trap gratuit, fermeture ESC/backdrop, 3 variantes (confirmation, formulaire, information)
-- Tabs / Accordion : toggle sections, dataset.bound anti-double-bind
-- Sliders (`initSliders()`) : sync bidirectionnelle range-number, fill dynamique via `--slider-fill`
-- Dropdowns (`initDropdowns()`) : search, multi-select, option filtering
-- Kanban : drag & drop natif HTML5 (dragstart, dragover, drop)
-- Backlog filtres : filtrage par priority, search
-- Burndown chart : animation SVG
-- Calendrier : navigation mois, selection date
-- Theme/Mode switcher : THEME_CONFIG, applyMode(), updateModeButtons()
+20+ fonctions init* exportees via `window.__initX` pour re-init SPA :
+
+### Sprint 1-5 (composants fondateurs)
+- **Toasts** (`showToast()`) : variantes colorees, auto-dismiss, stack
+- **Modals** (`openModal()`) : `<dialog>` natif HTML avec `.showModal()`, focus trap gratuit, fermeture ESC/backdrop, 3 variantes
+- **Tabs / Accordion** : toggle sections, dataset.bound anti-double-bind
+- **Sliders** (`initSliders()`) : sync bidirectionnelle range-number, fill dynamique via `--slider-fill`
+- **Dropdowns** (`initDropdowns()`) : search, multi-select, option filtering
+- **Kanban** : drag & drop natif HTML5 (dragstart, dragover, drop)
+- **Calendrier** : navigation mois, selection date
+- **Theme/Mode switcher** : THEME_CONFIG, applyMode(), updateModeButtons()
+
+### Sprint 6 (6 composants)
+- **Chips** (`initChips()`) : suppression animee, filter toggle, chip input dynamique (Enter/virgule/Backspace), anti-doublon
+- **Search Inputs** (`initSearchInputs()`) : clear button, suggestions filtrees, highlight `<mark>`, navigation clavier (ArrowDown/Up/Enter/Escape), a11y combobox
+- **Data Grids** (`initDataGrids()`) : tri multi-colonne (localeCompare fr), filtre cumulatif ET, selection avec indeterminate, header sticky, re-render
+- **Carousel** (`initCarousel()`) : navigation prev/next, dots dynamiques, auto-play (setInterval + pause hover/focus), touch swipe (seuil 50px, passive:false), MutationObserver cleanup SPA, boucle infinie
+- **Copy Buttons** (`initCopyButtons()`) : navigator.clipboard.writeText, swap icone clipboard→check, tooltip, injection auto sur code blocks
+
+### Sprint 7 (12 composants)
+- **Rating** (`initRating()`) : notation etoiles interactive, hover preview, read-only, 3 tailles, event custom
+- **Segmented Controls** (`initSegmentedControls()`) : indicateur slide anime (offsetLeft/offsetWidth), selection exclusive, requestAnimationFrame init
+- **Bottom Nav** (`initBottomNav()`) : toggle actif, event custom bottomnav:change
+- **Number Inputs** (`initNumberInputs()`) : boutons +/-, clamp min/max/step, disable aux bornes, navigation clavier ArrowUp/Down
+- **FAB** (`initFAB()`) : menu radial toggle, rotation icone, fermeture clic exterieur/Escape, stagger animation
+- **OTP Inputs** (`initOTPInputs()`) : auto-focus next, backspace previous, paste split, inputmode numeric
+- **Tag Inputs** (`initTagInputs()`) : ajout Enter/virgule, suppression X/Backspace, anti-doublon, max tags, disable input at limit
+- **Tree View** (`initTreeView()`) : expand/collapse branches, selection item, icones dossier/fichier
+- **Bottom Sheet** (`initBottomSheet()`) : slide-up/down, handle drag, swipe-to-close (seuil 100px), overlay, contenu scrollable
+- **Lightbox** (`initLightbox()`) : overlay plein ecran, navigation fleches/clavier, compteur, caption, galerie groupee
+- **Context Menu** (`initContextMenu()`) : clic droit custom, positionnement viewport-aware, sous-menus, icones, separateurs
+
+### Pattern commun
+- Anti-double-bind : `dataset.bound` / `dataset.xxxBound` sur chaque conteneur
+- Export `window.__initX` pour reinit apres navigation SPA
+- Variables CSS exclusives (zero couleur hardcodee) — compatible 3 themes x 2 modes automatiquement
 
 ## Flux de donnees
 
-Aucun backend. Toutes les donnees sont mockees en HTML statique.
+Aucun backend. Toutes les donnees sont mockees en HTML statique ou en JS inline (DATA_GRID_ROWS).
 Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` pour eviter les double-listeners lors des reinit SPA.
 
 ## Infrastructure
@@ -129,5 +156,6 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 ## Dette technique connue
 
 - Avatars hardcodes dans composants.html + templates.html (couleurs directes au lieu de variables)
-- post-merge.sh echoue quand GitHub auto-close l'issue avant le script
-- create-issue.sh passe le numero de milestone mais gh attend le nom (contournement : creation manuelle)
+- post-merge.sh echoue quand GitHub auto-close l'issue avant le script (dette depuis sprint 4)
+- Compteur footer site.html parfois desynchronise du hero (corrige manuellement)
+- Issue #6 (tests visuels) toujours dans le backlog
