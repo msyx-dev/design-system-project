@@ -29,7 +29,8 @@ const NAV_SECTIONS = [
         { label: 'File Upload', icon: '&#128206;', href: '/pages/formulaires.html#file-upload' },
         { label: 'Slider / Range', icon: '&#8942;', href: '/pages/formulaires.html#slider' },
         { label: 'Search Input', icon: '&#128269;', href: '/pages/formulaires.html#search-input' },
-        { label: 'Number Input', icon: '&#177;', href: '/pages/formulaires.html#number-input' }
+        { label: 'Number Input', icon: '&#177;', href: '/pages/formulaires.html#number-input' },
+        { label: 'OTP Input', icon: '&#9872;', href: '/pages/formulaires.html#otp-input' }
     ]},
     { title: 'Navigation', links: [
         { label: 'Tabs & Nav', icon: '&#9776;', href: '/pages/navigation.html#nav-components' },

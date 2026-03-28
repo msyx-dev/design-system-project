@@ -579,6 +579,85 @@
 </section>
 
     </div>
+
+<!-- OTP INPUT -->
+<section id="otp-input" class="ds-section">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>OTP / Pin Input</h2><p class="section-desc">Cases de saisie de code a usage unique avec focus auto, backspace et paste.</p></div>
+
+    <h3>4 chiffres</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Vide (saisie active)</span>
+            <div class="otp-group" data-length="4" aria-label="Code a 4 chiffres">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="Chiffre 1">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 2">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 3">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 4">
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Pre-rempli</span>
+            <div class="otp-group" data-length="4" aria-label="Code a 4 chiffres pre-rempli">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="Chiffre 1" value="4">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 2" value="2">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 3" value="7">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 4" value="1">
+            </div>
+        </div>
+    </div>
+
+    <h3>6 chiffres</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Vide (code SMS / TOTP)</span>
+            <div class="otp-group" data-length="6" aria-label="Code a 6 chiffres">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="Chiffre 1">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 2">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 3">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 4">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 5">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 6">
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Pre-rempli</span>
+            <div class="otp-group" data-length="6" aria-label="Code a 6 chiffres pre-rempli">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="Chiffre 1" value="1">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 2" value="8">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 3" value="3">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 4" value="5">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 5" value="9">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Chiffre 6" value="2">
+            </div>
+        </div>
+    </div>
+
+    <h3>Desactive</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">4 chiffres desactive</span>
+            <div class="otp-group otp-group--disabled" data-length="4" aria-label="Code desactive" aria-disabled="true">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 1" disabled>
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 2" disabled>
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 3" disabled>
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 4" disabled>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">6 chiffres desactive (pre-rempli)</span>
+            <div class="otp-group otp-group--disabled" data-length="6" aria-label="Code desactive pre-rempli" aria-disabled="true">
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 1" value="9" disabled>
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 2" value="9" disabled>
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 3" value="9" disabled>
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 4" value="9" disabled>
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 5" value="9" disabled>
+                <input class="otp-digit filled" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Chiffre 6" value="9" disabled>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
 </body>

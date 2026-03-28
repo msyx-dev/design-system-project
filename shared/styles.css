@@ -1954,6 +1954,46 @@ html { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3
     font-size: 0.92rem;
 }
 
+/* ===== OTP INPUT ===== */
+.otp-group {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+.otp-digit {
+    width: 3rem;
+    height: 3.5rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -moz-appearance: textfield;
+}
+.otp-digit::-webkit-outer-spin-button,
+.otp-digit::-webkit-inner-spin-button { -webkit-appearance: none; }
+.otp-digit:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+.otp-digit.filled {
+    border-color: rgba(var(--accent-rgb), 0.4);
+}
+.otp-group--disabled .otp-digit,
+.otp-digit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+@media (max-width: 480px) {
+    .otp-digit { width: 2.5rem; height: 3rem; font-size: 1rem; }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .demo-grid-4, .demo-grid-5 { grid-template-columns: repeat(2, 1fr); }
