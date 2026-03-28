@@ -17,7 +17,8 @@ const NAV_SECTIONS = [
         { label: 'Divider', icon: '&#9135;', href: '/pages/composants.html#dividers' },
         { label: 'Rating', icon: '&#9733;', href: '/pages/composants.html#rating' },
         { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' },
-        { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' }
+        { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' },
+        { label: 'FAB', icon: '&#43;', href: '/pages/composants.html#fab' }
     ]},
     { title: 'Formulaires', links: [
         { label: 'Inputs', icon: '&#9998;', href: '/pages/formulaires.html#inputs' },
