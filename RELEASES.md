@@ -1,5 +1,19 @@
 # Releases
 
+## 2.6.0 — 2026-03-28 — Sprint 6
+
+### Added
+- Composant Breadcrumbs — 4 variantes (simple, home, chevron, responsive collapse) dans navigation.html
+- Composant Copy Button — clipboard API, feedback visuel (icone swap + tooltip), integration code blocks
+- Composant Chip / Filter Chip — 4 variantes interactives (simple, icone, filter toggle, chip input dynamique)
+- Composant Search Input — 3 variantes (simple, suggestions dropdown, compact), navigation clavier, highlight terme
+- Composant Data Grid — table enrichie avec tri multi-colonne, filtre texte cumulatif, selection avec indeterminate, header sticky
+- Composant Carousel — navigation fleches, dots, auto-play pausable, touch swipe, boucle infinie, 2 variantes (images/cards)
+
+### Changed
+- Compteur : 40 → 46 composants
+- components.js : 9 fonctions init* exportees (chips, search, data grid, carousel, copy buttons)
+
 ## 2.5.0 — 2026-03-28 — Sprint 5
 
 ### Added
