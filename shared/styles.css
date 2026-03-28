@@ -1012,7 +1012,7 @@ html { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3
 
     /* Gradients corporate */
     --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
-    --gradient-2: linear-gradient(135deg, #00457a, #00345f);
+    --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
     --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
     --gradient-4: linear-gradient(135deg, #e0cd1e, #f59e0b);
 
@@ -1089,7 +1089,7 @@ html { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3
     --text-muted: #8fbfa0;
     --text-dim: #6a9e7a;
     --gradient-1: linear-gradient(135deg, #008837, #73c69c);
-    --gradient-2: linear-gradient(135deg, #005a22, #008837);
+    --gradient-2: linear-gradient(135deg, #22c55e, #008837);
     --gradient-3: linear-gradient(135deg, #008837, #00b84d);
     --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
     --border: rgba(var(--accent-rgb), 0.12);
