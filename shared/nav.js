@@ -13,6 +13,7 @@ const NAV_SECTIONS = [
         { label: 'Boutons', icon: '&#9654;', href: '/pages/composants.html#buttons' },
         { label: 'Cards', icon: '&#9744;', href: '/pages/composants.html#cards' },
         { label: 'Badges & Tags', icon: '&#9679;', href: '/pages/composants.html#badges' },
+        { label: 'Chips', icon: '&#10005;', href: '/pages/composants.html#chips' },
         { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' },
         { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' }
     ]},
