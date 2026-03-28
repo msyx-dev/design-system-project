@@ -531,6 +531,17 @@ dialog.modal-dialog .modal-actions {
 .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .divider-vertical { display: inline-block; width: 1px; height: 1.5em; background: var(--border); margin: 0 var(--space-sm); vertical-align: middle; align-self: stretch; flex-shrink: 0; }
 
+/* ===== RATING ===== */
+.rating { display: inline-flex; align-items: center; gap: 0.2rem; }
+.rating-star { width: 1.75rem; height: 1.75rem; cursor: pointer; color: var(--border); transition: color 0.15s, transform 0.1s; flex-shrink: 0; user-select: none; }
+.rating-star svg { width: 100%; height: 100%; display: block; }
+.rating-star.active { color: var(--accent); }
+.rating-star.hover { color: var(--accent-light); transform: scale(1.15); }
+.rating--readonly .rating-star { cursor: default; pointer-events: none; }
+.rating--readonly .rating-star.active { color: var(--accent); }
+.rating--sm .rating-star { width: 1.2rem; height: 1.2rem; }
+.rating--lg .rating-star { width: 2.25rem; height: 2.25rem; }
+
 /* ===== BREADCRUMB ===== */
 .breadcrumb { display: flex; align-items: center; gap: var(--space-sm); font-size: 0.82rem; }
 .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
