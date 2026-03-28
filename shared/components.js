@@ -180,6 +180,9 @@ function initComponents() {
 
     // Lightbox
     initLightbox();
+
+    // Context Menu
+    initContextMenu();
 }
 
 // Chips
@@ -1720,6 +1723,92 @@ function initLightbox() {
     });
 }
 window.__initLightbox = initLightbox;
+
+// Context Menu
+function initContextMenu() {
+    var activeMenu = null;
+
+    function hideMenu(menu) {
+        if (!menu) return;
+        menu.classList.remove('show');
+        activeMenu = null;
+    }
+
+    function showMenu(menu, x, y) {
+        // Hide any previously open menu
+        if (activeMenu && activeMenu !== menu) hideMenu(activeMenu);
+
+        menu.classList.add('show');
+        activeMenu = menu;
+
+        // Position — check viewport bounds
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        // Temporarily show off-screen to get dimensions
+        menu.style.left = '0px';
+        menu.style.top = '0px';
+        var mw = menu.offsetWidth;
+        var mh = menu.offsetHeight;
+
+        var left = x;
+        var top = y;
+
+        if (left + mw > vw - 8) left = vw - mw - 8;
+        if (top + mh > vh - 8) top = vh - mh - 8;
+        if (left < 8) left = 8;
+        if (top < 8) top = 8;
+
+        menu.style.left = left + 'px';
+        menu.style.top = top + 'px';
+    }
+
+    // Bind each context target
+    document.querySelectorAll('.context-target').forEach(function(target) {
+        if (target.dataset.ctxBound) return;
+        target.dataset.ctxBound = '1';
+
+        var menuId = target.id.replace('context-', 'context-') + '-menu';
+        // Try sibling or linked menu
+        var menu = target.nextElementSibling;
+        while (menu && !menu.classList.contains('context-menu')) {
+            menu = menu.nextElementSibling;
+        }
+        if (!menu) {
+            // fallback: look for data-menu attribute
+            var mid = target.dataset.menu;
+            if (mid) menu = document.getElementById(mid);
+        }
+        if (!menu) return;
+
+        target.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showMenu(menu, e.clientX, e.clientY);
+        });
+    });
+
+    // Close on outside click
+    if (!document.body.dataset.ctxOutsideBound) {
+        document.body.dataset.ctxOutsideBound = '1';
+        document.addEventListener('click', function(e) {
+            if (activeMenu && !activeMenu.contains(e.target)) {
+                hideMenu(activeMenu);
+            }
+        });
+        // Close on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && activeMenu) {
+                hideMenu(activeMenu);
+            }
+        });
+        // Close on contextmenu outside a target
+        document.addEventListener('contextmenu', function(e) {
+            if (activeMenu && !e.target.closest('.context-target')) {
+                hideMenu(activeMenu);
+            }
+        });
+    }
+}
+window.__initContextMenu = initContextMenu;
 
 window.__initComponents = initComponents;
 
