@@ -42,6 +42,7 @@ const NAV_SECTIONS = [
         { label: 'Modals', icon: '&#9634;', href: '/pages/feedback.html#modals' },
         { label: 'Skeleton', icon: '&#9604;', href: '/pages/feedback.html#skeleton' },
         { label: 'Drawer', icon: '&#9646;', href: '/pages/feedback.html#drawer' },
+        { label: 'Zone Banner', icon: '&#9646;', href: '/pages/feedback.html#zone-banner' },
         { label: 'Empty States', icon: '&#9744;', href: '/pages/feedback.html#empty-states' },
         { label: 'Spinners', icon: '&#10227;', href: '/pages/feedback.html#spinners' }
     ]},
