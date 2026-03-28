@@ -375,6 +375,27 @@ tr:hover td { background: rgba(var(--accent-rgb),0.03); }
 .data-grid-footer { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); gap: 1rem; }
 .data-grid-selection { color: var(--accent-light); font-weight: 500; }
 
+/* ===== TREE VIEW ===== */
+.tree { list-style: none; margin: 0; padding: 0; }
+.tree-children { padding-left: 1.4rem; overflow: hidden; max-height: 0; transition: max-height 0.28s ease; }
+.tree-children.open { max-height: 1000px; }
+.tree-item { display: flex; flex-direction: column; }
+.tree-branch > .tree-toggle { display: flex; align-items: center; gap: 0.4rem; background: none; border: none; color: var(--text); font-size: 0.875rem; font-family: inherit; padding: 0.3rem 0.5rem; border-radius: var(--radius-sm); cursor: pointer; width: 100%; text-align: left; transition: background 0.15s; }
+.tree-branch > .tree-toggle:hover { background: rgba(var(--accent-rgb), 0.07); }
+.tree-leaf { flex-direction: row; align-items: center; gap: 0.4rem; padding: 0.3rem 0.5rem; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.875rem; color: var(--text); transition: background 0.15s; }
+.tree-leaf:hover { background: rgba(var(--accent-rgb), 0.07); }
+.tree-item.selected > .tree-toggle,
+.tree-item.selected.tree-leaf { background: rgba(var(--accent-rgb), 0.12); color: var(--accent-light); }
+.tree-chevron { width: 14px; height: 14px; flex-shrink: 0; color: var(--text-muted); transition: transform 0.22s ease; }
+.tree-branch.open > .tree-toggle .tree-chevron { transform: rotate(0deg); }
+.tree-branch:not(.open) > .tree-toggle .tree-chevron { transform: rotate(-90deg); }
+.tree-icon { font-size: 1rem; flex-shrink: 0; line-height: 1; }
+.tree-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Indentation connector lines */
+.tree > .tree-item { position: relative; }
+.tree-children .tree-item { position: relative; }
+.tree-children .tree-item::before { content: ''; position: absolute; left: -0.9rem; top: 0.85rem; width: 0.7rem; height: 1px; background: var(--border); }
+
 /* ===== ALERT ===== */
 .alert { padding: 0.9rem 1.2rem; border-radius: var(--radius-sm); display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.88rem; line-height: 1.5; }
 .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }

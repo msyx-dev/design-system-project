@@ -347,6 +347,161 @@
     </div>
 </section>
 
+<!-- TREE VIEW -->
+<section id="tree-view">
+    <div class="section-header"><span class="overline">Data</span><h2>Tree View</h2><p>Arborescence depliable avec icones dossier/fichier, selection et animation expand/collapse.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Structure de projet</span>
+            <ul class="tree" role="tree" aria-label="Structure de projet">
+                <li class="tree-item tree-branch" role="treeitem" aria-expanded="true">
+                    <button class="tree-toggle" aria-label="Basculer src">
+                        <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                        <span class="tree-icon tree-icon-folder">&#128193;</span>
+                        <span class="tree-label">src</span>
+                    </button>
+                    <ul class="tree tree-children" role="group">
+                        <li class="tree-item tree-branch" role="treeitem" aria-expanded="true">
+                            <button class="tree-toggle" aria-label="Basculer app">
+                                <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                                <span class="tree-icon tree-icon-folder">&#128193;</span>
+                                <span class="tree-label">app</span>
+                            </button>
+                            <ul class="tree tree-children" role="group">
+                                <li class="tree-item tree-leaf" role="treeitem">
+                                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                                    <span class="tree-label">layout.tsx</span>
+                                </li>
+                                <li class="tree-item tree-leaf" role="treeitem">
+                                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                                    <span class="tree-label">page.tsx</span>
+                                </li>
+                                <li class="tree-item tree-leaf" role="treeitem">
+                                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                                    <span class="tree-label">globals.css</span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-item tree-branch" role="treeitem" aria-expanded="false">
+                            <button class="tree-toggle" aria-label="Basculer components">
+                                <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                                <span class="tree-icon tree-icon-folder">&#128193;</span>
+                                <span class="tree-label">components</span>
+                            </button>
+                            <ul class="tree tree-children" role="group">
+                                <li class="tree-item tree-leaf" role="treeitem">
+                                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                                    <span class="tree-label">Button.tsx</span>
+                                </li>
+                                <li class="tree-item tree-leaf" role="treeitem">
+                                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                                    <span class="tree-label">Modal.tsx</span>
+                                </li>
+                                <li class="tree-item tree-leaf" role="treeitem">
+                                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                                    <span class="tree-label">Toast.tsx</span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">utils.ts</span>
+                        </li>
+                    </ul>
+                </li>
+                <li class="tree-item tree-branch" role="treeitem" aria-expanded="false">
+                    <button class="tree-toggle" aria-label="Basculer public">
+                        <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                        <span class="tree-icon tree-icon-folder">&#128193;</span>
+                        <span class="tree-label">public</span>
+                    </button>
+                    <ul class="tree tree-children" role="group">
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">favicon.ico</span>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">logo.svg</span>
+                        </li>
+                    </ul>
+                </li>
+                <li class="tree-item tree-leaf" role="treeitem">
+                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                    <span class="tree-label">package.json</span>
+                </li>
+                <li class="tree-item tree-leaf" role="treeitem">
+                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                    <span class="tree-label">tsconfig.json</span>
+                </li>
+                <li class="tree-item tree-leaf" role="treeitem">
+                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                    <span class="tree-label">README.md</span>
+                </li>
+            </ul>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Structure design system</span>
+            <ul class="tree" role="tree" aria-label="Structure design system">
+                <li class="tree-item tree-branch" role="treeitem" aria-expanded="true">
+                    <button class="tree-toggle" aria-label="Basculer pages">
+                        <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                        <span class="tree-icon tree-icon-folder">&#128193;</span>
+                        <span class="tree-label">pages</span>
+                    </button>
+                    <ul class="tree tree-children" role="group">
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">fondation.html</span>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">composants.html</span>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">navigation.html</span>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">data.html</span>
+                        </li>
+                    </ul>
+                </li>
+                <li class="tree-item tree-branch" role="treeitem" aria-expanded="true">
+                    <button class="tree-toggle" aria-label="Basculer shared">
+                        <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                        <span class="tree-icon tree-icon-folder">&#128193;</span>
+                        <span class="tree-label">shared</span>
+                    </button>
+                    <ul class="tree tree-children" role="group">
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">styles.css</span>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">nav.js</span>
+                        </li>
+                        <li class="tree-item tree-leaf" role="treeitem">
+                            <span class="tree-icon tree-icon-file">&#128196;</span>
+                            <span class="tree-label">components.js</span>
+                        </li>
+                    </ul>
+                </li>
+                <li class="tree-item tree-leaf" role="treeitem">
+                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                    <span class="tree-label">site.html</span>
+                </li>
+                <li class="tree-item tree-leaf" role="treeitem">
+                    <span class="tree-icon tree-icon-file">&#128196;</span>
+                    <span class="tree-label">index.html</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
 <!-- LISTS -->
 <section id="lists">
     <div class="section-header"><span class="overline">Data</span><h2>Listes</h2><p>Listes d'items avec avatars, metadata et actions.</p></div>

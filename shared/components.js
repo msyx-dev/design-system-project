@@ -171,6 +171,9 @@ function initComponents() {
 
     // Tag Inputs
     initTagInputs();
+
+    // Tree View
+    initTreeView();
 }
 
 // Chips
@@ -1379,6 +1382,72 @@ function initTagInputs() {
     });
 }
 window.__initTagInputs = initTagInputs;
+
+// Tree View
+function initTreeView() {
+    document.querySelectorAll('.tree[role="tree"]').forEach(function(root) {
+        if (root.dataset.bound) return;
+        root.dataset.bound = '1';
+
+        // Init open/closed state from aria-expanded attributes
+        root.querySelectorAll('.tree-branch').forEach(function(branch) {
+            var expanded = branch.getAttribute('aria-expanded') === 'true';
+            var children = branch.querySelector('.tree-children');
+            if (children) {
+                if (expanded) {
+                    branch.classList.add('open');
+                    children.classList.add('open');
+                } else {
+                    branch.classList.remove('open');
+                    children.classList.remove('open');
+                }
+            }
+
+            var toggle = branch.querySelector(':scope > .tree-toggle');
+            if (!toggle || toggle.dataset.bound) return;
+            toggle.dataset.bound = '1';
+
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isOpen = branch.classList.contains('open');
+                if (isOpen) {
+                    branch.classList.remove('open');
+                    branch.setAttribute('aria-expanded', 'false');
+                    if (children) children.classList.remove('open');
+                } else {
+                    branch.classList.add('open');
+                    branch.setAttribute('aria-expanded', 'true');
+                    if (children) children.classList.add('open');
+                }
+                // Select the branch item itself on toggle click
+                selectItem(root, branch);
+            });
+        });
+
+        // Leaf click → select
+        root.querySelectorAll('.tree-leaf').forEach(function(leaf) {
+            if (leaf.dataset.bound) return;
+            leaf.dataset.bound = '1';
+            leaf.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectItem(root, leaf);
+            });
+        });
+    });
+
+    function selectItem(root, item) {
+        // Remove selection from all items in this tree
+        root.querySelectorAll('.tree-item.selected').forEach(function(el) {
+            el.classList.remove('selected');
+        });
+        item.classList.add('selected');
+        root.dispatchEvent(new CustomEvent('treeview:select', {
+            detail: { label: (item.querySelector('.tree-label') || {}).textContent || '' },
+            bubbles: true
+        }));
+    }
+}
+window.__initTreeView = initTreeView;
 
 window.__initComponents = initComponents;
 
