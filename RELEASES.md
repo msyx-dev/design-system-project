@@ -1,5 +1,25 @@
 # Releases
 
+## 2.7.0 — 2026-03-28 — Sprint 7
+
+### Added
+- Composant Divider — 4 variantes (simple, label central, vertical, gradient)
+- Composant Rating — notation étoiles interactive, hover preview, mode read-only, 3 tailles
+- Composant Bottom Navigation — barre mobile fixe, icônes + labels, item actif accent, badges
+- Composant Number Input — boutons +/-, bornes min/max, step, variantes compact/disabled
+- Composant FAB — simple, mini, extended, menu radial avec animations stagger
+- Composant Segmented Control — sélection exclusive avec indicateur slide animé, 3 tailles
+- Composant OTP / Pin Input — cases séparées, auto-focus, backspace, paste code complet
+- Composant Tag Input — ajout/suppression dynamique, anti-doublon, limite max tags
+- Composant Tree View — arborescence dépliable, icônes dossier/fichier, sélection item
+- Composant Bottom Sheet — panneau slide-up, handle drag, swipe-to-close, contenu scrollable
+- Composant Lightbox — galerie plein écran, navigation flèches, clavier, zoom
+- Composant Context Menu — clic droit custom, icônes, sous-menus, positionnement viewport-aware
+
+### Changed
+- Compteur : 46 → 57 composants (record : +11 en un sprint)
+- components.js : 20+ fonctions init* exportées
+
 ## 2.6.0 — 2026-03-28 — Sprint 6
 
 ### Added

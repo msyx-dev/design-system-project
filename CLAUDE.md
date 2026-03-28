@@ -16,17 +16,17 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   fondation.html    # Couleurs, typographie, espacements, ombres, theming
-  composants.html   # Cards, badges, boutons, chips, avatars, alertes, modals, toasts, theme switcher
-  navigation.html   # Tabs, breadcrumbs, stepper
-  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input
-  data.html         # Tables, data grid, stats, charts, KPI
+  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, FAB, theme switcher
+  navigation.html   # Tabs, breadcrumbs, stepper, segmented control, bottom navigation
+  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
+  data.html         # Tables, data grid, stats, charts, KPI, tree view
   templates.html    # Kanban, roadmap, backlog, sprint board
-  feedback.html     # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs
-  divers.html       # Command palette, accordion, timeline, code blocks, copy button, carousel
+  feedback.html     # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet
+  divers.html       # Command palette, accordion, timeline, code blocks, copy button, carousel, lightbox, context menu
 shared/
   styles.css        # CSS global — ~75 variables :root (dont --accent-rgb, --*-rgb semantiques), composants, theming, responsive
   nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, theme/mode switcher)
+  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher)
 ```
 
 ## Conventions
