@@ -1,5 +1,22 @@
 # Releases
 
+## 2.5.0 — 2026-03-28 — Sprint 5
+
+### Added
+- Composant Zone Banner — bandeaux colores pour indicateurs d'etat (perte/attention/rentable/info)
+- Composant Slider / Range Input — curseur de valeurs numeriques avec sync bidirectionnelle range-number
+- Composant Modal / Dialog — `<dialog>` natif avec focus trap, animation et 3 variantes (confirmation, formulaire, information)
+- API programmatique `window.__openModal(config)` pour les modals
+- Variables RGB semantiques (`--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`)
+
+### Fixed
+- Tokenisation complete des rgba accent hardcodes — variable `--accent-rgb` unique par theme
+- Les hovers, glows et badges utilisent maintenant la couleur accent du theme actif (plus de bleu residuel sur ACSSI/Nhood)
+- Migration des alertes vers les variables RGB semantiques
+
+### Changed
+- Compteur : 38 → 40 composants
+
 ## 2.4.0 — 2026-03-26 — Sprint 4
 
 ### Added

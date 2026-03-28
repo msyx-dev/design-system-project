@@ -18,15 +18,15 @@ pages/
   fondation.html    # Couleurs, typographie, espacements, ombres, theming
   composants.html   # Cards, badges, boutons, avatars, alertes, modals, toasts, theme switcher
   navigation.html   # Tabs, breadcrumbs, stepper
-  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier
+  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range
   data.html         # Tables, stats, charts, KPI
   templates.html    # Kanban, roadmap, backlog, sprint board
-  feedback.html     # Empty states, spinners, tooltips, pagination, drawer
+  feedback.html     # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs
   divers.html       # Command palette, accordion, timeline, code blocks
 shared/
-  styles.css        # CSS global — ~65 variables :root, composants, theming, responsive
+  styles.css        # CSS global — ~75 variables :root (dont --accent-rgb, --*-rgb semantiques), composants, theming, responsive
   nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js     # Composants JS partages (toasts, modals, tabs, kanban, theme/mode switcher)
+  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, theme/mode switcher)
 ```
 
 ## Conventions
@@ -52,7 +52,9 @@ shared/
 - `THEME_CONFIG` dans components.js : modes disponibles par theme, extensible
 - 2 cles localStorage : `msyx-theme` + `msyx-mode`
 - Toggle sun/moon dans le header, grise si theme dark-only
-- Ajouter un theme = 1 bloc CSS `[data-theme]` + 1 entree THEME_CONFIG + 1 option select
+- Variable `--accent-rgb` : triplet RGB brut par theme, pour les declinaisons `rgba(var(--accent-rgb), X)`
+- Variables RGB semantiques : `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`
+- Ajouter un theme = 1 bloc CSS `[data-theme]` + `--accent-rgb` + 1 entree THEME_CONFIG + 1 option select
 
 ## Charte graphique MSYX (reference par defaut)
 - Theme dark : `--primary: #0a0f1e`
