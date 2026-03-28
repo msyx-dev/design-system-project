@@ -35,6 +35,7 @@ const NAV_SECTIONS = [
         { label: 'Tabs & Nav', icon: '&#9776;', href: '/pages/navigation.html#nav-components' },
         { label: 'Breadcrumbs', icon: '&#8250;', href: '/pages/navigation.html#breadcrumbs' },
         { label: 'Stepper', icon: '&#8594;', href: '/pages/navigation.html#stepper' },
+        { label: 'Segmented', icon: '&#9632;', href: '/pages/navigation.html#segmented-control' },
         { label: 'Pagination', icon: '&#8230;', href: '/pages/navigation.html#pagination' },
         { label: 'Bottom Nav', icon: '&#9635;', href: '/pages/navigation.html#bottom-nav' }
     ]},
