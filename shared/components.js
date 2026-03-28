@@ -165,6 +165,9 @@ function initComponents() {
 
     // Segmented Controls
     initSegmentedControls();
+
+    // OTP Inputs
+    initOTPInputs();
 }
 
 // Chips
@@ -1165,6 +1168,102 @@ function initSegmentedControls() {
     });
 }
 window.__initSegmentedControls = initSegmentedControls;
+
+// OTP Inputs
+function initOTPInputs() {
+    document.querySelectorAll('.otp-group').forEach(function(group) {
+        if (group.dataset.bound) return;
+        group.dataset.bound = '1';
+
+        var digits = Array.from(group.querySelectorAll('.otp-digit'));
+        if (!digits.length) return;
+
+        digits.forEach(function(digit, index) {
+            // Mise a jour de la classe filled sur la valeur initiale
+            if (digit.value) digit.classList.add('filled');
+
+            digit.addEventListener('input', function() {
+                // Ne garder que le dernier caractere saisi (cas colle caractere par caractere)
+                var val = digit.value.replace(/[^0-9]/g, '');
+                digit.value = val ? val.slice(-1) : '';
+
+                if (digit.value) {
+                    digit.classList.add('filled');
+                    // Focus sur la case suivante
+                    var next = digits[index + 1];
+                    if (next) next.focus();
+                } else {
+                    digit.classList.remove('filled');
+                }
+
+                group.dispatchEvent(new CustomEvent('otp:change', {
+                    detail: { value: digits.map(function(d) { return d.value; }).join('') },
+                    bubbles: true
+                }));
+            });
+
+            digit.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    if (digit.value) {
+                        // Effacer la case courante
+                        digit.value = '';
+                        digit.classList.remove('filled');
+                    } else {
+                        // Case vide : revenir a la precedente et l'effacer
+                        var prev = digits[index - 1];
+                        if (prev) {
+                            prev.value = '';
+                            prev.classList.remove('filled');
+                            prev.focus();
+                        }
+                    }
+                    e.preventDefault();
+                } else if (e.key === 'ArrowLeft') {
+                    var prev = digits[index - 1];
+                    if (prev) { e.preventDefault(); prev.focus(); }
+                } else if (e.key === 'ArrowRight') {
+                    var next = digits[index + 1];
+                    if (next) { e.preventDefault(); next.focus(); }
+                }
+            });
+
+            digit.addEventListener('paste', function(e) {
+                e.preventDefault();
+                var pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+                if (!pasted) return;
+
+                // Distribuer les caracteres sur toutes les cases a partir de l'index courant
+                var startIndex = index;
+                pasted.split('').forEach(function(char, i) {
+                    var target = digits[startIndex + i];
+                    if (!target) return;
+                    target.value = char;
+                    target.classList.add('filled');
+                });
+
+                // Focus sur la derniere case remplie ou la derniere case
+                var lastFilledIndex = Math.min(startIndex + pasted.length - 1, digits.length - 1);
+                var nextEmpty = digits[startIndex + pasted.length];
+                if (nextEmpty) {
+                    nextEmpty.focus();
+                } else {
+                    digits[lastFilledIndex].focus();
+                }
+
+                group.dispatchEvent(new CustomEvent('otp:change', {
+                    detail: { value: digits.map(function(d) { return d.value; }).join('') },
+                    bubbles: true
+                }));
+            });
+
+            // Selectionner le contenu au focus pour faciliter la saisie
+            digit.addEventListener('focus', function() {
+                digit.select();
+            });
+        });
+    });
+}
+window.__initOTPInputs = initOTPInputs;
 
 window.__initComponents = initComponents;
 
