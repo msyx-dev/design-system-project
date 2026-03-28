@@ -929,6 +929,90 @@ footer p { color: var(--text-dim); font-size: 0.78rem; }
 /* Disabled state */
 .slider-disabled { opacity: 0.5; pointer-events: none; }
 
+/* ===== NUMBER INPUT ===== */
+.number-input-wrap {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-light);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    max-width: 200px;
+}
+.number-input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+}
+.number-input-wrap.number-input--disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+.number-input-btn {
+    flex-shrink: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-light);
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    line-height: 1;
+    padding: 0;
+    user-select: none;
+}
+.number-input-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: #fff;
+}
+.number-input-btn:active:not(:disabled) {
+    background: var(--accent-light);
+    color: #fff;
+}
+.number-input-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    color: var(--text-dim);
+}
+.number-input-field {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+    padding: 0 0.25rem;
+    outline: none;
+    -moz-appearance: textfield;
+}
+.number-input-field::-webkit-outer-spin-button,
+.number-input-field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Compact variant */
+.number-input-wrap.number-input--compact .number-input-btn {
+    width: 1.85rem;
+    height: 1.85rem;
+    font-size: 0.95rem;
+}
+.number-input-wrap.number-input--compact .number-input-field {
+    font-size: 0.82rem;
+}
+.number-input-wrap.number-input--compact {
+    max-width: 148px;
+}
+
 /* ===== SEARCH INPUT ===== */
 .search-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
 .search-input {
