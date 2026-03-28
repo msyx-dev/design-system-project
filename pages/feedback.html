@@ -74,6 +74,72 @@
             </div>
         </div>
     </div>
+
+    <h3 style="margin-top:var(--space-xl);margin-bottom:var(--space-md);">Démos interactives</h3>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <h4>Confirmation</h4>
+            <button class="btn btn-primary" data-modal-trigger="modal-confirm">Ouvrir</button>
+        </div>
+        <div class="demo-box">
+            <h4>Information</h4>
+            <button class="btn btn-secondary" data-modal-trigger="modal-info">Ouvrir</button>
+        </div>
+        <div class="demo-box">
+            <h4>Formulaire</h4>
+            <button class="btn btn-primary" data-modal-trigger="modal-form">Ouvrir</button>
+        </div>
+    </div>
+
+    <dialog id="modal-confirm" class="modal-dialog" aria-labelledby="modal-confirm-title">
+        <div class="modal-header">
+            <h3 id="modal-confirm-title">Confirmer la suppression</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" data-modal-close>Annuler</button>
+            <button class="btn btn-danger" data-modal-close>Supprimer</button>
+        </div>
+    </dialog>
+
+    <dialog id="modal-info" class="modal-dialog" aria-labelledby="modal-info-title">
+        <div class="modal-header">
+            <h3 id="modal-info-title">Information</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Votre projet a été créé avec succès. Vous pouvez maintenant ajouter des membres à l'équipe et configurer les paramètres.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" data-modal-close>Compris</button>
+        </div>
+    </dialog>
+
+    <dialog id="modal-form" class="modal-dialog" aria-labelledby="modal-form-title">
+        <div class="modal-header">
+            <h3 id="modal-form-title">Nouveau projet</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div>
+                    <label class="input-label">Nom du projet</label>
+                    <input class="input" type="text" placeholder="Mon projet...">
+                </div>
+                <div>
+                    <label class="input-label">Description</label>
+                    <textarea class="input" rows="3" placeholder="Description..."></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" data-modal-close>Annuler</button>
+            <button class="btn btn-primary" data-modal-close>Créer</button>
+        </div>
+    </dialog>
 </section>
 
 <!-- SKELETON -->
