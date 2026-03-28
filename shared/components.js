@@ -145,6 +145,9 @@ function initComponents() {
     // Copy Buttons
     initCopyButtons();
 
+    // Carousel
+    initCarousel();
+
     // Data Grids
     initDataGrids();
 }
@@ -794,6 +797,115 @@ function initDataGrids() {
     });
 }
 window.__initDataGrids = initDataGrids;
+
+function initCarousel() {
+    document.querySelectorAll('.carousel').forEach(function(carousel) {
+        if (carousel.dataset.bound) return;
+        carousel.dataset.bound = '1';
+
+        var track = carousel.querySelector('.carousel-track');
+        var slides = carousel.querySelectorAll('.carousel-slide');
+        var dotsContainer = carousel.querySelector('.carousel-dots');
+        var btnPrev = carousel.querySelector('.carousel-btn-prev');
+        var btnNext = carousel.querySelector('.carousel-btn-next');
+        if (!track || !slides.length) return;
+
+        var total = slides.length;
+        var current = 0;
+        var autoplayMs = parseInt(carousel.dataset.autoplay, 10) || 0;
+        var timer = null;
+
+        // Build dots
+        if (dotsContainer) {
+            for (var i = 0; i < total; i++) {
+                var dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('role', 'tab');
+                dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                dot.dataset.index = i;
+                dotsContainer.appendChild(dot);
+            }
+            dotsContainer.addEventListener('click', function(e) {
+                var btn = e.target.closest('.carousel-dot');
+                if (btn) goTo(parseInt(btn.dataset.index, 10));
+            });
+        }
+
+        function updateDots() {
+            if (!dotsContainer) return;
+            dotsContainer.querySelectorAll('.carousel-dot').forEach(function(dot, idx) {
+                dot.classList.toggle('active', idx === current);
+            });
+        }
+
+        function goTo(index) {
+            current = ((index % total) + total) % total;
+            track.style.transform = 'translateX(-' + current * 100 + '%)';
+            updateDots();
+        }
+
+        if (btnPrev) {
+            btnPrev.addEventListener('click', function() { goTo(current - 1); });
+        }
+        if (btnNext) {
+            btnNext.addEventListener('click', function() { goTo(current + 1); });
+        }
+
+        // Auto-play
+        function startAutoplay() {
+            if (!autoplayMs) return;
+            timer = setInterval(function() { goTo(current + 1); }, autoplayMs);
+        }
+        function stopAutoplay() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+
+        if (autoplayMs) {
+            carousel.addEventListener('mouseenter', stopAutoplay);
+            carousel.addEventListener('focusin', stopAutoplay);
+            carousel.addEventListener('mouseleave', startAutoplay);
+            carousel.addEventListener('focusout', function(e) {
+                if (!carousel.contains(e.relatedTarget)) startAutoplay();
+            });
+            startAutoplay();
+        }
+
+        // Touch swipe
+        var touchStartX = 0;
+        var touchStartY = 0;
+        var touchMoved = false;
+        carousel.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchMoved = false;
+        }, { passive: true });
+        carousel.addEventListener('touchmove', function(e) {
+            var dx = e.touches[0].clientX - touchStartX;
+            var dy = e.touches[0].clientY - touchStartY;
+            if (!touchMoved && Math.abs(dx) > Math.abs(dy)) {
+                e.preventDefault();
+            }
+            touchMoved = true;
+        }, { passive: false });
+        carousel.addEventListener('touchend', function(e) {
+            var dx = e.changedTouches[0].clientX - touchStartX;
+            var dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                goTo(dx < 0 ? current + 1 : current - 1);
+            }
+        }, { passive: true });
+
+        // Cleanup SPA : MutationObserver watches carousel removal
+        var observer = new MutationObserver(function() {
+            if (!document.body.contains(carousel)) {
+                stopAutoplay();
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+}
+window.__initCarousel = initCarousel;
 
 window.__initComponents = initComponents;
 

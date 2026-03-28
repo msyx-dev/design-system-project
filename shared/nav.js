@@ -57,6 +57,7 @@ const NAV_SECTIONS = [
         { label: 'Code', icon: '&lt;/&gt;', href: '/pages/divers.html#code' },
         { label: 'Tooltip/Popover', icon: '&#128172;', href: '/pages/divers.html#tooltip' },
         { label: 'Copy Button', icon: '&#128203;', href: '/pages/divers.html#copy-button' },
+        { label: 'Carousel', icon: '&#9654;', href: '/pages/divers.html#carousel' },
         { label: 'Cmd Palette', icon: '&#8984;', href: '/pages/divers.html#command-palette' }
     ]},
     { title: 'Templates', links: [
