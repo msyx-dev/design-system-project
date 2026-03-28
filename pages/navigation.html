@@ -37,6 +37,87 @@
     </div>
 </section>
 
+<!-- BREADCRUMBS -->
+<section id="breadcrumbs">
+    <div class="section-header"><span class="overline">Navigation</span><h2>Breadcrumbs</h2><p>Navigation hierarchique avec separateurs personnalisables et collapse responsive sur mobile.</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Simple — separateur /</span>
+            <nav class="breadcrumbs" aria-label="Fil d'Ariane">
+                <ol>
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span></li>
+                    <li><a href="#">Projets</a></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span></li>
+                    <li><a href="#">Design System</a></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span></li>
+                    <li><span aria-current="page">Navigation</span></li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Avec icone home</span>
+            <nav class="breadcrumbs" aria-label="Fil d'Ariane">
+                <ol>
+                    <li>
+                        <a href="#" class="bc-home" aria-label="Accueil">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        </a>
+                    </li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span></li>
+                    <li><a href="#">Composants</a></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span></li>
+                    <li><span aria-current="page">Breadcrumbs</span></li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Separateur chevron SVG</span>
+            <nav class="breadcrumbs" aria-label="Fil d'Ariane">
+                <ol>
+                    <li><a href="#">Accueil</a></li>
+                    <li>
+                        <span class="bc-sep" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </span>
+                    </li>
+                    <li><a href="#">Parametres</a></li>
+                    <li>
+                        <span class="bc-sep" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </span>
+                    </li>
+                    <li><a href="#">Securite</a></li>
+                    <li>
+                        <span class="bc-sep" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </span>
+                    </li>
+                    <li><span aria-current="page">Cles API</span></li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Responsive — collapse sur mobile</span>
+            <nav class="breadcrumbs bc-responsive" aria-label="Fil d'Ariane">
+                <ol>
+                    <li><a href="#">Accueil</a></li>
+                    <li class="bc-ellipsis" aria-hidden="true"><span class="bc-sep">/</span><span>…</span></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span><a href="#">Projets</a></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span><a href="#">Design System</a></li>
+                    <li><span class="bc-sep" aria-hidden="true">/</span><span aria-current="page">Breadcrumbs</span></li>
+                </ol>
+            </nav>
+            <p class="typo-small" style="margin-top:1rem;">Sur mobile : premier + "…" + dernier element uniquement.</p>
+        </div>
+
+    </div>
+</section>
+
 <!-- STEPPER -->
 <section id="stepper">
     <div class="section-header"><span class="overline">Navigation</span><h2>Stepper</h2><p>Indicateur de progression multi-etapes.</p></div>
