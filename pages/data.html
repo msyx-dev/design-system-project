@@ -311,6 +311,42 @@
     </div>
 </section>
 
+<!-- DATA GRID -->
+<section id="data-grid">
+    <div class="section-header"><span class="overline">Data</span><h2>Data Grid</h2><p>Table enrichie avec tri multi-colonne, filtres inline et selection multiple.</p></div>
+    <div class="demo-box">
+        <div class="data-grid-wrap">
+            <table class="data-grid" id="data-grid-main">
+                <thead>
+                    <tr class="data-grid-header-row">
+                        <th><input type="checkbox" class="data-grid-select-all" title="Tout selectionner" style="accent-color:var(--accent);"></th>
+                        <th class="data-grid-sortable" data-col="0">Composant <span class="data-grid-sort-icon">↕</span></th>
+                        <th class="data-grid-sortable" data-col="1">Categorie <span class="data-grid-sort-icon">↕</span></th>
+                        <th class="data-grid-sortable" data-col="2">Statut <span class="data-grid-sort-icon">↕</span></th>
+                        <th class="data-grid-sortable" data-col="3">Sprint <span class="data-grid-sort-icon">↕</span></th>
+                        <th class="data-grid-sortable" data-col="4">SP <span class="data-grid-sort-icon">↕</span></th>
+                        <th class="data-grid-sortable" data-col="5">JS <span class="data-grid-sort-icon">↕</span></th>
+                    </tr>
+                    <tr class="data-grid-filter-row">
+                        <th></th>
+                        <th><input class="data-grid-filter" data-col="0" placeholder="Filtrer…" type="text"></th>
+                        <th><input class="data-grid-filter" data-col="1" placeholder="Filtrer…" type="text"></th>
+                        <th><input class="data-grid-filter" data-col="2" placeholder="Filtrer…" type="text"></th>
+                        <th><input class="data-grid-filter" data-col="3" placeholder="Filtrer…" type="text"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="data-grid-body"></tbody>
+            </table>
+        </div>
+        <div class="data-grid-footer">
+            <span class="data-grid-count"></span>
+            <span class="data-grid-selection"></span>
+        </div>
+    </div>
+</section>
+
 <!-- LISTS -->
 <section id="lists">
     <div class="section-header"><span class="overline">Data</span><h2>Listes</h2><p>Listes d'items avec avatars, metadata et actions.</p></div>
