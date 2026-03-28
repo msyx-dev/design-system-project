@@ -162,6 +162,9 @@ function initComponents() {
 
     // FAB
     initFAB();
+
+    // Segmented Controls
+    initSegmentedControls();
 }
 
 // Chips
@@ -1107,6 +1110,61 @@ function initFAB() {
     });
 }
 window.__initFAB = initFAB;
+
+// Segmented Controls
+function initSegmentedControls() {
+    document.querySelectorAll('.segmented').forEach(function(seg) {
+        if (seg.dataset.bound) return;
+        seg.dataset.bound = '1';
+
+        var indicator = seg.querySelector('.segmented-indicator');
+        var items = seg.querySelectorAll('.segmented-item');
+        if (!indicator || !items.length) return;
+
+        function moveIndicator(item) {
+            indicator.style.width = item.offsetWidth + 'px';
+            indicator.style.transform = 'translateX(' + item.offsetLeft + 'px)';
+        }
+
+        function selectItem(item) {
+            items.forEach(function(i) {
+                i.classList.remove('active');
+                i.setAttribute('aria-pressed', 'false');
+            });
+            item.classList.add('active');
+            item.setAttribute('aria-pressed', 'true');
+            moveIndicator(item);
+            seg.dispatchEvent(new CustomEvent('segmented:change', {
+                detail: { value: item.textContent.trim(), index: Array.from(items).indexOf(item) },
+                bubbles: true
+            }));
+        }
+
+        items.forEach(function(item) {
+            item.setAttribute('role', 'button');
+            item.setAttribute('aria-pressed', item.classList.contains('active') ? 'true' : 'false');
+            item.addEventListener('click', function() {
+                selectItem(item);
+            });
+            item.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectItem(item);
+                }
+            });
+        });
+
+        // Init indicator sur l'item actif
+        var activeItem = seg.querySelector('.segmented-item.active') || items[0];
+        if (activeItem) {
+            // Attendre que le layout soit pret (requestAnimationFrame)
+            requestAnimationFrame(function() {
+                moveIndicator(activeItem);
+            });
+        }
+    });
+}
+window.__initSegmentedControls = initSegmentedControls;
 
 window.__initComponents = initComponents;
 
