@@ -210,6 +210,107 @@
     </div>
 </section>
 
+<!-- CAROUSEL -->
+<section id="carousel">
+    <div class="section-header"><span class="overline">Divers</span><h2>Carousel / Image Slider</h2><p>Slider avec navigation, points indicateurs, swipe tactile et auto-play configurable.</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box" style="grid-column:1/-1;">
+            <span class="demo-label">Images (gradients) — auto-play 4s</span>
+            <div class="carousel" data-autoplay="4000" aria-label="Carousel images">
+                <div class="carousel-track" role="list">
+                    <div class="carousel-slide" role="listitem">
+                        <div class="carousel-img-slide" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">
+                            <div class="carousel-slide-content">
+                                <span class="carousel-slide-label">Design System</span>
+                                <h3>Composants UI</h3>
+                                <p>46 composants, 3 themes, dark &amp; light mode.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" role="listitem">
+                        <div class="carousel-img-slide" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);">
+                            <div class="carousel-slide-content">
+                                <span class="carousel-slide-label">Pipeline</span>
+                                <h3>Agents Claude Code</h3>
+                                <p>8 agents specialises, 9 skills, 10 commandes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" role="listitem">
+                        <div class="carousel-img-slide" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);">
+                            <div class="carousel-slide-content">
+                                <span class="carousel-slide-label">Theming</span>
+                                <h3>3 themes natifs</h3>
+                                <p>MSYX, ACSSI, Nhood — dark &amp; light par theme.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" role="listitem">
+                        <div class="carousel-img-slide" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">
+                            <div class="carousel-slide-content">
+                                <span class="carousel-slide-label">Deploy</span>
+                                <h3>Infrastructure Caddy</h3>
+                                <p>Reverse proxy, auth gate, HTTPS auto sur *.msyx.fr.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-btn carousel-btn-prev" aria-label="Slide precedent">&#8249;</button>
+                <button class="carousel-btn carousel-btn-next" aria-label="Slide suivant">&#8250;</button>
+                <div class="carousel-dots" role="tablist"></div>
+            </div>
+        </div>
+
+        <div class="demo-box" style="grid-column:1/-1;">
+            <span class="demo-label">Cards texte — navigation manuelle</span>
+            <div class="carousel carousel--cards" aria-label="Carousel cards">
+                <div class="carousel-track" role="list">
+                    <div class="carousel-slide" role="listitem">
+                        <div class="card" style="padding:2rem;">
+                            <div class="badge badge-primary" style="margin-bottom:1rem;">Sprint 6</div>
+                            <h3 style="margin-bottom:0.5rem;">Carousel</h3>
+                            <p style="color:var(--text-muted);">Slider avec auto-play, swipe, dots et navigation clavier. 5 story points.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" role="listitem">
+                        <div class="card" style="padding:2rem;">
+                            <div class="badge badge-success" style="margin-bottom:1rem;">Livre</div>
+                            <h3 style="margin-bottom:0.5rem;">Copy Button</h3>
+                            <p style="color:var(--text-muted);">Copie dans le presse-papiers avec feedback visuel et tooltip de confirmation.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" role="listitem">
+                        <div class="card" style="padding:2rem;">
+                            <div class="badge badge-success" style="margin-bottom:1rem;">Livre</div>
+                            <h3 style="margin-bottom:0.5rem;">Breadcrumbs</h3>
+                            <p style="color:var(--text-muted);">4 variantes de fil d'Ariane avec collapse mobile automatique.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-btn carousel-btn-prev" aria-label="Slide precedent">&#8249;</button>
+                <button class="carousel-btn carousel-btn-next" aria-label="Slide suivant">&#8250;</button>
+                <div class="carousel-dots" role="tablist"></div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Usage HTML</span>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="cm">&lt;!-- Carousel images --&gt;</span><br><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"carousel"</span><br>&nbsp;&nbsp;<span class="fn">data-autoplay</span>=<span class="str">"4000"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"carousel-track"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"carousel-slide"</span><span class="kw">&gt;</span>...<span class="kw">&lt;/div&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;/div&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;button</span> <span class="fn">class</span>=<span class="str">"carousel-btn-prev"</span><span class="kw">&gt;</span>&#8249;<span class="kw">&lt;/button&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"carousel-dots"</span><span class="kw">&gt;&lt;/div&gt;</span><br><span class="kw">&lt;/div&gt;</span></div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Variante cards</span>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="cm">&lt;!-- Modifier pour cards --&gt;</span><br><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"carousel carousel--cards"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="cm">&lt;!-- pas d'autoplay --&gt;</span><br>&nbsp;&nbsp;<span class="cm">&lt;!-- dots en position static --&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">/* .carousel-img-slide */</span><br><span class="fn">height</span>: <span class="num">260px</span>;<br><span class="fn">background</span>: linear-gradient(...);</div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- COMMAND PALETTE -->
 <section id="command-palette">
     <div class="section-header"><span class="overline">Divers</span><h2>Command Palette</h2><p>Recherche rapide et navigation par raccourci <kbd>&#8984;</kbd><kbd>K</kbd>.</p></div>
