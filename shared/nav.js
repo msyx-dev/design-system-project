@@ -24,7 +24,8 @@ const NAV_SECTIONS = [
         { label: 'Calendrier', icon: '&#128197;', href: '/pages/formulaires.html#calendar' },
         { label: 'Dropdown', icon: '&#9662;', href: '/pages/formulaires.html#dropdown' },
         { label: 'File Upload', icon: '&#128206;', href: '/pages/formulaires.html#file-upload' },
-        { label: 'Slider / Range', icon: '&#8942;', href: '/pages/formulaires.html#slider' }
+        { label: 'Slider / Range', icon: '&#8942;', href: '/pages/formulaires.html#slider' },
+        { label: 'Search Input', icon: '&#128269;', href: '/pages/formulaires.html#search-input' }
     ]},
     { title: 'Navigation', links: [
         { label: 'Tabs & Nav', icon: '&#9776;', href: '/pages/navigation.html#nav-components' },

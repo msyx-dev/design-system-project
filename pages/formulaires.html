@@ -408,6 +408,91 @@
   </div>
 </section>
 
+<section id="search-input" class="ds-section">
+  <div class="section-header"><span class="overline">Formulaires</span><h2>Search Input</h2><p class="section-desc">Champs de recherche avec suggestions, navigation clavier et variante compacte.</p></div>
+
+  <h3>Search simple</h3>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box">
+      <div class="search-input-wrap" role="search">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" placeholder="Rechercher..." aria-label="Rechercher">
+        <button class="search-clear hidden" aria-label="Effacer la recherche" tabindex="-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="demo-box" style="background:var(--surface-light);">
+      <div class="search-input-wrap" role="search">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" placeholder="Rechercher un fichier..." aria-label="Rechercher">
+        <button class="search-clear hidden" aria-label="Effacer la recherche" tabindex="-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <h3>Search avec suggestions</h3>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box" style="padding-bottom:2rem;">
+      <div class="search-input-wrap search-with-suggestions" data-suggestions="Button,Card,Badge,Chip,Breadcrumbs,Tabs,Stepper,Pagination,Modal,Toast,Drawer,Slider,Calendar,Dropdown,File Upload,Search Input,Copy Button,Timeline,Accordion,Tooltip" role="combobox" aria-haspopup="listbox" aria-expanded="false">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" placeholder="Chercher un composant..." aria-label="Chercher un composant" aria-autocomplete="list" aria-controls="suggestions-1">
+        <button class="search-clear hidden" aria-label="Effacer la recherche" tabindex="-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <ul id="suggestions-1" class="search-suggestions hidden" role="listbox" aria-label="Suggestions"></ul>
+      </div>
+    </div>
+    <div class="demo-box" style="padding-bottom:2rem;">
+      <div class="search-input-wrap search-with-suggestions" data-suggestions="MSYX Theme,ACSSI Theme,Nhood Theme,Dark Mode,Light Mode,Space Grotesk,Inter,Fira Code,Glassmorphism,Gradient,Border Glow,Surface,Accent,Primary,Secondary" role="combobox" aria-haspopup="listbox" aria-expanded="false">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" placeholder="Chercher un token..." aria-label="Chercher un token" aria-autocomplete="list" aria-controls="suggestions-2">
+        <button class="search-clear hidden" aria-label="Effacer la recherche" tabindex="-1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <ul id="suggestions-2" class="search-suggestions hidden" role="listbox" aria-label="Suggestions"></ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>Search compact</h3>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box">
+      <div class="search-input-wrap search-compact" role="search">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" placeholder="Recherche rapide..." aria-label="Recherche rapide">
+        <button class="search-clear hidden" aria-label="Effacer" tabindex="-1">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="demo-box" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+      <span style="font-size:0.82rem;color:var(--text-dim);white-space:nowrap;">Barre de nav :</span>
+      <div class="search-input-wrap search-compact" style="flex:1;min-width:160px;" role="search">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" placeholder="⌘K pour rechercher..." aria-label="Recherche globale">
+        <button class="search-clear hidden" aria-label="Effacer" tabindex="-1">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
