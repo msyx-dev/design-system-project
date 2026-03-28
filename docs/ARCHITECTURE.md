@@ -14,15 +14,15 @@ pages/
   fondation.html        # Couleurs, typographie, espacements, ombres, theming
   composants.html       # Cards, badges, boutons, avatars, alertes, modals, toasts, theme switcher
   navigation.html       # Tabs, breadcrumbs, stepper
-  formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier
+  formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range
   data.html             # Tables, stats, charts, KPI
   templates.html        # Kanban, roadmap, backlog, sprint board
-  feedback.html         # Empty states, spinners, tooltips, pagination, drawer
+  feedback.html         # Alertes, toasts, modals (<dialog> natif), skeleton, drawer, zone banner, empty states, spinners
   divers.html           # Command palette, accordion, timeline, code blocks
 shared/
-  styles.css            # CSS global — variables :root (~65), composants, theming, responsive
+  styles.css            # CSS global — ~45 variables :root (+ overrides theme/mode), composants, theming, responsive
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js         # Composants JS (toasts, modals, tabs, kanban, theme/mode switcher)
+  components.js         # Composants JS (toasts, modals, tabs, kanban, sliders, dropdowns, theme/mode switcher)
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint
@@ -86,8 +86,9 @@ docs/
 
 ## Variables CSS
 
-~65 variables dans `:root` de shared/styles.css :
+~45 variables dans `:root` de shared/styles.css (+ overrides dans chaque bloc theme/mode) :
 - **Couleurs** : primary, accent, surface, text, semantic (success/warning/danger/info)
+- **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
 - **Couleurs etendues** : violet, cyan, pink, success/warning/danger-light/dark
 - **Code syntax** : code-keyword, code-string, code-comment, code-function, code-number
 - **Overlays** : overlay, overlay-heavy
@@ -102,8 +103,10 @@ docs/
 ## Composants JS interactifs
 
 - Toasts (`showToast()`) : variantes colorees, auto-dismiss, stack
-- Modals : overlay + contenu, fermeture ESC/clic overlay
+- Modals (`openModal()`) : `<dialog>` natif HTML avec `.showModal()`, focus trap gratuit, fermeture ESC/backdrop, 3 variantes (confirmation, formulaire, information)
 - Tabs / Accordion : toggle sections, dataset.bound anti-double-bind
+- Sliders (`initSliders()`) : sync bidirectionnelle range-number, fill dynamique via `--slider-fill`
+- Dropdowns (`initDropdowns()`) : search, multi-select, option filtering
 - Kanban : drag & drop natif HTML5 (dragstart, dragover, drop)
 - Backlog filtres : filtrage par priority, search
 - Burndown chart : animation SVG
@@ -125,7 +128,6 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 
 ## Dette technique connue
 
-- ~43 `rgba(59,130,246,...)` hardcodes dans les composants CSS (opacite accent non tokenisees)
 - Avatars hardcodes dans composants.html + templates.html (couleurs directes au lieu de variables)
 - post-merge.sh echoue quand GitHub auto-close l'issue avant le script
-- Board design-system absent de pipeline.json (warnings a chaque create-issue)
+- create-issue.sh passe le numero de milestone mais gh attend le nom (contournement : creation manuelle)
