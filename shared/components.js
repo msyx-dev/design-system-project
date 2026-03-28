@@ -156,6 +156,9 @@ function initComponents() {
 
     // Bottom Navigation
     initBottomNav();
+
+    // Number Inputs
+    initNumberInputs();
 }
 
 // Chips
@@ -984,6 +987,69 @@ function initBottomNav() {
     });
 }
 window.__initBottomNav = initBottomNav;
+
+// Number Inputs
+function initNumberInputs() {
+    document.querySelectorAll('.number-input-wrap').forEach(function(wrap) {
+        if (wrap.dataset.bound) return;
+        wrap.dataset.bound = '1';
+
+        var btnDec = wrap.querySelector('.number-input-btn[data-action="dec"]');
+        var btnInc = wrap.querySelector('.number-input-btn[data-action="inc"]');
+        var field  = wrap.querySelector('.number-input-field');
+        if (!btnDec || !btnInc || !field) return;
+
+        var min  = parseFloat(wrap.dataset.min  !== undefined ? wrap.dataset.min  : '-Infinity');
+        var max  = parseFloat(wrap.dataset.max  !== undefined ? wrap.dataset.max  : 'Infinity');
+        var step = parseFloat(wrap.dataset.step !== undefined ? wrap.dataset.step : '1') || 1;
+
+        function clamp(val) {
+            return Math.min(max, Math.max(min, val));
+        }
+
+        function round(val) {
+            var inv = 1 / step;
+            return Math.round(val * inv) / inv;
+        }
+
+        function updateButtons(val) {
+            btnDec.disabled = val <= min;
+            btnInc.disabled = val >= max;
+        }
+
+        function getValue() {
+            return parseFloat(field.value) || 0;
+        }
+
+        function setValue(val) {
+            val = clamp(round(val));
+            field.value = val;
+            updateButtons(val);
+            wrap.dispatchEvent(new CustomEvent('numberinput:change', { detail: { value: val }, bubbles: true }));
+        }
+
+        btnDec.addEventListener('click', function() {
+            setValue(getValue() - step);
+        });
+
+        btnInc.addEventListener('click', function() {
+            setValue(getValue() + step);
+        });
+
+        field.addEventListener('change', function() {
+            setValue(getValue());
+        });
+
+        field.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp')   { e.preventDefault(); setValue(getValue() + step); }
+            if (e.key === 'ArrowDown') { e.preventDefault(); setValue(getValue() - step); }
+        });
+
+        // Init button state
+        updateButtons(getValue());
+    });
+}
+window.__initNumberInputs = initNumberInputs;
 
 window.__initComponents = initComponents;
 

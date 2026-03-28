@@ -493,6 +493,91 @@
   </div>
 </section>
 
+
+<!-- NUMBER INPUT -->
+<section id="number-input" class="ds-section">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Number Input</h2><p class="section-desc">Champs numeriques avec boutons + et - fonctionnels, bornes min/max et variantes compact/standard.</p></div>
+
+    <h3>Standard</h3>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Quantite (1-99)</span>
+            <div class="number-input-wrap" data-min="1" data-max="99" data-step="1">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer">&#8722;</button>
+                <input class="number-input-field" type="number" value="1" min="1" max="99" aria-label="Quantite">
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter">&#43;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Port (0-65535)</span>
+            <div class="number-input-wrap" data-min="0" data-max="65535" data-step="1" style="max-width:180px;">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer">&#8722;</button>
+                <input class="number-input-field" type="number" value="3000" min="0" max="65535" aria-label="Port">
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter">&#43;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Temperature (-20 a 120, step 5)</span>
+            <div class="number-input-wrap" data-min="-20" data-max="120" data-step="5">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer">&#8722;</button>
+                <input class="number-input-field" type="number" value="20" min="-20" max="120" aria-label="Temperature">
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter">&#43;</button>
+            </div>
+        </div>
+    </div>
+
+    <h3>Compact</h3>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Compact — Sprint points</span>
+            <div class="number-input-wrap number-input--compact" data-min="0" data-max="13" data-step="1">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer">&#8722;</button>
+                <input class="number-input-field" type="number" value="3" min="0" max="13" aria-label="Points">
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter">&#43;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Compact — Zoom (%)</span>
+            <div class="number-input-wrap number-input--compact" data-min="10" data-max="400" data-step="10">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer">&#8722;</button>
+                <input class="number-input-field" type="number" value="100" min="10" max="400" aria-label="Zoom">
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter">&#43;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Compact dans un contexte inline</span>
+            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+                <span style="font-size:0.85rem;color:var(--text-muted);">Repliques :</span>
+                <div class="number-input-wrap number-input--compact" data-min="1" data-max="10" data-step="1" style="max-width:110px;">
+                    <button class="number-input-btn" data-action="dec" aria-label="Diminuer">&#8722;</button>
+                    <input class="number-input-field" type="number" value="2" min="1" max="10" aria-label="Repliques">
+                    <button class="number-input-btn" data-action="inc" aria-label="Augmenter">&#43;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Desactive</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Standard desactive</span>
+            <div class="number-input-wrap number-input--disabled" data-min="0" data-max="100" data-step="1">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer" disabled>&#8722;</button>
+                <input class="number-input-field" type="number" value="42" min="0" max="100" aria-label="Valeur" disabled>
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter" disabled>&#43;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Compact desactive</span>
+            <div class="number-input-wrap number-input--compact number-input--disabled" data-min="0" data-max="10" data-step="1">
+                <button class="number-input-btn" data-action="dec" aria-label="Diminuer" disabled>&#8722;</button>
+                <input class="number-input-field" type="number" value="5" min="0" max="10" aria-label="Valeur" disabled>
+                <button class="number-input-btn" data-action="inc" aria-label="Augmenter" disabled>&#43;</button>
+            </div>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
