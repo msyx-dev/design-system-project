@@ -355,6 +355,26 @@ th { background: var(--surface-solid); padding: 0.7rem 1.1rem; text-align: left;
 td { padding: 0.7rem 1.1rem; border-top: 1px solid var(--border); font-size: 0.88rem; }
 tr:hover td { background: rgba(var(--accent-rgb),0.03); }
 
+/* ===== DATA GRID ===== */
+.data-grid-wrap { max-height: 400px; overflow-x: auto; overflow-y: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+.data-grid { width: 100%; border-collapse: collapse; min-width: 640px; }
+.data-grid thead { position: sticky; top: 0; z-index: 2; }
+.data-grid-header-row th { background: var(--surface-solid); padding: 0.6rem 0.9rem; text-align: left; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+.data-grid-filter-row th { background: var(--surface-solid); padding: 0.35rem 0.9rem 0.5rem; border-bottom: 1px solid var(--border); }
+.data-grid-sortable { cursor: pointer; user-select: none; }
+.data-grid-sortable:hover { color: var(--accent-light); }
+.data-grid-sort-icon { display: inline-block; margin-left: 0.3rem; opacity: 0.35; font-style: normal; transition: opacity 0.15s, color 0.15s; }
+.data-grid-sortable[aria-sort="ascending"] .data-grid-sort-icon,
+.data-grid-sortable[aria-sort="descending"] .data-grid-sort-icon { opacity: 1; color: var(--accent); }
+.data-grid-filter { width: 100%; background: rgba(var(--accent-rgb), 0.04); border: 1px solid var(--border); border-radius: var(--radius-xs); color: var(--text); padding: 0.3rem 0.5rem; font-size: 0.78rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+.data-grid-filter:focus { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.07); }
+.data-grid-body tr td { padding: 0.65rem 0.9rem; border-top: 1px solid var(--border); font-size: 0.86rem; color: var(--text); vertical-align: middle; }
+.data-grid-body tr:hover td { background: rgba(var(--accent-rgb), 0.03); }
+.data-grid-body tr.selected td { background: rgba(var(--accent-rgb), 0.07); }
+.data-grid-body td input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
+.data-grid-footer { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); gap: 1rem; }
+.data-grid-selection { color: var(--accent-light); font-weight: 500; }
+
 /* ===== ALERT ===== */
 .alert { padding: 0.9rem 1.2rem; border-radius: var(--radius-sm); display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.88rem; line-height: 1.5; }
 .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }

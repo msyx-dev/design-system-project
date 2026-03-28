@@ -144,6 +144,9 @@ function initComponents() {
 
     // Copy Buttons
     initCopyButtons();
+
+    // Data Grids
+    initDataGrids();
 }
 
 // Chips
@@ -612,6 +615,186 @@ function initModeSwitcher() {
 window.__initModeSwitcher = initModeSwitcher;
 
 // Expose for SPA re-init
+// ===== DATA GRID =====
+var DATA_GRID_ROWS = [
+    { composant: 'Button', categorie: 'Composants', statut: 'Stable', sprint: 'Sprint 1', sp: 2, js: false },
+    { composant: 'Badge', categorie: 'Composants', statut: 'Stable', sprint: 'Sprint 1', sp: 1, js: false },
+    { composant: 'Card', categorie: 'Composants', statut: 'Stable', sprint: 'Sprint 1', sp: 2, js: false },
+    { composant: 'Modal', categorie: 'Feedback', statut: 'Stable', sprint: 'Sprint 5', sp: 3, js: true },
+    { composant: 'Toast', categorie: 'Feedback', statut: 'Stable', sprint: 'Sprint 3', sp: 3, js: true },
+    { composant: 'Tabs', categorie: 'Navigation', statut: 'Stable', sprint: 'Sprint 2', sp: 2, js: true },
+    { composant: 'Slider', categorie: 'Formulaires', statut: 'Stable', sprint: 'Sprint 5', sp: 3, js: true },
+    { composant: 'Breadcrumbs', categorie: 'Navigation', statut: 'Stable', sprint: 'Sprint 6', sp: 3, js: true },
+    { composant: 'Copy Button', categorie: 'Divers', statut: 'Stable', sprint: 'Sprint 6', sp: 2, js: true },
+    { composant: 'Chip', categorie: 'Composants', statut: 'En cours', sprint: 'Sprint 6', sp: 2, js: true },
+    { composant: 'Data Grid', categorie: 'Data', statut: 'En cours', sprint: 'Sprint 6', sp: 5, js: true },
+    { composant: 'Carousel', categorie: 'Composants', statut: 'Planifie', sprint: 'Sprint 6', sp: 3, js: true }
+];
+
+function initDataGrids() {
+    document.querySelectorAll('.data-grid').forEach(function(grid) {
+        if (grid.dataset.bound) return;
+        grid.dataset.bound = '1';
+
+        var tbody = grid.querySelector('.data-grid-body');
+        var filterInputs = grid.querySelectorAll('.data-grid-filter');
+        var sortHeaders = grid.querySelectorAll('.data-grid-sortable');
+        var selectAllCb = grid.querySelector('.data-grid-select-all');
+        var countEl = grid.closest('.demo-box') ? grid.closest('.demo-box').querySelector('.data-grid-count') : null;
+        var selEl = grid.closest('.demo-box') ? grid.closest('.demo-box').querySelector('.data-grid-selection') : null;
+
+        var filterState = {};
+        var sortState = { col: null, dir: 'none' };
+
+        function getStatutBadge(statut) {
+            var map = { 'Stable': 'badge-success', 'En cours': 'badge-primary', 'Planifie': 'badge-warning', 'Annule': 'badge-danger' };
+            var cls = map[statut] || 'badge-info';
+            return '<span class="badge ' + cls + '" style="font-size:0.68rem;padding:0.15rem 0.5rem;">' + statut + '</span>';
+        }
+
+        function getSortedFiltered() {
+            var rows = DATA_GRID_ROWS.slice();
+            // Filter
+            Object.keys(filterState).forEach(function(col) {
+                var val = filterState[col].toLowerCase().trim();
+                if (!val) return;
+                var colIdx = parseInt(col, 10);
+                rows = rows.filter(function(r) {
+                    var colKeys = ['composant', 'categorie', 'statut', 'sprint', 'sp', 'js'];
+                    var cellVal = String(r[colKeys[colIdx]]).toLowerCase();
+                    return cellVal.includes(val);
+                });
+            });
+            // Sort
+            if (sortState.col !== null && sortState.dir !== 'none') {
+                var colKeys = ['composant', 'categorie', 'statut', 'sprint', 'sp', 'js'];
+                var key = colKeys[sortState.col];
+                rows.sort(function(a, b) {
+                    var av = a[key], bv = b[key];
+                    var cmp = typeof av === 'number'
+                        ? av - bv
+                        : String(av).localeCompare(String(bv), 'fr');
+                    return sortState.dir === 'asc' ? cmp : -cmp;
+                });
+            }
+            return rows;
+        }
+
+        function renderRows(data) {
+            tbody.innerHTML = '';
+            data.forEach(function(row) {
+                var tr = document.createElement('tr');
+                tr.innerHTML =
+                    '<td><input type="checkbox" style="accent-color:var(--accent);cursor:pointer;"></td>' +
+                    '<td style="font-weight:500;">' + row.composant + '</td>' +
+                    '<td>' + row.categorie + '</td>' +
+                    '<td>' + getStatutBadge(row.statut) + '</td>' +
+                    '<td><span class="tag">' + row.sprint + '</span></td>' +
+                    '<td style="font-weight:600;color:var(--accent-light);">' + row.sp + '</td>' +
+                    '<td>' + (row.js ? '<span style="color:var(--warning);font-size:0.8rem;font-weight:600;">JS</span>' : '<span style="color:var(--text-dim);font-size:0.8rem;">—</span>') + '</td>';
+                var cb = tr.querySelector('input[type="checkbox"]');
+                cb.addEventListener('change', function() {
+                    if (cb.checked) {
+                        tr.classList.add('selected');
+                    } else {
+                        tr.classList.remove('selected');
+                    }
+                    updateSelectAllState();
+                    updateFooter();
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateFooter() {
+            var allRows = tbody.querySelectorAll('tr');
+            var selRows = tbody.querySelectorAll('tr.selected');
+            if (countEl) countEl.textContent = allRows.length + ' / ' + DATA_GRID_ROWS.length + ' lignes';
+            if (selEl) {
+                if (selRows.length > 0) {
+                    selEl.textContent = selRows.length + ' selectionne' + (selRows.length > 1 ? 'es' : 'e');
+                    selEl.style.display = '';
+                } else {
+                    selEl.textContent = '';
+                    selEl.style.display = 'none';
+                }
+            }
+        }
+
+        function updateSelectAllState() {
+            if (!selectAllCb) return;
+            var allCbs = tbody.querySelectorAll('input[type="checkbox"]');
+            var checked = tbody.querySelectorAll('input[type="checkbox"]:checked');
+            if (checked.length === 0) {
+                selectAllCb.checked = false;
+                selectAllCb.indeterminate = false;
+            } else if (checked.length === allCbs.length) {
+                selectAllCb.checked = true;
+                selectAllCb.indeterminate = false;
+            } else {
+                selectAllCb.checked = false;
+                selectAllCb.indeterminate = true;
+            }
+        }
+
+        function refresh() {
+            var data = getSortedFiltered();
+            renderRows(data);
+            updateFooter();
+        }
+
+        // Sort handlers
+        sortHeaders.forEach(function(th) {
+            th.setAttribute('role', 'columnheader');
+            th.setAttribute('aria-sort', 'none');
+            th.addEventListener('click', function() {
+                var col = parseInt(th.dataset.col, 10);
+                var currentDir = th.getAttribute('aria-sort');
+                var nextDir = currentDir === 'none' ? 'asc' : currentDir === 'asc' ? 'desc' : 'none';
+                // Reset all
+                sortHeaders.forEach(function(h) {
+                    h.setAttribute('aria-sort', 'none');
+                    var icon = h.querySelector('.data-grid-sort-icon');
+                    if (icon) icon.textContent = '↕';
+                });
+                th.setAttribute('aria-sort', nextDir);
+                var icon = th.querySelector('.data-grid-sort-icon');
+                if (icon) icon.textContent = nextDir === 'asc' ? '↑' : nextDir === 'desc' ? '↓' : '↕';
+                sortState = { col: nextDir === 'none' ? null : col, dir: nextDir };
+                refresh();
+            });
+        });
+
+        // Filter handlers
+        filterInputs.forEach(function(input) {
+            input.addEventListener('input', function() {
+                filterState[input.dataset.col] = input.value;
+                refresh();
+            });
+        });
+
+        // Select-all handler
+        if (selectAllCb) {
+            selectAllCb.addEventListener('change', function() {
+                var allCbs = tbody.querySelectorAll('input[type="checkbox"]');
+                allCbs.forEach(function(cb) {
+                    cb.checked = selectAllCb.checked;
+                    if (selectAllCb.checked) {
+                        cb.closest('tr').classList.add('selected');
+                    } else {
+                        cb.closest('tr').classList.remove('selected');
+                    }
+                });
+                updateFooter();
+            });
+        }
+
+        // Initial render
+        refresh();
+    });
+}
+window.__initDataGrids = initDataGrids;
+
 window.__initComponents = initComponents;
 
 // Close dropdowns on outside click (once)
