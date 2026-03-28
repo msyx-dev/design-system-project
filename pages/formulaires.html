@@ -343,6 +343,71 @@
     </div>
 </section>
 
+<!-- SLIDER / RANGE -->
+<section id="slider" class="ds-section">
+  <div class="section-header"><span class="overline">Formulaires</span><h2>Slider / Range</h2><p class="section-desc">Curseurs de sélection de valeurs numériques avec bornes.</p></div>
+
+  <h3>Simple</h3>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box">
+      <div class="slider-group">
+        <div class="slider-header">
+          <label class="input-label">Opacité</label>
+          <span class="slider-value-display">75</span>
+        </div>
+        <input class="slider-track" type="range" min="0" max="100" value="75">
+      </div>
+    </div>
+    <div class="demo-box">
+      <div class="slider-group">
+        <div class="slider-header">
+          <label class="input-label">Volume</label>
+          <span class="slider-value-display">50</span>
+        </div>
+        <input class="slider-track" type="range" min="0" max="100" value="50">
+      </div>
+    </div>
+  </div>
+
+  <h3>Avec input numérique</h3>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box">
+      <div class="slider-group slider-dual">
+        <label class="input-label">Taille de police</label>
+        <div class="slider-row">
+          <input class="slider-track" type="range" min="8" max="72" value="16">
+          <input class="slider-value input" type="number" min="8" max="72" value="16">
+        </div>
+      </div>
+    </div>
+    <div class="demo-box">
+      <div class="slider-group slider-dual">
+        <label class="input-label">Border radius</label>
+        <div class="slider-row">
+          <input class="slider-track" type="range" min="0" max="32" value="8">
+          <div class="slider-value-wrap">
+            <input class="slider-value input" type="number" min="0" max="32" value="8">
+            <span class="slider-unit">px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Désactivé</h3>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box">
+      <div class="slider-group slider-disabled">
+        <div class="slider-header">
+          <label class="input-label">Désactivé</label>
+          <span class="slider-value-display">30</span>
+        </div>
+        <input class="slider-track" type="range" min="0" max="100" value="30" disabled>
+      </div>
+    </div>
+  </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
