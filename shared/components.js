@@ -168,6 +168,9 @@ function initComponents() {
 
     // OTP Inputs
     initOTPInputs();
+
+    // Tag Inputs
+    initTagInputs();
 }
 
 // Chips
@@ -1264,6 +1267,118 @@ function initOTPInputs() {
     });
 }
 window.__initOTPInputs = initOTPInputs;
+
+function initTagInputs() {
+    document.querySelectorAll('.tag-input-wrap').forEach(function(wrap) {
+        if (wrap.dataset.bound) return;
+        wrap.dataset.bound = '1';
+
+        var input = wrap.querySelector('.tag-input-field');
+        if (!input) return;
+
+        var maxTags = parseInt(wrap.dataset.max, 10) || Infinity;
+
+        function getTags() {
+            return Array.from(wrap.querySelectorAll('.tag-item'));
+        }
+
+        function getTagValues() {
+            return getTags().map(function(t) {
+                return t.querySelector('.tag-close')
+                    ? t.childNodes[0].textContent.trim()
+                    : t.textContent.trim();
+            });
+        }
+
+        function updateInputState() {
+            var count = getTags().length;
+            if (count >= maxTags) {
+                input.disabled = true;
+                input.placeholder = 'Limite atteinte';
+            } else {
+                input.disabled = false;
+                input.placeholder = input.getAttribute('data-placeholder') || 'Ajouter un tag...';
+            }
+            // Met a jour le compteur si present
+            var counter = wrap.querySelector('.tag-input-limit');
+            if (counter && isFinite(maxTags)) {
+                counter.textContent = count + '/' + maxTags;
+            }
+        }
+
+        // Sauvegarder le placeholder original
+        input.setAttribute('data-placeholder', input.placeholder);
+
+        function createTag(value) {
+            var trimmed = value.trim().replace(/,+$/, '').trim();
+            if (!trimmed) return false;
+            // Anti-doublon
+            if (getTagValues().includes(trimmed)) return false;
+            // Limit
+            if (getTags().length >= maxTags) return false;
+
+            var tag = document.createElement('span');
+            tag.className = 'tag-item';
+            tag.innerHTML = trimmed + ' <button class="tag-close" aria-label="Supprimer ' + trimmed + '">&times;</button>';
+
+            tag.querySelector('.tag-close').addEventListener('click', function() {
+                removeTag(tag);
+            });
+
+            // Inserer avant le champ input
+            wrap.insertBefore(tag, input);
+            updateInputState();
+            wrap.dispatchEvent(new CustomEvent('tag:add', { detail: { value: trimmed, tags: getTagValues() }, bubbles: true }));
+            return true;
+        }
+
+        function removeTag(tag) {
+            tag.classList.add('tag-item--removing');
+            var val = tag.childNodes[0].textContent.trim();
+            setTimeout(function() {
+                if (tag.parentNode) tag.parentNode.removeChild(tag);
+                updateInputState();
+                wrap.dispatchEvent(new CustomEvent('tag:remove', { detail: { value: val, tags: getTagValues() }, bubbles: true }));
+            }, 150);
+        }
+
+        input.addEventListener('keydown', function(e) {
+            if ((e.key === 'Enter' || e.key === ',') && !input.disabled) {
+                e.preventDefault();
+                if (createTag(input.value)) {
+                    input.value = '';
+                }
+            } else if (e.key === 'Backspace' && input.value === '') {
+                var tags = getTags();
+                if (tags.length > 0) {
+                    removeTag(tags[tags.length - 1]);
+                }
+            }
+        });
+
+        // Gerer la virgule via input event (cas mobile / composition)
+        input.addEventListener('input', function() {
+            if (input.value.endsWith(',')) {
+                var val = input.value.slice(0, -1);
+                if (createTag(val)) {
+                    input.value = '';
+                } else {
+                    input.value = val;
+                }
+            }
+        });
+
+        // Clic sur le wrap focus l'input
+        wrap.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('tag-close') && !e.target.classList.contains('tag-item')) {
+                input.focus();
+            }
+        });
+
+        updateInputState();
+    });
+}
+window.__initTagInputs = initTagInputs;
 
 window.__initComponents = initComponents;
 

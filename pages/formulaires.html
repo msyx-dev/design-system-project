@@ -658,6 +658,84 @@
 </section>
 
     </div>
+
+<section id="tag-input">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Tag Input</h2><p>Champ de saisie multi-valeurs avec ajout dynamique, suppression et validation anti-doublons.</p></div>
+
+    <h3>Vide</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Vide (Enter ou virgule pour ajouter)</span>
+            <label class="tag-input-label" for="tag-empty">Technologies</label>
+            <div class="tag-input-wrap" id="tag-empty">
+                <input class="tag-input-field" type="text" placeholder="Ajouter un tag..." aria-label="Ajouter un tag" maxlength="32">
+            </div>
+            <span class="tag-input-hint">Enter ou virgule pour ajouter &mdash; Backspace pour supprimer le dernier</span>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Pre-rempli</span>
+            <label class="tag-input-label" for="tag-prefilled">Equipe</label>
+            <div class="tag-input-wrap" id="tag-prefilled">
+                <span class="tag-item">Design <button class="tag-close" aria-label="Supprimer Design">&times;</button></span>
+                <span class="tag-item">Frontend <button class="tag-close" aria-label="Supprimer Frontend">&times;</button></span>
+                <span class="tag-item">Backend <button class="tag-close" aria-label="Supprimer Backend">&times;</button></span>
+                <input class="tag-input-field" type="text" placeholder="Ajouter un tag..." aria-label="Ajouter un tag" maxlength="32">
+            </div>
+            <span class="tag-input-hint">3 tags pre-remplis</span>
+        </div>
+    </div>
+
+    <h3>Avec limite</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Max 5 tags</span>
+            <label class="tag-input-label" for="tag-max">Competences</label>
+            <div class="tag-input-wrap" id="tag-max" data-max="5">
+                <span class="tag-item">React <button class="tag-close" aria-label="Supprimer React">&times;</button></span>
+                <span class="tag-item">TypeScript <button class="tag-close" aria-label="Supprimer TypeScript">&times;</button></span>
+                <input class="tag-input-field" type="text" placeholder="Ajouter un tag..." aria-label="Ajouter un tag" maxlength="32">
+                <span class="tag-input-limit">2/5</span>
+            </div>
+            <span class="tag-input-hint">Maximum 5 tags</span>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Limite atteinte (5/5)</span>
+            <label class="tag-input-label" for="tag-full">Labels</label>
+            <div class="tag-input-wrap" id="tag-full" data-max="5">
+                <span class="tag-item">alpha <button class="tag-close" aria-label="Supprimer alpha">&times;</button></span>
+                <span class="tag-item">beta <button class="tag-close" aria-label="Supprimer beta">&times;</button></span>
+                <span class="tag-item">prod <button class="tag-close" aria-label="Supprimer prod">&times;</button></span>
+                <span class="tag-item">v2 <button class="tag-close" aria-label="Supprimer v2">&times;</button></span>
+                <span class="tag-item">stable <button class="tag-close" aria-label="Supprimer stable">&times;</button></span>
+                <input class="tag-input-field" type="text" placeholder="Limite atteinte" aria-label="Ajouter un tag" maxlength="32">
+                <span class="tag-input-limit">5/5</span>
+            </div>
+            <span class="tag-input-hint">Supprimer un tag pour pouvoir en ajouter un nouveau</span>
+        </div>
+    </div>
+
+    <h3>Desactive</h3>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Desactive (vide)</span>
+            <label class="tag-input-label" for="tag-disabled">Tags</label>
+            <div class="tag-input-wrap tag-input-wrap--disabled" id="tag-disabled">
+                <input class="tag-input-field" type="text" placeholder="Non modifiable" aria-label="Champ desactive" disabled>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Desactive (pre-rempli)</span>
+            <label class="tag-input-label" for="tag-disabled-prefilled">Environnements</label>
+            <div class="tag-input-wrap tag-input-wrap--disabled" id="tag-disabled-prefilled">
+                <span class="tag-item">production</span>
+                <span class="tag-item">staging</span>
+                <input class="tag-input-field" type="text" placeholder="Non modifiable" aria-label="Champ desactive" disabled>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
 </body>
