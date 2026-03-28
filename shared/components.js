@@ -159,6 +159,9 @@ function initComponents() {
 
     // Number Inputs
     initNumberInputs();
+
+    // FAB
+    initFAB();
 }
 
 // Chips
@@ -1050,6 +1053,60 @@ function initNumberInputs() {
     });
 }
 window.__initNumberInputs = initNumberInputs;
+
+// FAB — Floating Action Button
+function initFAB() {
+    document.querySelectorAll('.fab-menu').forEach(function(menu) {
+        if (menu.dataset.bound) return;
+        menu.dataset.bound = '1';
+
+        var trigger = menu.querySelector('.fab-trigger');
+        if (!trigger) return;
+
+        function openMenu() {
+            menu.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMenu() {
+            menu.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (menu.classList.contains('open')) {
+                closeMenu();
+            } else {
+                // Fermer les autres menus FAB ouverts
+                document.querySelectorAll('.fab-menu.open').forEach(function(m) {
+                    if (m !== menu) {
+                        m.classList.remove('open');
+                        var t = m.querySelector('.fab-trigger');
+                        if (t) t.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                openMenu();
+            }
+        });
+
+        // Fermeture au clic exterieur
+        document.addEventListener('click', function(e) {
+            if (!menu.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Fermeture a la touche Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && menu.classList.contains('open')) {
+                closeMenu();
+                trigger.focus();
+            }
+        });
+    });
+}
+window.__initFAB = initFAB;
 
 window.__initComponents = initComponents;
 
