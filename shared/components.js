@@ -130,6 +130,9 @@ function initComponents() {
         if (si) si.addEventListener('input', () => { const q = si.value.toLowerCase(); menu.querySelectorAll('.dropdown-option').forEach(o => { o.style.display = o.textContent.toLowerCase().includes(q) ? '' : 'none'; }); });
     });
 
+    // Chips
+    initChips();
+
     // Sliders
     initSliders();
 
@@ -139,6 +142,88 @@ function initComponents() {
     // Copy Buttons
     initCopyButtons();
 }
+
+// Chips
+function initChips() {
+    // Suppression : délégation sur chip-close (chips simples et chip-input-item)
+    document.querySelectorAll('.chip:not(.chip-filter)').forEach(chip => {
+        if (chip.dataset.chipBound) return;
+        chip.dataset.chipBound = '1';
+        const closeBtn = chip.querySelector('.chip-close');
+        if (!closeBtn) return;
+        closeBtn.addEventListener('click', () => {
+            chip.style.transition = 'opacity 0.18s, transform 0.18s';
+            chip.style.opacity = '0';
+            chip.style.transform = 'scale(0.8)';
+            setTimeout(() => chip.remove(), 180);
+        });
+    });
+
+    // Filter toggle : délégation sur chip-group
+    document.querySelectorAll('.chip-group').forEach(group => {
+        if (group.dataset.bound) return;
+        group.dataset.bound = '1';
+        group.addEventListener('click', e => {
+            const filter = e.target.closest('.chip-filter');
+            if (!filter) return;
+            group.querySelectorAll('.chip-filter').forEach(f => f.classList.remove('active'));
+            filter.classList.add('active');
+        });
+    });
+
+    // Chip input : saisie dynamique
+    document.querySelectorAll('.chip-input-wrapper').forEach(wrapper => {
+        if (wrapper.dataset.bound) return;
+        wrapper.dataset.bound = '1';
+
+        const input = wrapper.querySelector('.chip-input-field');
+        if (!input) return;
+
+        function createChip(value) {
+            const trimmed = value.trim().replace(/,+$/, '').trim();
+            if (!trimmed) return;
+            // Anti-doublon
+            const existing = Array.from(wrapper.querySelectorAll('.chip-input-item'))
+                .map(c => c.textContent.trim().replace('×', '').trim());
+            if (existing.includes(trimmed)) return;
+
+            const chip = document.createElement('span');
+            chip.className = 'chip chip-input-item';
+            chip.dataset.chipBound = '1';
+            chip.innerHTML = `${trimmed} <button class="chip-close" aria-label="Supprimer ${trimmed}">&times;</button>`;
+            chip.querySelector('.chip-close').addEventListener('click', () => {
+                chip.style.transition = 'opacity 0.18s, transform 0.18s';
+                chip.style.opacity = '0';
+                chip.style.transform = 'scale(0.8)';
+                setTimeout(() => chip.remove(), 180);
+            });
+            wrapper.insertBefore(chip, input);
+        }
+
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                createChip(input.value);
+                input.value = '';
+            } else if (e.key === 'Backspace' && input.value === '') {
+                const chips = wrapper.querySelectorAll('.chip-input-item');
+                if (chips.length > 0) {
+                    const last = chips[chips.length - 1];
+                    last.style.transition = 'opacity 0.18s, transform 0.18s';
+                    last.style.opacity = '0';
+                    last.style.transform = 'scale(0.8)';
+                    setTimeout(() => last.remove(), 180);
+                }
+            }
+        });
+
+        // Clic sur le wrapper donne le focus à l'input
+        wrapper.addEventListener('click', e => {
+            if (e.target === wrapper) input.focus();
+        });
+    });
+}
+window.__initChips = initChips;
 
 // Sliders
 function initSliders() {
