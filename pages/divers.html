@@ -311,6 +311,55 @@
     </div>
 </section>
 
+<!-- LIGHTBOX -->
+<section id="lightbox">
+    <div class="section-header"><span class="overline">Divers</span><h2>Lightbox</h2><p>Galerie d'images avec visionneuse plein ecran, navigation et raccourcis clavier.</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box" style="grid-column:1/-1;">
+            <span class="demo-label">Galerie — clic pour ouvrir</span>
+            <div class="lightbox-gallery" data-lightbox-group="gallery-1">
+                <div class="lightbox-trigger" data-full="#" data-caption="Design System — Composants UI" tabindex="0" aria-label="Ouvrir l'image 1">
+                    <div class="lightbox-thumb-placeholder" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">Design System<br>Composants UI</div>
+                </div>
+                <div class="lightbox-trigger" data-full="#" data-caption="Pipeline — Agents Claude Code" tabindex="0" aria-label="Ouvrir l'image 2">
+                    <div class="lightbox-thumb-placeholder" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);">Pipeline<br>Agents Claude Code</div>
+                </div>
+                <div class="lightbox-trigger" data-full="#" data-caption="Theming — 3 themes natifs" tabindex="0" aria-label="Ouvrir l'image 3">
+                    <div class="lightbox-thumb-placeholder" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);">Theming<br>3 themes natifs</div>
+                </div>
+                <div class="lightbox-trigger" data-full="#" data-caption="Infrastructure Caddy — Reverse proxy HTTPS" tabindex="0" aria-label="Ouvrir l'image 4">
+                    <div class="lightbox-thumb-placeholder" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">Infrastructure<br>Caddy + HTTPS</div>
+                </div>
+                <div class="lightbox-trigger" data-full="#" data-caption="Docker — Isolation des services" tabindex="0" aria-label="Ouvrir l'image 5">
+                    <div class="lightbox-thumb-placeholder" style="background:linear-gradient(135deg,#22c55e,#06b6d4);">Docker<br>Isolation services</div>
+                </div>
+                <div class="lightbox-trigger" data-full="#" data-caption="Auth Gate — Cookie HMAC 12h" tabindex="0" aria-label="Ouvrir l'image 6">
+                    <div class="lightbox-thumb-placeholder" style="background:linear-gradient(135deg,#ec4899,#f59e0b);">Auth Gate<br>Cookie HMAC</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Usage HTML</span>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="cm">&lt;!-- Galerie --&gt;</span><br><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"lightbox-gallery"</span><br>&nbsp;&nbsp;<span class="fn">data-lightbox-group</span>=<span class="str">"gallery-1"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;img</span> <span class="fn">class</span>=<span class="str">"lightbox-trigger"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">data-full</span>=<span class="str">"url-full.jpg"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">data-caption</span>=<span class="str">"Legende"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">src</span>=<span class="str">"thumb.jpg"</span><span class="kw">&gt;</span><br><span class="kw">&lt;/div&gt;</span></div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Raccourcis clavier</span>
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;"><kbd>Esc</kbd><span style="color:var(--text-muted);font-size:0.875rem;">Fermer la visionneuse</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;"><kbd>←</kbd><span style="color:var(--text-muted);font-size:0.875rem;">Image precedente</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;"><kbd>→</kbd><span style="color:var(--text-muted);font-size:0.875rem;">Image suivante</span></div>
+                <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;color:var(--text-muted);">Clic overlay (hors image) → ferme</div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- COMMAND PALETTE -->
 <section id="command-palette">
     <div class="section-header"><span class="overline">Divers</span><h2>Command Palette</h2><p>Recherche rapide et navigation par raccourci <kbd>&#8984;</kbd><kbd>K</kbd>.</p></div>

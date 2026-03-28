@@ -177,6 +177,9 @@ function initComponents() {
 
     // Bottom Sheet
     initBottomSheet();
+
+    // Lightbox
+    initLightbox();
 }
 
 // Chips
@@ -1546,6 +1549,177 @@ function initBottomSheet() {
     });
 }
 window.__initBottomSheet = initBottomSheet;
+
+// Lightbox
+function initLightbox() {
+    var overlay = document.getElementById('lb-overlay');
+
+    // Cree l'overlay une seule fois dans le DOM
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'lb-overlay';
+        overlay.className = 'lightbox-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Visionneuse d\'images');
+        overlay.innerHTML =
+            '<div class="lightbox-img-wrap" id="lb-img-wrap"></div>' +
+            '<button class="lightbox-close" id="lb-close" aria-label="Fermer">&#10005;</button>' +
+            '<button class="lightbox-btn lightbox-prev" id="lb-prev" aria-label="Image precedente">&#8249;</button>' +
+            '<button class="lightbox-btn lightbox-next" id="lb-next" aria-label="Image suivante">&#8250;</button>' +
+            '<div class="lightbox-caption" id="lb-caption"></div>' +
+            '<div class="lightbox-counter" id="lb-counter"></div>';
+        document.body.appendChild(overlay);
+    }
+
+    var imgWrap   = document.getElementById('lb-img-wrap');
+    var btnClose  = document.getElementById('lb-close');
+    var btnPrev   = document.getElementById('lb-prev');
+    var btnNext   = document.getElementById('lb-next');
+    var caption   = document.getElementById('lb-caption');
+    var counter   = document.getElementById('lb-counter');
+
+    var currentGroup  = [];
+    var currentIndex  = 0;
+
+    function openLightbox(triggers, idx) {
+        currentGroup = Array.from(triggers);
+        currentIndex = idx;
+        overlay.classList.add('lb-open');
+        document.body.style.overflow = 'hidden';
+        showImage(currentIndex);
+        btnClose.focus();
+    }
+
+    function closeLightbox() {
+        overlay.classList.remove('lb-open');
+        document.body.style.overflow = '';
+        // Nettoyer l'image pour la prochaine ouverture
+        setTimeout(function() {
+            imgWrap.innerHTML = '';
+        }, 250);
+    }
+
+    function showImage(idx) {
+        var trigger = currentGroup[idx];
+        var cap = trigger.dataset.caption || '';
+        var fullSrc = trigger.dataset.full || '';
+        var total = currentGroup.length;
+
+        // Vider le wrap
+        imgWrap.innerHTML = '';
+
+        // Determiner le gradient de fond (pour les placeholders)
+        var thumbEl = trigger.querySelector('[style]');
+        var bg = thumbEl ? thumbEl.style.background : 'linear-gradient(135deg,#3b82f6,#8b5cf6)';
+        var label = trigger.getAttribute('aria-label') || '';
+        var thumbText = trigger.querySelector('.lightbox-thumb-placeholder') ?
+            trigger.querySelector('.lightbox-thumb-placeholder').textContent : '';
+
+        var el;
+        if (fullSrc && fullSrc !== '#') {
+            // Image reelle
+            el = document.createElement('img');
+            el.className = 'lightbox-img';
+            el.alt = cap;
+            imgWrap.appendChild(el);
+            el.onload = function() { el.classList.add('lb-img-visible'); };
+            el.onerror = function() { el.classList.add('lb-img-visible'); };
+            el.src = fullSrc;
+        } else {
+            // Placeholder gradient (demo sans vraies images)
+            el = document.createElement('div');
+            el.className = 'lightbox-img-placeholder';
+            el.style.background = bg;
+            el.style.borderRadius = '12px';
+            el.innerHTML = '<div style="font-size:1.4rem;font-weight:600;text-align:center;line-height:1.5;">' + thumbText + '</div>' +
+                '<div style="font-size:0.8rem;opacity:0.6;font-family:var(--font-mono,monospace);">Placeholder — pas de fichier image</div>';
+            imgWrap.appendChild(el);
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() { el.classList.add('lb-img-visible'); });
+            });
+        }
+
+        caption.textContent = cap;
+        caption.style.display = cap ? '' : 'none';
+
+        // Compteur
+        if (total > 1) {
+            counter.textContent = (idx + 1) + ' / ' + total;
+            counter.style.display = '';
+        } else {
+            counter.style.display = 'none';
+        }
+
+        // Boutons prev/next
+        if (total <= 1) {
+            btnPrev.classList.add('lb-hidden');
+            btnNext.classList.add('lb-hidden');
+        } else {
+            btnPrev.classList.toggle('lb-hidden', idx === 0);
+            btnNext.classList.toggle('lb-hidden', idx === total - 1);
+        }
+    }
+
+    function navigate(dir) {
+        var newIdx = currentIndex + dir;
+        if (newIdx < 0 || newIdx >= currentGroup.length) return;
+        currentIndex = newIdx;
+        showImage(currentIndex);
+    }
+
+    // Clic overlay → fermer (pas sur l'image)
+    if (!overlay.dataset.bound) {
+        overlay.dataset.bound = '1';
+
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) closeLightbox();
+        });
+
+        btnClose.addEventListener('click', closeLightbox);
+
+        btnPrev.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navigate(-1);
+        });
+
+        btnNext.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navigate(1);
+        });
+
+        // Keyboard global (Escape, ArrowLeft, ArrowRight)
+        document.addEventListener('keydown', function(e) {
+            if (!overlay.classList.contains('lb-open')) return;
+            if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); navigate(1); }
+        });
+    }
+
+    // Binder les triggers
+    document.querySelectorAll('[data-lightbox-group]').forEach(function(gallery) {
+        if (gallery.dataset.lbBound) return;
+        gallery.dataset.lbBound = '1';
+
+        var groupName = gallery.dataset.lightboxGroup;
+        var triggers = gallery.querySelectorAll('.lightbox-trigger');
+
+        triggers.forEach(function(trigger, idx) {
+            trigger.addEventListener('click', function() {
+                openLightbox(triggers, idx);
+            });
+            // Accessibilite clavier
+            trigger.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox(triggers, idx);
+                }
+            });
+        });
+    });
+}
+window.__initLightbox = initLightbox;
 
 window.__initComponents = initComponents;
 
