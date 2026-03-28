@@ -360,6 +360,74 @@
     </div>
 </section>
 
+<!-- CONTEXT MENU -->
+<section id="context-menu">
+    <div class="section-header"><span class="overline">Divers</span><h2>Context Menu</h2><p>Menu contextuel au clic droit avec sous-menus, separateurs et positionnement intelligent.</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Zone cible</span>
+            <div class="context-target" id="context-demo-target">
+                <span class="context-hint-icon">&#8594;</span>
+                Clic droit ici
+            </div>
+            <!-- Menu contextuel -->
+            <div class="context-menu" id="context-demo-menu" role="menu" aria-label="Menu contextuel">
+                <div class="context-menu-item" role="menuitem">
+                    <span class="icon">&#128203;</span>
+                    Copier
+                </div>
+                <div class="context-menu-item" role="menuitem">
+                    <span class="icon">&#128196;</span>
+                    Coller
+                </div>
+                <div class="context-menu-item" role="menuitem">
+                    <span class="icon">&#9986;</span>
+                    Couper
+                </div>
+                <div class="context-menu-divider"></div>
+                <div class="context-menu-item" role="menuitem">
+                    <span class="icon">&#9638;</span>
+                    Selectionner tout
+                </div>
+                <div class="context-menu-divider"></div>
+                <div class="context-menu-item" role="menuitem" aria-haspopup="true">
+                    <span class="icon">&#8678;</span>
+                    Partager
+                    <span class="context-arrow">&#9654;</span>
+                    <div class="context-submenu" role="menu" aria-label="Partager via">
+                        <div class="context-menu-item" role="menuitem">
+                            <span class="icon">&#9993;</span>
+                            Email
+                        </div>
+                        <div class="context-menu-item" role="menuitem">
+                            <span class="icon">&#128172;</span>
+                            Slack
+                        </div>
+                        <div class="context-menu-item" role="menuitem">
+                            <span class="icon">&#128279;</span>
+                            Lien
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Fonctionnalites</span>
+            <ul style="display:flex;flex-direction:column;gap:0.55rem;list-style:none;padding:0;margin:0;">
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);">&#10003;</span> Clic droit sur zone cible</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);">&#10003;</span> Items avec icones</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);">&#10003;</span> Sous-menu Partager (hover)</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);">&#10003;</span> Positionnement adaptatif (bords viewport)</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);">&#10003;</span> Fermeture clic exterieur</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);">&#10003;</span> Fermeture touche Echap</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
 <!-- COMMAND PALETTE -->
 <section id="command-palette">
     <div class="section-header"><span class="overline">Divers</span><h2>Command Palette</h2><p>Recherche rapide et navigation par raccourci <kbd>&#8984;</kbd><kbd>K</kbd>.</p></div>
