@@ -47,6 +47,7 @@ const NAV_SECTIONS = [
         { label: 'Tables', icon: '&#9638;', href: '/pages/data.html#tables' },
         { label: 'Data Grid', icon: '&#9639;', href: '/pages/data.html#data-grid' },
         { label: 'Charts', icon: '&#9636;', href: '/pages/data.html#charts' },
+        { label: 'Tree View', icon: '&#9656;', href: '/pages/data.html#tree-view' },
         { label: 'Listes', icon: '&#9776;', href: '/pages/data.html#lists' }
     ]},
     { title: 'Feedback', links: [
