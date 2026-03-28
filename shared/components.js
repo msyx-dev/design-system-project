@@ -153,6 +153,9 @@ function initComponents() {
 
     // Rating
     initRating();
+
+    // Bottom Navigation
+    initBottomNav();
 }
 
 // Chips
@@ -957,6 +960,30 @@ function initRating() {
     });
 }
 window.__initRating = initRating;
+
+// Bottom Navigation
+function initBottomNav() {
+    document.querySelectorAll('.bottom-nav').forEach(function(nav) {
+        if (nav.dataset.bound) return;
+        nav.dataset.bound = '1';
+
+        nav.querySelectorAll('.bottom-nav-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                nav.querySelectorAll('.bottom-nav-item').forEach(function(i) {
+                    i.classList.remove('active');
+                    i.setAttribute('aria-selected', 'false');
+                });
+                item.classList.add('active');
+                item.setAttribute('aria-selected', 'true');
+                nav.dispatchEvent(new CustomEvent('bottomnav:change', {
+                    detail: { label: item.dataset.label || '' },
+                    bubbles: true
+                }));
+            });
+        });
+    });
+}
+window.__initBottomNav = initBottomNav;
 
 window.__initComponents = initComponents;
 
