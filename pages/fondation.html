@@ -224,6 +224,94 @@
         </div>
     </div>
 </section>
+
+<section id="consommation">
+    <div class="section-header"><span class="overline">Guide</span><h2>Consommation</h2><p>Comment integrer le design system dans vos projets.</p></div>
+
+    <!-- Import -->
+    <div class="subsection">
+        <span class="demo-label">Import — 3 niveaux</span>
+        <div class="demo-grid demo-grid-3" style="gap:1rem;">
+            <div class="demo-box" style="flex:1;">
+                <span class="demo-label" style="color:var(--accent);">Tokens seuls</span>
+                <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="cm">/* Variables CSS uniquement */</span><br><span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"stylesheet"</span><br>&nbsp;&nbsp;<span class="fn">href</span>=<span class="str">"https://design-system.msyx.fr/shared/css/tokens.css"</span><span class="kw">&gt;</span></div>
+            </div>
+            <div class="demo-box" style="flex:1;">
+                <span class="demo-label" style="color:var(--success);">Tokens + utilitaires</span>
+                <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="cm">/* Variables + classes couleur */</span><br><span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"stylesheet"</span><br>&nbsp;&nbsp;<span class="fn">href</span>=<span class="str">".../css/tokens.css"</span><span class="kw">&gt;</span><br><span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"stylesheet"</span><br>&nbsp;&nbsp;<span class="fn">href</span>=<span class="str">".../css/utilities.css"</span><span class="kw">&gt;</span></div>
+            </div>
+            <div class="demo-box" style="flex:1;">
+                <span class="demo-label" style="color:var(--violet);">Design system complet</span>
+                <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="cm">/* Tout : tokens + utils + composants */</span><br><span class="kw">&lt;link</span> <span class="fn">rel</span>=<span class="str">"stylesheet"</span><br>&nbsp;&nbsp;<span class="fn">href</span>=<span class="str">"https://design-system.msyx.fr/shared/styles.css"</span><span class="kw">&gt;</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next.js / React -->
+    <div class="subsection" style="margin-top:1.5rem;">
+        <span class="demo-label">Next.js / React</span>
+        <div class="demo-box">
+            <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="cm">/* globals.css ou layout.tsx */</span><br><span class="kw">@import</span> <span class="str">"../styles/ds-tokens.css"</span>;<br><span class="kw">@import</span> <span class="str">"../styles/ds-utilities.css"</span>;<br><br><span class="cm">/* Theming : ajouter data-theme sur &lt;html&gt; */</span><br><span class="kw">&lt;html</span> <span class="fn">data-theme</span>=<span class="str">"acssi"</span><span class="kw">&gt;</span></div>
+        </div>
+    </div>
+
+    <!-- Synchronisation -->
+    <div class="subsection" style="margin-top:1.5rem;">
+        <span class="demo-label">Synchronisation</span>
+        <div class="demo-box">
+            <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="cm"># Copier tokens + utilities vers votre projet</span><br><span class="fn">bash</span> /path/to/design-system-project/shared/<span class="str">sync.sh</span> ./src/styles/<br><br><span class="cm"># Verifier si votre copie est a jour</span><br><span class="fn">bash</span> /path/to/design-system-project/shared/<span class="str">check-sync.sh</span> ./src/styles/ds-tokens.css</div>
+        </div>
+    </div>
+
+    <!-- Classes utilitaires -->
+    <div class="subsection" style="margin-top:2rem;">
+        <span class="demo-label">Classes utilitaires couleur</span>
+        <div class="demo-grid demo-grid-2" style="gap:1rem;">
+            <div class="demo-box">
+                <span class="demo-label">Texte</span>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;padding:0.5rem 0;">
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-default" style="font-size:0.85rem;">.text-default</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--text)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-muted" style="font-size:0.85rem;">.text-muted</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--text-muted)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-dim" style="font-size:0.85rem;">.text-dim</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--text-dim)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-accent" style="font-size:0.85rem;">.text-accent</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--accent)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-accent-light" style="font-size:0.85rem;">.text-accent-light</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--accent-light)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-success" style="font-size:0.85rem;">.text-success</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--success)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-warning" style="font-size:0.85rem;">.text-warning</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--warning)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-danger" style="font-size:0.85rem;">.text-danger</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--danger)</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><span class="text-info" style="font-size:0.85rem;">.text-info</span><code style="font-size:0.7rem;color:var(--text-dim);margin-left:auto;">var(--info)</code></div>
+                </div>
+            </div>
+            <div class="demo-box">
+                <span class="demo-label">Backgrounds</span>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;padding:0.5rem 0;">
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div class="bg-primary" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);flex-shrink:0;"></div><code style="font-size:0.75rem;">.bg-primary</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div class="bg-primary-light" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);flex-shrink:0;"></div><code style="font-size:0.75rem;">.bg-primary-light</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div class="bg-surface-solid" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);flex-shrink:0;"></div><code style="font-size:0.75rem;">.bg-surface-solid</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div class="bg-surface-light" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);flex-shrink:0;"></div><code style="font-size:0.75rem;">.bg-surface-light</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div class="bg-accent" style="width:28px;height:28px;border-radius:6px;flex-shrink:0;"></div><code style="font-size:0.75rem;">.bg-accent</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div class="bg-accent-glow" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);flex-shrink:0;"></div><code style="font-size:0.75rem;">.bg-accent-glow</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:28px;height:28px;border-radius:6px;flex-shrink:0;background:var(--gradient-1);"></div><code style="font-size:0.75rem;">.bg-gradient-1</code></div>
+                    <div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:28px;height:28px;border-radius:6px;flex-shrink:0;background:var(--gradient-2);"></div><code style="font-size:0.75rem;">.bg-gradient-2</code></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avant / Après -->
+    <div class="subsection" style="margin-top:2rem;">
+        <span class="demo-label">Avant / Apres</span>
+        <div class="demo-grid demo-grid-2" style="gap:1rem;">
+            <div class="demo-box" style="border-color:rgba(239,68,68,0.3);">
+                <span class="demo-label" style="color:var(--danger);">Avant (inline)</span>
+                <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="kw">style</span>={{ <span class="fn">color</span>: <span class="str">"var(--text-muted)"</span> }}<br><span class="kw">style</span>={{ <span class="fn">background</span>: <span class="str">"var(--accent)"</span> }}<br><span class="kw">style</span>={{ <span class="fn">color</span>: <span class="str">"var(--success)"</span> }}<br><span class="kw">style</span>={{ <span class="fn">border</span>: <span class="str">"1px solid var(--border)"</span> }}</div>
+            </div>
+            <div class="demo-box" style="border-color:rgba(34,197,94,0.3);">
+                <span class="demo-label" style="color:var(--success);">Apres (classes DS)</span>
+                <div class="code-block" style="font-size:0.72rem;line-height:1.7;"><span class="fn">className</span>=<span class="str">"text-muted"</span><br><span class="fn">className</span>=<span class="str">"bg-accent"</span><br><span class="fn">className</span>=<span class="str">"text-success"</span><br><span class="fn">className</span>=<span class="str">"border-default"</span></div>
+            </div>
+        </div>
+    </div>
+</section>
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

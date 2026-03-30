@@ -12,7 +12,7 @@ Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 8 categories
 pages/
-  fondation.html        # Couleurs, typographie, espacements, ombres, theming
+  fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration)
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, FAB, theme switcher
   navigation.html       # Tabs, breadcrumbs, stepper, segmented control, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
