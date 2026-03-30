@@ -186,6 +186,9 @@ function initComponents() {
 
     // Pie / Donut Charts
     initPieCharts();
+
+    // Gauge / Speedometer
+    initGauges();
 }
 
 // Chips
@@ -2021,6 +2024,66 @@ function initPieCharts() {
     });
 }
 window.__initPieCharts = initPieCharts;
+
+// ===== GAUGE / SPEEDOMETER =====
+function initGauges() {
+    // Semi-circle arc: M 10 55 A 40 40 0 0 1 90 55
+    // Arc length = PI * r = PI * 40 ≈ 125.66
+    const ARC_LENGTH = Math.PI * 40;
+
+    function getThresholdColor(pct, thresholds) {
+        if (!thresholds) return null;
+        const [low, high] = thresholds.split(',').map(Number);
+        if (pct <= low) return 'var(--danger)';
+        if (pct <= high) return 'var(--warning)';
+        return 'var(--success)';
+    }
+
+    function animateGauge(gauge) {
+        const value = parseFloat(gauge.dataset.value) || 0;
+        const max = parseFloat(gauge.dataset.max) || 100;
+        const thresholds = gauge.dataset.thresholds || null;
+        const pct = Math.min(Math.max(value / max, 0), 1) * 100;
+
+        const fill = gauge.querySelector('.gauge-fill');
+        if (!fill) return;
+
+        // Threshold color
+        const color = getThresholdColor(pct, thresholds);
+        if (color) fill.style.stroke = color;
+
+        // Draw: dasharray = total arc, dashoffset = remaining portion
+        const offset = ARC_LENGTH * (1 - pct / 100);
+        fill.style.strokeDasharray = ARC_LENGTH;
+        fill.style.strokeDashoffset = ARC_LENGTH; // start hidden
+        // Force reflow then animate
+        fill.getBoundingClientRect();
+        fill.style.strokeDashoffset = offset;
+    }
+
+    document.querySelectorAll('.gauge').forEach(gauge => {
+        if (gauge.dataset.bound) return;
+        gauge.dataset.bound = '1';
+
+        // Set initial hidden state
+        const fill = gauge.querySelector('.gauge-fill');
+        if (fill) {
+            fill.style.strokeDasharray = ARC_LENGTH;
+            fill.style.strokeDashoffset = ARC_LENGTH;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateGauge(gauge);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        observer.observe(gauge);
+    });
+}
+window.__initGauges = initGauges;
 
 window.__initComponents = initComponents;
 

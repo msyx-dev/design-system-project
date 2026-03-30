@@ -564,6 +564,73 @@
     </div>
 </section>
 
+<!-- GAUGE -->
+<section id="gauge">
+    <div class="section-header"><span class="overline">Data</span><h2>Gauge / Speedometer</h2><p>Jauges semi-circulaires SVG avec seuils colorés et animation à l'entrée dans le viewport.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box" style="text-align:center;">
+            <span class="demo-label">Simple (accent)</span>
+            <div style="display:flex;justify-content:center;">
+                <div class="gauge" data-value="72" data-max="100" role="img" aria-label="Gauge simple — 72%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Performance — 72%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">72%</text>
+                    </svg>
+                    <span class="gauge-label">Performance</span>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box" style="text-align:center;">
+            <span class="demo-label">Seuils colorés</span>
+            <div style="display:flex;justify-content:center;">
+                <div class="gauge" data-value="45" data-max="100" data-thresholds="30,70" role="img" aria-label="Gauge avec seuils — 45%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Charge CPU — 45%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">45%</text>
+                    </svg>
+                    <span class="gauge-label">Charge CPU</span>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box" style="text-align:center;">
+            <span class="demo-label">Mini gauges (seuils)</span>
+            <div class="gauge-group" style="padding-top:0.5rem;">
+                <div class="gauge gauge--mini" data-value="92" data-max="100" data-thresholds="30,70" role="img" aria-label="Uptime — 92%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Uptime — 92%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">92%</text>
+                    </svg>
+                    <span class="gauge-label">Uptime</span>
+                </div>
+                <div class="gauge gauge--mini" data-value="28" data-max="100" data-thresholds="30,70" role="img" aria-label="Erreurs — 28%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Erreurs — 28%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">28%</text>
+                    </svg>
+                    <span class="gauge-label">Erreurs</span>
+                </div>
+                <div class="gauge gauge--mini" data-value="65" data-max="100" data-thresholds="30,70" role="img" aria-label="RAM — 65%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>RAM — 65%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">65%</text>
+                    </svg>
+                    <span class="gauge-label">RAM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- LISTS -->
 <section id="lists">
     <div class="section-header"><span class="overline">Data</span><h2>Listes</h2><p>Listes d'items avec avatars, metadata et actions.</p></div>

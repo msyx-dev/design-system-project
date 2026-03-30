@@ -49,6 +49,7 @@ const NAV_SECTIONS = [
         { label: 'Charts', icon: '&#9636;', href: '/pages/data.html#charts' },
         { label: 'Pie & Donut', icon: '&#9685;', href: '/pages/data.html#pie-donut' },
         { label: 'Tree View', icon: '&#9656;', href: '/pages/data.html#tree-view' },
+        { label: 'Gauge', icon: '&#9685;', href: '/pages/data.html#gauge' },
         { label: 'Listes', icon: '&#9776;', href: '/pages/data.html#lists' }
     ]},
     { title: 'Feedback', links: [
