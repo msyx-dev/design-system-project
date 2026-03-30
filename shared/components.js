@@ -189,6 +189,9 @@ function initComponents() {
 
     // Gauge / Speedometer
     initGauges();
+
+    // Animated Counters
+    initAnimatedCounters();
 }
 
 // Chips
@@ -2084,6 +2087,50 @@ function initGauges() {
     });
 }
 window.__initGauges = initGauges;
+
+function initAnimatedCounters() {
+    if (document.dataset && document.dataset.animatedCountersBound) return;
+    const counters = document.querySelectorAll('.counter[data-target]');
+    if (!counters.length) return;
+
+    const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+    const DURATION = 1500;
+
+    counters.forEach(counter => {
+        if (counter.dataset.bound) return;
+        counter.dataset.bound = 'true';
+
+        const target = parseFloat(counter.dataset.target);
+        const decimals = parseInt(counter.dataset.decimals || '0', 10);
+        const valueEl = counter.querySelector('.counter-value');
+        if (!valueEl) return;
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                if (counter.dataset.counted === 'true') return;
+                counter.dataset.counted = 'true';
+                observer.disconnect();
+
+                const start = performance.now();
+                function tick(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / DURATION, 1);
+                    const eased = easeOutQuart(progress);
+                    const current = eased * target;
+                    valueEl.textContent = decimals > 0
+                        ? current.toFixed(decimals)
+                        : Math.floor(current).toString();
+                    if (progress < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(counter);
+    });
+}
+window.__initAnimatedCounters = initAnimatedCounters;
 
 window.__initComponents = initComponents;
 

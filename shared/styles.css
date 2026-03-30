@@ -2123,6 +2123,34 @@ tbody tr:last-child .comparison-recommended {
     }
 }
 
+/* ===== ANIMATED COUNTERS ===== */
+.counter {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+.counter-value {
+    font-variant-numeric: tabular-nums;
+}
+.counter-prefix,
+.counter-suffix {
+    font-size: 1.2rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+.counter-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+@media (max-width: 640px) {
+    .counter { font-size: 2rem; }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .demo-grid-4, .demo-grid-5 { grid-template-columns: repeat(2, 1fr); }
