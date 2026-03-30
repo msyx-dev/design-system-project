@@ -19,7 +19,7 @@ pages/
   data.html             # Tables, data grid, stats, charts, KPI, tree view
   templates.html        # Kanban, roadmap, backlog, sprint board
   feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet
-  divers.html           # Command palette, accordion, timeline, code blocks, copy button, carousel, lightbox, context menu
+  divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks) + Interaction (accordion, command palette, context menu, copy button)
 shared/
   styles.css            # CSS global — @import tokens.css + composants, theming, responsive
   css/
