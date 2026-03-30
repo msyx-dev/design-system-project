@@ -475,6 +475,50 @@
     </div>
 </section>
 
+<!-- DECISION TREE -->
+<section id="decision-tree">
+    <div class="section-header"><span class="overline">Avancé</span><h2>Decision Tree</h2><p>Arbre de decision interactif step-by-step. Cliquer sur un choix revele le noeud suivant.</p></div>
+    <div class="demo-box">
+        <div class="dtree">
+            <div class="dtree-node dtree-node--question active" id="dt-q1" role="group" aria-label="Etape 1">
+                <div class="dtree-node-content">Quel type de projet ?</div>
+                <div class="dtree-choices">
+                    <button class="dtree-choice" data-next="dt-q2a" aria-label="Site vitrine">Site vitrine</button>
+                    <button class="dtree-choice" data-next="dt-q2b" aria-label="Application web">Application web</button>
+                </div>
+            </div>
+            <div class="dtree-connector" data-from="dt-q1" aria-hidden="true"></div>
+            <div class="dtree-node dtree-node--question" id="dt-q2a" role="group" aria-label="Etape 2a">
+                <div class="dtree-node-content">Besoin d'un CMS ?</div>
+                <div class="dtree-choices">
+                    <button class="dtree-choice" data-next="dt-r1" aria-label="Oui">Oui</button>
+                    <button class="dtree-choice" data-next="dt-r2" aria-label="Non">Non</button>
+                </div>
+            </div>
+            <div class="dtree-node dtree-node--question" id="dt-q2b" role="group" aria-label="Etape 2b">
+                <div class="dtree-node-content">Quelle stack ?</div>
+                <div class="dtree-choices">
+                    <button class="dtree-choice" data-next="dt-r3" aria-label="Next.js">Next.js</button>
+                    <button class="dtree-choice" data-next="dt-r4" aria-label="FastAPI + React">FastAPI + React</button>
+                </div>
+            </div>
+            <div class="dtree-node dtree-node--result" id="dt-r1" role="region" aria-label="Resultat">
+                <div class="dtree-node-content">&#10132; WordPress ou Strapi</div>
+            </div>
+            <div class="dtree-node dtree-node--result" id="dt-r2" role="region" aria-label="Resultat">
+                <div class="dtree-node-content">&#10132; HTML/CSS statique + Caddy</div>
+            </div>
+            <div class="dtree-node dtree-node--result" id="dt-r3" role="region" aria-label="Resultat">
+                <div class="dtree-node-content">&#10132; Next.js + Vercel ou Docker</div>
+            </div>
+            <div class="dtree-node dtree-node--result" id="dt-r4" role="region" aria-label="Resultat">
+                <div class="dtree-node-content">&#10132; FastAPI + React + Docker Compose</div>
+            </div>
+            <button class="dtree-reset btn-primary" style="margin-top:1rem;display:none;" aria-label="Recommencer l'arbre de decision">Recommencer</button>
+        </div>
+    </div>
+</section>
+
 <!-- BEFORE / AFTER SLIDER -->
 <section id="before-after">
     <div class="section-header"><span class="overline">Avancé</span><h2>Before / After</h2><p>Slider de comparaison avant/apres avec curseur draggable.</p></div>

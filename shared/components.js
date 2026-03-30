@@ -207,6 +207,9 @@ function initComponents() {
 
     // Quiz / Poll
     initQuiz();
+
+    // Decision Tree
+    initDecisionTree();
 }
 
 // Chips
@@ -2694,6 +2697,76 @@ function initQuiz() {
     });
 }
 window.__initQuiz = initQuiz;
+
+// ===== DECISION TREE =====
+function initDecisionTree() {
+    document.querySelectorAll('.dtree').forEach(function(dtree) {
+        if (dtree.dataset.bound) return;
+        dtree.dataset.bound = '1';
+
+        var resetBtn = dtree.querySelector('.dtree-reset');
+
+        dtree.addEventListener('click', function(e) {
+            var choice = e.target.closest('.dtree-choice');
+            if (!choice) return;
+
+            // Ignore si deja selectionne
+            if (choice.classList.contains('selected')) return;
+
+            var currentNode = choice.closest('.dtree-node');
+            if (!currentNode) return;
+
+            // Marquer le choix selectionne, desactiver les autres
+            var siblings = currentNode.querySelectorAll('.dtree-choice');
+            siblings.forEach(function(btn) {
+                btn.disabled = true;
+                btn.classList.remove('selected');
+            });
+            choice.classList.add('selected');
+
+            // Afficher le connecteur associe a ce noeud
+            var connector = dtree.querySelector('.dtree-connector[data-from="' + currentNode.id + '"]');
+            if (connector) connector.classList.add('visible');
+
+            // Afficher le noeud suivant
+            var nextId = choice.getAttribute('data-next');
+            if (!nextId) return;
+            var nextNode = dtree.querySelector('#' + nextId);
+            if (!nextNode) return;
+            nextNode.classList.add('active');
+
+            // Si le noeud suivant est un resultat, afficher le bouton reset
+            if (nextNode.classList.contains('dtree-node--result') && resetBtn) {
+                resetBtn.style.display = '';
+            }
+        });
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                // Masquer tous les noeuds sauf le premier
+                dtree.querySelectorAll('.dtree-node').forEach(function(node, idx) {
+                    if (idx === 0) {
+                        node.classList.add('active');
+                    } else {
+                        node.classList.remove('active');
+                    }
+                    // Ré-activer les boutons et enlever la selection
+                    node.querySelectorAll('.dtree-choice').forEach(function(btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('selected');
+                    });
+                });
+                // Masquer tous les connecteurs
+                dtree.querySelectorAll('.dtree-connector').forEach(function(c) {
+                    c.classList.remove('visible');
+                });
+                // Masquer le reset
+                resetBtn.style.display = 'none';
+            });
+        }
+    });
+}
+window.__initDecisionTree = initDecisionTree;
 
 window.__initComponents = initComponents;
 
