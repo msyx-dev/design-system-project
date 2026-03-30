@@ -1,5 +1,13 @@
 # Releases
 
+## 2.10.0 — 2026-03-30 — Sprint 10
+
+### Changed
+- Catégorie "Divers" renommée "Avancé" avec sous-groupes visuels (Contenu riche + Interaction)
+- FAB repositionné : composants.html → feedback.html
+- Segmented Control repositionné : navigation.html → composants.html
+- Compteurs hub cards ajustés (navigation 5→4, feedback 8→9)
+
 ## 2.9.0 — 2026-03-30 — Sprint 9
 
 ### Added
