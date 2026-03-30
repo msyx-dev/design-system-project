@@ -16,7 +16,7 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   fondation.html    # Couleurs, typographie, espacements, ombres, theming
-  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher
+  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges
   navigation.html   # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll
   data.html         # Tables, data grid, stats, charts, KPI, tree view
