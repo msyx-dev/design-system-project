@@ -61,7 +61,7 @@ const NAV_SECTIONS = [
         { label: 'Bottom Sheet', icon: '&#9650;', href: '/pages/feedback.html#bottom-sheet' },
         { label: 'Spinners', icon: '&#10227;', href: '/pages/feedback.html#spinners' }
     ]},
-    { title: 'Divers', links: [
+    { title: 'Avancé', links: [
         { label: 'Timeline', icon: '&#8942;', href: '/pages/divers.html#timeline' },
         { label: 'Accordion', icon: '&#9660;', href: '/pages/divers.html#accordion' },
         { label: 'Code', icon: '&lt;/&gt;', href: '/pages/divers.html#code' },
