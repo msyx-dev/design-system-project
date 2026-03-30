@@ -1,5 +1,25 @@
 # Releases
 
+## 2.13.0 — 2026-03-30 — Extraction modulaire CSS
+
+### Added
+- `shared/css/layout.css` — classes layout extraites (header, sidebar, main, section patterns, responsive/theming overrides)
+- `shared/css/components.css` — tous les composants UI extraits (buttons, cards, badges, forms, modals, tables, etc.)
+- `shared/CONSUMER_GUIDE.md` — guide d'integration pour les projets consommateurs
+- `sync.sh` synchronise maintenant 4 fichiers : tokens, utilities, layout, components
+
+### Changed
+- `shared/styles.css` reduit a un agregateur mince (imports + base reset)
+- Aucun changement visuel — refactoring pur de l'organisation CSS
+
+## 2.12.1 — 2026-03-30 — Infra
+
+### Fixed
+- Auth gate Caddy : forward_auth réactivé sur design-system.msyx.fr (bloc manquant)
+- Rewrite rules corrigées : / → /site.html (protégé), /index.html → public (login)
+- @public matcher : `/index.html`, `/auth/*`, `/favicon.ico` accessibles sans auth
+- Forward_auth redirect : vers `/index.html` au lieu de `/login`
+
 ## 2.12.0 — 2026-03-30 — Sprint 12
 
 ### Added

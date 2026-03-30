@@ -21,12 +21,15 @@ pages/
   feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed, before/after) + Interaction (accordion, command palette, context menu, copy button, decision tree)
 shared/
-  styles.css            # CSS global — @import tokens.css + composants, theming, responsive
+  styles.css            # Agregateur CSS — imports tokens + utilities + layout + components + base reset
   css/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures
-  sync.sh               # Synchronise tokens + utilities vers un projet consommateur
+    layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
+    components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
+  sync.sh               # Synchronise les 4 fichiers CSS vers un projet consommateur
   check-sync.sh         # Vérifie si le DS consommé est à jour (@ds-version)
+  CONSUMER_GUIDE.md     # Guide d'integration pour projets consommateurs
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
   components.js         # 25+ composants JS interactifs (voir section dediee)
 docs/
