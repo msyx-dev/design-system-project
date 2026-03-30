@@ -2535,3 +2535,74 @@ tbody tr:last-child .comparison-recommended {
     font-size: 0.85rem;
     color: var(--text-muted);
 }
+
+/* ===== BEFORE / AFTER SLIDER ===== */
+.before-after {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    cursor: col-resize;
+    user-select: none;
+}
+.before-after-after {
+    position: absolute;
+    inset: 0;
+}
+.before-after-before {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 50% 0 0);
+    z-index: 1;
+}
+.before-after-label {
+    position: absolute;
+    padding: 0.3rem 0.8rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.before-after-before .before-after-label {
+    top: 1rem;
+    left: 1rem;
+}
+.before-after-after .before-after-label {
+    top: 1rem;
+    right: 1rem;
+}
+.before-after-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: var(--accent);
+    z-index: 2;
+    transform: translateX(-50%);
+}
+.before-after-handle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.before-after-handle::after {
+    content: '◀▶';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 0.7rem;
+    z-index: 3;
+    pointer-events: none;
+}

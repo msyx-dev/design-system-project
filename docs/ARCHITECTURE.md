@@ -4,7 +4,7 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**64 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
+**65 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
 
 ## Structure
 
@@ -19,7 +19,7 @@ pages/
   data.html             # Tables, data grid, stats, charts, pie/donut, KPI, tree view, gauge, animated counters, comparison table, progress tracker
   templates.html        # Kanban, roadmap, backlog, sprint board
   feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
-  divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed) + Interaction (accordion, command palette, context menu, copy button)
+  divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed, before/after) + Interaction (accordion, command palette, context menu, copy button)
 shared/
   styles.css            # CSS global — @import tokens.css + composants, theming, responsive
   css/
@@ -28,7 +28,7 @@ shared/
   sync.sh               # Synchronise tokens + utilities vers un projet consommateur
   check-sync.sh         # Vérifie si le DS consommé est à jour (@ds-version)
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js         # 22+ composants JS interactifs (voir section dediee)
+  components.js         # 23+ composants JS interactifs (voir section dediee)
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint + velocity.json
@@ -143,6 +143,7 @@ docs/
 ### Sprint 8+ (nouveaux composants)
 - **Sortable List** (`initSortableLists()`) : liste reorderable par drag-and-drop HTML5 (dragstart/dragover/drop), poignee de glissement `.sortable-handle`, feedback visuel `.dragging`/`.drag-over`, support tactile via pointer events (pointerdown/move/up + clone fantome), auto-numerotation pour `.sortable-list--numbered`, anti-double-bind dataset.bound
 - **Video Embeds** (`initVideoEmbeds()`) : lecteur video responsive 16:9, lazy-load iframe au clic sur overlay (.video-embed-overlay), bouton play circulaire accent, classe `.loaded` masque l'overlay, support clavier (Enter/Space), variante card (.video-card), autoplay a l'activation, anti-double-bind dataset.bound
+- **Before/After Slider** (`initBeforeAfter()`) : comparaison visuelle avant/apres, handle draggable (mouse + touch), clip-path dynamique sur `.before-after-before`, position handle synchronisee, clampage 5%-95%, anti-double-bind dataset.bound
 - **Pie & Donut Charts** (`initPieCharts()`) : graphiques circulaires SVG dynamiques, pie path-arc + donut stroke-dasharray, 3 variantes (pie/donut/mini), legende interactive avec highlight, couleurs via --chart-N ou semantic (success/warning/danger), animation IntersectionObserver, anti-double-bind dataset.bound
 - **Gauge / Speedometer** (`initGauges()`) : jauge semi-circulaire SVG (arc path), data-value/data-max/data-thresholds, seuils colorés (danger ≤30%, warning ≤70%, success >70%), variante mini (.gauge--mini), animation stroke-dashoffset via IntersectionObserver, anti-double-bind dataset.bound
 - **Animated Counters** (`initAnimatedCounters()`) : animation requestAnimationFrame de 0 a la valeur cible (data-target), easeOutQuart 1.5s, support decimals (data-decimals), prefix/suffix, trigger IntersectionObserver au scroll, anti-double-bind dataset.bound + dataset.counted

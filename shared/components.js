@@ -201,6 +201,9 @@ function initComponents() {
 
     // Video Embeds
     initVideoEmbeds();
+
+    // Before / After Slider
+    initBeforeAfter();
 }
 
 // Chips
@@ -2464,6 +2467,54 @@ function initVideoEmbeds() {
     });
 }
 window.__initVideoEmbeds = initVideoEmbeds;
+
+function initBeforeAfter() {
+    document.querySelectorAll('.before-after').forEach(container => {
+        if (container.dataset.bound) return;
+        container.dataset.bound = '1';
+
+        const before = container.querySelector('.before-after-before');
+        const handle = container.querySelector('.before-after-handle');
+        if (!before || !handle) return;
+
+        let dragging = false;
+
+        function applyPercent(percent) {
+            const clamped = Math.min(95, Math.max(5, percent));
+            before.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
+            handle.style.left = clamped + '%';
+        }
+
+        function getPercent(clientX) {
+            const rect = container.getBoundingClientRect();
+            return ((clientX - rect.left) / rect.width) * 100;
+        }
+
+        // Mouse events
+        container.addEventListener('mousedown', e => {
+            dragging = true;
+            applyPercent(getPercent(e.clientX));
+            e.preventDefault();
+        });
+        document.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            applyPercent(getPercent(e.clientX));
+        });
+        document.addEventListener('mouseup', () => { dragging = false; });
+
+        // Touch events
+        container.addEventListener('touchstart', e => {
+            dragging = true;
+            applyPercent(getPercent(e.touches[0].clientX));
+        }, { passive: true });
+        document.addEventListener('touchmove', e => {
+            if (!dragging) return;
+            applyPercent(getPercent(e.touches[0].clientX));
+        }, { passive: true });
+        document.addEventListener('touchend', () => { dragging = false; });
+    });
+}
+window.__initBeforeAfter = initBeforeAfter;
 
 window.__initComponents = initComponents;
 
