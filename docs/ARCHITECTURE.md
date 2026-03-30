@@ -24,6 +24,7 @@ shared/
   styles.css            # CSS global — @import tokens.css + composants, theming, responsive
   css/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
+    utilities.css       # Classes utilitaires couleur, backgrounds, bordures
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
   components.js         # 20+ composants JS interactifs (voir section dediee)
 docs/
