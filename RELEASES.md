@@ -1,5 +1,16 @@
 # Releases
 
+## 2.11.0 — 2026-03-30 — Sprint 11
+
+### Added
+- Composant Pie / Donut Chart — pie, donut, mini donut, legende interactive
+- Composant Gauge / Speedometer — jauge semi-circulaire avec seuils colores
+- Composant Comparison Table — tableau comparatif cote-a-cote
+- Composant Animated Counter — compteurs animes au scroll (easeOutQuart)
+
+### Changed
+- Compteur : 57 → 61 composants (+4 data/viz)
+
 ## 2.10.0 — 2026-03-30 — Sprint 10
 
 ### Changed
