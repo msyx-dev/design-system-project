@@ -323,6 +323,56 @@
     </div>
 </section>
 
+<!-- PIE & DONUT CHARTS -->
+<section id="pie-donut">
+    <div class="section-header"><span class="overline">Data</span><h2>Pie &amp; Donut Charts</h2><p>Graphiques circulaires pour representer des repartitions et proportions.</p></div>
+
+    <div class="demo-grid demo-grid-3">
+        <!-- Pie Chart -->
+        <div class="demo-box">
+            <span class="demo-label">Pie Chart</span>
+            <div class="pie-chart" data-values="35,25,20,12,8" data-labels="Frontend,Backend,Design,DevOps,QA">
+                <svg viewBox="0 0 200 200" role="img" aria-labelledby="pie1-title pie1-desc">
+                    <title id="pie1-title">Repartition equipe</title>
+                    <desc id="pie1-desc">Graphique en secteurs montrant la repartition par domaine</desc>
+                </svg>
+                <div class="pie-legend"></div>
+            </div>
+        </div>
+
+        <!-- Donut Chart -->
+        <div class="demo-box">
+            <span class="demo-label">Donut Chart</span>
+            <div class="pie-chart pie-chart--donut" data-values="60,25,15" data-labels="Conforme,En cours,Non conforme" data-colors="success,warning,danger">
+                <svg viewBox="0 0 200 200" role="img" aria-labelledby="donut1-title">
+                    <title id="donut1-title">Score conformite</title>
+                </svg>
+                <div class="pie-center-value">60%</div>
+                <div class="pie-legend"></div>
+            </div>
+        </div>
+
+        <!-- Mini Donut -->
+        <div class="demo-box">
+            <span class="demo-label">Mini Donut</span>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;">
+                <div class="pie-chart pie-chart--mini" data-values="75,25" data-labels="Done,Remaining">
+                    <svg viewBox="0 0 80 80" role="img"><title>75% complete</title></svg>
+                    <div class="pie-center-value">75%</div>
+                </div>
+                <div class="pie-chart pie-chart--mini" data-values="42,58" data-labels="Score,Reste" data-colors="warning,">
+                    <svg viewBox="0 0 80 80" role="img"><title>42% score</title></svg>
+                    <div class="pie-center-value">42%</div>
+                </div>
+                <div class="pie-chart pie-chart--mini" data-values="90,10" data-labels="Passed,Failed" data-colors="success,">
+                    <svg viewBox="0 0 80 80" role="img"><title>90% reussite</title></svg>
+                    <div class="pie-center-value">90%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- DATA GRID -->
 <section id="data-grid">
     <div class="section-header"><span class="overline">Data</span><h2>Data Grid</h2><p>Table enrichie avec tri multi-colonne, filtres inline et selection multiple.</p></div>

@@ -183,6 +183,9 @@ function initComponents() {
 
     // Context Menu
     initContextMenu();
+
+    // Pie / Donut Charts
+    initPieCharts();
 }
 
 // Chips
@@ -1830,6 +1833,194 @@ function initContextMenu() {
     }
 }
 window.__initContextMenu = initContextMenu;
+
+// Pie / Donut Charts
+function initPieCharts() {
+    const root = document.documentElement;
+
+    function resolveColor(colorKey, index) {
+        const map = { success: '--success', warning: '--warning', danger: '--danger', info: '--info' };
+        if (colorKey && map[colorKey]) {
+            return getComputedStyle(root).getPropertyValue(map[colorKey]).trim();
+        }
+        return getComputedStyle(root).getPropertyValue('--chart-' + ((index % 5) + 1)).trim();
+    }
+
+    function describeArcPath(cx, cy, r, startAngle, endAngle) {
+        // Returns an SVG arc path string for a filled pie segment
+        const toRad = a => (a - 90) * Math.PI / 180;
+        const x1 = cx + r * Math.cos(toRad(startAngle));
+        const y1 = cy + r * Math.sin(toRad(startAngle));
+        const x2 = cx + r * Math.cos(toRad(endAngle));
+        const y2 = cy + r * Math.sin(toRad(endAngle));
+        const large = (endAngle - startAngle) > 180 ? 1 : 0;
+        return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+    }
+
+    function buildPieChart(chart, values, labels, colors, isMini) {
+        const svg = chart.querySelector('svg');
+        const legendEl = chart.querySelector('.pie-legend');
+        const total = values.reduce((s, v) => s + v, 0);
+        const cx = isMini ? 40 : 100;
+        const cy = isMini ? 40 : 100;
+        const r = isMini ? 36 : 88;
+
+        let currentAngle = 0;
+        const segments = [];
+
+        values.forEach((val, i) => {
+            const angle = (val / total) * 360;
+            const endAngle = currentAngle + angle;
+            const color = resolveColor(colors[i], i);
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', describeArcPath(cx, cy, r, currentAngle, endAngle));
+            path.setAttribute('fill', color);
+            path.classList.add('pie-segment');
+            path.setAttribute('aria-label', `${labels[i]}: ${val}`);
+            path.style.opacity = '0';
+            svg.appendChild(path);
+            segments.push({ el: path, label: labels[i], color });
+            currentAngle = endAngle;
+        });
+
+        // Legend
+        if (legendEl) {
+            legendEl.innerHTML = segments.map((s, i) =>
+                `<span class="pie-legend-item" data-idx="${i}">` +
+                `<span class="pie-legend-dot" style="background:${s.color};"></span>${s.label}</span>`
+            ).join('');
+
+            legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    const idx = +item.dataset.idx;
+                    segments.forEach((s, i) => {
+                        s.el.style.opacity = i === idx ? '1' : '0.3';
+                    });
+                    legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
+                        li.classList.toggle('dimmed', i !== idx);
+                    });
+                });
+                item.addEventListener('mouseleave', () => {
+                    segments.forEach(s => { s.el.style.opacity = '1'; });
+                    legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
+                });
+            });
+        }
+
+        return segments;
+    }
+
+    function buildDonutChart(chart, values, labels, colors, isMini) {
+        const svg = chart.querySelector('svg');
+        const legendEl = chart.querySelector('.pie-legend');
+        const total = values.reduce((s, v) => s + v, 0);
+        const cx = isMini ? 40 : 100;
+        const cy = isMini ? 40 : 100;
+        const r = isMini ? 28 : 72;
+        const strokeW = isMini ? 14 : 28;
+        const circumference = 2 * Math.PI * r;
+
+        let offsetAngle = 0; // in degrees, top = -90
+        const segments = [];
+
+        values.forEach((val, i) => {
+            const fraction = val / total;
+            const dashLen = fraction * circumference;
+            const color = resolveColor(colors[i], i);
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', cx);
+            circle.setAttribute('cy', cy);
+            circle.setAttribute('r', r);
+            circle.setAttribute('fill', 'none');
+            circle.setAttribute('stroke', color);
+            circle.setAttribute('stroke-width', strokeW);
+            // rotate via stroke-dashoffset : offset = circumference - (offsetAngle/360)*circumference
+            const dashOffset = circumference - (offsetAngle / 360) * circumference;
+            circle.setAttribute('stroke-dasharray', `${dashLen} ${circumference}`);
+            circle.setAttribute('stroke-dashoffset', dashOffset);
+            circle.classList.add('pie-donut-segment');
+            circle.setAttribute('aria-label', `${labels[i]}: ${val}`);
+            circle.style.opacity = '0';
+            // rotate from top : transform-origin at center
+            circle.style.transformOrigin = `${cx}px ${cy}px`;
+            svg.appendChild(circle);
+
+            segments.push({ el: circle, label: labels[i], color, dashLen, circumference, dashOffset });
+            offsetAngle += fraction * 360;
+        });
+
+        // Legend
+        if (legendEl) {
+            legendEl.innerHTML = segments.map((s, i) =>
+                `<span class="pie-legend-item" data-idx="${i}">` +
+                `<span class="pie-legend-dot" style="background:${s.color};"></span>${s.label}</span>`
+            ).join('');
+
+            legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    const idx = +item.dataset.idx;
+                    segments.forEach((s, i) => {
+                        s.el.style.opacity = i === idx ? '1' : '0.3';
+                    });
+                    legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
+                        li.classList.toggle('dimmed', i !== idx);
+                    });
+                });
+                item.addEventListener('mouseleave', () => {
+                    segments.forEach(s => { s.el.style.opacity = '1'; });
+                    legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
+                });
+            });
+        }
+
+        return segments;
+    }
+
+    function animateSegments(segments) {
+        segments.forEach((s, i) => {
+            setTimeout(() => {
+                s.el.style.transition = 'opacity 0.4s ease';
+                s.el.style.opacity = '1';
+            }, i * 80);
+        });
+    }
+
+    document.querySelectorAll('.pie-chart').forEach(chart => {
+        if (chart.dataset.bound) return;
+        chart.dataset.bound = '1';
+
+        const rawValues = (chart.dataset.values || '').split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v) && v > 0);
+        if (!rawValues.length) return;
+        const rawLabels = (chart.dataset.labels || '').split(',').map(l => l.trim());
+        const rawColors = (chart.dataset.colors || '').split(',').map(c => c.trim());
+        const labels = rawValues.map((_, i) => rawLabels[i] || `Segment ${i + 1}`);
+        const colors = rawValues.map((_, i) => rawColors[i] || '');
+
+        const isDonut = chart.classList.contains('pie-chart--donut') || chart.classList.contains('pie-chart--mini');
+        const isMini = chart.classList.contains('pie-chart--mini');
+        const isDonutType = isDonut;
+
+        let segments;
+        if (isDonutType) {
+            segments = buildDonutChart(chart, rawValues, labels, colors, isMini);
+        } else {
+            segments = buildPieChart(chart, rawValues, labels, colors, isMini);
+        }
+
+        // Animate on IntersectionObserver
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateSegments(segments);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        observer.observe(chart);
+    });
+}
+window.__initPieCharts = initPieCharts;
 
 window.__initComponents = initComponents;
 
