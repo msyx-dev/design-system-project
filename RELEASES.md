@@ -1,5 +1,11 @@
 # Releases
 
+## 2.13.1 — 2026-03-30 — Fix tokens ACSSI + scoping layout
+
+### Fixed
+- `tokens.css` : ajout `--sidebar-bg`, `--sidebar-link-hover-bg`, `--sidebar-link-active-bg` dans le bloc `[data-theme="acssi"]` (héritage MSYX incorrect)
+- `layout.css` : classes showcase (`section`, `.section-header`, `.demo-box`, `.demo-grid`, `.demo-label`, `.demo-row`, `.subsection`, `.subgroup-header`) scopées sous `.main` pour ne pas polluer les projets consommateurs
+
 ## 2.13.0 — 2026-03-30 — Extraction modulaire CSS
 
 ### Added

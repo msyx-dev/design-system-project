@@ -1,4 +1,4 @@
-/* @ds-version: 2.13.0 */
+/* @ds-version: 2.13.1 */
 /* tokens.css — Design tokens msyx.design
    Variables CSS pures. Aucune règle structurelle.
    Import : @import url('css/tokens.css'); */
@@ -162,6 +162,11 @@
     --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
     --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
     --gradient-4: linear-gradient(135deg, #e0cd1e, #f59e0b);
+
+    /* Layout shell */
+    --sidebar-bg: rgba(0, 52, 95, 0.9);
+    --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.06);
+    --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.10);
 
     /* Bordures */
     --border: rgba(var(--accent-rgb), 0.12);
