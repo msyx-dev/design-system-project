@@ -13,12 +13,12 @@ index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 8 categories
 pages/
   fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration)
-  composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, FAB, theme switcher
-  navigation.html       # Tabs, breadcrumbs, stepper, segmented control, bottom navigation
+  composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher
+  navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
   data.html             # Tables, data grid, stats, charts, KPI, tree view
   templates.html        # Kanban, roadmap, backlog, sprint board
-  feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet
+  feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks) + Interaction (accordion, command palette, context menu, copy button)
 shared/
   styles.css            # CSS global — @import tokens.css + composants, theming, responsive

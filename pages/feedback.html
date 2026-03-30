@@ -436,6 +436,70 @@
     </div>
 </section>
 
+
+<section id="fab">
+    <div class="section-header"><span class="overline">Feedback</span><h2>FAB — Floating Action Button</h2><p>Bouton d'action flottant en position fixe bottom-right. 3 variantes : simple, mini, et menu radial expand.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">FAB simple</span>
+            <div class="fab-demo-area">
+                <button class="fab" aria-label="Ajouter"><span>&#43;</span></button>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Classe <code class="code-inline">.fab</code> — icone + hover scale + glow accent</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Mini FAB</span>
+            <div class="fab-demo-area" style="align-items:flex-end;justify-content:flex-end;gap:var(--space-sm);">
+                <button class="fab fab-mini fab-success" aria-label="Valider">&#10003;</button>
+                <button class="fab fab-mini" aria-label="Editer">&#9998;</button>
+                <button class="fab fab-mini fab-danger" aria-label="Supprimer">&#128465;</button>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Classe <code class="code-inline">.fab-mini</code> — 40px vs 56px standard</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">FAB extended</span>
+            <div class="fab-demo-area" style="justify-content:center;">
+                <button class="fab fab-extended" aria-label="Nouveau projet"><span class="fab-icon">&#43;</span> Nouveau projet</button>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Classe <code class="code-inline">.fab-extended</code> — pill avec label texte</p>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-2" style="margin-top:var(--space-xl);">
+        <div class="demo-box">
+            <span class="demo-label">FAB menu radial (expand)</span>
+            <div class="fab-demo-area">
+                <div class="fab-menu" id="fab-menu-demo" aria-label="Menu actions">
+                    <div class="fab-actions" aria-live="polite">
+                        <div class="fab-action">
+                            <span class="fab-action-label">Partager</span>
+                            <button class="fab-action-btn" aria-label="Partager">&#8679;</button>
+                        </div>
+                        <div class="fab-action">
+                            <span class="fab-action-label">Modifier</span>
+                            <button class="fab-action-btn" aria-label="Modifier">&#9998;</button>
+                        </div>
+                        <div class="fab-action">
+                            <span class="fab-action-label">Supprimer</span>
+                            <button class="fab-action-btn" aria-label="Supprimer" style="color:var(--danger);">&#128465;</button>
+                        </div>
+                    </div>
+                    <button class="fab fab-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Ouvrir les actions">
+                        <span class="fab-icon-main">&#43;</span>
+                    </button>
+                </div>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Clic sur le FAB pour ouvrir/fermer — icone tourne 45deg, actions en stagger</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.75rem;">FAB fixe en production : <code class="code-inline">.fab</code> avec <code class="code-inline">position: fixed; bottom: 1.5rem; right: 1.5rem;</code>.</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.75rem;">Menu expand : <code class="code-inline">.fab-menu</code> + <code class="code-inline">.fab-trigger</code> + <code class="code-inline">.fab-actions</code>. JS : <code class="code-inline">initFAB()</code> gere le toggle <code class="code-inline">.open</code>.</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.75rem;">Variantes couleur : <code class="code-inline">.fab-success</code>, <code class="code-inline">.fab-danger</code>.</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Fermeture automatique au clic exterieur.</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
