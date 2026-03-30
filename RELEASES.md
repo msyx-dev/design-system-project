@@ -1,5 +1,19 @@
 # Releases
 
+## 2.12.0 — 2026-03-30 — Sprint 12
+
+### Added
+- Composant Progress Tracker circulaire — ring SVG avec etapes, anneau pourcentage, multi-ring
+- Composant Sortable List — drag-and-drop HTML5 avec numerotation auto
+- Composant Video Embed — lazy loading iframe, placeholder play, variante card
+- Composant Before/After Slider — comparaison avant/apres avec curseur draggable
+- Composant Quiz / Poll — questions interactives avec scoring et feedback immediat
+- Composant Achievement Badge — grille de badges avec etats locked/unlocked/new, niveaux bronze/silver/gold
+- Composant Decision Tree — arbre de decision interactif step-by-step
+
+### Changed
+- Compteur : 61 → 68 composants (+7 interactif/e-learning)
+
 ## 2.11.0 — 2026-03-30 — Sprint 11
 
 ### Added
