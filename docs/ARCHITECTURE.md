@@ -108,7 +108,7 @@ docs/
 
 ## Composants JS interactifs
 
-20+ fonctions init* exportees via `window.__initX` pour re-init SPA :
+30 fonctions init* exportees via `window.__initX` pour re-init SPA :
 
 ### Sprint 1-5 (composants fondateurs)
 - **Toasts** (`showToast()`) : variantes colorees, auto-dismiss, stack
