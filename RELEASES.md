@@ -1,5 +1,21 @@
 # Releases
 
+## 2.9.0 — 2026-03-30 — Sprint 9
+
+### Added
+- Checklist industrialisée pour l'ajout de composants (CLAUDE.md + ARCHITECTURE.md)
+- Section "Process ajout composant" avec les 7 étapes et fichiers à modifier
+
+### Fixed
+- Accessibilité charts SVG — `<title>` + `<desc>` + `role="img"` sur 13 SVGs (data.html)
+- Navigation clavier carousel — ArrowLeft/ArrowRight + `tabindex="0"` + `role="region"`
+- Tooltips accessibles au clavier — `:focus-within` + `role="tooltip"` + `aria-describedby`
+- Toasts avec `aria-live="polite"` + `role="status"` pour screen readers
+- Header version corrigée (v2.5 → v2.8 → v2.8.1 → v2.9)
+
+### Changed
+- @ds-version bump 2.8.0 → 2.9.0
+
 ## 2.8.0 — 2026-03-30 — Sprint 8
 
 ### Added
