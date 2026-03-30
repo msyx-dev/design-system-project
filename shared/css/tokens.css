@@ -1,4 +1,4 @@
-/* @ds-version: 2.13.1 */
+/* @ds-version: 2.13.2 */
 /* tokens.css — Design tokens msyx.design
    Variables CSS pures. Aucune règle structurelle.
    Import : @import url('css/tokens.css'); */
@@ -140,6 +140,7 @@
     /* Backgrounds */
     --primary: #00345f;
     --primary-light: #00457a;
+    --bg-page: #001530;
 
     /* Accent or */
     --accent: #e0cd1e;
