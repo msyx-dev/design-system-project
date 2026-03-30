@@ -1,0 +1,46 @@
+/* @ds-version: 2.8.0 */
+/* utilities.css — Classes utilitaires design system msyx.design
+   Couleurs, backgrounds, bordures, accessibilité.
+   Import : @import url('css/utilities.css'); */
+
+/* ===== Texte ===== */
+.text-default { color: var(--text); }
+.text-muted { color: var(--text-muted); }
+.text-dim { color: var(--text-dim); }
+.text-accent { color: var(--accent); }
+.text-accent-light { color: var(--accent-light); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+.text-info { color: var(--info); }
+.text-on-accent { color: var(--text-on-accent); }
+
+/* ===== Backgrounds ===== */
+.bg-primary { background: var(--primary); }
+.bg-primary-light { background: var(--primary-light); }
+.bg-surface { background: var(--surface); }
+.bg-surface-solid { background: var(--surface-solid); }
+.bg-surface-light { background: var(--surface-light); }
+.bg-accent { background: var(--accent); }
+.bg-accent-glow { background: var(--accent-glow); }
+.bg-gradient-1 { background: var(--gradient-1); }
+.bg-gradient-2 { background: var(--gradient-2); }
+.bg-gradient-3 { background: var(--gradient-3); }
+.bg-gradient-4 { background: var(--gradient-4); }
+
+/* ===== Bordures ===== */
+.border-default { border: 1px solid var(--border); }
+.border-accent { border-color: var(--accent); }
+
+/* ===== Accessibilité ===== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
