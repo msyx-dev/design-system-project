@@ -204,6 +204,9 @@ function initComponents() {
 
     // Before / After Slider
     initBeforeAfter();
+
+    // Quiz / Poll
+    initQuiz();
 }
 
 // Chips
@@ -2515,6 +2518,182 @@ function initBeforeAfter() {
     });
 }
 window.__initBeforeAfter = initBeforeAfter;
+
+// ===== QUIZ / POLL =====
+function initQuiz() {
+    document.querySelectorAll('.quiz').forEach(quiz => {
+        if (quiz.dataset.bound) return;
+        quiz.dataset.bound = '1';
+
+        const mode = quiz.dataset.mode || 'quiz';
+        const questions = Array.from(quiz.querySelectorAll('.quiz-question'));
+        const progressBar = quiz.querySelector('.quiz-progress-bar');
+        const progressWrap = quiz.querySelector('.quiz-progress');
+        const resultEl = quiz.querySelector('.quiz-result');
+        const scoreEl = quiz.querySelector('.quiz-score');
+        const restartBtn = quiz.querySelector('.quiz-restart');
+
+        let currentIndex = 0;
+        let score = 0;
+
+        function updateProgress(index) {
+            if (!progressBar || !progressWrap) return;
+            const pct = Math.round(((index + 1) / questions.length) * 100);
+            progressBar.style.width = pct + '%';
+            progressWrap.setAttribute('aria-valuenow', pct);
+        }
+
+        function showQuestion(index) {
+            questions.forEach((q, i) => {
+                q.classList.toggle('active', i === index);
+            });
+            if (progressBar) updateProgress(index);
+        }
+
+        function disableOptions(questionEl) {
+            questionEl.querySelectorAll('input[type="radio"]').forEach(r => {
+                r.disabled = true;
+            });
+        }
+
+        function handleQuizAnswer(questionEl, selectedValue) {
+            const correct = parseInt(questionEl.dataset.correct, 10);
+            const isCorrect = parseInt(selectedValue, 10) === correct;
+            const feedbackEl = questionEl.querySelector('.quiz-feedback');
+            const options = questionEl.querySelectorAll('.quiz-option');
+
+            disableOptions(questionEl);
+
+            options.forEach(opt => {
+                const radio = opt.querySelector('input[type="radio"]');
+                const val = parseInt(radio.value, 10);
+                if (val === correct) opt.classList.add('correct');
+                if (radio.checked && !isCorrect) opt.classList.add('wrong');
+                if (radio.checked) opt.classList.add('selected');
+            });
+
+            if (feedbackEl) {
+                feedbackEl.textContent = isCorrect ? 'Bonne reponse !' : 'Mauvaise reponse.';
+                feedbackEl.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+            }
+
+            if (isCorrect) score++;
+
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < questions.length) {
+                    showQuestion(currentIndex);
+                } else {
+                    showResult();
+                }
+            }, 1000);
+        }
+
+        function showResult() {
+            questions.forEach(q => q.classList.remove('active'));
+            if (resultEl) {
+                resultEl.classList.add('show');
+            }
+            if (scoreEl) {
+                const pct = Math.round((score / questions.length) * 100);
+                scoreEl.textContent = score + '/' + questions.length + ' — ' + pct + '%';
+            }
+        }
+
+        function resetQuiz() {
+            score = 0;
+            currentIndex = 0;
+
+            questions.forEach(q => {
+                q.classList.remove('active');
+                q.querySelectorAll('input[type="radio"]').forEach(r => {
+                    r.checked = false;
+                    r.disabled = false;
+                });
+                q.querySelectorAll('.quiz-option').forEach(o => {
+                    o.classList.remove('correct', 'wrong', 'selected');
+                });
+                const fb = q.querySelector('.quiz-feedback');
+                if (fb) {
+                    fb.textContent = '';
+                    fb.className = 'quiz-feedback';
+                }
+            });
+
+            if (resultEl) resultEl.classList.remove('show');
+            showQuestion(0);
+        }
+
+        // Poll mode: fake results on selection
+        function handlePollAnswer(questionEl, selectedValue) {
+            const options = questionEl.querySelectorAll('.quiz-option');
+            const labels = Array.from(options).map(o => o.querySelector('span').textContent);
+            const total = options.length;
+
+            disableOptions(questionEl);
+            options.forEach(opt => {
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio.checked) opt.classList.add('selected');
+            });
+
+            // Generate fake random percentages that sum to 100
+            const rawVotes = labels.map((_, i) => {
+                if (parseInt(selectedValue, 10) === i) return 30 + Math.floor(Math.random() * 30);
+                return 5 + Math.floor(Math.random() * 20);
+            });
+            const total_votes = rawVotes.reduce((a, b) => a + b, 0);
+            const pcts = rawVotes.map(v => Math.round((v / total_votes) * 100));
+
+            const pollResults = questionEl.querySelector('.quiz-poll-results');
+            if (!pollResults) return;
+
+            pollResults.innerHTML = '';
+            labels.forEach((label, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'quiz-poll-bar';
+                bar.innerHTML =
+                    '<div class="quiz-poll-fill" style="width:0%"></div>' +
+                    '<span class="quiz-poll-label">' + label + '</span>' +
+                    '<span class="quiz-poll-pct">' + pcts[i] + '%</span>';
+                pollResults.appendChild(bar);
+            });
+
+            pollResults.classList.add('show');
+
+            // Animate fills after paint
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    pollResults.querySelectorAll('.quiz-poll-fill').forEach((fill, i) => {
+                        fill.style.width = pcts[i] + '%';
+                    });
+                });
+            });
+        }
+
+        // Bind radio change events
+        questions.forEach(questionEl => {
+            questionEl.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    if (radio.disabled) return;
+                    if (mode === 'quiz') {
+                        handleQuizAnswer(questionEl, radio.value);
+                    } else if (mode === 'poll') {
+                        handlePollAnswer(questionEl, radio.value);
+                    }
+                });
+            });
+        });
+
+        // Restart button
+        if (restartBtn) {
+            restartBtn.addEventListener('click', resetQuiz);
+        }
+
+        // Init: show first question
+        showQuestion(0);
+    });
+}
+window.__initQuiz = initQuiz;
 
 window.__initComponents = initComponents;
 

@@ -18,7 +18,7 @@ pages/
   fondation.html    # Couleurs, typographie, espacements, ombres, theming
   composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher
   navigation.html   # Tabs, breadcrumbs, stepper, bottom navigation
-  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
+  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll
   data.html         # Tables, data grid, stats, charts, KPI, tree view
   templates.html    # Kanban, roadmap, backlog, sprint board
   feedback.html     # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
@@ -31,7 +31,7 @@ shared/
   sync.sh           # Sync tokens + utilities vers un projet consommateur
   check-sync.sh     # Vérifie si le DS consommé est à jour (@ds-version)
   nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds)
+  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll)
 ```
 
 ## Conventions
