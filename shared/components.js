@@ -195,6 +195,9 @@ function initComponents() {
 
     // Progress Trackers
     initProgressTrackers();
+
+    // Sortable Lists
+    initSortableLists();
 }
 
 // Chips
@@ -2261,6 +2264,171 @@ function initProgressTrackers() {
     });
 }
 window.__initProgressTrackers = initProgressTrackers;
+
+// Sortable List
+function initSortableLists() {
+    document.querySelectorAll('.sortable-list').forEach(function(list) {
+        if (list.dataset.bound) return;
+        list.dataset.bound = '1';
+
+        var dragSrc = null;
+
+        function getItems() {
+            return Array.from(list.querySelectorAll('.sortable-item'));
+        }
+
+        function updateNumbers() {
+            if (!list.classList.contains('sortable-list--numbered')) return;
+            getItems().forEach(function(item, idx) {
+                var num = item.querySelector('.sortable-num');
+                if (num) num.textContent = idx + 1;
+            });
+        }
+
+        // HTML5 Drag & Drop
+        getItems().forEach(function(item) {
+            item.addEventListener('dragstart', function(e) {
+                dragSrc = item;
+                item.classList.add('dragging');
+                item.setAttribute('aria-grabbed', 'true');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+
+            item.addEventListener('dragend', function() {
+                item.classList.remove('dragging');
+                item.setAttribute('aria-grabbed', 'false');
+                list.querySelectorAll('.drag-over').forEach(function(el) {
+                    el.classList.remove('drag-over');
+                });
+                dragSrc = null;
+                updateNumbers();
+            });
+
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (item === dragSrc) return;
+                list.querySelectorAll('.drag-over').forEach(function(el) {
+                    el.classList.remove('drag-over');
+                });
+                item.classList.add('drag-over');
+            });
+
+            item.addEventListener('dragleave', function() {
+                item.classList.remove('drag-over');
+            });
+
+            item.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (!dragSrc || item === dragSrc) return;
+                item.classList.remove('drag-over');
+                var items = getItems();
+                var srcIdx = items.indexOf(dragSrc);
+                var tgtIdx = items.indexOf(item);
+                if (srcIdx < tgtIdx) {
+                    list.insertBefore(dragSrc, item.nextSibling);
+                } else {
+                    list.insertBefore(dragSrc, item);
+                }
+                updateNumbers();
+            });
+        });
+
+        // Touch support via pointer events
+        var pointerDragSrc = null;
+        var pointerClone = null;
+        var pointerOffsetX = 0;
+        var pointerOffsetY = 0;
+
+        getItems().forEach(function(item) {
+            var handle = item.querySelector('.sortable-handle');
+            var target = handle || item;
+
+            target.addEventListener('pointerdown', function(e) {
+                if (e.pointerType === 'mouse') return; // handled by HTML5 DnD
+                e.preventDefault();
+                pointerDragSrc = item;
+                item.classList.add('dragging');
+                item.setAttribute('aria-grabbed', 'true');
+
+                var rect = item.getBoundingClientRect();
+                pointerOffsetX = e.clientX - rect.left;
+                pointerOffsetY = e.clientY - rect.top;
+
+                pointerClone = item.cloneNode(true);
+                pointerClone.style.cssText = [
+                    'position:fixed',
+                    'pointer-events:none',
+                    'z-index:9999',
+                    'width:' + rect.width + 'px',
+                    'opacity:0.85',
+                    'left:' + (e.clientX - pointerOffsetX) + 'px',
+                    'top:' + (e.clientY - pointerOffsetY) + 'px',
+                    'transition:none'
+                ].join(';');
+                document.body.appendChild(pointerClone);
+            });
+        });
+
+        document.addEventListener('pointermove', function(e) {
+            if (!pointerDragSrc || !pointerClone) return;
+            pointerClone.style.left = (e.clientX - pointerOffsetX) + 'px';
+            pointerClone.style.top = (e.clientY - pointerOffsetY) + 'px';
+
+            list.querySelectorAll('.drag-over').forEach(function(el) {
+                el.classList.remove('drag-over');
+            });
+            var items = getItems();
+            var target = null;
+            items.forEach(function(it) {
+                if (it === pointerDragSrc) return;
+                var rect = it.getBoundingClientRect();
+                if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    target = it;
+                }
+            });
+            if (target) target.classList.add('drag-over');
+        }, { passive: true });
+
+        document.addEventListener('pointerup', function(e) {
+            if (!pointerDragSrc) return;
+            if (pointerClone) {
+                document.body.removeChild(pointerClone);
+                pointerClone = null;
+            }
+
+            list.querySelectorAll('.drag-over').forEach(function(el) {
+                el.classList.remove('drag-over');
+            });
+
+            var items = getItems();
+            var target = null;
+            items.forEach(function(it) {
+                if (it === pointerDragSrc) return;
+                var rect = it.getBoundingClientRect();
+                if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    target = it;
+                }
+            });
+
+            if (target) {
+                var srcIdx = items.indexOf(pointerDragSrc);
+                var tgtIdx = items.indexOf(target);
+                if (srcIdx < tgtIdx) {
+                    list.insertBefore(pointerDragSrc, target.nextSibling);
+                } else {
+                    list.insertBefore(pointerDragSrc, target);
+                }
+            }
+
+            pointerDragSrc.classList.remove('dragging');
+            pointerDragSrc.setAttribute('aria-grabbed', 'false');
+            pointerDragSrc = null;
+            updateNumbers();
+        });
+    });
+}
+window.__initSortableLists = initSortableLists;
 
 window.__initComponents = initComponents;
 

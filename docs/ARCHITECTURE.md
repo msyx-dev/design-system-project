@@ -4,7 +4,7 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**62 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
+**63 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
 
 ## Structure
 
@@ -13,7 +13,7 @@ index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 8 categories
 pages/
   fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration)
-  composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher
+  composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
   data.html             # Tables, data grid, stats, charts, pie/donut, KPI, tree view, gauge, animated counters, comparison table, progress tracker
@@ -28,7 +28,7 @@ shared/
   sync.sh               # Synchronise tokens + utilities vers un projet consommateur
   check-sync.sh         # Vérifie si le DS consommé est à jour (@ds-version)
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js         # 20+ composants JS interactifs (voir section dediee)
+  components.js         # 21+ composants JS interactifs (voir section dediee)
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint + velocity.json
@@ -141,6 +141,7 @@ docs/
 - **Context Menu** (`initContextMenu()`) : clic droit custom, positionnement viewport-aware, sous-menus, icones, separateurs
 
 ### Sprint 8+ (nouveaux composants)
+- **Sortable List** (`initSortableLists()`) : liste reorderable par drag-and-drop HTML5 (dragstart/dragover/drop), poignee de glissement `.sortable-handle`, feedback visuel `.dragging`/`.drag-over`, support tactile via pointer events (pointerdown/move/up + clone fantome), auto-numerotation pour `.sortable-list--numbered`, anti-double-bind dataset.bound
 - **Pie & Donut Charts** (`initPieCharts()`) : graphiques circulaires SVG dynamiques, pie path-arc + donut stroke-dasharray, 3 variantes (pie/donut/mini), legende interactive avec highlight, couleurs via --chart-N ou semantic (success/warning/danger), animation IntersectionObserver, anti-double-bind dataset.bound
 - **Gauge / Speedometer** (`initGauges()`) : jauge semi-circulaire SVG (arc path), data-value/data-max/data-thresholds, seuils colorés (danger ≤30%, warning ≤70%, success >70%), variante mini (.gauge--mini), animation stroke-dashoffset via IntersectionObserver, anti-double-bind dataset.bound
 - **Animated Counters** (`initAnimatedCounters()`) : animation requestAnimationFrame de 0 a la valeur cible (data-target), easeOutQuart 1.5s, support decimals (data-decimals), prefix/suffix, trigger IntersectionObserver au scroll, anti-double-bind dataset.bound + dataset.counted

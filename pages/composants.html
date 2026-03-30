@@ -363,6 +363,100 @@
 </section>
 
     </div>
+</section>
+
+<section id="sortable-list">
+    <div class="section-header">
+        <span class="overline">Composants</span>
+        <h2>Sortable List</h2>
+        <p>Liste reorderable par drag-and-drop. Poignee de glissement, feedback visuel, support tactile.</p>
+    </div>
+
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Liste simple</span>
+            <ul class="sortable-list" aria-label="Liste reorderable" role="listbox">
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span>Concevoir la maquette</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span>Integrer les composants</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span>Ecrire les tests</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span>Deployer en production</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span>Monitorer les performances</span>
+                </li>
+            </ul>
+            <p class="typo-small" style="margin-top:1rem;">Glissez les items via la poignee <code style="font-family:'Fira Code',monospace;color:var(--accent-light);">&#8942;&#8942;</code> pour les reordonner.</p>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Liste numerotee avec metadonnees</span>
+            <ul class="sortable-list sortable-list--numbered" aria-label="Liste numerotee reorderable" role="listbox">
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span class="sortable-num">1</span>
+                    <span style="flex:1;">
+                        <strong>Sprint Planning</strong>
+                        <span class="badge badge-info" style="margin-left:0.5rem;font-size:0.65rem;">P1</span>
+                    </span>
+                    <span style="color:var(--text-dim);font-size:0.75rem;">2h</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span class="sortable-num">2</span>
+                    <span style="flex:1;">
+                        <strong>Daily Standup</strong>
+                        <span class="badge badge-success" style="margin-left:0.5rem;font-size:0.65rem;">P2</span>
+                    </span>
+                    <span style="color:var(--text-dim);font-size:0.75rem;">15m</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span class="sortable-num">3</span>
+                    <span style="flex:1;">
+                        <strong>Code Review</strong>
+                        <span class="badge badge-warning" style="margin-left:0.5rem;font-size:0.65rem;">P2</span>
+                    </span>
+                    <span style="color:var(--text-dim);font-size:0.75rem;">1h</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span class="sortable-num">4</span>
+                    <span style="flex:1;">
+                        <strong>Sprint Review</strong>
+                        <span class="badge badge-info" style="margin-left:0.5rem;font-size:0.65rem;">P1</span>
+                    </span>
+                    <span style="color:var(--text-dim);font-size:0.75rem;">1h</span>
+                </li>
+                <li class="sortable-item" draggable="true" role="option" aria-grabbed="false">
+                    <span class="sortable-handle" aria-hidden="true">&#8942;&#8942;</span>
+                    <span class="sortable-num">5</span>
+                    <span style="flex:1;">
+                        <strong>Retrospective</strong>
+                        <span class="badge badge-success" style="margin-left:0.5rem;font-size:0.65rem;">P3</span>
+                    </span>
+                    <span style="color:var(--text-dim);font-size:0.75rem;">45m</span>
+                </li>
+            </ul>
+            <p class="typo-small" style="margin-top:1rem;">La numerotation se met a jour automatiquement apres chaque reordonnancement.</p>
+        </div>
+
+    </div>
+</section>
+
+    </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
 </body>
