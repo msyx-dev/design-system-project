@@ -158,6 +158,21 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 - CSP : `script-src 'self' 'unsafe-inline'` (requis pour anti-FOUC)
 - Deploy : git push → visible immediatement (pas de build)
 
+## Process ajout composant
+
+Pour ajouter un nouveau composant au DS, suivre la checklist dans `CLAUDE.md` section "Process ajout composant".
+
+Fichiers modifies pour chaque composant :
+1. `pages/{categorie}.html` — section HTML + demo
+2. `shared/styles.css` — section CSS dediee
+3. `shared/components.js` — fonction init* (si interactif)
+4. `site.html` — compteur hero
+5. `shared/css/tokens.css` + `shared/css/utilities.css` — bump @ds-version
+6. `shared/nav.js` — bump header-version
+7. `docs/ARCHITECTURE.md` — structure + composants JS
+8. `CLAUDE.md` — description page + conventions
+9. `RELEASES.md` — changelog
+
 ## Dette technique connue
 
 - Avatars hardcodes dans composants.html + templates.html (couleurs directes au lieu de variables)

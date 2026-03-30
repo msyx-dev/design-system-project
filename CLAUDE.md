@@ -68,6 +68,36 @@ shared/
 - Typo : Space Grotesk (titres) + Inter (corps) + Fira Code (mono)
 - Glassmorphism + border glow subtil
 
+## Process ajout composant
+Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
+
+1. **HTML** : ajouter la section dans la page thematique appropriee
+   - Pattern : `<section id="nom">` + `section-header` + `demo-box` avec exemples
+   - Variantes : montrer au moins 2-3 variantes (tailles, etats, couleurs)
+   - Respecter le style des sections existantes dans la meme page
+2. **CSS** : ajouter dans `shared/styles.css`
+   - Section dediee avec commentaire `/* ===== NOM COMPOSANT ===== */`
+   - Variables CSS uniquement (jamais de hex/rgb hardcode)
+   - Mobile-first : media queries co-localisees avec le composant
+   - Tester les 5 combinaisons theme/mode (MSYX dark/light, ACSSI dark, Nhood dark/light)
+3. **JS** (si interactif) : ajouter dans `shared/components.js`
+   - Fonction `initNomComposant()` exportee
+   - Pattern `dataset.bound` anti-double-bind sur les event listeners
+   - Appel dans le bloc `reinitAll()` pour compatibilite SPA
+4. **Compteur** : mettre a jour le nombre dans `site.html` (hero + hub cards si applicable)
+5. **Version** : bumper `@ds-version` dans `shared/css/tokens.css` ET `shared/css/utilities.css`
+   - Feature : minor (2.9 → 2.10)
+   - Fix : patch (2.9.0 → 2.9.1)
+   - Bumper aussi la version dans `shared/nav.js` (header-version)
+6. **Docs** :
+   - `docs/ARCHITECTURE.md` : ajouter dans la structure + section composants JS si init*
+   - `CLAUDE.md` : mettre a jour la liste des composants dans la description de la page
+   - `RELEASES.md` : entree Added/Changed
+7. **Qualite** :
+   - Anti-FOUC : le composant ne doit pas flasher au chargement (script inline <head>)
+   - Accessibilite : aria-labels, role, keyboard navigation si interactif
+   - Responsive : tester 320px, 768px, 1280px
+
 ## Deploy
 Fichiers servis directement par Caddy. Aucun build necessaire.
 Modifier les fichiers → commit/push → visible immediatement.
