@@ -687,6 +687,95 @@
     </div>
 </section>
 
+<!-- PROGRESS TRACKER -->
+<section id="progress-tracker">
+    <div class="section-header"><span class="overline">Data</span><h2>Progress Tracker</h2><p>Trackers circulaires SVG avec etapes, pourcentage et anneaux concentriques. Animation au scroll.</p></div>
+
+    <div class="demo-grid demo-grid-3">
+
+        <!-- Demo 1 : Ring avec 4 etapes -->
+        <div class="demo-box" style="text-align:center;">
+            <span class="demo-label">Ring avec etapes</span>
+            <div style="display:flex;justify-content:center;margin-top:1rem;">
+                <div class="progress-tracker-step-wrapper">
+                    <div class="progress-tracker"
+                         data-progress="75"
+                         data-steps="4"
+                         data-current="3"
+                         aria-label="Progression : etape 3 sur 4 (75%)">
+                        <svg viewBox="0 0 160 160" role="img" aria-hidden="true">
+                            <title>Progress tracker — etape 3/4</title>
+                            <circle class="pt-track" cx="80" cy="80" r="62"/>
+                            <circle class="pt-fill" cx="80" cy="80" r="62"/>
+                        </svg>
+                        <div class="progress-tracker-center">
+                            <span class="progress-tracker-value">3/4</span>
+                            <span class="progress-tracker-label">Etapes</span>
+                        </div>
+                    </div>
+                    <div class="progress-tracker-step-label">Deploiement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 2 : Anneau simple avec pourcentage -->
+        <div class="demo-box" style="text-align:center;">
+            <span class="demo-label">Anneau — 75%</span>
+            <div style="display:flex;justify-content:center;margin-top:1rem;">
+                <div class="progress-tracker-step-wrapper">
+                    <div class="progress-tracker"
+                         data-progress="75"
+                         aria-label="Progression 75%">
+                        <svg viewBox="0 0 160 160" role="img" aria-hidden="true">
+                            <title>Progress tracker — 75%</title>
+                            <circle class="pt-track" cx="80" cy="80" r="62"/>
+                            <circle class="pt-fill" cx="80" cy="80" r="62"/>
+                        </svg>
+                        <div class="progress-tracker-center">
+                            <span class="progress-tracker-value">75%</span>
+                            <span class="progress-tracker-label">Complet</span>
+                        </div>
+                    </div>
+                    <div class="progress-tracker-step-label">Sprint actuel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 3 : Multi-ring concentriques -->
+        <div class="demo-box" style="text-align:center;">
+            <span class="demo-label">Multi-ring concentriques</span>
+            <div style="display:flex;justify-content:center;align-items:center;margin-top:1rem;flex-wrap:wrap;gap:0.5rem;">
+                <div class="progress-tracker-multi"
+                     data-rings='[{"label":"Frontend","pct":82,"color":"var(--accent)"},{"label":"Backend","pct":55,"color":"var(--violet)"},{"label":"Tests","pct":34,"color":"var(--cyan)"}]'
+                     aria-label="Progression multi-modules">
+                    <svg viewBox="0 0 200 200" role="img" aria-hidden="true">
+                        <title>Progress tracker multi-ring</title>
+                        <!-- Rings drawn by JS -->
+                    </svg>
+                </div>
+                <div class="progress-tracker-multi-legend">
+                    <div class="progress-tracker-multi-legend-item">
+                        <span class="progress-tracker-multi-legend-dot" style="background:var(--accent);"></span>
+                        <span>Frontend</span>
+                        <span class="progress-tracker-multi-legend-pct">82%</span>
+                    </div>
+                    <div class="progress-tracker-multi-legend-item">
+                        <span class="progress-tracker-multi-legend-dot" style="background:var(--violet);"></span>
+                        <span>Backend</span>
+                        <span class="progress-tracker-multi-legend-pct">55%</span>
+                    </div>
+                    <div class="progress-tracker-multi-legend-item">
+                        <span class="progress-tracker-multi-legend-dot" style="background:var(--cyan);"></span>
+                        <span>Tests</span>
+                        <span class="progress-tracker-multi-legend-pct">34%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- LISTS -->
 <section id="lists">
     <div class="section-header"><span class="overline">Data</span><h2>Listes</h2><p>Listes d'items avec avatars, metadata et actions.</p></div>

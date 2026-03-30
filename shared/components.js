@@ -192,6 +192,9 @@ function initComponents() {
 
     // Animated Counters
     initAnimatedCounters();
+
+    // Progress Trackers
+    initProgressTrackers();
 }
 
 // Chips
@@ -2131,6 +2134,133 @@ function initAnimatedCounters() {
     });
 }
 window.__initAnimatedCounters = initAnimatedCounters;
+
+// ===== PROGRESS TRACKER =====
+function initProgressTrackers() {
+    // --- Single ring trackers (.progress-tracker) ---
+    document.querySelectorAll('.progress-tracker[data-progress]').forEach(tracker => {
+        if (tracker.dataset.bound) return;
+        tracker.dataset.bound = '1';
+
+        const pct = Math.min(Math.max(parseFloat(tracker.dataset.progress) || 0, 0), 100);
+        const steps = parseInt(tracker.dataset.steps || '0', 10);
+        const current = parseInt(tracker.dataset.current || '0', 10);
+
+        const svg = tracker.querySelector('svg');
+        const fill = tracker.querySelector('.pt-fill');
+        if (!svg || !fill) return;
+
+        // Ring geometry — r=62, cx=cy=80, viewBox 0 0 160 160
+        const R = 62;
+        const CX = 80;
+        const CY = 80;
+        const circumference = 2 * Math.PI * R;
+
+        // Rotate start to top (-90deg)
+        fill.style.transformOrigin = `${CX}px ${CY}px`;
+        fill.style.transform = 'rotate(-90deg)';
+        fill.setAttribute('stroke-dasharray', circumference);
+        fill.setAttribute('stroke-dashoffset', circumference); // hidden initially
+
+        // Step dots
+        if (steps > 0) {
+            for (let i = 0; i < steps; i++) {
+                const angle = (2 * Math.PI * i) / steps - Math.PI / 2;
+                const dx = CX + R * Math.cos(angle);
+                const dy = CY + R * Math.sin(angle);
+                const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                dot.setAttribute('cx', dx);
+                dot.setAttribute('cy', dy);
+                dot.setAttribute('r', '5');
+                let state = 'pt-step--pending';
+                if (i < current - 1) state = 'pt-step--done';
+                else if (i === current - 1) state = 'pt-step--active';
+                dot.setAttribute('class', `pt-step ${state}`);
+                svg.appendChild(dot);
+            }
+        }
+
+        // Animate on intersection
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                observer.unobserve(entry.target);
+                // Force reflow
+                fill.getBoundingClientRect();
+                const offset = circumference * (1 - pct / 100);
+                fill.style.strokeDashoffset = offset;
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(tracker);
+    });
+
+    // --- Multi-ring trackers (.progress-tracker-multi) ---
+    document.querySelectorAll('.progress-tracker-multi[data-rings]').forEach(tracker => {
+        if (tracker.dataset.bound) return;
+        tracker.dataset.bound = '1';
+
+        let rings;
+        try { rings = JSON.parse(tracker.dataset.rings); } catch(e) { return; }
+        if (!Array.isArray(rings) || rings.length === 0) return;
+
+        const svg = tracker.querySelector('svg');
+        if (!svg) return;
+
+        // Geometry: 3 concentric rings in viewBox 0 0 200 200
+        // Radii: 84, 68, 52 (gap of 16 = 7px stroke + 9px spacing)
+        const CX = 100, CY = 100;
+        const RADII = [84, 68, 52];
+        const SW = 7;
+
+        rings.forEach((ring, idx) => {
+            const r = RADII[idx] || (84 - idx * 16);
+            const pct = Math.min(Math.max(parseFloat(ring.pct) || 0, 0), 100);
+            const color = ring.color || 'var(--accent)';
+            const circumference = 2 * Math.PI * r;
+
+            // Track
+            const track = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            track.setAttribute('cx', CX);
+            track.setAttribute('cy', CY);
+            track.setAttribute('r', r);
+            track.setAttribute('class', 'pt-track');
+            track.setAttribute('stroke-width', SW);
+            svg.appendChild(track);
+
+            // Fill
+            const fill = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            fill.setAttribute('cx', CX);
+            fill.setAttribute('cy', CY);
+            fill.setAttribute('r', r);
+            fill.setAttribute('class', 'pt-fill');
+            fill.setAttribute('stroke-width', SW);
+            fill.style.stroke = color;
+            fill.style.transformOrigin = `${CX}px ${CY}px`;
+            fill.style.transform = 'rotate(-90deg)';
+            fill.setAttribute('stroke-dasharray', circumference);
+            fill.setAttribute('stroke-dashoffset', circumference);
+            svg.appendChild(fill);
+
+            // Stagger animation per ring
+            const delay = idx * 150;
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    observer.unobserve(entry.target);
+                    setTimeout(() => {
+                        fill.getBoundingClientRect();
+                        const offset = circumference * (1 - pct / 100);
+                        fill.style.strokeDashoffset = offset;
+                    }, delay);
+                });
+            }, { threshold: 0.3 });
+
+            observer.observe(tracker);
+        });
+    });
+}
+window.__initProgressTrackers = initProgressTrackers;
 
 window.__initComponents = initComponents;
 

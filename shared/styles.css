@@ -2283,3 +2283,137 @@ tbody tr:last-child .comparison-recommended {
 .context-submenu .context-menu-item {
     padding: 0.5rem 0.85rem;
 }
+
+/* ===== PROGRESS TRACKER ===== */
+.progress-tracker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.progress-tracker svg {
+    width: 160px;
+    height: 160px;
+    overflow: visible;
+}
+.progress-tracker--sm svg {
+    width: 100px;
+    height: 100px;
+}
+.progress-tracker-center {
+    position: absolute;
+    text-align: center;
+    pointer-events: none;
+}
+.progress-tracker-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text);
+    line-height: 1;
+}
+.progress-tracker-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+.progress-tracker .pt-track {
+    fill: none;
+    stroke: var(--surface-light);
+    stroke-width: 8;
+}
+.progress-tracker .pt-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease;
+}
+.progress-tracker .pt-step {
+    transition: fill 0.3s;
+}
+.progress-tracker .pt-step--done {
+    fill: var(--success);
+}
+.progress-tracker .pt-step--active {
+    fill: var(--accent);
+}
+.progress-tracker .pt-step--pending {
+    fill: var(--surface-light);
+}
+
+/* Multi-ring concentric */
+.progress-tracker-multi {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.progress-tracker-multi svg {
+    width: 200px;
+    height: 200px;
+    overflow: visible;
+}
+.progress-tracker-multi .pt-track {
+    fill: none;
+    stroke: var(--surface-light);
+    stroke-width: 7;
+}
+.progress-tracker-multi .pt-fill {
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.1s ease;
+}
+.progress-tracker-multi-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-left: 1.5rem;
+}
+.progress-tracker-multi-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+}
+.progress-tracker-multi-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.progress-tracker-multi-legend-pct {
+    margin-left: auto;
+    font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text);
+}
+
+/* Steps layout */
+.progress-tracker-steps-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+.progress-tracker-step-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+.progress-tracker-step-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 90px;
+}
+
+@media (max-width: 600px) {
+    .progress-tracker svg { width: 120px; height: 120px; }
+    .progress-tracker-multi svg { width: 160px; height: 160px; }
+    .progress-tracker-multi-legend { margin-left: 0.8rem; }
+    .progress-tracker-value { font-size: 1.4rem; }
+}

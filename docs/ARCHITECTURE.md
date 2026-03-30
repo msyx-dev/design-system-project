@@ -4,7 +4,7 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**61 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
+**62 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
 
 ## Structure
 
@@ -16,7 +16,7 @@ pages/
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input
-  data.html             # Tables, data grid, stats, charts, pie/donut, KPI, tree view, gauge, animated counters, comparison table
+  data.html             # Tables, data grid, stats, charts, pie/donut, KPI, tree view, gauge, animated counters, comparison table, progress tracker
   templates.html        # Kanban, roadmap, backlog, sprint board
   feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks) + Interaction (accordion, command palette, context menu, copy button)
@@ -144,6 +144,7 @@ docs/
 - **Pie & Donut Charts** (`initPieCharts()`) : graphiques circulaires SVG dynamiques, pie path-arc + donut stroke-dasharray, 3 variantes (pie/donut/mini), legende interactive avec highlight, couleurs via --chart-N ou semantic (success/warning/danger), animation IntersectionObserver, anti-double-bind dataset.bound
 - **Gauge / Speedometer** (`initGauges()`) : jauge semi-circulaire SVG (arc path), data-value/data-max/data-thresholds, seuils colorés (danger ≤30%, warning ≤70%, success >70%), variante mini (.gauge--mini), animation stroke-dashoffset via IntersectionObserver, anti-double-bind dataset.bound
 - **Animated Counters** (`initAnimatedCounters()`) : animation requestAnimationFrame de 0 a la valeur cible (data-target), easeOutQuart 1.5s, support decimals (data-decimals), prefix/suffix, trigger IntersectionObserver au scroll, anti-double-bind dataset.bound + dataset.counted
+- **Progress Trackers** (`initProgressTrackers()`) : anneaux SVG circulaires (stroke-dasharray/dashoffset), data-progress (0-100), data-steps + data-current pour dots d'etapes (done/active/pending), multi-ring concentriques (data-rings JSON), animation IntersectionObserver au scroll, anti-double-bind dataset.bound
 
 ### Pattern commun
 - Anti-double-bind : `dataset.bound` / `dataset.xxxBound` sur chaque conteneur
