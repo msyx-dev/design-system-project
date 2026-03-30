@@ -1,5 +1,20 @@
 # Releases
 
+## 2.8.0 — 2026-03-30 — Sprint 8
+
+### Added
+- `shared/css/tokens.css` — design tokens extraits, importable séparément par les projets consommateurs
+- `shared/css/utilities.css` — classes utilitaires couleur (.text-muted, .bg-accent, .border-default, .sr-only)
+- `shared/sync.sh` — synchronise tokens + utilities vers un projet consommateur
+- `shared/check-sync.sh` — vérifie si le DS consommé est à jour (@ds-version)
+- Section "Consommation" dans fondation.html — guide d'intégration avec exemples visuels et avant/après
+
+### Changed
+- `shared/styles.css` devient agrégateur (@import tokens.css + utilities.css)
+- Tokens CSS cohérents : --*-rgb sémantiques dans tous les thèmes, tokens overlay (--text-on-accent, --overlay-*)
+- Zéro hardcoded white (#fff/white) dans les composants — tout via tokens
+- fondation.html documente les 2 modes d'import (tokens seul / DS complet)
+
 ## 2.7.0 — 2026-03-28 — Sprint 7
 
 ### Added
