@@ -198,6 +198,9 @@ function initComponents() {
 
     // Sortable Lists
     initSortableLists();
+
+    // Video Embeds
+    initVideoEmbeds();
 }
 
 // Chips
@@ -2429,6 +2432,38 @@ function initSortableLists() {
     });
 }
 window.__initSortableLists = initSortableLists;
+
+// ===== VIDEO EMBEDS =====
+function initVideoEmbeds() {
+    document.querySelectorAll('.video-embed').forEach(embed => {
+        if (embed.dataset.bound) return;
+        embed.dataset.bound = '1';
+
+        const overlay = embed.querySelector('.video-embed-overlay');
+        if (!overlay) return;
+
+        const activate = () => {
+            const src = embed.dataset.src;
+            if (!src) return;
+            embed.classList.add('loaded');
+            const iframe = document.createElement('iframe');
+            iframe.src = src + '?autoplay=1';
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.setAttribute('allow', 'autoplay; encrypted-media');
+            iframe.setAttribute('title', embed.getAttribute('aria-label') || 'Video');
+            embed.appendChild(iframe);
+        };
+
+        overlay.addEventListener('click', activate);
+        overlay.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                activate();
+            }
+        });
+    });
+}
+window.__initVideoEmbeds = initVideoEmbeds;
 
 window.__initComponents = initComponents;
 

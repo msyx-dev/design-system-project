@@ -22,7 +22,7 @@ pages/
   data.html         # Tables, data grid, stats, charts, KPI, tree view
   templates.html    # Kanban, roadmap, backlog, sprint board
   feedback.html     # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
-  divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks) + Interaction (accordion, command palette, context menu, copy button)
+  divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed) + Interaction (accordion, command palette, context menu, copy button)
 shared/
   styles.css        # CSS global — @import tokens.css + composants, theming, responsive
   css/
@@ -31,7 +31,7 @@ shared/
   sync.sh           # Sync tokens + utilities vers un projet consommateur
   check-sync.sh     # Vérifie si le DS consommé est à jour (@ds-version)
   nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher)
+  components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds)
 ```
 
 ## Conventions
