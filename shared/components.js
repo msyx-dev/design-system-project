@@ -1,6 +1,12 @@
 // Shared component interactions for msyx.design
 // Exposes window.__initComponents() for SPA re-init after page swap
 
+function escapeHTML(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
 function initComponents() {
     // Tabs
     document.querySelectorAll('.tabs').forEach(g => {
@@ -259,7 +265,7 @@ function initChips() {
             const chip = document.createElement('span');
             chip.className = 'chip chip-input-item';
             chip.dataset.chipBound = '1';
-            chip.innerHTML = `${trimmed} <button class="chip-close" aria-label="Supprimer ${trimmed}">&times;</button>`;
+            chip.innerHTML = escapeHTML(trimmed) + ' <button class="chip-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
             chip.querySelector('.chip-close').addEventListener('click', () => {
                 chip.style.transition = 'opacity 0.18s, transform 0.18s';
                 chip.style.opacity = '0';
@@ -473,7 +479,7 @@ function showToast(message, type, duration) {
     var toast = document.createElement('div');
     toast.className = 'toast toast-' + type + ' toast-enter';
     toast.setAttribute('role', 'status');
-    toast.innerHTML = '<span style="color:' + colors[type] + ';font-size:1rem;">' + icons[type] + '</span><span>' + message + '</span><button class="toast-close">&times;</button>';
+    toast.innerHTML = '<span style="color:' + colors[type] + ';font-size:1rem;">' + icons[type] + '</span><span>' + escapeHTML(message) + '</span><button class="toast-close">&times;</button>';
     container.appendChild(toast);
     var closeBtn = toast.querySelector('.toast-close');
     function dismiss() {
@@ -539,7 +545,7 @@ window.__openModal = function(config) {
         actionsHtml = '<div class="modal-actions"><button class="btn btn-primary" data-modal-close>Fermer</button></div>';
     }
 
-    dialog.innerHTML = '<div class="modal-header"><h3>' + (title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + (body || '') + '</div>' + actionsHtml;
+    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + escapeHTML(body || '') + '</div>' + actionsHtml;
 
     dialog.querySelectorAll('[data-modal-close]').forEach(function(btn) {
         btn.addEventListener('click', function() { dialog.close(); });
@@ -1379,7 +1385,7 @@ function initTagInputs() {
 
             var tag = document.createElement('span');
             tag.className = 'tag-item';
-            tag.innerHTML = trimmed + ' <button class="tag-close" aria-label="Supprimer ' + trimmed + '">&times;</button>';
+            tag.innerHTML = escapeHTML(trimmed) + ' <button class="tag-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
 
             tag.querySelector('.tag-close').addEventListener('click', function() {
                 removeTag(tag);
