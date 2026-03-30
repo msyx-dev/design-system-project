@@ -44,9 +44,9 @@
         <div class="demo-box">
             <span class="demo-label">Indicateurs circulaires</span>
             <div style="display:flex;gap:2rem;justify-content:center;align-items:center;padding-top:0.5rem;">
-                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="17"></circle></svg><span class="value">92%</span></div>
-                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke: var(--violet);"></circle></svg><span class="value">60%</span></div>
-                <div class="progress-ring"><svg width="80" height="80"><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke: var(--cyan);"></circle></svg><span class="value">30%</span></div>
+                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-1"><title id="ring-title-1">Indicateur circulaire Build — 92%</title><desc>Progression du build a 92 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="17"></circle></svg><span class="value">92%</span></div>
+                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-2"><title id="ring-title-2">Indicateur circulaire Tests — 60%</title><desc>Progression des tests a 60 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke: var(--violet);"></circle></svg><span class="value">60%</span></div>
+                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-3"><title id="ring-title-3">Indicateur circulaire Coverage — 30%</title><desc>Progression de la couverture a 30 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke: var(--cyan);"></circle></svg><span class="value">30%</span></div>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
     <div class="section-header"><span class="overline">Data</span><h2>Charts</h2><p>Graphiques SVG purs, zero dependance. Copier-coller ready.</p></div>
 
     <!-- Shared SVG gradients -->
-    <svg width="0" height="0" style="position:absolute;">
+    <svg width="0" height="0" style="position:absolute;" aria-hidden="true" focusable="false">
         <defs>
             <linearGradient id="gradBar1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" style="stop-color: var(--chart-2)"/><stop offset="100%" style="stop-color: var(--chart-1)"/></linearGradient>
             <linearGradient id="gradBar2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" style="stop-color: var(--chart-3)"/><stop offset="100%" style="stop-color: var(--chart-1)"/></linearGradient>
@@ -92,7 +92,9 @@
             <div class="demo-box chart-wrap chart-animated">
                 <span class="demo-label">Trafic mensuel</span>
                 <div class="chart-tooltip" id="tooltip-bar-v"></div>
-                <svg viewBox="0 0 520 175" role="img" aria-label="Graphique a barres verticales du trafic mensuel de janvier a juin">
+                <svg viewBox="0 0 520 175" role="img" aria-labelledby="chart-title-bar-v" aria-describedby="chart-desc-bar-v">
+                    <title id="chart-title-bar-v">Trafic mensuel — barres verticales</title>
+                    <desc id="chart-desc-bar-v">Graphique a barres verticales du trafic mensuel de janvier a juin, avec des valeurs allant de 28k a 47k visiteurs.</desc>
                     <line x1="45" y1="20" x2="500" y2="20" class="chart-grid-line"/>
                     <line x1="45" y1="48" x2="500" y2="48" class="chart-grid-line"/>
                     <line x1="45" y1="76" x2="500" y2="76" class="chart-grid-line"/>
@@ -120,7 +122,9 @@
             <div class="demo-box chart-wrap chart-animated">
                 <span class="demo-label">Top pages</span>
                 <div class="chart-tooltip" id="tooltip-bar-h"></div>
-                <svg viewBox="0 0 520 155" role="img" aria-label="Graphique a barres horizontales des pages les plus visitees">
+                <svg viewBox="0 0 520 155" role="img" aria-labelledby="chart-title-bar-h" aria-describedby="chart-desc-bar-h">
+                    <title id="chart-title-bar-h">Top pages — barres horizontales</title>
+                    <desc id="chart-desc-bar-h">Graphique a barres horizontales des pages les plus visitees : page d'accueil 12.4k, /docs 9.2k, /api 7.1k, /blog 5.3k, /status 3.1k.</desc>
                     <text x="55" y="20" class="chart-axis-label" text-anchor="end">/</text>
                     <rect class="chart-bar" x="65" y="10" width="380" height="17" rx="4" fill="url(#gradBar2)" data-label="/" data-value="12.4k"/>
                     <text x="452" y="22" class="chart-axis-label">12.4k</text>
@@ -146,7 +150,9 @@
         <div class="demo-grid demo-grid-2">
             <div class="demo-box chart-wrap chart-animated">
                 <span class="demo-label">Sources de trafic</span>
-                <svg viewBox="0 0 500 185" role="img" aria-label="Graphique donut des sources de trafic">
+                <svg viewBox="0 0 500 185" role="img" aria-labelledby="chart-title-donut" aria-describedby="chart-desc-donut">
+                    <title id="chart-title-donut">Sources de trafic — graphique donut</title>
+                    <desc id="chart-desc-donut">Repartition des 36.2k visiteurs : Direct 40%, Referral 25%, Search 20%, Social 15%.</desc>
                     <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-1)" stroke-width="28" stroke-dasharray="170.9 256.4" stroke-dashoffset="0" data-label="Direct" data-value="40%"/>
                     <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-2)" stroke-width="28" stroke-dasharray="106.8 320.4" stroke-dashoffset="-170.9" data-label="Referral" data-value="25%"/>
                     <circle class="chart-donut-slice" cx="250" cy="85" r="68" fill="none" style="stroke: var(--chart-3)" stroke-width="28" stroke-dasharray="85.5 341.8" stroke-dashoffset="-277.7" data-label="Search" data-value="20%"/>
@@ -164,7 +170,9 @@
             <div class="demo-box chart-wrap chart-animated">
                 <span class="demo-label">Revenue quotidien</span>
                 <div class="chart-tooltip" id="tooltip-line"></div>
-                <svg viewBox="0 0 520 175" role="img" aria-label="Graphique lineaire du revenue quotidien du lundi au dimanche">
+                <svg viewBox="0 0 520 175" role="img" aria-labelledby="chart-title-line" aria-describedby="chart-desc-line">
+                    <title id="chart-title-line">Revenue quotidien — graphique lineaire</title>
+                    <desc id="chart-desc-line">Graphique lineaire du revenue quotidien du lundi au samedi, avec un pic a 4.8k le samedi.</desc>
                     <line x1="45" y1="20" x2="500" y2="20" class="chart-grid-line"/>
                     <line x1="45" y1="48" x2="500" y2="48" class="chart-grid-line"/>
                     <line x1="45" y1="76" x2="500" y2="76" class="chart-grid-line"/>
@@ -199,7 +207,9 @@
         <div class="demo-box chart-wrap chart-animated">
             <span class="demo-label">Revenue & Taux de conversion</span>
             <div class="chart-tooltip" id="tooltip-dual"></div>
-            <svg viewBox="0 0 800 170" role="img" aria-label="Graphique double axe Y combinant revenue en barres et taux de conversion en ligne">
+            <svg viewBox="0 0 800 170" role="img" aria-labelledby="chart-title-dual" aria-describedby="chart-desc-dual">
+                <title id="chart-title-dual">Revenue et taux de conversion — graphique combine</title>
+                <desc id="chart-desc-dual">Graphique a double axe Y combinant le revenue mensuel en barres (de 15k a 24k) et le taux de conversion en ligne (de 2.8% a 4.2%) de janvier a juin.</desc>
                 <line x1="50" y1="15" x2="750" y2="15" class="chart-grid-line"/>
                 <line x1="50" y1="42" x2="750" y2="42" class="chart-grid-line"/>
                 <line x1="50" y1="69" x2="750" y2="69" class="chart-grid-line"/>
@@ -249,24 +259,26 @@
                 <span class="demo-label">Monitoring</span>
                 <div class="spark-row">
                     <div class="spark-info"><div class="spark-label">CPU</div><div class="spark-value">73%</div></div>
-                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline CPU"><polyline fill="none" style="stroke: var(--chart-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12"/><polygon fill="url(#gradArea1)" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12 200,40 0,40"/></svg></div>
+                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-labelledby="spark-title-cpu" aria-describedby="spark-desc-cpu"><title id="spark-title-cpu">Sparkline CPU</title><desc id="spark-desc-cpu">Graphique d'evolution de l'utilisation CPU, actuellement a 73%, tendance a la hausse de 5%.</desc><polyline fill="none" style="stroke: var(--chart-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12"/><polygon fill="url(#gradArea1)" points="0,28 20,22 40,30 60,18 80,24 100,14 120,20 140,10 160,16 180,8 200,12 200,40 0,40"/></svg></div>
                     <span class="spark-change up">+5%</span>
                 </div>
                 <div class="spark-row">
                     <div class="spark-info"><div class="spark-label">RAM</div><div class="spark-value">8.2 Go</div></div>
-                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline RAM"><polyline fill="none" style="stroke: var(--chart-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22"/><polygon fill="url(#gradArea2)" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22 200,40 0,40"/></svg></div>
+                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-labelledby="spark-title-ram" aria-describedby="spark-desc-ram"><title id="spark-title-ram">Sparkline RAM</title><desc id="spark-desc-ram">Graphique d'evolution de la consommation RAM, actuellement a 8.2 Go, tendance a la baisse de 3%.</desc><polyline fill="none" style="stroke: var(--chart-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22"/><polygon fill="url(#gradArea2)" points="0,15 20,20 40,12 60,25 80,18 100,22 120,28 140,20 160,24 180,30 200,22 200,40 0,40"/></svg></div>
                     <span class="spark-change down">-3%</span>
                 </div>
                 <div class="spark-row">
                     <div class="spark-info"><div class="spark-label">Reseau</div><div class="spark-value">142 Mb/s</div></div>
-                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-label="Sparkline Reseau"><polyline fill="none" style="stroke: var(--chart-3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6"/><polygon fill="url(#gradArea1)" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6 200,40 0,40" opacity="0.5"/></svg></div>
+                    <div class="spark-line"><svg viewBox="0 0 200 40" preserveAspectRatio="none" role="img" aria-labelledby="spark-title-net" aria-describedby="spark-desc-net"><title id="spark-title-net">Sparkline Reseau</title><desc id="spark-desc-net">Graphique d'evolution du debit reseau, actuellement a 142 Mb/s, tendance a la hausse de 12%.</desc><polyline fill="none" style="stroke: var(--chart-3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6"/><polygon fill="url(#gradArea1)" points="0,32 20,28 40,35 60,20 80,30 100,15 120,22 140,8 160,18 180,12 200,6 200,40 0,40" opacity="0.5"/></svg></div>
                     <span class="spark-change up">+12%</span>
                 </div>
             </div>
             <div class="demo-box chart-wrap chart-animated">
                 <span class="demo-label">Requetes API (24h)</span>
                 <div class="chart-tooltip" id="tooltip-area"></div>
-                <svg viewBox="0 0 520 175" role="img" aria-label="Graphique area multi-series des requetes API GET et POST sur 24 heures">
+                <svg viewBox="0 0 520 175" role="img" aria-labelledby="chart-title-area" aria-describedby="chart-desc-area">
+                    <title id="chart-title-area">Requetes API sur 24h — graphique area multi-series</title>
+                    <desc id="chart-desc-area">Graphique area comparant les requetes GET et POST sur 24 heures, avec un pic a 490 requetes GET a 18h.</desc>
                     <line x1="45" y1="20" x2="500" y2="20" class="chart-grid-line"/>
                     <line x1="45" y1="48" x2="500" y2="48" class="chart-grid-line"/>
                     <line x1="45" y1="76" x2="500" y2="76" class="chart-grid-line"/>

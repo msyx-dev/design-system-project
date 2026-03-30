@@ -82,10 +82,10 @@
         <div class="demo-box">
             <span class="demo-label">Tooltips</span>
             <div class="demo-row" style="gap:2rem;">
-                <div class="tooltip-wrap"><button class="btn-secondary btn-sm">Hover moi</button><span class="tooltip">Info rapide</span></div>
-                <div class="tooltip-wrap"><button class="btn-icon">&#9881;</button><span class="tooltip">Parametres</span></div>
-                <div class="tooltip-wrap"><button class="btn-icon">&#128276;</button><span class="tooltip">Notifications</span></div>
-                <div class="tooltip-wrap"><span class="badge badge-primary">Beta</span><span class="tooltip">Version beta publique</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-hover">Hover moi</button><span class="tooltip" id="tt-hover" role="tooltip">Info rapide</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-settings" aria-label="Parametres">&#9881;</button><span class="tooltip" id="tt-settings" role="tooltip">Parametres</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-notif" aria-label="Notifications">&#128276;</button><span class="tooltip" id="tt-notif" role="tooltip">Notifications</span></div>
+                <div class="tooltip-wrap"><span class="badge badge-primary" tabindex="0" aria-describedby="tt-beta">Beta</span><span class="tooltip" id="tt-beta" role="tooltip">Version beta publique</span></div>
             </div>
         </div>
         <div class="demo-box">

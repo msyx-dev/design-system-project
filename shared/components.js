@@ -437,12 +437,15 @@ function showToast(message, type, duration) {
         container = document.createElement('div');
         container.id = 'toast-container';
         container.className = 'toast-container';
+        container.setAttribute('aria-live', 'polite');
+        container.setAttribute('aria-atomic', 'false');
         document.body.appendChild(container);
     }
     var icons = { success: '&#10003;', error: '&#10007;', warning: '&#9888;', info: '&#8505;' };
     var colors = { success: 'var(--success)', error: 'var(--danger)', warning: 'var(--warning)', info: 'var(--info)' };
     var toast = document.createElement('div');
     toast.className = 'toast toast-' + type + ' toast-enter';
+    toast.setAttribute('role', 'status');
     toast.innerHTML = '<span style="color:' + colors[type] + ';font-size:1rem;">' + icons[type] + '</span><span>' + message + '</span><button class="toast-close">&times;</button>';
     container.appendChild(toast);
     var closeBtn = toast.querySelector('.toast-close');
@@ -843,6 +846,13 @@ function initCarousel() {
         var btnNext = carousel.querySelector('.carousel-btn-next');
         if (!track || !slides.length) return;
 
+        // Keyboard accessibility
+        if (!carousel.hasAttribute('tabindex')) {
+            carousel.setAttribute('tabindex', '0');
+        }
+        carousel.setAttribute('role', 'region');
+        carousel.setAttribute('aria-label', carousel.dataset.label || 'Carrousel');
+
         var total = slides.length;
         var current = 0;
         var autoplayMs = parseInt(carousel.dataset.autoplay, 10) || 0;
@@ -902,6 +912,17 @@ function initCarousel() {
             });
             startAutoplay();
         }
+
+        // Keyboard navigation
+        carousel.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goTo(current - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                goTo(current + 1);
+            }
+        });
 
         // Touch swipe
         var touchStartX = 0;
