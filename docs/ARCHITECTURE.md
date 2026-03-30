@@ -25,6 +25,8 @@ shared/
   css/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures
+  sync.sh               # Synchronise tokens + utilities vers un projet consommateur
+  check-sync.sh         # Vérifie si le DS consommé est à jour (@ds-version)
   nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
   components.js         # 20+ composants JS interactifs (voir section dediee)
 docs/
