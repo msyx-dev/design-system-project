@@ -135,6 +135,11 @@
     letter-spacing: 0.04em;
 }
 
+[data-theme="acssi"][data-mode="light"] .sidebar {
+    border-right-color: rgba(var(--accent-rgb), 0.12);
+}
+[data-theme="acssi"][data-mode="light"] .site-header { border-bottom-color: rgba(var(--accent-rgb), 0.12); }
+
 [data-theme="nhood"][data-mode="light"] .sidebar {
     border-right-color: rgba(var(--accent-rgb), 0.12);
 }
