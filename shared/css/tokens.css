@@ -229,6 +229,96 @@
     --chart-5: #00457a;
 }
 
+/* ----- Theme ACSSI + Mode Light ----- */
+/* Accent principal : bleu marine #00345f — or reserve aux gradients/decorations */
+[data-theme="acssi"][data-mode="light"] {
+    /* Backgrounds */
+    --primary: #f0f4f8;
+    --primary-light: #e8eef4;
+    --bg-page: #f0f4f8;
+
+    /* Accent bleu marine */
+    --accent: #00345f;
+    --accent-rgb: 0, 52, 95;
+    --accent-light: #00457a;
+    --accent-glow: rgba(var(--accent-rgb), 0.10);
+
+    /* Surfaces */
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-solid: #ffffff;
+    --surface-light: #dce4ec;
+
+    /* Textes */
+    --text: #00243f;
+    --text-muted: #3d5a73;
+    --text-dim: #5a7a94;
+
+    /* Gradients — or decoratif sur fond marine */
+    --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
+    --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
+    --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
+    --gradient-4: linear-gradient(135deg, #00457a, #00345f);
+
+    /* Layout shell */
+    --sidebar-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.05);
+    --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.08);
+
+    /* Bordures */
+    --border: rgba(var(--accent-rgb), 0.12);
+    --border-hover: rgba(var(--accent-rgb), 0.30);
+
+    /* Ombres — legeres, teintees bleu marine */
+    --shadow: 0 4px 20px rgba(0, 30, 60, 0.08);
+    --shadow-lg: 0 12px 40px rgba(0, 30, 60, 0.12);
+
+    /* Semantiques — assombries pour contraste fond clair */
+    --success: #16a34a;
+    --warning: #ea580c;
+    --danger: #dc2626;
+    --info: #0284c7;
+    --success-rgb: 22, 163, 74;
+    --warning-rgb: 234, 88, 12;
+    --danger-rgb: 220, 38, 38;
+    --info-rgb: 2, 132, 199;
+
+    /* Semantic light */
+    --success-light: #22c55e;
+    --warning-light: #f97316;
+    --danger-light: #ef4444;
+    --info-light: #0ea5e9;
+
+    /* Semantic dark */
+    --success-dark: #15803d;
+    --warning-dark: #c2410c;
+    --danger-dark: #b91c1c;
+
+    /* Code syntax — adapte fond clair */
+    --code-keyword: #00345f;
+    --code-string: #16a34a;
+    --code-comment: #7a94a8;
+    --code-function: #0056a0;
+    --code-number: #b45309;
+
+    /* Overlays */
+    --overlay: rgba(0, 0, 0, 0.30);
+    --overlay-heavy: rgba(240, 244, 248, 0.90);
+
+    /* Hub card backgrounds */
+    --hub-bg-violet: rgba(0, 90, 158, 0.08);
+    --hub-bg-cyan: rgba(2, 132, 199, 0.07);
+    --hub-bg-pink: rgba(234, 88, 12, 0.07);
+    --hub-bg-success: rgba(22, 163, 74, 0.07);
+    --hub-bg-warning: rgba(224, 205, 30, 0.08);
+
+    /* Chart palette */
+    --chart-1: #00345f;
+    --chart-2: #0284c7;
+    --chart-3: #16a34a;
+    --chart-4: #ea580c;
+    --chart-5: #b45309;
+}
+
 /* ----- Theme Nhood ----- */
 /* Palette : vert fonce #008837 / menthe #73c69c / blanc #ffffff / noir #1a1a1a */
 /* Activation : document.documentElement.dataset.theme = 'nhood' */
