@@ -613,7 +613,7 @@ window.__initCopyButtons = initCopyButtons;
 
 var THEME_CONFIG = {
     msyx:  { modes: ['dark', 'light'], defaultMode: 'dark' },
-    acssi: { modes: ['dark'],          defaultMode: 'dark' },
+    acssi: { modes: ['dark', 'light'], defaultMode: 'dark' },
     nhood: { modes: ['dark', 'light'], defaultMode: 'dark' }
 };
 

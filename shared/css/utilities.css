@@ -1,4 +1,4 @@
-/* @ds-version: 2.13.1 */
+/* @ds-version: 2.13.2 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité.
    Import : @import url('css/utilities.css'); */
@@ -14,6 +14,10 @@
 .text-danger { color: var(--danger); }
 .text-info { color: var(--info); }
 .text-on-accent { color: var(--text-on-accent); }
+.text-success-light { color: var(--success-light); }
+.text-warning-light { color: var(--warning-light); }
+.text-danger-light { color: var(--danger-light); }
+.text-info-light { color: var(--info-light); }
 
 /* ===== Backgrounds ===== */
 .bg-primary { background: var(--primary); }
