@@ -1,5 +1,15 @@
 # Releases
 
+## 2.14.0 — 2026-03-31 — ACSSI light mode
+
+### Added
+- Theme ACSSI light : palette complete (60+ variables) — fond #f0f4f8, accent marine #00345f
+- Toggle dark/light fonctionnel pour ACSSI (plus grise)
+
+### Fixed
+- Composants ACSSI light : correction couleurs hardcodees (accordion, badges, pulse-dot, before/after)
+- Layout ACSSI light : bordures sidebar/header adaptees au bleu marine
+
 ## 2.13.1 — 2026-03-30 — Fix tokens ACSSI + scoping layout
 
 ### Fixed
