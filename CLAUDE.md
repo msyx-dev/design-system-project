@@ -56,7 +56,7 @@ shared/
 ## Theming
 - 2 attributs HTML : `data-theme` (palette) + `data-mode` (dark/light)
 - Cascade CSS 4 couches : `:root` → `[data-theme]` → `[data-mode="light"]` → `[data-theme][data-mode]`
-- 3 themes : MSYX (dark+light), ACSSI (dark only), Nhood (dark+light)
+- 3 themes : MSYX (dark+light), ACSSI (dark+light), Nhood (dark+light)
 - `THEME_CONFIG` dans components.js : modes disponibles par theme, extensible
 - 2 cles localStorage : `msyx-theme` + `msyx-mode`
 - Toggle sun/moon dans le header, grise si theme dark-only

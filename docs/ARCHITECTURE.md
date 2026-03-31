@@ -81,7 +81,7 @@ docs/
 | Theme | Modes | Accent | Style |
 |-------|-------|--------|-------|
 | MSYX | dark, light | #3b82f6 bleu | Glassmorphism, gradients bleu/violet |
-| ACSSI | dark | #e0cd1e or | Corporate bleu marine/or |
+| ACSSI | dark, light | dark: #e0cd1e or / light: #00345f marine | Corporate bleu marine/or |
 | Nhood | dark, light | #008837 vert | Corporate vert fonce/menthe |
 
 ### Persistance
