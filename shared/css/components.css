@@ -1,4 +1,4 @@
-/* @ds-version: 2.14.1 */
+/* @ds-version: 2.14.2 */
 /* components.css — Composants UI du design system msyx.design
    Import : @import url('css/components.css'); */
 
@@ -7,8 +7,8 @@
 .hero-bg { position: absolute; inset: 0; overflow: hidden; }
 .hero-bg .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
 .hero-bg .orb-1 { width: 500px; height: 500px; top: -20%; right: -5%; background: rgba(var(--accent-rgb),0.07); animation: orbFloat 20s ease-in-out infinite; }
-.hero-bg .orb-2 { width: 350px; height: 350px; bottom: -10%; left: 10%; background: rgba(139,92,246,0.05); animation: orbFloat 25s ease-in-out infinite reverse; }
-.hero-bg .orb-3 { width: 250px; height: 250px; top: 40%; left: 50%; background: rgba(6,182,212,0.04); animation: orbFloat 18s ease-in-out infinite 5s; }
+.hero-bg .orb-2 { width: 350px; height: 350px; bottom: -10%; left: 10%; background: rgba(var(--violet-rgb),0.05); animation: orbFloat 25s ease-in-out infinite reverse; }
+.hero-bg .orb-3 { width: 250px; height: 250px; top: 40%; left: 50%; background: rgba(var(--cyan-rgb),0.04); animation: orbFloat 18s ease-in-out infinite 5s; }
 .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(var(--accent-rgb),0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-rgb),0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%); }
 @keyframes orbFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.05); } 66% { transform: translate(-20px,15px) scale(0.95); } }
 .hero-inner { position: relative; z-index: 1; max-width: 700px; }
@@ -67,7 +67,7 @@
 .badge-warning { background: rgba(var(--warning-rgb),0.1); color: var(--warning-light); border: 1px solid rgba(var(--warning-rgb),0.2); }
 .badge-danger { background: rgba(var(--danger-rgb),0.1); color: var(--danger-light); border: 1px solid rgba(var(--danger-rgb),0.2); }
 .badge-info { background: rgba(var(--info-rgb),0.1); color: var(--info-light); border: 1px solid rgba(var(--info-rgb),0.2); }
-.badge-neutral { background: rgba(148,163,184,0.1); color: var(--text-muted); border: 1px solid rgba(148,163,184,0.2); }
+.badge-neutral { background: rgba(var(--text-muted-rgb),0.1); color: var(--text-muted); border: 1px solid rgba(var(--text-muted-rgb),0.2); }
 .tag { display: inline-block; background: rgba(var(--accent-rgb),0.08); color: var(--accent-light); padding: 0.22rem 0.65rem; border-radius: 6px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; }
 .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 8px rgba(var(--success-rgb),0.5); flex-shrink: 0; }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }

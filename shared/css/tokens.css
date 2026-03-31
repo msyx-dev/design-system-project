@@ -1,4 +1,4 @@
-/* @ds-version: 2.14.1 */
+/* @ds-version: 2.14.2 */
 /* tokens.css — Design tokens msyx.design
    Variables CSS pures. Aucune règle structurelle.
    Import : @import url('css/tokens.css'); */
@@ -51,8 +51,11 @@
 
     /* === Couleurs etendues (theming) === */
     --violet: #8b5cf6;
+    --violet-rgb: 139, 92, 246;
     --cyan: #06b6d4;
+    --cyan-rgb: 6, 182, 212;
     --pink: #ec4899;
+    --text-muted-rgb: 148, 163, 184;
 
     /* Semantic light (badges/alerts text) */
     --success-light: #4ade80;
@@ -110,6 +113,7 @@
     --surface-light: #e2e8f0;
     --text: #0f172a;
     --text-muted: #475569;
+    --text-muted-rgb: 71, 85, 105;
     --text-dim: #64748b;
     --border: rgba(15, 23, 42, 0.08);
     --border-hover: rgba(15, 23, 42, 0.20);
@@ -140,7 +144,6 @@
     /* Backgrounds */
     --primary: #00345f;
     --primary-light: #00457a;
-    --bg-page: #001530;
 
     /* Accent or */
     --accent: #e0cd1e;
@@ -189,8 +192,11 @@
 
     /* Couleurs etendues */
     --violet: #005a9e;
+    --violet-rgb: 0, 90, 158;
     --cyan: #38bdf8;
+    --cyan-rgb: 56, 189, 248;
     --pink: #f97316;
+    --text-muted-rgb: 148, 163, 184;
 
     /* Semantic light */
     --success-light: #4ade80;
@@ -235,7 +241,6 @@
     /* Backgrounds */
     --primary: #f0f4f8;
     --primary-light: #e8eef4;
-    --bg-page: #f0f4f8;
 
     /* Accent bleu marine */
     --accent: #00345f;
@@ -251,7 +256,10 @@
     /* Textes */
     --text: #00243f;
     --text-muted: #3d5a73;
+    --text-muted-rgb: 61, 90, 115;
     --text-dim: #5a7a94;
+    --violet-rgb: 0, 90, 158;
+    --cyan-rgb: 56, 189, 248;
 
     /* Gradients — or decoratif sur fond marine */
     --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
@@ -352,8 +360,11 @@
     --danger-rgb: 239, 68, 68;
     --info-rgb: 56, 189, 248;
     --violet: #7c3aed;
+    --violet-rgb: 124, 58, 237;
     --cyan: #06b6d4;
+    --cyan-rgb: 6, 182, 212;
     --pink: #ec4899;
+    --text-muted-rgb: 143, 191, 160;
     --success-light: #4ade80;
     --warning-light: #fb923c;
     --danger-light: #f87171;
