@@ -91,13 +91,13 @@ docs/
 
 ### Toggle UI
 - Selecteur theme : `<select>` dans le header
-- Toggle mode : boutons lune/soleil dans le header, soleil grise si theme dark-only
+- Toggle mode : boutons lune/soleil dans le header (tous les themes supportent dark+light depuis v2.14)
 
 ## Variables CSS
 
 ~75 variables dans `:root` de shared/styles.css (+ overrides dans chaque bloc theme/mode) :
 - **Couleurs** : primary, accent, surface, text, semantic (success/warning/danger/info)
-- **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
+- **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`, `--violet-rgb`, `--cyan-rgb`, `--text-muted-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
 - **Couleurs etendues** : violet, cyan, pink, success/warning/danger-light/dark
 - **Code syntax** : code-keyword, code-string, code-comment, code-function, code-number
 - **Overlays** : overlay, overlay-heavy

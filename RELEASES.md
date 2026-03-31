@@ -1,14 +1,25 @@
 # Releases
 
-## 2.14.0 — 2026-03-31 — ACSSI light mode
+## 2.14.3 — 2026-03-31 — ACSSI light mode + nettoyage complet
 
 ### Added
 - Theme ACSSI light : palette complete (60+ variables) — fond #f0f4f8, accent marine #00345f
 - Toggle dark/light fonctionnel pour ACSSI (plus grise)
+- Nouveaux tokens RGB : `--violet-rgb`, `--cyan-rgb`, `--text-muted-rgb` (tous themes)
+- Semantiques WCAG AA dans le bloc light generique (protection futurs themes)
+- Semantiques WCAG AA dans le bloc Nhood light (meme pattern qu'ACSSI)
 
 ### Fixed
+- Contraste WCAG AA : success/warning/info assombries en ACSSI light (#15803d, #c2410c, #0369a1)
+- Contraste WCAG AA : code-string et code-comment assombries (ACSSI + Nhood light)
+- badge-neutral : rgba hardcode → `rgba(var(--text-muted-rgb),...)`
+- Orbs hero : violet/cyan MSYX hardcodes → `rgba(var(--violet-rgb/--cyan-rgb),...)`
+- 13 box-shadow hardcodees → `var(--shadow)` / `var(--shadow-lg)`
 - Composants ACSSI light : correction couleurs hardcodees (accordion, badges, pulse-dot, before/after)
 - Layout ACSSI light : bordures sidebar/header adaptees au bleu marine
+
+### Removed
+- `--bg-page` : variable inutilisee, supprimee (--primary suffit)
 
 ## 2.13.1 — 2026-03-30 — Fix tokens ACSSI + scoping layout
 
