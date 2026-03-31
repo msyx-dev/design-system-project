@@ -1,4 +1,4 @@
-/* @ds-version: 2.14.0 */
+/* @ds-version: 2.14.1 */
 /* tokens.css — Design tokens msyx.design
    Variables CSS pures. Aucune règle structurelle.
    Import : @import url('css/tokens.css'); */
@@ -272,15 +272,15 @@
     --shadow: 0 4px 20px rgba(0, 30, 60, 0.08);
     --shadow-lg: 0 12px 40px rgba(0, 30, 60, 0.12);
 
-    /* Semantiques — assombries pour contraste fond clair */
-    --success: #16a34a;
-    --warning: #ea580c;
+    /* Semantiques — assombries pour contraste WCAG AA sur fond clair */
+    --success: #15803d;
+    --warning: #c2410c;
     --danger: #dc2626;
-    --info: #0284c7;
-    --success-rgb: 22, 163, 74;
-    --warning-rgb: 234, 88, 12;
+    --info: #0369a1;
+    --success-rgb: 21, 128, 61;
+    --warning-rgb: 194, 65, 12;
     --danger-rgb: 220, 38, 38;
-    --info-rgb: 2, 132, 199;
+    --info-rgb: 3, 105, 161;
 
     /* Semantic light */
     --success-light: #22c55e;
@@ -295,8 +295,8 @@
 
     /* Code syntax — adapte fond clair */
     --code-keyword: #00345f;
-    --code-string: #16a34a;
-    --code-comment: #7a94a8;
+    --code-string: #15803d;
+    --code-comment: #5a7a90;
     --code-function: #0056a0;
     --code-number: #b45309;
 
