@@ -1,5 +1,62 @@
-// Shared component interactions for msyx.design
-// Exposes window.__initComponents() for SPA re-init after page swap
+// components.js — Interactions partagées msyx.design
+// Exposes window.__initComponents() pour la re-init SPA après swap de page
+//
+// ─── Catalogue des fonctions init* ────────────────────────────────────────
+//
+//  Composant                    Fonction                     Sélecteur principal
+//  ──────────────────────────   ──────────────────────────   ───────────────────
+//  Tabs                         initComponents()             .tabs
+//  Accordion                    initComponents()             .accordion-header
+//  Kanban drag & drop           initComponents()             .kanban-board
+//  Chips (ajout/suppression)    initChips()                  .chips-input
+//  Search inputs                initSearchInputs()           .search-input
+//  Range sliders                initSliders()                .slider-track
+//  Modals (open/close)          initModals()                 .modal-trigger, .modal
+//  Copy buttons                 initCopyButtons()            .copy-btn
+//  Theme switcher (select)      initThemeSwitcher()          #theme-switcher
+//  Mode switcher (sun/moon)     initModeSwitcher()           .mode-toggle
+//  Data grids (tri, filtre)     initDataGrids()              .data-grid
+//  Carousel                     initCarousel()               .carousel
+//  Rating (étoiles)             initRating()                 .rating
+//  Bottom navigation            initBottomNav()              .bottom-nav
+//  Number inputs (+/-)          initNumberInputs()           .number-input
+//  FAB (floating action button) initFAB()                    .fab
+//  Segmented controls           initSegmentedControls()      .segmented-control
+//  OTP inputs                   initOTPInputs()              .otp-input
+//  Tag inputs                   initTagInputs()              .tag-input
+//  Tree view                    initTreeView()               .tree-view
+//  Bottom sheet                 initBottomSheet()            .bottom-sheet-trigger
+//  Lightbox                     initLightbox()               .lightbox-trigger
+//  Context menu                 initContextMenu()            .context-menu-trigger
+//  Pie charts (SVG)             initPieCharts()              .pie-chart
+//  Gauges (jauge circulaire)    initGauges()                 .gauge
+//  Animated counters            initAnimatedCounters()       .counter
+//  Progress trackers            initProgressTrackers()       .progress-tracker
+//  Sortable lists               initSortableLists()          .sortable-list
+//  Video embeds                 initVideoEmbeds()            .video-embed
+//  Before / after slider        initBeforeAfter()            .before-after
+//  Quiz / poll                  initQuiz()                   .quiz
+//  Decision tree                initDecisionTree()           .decision-tree
+//  Command palette              initCommandPalette()         .command-palette-trigger
+//  Pricing toggle               initPricing()                .pricing-toggle
+//  Notification center          initNotificationCenter()     .notification-center
+//  Activity feed                initActivityFeed()           .activity-feed
+//  Wizard / stepper interactif  initWizard()                 .wizard
+//  Inline edit                  initInlineEdit()             .inline-edit
+//  Action menu                  initActionMenu()             .action-menu
+//  Sidebar rail                 initSidebarRail()            .sidebar-rail
+//  Tooltips ARIA                initTooltipsARIA()           [data-tooltip]
+//
+// ─── Pattern anti-double-bind ─────────────────────────────────────────────
+//  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
+//  les doublons d'event listeners lors des re-inits SPA via reinitAll().
+//
+// ─── Ajout d'un nouveau composant ─────────────────────────────────────────
+//  1. Créer function initNomComposant() avec pattern dataset.bound
+//  2. Exposer via window.__initNomComposant = initNomComposant;
+//  3. Appeler dans reinitAll() pour compatibilité SPA
+//  4. Documenter ci-dessus dans le catalogue
+// ──────────────────────────────────────────────────────────────────────────
 
 function escapeHTML(str) {
     var div = document.createElement('div');

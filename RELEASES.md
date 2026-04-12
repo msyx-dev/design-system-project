@@ -1,5 +1,18 @@
 # Releases
 
+## 2.18.1 — 2026-04-12 — DX : sync scalable + modularité JS + minification (#128)
+
+### Added
+- `shared/sync-all.sh` : sync scalable — synchronise vers tous les consommateurs enregistrés dans `consumers.json`, modes `--no-showcase` et `--dry-run`, récapitulatif avant/après
+- `shared/consumers.json` : registre des projets consommateurs (acssi-core, acssistender, aksyva)
+- `shared/build.sh` : minification CSS (csso) + JS (terser) vers `shared/dist/`, affiche les tailles avant/après avec ratio de compression
+- Commentaire catalogue en tête de `shared/components.js` : liste de toutes les fonctions init* avec sélecteur CSS associé et pattern anti-double-bind
+
+### Changed
+- `shared/check-sync.sh` : vérifie maintenant la version `@ds-version` sur les 4 fichiers CSS (ds-tokens.css, ds-utilities.css, ds-layout.css, ds-components.css) au lieu de tokens.css seul — compatibilité legacy : accepte toujours un fichier ou un répertoire
+- `shared/CONSUMER_GUIDE.md` : section "Sync automatique" avec sync-all.sh, dry-run, consumers.json
+- `docs/ARCHITECTURE.md` : sync-all.sh, build.sh, consumers.json ajoutés à la structure
+
 ## 2.18.0 — 2026-04-12 — Composants SaaS P1 : wizard multi-step, inline editing, action menu, sidebar rail (#127)
 
 ### Added

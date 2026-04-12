@@ -28,8 +28,11 @@ shared/
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur
-  check-sync.sh              # Vérifie version (@ds-version) + mode --check-overrides
+  sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
+  check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides
   check-components.sh        # Lint consommateurs — détecte composants custom hors DS
+  build.sh                   # Minification assets CSS (csso) + JS (terser) → dist/
+  consumers.json             # Registre des projets consommateurs pour sync-all.sh
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
   CONSUMER_GUIDE.md          # Guide d'integration + règle d'or + scripts de vérification
   nav.js                     # Header, sidebar, scroll spy, SPA navigation, LazyLoader

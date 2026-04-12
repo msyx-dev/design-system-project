@@ -1,10 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
-# check-sync.sh — Vérifie si les tokens DS sont à jour dans un projet consommateur
-# Usage : ./check-sync.sh <fichier-local-ds-tokens.css>
+# check-sync.sh — Vérifie si les fichiers DS sont à jour dans un projet consommateur
+# Usage : ./check-sync.sh <répertoire-css-local>
+#         ./check-sync.sh <fichier-local-ds-tokens.css>     (compatibilité legacy)
 #         ./check-sync.sh --check-overrides <répertoire-css-projet>
 # Exit 0 = OK, Exit 1 = désynchronisé ou overrides détectés
+#
+# Mode par défaut : vérifie la version @ds-version sur les 4 fichiers DS
+#   ds-tokens.css, ds-utilities.css, ds-layout.css, ds-components.css
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DS_TOKENS="$SCRIPT_DIR/css/tokens.css"
@@ -81,11 +85,16 @@ if [ "$MODE" = "--check-overrides" ]; then
     fi
 fi
 
-# ─── Mode par défaut : vérification de version ─────────────────────────────
-LOCAL_FILE="${1:?Usage: $0 <fichier-local-ds-tokens.css> | --check-overrides <répertoire>}"
+# ─── Mode par défaut : vérification de version sur les 4 fichiers CSS ──────
+ARG="${1:?Usage: $0 <répertoire-css-local|fichier-ds-tokens.css> | --check-overrides <répertoire>}"
 
-if [ ! -f "$LOCAL_FILE" ]; then
-    echo "ERREUR: fichier inexistant : $LOCAL_FILE" >&2
+# Compatibilité legacy : si l'argument est un fichier, déduire le répertoire
+if [ -f "$ARG" ]; then
+    CSS_LOCAL_DIR="$(dirname "$ARG")"
+elif [ -d "$ARG" ]; then
+    CSS_LOCAL_DIR="$ARG"
+else
+    echo "ERREUR: argument inexistant (fichier ou répertoire attendu) : $ARG" >&2
     exit 1
 fi
 
@@ -95,20 +104,55 @@ if [ ! -f "$DS_TOKENS" ]; then
 fi
 
 DS_VERSION=$(grep -oP '@ds-version:\s*\K[\d.]+' "$DS_TOKENS" || echo "")
-LOCAL_VERSION=$(grep -oP '@ds-version:\s*\K[\d.]+' "$LOCAL_FILE" || echo "")
-
 if [ -z "$DS_VERSION" ]; then
     echo "ERREUR: pas de @ds-version dans $DS_TOKENS" >&2
     exit 1
 fi
 
-if [ "$DS_VERSION" = "$LOCAL_VERSION" ]; then
-    echo "OK — Design System à jour (v${DS_VERSION})"
+echo "=== check-sync.sh — version DS source : v${DS_VERSION} ==="
+echo "Répertoire local : $CSS_LOCAL_DIR"
+echo ""
+
+# Les 4 fichiers à vérifier : nom DS source → nom local
+declare -A FILE_MAP
+FILE_MAP=(
+    ["tokens.css"]="ds-tokens.css"
+    ["utilities.css"]="ds-utilities.css"
+    ["layout.css"]="ds-layout.css"
+    ["components.css"]="ds-components.css"
+)
+
+DRIFT=0
+
+for DS_FILE in tokens.css utilities.css layout.css components.css; do
+    LOCAL_NAME="${FILE_MAP[$DS_FILE]}"
+    LOCAL_PATH="$CSS_LOCAL_DIR/$LOCAL_NAME"
+
+    if [ ! -f "$LOCAL_PATH" ]; then
+        printf "  MISSING  %-22s — absent (jamais synchronisé ?)\n" "$LOCAL_NAME"
+        DRIFT=$((DRIFT + 1))
+        continue
+    fi
+
+    LOCAL_VERSION=$(grep -oP '@ds-version:\s*\K[\d.]+' "$LOCAL_PATH" 2>/dev/null || echo "")
+
+    if [ -z "$LOCAL_VERSION" ]; then
+        printf "  NO-TAG   %-22s — @ds-version absent dans le fichier local\n" "$LOCAL_NAME"
+        DRIFT=$((DRIFT + 1))
+    elif [ "$DS_VERSION" = "$LOCAL_VERSION" ]; then
+        printf "  OK       %-22s — v%s\n" "$LOCAL_NAME" "$LOCAL_VERSION"
+    else
+        printf "  DRIFT    %-22s — local v%s  (DS source : v%s)\n" "$LOCAL_NAME" "$LOCAL_VERSION" "$DS_VERSION"
+        DRIFT=$((DRIFT + 1))
+    fi
+done
+
+echo ""
+if [ $DRIFT -eq 0 ]; then
+    echo "OK — tous les fichiers DS sont à jour (v${DS_VERSION})"
     exit 0
 else
-    echo "WARN — Design System désynchronisé"
-    echo "   DS source : v${DS_VERSION}"
-    echo "   Local     : v${LOCAL_VERSION:-non trouvé}"
-    echo "   → Exécuter sync.sh pour mettre à jour"
+    echo "WARN — $DRIFT fichier(s) désynchronisé(s)"
+    echo "   → Exécuter sync.sh (ou sync-all.sh) pour mettre à jour"
     exit 1
 fi

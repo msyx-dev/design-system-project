@@ -84,12 +84,14 @@ Les classes utilitaires (`.text-muted`, `.bg-accent`, `.border-subtle`) evitent 
 
 ## Comment synchroniser
 
+### Sync manuelle (un seul projet)
+
 ```bash
 # Copier les fichiers DS dans votre projet
 ./sync.sh /chemin/vers/projet/styles/
 
-# Verifier si votre copie est a jour
-./check-sync.sh /chemin/vers/projet/styles/ds-tokens.css
+# Verifier si votre copie est a jour (4 fichiers verifies)
+./check-sync.sh /chemin/vers/projet/styles/
 ```
 
 Le script `sync.sh` copie les 4 fichiers avec le prefixe `ds-` :
@@ -97,6 +99,54 @@ Le script `sync.sh` copie les 4 fichiers avec le prefixe `ds-` :
 - `ds-utilities.css`
 - `ds-layout.css`
 - `ds-components.css`
+
+### Sync automatique (tous les consommateurs)
+
+Le script `sync-all.sh` synchronise en une seule commande tous les projets
+enregistres dans `shared/consumers.json` :
+
+```bash
+# Synchroniser tous les consommateurs enregistres
+./sync-all.sh
+
+# Voir ce qui serait fait sans modifier quoi que ce soit
+./sync-all.sh --dry-run
+
+# Synchroniser en mode --no-showcase (recommande pour projets hors DS)
+./sync-all.sh --no-showcase
+```
+
+Exemple de sortie :
+
+```
+=== sync-all.sh — Design System v2.18.0 ===
+
+  OK    [acssi-core]    : v2.17.0 → v2.18.0
+  OK    [acssistender]  : v2.17.0 → v2.18.0
+  SKIP  [aksyva]        — répertoire absent : /home/.../src/styles
+
+─── Récapitulatif ───────────────────────────────────────────
+  Consommateurs enregistrés : 3
+  Synchronisés              : 2
+  Ignorés (absent)          : 1
+
+OK — 2 consommateur(s) synchronisé(s) vers v2.18.0
+```
+
+### Enregistrer un nouveau consommateur
+
+Editer `shared/consumers.json` et ajouter une entree :
+
+```json
+{
+  "consumers": [
+    {"name": "mon-projet", "path": "/home/deployer/projects/prod/mon-projet", "css_dir": "src/styles"}
+  ]
+}
+```
+
+Le champ `css_dir` indique le chemin relatif depuis `path` ou se trouvent
+les fichiers `ds-*.css`. Valeur par defaut : `src/styles`.
 
 ## Regles d'or
 
