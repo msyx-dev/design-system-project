@@ -665,6 +665,19 @@ var THEME_CONFIG = {
     nhood: { modes: ['dark', 'light'], defaultMode: 'dark' }
 };
 
+// Transition douce sur changement theme/mode
+function applyThemeTransition(callback) {
+    document.documentElement.classList.add('theme-transitioning');
+    callback();
+    setTimeout(function() {
+        document.documentElement.classList.remove('theme-transitioning');
+    }, 300);
+}
+
+// Noms lisibles des themes/modes pour le toast
+var THEME_LABELS = { msyx: 'MSYX', acssi: 'ACSSI', nhood: 'Nhood' };
+var MODE_LABELS  = { dark: 'Dark', light: 'Light' };
+
 function initThemeSwitcher() {
     var select = document.getElementById('theme-select');
     if (!select) return;
@@ -674,19 +687,24 @@ function initThemeSwitcher() {
     select.dataset.bound = '1';
     select.addEventListener('change', function() {
         var theme = this.value;
-        if (theme === 'msyx') {
-            document.documentElement.removeAttribute('data-theme');
-        } else {
-            document.documentElement.setAttribute('data-theme', theme);
+        applyThemeTransition(function() {
+            if (theme === 'msyx') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            localStorage.setItem('msyx-theme', theme);
+            // Check if current mode is compatible with new theme
+            var config = THEME_CONFIG[theme] || THEME_CONFIG.msyx;
+            var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
+            if (config.modes.indexOf(currentMode) === -1) {
+                applyMode(config.defaultMode);
+            }
+            updateModeButtons();
+        });
+        if (typeof showToast === 'function') {
+            showToast('Theme : ' + (THEME_LABELS[theme] || theme), 'info', 2000);
         }
-        localStorage.setItem('msyx-theme', theme);
-        // Check if current mode is compatible with new theme
-        var config = THEME_CONFIG[theme] || THEME_CONFIG.msyx;
-        var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
-        if (config.modes.indexOf(currentMode) === -1) {
-            applyMode(config.defaultMode);
-        }
-        updateModeButtons();
     });
 }
 window.__initThemeSwitcher = initThemeSwitcher;
@@ -723,13 +741,13 @@ function initModeSwitcher() {
     darkBtn.dataset.bound = '1';
     lightBtn.dataset.bound = '1';
     darkBtn.addEventListener('click', function() {
-        applyMode('dark');
-        updateModeButtons();
+        applyThemeTransition(function() { applyMode('dark'); updateModeButtons(); });
+        if (typeof showToast === 'function') showToast('Mode : Dark', 'info', 2000);
     });
     lightBtn.addEventListener('click', function() {
         if (lightBtn.disabled) return;
-        applyMode('light');
-        updateModeButtons();
+        applyThemeTransition(function() { applyMode('light'); updateModeButtons(); });
+        if (typeof showToast === 'function') showToast('Mode : Light', 'info', 2000);
     });
 }
 window.__initModeSwitcher = initModeSwitcher;

@@ -21,9 +21,11 @@
 - `initHeaderNotifications()` dans `nav.js` : panel popover notifications (liste, badge count, "Tout lire")
 - `updateHeaderUser(user)` dans `nav.js` : mise à jour dynamique des infos utilisateur
 - `updateNotificationCount(count)` dans `nav.js` : mise à jour dynamique du badge
+- `window.__updateHeaderUser(data)` et `window.__updateNotificationCount(count)` dans `nav.js` : APIs publiques pour mise à jour dynamique depuis un projet consommateur
 - `renderNotifications(items)` dans `nav.js` : rendu de la liste notifications depuis `window.MSYX_HEADER.notifications.items`
 - CSS `.header-user-zone`, `.header-notification`, `.header-notification-badge`, `.header-avatar-trigger`, `.header-dropdown`, `.header-dropdown-item`, `.header-dropdown-header`, `.header-dropdown-divider`, `.header-dropdown-name`, `.header-notif-panel`, `.header-notif-*` dans `layout.css`
 - CSS `html.theme-transitioning` dans `layout.css` : transition douce bg/border/color 250ms
+- CSS `html.theme-transitioning` avec `*::before` et `*::after` dans `components.css` : couverture complète pseudo-éléments
 - `applyThemeTransition()` dans `components.js` : wrapper pour transition + cleanup
 - Toast de confirmation au changement de theme et de mode
 - Demo interactive dans `navigation.html#header-user` (panel notif + dropdown avatar standalone)
