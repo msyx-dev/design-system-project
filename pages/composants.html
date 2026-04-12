@@ -537,10 +537,10 @@
 
 <!-- TOOLTIP / POPOVER -->
 <section id="tooltip">
-    <div class="section-header"><span class="overline">Composants</span><h2>Tooltip &amp; Popover</h2><p>Infobulles au hover et popovers riches au clic.</p></div>
+    <div class="section-header"><span class="overline">Composants</span><h2>Tooltip &amp; Popover</h2><p>Infobulles au hover et popovers riches au clic. 4 positions disponibles.</p></div>
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
-            <span class="demo-label">Tooltips</span>
+            <span class="demo-label">Tooltips — position top (defaut)</span>
             <div class="demo-row" style="gap:2rem;">
                 <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-hover">Hover moi</button><span class="tooltip" id="tt-hover" role="tooltip">Info rapide</span></div>
                 <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-settings" aria-label="Parametres">&#9881;</button><span class="tooltip" id="tt-settings" role="tooltip">Parametres</span></div>
@@ -549,7 +549,16 @@
             </div>
         </div>
         <div class="demo-box">
-            <span class="demo-label">Popovers (clic)</span>
+            <span class="demo-label">Tooltips — 4 positions</span>
+            <div class="demo-row" style="gap:2.5rem; justify-content:center; padding:1.5rem 0;">
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-top">Top</button><span class="tooltip" id="tt-top" role="tooltip">Position top</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-bottom">Bottom</button><span class="tooltip tooltip--bottom" id="tt-bottom" role="tooltip">Position bottom</span></div>
+                <div class="tooltip-wrap" style="margin-left:3.5rem;"><button class="btn-secondary btn-sm" aria-describedby="tt-left">Left</button><span class="tooltip tooltip--left" id="tt-left" role="tooltip">Position left</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-right">Right</button><span class="tooltip tooltip--right" id="tt-right" role="tooltip">Position right</span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers — position top (defaut)</span>
             <div class="demo-row" style="gap:2rem;">
                 <div class="popover-wrap">
                     <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Plus d'info</button>
@@ -565,6 +574,27 @@
                         <h4>Aide contextuelle</h4>
                         <p>Cliquez sur les icones d'aide pour afficher des informations supplementaires.</p>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers — 4 positions</span>
+            <div class="demo-row" style="gap:2rem; flex-wrap:wrap; padding:1.5rem 0;">
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Top</button>
+                    <div class="popover"><h4>Popover top</h4><p>Position par defaut, s'affiche au-dessus.</p></div>
+                </div>
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Bottom</button>
+                    <div class="popover popover--bottom"><h4>Popover bottom</h4><p>S'affiche en-dessous du declencheur.</p></div>
+                </div>
+                <div class="popover-wrap" style="margin-top:1rem;">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Left</button>
+                    <div class="popover popover--left" style="min-width:160px;"><h4>Popover left</h4><p>S'affiche a gauche.</p></div>
+                </div>
+                <div class="popover-wrap" style="margin-top:1rem;">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Right</button>
+                    <div class="popover popover--right" style="min-width:160px;"><h4>Popover right</h4><p>S'affiche a droite.</p></div>
                 </div>
             </div>
         </div>

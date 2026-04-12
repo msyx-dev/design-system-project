@@ -1,5 +1,24 @@
 # Releases
 
+## 2.20.1 — 2026-04-12 — UX DS : transition SPA, sidebar mobile overlay, tooltip multi-position (#132)
+
+### Added
+- `shared/css/layout.css` : `.sidebar-overlay` (overlay mobile sidebar, z-index 99, opacity transition, scoped @media 768px)
+- `shared/css/layout.css` : `.main { transition: opacity 0.15s }` + `.main.fade-out { opacity: 0 }` pour fade SPA
+- `shared/css/components.css` : `.tooltip--bottom`, `.tooltip--left`, `.tooltip--right` avec fleche CSS repositionnee
+- `shared/css/components.css` : `.popover--bottom`, `.popover--left`, `.popover--right` avec fleche CSS repositionnee
+- `shared/nav.js` : `buildSidebarOverlay()` — overlay dynamique + tap-outside + swipe gauche (deltaX < -50px)
+- `shared/nav.js` : `closeSidebar()` / `openSidebar()` — ferme/ouvre sidebar + overlay ensemble
+- `shared/nav.js` : `isSidebarLinkVisible()` — scroll-spy ne scrolle la sidebar que si l'item actif est hors viewport
+- `pages/composants.html` : demos tooltip 4 positions + demos popover 4 positions
+
+### Changed
+- `shared/nav.js` : `navigateTo()` — fade-out 150ms avant swap innerHTML, fade-in apres
+- `shared/nav.js` : `initLazyLoader()` — bouton "Tout charger" → "Tout chargé ✓" + `.btn-success` apres Promise.all
+- `shared/nav.js` : tous les `sidebar.classList.remove('open')` remplacés par `closeSidebar()`
+- `shared/nav.js` : burger toggle utilise `openSidebar()` / `closeSidebar()`
+- `shared/nav.js`, `tokens.css`, `utilities.css`, `layout.css`, `components.css` : version bump 2.20.0 → 2.20.1
+
 ## 2.20.0 — 2026-04-12 — Utilities CSS : espacement, display, radius, shadow, typographie (#130)
 
 ### Added

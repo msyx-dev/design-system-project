@@ -1,4 +1,4 @@
-/* @ds-version: 2.16.0 */
+/* @ds-version: 2.20.1 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -487,4 +487,23 @@ html.theme-transitioning * {
     .main { margin-left: 0; }
     .main section { padding: 3rem 1.5rem; }
     .main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: 1fr; }
+
+    /* Sidebar overlay — mobile only */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+    .sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
+
+/* ===== MAIN — SPA fade transition ===== */
+.main { transition: opacity 0.15s ease; }
+.main.fade-out { opacity: 0; }

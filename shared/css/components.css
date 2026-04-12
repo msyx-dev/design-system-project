@@ -1,4 +1,4 @@
-/* @ds-version: 2.17.0 */
+/* @ds-version: 2.20.1 */
 /* components.css — Composants UI du design system msyx.design
    Import : @import url('css/components.css'); */
 
@@ -269,8 +269,18 @@ tr:hover td { background: rgba(var(--accent-rgb),0.03); }
 
 /* ===== TOOLTIP ===== */
 .tooltip-wrap { position: relative; display: inline-block; }
+/* Position par défaut : top */
 .tooltip-wrap .tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--surface-solid); color: var(--text); padding: 0.35rem 0.7rem; border-radius: 6px; font-size: 0.72rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; border: 1px solid var(--border); z-index: 10; }
 .tooltip-wrap .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--surface-solid); }
+/* Tooltip bottom */
+.tooltip-wrap .tooltip.tooltip--bottom { bottom: auto; top: calc(100% + 8px); }
+.tooltip-wrap .tooltip.tooltip--bottom::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--surface-solid); }
+/* Tooltip left */
+.tooltip-wrap .tooltip.tooltip--left { bottom: auto; left: auto; right: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+.tooltip-wrap .tooltip.tooltip--left::after { top: 50%; left: 100%; transform: translateY(-50%); border-top-color: transparent; border-left-color: var(--surface-solid); }
+/* Tooltip right */
+.tooltip-wrap .tooltip.tooltip--right { bottom: auto; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+.tooltip-wrap .tooltip.tooltip--right::after { top: 50%; right: 100%; left: auto; transform: translateY(-50%); border-top-color: transparent; border-right-color: var(--surface-solid); }
 .tooltip-wrap:hover .tooltip,
 .tooltip-wrap:focus-within .tooltip { opacity: 1; }
 
@@ -992,9 +1002,19 @@ footer p { color: var(--text-dim); font-size: 0.78rem; }
 
 /* ===== POPOVER ===== */
 .popover-wrap { position: relative; display: inline-block; }
+/* Position par défaut : top */
 .popover { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--surface-solid); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; min-width: 240px; opacity: 0; pointer-events: none; transition: all 0.2s; box-shadow: var(--shadow-lg); z-index: 50; }
 .popover.open { opacity: 1; pointer-events: auto; }
 .popover::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--surface-solid); }
+/* Popover bottom */
+.popover.popover--bottom { bottom: auto; top: calc(100% + 12px); }
+.popover.popover--bottom::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--surface-solid); }
+/* Popover left */
+.popover.popover--left { bottom: auto; left: auto; right: calc(100% + 12px); top: 50%; transform: translateY(-50%); }
+.popover.popover--left::after { top: 50%; left: 100%; transform: translateY(-50%); border-top-color: transparent; border-left-color: var(--surface-solid); }
+/* Popover right */
+.popover.popover--right { bottom: auto; left: calc(100% + 12px); top: 50%; transform: translateY(-50%); }
+.popover.popover--right::after { top: 50%; right: 100%; left: auto; transform: translateY(-50%); border-top-color: transparent; border-right-color: var(--surface-solid); }
 .popover h4 { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; margin-bottom: 0.4rem; }
 .popover p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
