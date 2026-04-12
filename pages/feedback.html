@@ -19,7 +19,7 @@
 <!-- ALERTS -->
 <section id="alerts">
     <div class="section-header"><span class="overline">Feedback</span><h2>Alertes</h2><p>Messages contextuels pour informer l'utilisateur.</p></div>
-    <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:650px;">
+    <div class="demo-flex-col demo-max-w-md">
         <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Nouvelle version disponible. Mettez a jour pour profiter des dernieres fonctionnalites.</span></div>
         <div class="alert alert-success"><span class="alert-icon">&#10003;</span><span>Deploiement reussi sur production. Temps de build : 34s.</span></div>
         <div class="alert alert-warning"><span class="alert-icon">&#9888;</span><span>Utilisation CPU elevee (89%). Surveillez les performances.</span></div>
@@ -32,11 +32,11 @@
     <div class="section-header"><span class="overline">Feedback</span><h2>Toasts</h2><p>Notifications ephemeres non-bloquantes avec auto-dismiss.</p></div>
     <div class="subsection">
         <span class="demo-label">Variantes</span>
-        <div style="display:flex;flex-direction:column;gap:0.8rem;max-width:380px;">
-            <div class="toast toast-success"><span style="color:var(--success);font-size:1rem;">&#10003;</span><span>Fichier sauvegarde avec succes</span><button class="toast-close">&times;</button></div>
-            <div class="toast toast-error"><span style="color:var(--danger);font-size:1rem;">&#10007;</span><span>Erreur de connexion au serveur</span><button class="toast-close">&times;</button></div>
-            <div class="toast toast-info"><span style="color:var(--info);font-size:1rem;">&#8505;</span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
-            <div class="toast toast-warning"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><span>Session expire dans 5 minutes</span><button class="toast-close">&times;</button></div>
+        <div class="demo-flex-col demo-max-w-sm">
+            <div class="toast toast-success"><span class="text-success-md">&#10003;</span><span>Fichier sauvegarde avec succes</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-error"><span class="text-danger-md">&#10007;</span><span>Erreur de connexion au serveur</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-info"><span class="text-info-md">&#8505;</span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-warning"><span class="text-warning-md">&#9888;</span><span>Session expire dans 5 minutes</span><button class="toast-close">&times;</button></div>
         </div>
     </div>
     <div class="subsection">
@@ -67,8 +67,8 @@
             <div class="modal-overlay">
                 <div class="modal-content">
                     <h3>Nouveau projet</h3>
-                    <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom</label><input class="input" type="text" placeholder="mon-projet"></div>
-                    <div class="input-group" style="margin-bottom:1.5rem;"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                    <div class="input-group mb-md"><label class="input-label">Nom</label><input class="input" type="text" placeholder="mon-projet"></div>
+                    <div class="input-group mb-lg"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
                     <div class="modal-actions"><button class="btn-ghost btn-sm">Annuler</button><button class="btn-primary btn-sm">Creer &rarr;</button></div>
                 </div>
             </div>
@@ -124,7 +124,7 @@
             <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
         </div>
         <div class="modal-body">
-            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+            <div class="flex-col-gap">
                 <div>
                     <label class="input-label">Nom du projet</label>
                     <input class="input" type="text" placeholder="Mon projet...">
@@ -148,22 +148,22 @@
     <div class="demo-grid demo-grid-3">
         <div class="demo-box">
             <span class="demo-label">Card skeleton</span>
-            <div style="display:flex;gap:1rem;align-items:flex-start;">
+            <div class="flex-start-gap">
                 <div class="skeleton skeleton-avatar"></div>
-                <div style="flex:1;"><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text" style="width:100%;"></div><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:50%;"></div></div>
+                <div class="flex-1"><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text" style="width:100%;"></div><div class="skeleton skeleton-text w-80"></div><div class="skeleton skeleton-text" style="width:50%;"></div></div>
             </div>
         </div>
         <div class="demo-box">
             <span class="demo-label">Liste skeleton</span>
-            <div style="display:flex;flex-direction:column;gap:1rem;">
-                <div style="display:flex;gap:0.8rem;align-items:center;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skeleton-text" style="width:70%;"></div><div class="skeleton skeleton-text" style="width:40%;margin-bottom:0;"></div></div></div>
-                <div style="display:flex;gap:0.8rem;align-items:center;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skeleton-text" style="width:60%;"></div><div class="skeleton skeleton-text" style="width:35%;margin-bottom:0;"></div></div></div>
-                <div style="display:flex;gap:0.8rem;align-items:center;"><div class="skeleton" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="skeleton skeleton-text" style="width:80%;"></div><div class="skeleton skeleton-text" style="width:45%;margin-bottom:0;"></div></div></div>
+            <div class="flex-col-gap">
+                <div class="flex-center-gap-rg"><div class="skeleton avatar-dot"></div><div class="flex-1"><div class="skeleton skeleton-text" style="width:70%;"></div><div class="skeleton skeleton-text" style="width:40%;margin-bottom:0;"></div></div></div>
+                <div class="flex-center-gap-rg"><div class="skeleton avatar-dot"></div><div class="flex-1"><div class="skeleton skeleton-text" style="width:60%;"></div><div class="skeleton skeleton-text" style="width:35%;margin-bottom:0;"></div></div></div>
+                <div class="flex-center-gap-rg"><div class="skeleton avatar-dot"></div><div class="flex-1"><div class="skeleton skeleton-text w-80"></div><div class="skeleton skeleton-text" style="width:45%;margin-bottom:0;"></div></div></div>
             </div>
         </div>
         <div class="demo-box">
             <span class="demo-label">Boutons skeleton</span>
-            <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="flex-col-gap">
                 <div class="skeleton" style="height:40px;border-radius:12px;"></div>
                 <div style="display:flex;gap:0.8rem;"><div class="skeleton skeleton-btn"></div><div class="skeleton skeleton-btn" style="width:80px;"></div></div>
                 <div class="skeleton" style="height:80px;border-radius:12px;"></div>
@@ -179,8 +179,8 @@
         <div class="demo-box">
             <span class="demo-label">Drawer droite</span>
             <div class="drawer-preview" id="drawer-demo-1">
-                <div style="padding:2rem;">
-                    <p class="typo-small" style="margin-bottom:1rem;">Contenu principal de la page</p>
+                <div class="p-lg">
+                    <p class="typo-small mb-md">Contenu principal de la page</p>
                     <button class="btn-primary btn-sm" onclick="document.querySelector('#drawer-demo-1 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-1 .drawer-panel').classList.add('open');">Ouvrir le drawer &rarr;</button>
                 </div>
                 <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
@@ -190,8 +190,8 @@
                         <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
                     </div>
                     <div class="drawer-body">
-                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom</label><input class="input" type="text" value="design-system"></div>
-                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                        <div class="input-group mb-md"><label class="input-label">Nom</label><input class="input" type="text" value="design-system"></div>
+                        <div class="input-group mb-md"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
                         <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Description du projet..."></textarea></div>
                     </div>
                     <div class="drawer-footer">
@@ -204,8 +204,8 @@
         <div class="demo-box">
             <span class="demo-label">Drawer avec liste</span>
             <div class="drawer-preview" id="drawer-demo-2">
-                <div style="padding:2rem;">
-                    <p class="typo-small" style="margin-bottom:1rem;">Notifications et activites</p>
+                <div class="p-lg">
+                    <p class="typo-small mb-md">Notifications et activites</p>
                     <button class="btn-secondary btn-sm" onclick="document.querySelector('#drawer-demo-2 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-2 .drawer-panel').classList.add('open');">Voir les notifications</button>
                 </div>
                 <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
@@ -216,9 +216,9 @@
                     </div>
                     <div class="drawer-body" style="padding:0;">
                         <div class="list">
-                            <div class="list-item"><span style="color:var(--success);font-size:1rem;">&#10003;</span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">design-system.msyx.fr — il y a 5 min</div></div></div>
-                            <div class="list-item"><span style="color:var(--warning);font-size:1rem;">&#9888;</span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
-                            <div class="list-item"><span style="color:var(--info);font-size:1rem;">&#8505;</span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
+                            <div class="list-item"><span class="text-success-md">&#10003;</span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">design-system.msyx.fr — il y a 5 min</div></div></div>
+                            <div class="list-item"><span class="text-warning-md">&#9888;</span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
+                            <div class="list-item"><span class="text-info-md">&#8505;</span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
                         </div>
                     </div>
                 </div>
@@ -296,7 +296,7 @@
             <span class="demo-label">Simple</span>
             <div class="bottom-sheet-demo-wrap" id="bs-demo-1">
                 <div class="bs-mock-screen">
-                    <p class="typo-small" style="margin-bottom:1rem;color:var(--text-muted);">Contenu de la page</p>
+                    <p class="typo-small mb-md text-muted">Contenu de la page</p>
                     <button class="btn btn-primary btn-sm bottom-sheet-trigger" data-target="bs-panel-1">Ouvrir le panneau</button>
                 </div>
                 <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-1"></div>
@@ -323,7 +323,7 @@
             <span class="demo-label">Avec liste</span>
             <div class="bottom-sheet-demo-wrap" id="bs-demo-2">
                 <div class="bs-mock-screen">
-                    <p class="typo-small" style="margin-bottom:1rem;color:var(--text-muted);">Choisir une action</p>
+                    <p class="typo-small mb-md text-muted">Choisir une action</p>
                     <button class="btn btn-secondary btn-sm bottom-sheet-trigger" data-target="bs-panel-2">Voir les options</button>
                 </div>
                 <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-2"></div>
@@ -338,9 +338,9 @@
                     <div class="bottom-sheet-content" style="padding:0;">
                         <div class="list">
                             <div class="list-item bs-list-action"><span style="color:var(--accent);font-size:1rem;">&#128203;</span><div class="list-item-content"><div class="list-item-title">Dupliquer</div><div class="list-item-desc">Creer une copie du projet</div></div></div>
-                            <div class="list-item bs-list-action"><span style="color:var(--success);font-size:1rem;">&#10003;</span><div class="list-item-content"><div class="list-item-title">Archiver</div><div class="list-item-desc">Deplacer en archive</div></div></div>
-                            <div class="list-item bs-list-action"><span style="color:var(--warning);font-size:1rem;">&#9993;</span><div class="list-item-content"><div class="list-item-title">Partager</div><div class="list-item-desc">Inviter des collaborateurs</div></div></div>
-                            <div class="list-item bs-list-action"><span style="color:var(--danger);font-size:1rem;">&#10007;</span><div class="list-item-content"><div class="list-item-title">Supprimer</div><div class="list-item-desc">Action irreversible</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-success-md">&#10003;</span><div class="list-item-content"><div class="list-item-title">Archiver</div><div class="list-item-desc">Deplacer en archive</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-warning-md">&#9993;</span><div class="list-item-content"><div class="list-item-title">Partager</div><div class="list-item-desc">Inviter des collaborateurs</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-danger-md">&#10007;</span><div class="list-item-content"><div class="list-item-title">Supprimer</div><div class="list-item-desc">Action irreversible</div></div></div>
                         </div>
                     </div>
                 </div>
@@ -352,7 +352,7 @@
             <span class="demo-label">Avec formulaire</span>
             <div class="bottom-sheet-demo-wrap" id="bs-demo-3">
                 <div class="bs-mock-screen">
-                    <p class="typo-small" style="margin-bottom:1rem;color:var(--text-muted);">Saisie rapide</p>
+                    <p class="typo-small mb-md text-muted">Saisie rapide</p>
                     <button class="btn btn-primary btn-sm bottom-sheet-trigger" data-target="bs-panel-3">Ajouter une tache</button>
                 </div>
                 <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-3"></div>
@@ -365,7 +365,7 @@
                         <button class="bottom-sheet-close" data-bs-close="bs-panel-3" aria-label="Fermer">&times;</button>
                     </div>
                     <div class="bottom-sheet-content">
-                        <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                        <div class="flex-col-gap">
                             <div>
                                 <label class="input-label">Titre</label>
                                 <input class="input" type="text" placeholder="Nom de la tache...">
@@ -382,9 +382,9 @@
                                 <label class="input-label">Description</label>
                                 <textarea class="input" rows="2" placeholder="Details..."></textarea>
                             </div>
-                            <div style="display:flex;gap:var(--space-sm);">
-                                <button class="btn btn-secondary btn-sm" style="flex:1;" data-bs-close="bs-panel-3">Annuler</button>
-                                <button class="btn btn-primary btn-sm" style="flex:1;">Ajouter</button>
+                            <div class="flex-row gap-sm">
+                                <button class="btn btn-secondary btn-sm flex-1" data-bs-close="bs-panel-3">Annuler</button>
+                                <button class="btn btn-primary btn-sm flex-1">Ajouter</button>
                             </div>
                         </div>
                     </div>
@@ -401,15 +401,15 @@
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
             <span class="demo-label">Cercles</span>
-            <div class="demo-row" style="gap:2rem;">
-                <div style="text-align:center;"><div class="spinner spinner-sm"></div><p class="typo-xs" style="margin-top:0.5rem;">SM</p></div>
-                <div style="text-align:center;"><div class="spinner spinner-md"></div><p class="typo-xs" style="margin-top:0.5rem;">MD</p></div>
-                <div style="text-align:center;"><div class="spinner spinner-lg"></div><p class="typo-xs" style="margin-top:0.5rem;">LG</p></div>
+            <div class="demo-row gap-xl">
+                <div class="text-center"><div class="spinner spinner-sm"></div><p class="typo-xs mt-sm">SM</p></div>
+                <div class="text-center"><div class="spinner spinner-md"></div><p class="typo-xs mt-sm">MD</p></div>
+                <div class="text-center"><div class="spinner spinner-lg"></div><p class="typo-xs mt-sm">LG</p></div>
             </div>
         </div>
         <div class="demo-box">
             <span class="demo-label">Dots</span>
-            <div class="demo-row" style="gap:2rem;">
+            <div class="demo-row gap-xl">
                 <div class="spinner-dots"><span></span><span></span><span></span></div>
             </div>
             <div class="divider"></div>
@@ -417,7 +417,7 @@
             <div class="loading-bar"></div>
         </div>
     </div>
-    <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
+    <div class="demo-grid demo-grid-2 mt-lg">
         <div class="demo-box">
             <span class="demo-label">Bouton loading</span>
             <div class="demo-row">
@@ -445,7 +445,7 @@
             <div class="fab-demo-area">
                 <button class="fab" aria-label="Ajouter"><span>&#43;</span></button>
             </div>
-            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Classe <code class="code-inline">.fab</code> — icone + hover scale + glow accent</p>
+            <p class="demo-hint-dim">Classe <code class="code-inline">.fab</code> — icone + hover scale + glow accent</p>
         </div>
         <div class="demo-box">
             <span class="demo-label">Mini FAB</span>
@@ -454,17 +454,17 @@
                 <button class="fab fab-mini" aria-label="Editer">&#9998;</button>
                 <button class="fab fab-mini fab-danger" aria-label="Supprimer">&#128465;</button>
             </div>
-            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Classe <code class="code-inline">.fab-mini</code> — 40px vs 56px standard</p>
+            <p class="demo-hint-dim">Classe <code class="code-inline">.fab-mini</code> — 40px vs 56px standard</p>
         </div>
         <div class="demo-box">
             <span class="demo-label">FAB extended</span>
-            <div class="fab-demo-area" style="justify-content:center;">
+            <div class="fab-demo-area justify-center">
                 <button class="fab fab-extended" aria-label="Nouveau projet"><span class="fab-icon">&#43;</span> Nouveau projet</button>
             </div>
-            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Classe <code class="code-inline">.fab-extended</code> — pill avec label texte</p>
+            <p class="demo-hint-dim">Classe <code class="code-inline">.fab-extended</code> — pill avec label texte</p>
         </div>
     </div>
-    <div class="demo-grid demo-grid-2" style="margin-top:var(--space-xl);">
+    <div class="demo-grid demo-grid-2 mt-xl">
         <div class="demo-box">
             <span class="demo-label">FAB menu radial (expand)</span>
             <div class="fab-demo-area">
@@ -488,14 +488,14 @@
                     </button>
                 </div>
             </div>
-            <p style="font-size:0.75rem;color:var(--text-dim);margin-top:0.5rem;">Clic sur le FAB pour ouvrir/fermer — icone tourne 45deg, actions en stagger</p>
+            <p class="demo-hint-dim">Clic sur le FAB pour ouvrir/fermer — icone tourne 45deg, actions en stagger</p>
         </div>
         <div class="demo-box">
             <span class="demo-label">Usage</span>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.75rem;">FAB fixe en production : <code class="code-inline">.fab</code> avec <code class="code-inline">position: fixed; bottom: 1.5rem; right: 1.5rem;</code>.</p>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.75rem;">Menu expand : <code class="code-inline">.fab-menu</code> + <code class="code-inline">.fab-trigger</code> + <code class="code-inline">.fab-actions</code>. JS : <code class="code-inline">initFAB()</code> gere le toggle <code class="code-inline">.open</code>.</p>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 0.75rem;">Variantes couleur : <code class="code-inline">.fab-success</code>, <code class="code-inline">.fab-danger</code>.</p>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Fermeture automatique au clic exterieur.</p>
+            <p class="demo-note">FAB fixe en production : <code class="code-inline">.fab</code> avec <code class="code-inline">position: fixed; bottom: 1.5rem; right: 1.5rem;</code>.</p>
+            <p class="demo-note">Menu expand : <code class="code-inline">.fab-menu</code> + <code class="code-inline">.fab-trigger</code> + <code class="code-inline">.fab-actions</code>. JS : <code class="code-inline">initFAB()</code> gere le toggle <code class="code-inline">.open</code>.</p>
+            <p class="demo-note">Variantes couleur : <code class="code-inline">.fab-success</code>, <code class="code-inline">.fab-danger</code>.</p>
+            <p class="demo-note-last">Fermeture automatique au clic exterieur.</p>
         </div>
     </div>
 </section>

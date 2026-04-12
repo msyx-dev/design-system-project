@@ -176,6 +176,17 @@
 [data-theme="nhood"][data-mode="light"] .site-header { border-bottom-color: rgba(var(--accent-rgb), 0.12); }
 
 
+/* ===== DEMO LAYOUT UTILITIES ===== */
+.demo-flex { display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center; }
+.demo-flex-col { display: flex; flex-direction: column; gap: 0.8rem; }
+.demo-flex-center { display: flex; gap: var(--space-md); justify-content: center; align-items: center; flex-wrap: wrap; }
+.demo-mb-sm { margin-bottom: 0.3rem; }
+.demo-mb-md { margin-bottom: 0.5rem; }
+.demo-mb-lg { margin-bottom: 0.8rem; }
+.demo-mb-xl { margin-bottom: 1.2rem; }
+.demo-max-w-sm { max-width: 380px; }
+.demo-max-w-md { max-width: 650px; }
+
 /* ===== RESPONSIVE — Layout ===== */
 @media (max-width: 1024px) {
     .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: repeat(2, 1fr); }

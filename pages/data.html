@@ -20,11 +20,11 @@
 <section id="stats">
     <div class="section-header"><span class="overline">Data</span><h2>Statistiques</h2><p>Indicateurs chiffres avec gradient et labels.</p></div>
     <div class="demo-grid demo-grid-5">
-        <div class="demo-box" style="text-align:center;"><div class="stat-value">99.9%</div><div class="stat-label">Uptime</div></div>
-        <div class="demo-box" style="text-align:center;"><div class="stat-value">1.2k</div><div class="stat-label">Deploys</div></div>
-        <div class="demo-box" style="text-align:center;"><div class="stat-value">&lt;50ms</div><div class="stat-label">Latence P95</div></div>
-        <div class="demo-box" style="text-align:center;"><div class="stat-value">24/7</div><div class="stat-label">Monitoring</div></div>
-        <div class="demo-box" style="text-align:center;"><div class="stat-value">4</div><div class="stat-label">Projets live</div></div>
+        <div class="demo-box text-center"><div class="stat-value">99.9%</div><div class="stat-label">Uptime</div></div>
+        <div class="demo-box text-center"><div class="stat-value">1.2k</div><div class="stat-label">Deploys</div></div>
+        <div class="demo-box text-center"><div class="stat-value">&lt;50ms</div><div class="stat-label">Latence P95</div></div>
+        <div class="demo-box text-center"><div class="stat-value">24/7</div><div class="stat-label">Monitoring</div></div>
+        <div class="demo-box text-center"><div class="stat-value">4</div><div class="stat-label">Projets live</div></div>
     </div>
 </section>
 
@@ -34,16 +34,16 @@
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
             <span class="demo-label">Barres de progression</span>
-            <div style="display:flex;flex-direction:column;gap:1.2rem;">
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small">Build</span><span class="typo-small">92%</span></div><div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--gradient-1);"></div></div></div>
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small">Tests</span><span class="typo-small">78%</span></div><div class="progress-bar"><div class="progress-fill" style="width:78%;background:var(--gradient-2);"></div></div></div>
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small">Coverage</span><span class="typo-small">45%</span></div><div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--gradient-3);"></div></div></div>
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span class="typo-small">Upload (animated)</span><span class="typo-small">65%</span></div><div class="progress-bar progress-bar-striped"><div class="progress-fill" style="width:65%;background:var(--gradient-1);"></div></div></div>
+            <div class="demo-flex-col">
+                <div><div class="flex-between-sm"><span class="typo-small">Build</span><span class="typo-small">92%</span></div><div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--gradient-1);"></div></div></div>
+                <div><div class="flex-between-sm"><span class="typo-small">Tests</span><span class="typo-small">78%</span></div><div class="progress-bar"><div class="progress-fill" style="width:78%;background:var(--gradient-2);"></div></div></div>
+                <div><div class="flex-between-sm"><span class="typo-small">Coverage</span><span class="typo-small">45%</span></div><div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--gradient-3);"></div></div></div>
+                <div><div class="flex-between-sm"><span class="typo-small">Upload (animated)</span><span class="typo-small">65%</span></div><div class="progress-bar progress-bar-striped"><div class="progress-fill" style="width:65%;background:var(--gradient-1);"></div></div></div>
             </div>
         </div>
         <div class="demo-box">
             <span class="demo-label">Indicateurs circulaires</span>
-            <div style="display:flex;gap:2rem;justify-content:center;align-items:center;padding-top:0.5rem;">
+            <div class="demo-flex-center" style="padding-top:0.5rem;">
                 <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-1"><title id="ring-title-1">Indicateur circulaire Build — 92%</title><desc>Progression du build a 92 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="17"></circle></svg><span class="value">92%</span></div>
                 <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-2"><title id="ring-title-2">Indicateur circulaire Tests — 60%</title><desc>Progression des tests a 60 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke: var(--violet);"></circle></svg><span class="value">60%</span></div>
                 <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-3"><title id="ring-title-3">Indicateur circulaire Coverage — 30%</title><desc>Progression de la couverture a 30 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke: var(--cyan);"></circle></svg><span class="value">30%</span></div>
@@ -60,11 +60,11 @@
             <table>
                 <thead><tr><th>Projet</th><th>Type</th><th>Status</th><th>Domaine</th><th>Uptime</th><th>Deploy</th></tr></thead>
                 <tbody>
-                    <tr><td style="font-weight:600;">os-landingperso</td><td><span class="tag">oneshot</span></td><td><span class="badge badge-success" style="font-size:0.7rem;padding:0.2rem 0.5rem;">En ligne</span></td><td class="typo-mono" style="font-size:0.78rem;">os-landingperso.msyx.fr</td><td>99.9%</td><td class="typo-xs">il y a 2h</td></tr>
-                    <tr><td style="font-weight:600;">design-system</td><td><span class="tag">projet</span></td><td><span class="badge badge-success" style="font-size:0.7rem;padding:0.2rem 0.5rem;">En ligne</span></td><td class="typo-mono" style="font-size:0.78rem;">design-system.msyx.fr</td><td>100%</td><td class="typo-xs">maintenant</td></tr>
-                    <tr><td style="font-weight:600;">poc-dashboard</td><td><span class="tag">poc</span></td><td><span class="badge badge-primary" style="font-size:0.7rem;padding:0.2rem 0.5rem;">Dev</span></td><td class="typo-mono" style="font-size:0.78rem;">poc-dashboard.msyx.fr</td><td>98.5%</td><td class="typo-xs">il y a 1j</td></tr>
-                    <tr><td style="font-weight:600;">auth-service</td><td><span class="tag">projet</span></td><td><span class="badge badge-danger" style="font-size:0.7rem;padding:0.2rem 0.5rem;">Erreur</span></td><td class="typo-mono" style="font-size:0.78rem;">auth.msyx.fr</td><td>87.2%</td><td class="typo-xs">il y a 3j</td></tr>
-                    <tr><td style="font-weight:600;">api-gateway</td><td><span class="tag">projet</span></td><td><span class="badge badge-warning" style="font-size:0.7rem;padding:0.2rem 0.5rem;">Maintenance</span></td><td class="typo-mono" style="font-size:0.78rem;">api.msyx.fr</td><td>95.1%</td><td class="typo-xs">il y a 5h</td></tr>
+                    <tr><td class="fw-600">os-landingperso</td><td><span class="tag">oneshot</span></td><td><span class="badge badge-success badge-xs">En ligne</span></td><td class="typo-mono text-sm-rg">os-landingperso.msyx.fr</td><td>99.9%</td><td class="typo-xs">il y a 2h</td></tr>
+                    <tr><td class="fw-600">design-system</td><td><span class="tag">projet</span></td><td><span class="badge badge-success badge-xs">En ligne</span></td><td class="typo-mono text-sm-rg">design-system.msyx.fr</td><td>100%</td><td class="typo-xs">maintenant</td></tr>
+                    <tr><td class="fw-600">poc-dashboard</td><td><span class="tag">poc</span></td><td><span class="badge badge-primary badge-xs">Dev</span></td><td class="typo-mono text-sm-rg">poc-dashboard.msyx.fr</td><td>98.5%</td><td class="typo-xs">il y a 1j</td></tr>
+                    <tr><td class="fw-600">auth-service</td><td><span class="tag">projet</span></td><td><span class="badge badge-danger badge-xs">Erreur</span></td><td class="typo-mono text-sm-rg">auth.msyx.fr</td><td>87.2%</td><td class="typo-xs">il y a 3j</td></tr>
+                    <tr><td class="fw-600">api-gateway</td><td><span class="tag">projet</span></td><td><span class="badge badge-warning badge-xs">Maintenance</span></td><td class="typo-mono text-sm-rg">api.msyx.fr</td><td>95.1%</td><td class="typo-xs">il y a 5h</td></tr>
                 </tbody>
             </table>
         </div>
@@ -355,7 +355,7 @@
         <!-- Mini Donut -->
         <div class="demo-box">
             <span class="demo-label">Mini Donut</span>
-            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;">
+            <div class="demo-flex-center">
                 <div class="pie-chart pie-chart--mini" data-values="75,25" data-labels="Done,Remaining">
                     <svg viewBox="0 0 80 80" role="img"><title>75% complete</title></svg>
                     <div class="pie-center-value">75%</div>
@@ -568,9 +568,9 @@
 <section id="gauge">
     <div class="section-header"><span class="overline">Data</span><h2>Gauge / Speedometer</h2><p>Jauges semi-circulaires SVG avec seuils colorés et animation à l'entrée dans le viewport.</p></div>
     <div class="demo-grid demo-grid-3">
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <span class="demo-label">Simple (accent)</span>
-            <div style="display:flex;justify-content:center;">
+            <div class="flex-justify-center">
                 <div class="gauge" data-value="72" data-max="100" role="img" aria-label="Gauge simple — 72%">
                     <svg viewBox="0 0 100 60" aria-hidden="true">
                         <title>Performance — 72%</title>
@@ -582,9 +582,9 @@
                 </div>
             </div>
         </div>
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <span class="demo-label">Seuils colorés</span>
-            <div style="display:flex;justify-content:center;">
+            <div class="flex-justify-center">
                 <div class="gauge" data-value="45" data-max="100" data-thresholds="30,70" role="img" aria-label="Gauge avec seuils — 45%">
                     <svg viewBox="0 0 100 60" aria-hidden="true">
                         <title>Charge CPU — 45%</title>
@@ -596,7 +596,7 @@
                 </div>
             </div>
         </div>
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <span class="demo-label">Mini gauges (seuils)</span>
             <div class="gauge-group" style="padding-top:0.5rem;">
                 <div class="gauge gauge--mini" data-value="92" data-max="100" data-thresholds="30,70" role="img" aria-label="Uptime — 92%">
@@ -636,25 +636,25 @@
     <div class="section-header"><span class="overline">Data</span><h2>Animated Counters</h2><p>Compteurs animes de 0 a la valeur cible au scroll. Pour KPI, stats d engagement, chiffres cles.</p></div>
 
     <div class="demo-grid demo-grid-4">
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <div class="counter" data-target="1247" data-suffix="">
                 <span class="counter-value">0</span>
             </div>
             <div class="counter-label">Utilisateurs actifs</div>
         </div>
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <div class="counter" data-target="98.5" data-suffix="%" data-decimals="1">
                 <span class="counter-value">0</span><span class="counter-suffix">%</span>
             </div>
             <div class="counter-label">Uptime</div>
         </div>
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <div class="counter" data-target="42" data-prefix="+" data-suffix="k">
                 <span class="counter-prefix">+</span><span class="counter-value">0</span><span class="counter-suffix">k</span>
             </div>
             <div class="counter-label">Telechargements</div>
         </div>
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <div class="counter" data-target="3.2" data-prefix="€" data-suffix="M" data-decimals="1">
                 <span class="counter-prefix">€</span><span class="counter-value">0</span><span class="counter-suffix">M</span>
             </div>
@@ -671,7 +671,7 @@
                 <tr>
                     <th></th>
                     <th>Basic</th>
-                    <th class="comparison-recommended"><span class="badge badge-primary" style="font-size:0.65rem;">Recommandé</span><br>Pro</th>
+                    <th class="comparison-recommended"><span class="badge badge-primary text-2xs">Recommandé</span><br>Pro</th>
                     <th>Enterprise</th>
                 </tr>
             </thead>
@@ -694,9 +694,9 @@
     <div class="demo-grid demo-grid-3">
 
         <!-- Demo 1 : Ring avec 4 etapes -->
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <span class="demo-label">Ring avec etapes</span>
-            <div style="display:flex;justify-content:center;margin-top:1rem;">
+            <div class="flex-justify-center-mt">
                 <div class="progress-tracker-step-wrapper">
                     <div class="progress-tracker"
                          data-progress="75"
@@ -719,9 +719,9 @@
         </div>
 
         <!-- Demo 2 : Anneau simple avec pourcentage -->
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <span class="demo-label">Anneau — 75%</span>
-            <div style="display:flex;justify-content:center;margin-top:1rem;">
+            <div class="flex-justify-center-mt">
                 <div class="progress-tracker-step-wrapper">
                     <div class="progress-tracker"
                          data-progress="75"
@@ -742,7 +742,7 @@
         </div>
 
         <!-- Demo 3 : Multi-ring concentriques -->
-        <div class="demo-box" style="text-align:center;">
+        <div class="demo-box text-center">
             <span class="demo-label">Multi-ring concentriques</span>
             <div style="display:flex;justify-content:center;align-items:center;margin-top:1rem;flex-wrap:wrap;gap:0.5rem;">
                 <div class="progress-tracker-multi"
@@ -779,11 +779,11 @@
 <!-- LISTS -->
 <section id="lists">
     <div class="section-header"><span class="overline">Data</span><h2>Listes</h2><p>Listes d'items avec avatars, metadata et actions.</p></div>
-    <div class="demo-box" style="max-width:600px;">
+    <div class="demo-box max-w-md">
         <div class="list">
-            <div class="list-item"><div class="avatar-status online"><div class="avatar avatar-md avatar-gradient">MS</div></div><div class="list-item-content"><div class="list-item-title">Mickael Soffray</div><div class="list-item-desc">Owner &middot; Derniere activite il y a 2min</div></div><span class="badge badge-success" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Admin</span></div>
-            <div class="list-item"><div class="avatar-status offline"><div class="avatar avatar-md" style="background: var(--violet);">CB</div></div><div class="list-item-content"><div class="list-item-title">Claude Bot</div><div class="list-item-desc">Agent &middot; Derniere activite il y a 1h</div></div><span class="badge badge-info" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Bot</span></div>
-            <div class="list-item"><div class="avatar-status busy"><div class="avatar avatar-md" style="background: var(--cyan);">CD</div></div><div class="list-item-content"><div class="list-item-title">Caddy Server</div><div class="list-item-desc">Reverse proxy &middot; CPU 89%</div></div><span class="badge badge-warning" style="font-size:0.68rem;padding:0.15rem 0.5rem;">Charge</span></div>
+            <div class="list-item"><div class="avatar-status online"><div class="avatar avatar-md avatar-gradient">MS</div></div><div class="list-item-content"><div class="list-item-title">Mickael Soffray</div><div class="list-item-desc">Owner &middot; Derniere activite il y a 2min</div></div><span class="badge badge-success badge-xxs">Admin</span></div>
+            <div class="list-item"><div class="avatar-status offline"><div class="avatar avatar-md" style="background: var(--violet);">CB</div></div><div class="list-item-content"><div class="list-item-title">Claude Bot</div><div class="list-item-desc">Agent &middot; Derniere activite il y a 1h</div></div><span class="badge badge-info badge-xxs">Bot</span></div>
+            <div class="list-item"><div class="avatar-status busy"><div class="avatar avatar-md" style="background: var(--cyan);">CD</div></div><div class="list-item-content"><div class="list-item-title">Caddy Server</div><div class="list-item-desc">Reverse proxy &middot; CPU 89%</div></div><span class="badge badge-warning badge-xxs">Charge</span></div>
         </div>
     </div>
 </section>
