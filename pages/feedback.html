@@ -196,6 +196,44 @@
                 <div class="skeleton" style="height:80px;border-radius:12px;"></div>
             </div>
         </div>
+        <div class="demo-box">
+            <span class="demo-label">Table skeleton</span>
+            <div>
+                <div class="skeleton-table-row"><div class="skeleton skeleton-cell skeleton-cell--sm"></div><div class="skeleton skeleton-cell"></div><div class="skeleton skeleton-cell skeleton-cell--md"></div><div class="skeleton skeleton-cell skeleton-cell--sm"></div></div>
+                <div class="skeleton-table-row"><div class="skeleton skeleton-cell skeleton-cell--sm"></div><div class="skeleton skeleton-cell" style="width:55%;"></div><div class="skeleton skeleton-cell skeleton-cell--md"></div><div class="skeleton skeleton-cell skeleton-cell--sm"></div></div>
+                <div class="skeleton-table-row"><div class="skeleton skeleton-cell skeleton-cell--sm"></div><div class="skeleton skeleton-cell" style="width:70%;"></div><div class="skeleton skeleton-cell skeleton-cell--md"></div><div class="skeleton skeleton-cell skeleton-cell--sm"></div></div>
+                <div class="skeleton-table-row"><div class="skeleton skeleton-cell skeleton-cell--sm"></div><div class="skeleton skeleton-cell" style="width:40%;"></div><div class="skeleton skeleton-cell skeleton-cell--md"></div><div class="skeleton skeleton-cell skeleton-cell--sm"></div></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Dashboard skeleton</span>
+            <div class="skeleton-dashboard">
+                <div class="skeleton-kpi"><div class="skeleton skeleton-text" style="width:50%;height:10px;"></div><div class="skeleton skeleton-text" style="width:70%;height:22px;margin-bottom:0;"></div></div>
+                <div class="skeleton-kpi"><div class="skeleton skeleton-text" style="width:50%;height:10px;"></div><div class="skeleton skeleton-text" style="width:70%;height:22px;margin-bottom:0;"></div></div>
+                <div class="skeleton-kpi"><div class="skeleton skeleton-text" style="width:50%;height:10px;"></div><div class="skeleton skeleton-text" style="width:70%;height:22px;margin-bottom:0;"></div></div>
+            </div>
+            <div style="margin-top:var(--space-sm);"><div class="skeleton" style="height:80px;border-radius:var(--radius-md);"></div></div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Profile skeleton</span>
+            <div class="skeleton-profile">
+                <div class="skeleton skeleton-avatar" style="width:56px;height:56px;"></div>
+                <div class="skeleton-profile-meta">
+                    <div class="skeleton skeleton-text" style="width:40%;height:14px;"></div>
+                    <div class="skeleton skeleton-text" style="width:60%;height:11px;"></div>
+                    <div class="skeleton skeleton-text" style="width:80%;height:11px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Form skeleton</span>
+            <div>
+                <div class="skeleton-form-group"><div class="skeleton skeleton-label"></div><div class="skeleton skeleton-field"></div></div>
+                <div class="skeleton-form-group"><div class="skeleton skeleton-label"></div><div class="skeleton skeleton-field"></div></div>
+                <div class="skeleton-form-group"><div class="skeleton skeleton-label" style="width:120px;"></div><div class="skeleton skeleton-field" style="height:80px;"></div></div>
+                <div class="skeleton skeleton-btn" style="width:100%;height:40px;border-radius:var(--radius-md);"></div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -587,6 +625,166 @@
         <p class="demo-note">Structure : <code class="code-inline">.notif-center</code> &gt; <code class="code-inline">.notif-trigger</code> (avec <code class="code-inline">.notif-trigger-count</code>) + <code class="code-inline">.notif-panel</code>.</p>
         <p class="demo-note">Items non-lus : <code class="code-inline">.notif-item--unread</code> &mdash; point bleu automatique via CSS <code class="code-inline">::before</code>.</p>
         <p class="demo-note-last">JS : <code class="code-inline">initNotificationCenter()</code> &mdash; fermeture au clic exterieur et Echap.</p>
+    </div>
+</section>
+
+<!-- AUTO-SAVE INDICATOR -->
+<section id="auto-save">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Auto-save Indicator</h2><p>Indicateur d'etat de sauvegarde : saving, saved, unsaved. Cycle interactif.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Etat : saved</span>
+            <div class="autosave autosave--saved">
+                <span class="autosave-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="autosave-text">Enregistre</span>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Etat : saving</span>
+            <div class="autosave autosave--saving">
+                <span class="autosave-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="2" stroke-dasharray="8 6" stroke-linecap="round"/></svg></span>
+                <span class="autosave-text">Enregistrement...</span>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Etat : unsaved</span>
+            <div class="autosave autosave--unsaved">
+                <span class="autosave-icon"><span class="autosave-dot"></span></span>
+                <span class="autosave-text">Modifications non sauvegardees</span>
+            </div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Simulation interactive</span>
+            <div style="display:flex;align-items:center;gap:var(--space-md);flex-wrap:wrap;">
+                <div class="autosave autosave--saved" data-autosave-demo>
+                    <span class="autosave-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5L5.5 10.5L11.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="autosave-text">Enregistre</span>
+                    <button data-autosave-trigger class="btn-ghost btn-xs" style="margin-left:0.5rem;">Simuler</button>
+                </div>
+            </div>
+            <p class="demo-hint-dim" style="margin-top:var(--space-sm);">Cliquer sur "Simuler" pour cycler entre les 3 etats.</p>
+        </div>
+        <div class="demo-box" style="margin-top:var(--space-md);">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Classes : <code class="code-inline">.autosave</code> + <code class="code-inline">.autosave--saving</code> / <code class="code-inline">.autosave--saved</code> / <code class="code-inline">.autosave--unsaved</code>.</p>
+            <p class="demo-note">Structure interne : <code class="code-inline">.autosave-icon</code> + <code class="code-inline">.autosave-text</code>.</p>
+            <p class="demo-note-last">JS interactif : <code class="code-inline">initAutoSave()</code> sur <code class="code-inline">[data-autosave-demo]</code> &mdash; cycle 3 etats au clic sur <code class="code-inline">[data-autosave-trigger]</code>.</p>
+        </div>
+    </div>
+</section>
+
+<!-- UPGRADE PROMPT -->
+<section id="upgrade-prompt">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Upgrade Prompt</h2><p>Bannieres d'appel a l'action pour inciter a passer a un plan superieur.</p></div>
+    <div class="demo-grid demo-grid-1">
+        <div class="demo-box">
+            <span class="demo-label">Banner standard</span>
+            <div class="upgrade-banner">
+                <div class="upgrade-banner-icon">&#9889;</div>
+                <div class="upgrade-banner-body">
+                    <div class="upgrade-banner-title">Passez au plan Pro</div>
+                    <div class="upgrade-banner-desc">Debloquez les exports illimites, l'API avancee et le support prioritaire. Essai gratuit 14 jours, sans engagement.</div>
+                    <div class="upgrade-banner-actions">
+                        <button class="btn-primary btn-sm">Voir les plans</button>
+                        <button class="btn-ghost btn-sm">Plus tard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box" style="margin-top:var(--space-md);">
+            <span class="demo-label">Banner warning (limite atteinte)</span>
+            <div class="upgrade-banner upgrade-banner--warning">
+                <div class="upgrade-banner-icon">&#9888;</div>
+                <div class="upgrade-banner-body">
+                    <div class="upgrade-banner-title">Limite de stockage presque atteinte</div>
+                    <div class="upgrade-banner-desc">Vous avez utilise 85% de votre stockage (850 Mo / 1 Go). Augmentez votre quota pour continuer.</div>
+                    <div class="upgrade-banner-actions">
+                        <button class="btn-warning btn-sm">Augmenter le quota</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box" style="margin-top:var(--space-md);">
+            <span class="demo-label">Banner danger (critique)</span>
+            <div class="upgrade-banner upgrade-banner--danger">
+                <div class="upgrade-banner-icon">&#128683;</div>
+                <div class="upgrade-banner-body">
+                    <div class="upgrade-banner-title">Quota depasse — service suspendu</div>
+                    <div class="upgrade-banner-desc">Votre compte a depasse la limite autorisee. Mettez a jour votre abonnement pour reactiver le service.</div>
+                    <div class="upgrade-banner-actions">
+                        <button class="btn-danger btn-sm">Mettre a jour maintenant</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box" style="margin-top:var(--space-md);">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Variantes : <code class="code-inline">.upgrade-banner</code> (defaut) / <code class="code-inline">.upgrade-banner--warning</code> / <code class="code-inline">.upgrade-banner--danger</code>.</p>
+            <p class="demo-note-last">Structure : <code class="code-inline">.upgrade-banner-icon</code> + <code class="code-inline">.upgrade-banner-body</code> (<code class="code-inline">-title</code>, <code class="code-inline">-desc</code>, <code class="code-inline">-actions</code>).</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONFIRM POPOVER -->
+<section id="confirm-popover">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Confirm Popover</h2><p>Popover de confirmation inline avec 4 positions. Fermeture clic exterieur et Echap.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Position top (defaut)</span>
+            <div style="display:flex;justify-content:center;padding:var(--space-2xl) 0 var(--space-lg);">
+                <div class="popover-confirm-wrap">
+                    <button class="btn-danger btn-sm" data-confirm-trigger>&#128465; Supprimer</button>
+                    <div class="popover-confirm popover-confirm--top" role="dialog" aria-label="Confirmer la suppression">
+                        <div class="popover-confirm-title">Confirmer la suppression ?</div>
+                        <div class="popover-confirm-desc">Cette action est irreversible. L'element sera definitivement supprime.</div>
+                        <div class="popover-confirm-actions">
+                            <button class="btn-ghost btn-xs" data-confirm-cancel>Annuler</button>
+                            <button class="btn-danger btn-xs" data-confirm-ok>Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Position bottom</span>
+            <div style="display:flex;justify-content:center;padding:var(--space-lg) 0 var(--space-2xl);">
+                <div class="popover-confirm-wrap">
+                    <button class="btn-outline-danger btn-sm" data-confirm-trigger>Reinitialiser</button>
+                    <div class="popover-confirm popover-confirm--bottom" role="dialog" aria-label="Confirmer la reinitialisation">
+                        <div class="popover-confirm-title">Reinitialiser les parametres ?</div>
+                        <div class="popover-confirm-desc">Les preferences seront remises aux valeurs par defaut.</div>
+                        <div class="popover-confirm-actions">
+                            <button class="btn-ghost btn-xs" data-confirm-cancel>Annuler</button>
+                            <button class="btn-warning btn-xs" data-confirm-ok>Reinitialiser</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Position right</span>
+            <div style="display:flex;justify-content:flex-start;align-items:center;padding:var(--space-lg) 0;min-height:120px;">
+                <div class="popover-confirm-wrap">
+                    <button class="btn-ghost btn-sm" data-confirm-trigger>&#128193; Archiver</button>
+                    <div class="popover-confirm popover-confirm--right" role="dialog" aria-label="Confirmer l'archivage">
+                        <div class="popover-confirm-title">Archiver cet element ?</div>
+                        <div class="popover-confirm-desc">Il ne sera plus visible dans la liste active.</div>
+                        <div class="popover-confirm-actions">
+                            <button class="btn-ghost btn-xs" data-confirm-cancel>Annuler</button>
+                            <button class="btn-primary btn-xs" data-confirm-ok>Archiver</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Structure : <code class="code-inline">.popover-confirm-wrap</code> &gt; <code class="code-inline">[data-confirm-trigger]</code> + <code class="code-inline">.popover-confirm.popover-confirm--top/bottom/left/right</code>.</p>
+            <p class="demo-note">Interne : <code class="code-inline">.popover-confirm-title</code> + <code class="code-inline">.popover-confirm-desc</code> + <code class="code-inline">.popover-confirm-actions</code> (<code class="code-inline">[data-confirm-cancel]</code> / <code class="code-inline">[data-confirm-ok]</code>).</p>
+            <p class="demo-note-last">JS : <code class="code-inline">initConfirmPopover()</code> &mdash; toggle au clic trigger, fermeture Echap + clic exterieur.</p>
+        </div>
     </div>
 </section>
 

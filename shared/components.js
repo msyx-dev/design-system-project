@@ -46,6 +46,11 @@
 //  Action menu                  initActionMenu()             .action-menu
 //  Sidebar rail                 initSidebarRail()            .sidebar-rail
 //  Tooltips ARIA                initTooltipsARIA()           [data-tooltip]
+//  Auto-save indicator          initAutoSave()               .autosave[data-autosave-demo]
+//  Comments / Thread            initComments()               .comment-action-btn[data-reply-trigger]
+//  Auth Flows                   initAuthFlows()              .login-strength[data-strength-target]
+//  Usage meter                  initUsageMeter()             .usage-meter[data-value]
+//  Confirm Popover              initConfirmPopover()         .popover-confirm-wrap
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -3714,6 +3719,202 @@ function initRiskMatrix() {
 }
 window.__initRiskMatrix = initRiskMatrix;
 
+// ===== AUTO-SAVE INDICATOR =====
+function initAutoSave() {
+    document.querySelectorAll('.autosave[data-autosave-demo]').forEach(function(el) {
+        if (el.dataset.bound) return;
+        el.dataset.bound = '1';
+        var btn = el.querySelector('[data-autosave-trigger]');
+        if (!btn) return;
+        var states = ['saving', 'saved', 'unsaved'];
+        var labels = { saving: 'Enregistrement...', saved: 'Enregistre', unsaved: 'Modifications non sauvegardees' };
+        var icons = {
+            saving: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="2" stroke-dasharray="8 6" stroke-linecap="round"/></svg>',
+            saved: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 7.5L5.5 10.5L11.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+            unsaved: '<span class="autosave-dot"></span>'
+        };
+        var idx = 0;
+        function applyState(state) {
+            el.className = 'autosave autosave--' + state;
+            var iconEl = el.querySelector('.autosave-icon');
+            var textEl = el.querySelector('.autosave-text');
+            if (iconEl) iconEl.innerHTML = icons[state];
+            if (textEl) textEl.textContent = labels[state];
+        }
+        applyState(states[idx]);
+        btn.addEventListener('click', function() {
+            idx = (idx + 1) % states.length;
+            applyState(states[idx]);
+        });
+    });
+}
+window.__initAutoSave = initAutoSave;
+
+// ===== COMMENTS / THREAD =====
+function initComments() {
+    document.querySelectorAll('.comment-action-btn[data-reply-trigger]').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+            var comment = btn.closest('.comment');
+            if (!comment) return;
+            var form = comment.querySelector('.comment-reply-form');
+            if (!form) return;
+            form.classList.toggle('open');
+            if (form.classList.contains('open')) {
+                var inp = form.querySelector('.comment-reply-input');
+                if (inp) inp.focus();
+            }
+        });
+    });
+    document.querySelectorAll('.comment-action-btn[data-like-trigger]').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+            btn.classList.toggle('active');
+            var countEl = btn.querySelector('.like-count');
+            if (countEl) {
+                var n = parseInt(countEl.textContent, 10) || 0;
+                countEl.textContent = btn.classList.contains('active') ? n + 1 : Math.max(0, n - 1);
+            }
+        });
+    });
+    document.querySelectorAll('.comment-reply-form .btn-ghost').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+            var form = btn.closest('.comment-reply-form');
+            if (form) form.classList.remove('open');
+        });
+    });
+}
+window.__initComments = initComments;
+
+// ===== AUTH FLOWS =====
+function initAuthFlows() {
+    // Password strength
+    document.querySelectorAll('.login-strength[data-strength-target]').forEach(function(el) {
+        if (el.dataset.bound) return;
+        el.dataset.bound = '1';
+        var targetId = el.dataset.strengthTarget;
+        var input = document.getElementById(targetId);
+        if (!input) return;
+        var fill = el.querySelector('.login-strength-fill');
+        var label = el.querySelector('.login-strength-label');
+        var levels = ['', 'Faible', 'Moyen', 'Bon', 'Fort'];
+        function calcStrength(v) {
+            var s = 0;
+            if (v.length >= 8) s++;
+            if (/[A-Z]/.test(v)) s++;
+            if (/[0-9]/.test(v)) s++;
+            if (/[^A-Za-z0-9]/.test(v)) s++;
+            return s;
+        }
+        input.addEventListener('input', function() {
+            var lvl = calcStrength(input.value);
+            if (fill) fill.setAttribute('data-level', input.value.length === 0 ? '0' : lvl);
+            if (fill) fill.style.width = input.value.length === 0 ? '0' : '';
+            if (label) label.textContent = input.value.length === 0 ? '' : levels[lvl] || '';
+        });
+    });
+    // Step navigation
+    document.querySelectorAll('[data-auth-step-to]').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+            var container = btn.closest('.login-card, .login-preview, [data-auth-container]');
+            if (!container) return;
+            var target = btn.dataset.authStepTo;
+            container.querySelectorAll('.login-step').forEach(function(s) { s.classList.remove('active'); });
+            var next = container.querySelector('.login-step[data-step="' + target + '"]');
+            if (next) next.classList.add('active');
+        });
+    });
+}
+window.__initAuthFlows = initAuthFlows;
+
+// ===== USAGE METER =====
+function initUsageMeter() {
+    var obs = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (!entry.isIntersecting) return;
+            var meter = entry.target;
+            var fill = meter.querySelector('.usage-fill');
+            if (!fill) return;
+            var pct = parseFloat(meter.dataset.value) || 0;
+            setTimeout(function() { fill.style.width = pct + '%'; }, 80);
+            obs.unobserve(meter);
+        });
+    }, { threshold: 0.3 }) : null;
+
+    document.querySelectorAll('.usage-meter[data-value]').forEach(function(meter) {
+        if (meter.dataset.bound) return;
+        meter.dataset.bound = '1';
+        var fill = meter.querySelector('.usage-fill');
+        if (!fill) return;
+        fill.style.width = '0';
+        if (obs) {
+            obs.observe(meter);
+        } else {
+            var pct = parseFloat(meter.dataset.value) || 0;
+            fill.style.width = pct + '%';
+        }
+    });
+}
+window.__initUsageMeter = initUsageMeter;
+
+// ===== CONFIRM POPOVER =====
+function initConfirmPopover() {
+    document.querySelectorAll('.popover-confirm-wrap').forEach(function(wrap) {
+        if (wrap.dataset.bound) return;
+        wrap.dataset.bound = '1';
+        var trigger = wrap.querySelector('[data-confirm-trigger]');
+        var popover = wrap.querySelector('.popover-confirm');
+        var cancelBtn = wrap.querySelector('[data-confirm-cancel]');
+        var confirmBtn = wrap.querySelector('[data-confirm-ok]');
+        if (!trigger || !popover) return;
+
+        function openPop() {
+            // Close others
+            document.querySelectorAll('.popover-confirm.open').forEach(function(p) {
+                if (p !== popover) p.classList.remove('open');
+            });
+            popover.classList.toggle('open');
+        }
+
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openPop();
+        });
+
+        if (cancelBtn) cancelBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            popover.classList.remove('open');
+        });
+
+        if (confirmBtn) confirmBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            popover.classList.remove('open');
+            var cb = wrap.dataset.onConfirm;
+            if (cb && typeof window[cb] === 'function') window[cb]();
+        });
+    });
+
+    // Global close on outside click
+    if (!document.__confirmPopoverGlobal) {
+        document.__confirmPopoverGlobal = true;
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.popover-confirm.open').forEach(function(p) { p.classList.remove('open'); });
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.popover-confirm.open').forEach(function(p) { p.classList.remove('open'); });
+            }
+        });
+    }
+}
+window.__initConfirmPopover = initConfirmPopover;
+
 window.__initComponents = initComponents;
 
 // Close dropdowns and action menus on outside click (once)
@@ -3742,4 +3943,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initActionMenu();
     initSidebarRail();
     initRiskMatrix();
+    initAutoSave();
+    initComments();
+    initAuthFlows();
+    initUsageMeter();
+    initConfirmPopover();
 });

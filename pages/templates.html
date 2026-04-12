@@ -185,6 +185,102 @@
     </div>
 </section>
 
+<!-- SETTINGS PANEL -->
+<section id="settings-panel">
+    <div class="section-header"><span class="overline">Templates</span><h2>Settings Panel</h2><p>Panneau de parametres avec sections groupees, toggles, inputs et zone danger.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Panneau complet</span>
+            <div class="settings-panel">
+                <div class="settings-section">
+                    <div class="settings-section-title">Compte</div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Nom d'affichage</div>
+                            <div class="settings-row-desc">Visible par les autres membres</div>
+                        </div>
+                        <div class="settings-row-control"><input class="settings-row-input" type="text" value="Mike"></div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Email</div>
+                            <div class="settings-row-desc">Pour les notifications et la connexion</div>
+                        </div>
+                        <div class="settings-row-control"><input class="settings-row-input" type="email" value="mike@msyx.fr"></div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-info"><div class="settings-row-label">Langue</div></div>
+                        <div class="settings-row-control">
+                            <select class="settings-row-select">
+                                <option>Francais</option><option>English</option><option>Espanol</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-section-title">Notifications</div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Notifications email</div>
+                            <div class="settings-row-desc">Recevez les alertes par email</div>
+                        </div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Notifications push</div>
+                            <div class="settings-row-desc">Alertes dans le navigateur</div>
+                        </div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Resume hebdomadaire</div>
+                            <div class="settings-row-desc">Rapport envoye chaque lundi</div>
+                        </div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-section-title">Preferences</div>
+                    <div class="settings-row">
+                        <div class="settings-row-info"><div class="settings-row-label">Theme</div></div>
+                        <div class="settings-row-control">
+                            <select class="settings-row-select">
+                                <option>MSYX (dark)</option><option>MSYX (light)</option><option>ACSSI</option><option>Nhood</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Reduire les animations</div>
+                            <div class="settings-row-desc">Accessibilite : moins de mouvement</div>
+                        </div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                    </div>
+                </div>
+                <div class="settings-section settings-danger">
+                    <div class="settings-section-title">Zone danger</div>
+                    <div class="settings-row">
+                        <div class="settings-row-info">
+                            <div class="settings-row-label">Supprimer le compte</div>
+                            <div class="settings-row-desc">Action irreversible &mdash; toutes les donnees seront perdues</div>
+                        </div>
+                        <div class="settings-row-control"><button class="btn-danger btn-sm">Supprimer</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Structure : <code class="code-inline">.settings-panel</code> &gt; <code class="code-inline">.settings-section</code> &gt; <code class="code-inline">.settings-section-title</code> + <code class="code-inline">.settings-row</code>.</p>
+            <p class="demo-note">Chaque row : <code class="code-inline">.settings-row-info</code> (label + desc) + <code class="code-inline">.settings-row-control</code> (toggle / input / select / btn).</p>
+            <p class="demo-note">Zone danger : <code class="code-inline">.settings-section.settings-danger</code> &mdash; couleur rouge automatique.</p>
+            <p class="demo-note-last">Pas de JS dedie &mdash; reutilise les toggles <code class="code-inline">.toggle</code> existants.</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

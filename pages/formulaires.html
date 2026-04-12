@@ -119,6 +119,76 @@
             <p class="typo-small" style="margin-top:0.8rem;">Variante bandeau horizontal pour integration dans un header ou une toolbar.</p>
         </div>
     </div>
+    <div class="demo-grid demo-grid-2" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Register (inscription)</span>
+            <div class="login-preview">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="login-card">
+                    <div class="login-logo">ms</div>
+                    <h3>Creer un compte</h3>
+                    <p class="subtitle">Rejoignez msyx.design</p>
+                    <div class="login-form">
+                        <input type="text" placeholder="Nom complet" id="reg-name">
+                        <input type="email" placeholder="Email" id="reg-email">
+                        <input type="password" placeholder="Mot de passe" id="reg-password" aria-describedby="strength-hint">
+                        <div class="login-strength" data-strength-target="reg-password">
+                            <div class="login-strength-bar"><div class="login-strength-fill" data-level="0"></div></div>
+                            <div class="login-strength-label" id="strength-hint"></div>
+                        </div>
+                        <input type="password" placeholder="Confirmer le mot de passe" id="reg-confirm">
+                        <div class="login-cgu">
+                            <input type="checkbox" id="cgu-check" aria-label="Accepter les CGU">
+                            <label for="cgu-check">J'accepte les <a href="#">conditions generales</a> et la <a href="#">politique de confidentialite</a></label>
+                        </div>
+                        <button class="login-submit">Creer mon compte</button>
+                    </div>
+                    <div style="text-align:center;margin-top:0.8rem;font-size:0.82rem;color:var(--text-muted);">Deja inscrit ? <a href="#" style="color:var(--accent);">Se connecter</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Mot de passe oublie</span>
+            <div class="login-preview">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="login-card" data-auth-container>
+                    <div class="login-step active" data-step="1">
+                        <div class="login-logo">&#128273;</div>
+                        <h3>Mot de passe oublie</h3>
+                        <p class="subtitle">Entrez votre email pour recevoir un lien de reinitialisation.</p>
+                        <div class="login-form">
+                            <input type="email" placeholder="Votre email" id="forgot-email">
+                            <button class="login-submit" data-auth-step-to="2">Envoyer le lien</button>
+                        </div>
+                        <div style="text-align:center;margin-top:0.8rem;">
+                            <button class="login-back-link" data-auth-step-to="0">&#8592; Retour a la connexion</button>
+                        </div>
+                    </div>
+                    <div class="login-step" data-step="2">
+                        <div class="login-logo" style="font-size:1.4rem;">&#9993;</div>
+                        <h3>Email envoye !</h3>
+                        <div class="login-success-msg show">
+                            Un lien de reinitialisation a ete envoye a <strong>votre email</strong>. Verifiez votre boite de reception.
+                        </div>
+                        <div style="text-align:center;margin-top:1.2rem;">
+                            <button class="login-back-link" data-auth-step-to="1">&#8592; Ressaisir l'email</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Usage — Auth Flows</span>
+            <p class="demo-note">Password strength : <code class="code-inline">.login-strength[data-strength-target="inputId"]</code> + <code class="code-inline">.login-strength-fill[data-level="0-4"]</code>. Niveaux : 1 Faible, 2 Moyen, 3 Bon, 4 Fort.</p>
+            <p class="demo-note">Steps : <code class="code-inline">[data-auth-container]</code> contient des <code class="code-inline">.login-step[data-step="1"]</code>. Navigation via <code class="code-inline">[data-auth-step-to="N"]</code>.</p>
+            <p class="demo-note">CGU : <code class="code-inline">.login-cgu</code> — checkbox + texte avec liens.</p>
+            <p class="demo-note-last">JS : <code class="code-inline">initAuthFlows()</code>.</p>
+        </div>
+    </div>
 </section>
 
 <!-- CALENDAR -->

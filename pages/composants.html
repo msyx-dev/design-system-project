@@ -820,6 +820,82 @@
     </div>
 </section>
 
+<!-- COMMENTS / THREAD -->
+<section id="comments">
+    <div class="section-header"><span class="overline">Composants</span><h2>Comments / Thread</h2><p>Avatar, auteur, date, actions (reply, like) et thread imbrique avec ligne connectrice.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Commentaires</span>
+            <div>
+                <div class="comment">
+                    <div class="comment-avatar">MS</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">Mike</span>
+                            <span class="comment-date">il y a 5 min</span>
+                        </div>
+                        <div class="comment-text">Super implementation du skeleton loading ! Le shimmer est vraiment fluide, ca donne un bon retour visuel pendant le chargement.</div>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" data-reply-trigger aria-label="Repondre">&#8617; Repondre</button>
+                            <button class="comment-action-btn" data-like-trigger aria-label="J'aime">&#9825; <span class="like-count">3</span></button>
+                        </div>
+                        <div class="comment-reply-form" aria-label="Formulaire de reponse">
+                            <textarea class="comment-reply-input" placeholder="Votre reponse..." rows="2" aria-label="Votre reponse"></textarea>
+                            <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs);">
+                                <button class="btn-primary btn-xs">Envoyer</button>
+                                <button class="btn-ghost btn-xs">Annuler</button>
+                            </div>
+                        </div>
+                        <div class="comment-thread">
+                            <div class="comment">
+                                <div class="comment-avatar" style="background:var(--gradient-3);width:30px;height:30px;font-size:0.68rem;">CB</div>
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <span class="comment-author">Claude</span>
+                                        <span class="comment-date">il y a 2 min</span>
+                                    </div>
+                                    <div class="comment-text">Merci ! J'ai utilise une animation CSS @keyframes avec background-position pour le shimmer.</div>
+                                    <div class="comment-actions">
+                                        <button class="comment-action-btn" data-like-trigger aria-label="J'aime">&#9825; <span class="like-count">1</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar" style="background:var(--gradient-4);">AB</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">Alice</span>
+                            <span class="comment-date">hier</span>
+                        </div>
+                        <div class="comment-text">Est-ce qu'on peut ajouter un skeleton pour les graphiques aussi ? Ca manque dans la section data.</div>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" data-reply-trigger aria-label="Repondre">&#8617; Repondre</button>
+                            <button class="comment-action-btn" data-like-trigger aria-label="J'aime">&#9825; <span class="like-count">0</span></button>
+                        </div>
+                        <div class="comment-reply-form" aria-label="Formulaire de reponse">
+                            <textarea class="comment-reply-input" placeholder="Votre reponse..." rows="2" aria-label="Votre reponse"></textarea>
+                            <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs);">
+                                <button class="btn-primary btn-xs">Envoyer</button>
+                                <button class="btn-ghost btn-xs">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Structure : <code class="code-inline">.comment</code> &gt; <code class="code-inline">.comment-avatar</code> + <code class="code-inline">.comment-body</code> (<code class="code-inline">-header</code>, <code class="code-inline">-text</code>, <code class="code-inline">-actions</code>).</p>
+            <p class="demo-note">Thread imbrique : <code class="code-inline">.comment-thread</code> dans <code class="code-inline">.comment-body</code> &mdash; ligne connectrice CSS automatique.</p>
+            <p class="demo-note">Actions : <code class="code-inline">[data-reply-trigger]</code> toggle le formulaire, <code class="code-inline">[data-like-trigger]</code> incremente le compteur.</p>
+            <p class="demo-note-last">JS : <code class="code-inline">initComments()</code>.</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
