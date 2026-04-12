@@ -16,6 +16,144 @@
     <aside class="sidebar" id="sidebar"></aside>
     <div class="main">
 
+<!-- HEADER USER ZONE -->
+<section id="header-user">
+    <div class="section-header">
+        <span class="overline">Navigation</span>
+        <h2>Header — Zone utilisateur</h2>
+        <p>Le header supporte nativement l'utilisateur connecté (avatar, dropdown menu), les notifications (cloche + panel), et des transitions douces sur le changement de theme. Configuration via <code style="font-family:'Fira Code',monospace;font-size:0.85em;color:var(--accent-light);">window.MSYX_HEADER</code>.</p>
+    </div>
+
+    <div class="demo-grid demo-grid-2">
+
+        <!-- Demo interactive -->
+        <div class="demo-box" style="grid-column: 1 / -1;">
+            <span class="demo-label">Demo interactive — header avec utilisateur connecte</span>
+            <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;justify-content:space-between;flex-wrap:wrap;">
+                <!-- Simulation header -->
+                <div style="display:flex;align-items:center;gap:1rem;">
+                    <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">msyx.design</span>
+                    <span style="font-size:0.68rem;color:var(--text-dim);">v2.16</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;position:relative;">
+                    <!-- Cloche notif demo -->
+                    <div style="position:relative;display:inline-flex;">
+                        <button class="header-notification" id="demo-notif-btn" aria-label="Notifications demo" aria-expanded="false">
+                            &#128276;
+                            <span class="header-notification-badge" id="demo-notif-badge">3</span>
+                        </button>
+                        <!-- Panel notif demo -->
+                        <div class="header-notif-panel" id="demo-notif-panel" role="dialog" aria-label="Notifications demo">
+                            <div class="header-notif-panel-header">
+                                <span>Notifications</span>
+                                <button class="header-notif-mark-read" id="demo-mark-all">Tout lire</button>
+                            </div>
+                            <div class="header-notif-list">
+                                <div class="header-notif-item unread">
+                                    <span class="header-notif-icon">&#128201;</span>
+                                    <div class="header-notif-body">
+                                        <div class="header-notif-title">Nouveau composant disponible</div>
+                                        <div class="header-notif-desc">Header User Zone — v2.16</div>
+                                    </div>
+                                    <span class="header-notif-time">2 min</span>
+                                </div>
+                                <div class="header-notif-item unread">
+                                    <span class="header-notif-icon">&#9989;</span>
+                                    <div class="header-notif-body">
+                                        <div class="header-notif-title">Deploy reussi</div>
+                                        <div class="header-notif-desc">design-system.msyx.fr</div>
+                                    </div>
+                                    <span class="header-notif-time">15 min</span>
+                                </div>
+                                <div class="header-notif-item">
+                                    <span class="header-notif-icon">&#128172;</span>
+                                    <div class="header-notif-body">
+                                        <div class="header-notif-title">Commentaire sur issue #124</div>
+                                        <div class="header-notif-desc">Spec debloquee, pret pour dev</div>
+                                    </div>
+                                    <span class="header-notif-time">1h</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Avatar + dropdown demo -->
+                    <div style="position:relative;display:inline-flex;">
+                        <button class="header-avatar-trigger" id="demo-avatar-btn" aria-label="Menu utilisateur demo" aria-expanded="false" aria-haspopup="true">M</button>
+                        <div class="header-dropdown" id="demo-dropdown" role="menu">
+                            <div class="header-dropdown-header"><span class="header-dropdown-name">Mike</span></div>
+                            <a href="#" class="header-dropdown-item" role="menuitem"><span>&#128100;</span> Profil</a>
+                            <a href="#" class="header-dropdown-item" role="menuitem"><span>&#9881;</span> Preferences</a>
+                            <div class="header-dropdown-divider"></div>
+                            <a href="#" class="header-dropdown-item danger" role="menuitem"><span>&#128682;</span> Deconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:1rem;">Cliquer sur la cloche pour ouvrir le panel notifications. Cliquer sur l'avatar pour le dropdown menu.</p>
+        </div>
+
+        <!-- Mode sans auth -->
+        <div class="demo-box">
+            <span class="demo-label">Mode sans auth — <code style="font-family:'Fira Code',monospace;font-size:0.82em;">auth: false</code></span>
+            <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);">msyx.design</span>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.25rem 0.5rem;font-size:0.72rem;color:var(--text-muted);">MSYX &#9660;</div>
+                    <div style="display:flex;gap:0.25rem;">
+                        <button style="width:28px;height:28px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:0.85rem;cursor:pointer;">&#9790;</button>
+                        <button style="width:28px;height:28px;border-radius:var(--radius-sm);border:1px solid var(--accent);background:var(--accent-glow);color:var(--accent-light);font-size:0.85rem;cursor:pointer;">&#9788;</button>
+                    </div>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Sans <code style="font-family:'Fira Code',monospace;font-size:0.82em;">window.MSYX_HEADER</code> ou avec <code style="font-family:'Fira Code',monospace;font-size:0.82em;">auth: false</code>, le header affiche uniquement le theme switcher.</p>
+        </div>
+
+        <!-- API config -->
+        <div class="demo-box">
+            <span class="demo-label">Configuration window.MSYX_HEADER</span>
+            <pre style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--accent-light);background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;overflow-x:auto;line-height:1.7;margin:0;">window.MSYX_HEADER = {
+  auth: true,
+  user: {
+    name: 'Mike',
+    initials: 'M',
+    avatar: null
+  },
+  notifications: {
+    enabled: true,
+    count: 3,
+    items: [
+      { title: 'Notif 1', desc: '...', time: '2 min', unread: true, icon: '&#128201;' }
+    ]
+  },
+  menu: [
+    { label: 'Profil', icon: '&#128100;', href: '/profil' },
+    { label: 'Preferences', icon: '&#9881;', href: '/settings' },
+    { divider: true },
+    { label: 'Deconnexion', icon: '&#128682;', action: 'logout', class: 'danger' }
+  ]
+};</pre>
+            <p class="typo-small" style="margin-top:0.75rem;">A definir avant le chargement de <code style="font-family:'Fira Code',monospace;font-size:0.82em;">nav.js</code>. Les notifications et le menu sont optionnels.</p>
+        </div>
+
+        <!-- Transition theme -->
+        <div class="demo-box" style="grid-column:1 / -1;">
+            <span class="demo-label">Transitions theme et mode</span>
+            <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.7;margin-bottom:0.5rem;">
+                Changer de theme ou de mode via les boutons du header declenche automatiquement :
+            </p>
+            <div class="demo-row">
+                <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.82rem;color:var(--text-muted);">
+                    <span style="color:var(--success-light,#86efac);">&#10003;</span> Transition douce <code style="font-family:'Fira Code',monospace;font-size:0.8em;">html.theme-transitioning</code> sur bg/borders/couleurs (250ms)
+                </div>
+                <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.82rem;color:var(--text-muted);">
+                    <span style="color:var(--success-light,#86efac);">&#10003;</span> Toast de confirmation ("Theme : ACSSI", "Mode : Light")
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- NAV COMPONENTS -->
 <section id="nav-components">
     <div class="section-header"><span class="overline">Navigation</span><h2>Navigation</h2><p>Tabs, breadcrumbs et menus.</p></div>
@@ -294,5 +432,87 @@
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
+    <script>
+    (function() {
+        // Demo interactive header-user section — boutons de la démo standalone
+
+        function initDemoHeaderUser() {
+            var notifBtn = document.getElementById('demo-notif-btn');
+            var notifPanel = document.getElementById('demo-notif-panel');
+            var markAllBtn = document.getElementById('demo-mark-all');
+            var avatarBtn = document.getElementById('demo-avatar-btn');
+            var dropdown = document.getElementById('demo-dropdown');
+            var badge = document.getElementById('demo-notif-badge');
+
+            if (!notifBtn || !notifPanel || !avatarBtn || !dropdown) return;
+            if (notifBtn.dataset.demoBound) return;
+            notifBtn.dataset.demoBound = '1';
+
+            function closeAll() {
+                notifPanel.classList.remove('open');
+                notifBtn.classList.remove('active');
+                notifBtn.setAttribute('aria-expanded', 'false');
+                dropdown.classList.remove('open');
+                avatarBtn.classList.remove('open');
+                avatarBtn.setAttribute('aria-expanded', 'false');
+            }
+
+            notifBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isOpen = notifPanel.classList.contains('open');
+                closeAll();
+                if (!isOpen) {
+                    notifPanel.classList.add('open');
+                    notifBtn.classList.add('active');
+                    notifBtn.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            avatarBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isOpen = dropdown.classList.contains('open');
+                closeAll();
+                if (!isOpen) {
+                    dropdown.classList.add('open');
+                    avatarBtn.classList.add('open');
+                    avatarBtn.setAttribute('aria-expanded', 'true');
+                }
+            });
+
+            if (markAllBtn && !markAllBtn.dataset.demoBound) {
+                markAllBtn.dataset.demoBound = '1';
+                markAllBtn.addEventListener('click', function() {
+                    notifPanel.querySelectorAll('.header-notif-item.unread').forEach(function(i) {
+                        i.classList.remove('unread');
+                    });
+                    badge.textContent = '';
+                    badge.classList.add('hidden');
+                });
+            }
+
+            // Liens dropdown — preventDefault pour la démo
+            dropdown.querySelectorAll('.header-dropdown-item').forEach(function(item) {
+                if (item.dataset.demoBound) return;
+                item.dataset.demoBound = '1';
+                item.addEventListener('click', function(e) { e.preventDefault(); closeAll(); });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!notifPanel.contains(e.target) && e.target !== notifBtn
+                    && !dropdown.contains(e.target) && e.target !== avatarBtn) {
+                    closeAll();
+                }
+            });
+        }
+
+        // Appeler au chargement ET lors des reinit SPA
+        document.addEventListener('DOMContentLoaded', initDemoHeaderUser);
+        var _orig = window.__initComponents;
+        window.__initComponents = function() {
+            if (_orig) _orig();
+            initDemoHeaderUser();
+        };
+    })();
+    </script>
 </body>
 </html>

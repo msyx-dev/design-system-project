@@ -763,6 +763,10 @@ document.addEventListener('click', e => {
     }
 });
 
+// ===== APIS PUBLIQUES — header user =====
+window.__updateHeaderUser = function(data) { updateHeaderUser(data); };
+window.__updateNotificationCount = function(count) { updateNotificationCount(count); };
+
 document.addEventListener('DOMContentLoaded', function() {
     buildHeader();
     buildSidebar();
