@@ -1,5 +1,18 @@
 # Releases
 
+## 2.22.0 — 2026-04-12 — Composant Risk Matrix (#133)
+
+### Added
+- `pages/data.html#risk-matrix` : section Risk Matrix avec 3 variantes demo (5x5, 3x3, collision)
+- `shared/css/components.css` : section `/* ===== RISK MATRIX ===== */` — grille CSS Grid, zones colorees par niveau, risk dots avec animation, tooltip riche, responsive
+- `shared/components.js` : `initRiskMatrix()` — generation dynamique DOM grille, positionnement data-prob/data-impact, tooltip hover/focus, modal detail via `__openModal`, gestion collisions (stack + overflow badge), IntersectionObserver animation
+- `shared/components.js` : `__openModal` supporte desormais `config.bodyHTML` pour injection HTML brut (retro-compatible)
+
+### Changed
+- `shared/nav.js` : `initRiskMatrix()` ajoutee dans reinitAll + version bump v2.20.1 → v2.22
+- `shared/css/tokens.css`, `shared/css/utilities.css` : version bump 2.21.0 → 2.22.0
+- `site.html` : compteur hero 78 → 79 composants
+
 ## 2.20.1 — 2026-04-12 — UX DS : transition SPA, sidebar mobile overlay, tooltip multi-position (#132)
 
 ### Added

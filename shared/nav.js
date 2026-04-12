@@ -180,7 +180,7 @@ function buildHeader() {
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.20.1</span>'
+        + '<span class="header-version">v2.22</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
@@ -629,6 +629,7 @@ function reinitComponents() {
     if (typeof window.__initInlineEdit === 'function') window.__initInlineEdit();
     if (typeof window.__initActionMenu === 'function') window.__initActionMenu();
     if (typeof window.__initSidebarRail === 'function') window.__initSidebarRail();
+    if (typeof window.__initRiskMatrix === 'function') window.__initRiskMatrix();
 }
 
 function isSidebarLinkVisible(el) {

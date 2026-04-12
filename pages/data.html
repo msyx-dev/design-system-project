@@ -888,6 +888,155 @@
     </div>
 </section>
 
+<!-- RISK MATRIX -->
+<section id="risk-matrix">
+    <div class="section-header">
+        <span class="overline">Data</span>
+        <h2>Risk Matrix</h2>
+        <p>Matrice probabilit&eacute; &times; impact avec tooltip riche au hover et d&eacute;tail modal au clic.</p>
+    </div>
+
+    <!-- Variante 5×5 principale -->
+    <div class="demo-box">
+        <span class="demo-label">5&times;5 &mdash; Projet infrastructure</span>
+        <div class="risk-matrix" data-size="5" data-label-x="Impact" data-label-y="Probabilit&eacute;">
+            <div class="risk-item"
+                data-prob="4" data-impact="5"
+                data-label="Panne serveur principal"
+                data-level="critical"
+                data-owner="&Eacute;quipe infra"
+                data-detail="Panne compl&egrave;te du serveur de production. Plan de mitigation&nbsp;: basculement automatique vers le serveur de secours. D&eacute;lai de reprise estim&eacute;&nbsp;: 15 minutes.">
+            </div>
+            <div class="risk-item"
+                data-prob="3" data-impact="4"
+                data-label="Fuite de donn&eacute;es client"
+                data-level="high"
+                data-owner="&Eacute;quipe s&eacute;curit&eacute;"
+                data-detail="Acc&egrave;s non autoris&eacute; aux donn&eacute;es personnelles. Mitigation&nbsp;: chiffrement E2E, audit logs, alertes temps r&eacute;el.">
+            </div>
+            <div class="risk-item"
+                data-prob="4" data-impact="2"
+                data-label="Retard livraison sprint"
+                data-level="medium"
+                data-owner="Scrum Master"
+                data-detail="Retard dans la livraison des fonctionnalit&eacute;s planifi&eacute;es. Mitigation&nbsp;: sprint buffer, backlog prioritis&eacute;.">
+            </div>
+            <div class="risk-item"
+                data-prob="2" data-impact="5"
+                data-label="Bug critique production"
+                data-level="high"
+                data-owner="Lead Dev"
+                data-detail="D&eacute;faut critique affectant les utilisateurs en production. Mitigation&nbsp;: tests automatiques, feature flags, rollback rapide.">
+            </div>
+            <div class="risk-item"
+                data-prob="2" data-impact="3"
+                data-label="Turnover d&eacute;veloppeur cl&eacute;"
+                data-level="medium"
+                data-owner="RH"
+                data-detail="D&eacute;part d'un membre critique de l'&eacute;quipe. Mitigation&nbsp;: documentation, pair programming, plan de succession.">
+            </div>
+            <div class="risk-item"
+                data-prob="3" data-impact="3"
+                data-label="D&eacute;passement budget"
+                data-level="high"
+                data-owner="PMO"
+                data-detail="D&eacute;rive budg&eacute;taire d&ucirc; &agrave; des impr&eacute;vus techniques. Mitigation&nbsp;: r&eacute;serve de contingence 15%, reporting mensuel.">
+            </div>
+            <div class="risk-item"
+                data-prob="1" data-impact="4"
+                data-label="Panne r&eacute;seau"
+                data-level="medium"
+                data-owner="Ops"
+                data-detail="Interruption de la connectivit&eacute; r&eacute;seau. Mitigation&nbsp;: redondance FAI, VPN de secours.">
+            </div>
+            <div class="risk-item"
+                data-prob="3" data-impact="2"
+                data-label="Incompatibilit&eacute; API tierce"
+                data-level="medium"
+                data-owner="Backend"
+                data-detail="Rupture de compatibilit&eacute; avec une API externe. Mitigation&nbsp;: versioning API, contrats d'interface, mocks de test.">
+            </div>
+        </div>
+    </div>
+
+    <!-- Variante 3×3 compacte -->
+    <div class="demo-box">
+        <span class="demo-label">3&times;3 &mdash; Compact</span>
+        <div class="risk-matrix" data-size="3" data-label-x="Impact" data-label-y="Probabilit&eacute;" style="max-width:320px;">
+            <div class="risk-item"
+                data-prob="3" data-impact="3"
+                data-label="Risque critique A"
+                data-level="critical"
+                data-owner="CTO"
+                data-detail="Risque &agrave; impact maximal et probabilit&eacute; &eacute;lev&eacute;e. Action imm&eacute;diate requise.">
+            </div>
+            <div class="risk-item"
+                data-prob="1" data-impact="2"
+                data-label="Risque faible B"
+                data-level="low"
+                data-owner="&Eacute;quipe ops"
+                data-detail="Risque marginal, surveillance p&eacute;riodique suffisante.">
+            </div>
+            <div class="risk-item"
+                data-prob="2" data-impact="1"
+                data-label="Risque faible C"
+                data-level="low"
+                data-owner="&Eacute;quipe ops"
+                data-detail="Impact n&eacute;gligeable. Accept&eacute; sans action corrective.">
+            </div>
+        </div>
+    </div>
+
+    <!-- Variante collision -->
+    <div class="demo-box">
+        <span class="demo-label">5&times;5 &mdash; Collision de points (m&ecirc;me case)</span>
+        <div class="risk-matrix" data-size="5" data-label-x="Impact" data-label-y="Probabilit&eacute;">
+            <div class="risk-item"
+                data-prob="3" data-impact="4"
+                data-label="Risque X &mdash; S&eacute;curit&eacute;"
+                data-level="high"
+                data-owner="RSSI"
+                data-detail="Premier risque partageant la case (3,4). Vuln&eacute;rabilit&eacute; XSS sur le portail client.">
+            </div>
+            <div class="risk-item"
+                data-prob="3" data-impact="4"
+                data-label="Risque Y &mdash; Conformit&eacute;"
+                data-level="high"
+                data-owner="DPO"
+                data-detail="Deuxi&egrave;me risque partageant la case (3,4). Non-conformit&eacute; RGPD sur la gestion des consentements.">
+            </div>
+            <div class="risk-item"
+                data-prob="3" data-impact="4"
+                data-label="Risque Z &mdash; Performance"
+                data-level="medium"
+                data-owner="Lead Perf"
+                data-detail="Troisi&egrave;me risque sur la m&ecirc;me case. D&eacute;gradation des temps de r&eacute;ponse sous charge.">
+            </div>
+            <div class="risk-item"
+                data-prob="5" data-impact="1"
+                data-label="T&acirc;che r&eacute;currente"
+                data-level="low"
+                data-owner="&Eacute;quipe QA"
+                data-detail="Risque r&eacute;current &agrave; faible impact. Couvert par les tests automatiques.">
+            </div>
+            <div class="risk-item"
+                data-prob="1" data-impact="5"
+                data-label="Catastrophe rare"
+                data-level="high"
+                data-owner="Direction"
+                data-detail="&Eacute;v&eacute;nement extr&ecirc;me peu probable mais &agrave; fort impact. Plan de continuit&eacute; d'activit&eacute; activ&eacute;.">
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Structure&nbsp;: <code class="code-inline">.risk-matrix[data-size="3|4|5"]</code> contenant des <code class="code-inline">.risk-item</code> avec <code class="code-inline">data-prob</code>, <code class="code-inline">data-impact</code>, <code class="code-inline">data-label</code>, <code class="code-inline">data-level</code>, <code class="code-inline">data-owner</code>, <code class="code-inline">data-detail</code>.</p>
+        <p class="demo-note">Axes&nbsp;: <code class="code-inline">data-label-x</code> (abscisse) et <code class="code-inline">data-label-y</code> (ordonn&eacute;e) sur le conteneur.</p>
+        <p class="demo-note-last">JS&nbsp;: <code class="code-inline">initRiskMatrix()</code> &mdash; g&eacute;n&egrave;re la grille dynamiquement, g&egrave;re collisions, tooltip hover, modal d&eacute;tail.</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

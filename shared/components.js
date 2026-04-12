@@ -650,7 +650,8 @@ window.__openModal = function(config) {
         actionsHtml = '<div class="modal-actions"><button class="btn btn-primary" data-modal-close>Fermer</button></div>';
     }
 
-    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + escapeHTML(body || '') + '</div>' + actionsHtml;
+    var bodyContent = config.bodyHTML ? config.bodyHTML : escapeHTML(body || '');
+    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + bodyContent + '</div>' + actionsHtml;
 
     dialog.querySelectorAll('[data-modal-close]').forEach(function(btn) {
         btn.addEventListener('click', function() { dialog.close(); });
@@ -3458,6 +3459,261 @@ function initSidebarRail() {
 }
 window.__initSidebarRail = initSidebarRail;
 
+// Risk Matrix
+function initRiskMatrix() {
+    var LEVEL_LABELS = { low: 'Faible', medium: 'Moyen', high: 'Elev&eacute;', critical: 'Critique' };
+
+    function scoreLevel(score, maxScore) {
+        var ratio = score / maxScore;
+        if (ratio <= 0.16) return 'low';
+        if (ratio <= 0.36) return 'medium';
+        if (ratio <= 0.64) return 'high';
+        return 'critical';
+    }
+
+    function initials(label) {
+        if (!label) return '?';
+        var words = label.trim().split(/\s+/);
+        if (words.length === 1) return label.slice(0, 2).toUpperCase();
+        return (words[0][0] + words[1][0]).toUpperCase();
+    }
+
+    function escapeAttr(s) {
+        return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Shared tooltip element (one per matrix)
+    function createTooltip() {
+        var tt = document.createElement('div');
+        tt.className = 'risk-tooltip';
+        document.body.appendChild(tt);
+        return tt;
+    }
+
+    document.querySelectorAll('.risk-matrix:not([data-bound])').forEach(function(matrix) {
+        matrix.dataset.bound = '1';
+
+        var size = parseInt(matrix.getAttribute('data-size') || '5', 10);
+        var labelX = matrix.getAttribute('data-label-x') || 'Impact';
+        var labelY = matrix.getAttribute('data-label-y') || 'Probabilit&eacute;';
+        var maxScore = size * size;
+
+        // Collect risk items
+        var items = Array.from(matrix.querySelectorAll('.risk-item'));
+        items.forEach(function(it) { it.remove(); });
+
+        // Build cell map: key = "prob_impact" → array of item data
+        var cellMap = {};
+        items.forEach(function(it) {
+            var prob = parseInt(it.getAttribute('data-prob') || '1', 10);
+            var impact = parseInt(it.getAttribute('data-impact') || '1', 10);
+            var key = prob + '_' + impact;
+            if (!cellMap[key]) cellMap[key] = [];
+            cellMap[key].push({
+                label: it.getAttribute('data-label') || 'Risque',
+                level: it.getAttribute('data-level') || 'medium',
+                owner: it.getAttribute('data-owner') || '',
+                detail: it.getAttribute('data-detail') || '',
+                prob: prob,
+                impact: impact
+            });
+        });
+
+        // Build outer wrapper
+        var wrap = document.createElement('div');
+        wrap.className = 'risk-matrix-wrap';
+
+        // Y axis label
+        var axisY = document.createElement('div');
+        axisY.className = 'risk-axis-y';
+        axisY.innerHTML = labelY + ' &uarr;';
+        wrap.appendChild(axisY);
+
+        // Inner (grid + x axis)
+        var inner = document.createElement('div');
+        inner.className = 'risk-matrix-inner';
+
+        // Grid: (size+1) columns (col 0 = row labels) × (size+1) rows (row size+1 = col labels)
+        var grid = document.createElement('div');
+        grid.className = 'risk-grid';
+        grid.style.gridTemplateColumns = '24px repeat(' + size + ', 1fr)';
+        grid.style.gridTemplateRows = 'repeat(' + size + ', 1fr) 24px';
+
+        // Build cells
+        // row 1..size = prob from high to low (prob=size at row 1, prob=1 at row size)
+        for (var row = 1; row <= size; row++) {
+            var prob = size - row + 1; // inverted: row1=prob5, rowN=prob1
+
+            // Row label (col 0)
+            var rowLabel = document.createElement('div');
+            rowLabel.className = 'risk-row-label';
+            rowLabel.textContent = prob;
+            rowLabel.style.gridColumn = '1';
+            rowLabel.style.gridRow = '' + row;
+            grid.appendChild(rowLabel);
+
+            // Cells for each impact col
+            for (var col = 1; col <= size; col++) {
+                var impact = col; // col1=impact1, colN=impactN
+                var score = prob * impact;
+                var scoreLabel = scoreLevel(score, maxScore);
+
+                var cell = document.createElement('div');
+                cell.className = 'risk-cell';
+                cell.setAttribute('data-score', scoreLabel);
+                cell.style.gridColumn = '' + (col + 1);
+                cell.style.gridRow = '' + row;
+
+                var key = prob + '_' + impact;
+                var dotItems = cellMap[key] || [];
+                var MAX_DOTS = 3;
+
+                dotItems.forEach(function(itemData, idx) {
+                    if (idx >= MAX_DOTS) return;
+                    var dot = document.createElement('div');
+                    dot.className = 'risk-dot risk-dot-hidden';
+                    dot.setAttribute('data-level', itemData.level);
+                    dot.setAttribute('tabindex', '0');
+                    dot.setAttribute('role', 'button');
+                    dot.setAttribute('aria-label', itemData.label + ' — niveau ' + (LEVEL_LABELS[itemData.level] || itemData.level));
+                    dot.dataset.riskLabel = itemData.label;
+                    dot.dataset.riskLevel = itemData.level;
+                    dot.dataset.riskOwner = itemData.owner;
+                    dot.dataset.riskDetail = itemData.detail;
+                    dot.dataset.riskProb = itemData.prob;
+                    dot.dataset.riskImpact = itemData.impact;
+                    dot.style.setProperty('--i', '' + idx);
+                    // Collision offset
+                    if (idx > 0) dot.style.marginLeft = '-8px';
+                    dot.textContent = initials(itemData.label);
+                    cell.appendChild(dot);
+                });
+
+                // Overflow badge if > MAX_DOTS
+                if (dotItems.length > MAX_DOTS) {
+                    var overflow = document.createElement('div');
+                    overflow.className = 'risk-dot risk-dot-overflow risk-dot-hidden';
+                    overflow.style.marginLeft = '-8px';
+                    overflow.setAttribute('aria-hidden', 'true');
+                    overflow.textContent = '+' + (dotItems.length - MAX_DOTS);
+                    cell.appendChild(overflow);
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        // Col labels row (row = size+1)
+        // Empty corner
+        var corner = document.createElement('div');
+        corner.style.gridColumn = '1';
+        corner.style.gridRow = '' + (size + 1);
+        grid.appendChild(corner);
+
+        for (var c = 1; c <= size; c++) {
+            var colLabel = document.createElement('div');
+            colLabel.className = 'risk-col-label';
+            colLabel.textContent = c;
+            colLabel.style.gridColumn = '' + (c + 1);
+            colLabel.style.gridRow = '' + (size + 1);
+            grid.appendChild(colLabel);
+        }
+
+        inner.appendChild(grid);
+
+        // X axis label
+        var axisX = document.createElement('div');
+        axisX.className = 'risk-axis-x';
+        axisX.innerHTML = labelX + ' &rarr;';
+        inner.appendChild(axisX);
+
+        wrap.appendChild(inner);
+        matrix.appendChild(wrap);
+
+        // Tooltip (shared per matrix)
+        var tooltip = createTooltip();
+
+        function showTooltip(dot, e) {
+            var lvl = dot.dataset.riskLevel || 'medium';
+            var owner = dot.dataset.riskOwner;
+            tooltip.innerHTML =
+                '<div class="risk-tooltip-title">' + escapeAttr(dot.dataset.riskLabel) + '</div>' +
+                '<div class="risk-tooltip-row">' +
+                  '<span class="risk-tooltip-badge ' + lvl + '">' + (LEVEL_LABELS[lvl] || lvl) + '</span>' +
+                  (owner ? '<span class="risk-tooltip-owner">' + escapeAttr(owner) + '</span>' : '') +
+                '</div>' +
+                '<div class="risk-tooltip-hint">Clic pour le d&eacute;tail complet</div>';
+            tooltip.classList.add('visible');
+            positionTooltip(e);
+        }
+
+        function positionTooltip(e) {
+            if (!e) return;
+            var x = e.clientX + 14, y = e.clientY - 10;
+            var tw = tooltip.offsetWidth || 200, th = tooltip.offsetHeight || 80;
+            if (x + tw > window.innerWidth - 8) x = e.clientX - tw - 14;
+            if (y + th > window.innerHeight - 8) y = e.clientY - th - 10;
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('visible');
+        }
+
+        function openDetail(dot) {
+            var lvl = dot.dataset.riskLevel || 'medium';
+            var prob = dot.dataset.riskProb;
+            var impact = dot.dataset.riskImpact;
+            var bodyHTML =
+                '<table style="width:100%;border-collapse:collapse;font-size:0.85rem;">' +
+                  '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted);width:35%">Niveau</td>' +
+                  '<td style="padding:0.4rem 0.6rem;"><span class="risk-tooltip-badge ' + lvl + '">' + (LEVEL_LABELS[lvl] || lvl) + '</span></td></tr>' +
+                  '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted)">Probabilit&eacute;</td>' +
+                  '<td style="padding:0.4rem 0.6rem;">' + escapeAttr(prob) + ' / ' + size + '</td></tr>' +
+                  '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted)">Impact</td>' +
+                  '<td style="padding:0.4rem 0.6rem;">' + escapeAttr(impact) + ' / ' + size + '</td></tr>' +
+                  (dot.dataset.riskOwner ? '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted)">Responsable</td><td style="padding:0.4rem 0.6rem;">' + escapeAttr(dot.dataset.riskOwner) + '</td></tr>' : '') +
+                  (dot.dataset.riskDetail ? '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted);vertical-align:top;">Description</td><td style="padding:0.4rem 0.6rem;">' + escapeAttr(dot.dataset.riskDetail) + '</td></tr>' : '') +
+                '</table>';
+            if (window.__openModal) {
+                window.__openModal({ title: dot.dataset.riskLabel || 'Risque', bodyHTML: bodyHTML });
+            }
+        }
+
+        // Bind events on all dots
+        grid.querySelectorAll('.risk-dot:not(.risk-dot-overflow)').forEach(function(dot) {
+            dot.addEventListener('mouseenter', function(e) { showTooltip(dot, e); });
+            dot.addEventListener('mousemove', function(e) { positionTooltip(e); });
+            dot.addEventListener('mouseleave', function() { hideTooltip(); });
+            dot.addEventListener('focus', function(e) { showTooltip(dot, e); });
+            dot.addEventListener('blur', function() { hideTooltip(); });
+            dot.addEventListener('click', function() { hideTooltip(); openDetail(dot); });
+            dot.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hideTooltip(); openDetail(dot); }
+            });
+        });
+
+        // Animate dots on scroll (IntersectionObserver)
+        var dotObs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var allDots = Array.from(entry.target.querySelectorAll('.risk-dot.risk-dot-hidden'));
+                    allDots.forEach(function(d, i) {
+                        setTimeout(function() {
+                            d.classList.remove('risk-dot-hidden');
+                            d.classList.add('risk-dot-visible');
+                        }, i * 60);
+                    });
+                    dotObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        dotObs.observe(matrix);
+    });
+}
+window.__initRiskMatrix = initRiskMatrix;
+
 window.__initComponents = initComponents;
 
 // Close dropdowns and action menus on outside click (once)
@@ -3485,4 +3741,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initInlineEdit();
     initActionMenu();
     initSidebarRail();
+    initRiskMatrix();
 });
