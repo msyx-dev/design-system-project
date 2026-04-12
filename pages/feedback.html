@@ -500,6 +500,69 @@
     </div>
 </section>
 
+
+<section id="notification-center">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Notification Center</h2><p>Cloche avec badge compteur, panel overlay, items avec dot non-lu et actions.</p></div>
+    <div class="demo-box">
+        <span class="demo-label">Avec notifications non-lues</span>
+        <div style="display:flex;gap:var(--space-lg);align-items:flex-start;flex-wrap:wrap;">
+            <div class="notif-center">
+                <button class="notif-trigger" aria-label="Notifications">
+                    &#128276;
+                    <span class="notif-trigger-count">3</span>
+                </button>
+                <div class="notif-panel" role="dialog" aria-label="Centre de notifications">
+                    <div class="notif-panel-header">
+                        <span class="notif-panel-title">Notifications</span>
+                        <button class="notif-mark-all">Tout marquer lu</button>
+                    </div>
+                    <div class="notif-list">
+                        <div class="notif-item notif-item--unread">
+                            <div class="notif-avatar" style="background:var(--gradient-2);">MS</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Mickael</strong> a deploye le projet <em>design-system</em></div>
+                                <div class="notif-time">il y a 2 min</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                        </div>
+                        <div class="notif-item notif-item--unread">
+                            <div class="notif-avatar" style="background:var(--gradient-3);">CB</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Claude</strong> a termine l&apos;issue <em>#126 Composants SaaS</em></div>
+                                <div class="notif-time">il y a 15 min</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                        </div>
+                        <div class="notif-item notif-item--unread">
+                            <div class="notif-avatar" style="background:var(--gradient-4);">SY</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Systeme</strong> : backup quotidien <em>termine avec succes</em></div>
+                                <div class="notif-time">il y a 1 h</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                        </div>
+                        <div class="notif-item">
+                            <div class="notif-avatar">AB</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Admin</strong> a modifie les permissions du role <em>deployer</em></div>
+                                <div class="notif-time">hier</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="demo-hint-dim">Cliquez sur la cloche pour ouvrir le panel &mdash; marquer individuellement ou tout lire d&apos;un coup.</p>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Structure : <code class="code-inline">.notif-center</code> &gt; <code class="code-inline">.notif-trigger</code> (avec <code class="code-inline">.notif-trigger-count</code>) + <code class="code-inline">.notif-panel</code>.</p>
+        <p class="demo-note">Items non-lus : <code class="code-inline">.notif-item--unread</code> &mdash; point bleu automatique via CSS <code class="code-inline">::before</code>.</p>
+        <p class="demo-note-last">JS : <code class="code-inline">initNotificationCenter()</code> &mdash; fermeture au clic exterieur et Echap.</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

@@ -3057,6 +3057,175 @@ function initCommandPalette() {
 }
 window.__initCommandPalette = initCommandPalette;
 
+// Pricing Table
+function initPricing() {
+    document.querySelectorAll('.pricing-toggle-switch').forEach(function(sw) {
+        if (sw.dataset.bound) return;
+        sw.dataset.bound = '1';
+
+        var grid = sw.closest('.pricing-section') || document.querySelector('.pricing-grid');
+        var labelMonthly = sw.parentElement ? sw.parentElement.querySelector('[data-label="monthly"]') : null;
+        var labelYearly = sw.parentElement ? sw.parentElement.querySelector('[data-label="yearly"]') : null;
+
+        function syncLabels() {
+            var isYearly = sw.classList.contains('yearly');
+            if (labelMonthly) { labelMonthly.classList.toggle('active', !isYearly); }
+            if (labelYearly) { labelYearly.classList.toggle('active', isYearly); }
+        }
+
+        function updatePrices(isYearly) {
+            var scope = sw.closest('.pricing-section') || document;
+            scope.querySelectorAll('[data-price-monthly]').forEach(function(el) {
+                el.textContent = isYearly ? el.dataset.priceYearly : el.dataset.priceMonthly;
+            });
+            syncLabels();
+        }
+
+        sw.setAttribute('role', 'switch');
+        sw.setAttribute('aria-checked', sw.classList.contains('yearly') ? 'true' : 'false');
+        sw.setAttribute('tabindex', '0');
+        syncLabels();
+
+        var toggle = function() {
+            sw.classList.toggle('yearly');
+            var isYearly = sw.classList.contains('yearly');
+            sw.setAttribute('aria-checked', isYearly ? 'true' : 'false');
+            updatePrices(isYearly);
+        };
+
+        sw.addEventListener('click', toggle);
+        sw.addEventListener('keydown', function(e) {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+        });
+    });
+}
+window.__initPricing = initPricing;
+
+// Notification Center
+function initNotificationCenter() {
+    document.querySelectorAll('.notif-center').forEach(function(center) {
+        if (center.dataset.bound) return;
+        center.dataset.bound = '1';
+
+        var trigger = center.querySelector('.notif-trigger');
+        var panel = center.querySelector('.notif-panel');
+        var markAllBtn = center.querySelector('.notif-mark-all');
+        if (!trigger || !panel) return;
+
+        function countUnread() {
+            return center.querySelectorAll('.notif-item--unread').length;
+        }
+
+        function updateBadge() {
+            var badge = trigger.querySelector('.notif-trigger-count');
+            if (!badge) return;
+            var n = countUnread();
+            badge.textContent = n > 0 ? (n > 9 ? '9+' : String(n)) : '';
+            badge.style.display = n > 0 ? '' : 'none';
+        }
+
+        function openPanel() {
+            panel.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closePanel() {
+            panel.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.setAttribute('aria-haspopup', 'true');
+        trigger.setAttribute('aria-expanded', 'false');
+        updateBadge();
+
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (panel.classList.contains('open')) { closePanel(); } else { openPanel(); }
+        });
+
+        // Mark individual as read
+        panel.querySelectorAll('.notif-read-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var item = btn.closest('.notif-item');
+                if (item) { item.classList.remove('notif-item--unread'); }
+                updateBadge();
+            });
+        });
+
+        // Click on item → mark read
+        panel.querySelectorAll('.notif-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                item.classList.remove('notif-item--unread');
+                updateBadge();
+            });
+        });
+
+        // Mark all
+        if (markAllBtn) {
+            markAllBtn.addEventListener('click', function() {
+                center.querySelectorAll('.notif-item--unread').forEach(function(i) {
+                    i.classList.remove('notif-item--unread');
+                });
+                updateBadge();
+            });
+        }
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (!center.contains(e.target)) { closePanel(); }
+        });
+
+        // Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && panel.classList.contains('open')) { closePanel(); trigger.focus(); }
+        });
+    });
+}
+window.__initNotificationCenter = initNotificationCenter;
+
+// Activity Feed
+function initActivityFeed() {
+    document.querySelectorAll('.activity-feed').forEach(function(feed) {
+        if (feed.dataset.bound) return;
+        feed.dataset.bound = '1';
+
+        var filters = feed.querySelectorAll('.activity-filter-chip');
+        var loadMoreBtn = feed.querySelector('.activity-load-more-btn');
+        var hiddenItems = feed.querySelectorAll('.activity-item.initially-hidden');
+
+        filters.forEach(function(chip) {
+            chip.addEventListener('click', function() {
+                filters.forEach(function(c) { c.classList.remove('active'); });
+                chip.classList.add('active');
+
+                var filter = chip.dataset.filter || 'all';
+                feed.querySelectorAll('.activity-item').forEach(function(item) {
+                    if (filter === 'all') {
+                        item.classList.remove('hidden');
+                    } else {
+                        var type = item.dataset.type || '';
+                        if (type === filter) {
+                            item.classList.remove('hidden');
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+        });
+
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function() {
+                var hidden = feed.querySelectorAll('.activity-item.initially-hidden');
+                hidden.forEach(function(item) { item.classList.remove('initially-hidden'); });
+                loadMoreBtn.closest('.activity-load-more').style.display = 'none';
+            });
+        }
+    });
+}
+window.__initActivityFeed = initActivityFeed;
+
 window.__initComponents = initComponents;
 
 // Close dropdowns on outside click (once)
@@ -3067,4 +3236,7 @@ document.addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     initComponents();
+    initPricing();
+    initNotificationCenter();
+    initActivityFeed();
 });

@@ -1,5 +1,19 @@
 # Releases
 
+## 2.17.0 — 2026-04-12 — Composants SaaS P1 : pricing table, notification center, activity feed (#126)
+
+### Added
+- `pages/composants.html#pricing` : Pricing Table — grille 3 colonnes (Free/Pro/Enterprise), toggle mensuel/annuel avec remise -20%, plan recommande avec highlight gradient
+- `pages/feedback.html#notification-center` : Notification Center — cloche avec badge compteur, panel overlay, items avec dot unread, mark as read individuel et global
+- `pages/data.html#activity-feed` : Activity Feed — items avatar + verbe + cible + timestamp, chips de filtre par type, bouton "Charger plus" progressif
+- CSS : `.pricing-toggle`, `.pricing-grid`, `.pricing-card`, `.pricing-card--recommended`, `.pricing-price`, `.pricing-features`, `.notif-center`, `.notif-trigger`, `.notif-panel`, `.notif-item`, `.notif-item--unread`, `.activity-feed`, `.activity-item`, `.activity-avatar`, `.activity-filters` dans `shared/css/components.css`
+- JS : `initPricing()`, `initNotificationCenter()`, `initActivityFeed()` dans `shared/components.js` — pattern anti-double-bind `dataset.bound`
+- `shared/nav.js` reinitComponents() : appels aux 3 nouvelles fonctions pour compatibilite SPA
+
+### Changed
+- `site.html` : compteur hero 71 → 74 composants, version footer v2.17
+- `shared/css/tokens.css`, `utilities.css`, `components.css`, `nav.js` : version bump 2.16.1 → 2.17.0
+
 ## 2.16.1 — 2026-04-12 — Enforcement composants : registre + lint + check-overrides (#125)
 
 ### Added

@@ -547,6 +547,81 @@
     </div>
 </section>
 
+
+<section id="pricing" class="pricing-section">
+    <div class="section-header"><span class="overline">Composants</span><h2>Pricing Table</h2><p>Grille de tarification 3 colonnes avec toggle mensuel/annuel et plan recommande.</p></div>
+    <div class="demo-box">
+        <div class="pricing-toggle">
+            <span class="pricing-toggle-label active" data-label="monthly">Mensuel</span>
+            <button class="pricing-toggle-switch" aria-label="Basculer facturation annuelle" role="switch" aria-checked="false"></button>
+            <span class="pricing-toggle-label" data-label="yearly">Annuel</span>
+            <span class="pricing-badge">-20%</span>
+        </div>
+        <div class="pricing-grid">
+            <!-- Free -->
+            <div class="pricing-card">
+                <div class="pricing-plan">Free</div>
+                <div class="pricing-price">
+                    <span class="pricing-price-currency">&euro;</span>
+                    <span class="pricing-price-amount" data-price-monthly="0" data-price-yearly="0">0</span>
+                    <span class="pricing-price-period">/ mois</span>
+                </div>
+                <p class="pricing-desc">Pour decouvrir et experimenter sans engagement.</p>
+                <ul class="pricing-features">
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> 3 projets</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> 1 Go stockage</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Support communaute</li>
+                    <li class="pricing-feature pricing-feature--disabled"><span class="pricing-feature-icon">&#10005;</span> API access</li>
+                    <li class="pricing-feature pricing-feature--disabled"><span class="pricing-feature-icon">&#10005;</span> Analytics avancees</li>
+                </ul>
+                <div class="pricing-cta"><button class="btn-secondary" style="width:100%;">Commencer gratuitement</button></div>
+            </div>
+            <!-- Pro (recommended) -->
+            <div class="pricing-card pricing-card--recommended">
+                <span class="pricing-card-badge">Recommande</span>
+                <div class="pricing-plan">Pro</div>
+                <div class="pricing-price">
+                    <span class="pricing-price-currency">&euro;</span>
+                    <span class="pricing-price-amount" data-price-monthly="19" data-price-yearly="15">19</span>
+                    <span class="pricing-price-period">/ mois</span>
+                </div>
+                <p class="pricing-desc">Pour les equipes qui veulent aller plus loin.</p>
+                <ul class="pricing-features">
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Projets illimites</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> 50 Go stockage</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Support prioritaire</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> API access</li>
+                    <li class="pricing-feature pricing-feature--disabled"><span class="pricing-feature-icon">&#10005;</span> SLA garanti</li>
+                </ul>
+                <div class="pricing-cta"><button class="btn-primary" style="width:100%;">Essayer 14 jours</button></div>
+            </div>
+            <!-- Enterprise -->
+            <div class="pricing-card">
+                <div class="pricing-plan">Enterprise</div>
+                <div class="pricing-price">
+                    <span class="pricing-price-currency">&euro;</span>
+                    <span class="pricing-price-amount" data-price-monthly="79" data-price-yearly="63">79</span>
+                    <span class="pricing-price-period">/ mois</span>
+                </div>
+                <p class="pricing-desc">Pour les organisations avec des besoins avances.</p>
+                <ul class="pricing-features">
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Tout de Pro</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> 500 Go stockage</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> SLA 99.9%</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> SSO / SAML</li>
+                    <li class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Analytics avancees</li>
+                </ul>
+                <div class="pricing-cta"><button class="btn-secondary" style="width:100%;">Contacter les ventes</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Toggle mensuel/annuel : <code class="code-inline">.pricing-toggle-switch</code> avec <code class="code-inline">data-price-monthly</code> et <code class="code-inline">data-price-yearly</code> sur les montants. JS : <code class="code-inline">initPricing()</code>.</p>
+        <p class="demo-note-last">Plan recommande : <code class="code-inline">.pricing-card--recommended</code> + <code class="code-inline">.pricing-card-badge</code>.</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

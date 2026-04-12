@@ -788,6 +788,109 @@
     </div>
 </section>
 
+
+<section id="activity-feed">
+    <div class="section-header"><span class="overline">Data</span><h2>Activity Feed</h2><p>Flux d&apos;activite avec avatar, verbe, cible, timestamp, chips de filtre et chargement progressif.</p></div>
+    <div class="demo-box max-w-md">
+        <div class="activity-feed">
+            <div class="activity-filters">
+                <button class="activity-filter-chip active" data-filter="all">Tous</button>
+                <button class="activity-filter-chip" data-filter="create">Creations</button>
+                <button class="activity-filter-chip" data-filter="edit">Modifications</button>
+                <button class="activity-filter-chip" data-filter="delete">Suppressions</button>
+                <button class="activity-filter-chip" data-filter="deploy">Deploiements</button>
+            </div>
+            <div class="activity-item" data-type="deploy">
+                <div class="activity-avatar-wrap">
+                    <div class="activity-avatar" style="background:var(--gradient-2);">MS</div>
+                    <span class="activity-type-icon">&#128640;</span>
+                </div>
+                <div class="activity-body">
+                    <div class="activity-text"><strong>Mickael</strong> a deploye <span class="activity-target">design-system v2.17</span></div>
+                    <div class="activity-meta">
+                        <span class="activity-time">il y a 3 min</span>
+                        <span class="activity-tag">deploy</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-item" data-type="create">
+                <div class="activity-avatar-wrap">
+                    <div class="activity-avatar" style="background:var(--gradient-3);">CB</div>
+                    <span class="activity-type-icon">&#43;</span>
+                </div>
+                <div class="activity-body">
+                    <div class="activity-text"><strong>Claude</strong> a cree <span class="activity-target">Pricing Table</span></div>
+                    <div class="activity-meta">
+                        <span class="activity-time">il y a 12 min</span>
+                        <span class="activity-tag">creation</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-item" data-type="edit">
+                <div class="activity-avatar-wrap">
+                    <div class="activity-avatar" style="background:var(--gradient-1);">AB</div>
+                    <span class="activity-type-icon">&#9998;</span>
+                </div>
+                <div class="activity-body">
+                    <div class="activity-text"><strong>Admin</strong> a modifie <span class="activity-target">tokens.css</span></div>
+                    <div class="activity-meta">
+                        <span class="activity-time">il y a 45 min</span>
+                        <span class="activity-tag">edit</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-item" data-type="delete">
+                <div class="activity-avatar-wrap">
+                    <div class="activity-avatar" style="background:var(--gradient-4);">SY</div>
+                    <span class="activity-type-icon">&#128465;</span>
+                </div>
+                <div class="activity-body">
+                    <div class="activity-text"><strong>Systeme</strong> a supprime <span class="activity-target">cache-old-build.zip</span></div>
+                    <div class="activity-meta">
+                        <span class="activity-time">il y a 2 h</span>
+                        <span class="activity-tag">delete</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-item initially-hidden" data-type="create">
+                <div class="activity-avatar-wrap">
+                    <div class="activity-avatar" style="background:var(--gradient-2);">MS</div>
+                    <span class="activity-type-icon">&#43;</span>
+                </div>
+                <div class="activity-body">
+                    <div class="activity-text"><strong>Mickael</strong> a cree <span class="activity-target">poc-onboarding</span></div>
+                    <div class="activity-meta">
+                        <span class="activity-time">hier</span>
+                        <span class="activity-tag">creation</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-item initially-hidden" data-type="deploy">
+                <div class="activity-avatar-wrap">
+                    <div class="activity-avatar">CD</div>
+                    <span class="activity-type-icon">&#128640;</span>
+                </div>
+                <div class="activity-body">
+                    <div class="activity-text"><strong>CI/CD</strong> a deploye <span class="activity-target">acssi-project v1.4</span></div>
+                    <div class="activity-meta">
+                        <span class="activity-time">avant-hier</span>
+                        <span class="activity-tag">deploy</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-load-more">
+                <button class="btn-secondary btn-sm activity-load-more-btn">Charger plus</button>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Structure : <code class="code-inline">.activity-feed</code> &gt; <code class="code-inline">.activity-filters</code> (chips) + liste <code class="code-inline">.activity-item</code> avec <code class="code-inline">data-type</code>.</p>
+        <p class="demo-note">Items masques au chargement : <code class="code-inline">.initially-hidden</code> &mdash; reveles par le bouton "Charger plus".</p>
+        <p class="demo-note-last">JS : <code class="code-inline">initActivityFeed()</code> &mdash; filtre par type et chargement progressif.</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
