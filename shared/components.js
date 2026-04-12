@@ -8,40 +8,63 @@ function escapeHTML(str) {
 }
 
 function initComponents() {
-    // Tabs
+    // Tabs — ARIA role=tablist/tab + navigation clavier flèches
     document.querySelectorAll('.tabs').forEach(g => {
         if (g.dataset.bound) return;
         g.dataset.bound = '1';
-        g.querySelectorAll('.tab').forEach(t => {
+        g.setAttribute('role', 'tablist');
+        const tabs = Array.from(g.querySelectorAll('.tab'));
+        tabs.forEach((t, idx) => {
             t.setAttribute('role', 'tab');
-            t.setAttribute('tabindex', '0');
+            t.setAttribute('tabindex', t.classList.contains('active') ? '0' : '-1');
+            t.setAttribute('aria-selected', t.classList.contains('active') ? 'true' : 'false');
             t.addEventListener('click', () => {
-                g.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+                tabs.forEach(x => {
+                    x.classList.remove('active');
+                    x.setAttribute('tabindex', '-1');
+                    x.setAttribute('aria-selected', 'false');
+                });
                 t.classList.add('active');
+                t.setAttribute('tabindex', '0');
+                t.setAttribute('aria-selected', 'true');
+                t.focus();
             });
             t.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    g.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-                    t.classList.add('active');
+                    t.click();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const next = tabs[(idx + 1) % tabs.length];
+                    next.click();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+                    prev.click();
                 }
             });
         });
     });
 
-    // Accordion
+    // Accordion — ARIA aria-expanded + role=button
     document.querySelectorAll('.accordion-header').forEach(h => {
         if (h.dataset.bound) return;
         h.dataset.bound = '1';
         h.setAttribute('role', 'button');
         h.setAttribute('tabindex', '0');
+        const isOpen = h.parentElement.classList.contains('open');
+        h.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        const toggle = () => {
+            h.parentElement.classList.toggle('open');
+            h.setAttribute('aria-expanded', h.parentElement.classList.contains('open') ? 'true' : 'false');
+        };
         h.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                h.parentElement.classList.toggle('open');
+                toggle();
             }
         });
-        h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+        h.addEventListener('click', toggle);
     });
 
     // Chart animations
@@ -216,6 +239,28 @@ function initComponents() {
 
     // Decision Tree
     initDecisionTree();
+
+    // Tooltips ARIA
+    initTooltipsARIA();
+}
+
+// Tooltips — role="tooltip" + aria-describedby
+function initTooltipsARIA() {
+    var uid = 0;
+    document.querySelectorAll('.tooltip-wrap').forEach(function(wrap) {
+        if (wrap.dataset.bound) return;
+        wrap.dataset.bound = '1';
+        var tip = wrap.querySelector('.tooltip');
+        if (!tip) return;
+        if (!tip.id) {
+            tip.id = 'tooltip-' + (++uid);
+        }
+        tip.setAttribute('role', 'tooltip');
+        var trigger = wrap.querySelector('[aria-label], button, a, [tabindex]') || wrap.firstElementChild;
+        if (trigger && trigger !== tip) {
+            trigger.setAttribute('aria-describedby', tip.id);
+        }
+    });
 }
 
 // Chips
@@ -897,7 +942,7 @@ function initCarousel() {
                 var dot = document.createElement('button');
                 dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
                 dot.setAttribute('role', 'tab');
-                dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                dot.setAttribute('aria-label', 'Slide ' + (i + 1) + ' sur ' + total);
                 dot.dataset.index = i;
                 dotsContainer.appendChild(dot);
             }

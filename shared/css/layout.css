@@ -1,4 +1,4 @@
-/* @ds-version: 2.14.3 */
+/* @ds-version: 2.14.4 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -24,6 +24,7 @@
     cursor: pointer; font-size: 1.2rem; transition: all 0.2s;
 }
 .site-header .header-burger:hover { background: var(--surface); border-color: var(--border-hover); }
+.site-header .header-burger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .site-header .theme-switcher { margin-bottom: 0; padding: 0; }
 .site-header .theme-switcher-label { display: none; }
 .site-header .theme-switcher-select { width: auto; min-width: 90px; padding: 0.3rem 1.8rem 0.3rem 0.5rem; font-size: 0.75rem; }
@@ -57,7 +58,7 @@
 .theme-switcher-label { display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.3rem; letter-spacing: 0.04em; }
 .theme-switcher-select { width: 100%; padding: 0.35rem 0.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 0.78rem; font-family: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.6rem center; }
 .theme-switcher-select:hover { border-color: var(--border-hover); }
-.theme-switcher-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.theme-switcher-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 
 /* ===== MAIN ===== */
@@ -118,6 +119,10 @@
 .mode-toggle-btn:hover {
     border-color: var(--border-hover);
     color: var(--text);
+}
+.mode-toggle-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 .mode-toggle-btn.active {
     background: var(--accent-glow);
