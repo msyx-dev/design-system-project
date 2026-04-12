@@ -1,5 +1,30 @@
 # Releases
 
+## 2.23.0 — 2026-04-13 — Sprint 2 + Sprint 3 complets
+
+### Added — Sprint 2 (Audit P0+P1, 55 SP)
+- A11y : prefers-reduced-motion global, focus-visible sur tous les interactifs, ARIA complet (#119)
+- Tokens : radius-md, z-index scale, transitions, typographie, shadows complets (#120)
+- Command palette fonctionnelle (⌘K), filtre sidebar, auto-load Ctrl+F (#121)
+- Documentation : page Getting Started, guidelines Usage, snippets copiables (#122)
+- Regroupement cohérent composants + taxonomie + classes démo (#123)
+- Header user connecté : avatar/dropdown/notifications via window.MSYX_HEADER (#124)
+- Enforcement : components-registry.json, check-components.sh, check-overrides (#125)
+- Pricing table, notification center, activity feed (#126)
+- Wizard multi-step, inline editing, action menu, sidebar rail (#127)
+- Sync scalable (sync-all.sh), modularité JS documentée, build.sh minification (#128)
+
+### Added — Sprint 3 (Audit P2, 29 SP)
+- Composants P2 : settings panel, auto-save, comments, auth flows, upgrade prompt, confirm popover, skeletons pré-fabriqués (#129)
+- ~180 classes utilitaires CSS (espacement, display, flex, grid, radius, shadow, typo, a11y) (#130)
+- CSS moderne : self-host fonts WOFF2, container queries sur .card, stratégie color-mix() (#131)
+- UX DS : sidebar mobile overlay+swipe, transition SPA fade, tooltip/popover 4 positions (#132)
+- Matrice risque interactive : grille NxN, zones colorées, tooltip riche, modal détail (#133)
+
+### Changed
+- 68 → 86 composants (Hero counter)
+- Version 2.14.3 → 2.23.0
+
 ## 2.22.0 — 2026-04-12 — Composant Risk Matrix (#133)
 
 ### Added
