@@ -1,5 +1,49 @@
 # Guide d'integration — Design System msyx.design
 
+## Regle d'or : pas de composant hors DS
+
+**Ne jamais reimplementer un composant UI dans un projet consommateur.**
+
+Si un composant dont vous avez besoin n'existe pas encore dans le DS :
+1. Ouvrir une issue sur le repo `design-system-project` avec le label `composant`
+2. Le composant est cree dans le DS (HTML + CSS + JS si interactif)
+3. Synchroniser avec `sync.sh`
+4. Consommer les classes DS dans votre projet
+
+### Pourquoi cette regle ?
+
+- **Coherence** : tous les projets msyx.fr partagent le meme langage visuel
+- **Maintenance** : corriger un bug ou changer un style se fait en un seul endroit
+- **Theming** : les composants DS respectent automatiquement tous les themes (MSYX, ACSSI, Nhood)
+
+### Registre des composants
+
+Le fichier `shared/components-registry.json` liste tous les composants disponibles avec :
+- Leurs classes CSS principales
+- La page thematique ou ils sont documentes
+- La fonction JS d'initialisation (si interactif)
+
+### Scripts de verification
+
+Trois scripts sont disponibles pour detecter les drifts :
+
+```bash
+# 1. Verifier que la copie locale du DS est a jour
+./check-sync.sh /chemin/projet/styles/ds-tokens.css
+
+# 2. Detecter les composants custom reimplementes hors DS
+./check-components.sh /chemin/projet/styles/
+
+# 3. Detecter les overrides de classes DS
+./check-sync.sh --check-overrides /chemin/projet/styles/
+```
+
+**check-components.sh** detecte les classes CSS avec des prefixes composant-like (`.btn-`, `.card-`, `.modal-`, etc.) qui ne sont pas dans le registre DS. Pour les cas legitimes (ex : Tailwind, librairie tierce), ajouter les classes dans un fichier `.ds-allowlist` (une classe par ligne) a la racine du dossier CSS analyse.
+
+**check-sync.sh --check-overrides** detecte les redefinitions de classes DS dans vos CSS locaux. La regle : ne jamais redefinir une classe DS — customiser via les variables CSS (`var(--token)`).
+
+---
+
 ## Structure des fichiers CSS
 
 | Fichier | Contenu | Obligatoire ? |
@@ -111,6 +155,81 @@ Mettre `data-theme` sur `<html>` pour changer la palette :
 | Nhood | dark, light | `#008837` vert |
 
 Les variables se mettent a jour automatiquement — aucun changement CSS necessaire.
+
+## Header avec utilisateur connecte
+
+Le header integre nativement la gestion de l'utilisateur connecte (avatar + dropdown), les notifications (cloche + panel popover) et les transitions douces de theme.
+
+### Configuration via window.MSYX_HEADER
+
+Definir cet objet **avant** le chargement de `nav.js` :
+
+```html
+<script>
+window.MSYX_HEADER = {
+  auth: true,                    // false = header sans zone user
+  user: {
+    name: 'Mike',
+    initials: 'M',               // utilise si pas d'avatar
+    avatar: '/img/avatar.png'    // URL image (optionnel)
+  },
+  notifications: {
+    enabled: true,
+    count: 3,                    // badge initial
+    items: [                     // liste affichee dans le panel (optionnel)
+      {
+        title: 'Nouveau message',
+        desc: 'Description courte',
+        time: '2 min',
+        icon: '&#128172;',
+        unread: true
+      }
+    ]
+  },
+  menu: [
+    { label: 'Profil',       icon: '&#128100;', href: '/profil' },
+    { label: 'Preferences',  icon: '&#9881;',   href: '/settings' },
+    { divider: true },
+    { label: 'Deconnexion',  icon: '&#128682;', action: 'logout', class: 'danger' }
+  ]
+};
+</script>
+<script src="/shared/nav.js"></script>
+```
+
+### Sans auth
+
+```javascript
+window.MSYX_HEADER = { auth: false };
+// ou simplement ne pas definir window.MSYX_HEADER
+```
+
+Le header affiche alors uniquement le logo + theme switcher.
+
+### Mises a jour dynamiques
+
+```javascript
+// Apres login : mettre a jour l'avatar
+updateHeaderUser({ name: 'Mike', initials: 'M' });
+
+// Apres reception de notifications
+updateNotificationCount(5);
+```
+
+### Event logout
+
+```javascript
+document.addEventListener('msyx:logout', function() {
+  // Votre logique de deconnexion
+  window.location.href = '/logout';
+});
+```
+
+### Transitions theme
+
+Le changement de theme/mode via le header declenche automatiquement :
+- `html.theme-transitioning` sur le document (transition CSS douce, 250ms)
+- Un toast de confirmation ("Theme : ACSSI", "Mode : Light")
 
 ## Anti-FOUC
 

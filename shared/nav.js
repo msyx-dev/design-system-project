@@ -35,6 +35,7 @@ const NAV_SECTIONS = [
         { label: 'Tag Input', icon: '&#127991;', href: '/pages/formulaires.html#tag-input' }
     ]},
     { title: 'Navigation', links: [
+        { label: 'Header User', icon: '&#128100;', href: '/pages/navigation.html#header-user' },
         { label: 'Tabs & Nav', icon: '&#9776;', href: '/pages/navigation.html#nav-components' },
         { label: 'Breadcrumbs', icon: '&#8250;', href: '/pages/navigation.html#breadcrumbs' },
         { label: 'Stepper', icon: '&#8594;', href: '/pages/navigation.html#stepper' },
@@ -88,10 +89,92 @@ let scrollSpyObserver = null;
 function buildHeader() {
     var header = document.getElementById('site-header');
     if (!header) return;
+
+    // Lire la config consommateur
+    var cfg = (typeof window.MSYX_HEADER === 'object' && window.MSYX_HEADER) ? window.MSYX_HEADER : {};
+    var authEnabled = !!cfg.auth;
+    var user = cfg.user || {};
+    var notifCfg = cfg.notifications || {};
+    var menuItems = cfg.menu || [
+        { label: 'Profil', icon: '&#128100;', href: '#' },
+        { label: 'Preferences', icon: '&#9881;', href: '#' },
+        { divider: true },
+        { label: 'Deconnexion', icon: '&#128682;', action: 'logout', 'class': 'danger' }
+    ];
+
+    // Construire l'avatar (initiales ou image)
+    var avatarContent = '';
+    if (user.avatar) {
+        avatarContent = '<img src="' + user.avatar + '" alt="' + (user.name || 'Utilisateur') + '">';
+    } else {
+        avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
+    }
+
+    // Construire les items du dropdown
+    var dropdownItems = '';
+    if (user.name) {
+        dropdownItems += '<div class="header-dropdown-header"><span class="header-dropdown-name">' + user.name + '</span></div>';
+    }
+    menuItems.forEach(function(item) {
+        if (item.divider) {
+            dropdownItems += '<div class="header-dropdown-divider"></div>';
+        } else {
+            var cls = 'header-dropdown-item' + (item['class'] ? ' ' + item['class'] : '');
+            var dataAction = item.action ? ' data-action="' + item.action + '"' : '';
+            var href = item.href || '#';
+            dropdownItems += '<a href="' + href + '" class="' + cls + '"' + dataAction + '>'
+                + (item.icon ? '<span>' + item.icon + '</span>' : '')
+                + item.label
+                + '</a>';
+        }
+    });
+
+    // Zone user (seulement si auth activé)
+    var userZoneHtml = '';
+    if (authEnabled) {
+        var notifCount = notifCfg.count || 0;
+        var notifVisible = notifCfg.enabled !== false;
+        var badgeHtml = '';
+        if (notifCount > 0) {
+            badgeHtml = '<span class="header-notification-badge" id="header-notif-badge">'
+                + (notifCount > 99 ? '99+' : notifCount)
+                + '</span>';
+        } else {
+            badgeHtml = '<span class="header-notification-badge hidden" id="header-notif-badge"></span>';
+        }
+
+        var notifBellHtml = '';
+        if (notifVisible) {
+            notifBellHtml = '<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false">'
+                + '&#128276;'
+                + badgeHtml
+                + '</button>'
+                + '<div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications">'
+                +   '<div class="header-notif-panel-header">'
+                +     '<span>Notifications</span>'
+                +     '<button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button>'
+                +   '</div>'
+                +   '<div class="header-notif-list" id="header-notif-list">'
+                +     '<div class="header-notif-empty">Aucune notification</div>'
+                +   '</div>'
+                + '</div>';
+        }
+
+        userZoneHtml = '<div class="header-user-zone" id="header-user-zone">'
+            + notifBellHtml
+            + '<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">'
+            +   avatarContent
+            + '</button>'
+            + '<div class="header-dropdown" id="header-dropdown" role="menu">'
+            +   dropdownItems
+            + '</div>'
+            + '</div>';
+    }
+
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.15</span>'
+        + '<span class="header-version">v2.16.1</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
@@ -107,14 +190,197 @@ function buildHeader() {
         +     '<button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button>'
         +     '<button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button>'
         +   '</div>'
-        + '</div>';
+        + '</div>'
+        + userZoneHtml;
+
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
     if (burger && sidebar) {
-        burger.addEventListener('click', function() { sidebar.classList.toggle('open'); });
+        if (!burger.dataset.bound) {
+            burger.dataset.bound = '1';
+            burger.addEventListener('click', function() { sidebar.classList.toggle('open'); });
+        }
     }
     if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
     if (typeof initModeSwitcher === 'function') initModeSwitcher();
+    if (authEnabled) {
+        initHeaderUser();
+        if ((cfg.notifications || {}).enabled !== false) initHeaderNotifications();
+    }
+}
+
+// Initialise le dropdown avatar
+function initHeaderUser() {
+    var btn = document.getElementById('header-avatar-btn');
+    var dropdown = document.getElementById('header-dropdown');
+    if (!btn || !dropdown) return;
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+
+    function openDropdown() {
+        dropdown.classList.add('open');
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        // Fermer le panel notif si ouvert
+        var np = document.getElementById('header-notif-panel');
+        var nb = document.getElementById('header-notif-btn');
+        if (np) np.classList.remove('open');
+        if (nb) { nb.classList.remove('active'); nb.setAttribute('aria-expanded', 'false'); }
+    }
+
+    function closeDropdown() {
+        dropdown.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleDropdown() {
+        if (dropdown.classList.contains('open')) { closeDropdown(); } else { openDropdown(); }
+    }
+
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleDropdown();
+    });
+
+    btn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown(); }
+        if (e.key === 'Escape') { closeDropdown(); btn.focus(); }
+    });
+
+    // Clic en dehors → fermer
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target) && e.target !== btn) { closeDropdown(); }
+    });
+
+    // Keyboard navigation in dropdown items
+    dropdown.querySelectorAll('.header-dropdown-item').forEach(function(item) {
+        if (item.dataset.bound) return;
+        item.dataset.bound = '1';
+        item.setAttribute('role', 'menuitem');
+        item.addEventListener('click', function(e) {
+            var action = item.dataset.action;
+            if (action === 'logout') {
+                e.preventDefault();
+                document.dispatchEvent(new CustomEvent('msyx:logout', { bubbles: true }));
+            }
+            closeDropdown();
+        });
+        item.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeDropdown(); btn.focus(); }
+        });
+    });
+}
+
+// Initialise le panel de notifications
+function initHeaderNotifications() {
+    var btn = document.getElementById('header-notif-btn');
+    var panel = document.getElementById('header-notif-panel');
+    var markAllBtn = document.getElementById('header-notif-mark-all');
+    if (!btn || !panel) return;
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+
+    function openPanel() {
+        panel.classList.add('open');
+        btn.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+        // Fermer le dropdown avatar si ouvert
+        var dd = document.getElementById('header-dropdown');
+        var ab = document.getElementById('header-avatar-btn');
+        if (dd) dd.classList.remove('open');
+        if (ab) { ab.classList.remove('open'); ab.setAttribute('aria-expanded', 'false'); }
+    }
+
+    function closePanel() {
+        panel.classList.remove('open');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (panel.classList.contains('open')) { closePanel(); } else { openPanel(); }
+    });
+
+    btn.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { closePanel(); btn.focus(); }
+    });
+
+    if (markAllBtn && !markAllBtn.dataset.bound) {
+        markAllBtn.dataset.bound = '1';
+        markAllBtn.addEventListener('click', function() {
+            panel.querySelectorAll('.header-notif-item.unread').forEach(function(item) {
+                item.classList.remove('unread');
+            });
+            updateNotificationCount(0);
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!panel.contains(e.target) && e.target !== btn) { closePanel(); }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && panel.classList.contains('open')) { closePanel(); }
+    });
+
+    // Charger les notifications depuis la config si présentes
+    var cfg = (typeof window.MSYX_HEADER === 'object' && window.MSYX_HEADER) ? window.MSYX_HEADER : {};
+    if (cfg.notifications && cfg.notifications.items) {
+        renderNotifications(cfg.notifications.items);
+    }
+}
+
+// Rendu de la liste de notifications
+function renderNotifications(items) {
+    var list = document.getElementById('header-notif-list');
+    if (!list) return;
+    if (!items || !items.length) {
+        list.innerHTML = '<div class="header-notif-empty">Aucune notification</div>';
+        return;
+    }
+    var html = '';
+    items.forEach(function(n) {
+        var unreadCls = n.unread ? ' unread' : '';
+        html += '<div class="header-notif-item' + unreadCls + '">'
+            + (n.icon ? '<span class="header-notif-icon">' + n.icon + '</span>' : '')
+            + '<div class="header-notif-body">'
+            +   '<div class="header-notif-title">' + (n.title || '') + '</div>'
+            +   (n.desc ? '<div class="header-notif-desc">' + n.desc + '</div>' : '')
+            + '</div>'
+            + (n.time ? '<span class="header-notif-time">' + n.time + '</span>' : '')
+            + '</div>';
+    });
+    list.innerHTML = html;
+}
+
+// Mettre à jour les infos user à la volée (ex: après login)
+function updateHeaderUser(user) {
+    var btn = document.getElementById('header-avatar-btn');
+    if (!btn) return;
+    var avatarContent = '';
+    if (user.avatar) {
+        avatarContent = '<img src="' + user.avatar + '" alt="' + (user.name || 'Utilisateur') + '">';
+    } else {
+        avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
+    }
+    btn.innerHTML = avatarContent;
+    var nameEl = document.querySelector('.header-dropdown-name');
+    if (nameEl && user.name) nameEl.textContent = user.name;
+}
+
+// Mettre à jour le badge de notifications à la volée
+function updateNotificationCount(count) {
+    var badge = document.getElementById('header-notif-badge');
+    if (!badge) return;
+    if (count <= 0) {
+        badge.textContent = '';
+        badge.classList.add('hidden');
+    } else {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.classList.remove('hidden');
+    }
 }
 
 function buildSidebar() {

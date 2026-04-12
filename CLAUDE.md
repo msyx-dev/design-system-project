@@ -17,7 +17,7 @@ site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   fondation.html    # Couleurs, typographie, espacements, ombres, theming
   composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers
-  navigation.html   # Tabs, breadcrumbs, stepper, bottom navigation
+  navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll
   data.html         # Tables, data grid, stats, charts, KPI, tree view
   templates.html    # Kanban, roadmap, backlog, sprint board
@@ -30,9 +30,11 @@ shared/
     utilities.css   # Classes utilitaires couleur, backgrounds, bordures, accessibilité
     layout.css      # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css  # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
-  sync.sh           # Sync les 4 fichiers CSS vers un projet consommateur
-  check-sync.sh     # Vérifie si le DS consommé est à jour (@ds-version)
-  CONSUMER_GUIDE.md # Guide d'integration pour projets consommateurs
+  sync.sh                    # Sync les 4 fichiers CSS vers un projet consommateur
+  check-sync.sh              # Vérifie version (@ds-version) + mode --check-overrides
+  check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS
+  components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
+  CONSUMER_GUIDE.md          # Guide d'integration pour projets consommateurs
   nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
   components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll, command palette)
 ```
@@ -100,6 +102,9 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Anti-FOUC : le composant ne doit pas flasher au chargement (script inline <head>)
    - Accessibilite : aria-labels, role, keyboard navigation si interactif
    - Responsive : tester 320px, 768px, 1280px
+8. **Registre** : mettre a jour `shared/components-registry.json`
+   - Ajouter une entree avec `name`, `page`, `cssClasses` (classes principales), `jsInit` (ou null)
+   - Maintenir la version `"version"` en coherence avec le bump de `@ds-version`
 
 ## Deploy
 Fichiers servis directement par Caddy. Aucun build necessaire.

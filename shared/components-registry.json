@@ -1,0 +1,336 @@
+{
+  "version": "2.16.1",
+  "generated": "2026-04-12",
+  "components": [
+    {
+      "name": "buttons",
+      "page": "composants",
+      "cssClasses": [".btn-primary", ".btn-secondary", ".btn-ghost", ".btn-sm", ".btn-lg", ".btn-xs", ".btn-icon", ".btn-danger", ".btn-success", ".btn-warning", ".btn-outline-danger", ".btn-loading"],
+      "jsInit": null
+    },
+    {
+      "name": "cards",
+      "page": "composants",
+      "cssClasses": [".card", ".card-icon", ".card-flat", ".card-compact", ".card-horizontal"],
+      "jsInit": null
+    },
+    {
+      "name": "badges",
+      "page": "composants",
+      "cssClasses": [".badge", ".badge-primary", ".badge-success", ".badge-warning", ".badge-danger", ".badge-info", ".badge-neutral", ".tag", ".pulse-dot"],
+      "jsInit": null
+    },
+    {
+      "name": "chips",
+      "page": "composants",
+      "cssClasses": [".chip", ".chip-close", ".chip-filter", ".chip-group", ".chip-input-wrapper", ".chip-input-item", ".chip-input-field"],
+      "jsInit": "initChips"
+    },
+    {
+      "name": "inputs",
+      "page": "formulaires",
+      "cssClasses": [".input", ".input-group", ".input-label", ".input-hint", ".input-error", ".input-error-msg", ".input-success", ".input-disabled", ".input-with-icon", ".toggle", ".toggle-slider", ".checkbox", ".radio"],
+      "jsInit": null
+    },
+    {
+      "name": "progress",
+      "page": "data",
+      "cssClasses": [".progress-bar", ".progress-fill", ".progress-bar-striped", ".progress-ring"],
+      "jsInit": null
+    },
+    {
+      "name": "stats",
+      "page": "data",
+      "cssClasses": [".stat-value", ".stat-label"],
+      "jsInit": null
+    },
+    {
+      "name": "avatar",
+      "page": "composants",
+      "cssClasses": [".avatar", ".avatar-xs", ".avatar-sm", ".avatar-md", ".avatar-lg", ".avatar-xl", ".avatar-gradient", ".avatar-group", ".avatar-status"],
+      "jsInit": null
+    },
+    {
+      "name": "table",
+      "page": "data",
+      "cssClasses": [".table-wrap"],
+      "jsInit": null
+    },
+    {
+      "name": "data-grid",
+      "page": "data",
+      "cssClasses": [".data-grid-wrap", ".data-grid", ".data-grid-header-row", ".data-grid-filter-row", ".data-grid-sortable", ".data-grid-sort-icon", ".data-grid-filter", ".data-grid-body", ".data-grid-footer", ".data-grid-selection"],
+      "jsInit": "initDataGrids"
+    },
+    {
+      "name": "tree-view",
+      "page": "data",
+      "cssClasses": [".tree", ".tree-children", ".tree-item", ".tree-branch", ".tree-toggle", ".tree-leaf", ".tree-chevron", ".tree-icon", ".tree-label"],
+      "jsInit": "initTreeView"
+    },
+    {
+      "name": "alert",
+      "page": "composants",
+      "cssClasses": [".alert", ".alert-icon", ".alert-info", ".alert-success", ".alert-warning", ".alert-danger"],
+      "jsInit": null
+    },
+    {
+      "name": "toast",
+      "page": "feedback",
+      "cssClasses": [".toast", ".toast-close", ".toast-success", ".toast-error", ".toast-warning", ".toast-info", ".toast-container"],
+      "jsInit": "showToast"
+    },
+    {
+      "name": "zone-banner",
+      "page": "feedback",
+      "cssClasses": [".zone-banner", ".zone-loss", ".zone-warning", ".zone-profit", ".zone-info"],
+      "jsInit": null
+    },
+    {
+      "name": "tooltip",
+      "page": "feedback",
+      "cssClasses": [".tooltip-wrap", ".tooltip"],
+      "jsInit": null
+    },
+    {
+      "name": "tabs",
+      "page": "navigation",
+      "cssClasses": [".tabs", ".tab"],
+      "jsInit": "initTabs"
+    },
+    {
+      "name": "modal",
+      "page": "composants",
+      "cssClasses": [".modal-preview", ".modal-overlay", ".modal-content", ".modal-actions", ".modal-dialog"],
+      "jsInit": "openModal"
+    },
+    {
+      "name": "skeleton",
+      "page": "feedback",
+      "cssClasses": [".skeleton", ".skeleton-text", ".skeleton-circle", ".skeleton-btn", ".skeleton-card"],
+      "jsInit": null
+    },
+    {
+      "name": "code",
+      "page": "divers",
+      "cssClasses": [".code-block", ".code-header", ".code-lang", ".code-body"],
+      "jsInit": "initCopyButtons"
+    },
+    {
+      "name": "copy-button",
+      "page": "divers",
+      "cssClasses": [".copy-btn"],
+      "jsInit": "initCopyButtons"
+    },
+    {
+      "name": "divider",
+      "page": "composants",
+      "cssClasses": [".divider", ".divider-label"],
+      "jsInit": null
+    },
+    {
+      "name": "rating",
+      "page": "composants",
+      "cssClasses": [".rating", ".rating-star"],
+      "jsInit": "initRating"
+    },
+    {
+      "name": "breadcrumb",
+      "page": "navigation",
+      "cssClasses": [".breadcrumb", ".breadcrumb-item"],
+      "jsInit": null
+    },
+    {
+      "name": "timeline",
+      "page": "divers",
+      "cssClasses": [".timeline", ".timeline-item", ".timeline-dot", ".timeline-content"],
+      "jsInit": null
+    },
+    {
+      "name": "accordion",
+      "page": "divers",
+      "cssClasses": [".accordion", ".accordion-item", ".accordion-header", ".accordion-body"],
+      "jsInit": "initAccordion"
+    },
+    {
+      "name": "stepper",
+      "page": "navigation",
+      "cssClasses": [".stepper", ".step", ".step-dot", ".step-label"],
+      "jsInit": null
+    },
+    {
+      "name": "dropdown",
+      "page": "formulaires",
+      "cssClasses": [".dropdown", ".dropdown-trigger", ".dropdown-menu", ".dropdown-search", ".dropdown-option", ".dropdown-tags", ".dropdown-tag"],
+      "jsInit": "initDropdowns"
+    },
+    {
+      "name": "file-upload",
+      "page": "formulaires",
+      "cssClasses": [".file-upload", ".file-upload-icon", ".file-upload-text", ".file-upload-hint", ".file-list", ".file-item"],
+      "jsInit": null
+    },
+    {
+      "name": "slider",
+      "page": "formulaires",
+      "cssClasses": [".slider-group", ".slider-header", ".slider-value-display", ".slider-track", ".slider-value", ".slider-disabled"],
+      "jsInit": "initSliders"
+    },
+    {
+      "name": "number-input",
+      "page": "formulaires",
+      "cssClasses": [".number-input-wrap", ".number-input-btn", ".number-input-field"],
+      "jsInit": "initNumberInputs"
+    },
+    {
+      "name": "search-input",
+      "page": "formulaires",
+      "cssClasses": [".search-input-wrap", ".search-input", ".search-icon", ".search-clear", ".search-suggestions", ".search-item", ".search-compact"],
+      "jsInit": "initSearchInputs"
+    },
+    {
+      "name": "popover",
+      "page": "composants",
+      "cssClasses": [".popover-wrap", ".popover"],
+      "jsInit": null
+    },
+    {
+      "name": "command-palette",
+      "page": "divers",
+      "cssClasses": [".cmd-overlay", ".cmd-palette", ".cmd-input-wrap", ".cmd-input", ".cmd-results", ".cmd-group-title", ".cmd-item", ".cmd-footer", ".cmd-empty"],
+      "jsInit": "initCommandPalette"
+    },
+    {
+      "name": "drawer",
+      "page": "feedback",
+      "cssClasses": [".drawer-preview", ".drawer-overlay", ".drawer-panel", ".drawer-header", ".drawer-close", ".drawer-body", ".drawer-footer"],
+      "jsInit": null
+    },
+    {
+      "name": "bottom-sheet",
+      "page": "feedback",
+      "cssClasses": [".bottom-sheet", ".bottom-sheet-overlay", ".bottom-sheet-handle-wrap", ".bottom-sheet-handle", ".bottom-sheet-header", ".bottom-sheet-close", ".bottom-sheet-content"],
+      "jsInit": "initBottomSheet"
+    },
+    {
+      "name": "empty-state",
+      "page": "feedback",
+      "cssClasses": [".empty-state", ".empty-state-icon"],
+      "jsInit": null
+    },
+    {
+      "name": "pagination",
+      "page": "feedback",
+      "cssClasses": [".pagination", ".page-btn", ".page-ellipsis", ".pagination-info"],
+      "jsInit": null
+    },
+    {
+      "name": "spinner",
+      "page": "feedback",
+      "cssClasses": [".spinner", ".spinner-sm", ".spinner-md", ".spinner-lg", ".spinner-dots", ".loading-bar", ".loading-overlay"],
+      "jsInit": null
+    },
+    {
+      "name": "carousel",
+      "page": "divers",
+      "cssClasses": [".carousel", ".carousel-track", ".carousel-slide", ".carousel-btn", ".carousel-dots", ".carousel-dot"],
+      "jsInit": "initCarousel"
+    },
+    {
+      "name": "lightbox",
+      "page": "divers",
+      "cssClasses": [".lightbox-gallery", ".lightbox-trigger", ".lightbox-thumb"],
+      "jsInit": "initLightbox"
+    },
+    {
+      "name": "bottom-nav",
+      "page": "navigation",
+      "cssClasses": [".bottom-nav", ".bottom-nav-item", ".bottom-nav-icon", ".bottom-nav-label", ".bottom-nav-badge"],
+      "jsInit": "initBottomNav"
+    },
+    {
+      "name": "fab",
+      "page": "feedback",
+      "cssClasses": [".fab", ".fab-mini", ".fab-success", ".fab-danger", ".fab-extended", ".fab-menu", ".fab-actions", ".fab-action", ".fab-action-btn"],
+      "jsInit": "initFAB"
+    },
+    {
+      "name": "segmented-control",
+      "page": "composants",
+      "cssClasses": [".segmented", ".segmented-indicator", ".segmented-item"],
+      "jsInit": "initSegmentedControls"
+    },
+    {
+      "name": "otp-input",
+      "page": "formulaires",
+      "cssClasses": [".otp-group", ".otp-digit"],
+      "jsInit": "initOTPInputs"
+    },
+    {
+      "name": "tag-input",
+      "page": "formulaires",
+      "cssClasses": [".tag-input-wrap", ".tag-input-tag", ".tag-input-remove", ".tag-input-field", ".tag-input-hint"],
+      "jsInit": "initTagInputs"
+    },
+    {
+      "name": "comparison-table",
+      "page": "data",
+      "cssClasses": [".comparison-table", ".comparison-recommended", ".comparison-yes", ".comparison-no"],
+      "jsInit": null
+    },
+    {
+      "name": "counter",
+      "page": "data",
+      "cssClasses": [".counter", ".counter-value", ".counter-prefix", ".counter-suffix", ".counter-label"],
+      "jsInit": "initCounters"
+    },
+    {
+      "name": "context-menu",
+      "page": "divers",
+      "cssClasses": [".context-menu", ".context-menu-item", ".context-menu-divider"],
+      "jsInit": "initContextMenu"
+    },
+    {
+      "name": "progress-tracker",
+      "page": "data",
+      "cssClasses": [".progress-tracker", ".progress-tracker-center", ".progress-tracker-value", ".progress-tracker-label", ".progress-tracker-multi"],
+      "jsInit": null
+    },
+    {
+      "name": "sortable-list",
+      "page": "composants",
+      "cssClasses": [".sortable-list", ".sortable-item", ".sortable-handle"],
+      "jsInit": "initSortableList"
+    },
+    {
+      "name": "video-embed",
+      "page": "divers",
+      "cssClasses": [".video-embed", ".video-embed-overlay", ".video-embed-play", ".video-card"],
+      "jsInit": "initVideoEmbeds"
+    },
+    {
+      "name": "quiz-poll",
+      "page": "formulaires",
+      "cssClasses": [".quiz", ".quiz-progress", ".quiz-question", ".quiz-option", ".quiz-feedback", ".quiz-result", ".quiz-poll-results"],
+      "jsInit": "initQuiz"
+    },
+    {
+      "name": "before-after",
+      "page": "divers",
+      "cssClasses": [".before-after", ".before-after-after", ".before-after-before", ".before-after-label", ".before-after-handle"],
+      "jsInit": "initBeforeAfter"
+    },
+    {
+      "name": "achievement-badge",
+      "page": "composants",
+      "cssClasses": [".achievement", ".achievement-icon", ".achievement-title", ".achievement-state", ".achievement--bronze", ".achievement--silver", ".achievement--gold", ".achievement-progress"],
+      "jsInit": null
+    },
+    {
+      "name": "decision-tree",
+      "page": "divers",
+      "cssClasses": [".dtree", ".dtree-node", ".dtree-choices", ".dtree-choice", ".dtree-connector"],
+      "jsInit": "initDecisionTree"
+    }
+  ]
+}

@@ -1,5 +1,39 @@
 # Releases
 
+## 2.16.1 — 2026-04-12 — Enforcement composants : registre + lint + check-overrides (#125)
+
+### Added
+- `shared/components-registry.json` : registre de tous les composants DS (54 composants) avec nom, page thématique, classes CSS principales, fonction JS init
+- `shared/check-components.sh` : lint des projets consommateurs — détecte les classes CSS composant-like définies hors DS, support `.ds-allowlist` pour faux positifs, exit codes 0/1
+- `shared/check-sync.sh` enrichi : nouveau mode `--check-overrides <répertoire>` pour détecter les redéfinitions de classes DS dans un projet consommateur
+- `shared/CONSUMER_GUIDE.md` : section "Règle d'or : pas de composant hors DS" avec workflow complet, référence au registre et aux 3 scripts de vérification
+
+### Changed
+- `CLAUDE.md` N2 : étape 8 "Registre" ajoutée au process d'ajout composant, nouveaux fichiers d'outillage dans la section Structure
+- `~/.claude/CLAUDE.md` N1 : règle renforcée — vérifier `components-registry.json` avant toute implémentation custom
+- `docs/ARCHITECTURE.md` : structure mise à jour avec les nouveaux fichiers d'outillage DX
+
+## 2.16.0 — 2026-04-12 — Header user connecté + theme switcher enrichi (#124)
+
+### Added
+- `buildHeader()` dans `nav.js` : lecture de `window.MSYX_HEADER` pour configurer le header dynamiquement (auth, user, notifications, menu)
+- `initHeaderUser()` dans `nav.js` : dropdown avatar avec navigation clavier, event `msyx:logout`
+- `initHeaderNotifications()` dans `nav.js` : panel popover notifications (liste, badge count, "Tout lire")
+- `updateHeaderUser(user)` dans `nav.js` : mise à jour dynamique des infos utilisateur
+- `updateNotificationCount(count)` dans `nav.js` : mise à jour dynamique du badge
+- `renderNotifications(items)` dans `nav.js` : rendu de la liste notifications depuis `window.MSYX_HEADER.notifications.items`
+- CSS `.header-user-zone`, `.header-notification`, `.header-notification-badge`, `.header-avatar-trigger`, `.header-dropdown`, `.header-dropdown-item`, `.header-dropdown-header`, `.header-dropdown-divider`, `.header-dropdown-name`, `.header-notif-panel`, `.header-notif-*` dans `layout.css`
+- CSS `html.theme-transitioning` dans `layout.css` : transition douce bg/border/color 250ms
+- `applyThemeTransition()` dans `components.js` : wrapper pour transition + cleanup
+- Toast de confirmation au changement de theme et de mode
+- Demo interactive dans `navigation.html#header-user` (panel notif + dropdown avatar standalone)
+- Lien "Header User" dans NAV_SECTIONS `shared/nav.js`
+- Compteur hero `site.html` : 68 → 71
+
+### Changed
+- `initThemeSwitcher()` et `initModeSwitcher()` dans `components.js` : enrobés dans `applyThemeTransition()` + toast
+- Header version `v2.15` → `v2.16`
+
 ## 2.15.1 — 2026-04-12 — DX : Command palette + filtre sidebar + auto-load Ctrl+F
 
 ### Added

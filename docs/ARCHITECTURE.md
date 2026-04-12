@@ -4,7 +4,7 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**68 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
+**71 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
 
 ## Structure
 
@@ -27,11 +27,13 @@ shared/
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
-  sync.sh               # Synchronise les 4 fichiers CSS vers un projet consommateur
-  check-sync.sh         # Vérifie si le DS consommé est à jour (@ds-version)
-  CONSUMER_GUIDE.md     # Guide d'integration pour projets consommateurs
-  nav.js                # Header, sidebar, scroll spy, SPA navigation, LazyLoader
-  components.js         # 25+ composants JS interactifs (voir section dediee)
+  sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur
+  check-sync.sh              # Vérifie version (@ds-version) + mode --check-overrides
+  check-components.sh        # Lint consommateurs — détecte composants custom hors DS
+  components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
+  CONSUMER_GUIDE.md          # Guide d'integration + règle d'or + scripts de vérification
+  nav.js                     # Header, sidebar, scroll spy, SPA navigation, LazyLoader
+  components.js              # 30+ composants JS interactifs (voir section dediee)
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint + velocity.json
@@ -42,8 +44,12 @@ docs/
 ### Header fixe (56px)
 - Position fixed, z-index 150, pleine largeur
 - Contenu : logo msyx.design, version, selecteur theme, toggle dark/light
+- Zone utilisateur (auth) : avatar cliquable + dropdown menu + cloche notifications + panel popover
+- Configuration consommateur : `window.MSYX_HEADER` (auth, user, notifications, menu)
+- Sans `window.MSYX_HEADER` ou `auth: false` : header minimal (logo + theme switcher)
 - Mobile : burger menu integre, version masquee
 - Variable CSS : `--header-h: 56px`
+- Fonctions nav.js : `buildHeader()`, `initHeaderUser()`, `initHeaderNotifications()`, `updateHeaderUser()`, `updateNotificationCount()`, `renderNotifications()`
 
 ### Sidebar
 - Position fixed, sous le header (`top: var(--header-h)`)
