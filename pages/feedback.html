@@ -25,6 +25,36 @@
         <div class="alert alert-warning"><span class="alert-icon">&#9888;</span><span>Utilisation CPU elevee (89%). Surveillez les performances.</span></div>
         <div class="alert alert-danger"><span class="alert-icon">&#10007;</span><span>Echec de connexion a la base de donnees. Retry dans 30s.</span></div>
     </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser les alertes pour des messages persistants contextuels lies a l'etat de la page (confirmation d'action, avertissement systeme). <code style="color:var(--accent);">alert-info</code> pour les informations neutres, <code style="color:var(--accent);">alert-success</code> pour les confirmations, <code style="color:var(--accent);">alert-warning</code> pour les avertissements non-bloquants, <code style="color:var(--accent);">alert-danger</code> pour les erreurs critiques. Ne pas utiliser des alertes pour des notifications ephemeres — preferer les toasts. Ne pas afficher plus de 2 alertes simultanement sur une meme page.</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;!-- Alert info --&gt;
+&lt;div class="alert alert-info"&gt;
+    &lt;span class="alert-icon"&gt;&amp;#8505;&lt;/span&gt;
+    &lt;span&gt;Nouvelle version disponible.&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- Alert success --&gt;
+&lt;div class="alert alert-success"&gt;
+    &lt;span class="alert-icon"&gt;&amp;#10003;&lt;/span&gt;
+    &lt;span&gt;Deploiement reussi.&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- Alert warning --&gt;
+&lt;div class="alert alert-warning"&gt;
+    &lt;span class="alert-icon"&gt;&amp;#9888;&lt;/span&gt;
+    &lt;span&gt;Utilisation elevee.&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- Alert danger --&gt;
+&lt;div class="alert alert-danger"&gt;
+    &lt;span class="alert-icon"&gt;&amp;#10007;&lt;/span&gt;
+    &lt;span&gt;Echec de connexion.&lt;/span&gt;
+&lt;/div&gt;</div>
+    </div>
 </section>
 
 <!-- TOASTS -->

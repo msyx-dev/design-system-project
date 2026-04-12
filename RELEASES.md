@@ -1,5 +1,17 @@
 # Releases
 
+## 2.19.0 — 2026-04-12 — DX : documentation d'usage — getting started, guidelines, snippets copiables (#122)
+
+### Added
+- `pages/getting-started.html` : nouvelle page Getting Started — installation (3 niveaux A/B/C), structure HTML de base, configuration du theming, anti-FOUC, tokens principaux, classes utilitaires, bonnes pratiques
+- Lien "Getting Started" dans la sidebar (nav.js NAV_SECTIONS, groupe racine)
+- `pages/composants.html` : guidelines "Usage" + snippets HTML copiables pour Boutons, Cards, Badges & Tags
+- `pages/feedback.html` : guidelines "Usage" + snippets HTML copiables pour Alertes
+
+### Changed
+- `shared/nav.js` : version bump v2.18.1 → v2.19.0
+- `shared/css/tokens.css`, `utilities.css` : version bump 2.18.1 → 2.19.0
+
 ## 2.18.1 — 2026-04-12 — DX : sync scalable + modularité JS + minification (#128)
 
 ### Added

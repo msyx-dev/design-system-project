@@ -1,6 +1,7 @@
 const NAV_SECTIONS = [
     { title: null, links: [
-        { label: 'Hub', icon: '&#9670;', href: '/site.html' }
+        { label: 'Hub', icon: '&#9670;', href: '/site.html' },
+        { label: 'Getting Started', icon: '&#9654;', href: '/pages/getting-started.html' }
     ]},
     { title: 'Fondation', links: [
         { label: 'Couleurs', icon: '&#127912;', href: '/pages/fondation.html#colors' },
@@ -178,7 +179,7 @@ function buildHeader() {
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.18.1</span>'
+        + '<span class="header-version">v2.19.0</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'

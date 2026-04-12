@@ -41,6 +41,36 @@
         <span class="demo-label">Groupe de boutons</span>
         <div style="display:inline-flex;border-radius:10px;overflow:hidden;border:1px solid var(--border);"><button class="tab active" style="border:none;border-radius:0;padding:0.5rem 1.2rem;">Jour</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Semaine</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Mois</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Annee</button></div>
     </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser <code style="color:var(--accent);">btn-primary</code> pour l'action principale d'une page ou d'un formulaire — un seul par section. Utiliser <code style="color:var(--accent);">btn-secondary</code> pour les actions secondaires et <code style="color:var(--accent);">btn-ghost</code> pour les actions tertiaires ou de navigation. Ne pas utiliser <code style="color:var(--accent);">btn-danger</code> pour des actions sans confirmation — preferer un modal de confirmation. Pour les actions icones seules, utiliser <code style="color:var(--accent);">btn-icon</code> avec un <code style="color:var(--accent);">aria-label</code> obligatoire.</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;!-- Variantes principales --&gt;
+&lt;button class="btn-primary"&gt;Action principale&lt;/button&gt;
+&lt;button class="btn-secondary"&gt;Action secondaire&lt;/button&gt;
+&lt;button class="btn-ghost"&gt;Action tertiaire&lt;/button&gt;
+
+&lt;!-- Couleurs semantiques --&gt;
+&lt;button class="btn-primary btn-danger"&gt;Supprimer&lt;/button&gt;
+&lt;button class="btn-primary btn-success"&gt;Confirmer&lt;/button&gt;
+&lt;button class="btn-primary btn-warning"&gt;Attention&lt;/button&gt;
+&lt;button class="btn-secondary btn-outline-danger"&gt;Annuler&lt;/button&gt;
+
+&lt;!-- Tailles --&gt;
+&lt;button class="btn-primary btn-xs"&gt;XS&lt;/button&gt;
+&lt;button class="btn-primary btn-sm"&gt;Small&lt;/button&gt;
+&lt;button class="btn-primary"&gt;Default&lt;/button&gt;
+&lt;button class="btn-primary btn-lg"&gt;Large&lt;/button&gt;
+
+&lt;!-- Etats --&gt;
+&lt;button class="btn-primary" disabled&gt;Disabled&lt;/button&gt;
+&lt;button class="btn-primary btn-loading"&gt;Chargement...&lt;/button&gt;
+
+&lt;!-- Bouton icone (aria-label obligatoire) --&gt;
+&lt;button class="btn-icon" aria-label="Fermer"&gt;&amp;#10005;&lt;/button&gt;</div>
+    </div>
 </section>
 
 <section id="cards">
@@ -66,6 +96,40 @@
             <div class="card card-compact" style="text-align:center;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#128736;</div><p class="typo-small">Reliable</p></div>
         </div>
     </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser <code style="color:var(--accent);">card</code> pour les contenus richement structures (titre + description + actions). Utiliser <code style="color:var(--accent);">card-compact</code> pour les grilles de features ou les KPI courts. Utiliser <code style="color:var(--accent);">card-horizontal</code> pour les listes avec icone + texte sur une seule ligne. Ne pas imbriquer des cards — preferer une <code style="color:var(--accent);">demo-box</code> ou une <code style="color:var(--accent);">subsection</code> pour les conteneurs secondaires.</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;!-- Card standard --&gt;
+&lt;div class="card"&gt;
+    &lt;div class="card-icon card-icon--accent"&gt;&amp;#9889;&lt;/div&gt;
+    &lt;h3&gt;Titre&lt;/h3&gt;
+    &lt;p&gt;Description du contenu de la card.&lt;/p&gt;
+    &lt;div class="demo-row mt-md"&gt;
+        &lt;span class="tag"&gt;Tag 1&lt;/span&gt;
+        &lt;span class="tag"&gt;Tag 2&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Card horizontale --&gt;
+&lt;div class="card card-horizontal"&gt;
+    &lt;div class="card-icon card-icon--violet"&gt;&amp;#128640;&lt;/div&gt;
+    &lt;div&gt;
+        &lt;h3&gt;Titre compact&lt;/h3&gt;
+        &lt;p&gt;Description courte.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Card compacte --&gt;
+&lt;div class="card card-compact" style="text-align:center;"&gt;
+    &lt;div style="font-size:1.8rem;margin-bottom:0.5rem;"&gt;&amp;#9889;&lt;/div&gt;
+    &lt;p class="typo-small"&gt;Feature&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Couleurs card-icon disponibles : --accent --violet --cyan --pink --green --&gt;</div>
+    </div>
 </section>
 
 <section id="badges">
@@ -85,6 +149,28 @@
         </div>
     </div>
 </section>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser les badges pour indiquer un statut (deploye, en attente, erreur) ou une categorie sur un element de liste ou une card. <code style="color:var(--accent);">badge-success</code> pour les etats positifs, <code style="color:var(--accent);">badge-warning</code> pour les alertes non-critiques, <code style="color:var(--accent);">badge-danger</code> pour les erreurs et <code style="color:var(--accent);">badge-info</code> pour les informations neutres. Ne pas utiliser des badges pour des actions — preferer des boutons. Limiter a 3-4 badges visibles simultanement pour eviter la surcharge visuelle.</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;!-- Badges statut --&gt;
+&lt;span class="badge badge-primary"&gt;&lt;span class="pulse-dot"&gt;&lt;/span&gt; En ligne&lt;/span&gt;
+&lt;span class="badge badge-success"&gt;Deploye&lt;/span&gt;
+&lt;span class="badge badge-warning"&gt;En attente&lt;/span&gt;
+&lt;span class="badge badge-danger"&gt;Erreur&lt;/span&gt;
+&lt;span class="badge badge-info"&gt;Info&lt;/span&gt;
+&lt;span class="badge badge-neutral"&gt;Archive&lt;/span&gt;
+
+&lt;!-- Tags (variante texte simple) --&gt;
+&lt;span class="tag"&gt;React&lt;/span&gt;
+&lt;span class="tag"&gt;TypeScript&lt;/span&gt;
+
+&lt;!-- Raccourcis clavier --&gt;
+&lt;kbd&gt;Ctrl&lt;/kbd&gt; &lt;kbd&gt;S&lt;/kbd&gt;</div>
+    </div>
 
 <section id="chips">
     <div class="section-header"><span class="overline">Composants</span><h2>Chips</h2><p>Labels interactifs supprimables, filtres selectionnables et saisie de tags dynamique.</p></div>

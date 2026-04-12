@@ -15,6 +15,7 @@ Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abo
 index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
+  getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
   fondation.html    # Couleurs, typographie, espacements, ombres, theming
   composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation

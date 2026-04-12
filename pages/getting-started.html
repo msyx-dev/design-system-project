@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started — msyx.design</title>
+    <meta name="description" content="Guide d'installation et de premier pas avec le design system msyx.design.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/styles.css">
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+    <header class="site-header" id="site-header"></header>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+
+<section id="overview">
+    <div class="section-header"><span class="overline">Documentation</span><h2>Getting Started</h2><p>Integrer le design system msyx.design en 3 etapes — tokens, composants, theming.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Pourquoi ce design system ?</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);margin:0 0 0.75rem;">Le DS msyx.design est la source de verite unique pour tous les projets <strong style="color:var(--text);">msyx.fr</strong>. Il garantit la coherence visuelle, le respect du theming (3 palettes × 2 modes) et l'accessibilite WCAG AA sur tous les projets consommateurs.</p>
+            <div class="demo-row" style="flex-wrap:wrap;gap:0.5rem;">
+                <span class="badge badge-info">78 composants</span>
+                <span class="badge badge-success">3 themes</span>
+                <span class="badge badge-primary">WCAG AA</span>
+                <span class="badge badge-neutral">Zero dependance</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="install">
+    <div class="section-header"><span class="overline">Getting Started</span><h2>Installation</h2><p>Trois niveaux d'integration selon vos besoins.</p></div>
+
+    <div class="subsection">
+        <span class="demo-label">Etape 1 — Synchroniser les fichiers CSS</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);margin:0 0 0.75rem;">Depuis le repertoire <code style="color:var(--accent);background:rgba(var(--accent-rgb),0.1);padding:0.1em 0.4em;border-radius:4px;">shared/</code> du design system, lancer le script de sync :</p>
+            <div class="code-block">./sync.sh /chemin/vers/votre-projet/src/styles/</div>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Cela copie 4 fichiers prefixes <code style="color:var(--accent);">ds-</code> dans votre dossier styles.</p>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Niveau A — Tokens seuls (minimal)</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Acces aux variables CSS uniquement. Ideal si vous avez votre propre systeme de composants.</p>
+            <div class="code-block">@import url('./styles/ds-tokens.css');</div>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Donne acces a <code style="color:var(--accent);">var(--accent)</code>, <code style="color:var(--accent);">var(--surface)</code>, <code style="color:var(--accent);">var(--text-muted)</code>, spacing, radius, shadows...</p>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Niveau B — CSS complet (recommande)</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Tokens + classes utilitaires + composants. Sans le layout shell (header/sidebar).</p>
+            <div class="code-block">@import url('./styles/ds-tokens.css');
+@import url('./styles/ds-utilities.css');
+@import url('./styles/ds-components.css');</div>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Donne acces a toutes les classes : <code style="color:var(--accent);">.btn-primary</code>, <code style="color:var(--accent);">.card</code>, <code style="color:var(--accent);">.badge-success</code>, <code style="color:var(--accent);">.text-muted</code>...</p>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Niveau C — CSS + JS (shell complet)</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Integration complete avec layout, composants interactifs (modals, toasts, sliders...) et header avec gestion utilisateur.</p>
+            <div class="code-block">&lt;!-- Dans &lt;head&gt; --&gt;
+@import url('./styles/ds-tokens.css');
+@import url('./styles/ds-utilities.css');
+@import url('./styles/ds-layout.css');
+@import url('./styles/ds-components.css');
+
+&lt;!-- En fin de &lt;body&gt; --&gt;
+&lt;script src="/shared/nav.js"&gt;&lt;/script&gt;
+&lt;script src="/shared/components.js"&gt;&lt;/script&gt;</div>
+        </div>
+    </div>
+</section>
+
+<section id="first-steps">
+    <div class="section-header"><span class="overline">Getting Started</span><h2>Premiers pas</h2><p>Structure HTML de base et configuration du theming.</p></div>
+
+    <div class="subsection">
+        <span class="demo-label">Structure HTML de base</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Template minimal pour une page utilisant le shell DS (header + sidebar + contenu) :</p>
+            <div class="code-block">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Ma page — Mon Projet&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/shared/styles.css"&gt;
+
+    &lt;!-- Anti-FOUC : appliquer le theme AVANT le rendu --&gt;
+    &lt;script&gt;(function(){
+      var t = localStorage.getItem('msyx-theme');
+      if (t &amp;&amp; t !== 'msyx') document.documentElement.setAttribute('data-theme', t);
+      var m = localStorage.getItem('msyx-mode');
+      if (m &amp;&amp; m !== 'dark') document.documentElement.setAttribute('data-mode', m);
+    }());&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header class="site-header" id="site-header"&gt;&lt;/header&gt;
+    &lt;aside class="sidebar" id="sidebar"&gt;&lt;/aside&gt;
+    &lt;div class="main"&gt;
+
+        &lt;section id="ma-section"&gt;
+            &lt;div class="section-header"&gt;
+                &lt;span class="overline"&gt;Categorie&lt;/span&gt;
+                &lt;h2&gt;Titre de section&lt;/h2&gt;
+                &lt;p&gt;Description de la section.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;!-- Contenu ici --&gt;
+        &lt;/section&gt;
+
+    &lt;/div&gt;
+    &lt;script src="/shared/nav.js"&gt;&lt;/script&gt;
+    &lt;script src="/shared/components.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Configurer le theme</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Deux attributs HTML controlent l'apparence. Les placer sur <code style="color:var(--accent);">&lt;html&gt;</code> :</p>
+            <div class="code-block">&lt;!-- Theme par defaut --&gt;
+&lt;html data-theme="msyx" data-mode="dark"&gt;
+
+&lt;!-- Corporate or (ACSSI) --&gt;
+&lt;html data-theme="acssi" data-mode="dark"&gt;
+
+&lt;!-- Corporate vert (Nhood) --&gt;
+&lt;html data-theme="nhood" data-mode="dark"&gt;
+&lt;html data-theme="nhood" data-mode="light"&gt;</div>
+            <div class="demo-row mt-md" style="flex-wrap:wrap;gap:0.5rem;">
+                <span class="badge badge-neutral">msyx : dark + light</span>
+                <span class="badge badge-warning">acssi : dark only</span>
+                <span class="badge badge-success">nhood : dark + light</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Premier composant</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Un bouton primaire, une card et un badge en 3 lignes :</p>
+            <div class="demo-row mb-md" style="flex-wrap:wrap;align-items:flex-start;gap:1rem;">
+                <button class="btn-primary">Action principale</button>
+                <div class="card card-compact" style="min-width:160px;"><p class="typo-small" style="margin:0;">Contenu de la card</p></div>
+                <span class="badge badge-success">Deploye</span>
+            </div>
+            <div class="code-block">&lt;button class="btn-primary"&gt;Action principale&lt;/button&gt;
+
+&lt;div class="card card-compact"&gt;
+    &lt;p class="typo-small"&gt;Contenu de la card&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;span class="badge badge-success"&gt;Deploye&lt;/span&gt;</div>
+        </div>
+    </div>
+</section>
+
+<section id="header-config">
+    <div class="section-header"><span class="overline">Getting Started</span><h2>Header avec utilisateur</h2><p>Configurer la zone utilisateur, les notifications et le menu du header.</p></div>
+
+    <div class="subsection">
+        <span class="demo-label">Configuration window.MSYX_HEADER</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Definir cet objet <strong>avant</strong> le chargement de <code style="color:var(--accent);">nav.js</code> pour activer la zone utilisateur :</p>
+            <div class="code-block">&lt;script&gt;
+window.MSYX_HEADER = {
+  auth: true,
+  user: {
+    name: 'Mike',
+    initials: 'M',
+    avatar: '/img/avatar.png'  // optionnel
+  },
+  notifications: {
+    enabled: true,
+    count: 3
+  },
+  menu: [
+    { label: 'Profil',      icon: '&amp;#128100;', href: '/profil' },
+    { label: 'Preferences', icon: '&amp;#9881;',   href: '/settings' },
+    { divider: true },
+    { label: 'Deconnexion', icon: '&amp;#128682;', action: 'logout', class: 'danger' }
+  ]
+};
+&lt;/script&gt;
+&lt;script src="/shared/nav.js"&gt;&lt;/script&gt;</div>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Sans <code style="color:var(--accent);">window.MSYX_HEADER</code> ou avec <code style="color:var(--accent);">auth: false</code> : header logo + theme switcher uniquement.</p>
+        </div>
+    </div>
+</section>
+
+<section id="tokens-usage">
+    <div class="section-header"><span class="overline">Getting Started</span><h2>Utiliser les tokens</h2><p>Variables CSS disponibles et classes utilitaires.</p></div>
+
+    <div class="subsection">
+        <span class="demo-label">Tokens principaux</span>
+        <div class="demo-box">
+            <div class="code-block">/* Couleurs */
+var(--accent)           /* Couleur accent du theme actif */
+var(--surface)          /* Surface de carte/panel */
+var(--text)             /* Texte principal */
+var(--text-muted)       /* Texte secondaire */
+var(--text-dim)         /* Texte desactive */
+var(--border)           /* Bordure standard */
+
+/* Semantiques */
+var(--success)  var(--warning)  var(--danger)  var(--info)
+
+/* RGB pour rgba() */
+rgba(var(--accent-rgb), 0.1)
+rgba(var(--success-rgb), 0.2)
+
+/* Spacing */
+var(--space-xs)   /* 0.25rem */
+var(--space-sm)   /* 0.5rem  */
+var(--space-md)   /* 1rem    */
+var(--space-lg)   /* 1.5rem  */
+var(--space-xl)   /* 2rem    */
+var(--space-2xl)  /* 3rem    */</div>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Classes utilitaires</span>
+        <div class="demo-box">
+            <div class="code-block">/* Texte */
+.text-muted    .text-dim    .text-accent
+.text-success  .text-warning  .text-danger  .text-info
+
+/* Backgrounds */
+.bg-surface    .bg-accent    .bg-success
+.bg-warning    .bg-danger    .bg-info
+
+/* Bordures */
+.border-default  .border-accent  .border-subtle
+
+/* Accessibilite */
+.sr-only       /* Visible seulement par les lecteurs d'ecran */
+.focus-visible /* Focus ring visible au clavier */</div>
+        </div>
+    </div>
+</section>
+
+<section id="anti-patterns">
+    <div class="section-header"><span class="overline">Getting Started</span><h2>Bonnes pratiques</h2><p>Ce qu'il faut faire et ce qu'il faut eviter.</p></div>
+
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box" style="border-color:rgba(239,68,68,0.3);">
+            <span class="demo-label" style="color:var(--danger);">A eviter</span>
+            <div class="code-block text-xxs-lh"><span class="kw">color</span>: <span class="str">#94a3b8</span>;
+<span class="kw">background</span>: <span class="str">#1e293b</span>;
+<span class="kw">border</span>: 1px solid <span class="str">rgba(59,130,246,0.2)</span>;
+
+<span class="fn">style</span>={{ <span class="str">color: "var(--text-muted)"</span> }}
+<span class="fn">style</span>={{ <span class="str">background: "var(--accent)"</span> }}</div>
+        </div>
+        <div class="demo-box" style="border-color:rgba(34,197,94,0.3);">
+            <span class="demo-label" style="color:var(--success);">Recommande</span>
+            <div class="code-block text-xxs-lh"><span class="kw">color</span>: <span class="fn">var</span>(<span class="str">--text-muted</span>);
+<span class="kw">background</span>: <span class="fn">var</span>(<span class="str">--surface</span>);
+<span class="kw">border</span>: 1px solid <span class="fn">rgba</span>(<span class="fn">var</span>(<span class="str">--accent-rgb</span>), 0.2);
+
+<span class="fn">className</span>=<span class="str">"text-muted"</span>
+<span class="fn">className</span>=<span class="str">"bg-accent"</span></div>
+        </div>
+    </div>
+
+    <div class="subsection mt-md">
+        <span class="demo-label">Regle d'or</span>
+        <div class="demo-box">
+            <p style="color:var(--text-muted);margin:0 0 0.5rem;"><strong style="color:var(--text);">Jamais de composant reimplemente hors DS.</strong> Si un composant manque, ouvrir une issue avec le label <code style="color:var(--accent);">composant</code> sur le repo <code style="color:var(--accent);">design-system-project</code>. Le composant est cree dans le DS, puis consomme via <code style="color:var(--accent);">sync.sh</code>.</p>
+            <a href="/shared/CONSUMER_GUIDE.md" target="_blank" class="btn-secondary btn-sm">Lire le CONSUMER_GUIDE.md complet</a>
+        </div>
+    </div>
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>
