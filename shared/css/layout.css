@@ -36,19 +36,19 @@
 .sidebar {
     position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); z-index: 100;
     background: var(--sidebar-bg); backdrop-filter: blur(24px) saturate(1.5);
-    border-right: 1px solid var(--border); padding: var(--space-sm) 0;
+    border-inline-end: 1px solid var(--border); padding: var(--space-sm) 0;
     display: flex; flex-direction: column; overflow-y: auto;
     transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .sidebar-section { padding: 0.8rem 1.5rem 0.3rem; font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
-.sidebar-link { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem var(--space-lg); color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; border-left: 2px solid transparent; }
+.sidebar-link { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem var(--space-lg); color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; border-inline-start: 2px solid transparent; }
 .sidebar-link:hover { color: var(--text); background: var(--sidebar-link-hover-bg); }
 .sidebar-link:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: -2px;
     background: var(--sidebar-link-active-bg);
 }
-.sidebar-link.active { color: var(--accent-light); background: var(--sidebar-link-active-bg); border-left-color: var(--accent); }
+.sidebar-link.active { color: var(--accent-light); background: var(--sidebar-link-active-bg); border-inline-start-color: var(--accent); }
 .sidebar-link .icon { width: 18px; text-align: center; font-size: 0.9rem; }
 .sidebar-footer { margin-top: auto; padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border); }
 .sidebar-footer p { font-size: 0.72rem; color: var(--text-dim); }
@@ -87,7 +87,7 @@
 
 
 /* ===== MAIN ===== */
-.main { margin-left: var(--sidebar-w); min-height: 100vh; padding-top: var(--header-h); }
+.main { margin-inline-start: var(--sidebar-w); min-height: 100vh; padding-top: var(--header-h); }
 /* ===== SHOWCASE — scoped sous .main pour ne pas polluer les consommateurs ===== */
 .main section { padding: var(--space-3xl) var(--space-2xl); border-bottom: 1px solid var(--border); }
 .main section[id] { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
@@ -97,7 +97,7 @@
 .main .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: var(--space-sm); }
 .main .section-header p { color: var(--text-muted); font-size: 0.95rem; max-width: 600px; line-height: 1.7; }
 .main .subsection { margin-bottom: var(--space-2xl); }
-.main .subgroup-header { margin: var(--space-4xl) 0 var(--space-xl); padding: var(--space-lg) var(--space-xl); border-left: 3px solid var(--accent); background: rgba(var(--accent-rgb), 0.06); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.main .subgroup-header { margin: var(--space-4xl) 0 var(--space-xl); padding: var(--space-lg) var(--space-xl); border-inline-start: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .main .subgroup-header .subgroup-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--accent); margin: 0 0 var(--space-xs); letter-spacing: -0.01em; }
 .main .subgroup-header .subgroup-desc { color: var(--text-muted); font-size: 0.875rem; margin: 0; line-height: 1.5; }
 .main .subsection:last-child { margin-bottom: 0; }
@@ -114,7 +114,7 @@
 
 /* ===== THEMING — Layout overrides ===== */
 [data-mode="light"] .sidebar {
-    border-right-color: rgba(15, 23, 42, 0.08);
+    border-inline-end-color: rgba(15, 23, 42, 0.08);
 }
 [data-mode="light"] .site-header { border-bottom-color: rgba(15, 23, 42, 0.08); }
 
@@ -166,14 +166,14 @@
 }
 
 [data-theme="acssi"][data-mode="light"] .sidebar {
-    border-right-color: rgba(var(--accent-rgb), 0.12);
+    border-inline-end-color: color-mix(in srgb, var(--accent) 12%, transparent);
 }
-[data-theme="acssi"][data-mode="light"] .site-header { border-bottom-color: rgba(var(--accent-rgb), 0.12); }
+[data-theme="acssi"][data-mode="light"] .site-header { border-bottom-color: color-mix(in srgb, var(--accent) 12%, transparent); }
 
 [data-theme="nhood"][data-mode="light"] .sidebar {
-    border-right-color: rgba(var(--accent-rgb), 0.12);
+    border-inline-end-color: color-mix(in srgb, var(--accent) 12%, transparent);
 }
-[data-theme="nhood"][data-mode="light"] .site-header { border-bottom-color: rgba(var(--accent-rgb), 0.12); }
+[data-theme="nhood"][data-mode="light"] .site-header { border-bottom-color: color-mix(in srgb, var(--accent) 12%, transparent); }
 
 
 /* ===== HEADER USER ZONE ===== */
@@ -210,7 +210,7 @@
     outline-offset: 2px;
 }
 .header-notification.active {
-    border-color: rgba(var(--accent-rgb), 0.4);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
     color: var(--accent-light);
     background: var(--accent-glow);
 }
@@ -317,19 +317,19 @@
     background: transparent;
     border: none;
     width: 100%;
-    text-align: left;
+    text-align: start;
     text-decoration: none;
     transition: background 0.15s, color 0.15s;
     font-family: inherit;
 }
 .header-dropdown-item:hover {
-    background: rgba(var(--accent-rgb), 0.07);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
     color: var(--text);
 }
 .header-dropdown-item:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: -2px;
-    background: rgba(var(--accent-rgb), 0.07);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
 }
 .header-dropdown-item.danger {
     color: var(--danger-light, #fca5a5);
@@ -404,8 +404,8 @@
     transition: background 0.15s;
 }
 .header-notif-item:last-child { border-bottom: none; }
-.header-notif-item:hover { background: rgba(var(--accent-rgb), 0.05); }
-.header-notif-item.unread { background: rgba(var(--accent-rgb), 0.04); }
+.header-notif-item:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.header-notif-item.unread { background: color-mix(in srgb, var(--accent) 4%, transparent); }
 .header-notif-item.unread::before {
     content: '';
     width: 6px;
@@ -414,7 +414,7 @@
     background: var(--accent);
     flex-shrink: 0;
     align-self: center;
-    margin-right: -2px;
+    margin-inline-end: -2px;
 }
 .header-notif-icon {
     font-size: 1rem;
@@ -484,7 +484,7 @@ html.theme-transitioning * {
     .sidebar.open { transform: translateX(0); }
     .site-header .header-burger { display: flex; }
     .site-header .header-version { display: none; }
-    .main { margin-left: 0; }
+    .main { margin-inline-start: 0; }
     .main section { padding: 3rem 1.5rem; }
     .main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: 1fr; }
 
@@ -507,3 +507,53 @@ html.theme-transitioning * {
 /* ===== MAIN — SPA fade transition ===== */
 .main { transition: opacity 0.15s ease; }
 .main.fade-out { opacity: 0; }
+
+/* ===== CONTAINER QUERIES (CSS moderne — v2.21.0) =====
+   Container queries permettent aux composants de s'adapter à leur conteneur
+   plutôt qu'au viewport. Conservées en complément des media queries existantes.
+   Support : Chrome 105+, Firefox 110+, Safari 16+. */
+
+/* Conteneurs : demo-grid, stats-grid, kpi-grid */
+.main .demo-grid {
+    container-type: inline-size;
+    container-name: demo-grid;
+}
+.stats-grid {
+    container-type: inline-size;
+    container-name: stats-grid;
+}
+.kpi-grid {
+    container-type: inline-size;
+    container-name: kpi-grid;
+}
+
+/* Cards : adaptation au conteneur */
+.card {
+    container-type: inline-size;
+    container-name: card;
+}
+
+@container card (max-width: 280px) {
+    .card { padding: var(--space-md); }
+    .card h3 { font-size: 0.9rem; }
+    .card p { font-size: 0.8rem; }
+    .card-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+}
+
+/* demo-grid : collapse en colonne unique sous 400px de conteneur */
+@container demo-grid (max-width: 400px) {
+    .main .demo-grid-2,
+    .main .demo-grid-3,
+    .main .demo-grid-4,
+    .main .demo-grid-5 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* stats-grid + kpi-grid : 2 colonnes max sous 500px de conteneur */
+@container stats-grid (max-width: 500px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@container kpi-grid (max-width: 500px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
