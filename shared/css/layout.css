@@ -1,4 +1,4 @@
-/* @ds-version: 2.14.4 */
+/* @ds-version: 2.15.1 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -52,6 +52,31 @@
 .sidebar-link .icon { width: 18px; text-align: center; font-size: 0.9rem; }
 .sidebar-footer { margin-top: auto; padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border); }
 .sidebar-footer p { font-size: 0.72rem; color: var(--text-dim); }
+
+/* ===== SIDEBAR FILTER ===== */
+.sidebar-filter-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border);
+}
+.sidebar-filter {
+    width: 100%;
+    padding: 0.35rem 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 0.78rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.sidebar-filter::placeholder { color: var(--text-dim); }
+.sidebar-filter:focus { border-color: var(--accent); }
+.sidebar-filter::-webkit-search-cancel-button { cursor: pointer; }
 
 /* Theme switcher */
 .theme-switcher { margin-bottom: var(--space-sm); }

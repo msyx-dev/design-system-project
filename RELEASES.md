@@ -1,5 +1,17 @@
 # Releases
 
+## 2.15.1 — 2026-04-12 — DX : Command palette + filtre sidebar + auto-load Ctrl+F
+
+### Added
+- `initCommandPalette()` dans `components.js` : overlay global ⌘K/Ctrl+K, index A-Z depuis NAV_SECTIONS, recherche substring groupée par catégorie, navigation clavier Up/Down/Enter/Esc, actions spéciales (toggle sidebar, toggle mode, tout charger)
+- Filtre sidebar : input sticky en haut de la sidebar, masquage dynamique des liens non-matchés et des sections vides
+- Auto-load Ctrl+F sur `site.html` : intercepte le raccourci pour charger toutes les sections lazy avant l'ouverture de la recherche native
+- CSS `.sidebar-filter-wrap` + `.sidebar-filter` dans `layout.css`
+- CSS `.cmd-empty` dans `components.css`
+
+### Changed
+- Section command-palette dans `divers.html` : description mise à jour, aperçu statique reflète le vrai rendu
+
 ## 2.14.3 — 2026-03-31 — ACSSI light mode + nettoyage complet
 
 ### Added

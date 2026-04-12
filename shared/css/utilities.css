@@ -1,4 +1,4 @@
-/* @ds-version: 2.14.3 */
+/* @ds-version: 2.15.1 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité.
    Import : @import url('css/utilities.css'); */
@@ -35,6 +35,40 @@
 /* ===== Bordures ===== */
 .border-default { border: 1px solid var(--border); }
 .border-accent { border-color: var(--accent); }
+
+/* ===== Spacing — margin ===== */
+.mt-xs  { margin-top: var(--space-xs); }
+.mt-sm  { margin-top: var(--space-sm); }
+.mt-md  { margin-top: var(--space-md); }
+.mt-lg  { margin-top: var(--space-lg); }
+.mt-xl  { margin-top: var(--space-xl); }
+.mb-xs  { margin-bottom: var(--space-xs); }
+.mb-sm  { margin-bottom: var(--space-sm); }
+.mb-md  { margin-bottom: var(--space-md); }
+.mb-lg  { margin-bottom: var(--space-lg); }
+.mb-xl  { margin-bottom: var(--space-xl); }
+
+/* ===== Spacing — gap ===== */
+.gap-xs { gap: var(--space-xs); }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+.gap-xl { gap: var(--space-xl); }
+
+/* ===== Layout helpers ===== */
+.flex-row    { display: flex; flex-direction: row; }
+.flex-col    { display: flex; flex-direction: column; }
+.flex-wrap   { flex-wrap: wrap; }
+.flex-center { display: flex; align-items: center; }
+.text-center { text-align: center; }
+.text-sm     { font-size: 0.85rem; }
+.text-xs     { font-size: 0.75rem; }
+
+/* ===== Card icon variants ===== */
+.card-icon--accent  { background: var(--accent-glow); }
+.card-icon--violet  { background: rgba(139, 92, 246, 0.12); }
+.card-icon--cyan    { background: rgba(6, 182, 212, 0.12); }
+.card-icon--pink    { background: rgba(236, 72, 153, 0.12); }
 
 /* ===== Accessibilité ===== */
 .sr-only {

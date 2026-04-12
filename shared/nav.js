@@ -18,6 +18,7 @@ const NAV_SECTIONS = [
         { label: 'Rating', icon: '&#9733;', href: '/pages/composants.html#rating' },
         { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' },
         { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' },
+        { label: 'Tooltip/Popover', icon: '&#128172;', href: '/pages/composants.html#tooltip' },
         { label: 'FAB', icon: '&#43;', href: '/pages/composants.html#fab' }
     ]},
     { title: 'Formulaires', links: [
@@ -67,7 +68,6 @@ const NAV_SECTIONS = [
         { label: 'Timeline', icon: '&#8942;', href: '/pages/divers.html#timeline' },
         { label: 'Accordion', icon: '&#9660;', href: '/pages/divers.html#accordion' },
         { label: 'Code', icon: '&lt;/&gt;', href: '/pages/divers.html#code' },
-        { label: 'Tooltip/Popover', icon: '&#128172;', href: '/pages/divers.html#tooltip' },
         { label: 'Copy Button', icon: '&#128203;', href: '/pages/divers.html#copy-button' },
         { label: 'Carousel', icon: '&#9654;', href: '/pages/divers.html#carousel' },
         { label: 'Lightbox', icon: '&#128247;', href: '/pages/divers.html#lightbox' },
@@ -91,7 +91,7 @@ function buildHeader() {
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.14</span>'
+        + '<span class="header-version">v2.15</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
@@ -120,9 +120,9 @@ function buildHeader() {
 function buildSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
-    let html = '';
+    let html = '<div class="sidebar-filter-wrap"><input class="sidebar-filter" type="search" placeholder="Filtrer..." aria-label="Filtrer la navigation" autocomplete="off"></div>';
     NAV_SECTIONS.forEach(section => {
-        if (section.title) html += '<div class="sidebar-section">' + section.title + '</div>';
+        if (section.title) html += '<div class="sidebar-section" data-section-title>' + section.title + '</div>';
         section.links.forEach(link => {
             html += '<a href="' + link.href + '" class="sidebar-link" data-href="' + link.href + '"><span class="icon">' + link.icon + '</span> ' + link.label + '</a>';
         });
@@ -131,6 +131,39 @@ function buildSidebar() {
     sidebar.innerHTML = html;
     updateActiveLink();
     bindSidebarClicks();
+    bindSidebarFilter();
+}
+
+function bindSidebarFilter() {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    const input = sidebar.querySelector('.sidebar-filter');
+    if (!input || input.dataset.bound) return;
+    input.dataset.bound = '1';
+    input.addEventListener('input', function() {
+        const q = input.value.toLowerCase().trim();
+        const links = sidebar.querySelectorAll('.sidebar-link');
+        const sections = sidebar.querySelectorAll('[data-section-title]');
+
+        links.forEach(function(link) {
+            const text = link.textContent.toLowerCase();
+            const visible = !q || text.includes(q);
+            link.style.display = visible ? '' : 'none';
+        });
+
+        // Masquer les titres de section dont tous les liens sont cachés
+        sections.forEach(function(sec) {
+            var next = sec.nextElementSibling;
+            var anyVisible = false;
+            while (next && !next.hasAttribute('data-section-title') && !next.classList.contains('sidebar-footer')) {
+                if (next.classList.contains('sidebar-link') && next.style.display !== 'none') {
+                    anyVisible = true;
+                }
+                next = next.nextElementSibling;
+            }
+            sec.style.display = anyVisible ? '' : 'none';
+        });
+    });
 }
 
 function updateActiveLink(targetUrl) {
@@ -364,6 +397,18 @@ function initLazyLoader() {
             loadAllBtn.textContent = 'Chargement...';
         });
     }
+
+    // Auto-load Ctrl+F : charger toutes les sections pour permettre Ctrl+F natif
+    if (!document.body.dataset.ctrlFBound) {
+        document.body.dataset.ctrlFBound = '1';
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f' && isSiteHub()) {
+                loadAllSections();
+                if (loadAllBtn) { loadAllBtn.disabled = true; loadAllBtn.textContent = 'Chargé'; }
+            }
+        });
+    }
+
     handleInitialHash();
 }
 

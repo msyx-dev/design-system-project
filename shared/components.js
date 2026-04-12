@@ -242,6 +242,9 @@ function initComponents() {
 
     // Tooltips ARIA
     initTooltipsARIA();
+
+    // Command Palette
+    initCommandPalette();
 }
 
 // Tooltips — role="tooltip" + aria-describedby
@@ -2818,6 +2821,223 @@ function initDecisionTree() {
     });
 }
 window.__initDecisionTree = initDecisionTree;
+
+// ===== COMMAND PALETTE =====
+function initCommandPalette() {
+    // Singleton : injecté une seule fois dans body
+    if (document.getElementById('cmd-overlay')) return;
+
+    // Construire l'index flat depuis NAV_SECTIONS
+    var index = [];
+    if (typeof NAV_SECTIONS !== 'undefined') {
+        NAV_SECTIONS.forEach(function(section) {
+            section.links.forEach(function(link) {
+                index.push({ label: link.label, icon: link.icon, href: link.href, category: section.title || 'Hub' });
+            });
+        });
+    }
+
+    // Actions spéciales
+    var ACTIONS = [
+        { label: 'Tout charger (Ctrl+F)', icon: '&#128269;', action: 'load-all', category: 'Actions' },
+        { label: 'Toggle sidebar', icon: '&#9776;', action: 'toggle-sidebar', category: 'Actions' },
+        { label: 'Toggle dark/light', icon: '&#9790;', action: 'toggle-mode', category: 'Actions' }
+    ];
+
+    // Injecter l'overlay dans le body
+    var overlay = document.createElement('div');
+    overlay.id = 'cmd-overlay';
+    overlay.className = 'cmd-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Palette de commandes');
+    overlay.innerHTML =
+        '<div class="cmd-palette" role="combobox" aria-expanded="false" aria-haspopup="listbox">'
+        + '<div class="cmd-input-wrap">'
+        +   '<span class="cmd-input-icon" aria-hidden="true">&#128269;</span>'
+        +   '<input class="cmd-input" type="text" placeholder="Rechercher une page, commande..." autocomplete="off" aria-label="Recherche" aria-controls="cmd-listbox" aria-autocomplete="list">'
+        +   '<div class="cmd-kbd"><kbd>Esc</kbd></div>'
+        + '</div>'
+        + '<div class="cmd-results" id="cmd-listbox" role="listbox" aria-label="Résultats"></div>'
+        + '<div class="cmd-footer" aria-hidden="true">'
+        +   '<span>&#8593;&#8595; Naviguer</span>'
+        +   '<span>&#8629; Ouvrir</span>'
+        +   '<span>Esc Fermer</span>'
+        + '</div>'
+        + '</div>';
+    document.body.appendChild(overlay);
+
+    var input = overlay.querySelector('.cmd-input');
+    var results = overlay.querySelector('.cmd-results');
+    var activeIdx = -1;
+
+    function getItems() {
+        return results.querySelectorAll('.cmd-item[data-idx]');
+    }
+
+    function setActive(idx) {
+        var items = getItems();
+        items.forEach(function(it) { it.classList.remove('active'); it.setAttribute('aria-selected', 'false'); });
+        if (idx >= 0 && idx < items.length) {
+            items[idx].classList.add('active');
+            items[idx].setAttribute('aria-selected', 'true');
+            items[idx].scrollIntoView({ block: 'nearest' });
+            input.setAttribute('aria-activedescendant', items[idx].id);
+        } else {
+            input.removeAttribute('aria-activedescendant');
+        }
+        activeIdx = idx;
+    }
+
+    function renderResults(q) {
+        var query = (q || '').toLowerCase().trim();
+        results.innerHTML = '';
+        activeIdx = -1;
+        input.removeAttribute('aria-activedescendant');
+
+        // Construire liste filtrée
+        var matched = [];
+        var allItems = index.concat(ACTIONS);
+
+        if (query === '') {
+            // Index A-Z
+            matched = index.slice().sort(function(a, b) { return a.label.localeCompare(b.label, 'fr'); });
+            // Ajouter actions en fin
+            matched = matched.concat(ACTIONS);
+        } else {
+            allItems.forEach(function(item) {
+                if (item.label.toLowerCase().includes(query) || (item.category && item.category.toLowerCase().includes(query))) {
+                    matched.push(item);
+                }
+            });
+        }
+
+        if (!matched.length) {
+            results.innerHTML = '<div class="cmd-empty">Aucun résultat pour <strong>' + escapeHTML(q) + '</strong></div>';
+            return;
+        }
+
+        // Grouper par catégorie
+        var groups = {};
+        var groupOrder = [];
+        matched.forEach(function(item) {
+            var cat = item.category || 'Autre';
+            if (!groups[cat]) { groups[cat] = []; groupOrder.push(cat); }
+            groups[cat].push(item);
+        });
+
+        var globalIdx = 0;
+        groupOrder.forEach(function(cat) {
+            var titleEl = document.createElement('div');
+            titleEl.className = 'cmd-group-title';
+            titleEl.textContent = cat;
+            results.appendChild(titleEl);
+
+            groups[cat].forEach(function(item) {
+                var el = document.createElement('div');
+                el.className = 'cmd-item';
+                el.setAttribute('role', 'option');
+                el.setAttribute('aria-selected', 'false');
+                el.id = 'cmd-item-' + globalIdx;
+                el.dataset.idx = globalIdx;
+                if (item.href) el.dataset.href = item.href;
+                if (item.action) el.dataset.action = item.action;
+                el.innerHTML = '<span class="cmd-item-icon" aria-hidden="true">' + item.icon + '</span>'
+                    + '<span class="cmd-item-text">' + escapeHTML(item.label) + '</span>'
+                    + '<span class="cmd-item-shortcut">' + escapeHTML(item.category || '') + '</span>';
+                el.addEventListener('click', function() { activateItem(el); });
+                results.appendChild(el);
+                globalIdx++;
+            });
+        });
+
+        // Sélectionner le premier résultat
+        if (globalIdx > 0) setActive(0);
+    }
+
+    function activateItem(el) {
+        if (!el) return;
+        var href = el.dataset.href;
+        var action = el.dataset.action;
+        closeOverlay();
+        if (href) {
+            if (typeof navigateTo === 'function') { navigateTo(href); }
+            else { location.href = href; }
+        } else if (action === 'load-all') {
+            if (typeof loadAllSections === 'function') loadAllSections();
+        } else if (action === 'toggle-sidebar') {
+            var sb = document.getElementById('sidebar');
+            if (sb) sb.classList.toggle('open');
+        } else if (action === 'toggle-mode') {
+            var btn = document.getElementById('mode-dark');
+            var html = document.documentElement;
+            var current = html.getAttribute('data-mode');
+            if (current === 'light') {
+                html.setAttribute('data-mode', 'dark');
+                localStorage.setItem('msyx-mode', 'dark');
+            } else {
+                html.setAttribute('data-mode', 'light');
+                localStorage.setItem('msyx-mode', 'light');
+            }
+        }
+    }
+
+    function openOverlay() {
+        overlay.classList.add('open');
+        input.value = '';
+        renderResults('');
+        input.focus();
+    }
+
+    function closeOverlay() {
+        overlay.classList.remove('open');
+    }
+
+    // Clic sur fond
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeOverlay();
+    });
+
+    // Input
+    input.addEventListener('input', function() {
+        renderResults(input.value);
+    });
+
+    // Navigation clavier
+    input.addEventListener('keydown', function(e) {
+        var items = getItems();
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeOverlay();
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setActive(Math.min(activeIdx + 1, items.length - 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setActive(Math.max(activeIdx - 1, 0));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            var active = results.querySelector('.cmd-item.active');
+            activateItem(active);
+        }
+    });
+
+    // Raccourci global Cmd+K / Ctrl+K
+    if (!document.body.dataset.cmdPaletteBound) {
+        document.body.dataset.cmdPaletteBound = '1';
+        document.addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                if (overlay.classList.contains('open')) { closeOverlay(); }
+                else { openOverlay(); }
+            }
+            if (e.key === 'Escape' && overlay.classList.contains('open')) {
+                closeOverlay();
+            }
+        });
+    }
+}
+window.__initCommandPalette = initCommandPalette;
 
 window.__initComponents = initComponents;
 
