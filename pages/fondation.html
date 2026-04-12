@@ -313,6 +313,187 @@
     </div>
 </section>
     </div>
+
+<section id="utilities">
+    <div class="section-header"><span class="overline">Reference</span><h2>Classes utilitaires</h2><p>Espacement, layout, radius, ombres et typographie — toutes basées sur les tokens CSS.</p></div>
+
+    <!-- Espacement -->
+    <div class="subsection">
+        <span class="demo-label">Espacement — Margin</span>
+        <div class="demo-box">
+            <div class="token-list">
+                <div class="flex-center-gap"><code class="text-xs">.mt-xs / .mb-xs / .ml-xs / .mr-xs / .mx-xs / .my-xs</code><span class="text-muted text-xs">var(--space-xs) = 0.25rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mt-sm / .mb-sm / .ml-sm / .mr-sm / .mx-sm / .my-sm</code><span class="text-muted text-xs">var(--space-sm) = 0.5rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mt-md / .mb-md / .ml-md / .mr-md / .mx-md / .my-md</code><span class="text-muted text-xs">var(--space-md) = 1rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mt-lg / .mb-lg / .ml-lg / .mr-lg / .mx-lg / .my-lg</code><span class="text-muted text-xs">var(--space-lg) = 1.5rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mt-xl / .mb-xl / .ml-xl / .mr-xl / .mx-xl / .my-xl</code><span class="text-muted text-xs">var(--space-xl) = 2rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mt-2xl … .my-2xl</code><span class="text-muted text-xs">var(--space-2xl) = 3rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mt-3xl … .my-3xl</code><span class="text-muted text-xs">var(--space-3xl) = 4rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.mx-auto</code><span class="text-muted text-xs">margin-left/right: auto</span></div>
+            </div>
+        </div>
+        <span class="demo-label mt-md">Espacement — Padding</span>
+        <div class="demo-box">
+            <div class="token-list">
+                <div class="flex-center-gap"><code class="text-xs">.p-xs / .pt-xs / .pb-xs / .pl-xs / .pr-xs / .px-xs / .py-xs</code><span class="text-muted text-xs">0.25rem</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.p-sm → .p-3xl</code><span class="text-muted text-xs">idem pour pt, pb, pl, pr, px, py × 7 niveaux</span></div>
+            </div>
+        </div>
+        <span class="demo-label mt-md">Espacement — Gap</span>
+        <div class="demo-box">
+            <div style="display:flex; gap: var(--space-xs); align-items:center; flex-wrap:wrap;" class="mb-sm">
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-xs</div>
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-sm</div>
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-md</div>
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-lg</div>
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-xl</div>
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-2xl</div>
+                <div style="background:var(--accent-glow);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);" class="text-xs text-accent">.gap-3xl</div>
+            </div>
+            <div class="text-xs text-muted">Variantes : <code>.gap-x-*</code> (column-gap) et <code>.gap-y-*</code> (row-gap) × 7 niveaux</div>
+        </div>
+    </div>
+
+    <!-- Display / Flex / Grid -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Display / Flex / Grid</span>
+        <div class="demo-box">
+            <div class="token-list">
+                <div class="flex-center-gap"><code class="text-xs">.flex</code><span class="text-muted text-xs">display: flex</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.flex-row</code><span class="text-muted text-xs">display: flex; flex-direction: row</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.flex-col</code><span class="text-muted text-xs">display: flex; flex-direction: column</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.flex-wrap</code><span class="text-muted text-xs">flex-wrap: wrap</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.flex-1</code><span class="text-muted text-xs">flex: 1</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.inline-flex</code><span class="text-muted text-xs">display: inline-flex</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.block</code><span class="text-muted text-xs">display: block</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.hidden</code><span class="text-muted text-xs">display: none</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.grid</code><span class="text-muted text-xs">display: grid</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.grid-2 / .grid-3 / .grid-4</code><span class="text-muted text-xs">display: grid; repeat(2/3/4, 1fr)</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.items-center / .items-start / .items-end</code><span class="text-muted text-xs">align-items</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.justify-center / .justify-between / .justify-end</code><span class="text-muted text-xs">justify-content</span></div>
+            </div>
+        </div>
+        <div class="demo-box mt-sm">
+            <span class="demo-label text-xs">Exemple .grid-3 + .gap-md</span>
+            <div class="grid-3 gap-md mt-sm">
+                <div style="background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-sm);" class="text-center text-xs text-muted">col 1</div>
+                <div style="background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-sm);" class="text-center text-xs text-muted">col 2</div>
+                <div style="background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius-sm);padding:var(--space-sm);" class="text-center text-xs text-muted">col 3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Border-radius -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Border-radius</span>
+        <div class="demo-box">
+            <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;align-items:flex-end;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);">
+                    <div class="rounded-xs" style="width:48px;height:48px;background:var(--accent-glow);border:1px solid var(--accent);"></div>
+                    <code class="text-xs">.rounded-xs</code><span class="text-muted text-xs">4px</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);">
+                    <div class="rounded-sm" style="width:48px;height:48px;background:var(--accent-glow);border:1px solid var(--accent);"></div>
+                    <code class="text-xs">.rounded-sm</code><span class="text-muted text-xs">8px</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);">
+                    <div class="rounded-md" style="width:48px;height:48px;background:var(--accent-glow);border:1px solid var(--accent);"></div>
+                    <code class="text-xs">.rounded-md</code><span class="text-muted text-xs">12px</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);">
+                    <div class="rounded" style="width:48px;height:48px;background:var(--accent-glow);border:1px solid var(--accent);"></div>
+                    <code class="text-xs">.rounded</code><span class="text-muted text-xs">16px</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);">
+                    <div class="rounded-lg" style="width:48px;height:48px;background:var(--accent-glow);border:1px solid var(--accent);"></div>
+                    <code class="text-xs">.rounded-lg</code><span class="text-muted text-xs">24px</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-xs);">
+                    <div class="rounded-full" style="width:48px;height:48px;background:var(--accent-glow);border:1px solid var(--accent);"></div>
+                    <code class="text-xs">.rounded-full</code><span class="text-muted text-xs">9999px</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shadows -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Ombres</span>
+        <div class="demo-box">
+            <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;align-items:flex-end;padding:var(--space-md) 0;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <div class="shadow-sm rounded-md" style="width:80px;height:56px;background:var(--surface-solid);"></div>
+                    <code class="text-xs">.shadow-sm</code>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <div class="shadow rounded-md" style="width:80px;height:56px;background:var(--surface-solid);"></div>
+                    <code class="text-xs">.shadow</code>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <div class="shadow-lg rounded-md" style="width:80px;height:56px;background:var(--surface-solid);"></div>
+                    <code class="text-xs">.shadow-lg</code>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <div class="shadow-none rounded-md" style="width:80px;height:56px;background:var(--surface-solid);border:1px solid var(--border);"></div>
+                    <code class="text-xs">.shadow-none</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Typographie -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Typographie</span>
+        <div class="demo-grid demo-grid-2 gap-md">
+            <div class="demo-box">
+                <div class="token-list">
+                    <div class="flex-center-gap"><span class="text-xs">.text-xs</span><span class="text-muted text-xs">0.75rem</span></div>
+                    <div class="flex-center-gap"><span class="text-sm">.text-sm</span><span class="text-muted text-xs">0.85rem</span></div>
+                    <div class="flex-center-gap"><span class="text-base">.text-base</span><span class="text-muted text-xs">1rem</span></div>
+                    <div class="flex-center-gap"><span class="text-lg">.text-lg</span><span class="text-muted text-xs">1.125rem</span></div>
+                    <div class="flex-center-gap"><span class="text-xl">.text-xl</span><span class="text-muted text-xs">1.25rem</span></div>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="token-list">
+                    <div class="flex-center-gap"><span class="text-left text-sm" style="width:120px;">left</span><code class="text-xs">.text-left</code></div>
+                    <div class="flex-center-gap"><span class="text-center text-sm" style="width:120px;">center</span><code class="text-xs">.text-center</code></div>
+                    <div class="flex-center-gap"><span class="text-right text-sm" style="width:120px;">right</span><code class="text-xs">.text-right</code></div>
+                    <div class="flex-center-gap"><span class="uppercase text-sm">.uppercase</span></div>
+                    <div class="flex-center-gap"><span class="capitalize text-sm">.capitalize</span></div>
+                    <div class="flex-center-gap"><span class="font-mono text-sm">.font-mono (Fira Code)</span></div>
+                    <div class="flex-center-gap"><span class="font-display text-sm">.font-display (Space Grotesk)</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box mt-sm">
+            <span class="demo-label text-xs">Troncature</span>
+            <div class="truncate mt-sm" style="max-width:300px;background:var(--surface-solid);padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-sm);">
+                <span class="text-sm">.truncate — Ce texte très long est tronqué avec une ellipse automatiquement</span>
+            </div>
+            <div class="line-clamp-2 mt-sm" style="max-width:300px;background:var(--surface-solid);padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-sm);">
+                <span class="text-sm">.line-clamp-2 — Première ligne de texte long qui continue sur plusieurs lignes. Cette deuxième ligne est visible. La troisième est masquée.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accessibilité -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Accessibilite</span>
+        <div class="demo-box">
+            <div class="token-list">
+                <div class="flex-center-gap"><code class="text-xs">.sr-only</code><span class="text-muted text-xs">Masque visuellement, accessible aux lecteurs d'écran</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.not-sr-only</code><span class="text-muted text-xs">Annule .sr-only (position static, dimensions auto)</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.focus-ring</code><span class="text-muted text-xs">outline accent 2px au :focus-visible</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.reduce-motion</code><span class="text-muted text-xs">animation + transition none (prefers-reduced-motion)</span></div>
+            </div>
+            <div class="mt-sm">
+                <button class="focus-ring" style="background:var(--accent-glow);border:1px solid var(--accent);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-sm);color:var(--accent);cursor:pointer;">Tabulation ici → focus-ring visible</button>
+            </div>
+        </div>
+    </div>
+</section>
+    </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
 </body>

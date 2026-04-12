@@ -16,7 +16,7 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html    # Couleurs, typographie, espacements, ombres, theming
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming, classes utilitaires
   composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll
@@ -28,7 +28,7 @@ shared/
   styles.css        # Agregateur CSS — imports des 4 modules + base reset
   css/
     tokens.css      # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
-    utilities.css   # Classes utilitaires couleur, backgrounds, bordures, accessibilité
+    utilities.css   # Classes utilitaires couleur, backgrounds, bordures, espacement, layout, radius, shadows, typo, accessibilité
     layout.css      # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css  # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
   sync.sh                    # Sync les 4 fichiers CSS vers un projet consommateur

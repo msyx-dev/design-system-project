@@ -1,4 +1,4 @@
-/* @ds-version: 2.19.0 */
+/* @ds-version: 2.20.0 */
 /* tokens.css — Design tokens msyx.design
    Variables CSS pures. Aucune règle structurelle.
    Import : @import url('css/tokens.css'); */
@@ -27,6 +27,7 @@
     --radius-md: 12px;
     --radius-sm: 8px;
     --radius-xs: 4px;
+    --radius-full: 9999px;
     --shadow: 0 4px 30px rgba(0,0,0,0.3);
     --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);

@@ -1,5 +1,17 @@
 # Releases
 
+## 2.20.0 — 2026-04-12 — Utilities CSS : espacement, display, radius, shadow, typographie (#130)
+
+### Added
+- `shared/css/utilities.css` : ~140 classes utilitaires — margin, padding, gap, gap-x, gap-y (7 niveaux xs→3xl), display/flex/grid, border-radius, shadows, typographie (taille, alignement, transform, font), accessibilite (.not-sr-only, .focus-ring, .reduce-motion)
+- `shared/css/tokens.css` : token `--radius-full: 9999px`
+- `pages/fondation.html#utilities` : section documentaire avec exemples visuels des 6 groupes de classes
+
+### Changed
+- `shared/nav.js` : lien "Utilitaires" ajouté dans la sidebar Fondation, version bump v2.19.0 → v2.20.0
+- `shared/css/tokens.css` : version bump 2.19.0 → 2.20.0
+- `shared/css/utilities.css` : version bump 2.19.0 → 2.20.0
+
 ## 2.19.0 — 2026-04-12 — DX : documentation d'usage — getting started, guidelines, snippets copiables (#122)
 
 ### Added

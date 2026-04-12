@@ -24,7 +24,7 @@ shared/
   styles.css            # Agregateur CSS — imports tokens + utilities + layout + components + base reset
   css/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
-    utilities.css       # Classes utilitaires couleur, backgrounds, bordures
+    utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur
