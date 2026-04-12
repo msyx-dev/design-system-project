@@ -3226,12 +3226,197 @@ function initActivityFeed() {
 }
 window.__initActivityFeed = initActivityFeed;
 
+// Wizard multi-step
+function initWizard() {
+    document.querySelectorAll('.wizard').forEach(function(wiz) {
+        if (wiz.dataset.bound) return;
+        wiz.dataset.bound = '1';
+
+        var steps = wiz.querySelectorAll('.wizard-step');
+        var panels = wiz.querySelectorAll('.wizard-panel');
+        var prevBtn = wiz.querySelector('.wizard-prev');
+        var nextBtn = wiz.querySelector('.wizard-next');
+        var indicator = wiz.querySelector('.wizard-step-indicator');
+        var current = 0;
+        var total = panels.length;
+
+        function goTo(n) {
+            steps[current].classList.remove('active');
+            panels[current].classList.remove('active');
+            if (n > current) steps[current].classList.add('completed');
+            else steps[current].classList.remove('completed');
+            current = n;
+            steps[current].classList.add('active');
+            panels[current].classList.add('active');
+            steps[current].setAttribute('aria-current', 'step');
+            steps.forEach(function(s, i) { if (i !== current) s.removeAttribute('aria-current'); });
+            if (prevBtn) prevBtn.disabled = current === 0;
+            if (nextBtn) {
+                if (current === total - 1) {
+                    nextBtn.textContent = 'Terminer';
+                } else {
+                    nextBtn.innerHTML = 'Suivant &#8594;';
+                }
+            }
+            if (indicator) indicator.textContent = 'Étape ' + (current + 1) + ' / ' + total;
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                if (current > 0) goTo(current - 1);
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                if (current < total - 1) {
+                    goTo(current + 1);
+                } else {
+                    // Final step — reset
+                    steps.forEach(function(s) { s.classList.remove('completed', 'active'); });
+                    goTo(0);
+                }
+            });
+        }
+
+        goTo(0);
+    });
+}
+window.__initWizard = initWizard;
+
+// Inline Editing
+function initInlineEdit() {
+    document.querySelectorAll('.editable-field[data-editable]').forEach(function(field) {
+        if (field.dataset.bound) return;
+        field.dataset.bound = '1';
+
+        var textEl = field.querySelector('.editable-text');
+        var inputWrap = field.querySelector('.editable-input-wrap');
+        var inputEl = field.querySelector('.editable-input');
+        var saveBtn = field.querySelector('.editable-btn-save');
+        var cancelBtn = field.querySelector('.editable-btn-cancel');
+        var saveDelay = parseInt(field.dataset.saveDelay || '0', 10);
+        if (!textEl || !inputWrap || !inputEl) return;
+
+        function startEdit() {
+            var currentText = textEl.textContent.trim().replace(/\s*[\u270E\u9998\uFE0F].*$/, '').trim();
+            inputEl.value = currentText;
+            textEl.classList.add('hidden');
+            inputWrap.classList.add('active');
+            inputEl.focus();
+            inputEl.select();
+        }
+
+        function stopEdit() {
+            textEl.classList.remove('hidden');
+            inputWrap.classList.remove('active');
+        }
+
+        function saveEdit() {
+            var newVal = inputEl.value.trim();
+            if (!newVal) { stopEdit(); return; }
+            if (saveDelay > 0 && saveBtn) {
+                saveBtn.classList.add('loading');
+                saveBtn.textContent = '…';
+                setTimeout(function() {
+                    saveBtn.classList.remove('loading');
+                    saveBtn.innerHTML = '&#10003;';
+                    textEl.childNodes[0].textContent = newVal + ' ';
+                    stopEdit();
+                }, saveDelay);
+            } else {
+                textEl.childNodes[0].textContent = newVal + ' ';
+                stopEdit();
+            }
+        }
+
+        textEl.addEventListener('click', startEdit);
+        textEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startEdit(); }
+        });
+
+        if (saveBtn) saveBtn.addEventListener('click', saveEdit);
+        if (cancelBtn) cancelBtn.addEventListener('click', stopEdit);
+
+        inputEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+            if (e.key === 'Escape') { stopEdit(); }
+        });
+    });
+}
+window.__initInlineEdit = initInlineEdit;
+
+// Action Menu
+function initActionMenu() {
+    document.querySelectorAll('.action-menu-wrap').forEach(function(wrap) {
+        if (wrap.dataset.bound) return;
+        wrap.dataset.bound = '1';
+
+        var trigger = wrap.querySelector('.action-menu-trigger');
+        var menu = wrap.querySelector('.action-menu');
+        if (!trigger || !menu) return;
+
+        function openMenu() {
+            menu.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+        function closeMenu() {
+            menu.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = menu.classList.contains('open');
+            // Close all other action menus
+            document.querySelectorAll('.action-menu.open').forEach(function(m) { m.classList.remove('open'); });
+            document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(function(t) { t.setAttribute('aria-expanded', 'false'); });
+            if (!isOpen) openMenu();
+        });
+
+        menu.querySelectorAll('.action-menu-item').forEach(function(item) {
+            item.addEventListener('click', function() { closeMenu(); });
+        });
+    });
+
+    // Global close on outside click (idempotent via named handler not needed — handled in DOMContentLoaded once)
+}
+window.__initActionMenu = initActionMenu;
+
+// Sidebar Rail
+function initSidebarRail() {
+    document.querySelectorAll('.rail-demo').forEach(function(demo) {
+        if (demo.dataset.bound) return;
+        demo.dataset.bound = '1';
+
+        var sidebar = demo.querySelector('.rail-sidebar');
+        var toggle = demo.querySelector('.rail-toggle');
+        if (!sidebar || !toggle) return;
+
+        toggle.addEventListener('click', function() {
+            var collapsed = sidebar.classList.toggle('collapsed');
+            toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            toggle.setAttribute('aria-label', collapsed ? 'Développer la sidebar' : 'Réduire la sidebar');
+        });
+    });
+}
+window.__initSidebarRail = initSidebarRail;
+
 window.__initComponents = initComponents;
 
-// Close dropdowns on outside click (once)
+// Close dropdowns and action menus on outside click (once)
 document.addEventListener('click', () => {
     document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     document.querySelectorAll('.dropdown-trigger.open').forEach(t => t.classList.remove('open'));
+    document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+});
+
+// Close action menus on Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
+        document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -3239,4 +3424,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initPricing();
     initNotificationCenter();
     initActivityFeed();
+    initWizard();
+    initInlineEdit();
+    initActionMenu();
+    initSidebarRail();
 });

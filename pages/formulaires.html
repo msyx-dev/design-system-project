@@ -807,6 +807,128 @@
     </div>
 </section>
 
+
+<!-- WIZARD MULTI-STEP -->
+<section id="wizard">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Wizard multi-step</h2><p>Formulaire multi-étapes avec stepper visuel, validation par étape et navigation Précédent/Suivant.</p></div>
+    <div class="demo-grid demo-grid-1">
+        <div class="demo-box">
+            <span class="demo-label">Wizard — 4 étapes</span>
+            <div class="wizard" id="demo-wizard">
+                <div class="wizard-steps" role="list">
+                    <div class="wizard-step active" data-step="0" role="listitem" aria-current="step">
+                        <div class="wizard-step-dot">1</div>
+                        <span class="wizard-step-label">Profil</span>
+                    </div>
+                    <div class="wizard-step" data-step="1" role="listitem">
+                        <div class="wizard-step-dot">2</div>
+                        <span class="wizard-step-label">Projet</span>
+                    </div>
+                    <div class="wizard-step" data-step="2" role="listitem">
+                        <div class="wizard-step-dot">3</div>
+                        <span class="wizard-step-label">Config</span>
+                    </div>
+                    <div class="wizard-step" data-step="3" role="listitem">
+                        <div class="wizard-step-dot">&#10003;</div>
+                        <span class="wizard-step-label">Confirmation</span>
+                    </div>
+                </div>
+                <div class="wizard-content">
+                    <div class="wizard-panel active" data-panel="0">
+                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom complet</label><input class="input" type="text" placeholder="Jean Dupont" id="wz-name"></div>
+                        <div class="input-group"><label class="input-label">Email</label><input class="input" type="email" placeholder="jean@exemple.fr" id="wz-email"></div>
+                    </div>
+                    <div class="wizard-panel" data-panel="1">
+                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom du projet</label><input class="input" type="text" placeholder="mon-super-projet" id="wz-project"></div>
+                        <div class="input-group"><label class="input-label">Type</label><select class="input" id="wz-type"><option>SaaS</option><option>E-commerce</option><option>Portfolio</option><option>API</option></select></div>
+                    </div>
+                    <div class="wizard-panel" data-panel="2">
+                        <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Environnement</label><select class="input" id="wz-env"><option>Production</option><option>Staging</option><option>Dev local</option></select></div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;color:var(--text);">Activer les notifications</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                    </div>
+                    <div class="wizard-panel" data-panel="3">
+                        <div style="text-align:center;padding:1.5rem 0;">
+                            <div style="width:56px;height:56px;border-radius:50%;background:rgba(var(--success-rgb),0.15);border:2px solid var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--success);">&#10003;</div>
+                            <h3 style="margin-bottom:0.5rem;color:var(--success);">Prêt à lancer !</h3>
+                            <p style="color:var(--text-muted);font-size:0.88rem;">Votre configuration a été validée. Cliquez sur "Terminer" pour créer le projet.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="wizard-actions">
+                    <button class="btn-ghost wizard-prev" disabled>&#8592; Précédent</button>
+                    <span class="wizard-step-indicator">Étape 1 / 4</span>
+                    <button class="btn-primary wizard-next">Suivant &#8594;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box" style="margin-top:var(--space-md);">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">HTML : <code class="code-inline">.wizard</code> contient <code class="code-inline">.wizard-steps</code> + <code class="code-inline">.wizard-content</code> + <code class="code-inline">.wizard-actions</code>. Chaque panneau : <code class="code-inline">.wizard-panel[data-panel="N"]</code>. JS : <code class="code-inline">initWizard()</code>.</p>
+        <p class="demo-note-last">États étapes : <code class="code-inline">.wizard-step.active</code> (courante), <code class="code-inline">.wizard-step.completed</code> (validée).</p>
+    </div>
+</section>
+
+<!-- INLINE EDITING -->
+<section id="inline-edit">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Inline Editing</h2><p>Édition directe dans la page — clic sur le texte pour passer en mode saisie, sauvegarde ou annulation.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Champ simple</span>
+            <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.05em;">Nom du projet</div>
+                    <div class="editable-field" data-editable>
+                        <span class="editable-text" tabindex="0" role="button" aria-label="Modifier le nom du projet">design-system-project <span class="edit-icon" aria-hidden="true">&#9998;</span></span>
+                        <span class="editable-input-wrap">
+                            <input class="editable-input" type="text" value="design-system-project" aria-label="Nom du projet">
+                            <span class="editable-actions">
+                                <button class="editable-btn editable-btn-save" aria-label="Sauvegarder">&#10003;</button>
+                                <button class="editable-btn editable-btn-cancel" aria-label="Annuler">&#10005;</button>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.05em;">Description</div>
+                    <div class="editable-field" data-editable>
+                        <span class="editable-text" tabindex="0" role="button" aria-label="Modifier la description">Design system msyx.fr <span class="edit-icon" aria-hidden="true">&#9998;</span></span>
+                        <span class="editable-input-wrap">
+                            <input class="editable-input" type="text" value="Design system msyx.fr" aria-label="Description">
+                            <span class="editable-actions">
+                                <button class="editable-btn editable-btn-save" aria-label="Sauvegarder">&#10003;</button>
+                                <button class="editable-btn editable-btn-cancel" aria-label="Annuler">&#10005;</button>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Avec loading state</span>
+            <div>
+                <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.05em;">Sous-domaine (sauvegarde simulée 1s)</div>
+                <div class="editable-field" data-editable data-save-delay="1000">
+                    <span class="editable-text" tabindex="0" role="button" aria-label="Modifier le sous-domaine">poc-dashboard.msyx.fr <span class="edit-icon" aria-hidden="true">&#9998;</span></span>
+                    <span class="editable-input-wrap">
+                        <input class="editable-input" type="text" value="poc-dashboard.msyx.fr" aria-label="Sous-domaine">
+                        <span class="editable-actions">
+                            <button class="editable-btn editable-btn-save" aria-label="Sauvegarder">&#10003;</button>
+                            <button class="editable-btn editable-btn-cancel" aria-label="Annuler">&#10005;</button>
+                        </span>
+                    </span>
+                </div>
+                <p style="margin-top:1rem;font-size:0.8rem;color:var(--text-muted);">&#9432; Cliquer sur &#10003; simule une requête réseau (1 s) avant confirmation.</p>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box" style="margin-top:var(--space-md);">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">HTML : <code class="code-inline">.editable-field[data-editable]</code> contient un <code class="code-inline">.editable-text</code> et un <code class="code-inline">.editable-input-wrap</code>. Clavier : Enter pour sauvegarder, Escape pour annuler.</p>
+        <p class="demo-note-last">Loading simulé : ajouter <code class="code-inline">data-save-delay="ms"</code>. JS : <code class="code-inline">initInlineEdit()</code>.</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

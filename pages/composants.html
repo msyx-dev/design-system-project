@@ -622,6 +622,91 @@
     </div>
 </section>
 
+
+<!-- ACTION MENU -->
+<section id="action-menu">
+    <div class="section-header"><span class="overline">Composants</span><h2>Action Menu</h2><p>Menu contextuel déclenché par un bouton "···" — liste d'actions avec item danger et divider. Fermeture clic extérieur et Escape.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Sur une card</span>
+            <div class="card" style="position:relative;padding-right:2.5rem;">
+                <div style="position:absolute;top:var(--space-md);right:var(--space-md);">
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#9998;</span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128203;</span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128193;</span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon">&#128465;</span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-icon card-icon--accent">&#9889;</div>
+                <h3>Mon projet</h3>
+                <p>Next.js + FastAPI + PostgreSQL</p>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Dans une liste</span>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                    <div>
+                        <div style="font-weight:600;font-size:0.9rem;">design-system</div>
+                        <div style="font-size:0.76rem;color:var(--text-muted);">v2.18</div>
+                    </div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#9998;</span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128203;</span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128193;</span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon">&#128465;</span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                    <div>
+                        <div style="font-weight:600;font-size:0.9rem;">poc-dashboard</div>
+                        <div style="font-size:0.76rem;color:var(--text-muted);">v1.4</div>
+                    </div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#9998;</span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128203;</span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128193;</span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon">&#128465;</span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Variante icones enrichies</span>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start;">
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem;">Taille standard</div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#9998;</span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128203;</span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128279;</span> Copier le lien</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon">&#128193;</span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon">&#128465;</span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="demo-note-last" style="margin-top:1rem;">Fermeture : clic extérieur ou touche Escape. JS : <code class="code-inline">initActionMenu()</code>.</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

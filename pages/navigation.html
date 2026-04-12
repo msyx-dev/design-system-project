@@ -514,5 +514,65 @@
         };
     })();
     </script>
+
+<!-- SIDEBAR RAIL -->
+<section id="sidebar-rail">
+    <div class="section-header"><span class="overline">Navigation</span><h2>Sidebar Rail</h2><p>Sidebar rétractable : mode plein (260px) et mode rail (64px icônes seules) avec tooltips au hover et bouton toggle chevron.</p></div>
+    <div class="demo-grid demo-grid-1">
+        <div class="demo-box">
+            <span class="demo-label">Demo interactive — toggle sidebar</span>
+            <div class="rail-demo" id="rail-demo-1">
+                <div class="rail-sidebar" id="rail-sidebar-1">
+                    <div class="rail-header">
+                        <span class="rail-logo">msyx.design</span>
+                        <button class="rail-toggle" id="rail-toggle-1" aria-label="Réduire la sidebar" aria-expanded="true">&#8249;</button>
+                    </div>
+                    <nav class="rail-nav" aria-label="Navigation principale">
+                        <a class="rail-item active" href="#" onclick="return false;" aria-current="page">
+                            <span class="rail-item-icon">&#9670;</span>
+                            <span class="rail-item-label">Dashboard</span>
+                            <span class="rail-tooltip">Dashboard</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon">&#128200;</span>
+                            <span class="rail-item-label">Analytics</span>
+                            <span class="rail-tooltip">Analytics</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon">&#128101;</span>
+                            <span class="rail-item-label">Utilisateurs</span>
+                            <span class="rail-tooltip">Utilisateurs</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon">&#128193;</span>
+                            <span class="rail-item-label">Projets</span>
+                            <span class="rail-tooltip">Projets</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon">&#128276;</span>
+                            <span class="rail-item-label">Notifications</span>
+                            <span class="rail-tooltip">Notifications</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon">&#9881;</span>
+                            <span class="rail-item-label">Paramètres</span>
+                            <span class="rail-tooltip">Paramètres</span>
+                        </a>
+                    </nav>
+                </div>
+                <div class="rail-content">
+                    <div class="rail-content-title">Contenu principal</div>
+                    <div class="rail-content-desc">Cliquer sur le chevron &#8249; pour réduire la sidebar en mode rail (icônes seules). En mode rail, survoler un item affiche un tooltip avec son label.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box" style="margin-top:var(--space-md);">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">HTML : <code class="code-inline">.rail-demo</code> contient <code class="code-inline">.rail-sidebar</code> + <code class="code-inline">.rail-content</code>. Toggle : <code class="code-inline">.rail-toggle</code> bascule <code class="code-inline">.rail-sidebar.collapsed</code>.</p>
+        <p class="demo-note-last">Tooltips automatiques en mode rail au hover. JS : <code class="code-inline">initSidebarRail()</code>. CSS : transition width 0.28s cubic-bezier.</p>
+    </div>
+</section>
+
 </body>
 </html>

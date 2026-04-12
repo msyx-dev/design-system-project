@@ -19,7 +19,8 @@ const NAV_SECTIONS = [
         { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' },
         { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' },
         { label: 'Tooltip/Popover', icon: '&#128172;', href: '/pages/composants.html#tooltip' },
-        { label: 'FAB', icon: '&#43;', href: '/pages/composants.html#fab' }
+        { label: 'FAB', icon: '&#43;', href: '/pages/composants.html#fab' },
+        { label: 'Action Menu', icon: '&#8942;', href: '/pages/composants.html#action-menu' }
     ]},
     { title: 'Formulaires', links: [
         { label: 'Inputs', icon: '&#9998;', href: '/pages/formulaires.html#inputs' },
@@ -32,7 +33,9 @@ const NAV_SECTIONS = [
         { label: 'Search Input', icon: '&#128269;', href: '/pages/formulaires.html#search-input' },
         { label: 'Number Input', icon: '&#177;', href: '/pages/formulaires.html#number-input' },
         { label: 'OTP Input', icon: '&#9872;', href: '/pages/formulaires.html#otp-input' },
-        { label: 'Tag Input', icon: '&#127991;', href: '/pages/formulaires.html#tag-input' }
+        { label: 'Tag Input', icon: '&#127991;', href: '/pages/formulaires.html#tag-input' },
+        { label: 'Wizard', icon: '&#8594;', href: '/pages/formulaires.html#wizard' },
+        { label: 'Inline Edit', icon: '&#9998;', href: '/pages/formulaires.html#inline-edit' }
     ]},
     { title: 'Navigation', links: [
         { label: 'Header User', icon: '&#128100;', href: '/pages/navigation.html#header-user' },
@@ -41,7 +44,8 @@ const NAV_SECTIONS = [
         { label: 'Stepper', icon: '&#8594;', href: '/pages/navigation.html#stepper' },
         { label: 'Segmented', icon: '&#9632;', href: '/pages/navigation.html#segmented-control' },
         { label: 'Pagination', icon: '&#8230;', href: '/pages/navigation.html#pagination' },
-        { label: 'Bottom Nav', icon: '&#9635;', href: '/pages/navigation.html#bottom-nav' }
+        { label: 'Bottom Nav', icon: '&#9635;', href: '/pages/navigation.html#bottom-nav' },
+        { label: 'Sidebar Rail', icon: '&#9646;', href: '/pages/navigation.html#sidebar-rail' }
     ]},
     { title: 'Data', links: [
         { label: 'Stats', icon: '#', href: '/pages/data.html#stats' },
@@ -174,7 +178,7 @@ function buildHeader() {
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.17.0</span>'
+        + '<span class="header-version">v2.18.0</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
@@ -565,6 +569,10 @@ function reinitComponents() {
     if (typeof window.__initPricing === 'function') window.__initPricing();
     if (typeof window.__initNotificationCenter === 'function') window.__initNotificationCenter();
     if (typeof window.__initActivityFeed === 'function') window.__initActivityFeed();
+    if (typeof window.__initWizard === 'function') window.__initWizard();
+    if (typeof window.__initInlineEdit === 'function') window.__initInlineEdit();
+    if (typeof window.__initActionMenu === 'function') window.__initActionMenu();
+    if (typeof window.__initSidebarRail === 'function') window.__initSidebarRail();
 }
 
 function initScrollSpy() {

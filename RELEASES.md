@@ -1,5 +1,21 @@
 # Releases
 
+## 2.18.0 — 2026-04-12 — Composants SaaS P1 : wizard multi-step, inline editing, action menu, sidebar rail (#127)
+
+### Added
+- `pages/formulaires.html#wizard` : Wizard multi-step — stepper visuel 4 étapes (dots/lignes), panneaux de contenu par étape, boutons Précédent/Suivant, indicateur d'étape, reset sur Terminer
+- `pages/formulaires.html#inline-edit` : Inline Editing — texte avec icône crayon → input au clic, sauvegarde/annulation (Enter/Escape), loading state simulé via `data-save-delay`
+- `pages/composants.html#action-menu` : Action Menu — bouton ··· → dropdown d'actions (Éditer/Dupliquer/Archiver/Supprimer), item danger, divider, fermeture clic extérieur et Escape, animation scale+opacity
+- `pages/navigation.html#sidebar-rail` : Sidebar Rail — démo isolée dans demo-box, sidebar 260px → rail 64px au toggle, tooltips hover en mode rail, bouton chevron animé
+- CSS : `.wizard`, `.wizard-steps`, `.wizard-step`, `.wizard-step.active`, `.wizard-step.completed`, `.wizard-content`, `.wizard-panel`, `.wizard-actions`, `.editable-field`, `.editable-text`, `.editable-input-wrap`, `.editable-input`, `.editable-actions`, `.editable-btn`, `.action-menu-wrap`, `.action-menu-trigger`, `.action-menu`, `.action-menu.open`, `.action-menu-item`, `.action-menu-item.danger`, `.action-menu-divider`, `.rail-demo`, `.rail-sidebar`, `.rail-sidebar.collapsed`, `.rail-item`, `.rail-tooltip`, `.rail-toggle` dans `shared/css/components.css`
+- JS : `initWizard()`, `initInlineEdit()`, `initActionMenu()`, `initSidebarRail()` dans `shared/components.js` — pattern anti-double-bind `dataset.bound`
+- `shared/nav.js` reinitComponents() : appels aux 4 nouvelles fonctions pour compatibilité SPA
+- Liens sidebar nav.js : Action Menu, Wizard, Inline Edit, Sidebar Rail
+
+### Changed
+- `site.html` : compteur hero 74 → 78 composants, version footer v2.18, hub-cards counts (Composants 4→5, Formulaires 12→14, Navigation 4→5)
+- `shared/css/tokens.css`, `utilities.css`, `nav.js` : version bump 2.17.0 → 2.18.0
+
 ## 2.17.0 — 2026-04-12 — Composants SaaS P1 : pricing table, notification center, activity feed (#126)
 
 ### Added
