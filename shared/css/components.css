@@ -3749,6 +3749,9 @@ html.theme-transitioning *::after {
 }
 
 /* ===== RISK MATRIX ===== */
+.risk-matrix {
+    max-width: 600px;
+}
 .risk-matrix-wrap {
     position: relative;
     display: flex;
@@ -3781,7 +3784,7 @@ html.theme-transitioning *::after {
     position: relative;
     border: 1px solid var(--border);
     border-radius: var(--radius-xs);
-    min-height: 56px;
+    min-height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3839,14 +3842,14 @@ html.theme-transitioning *::after {
 }
 /* Risk dot */
 .risk-dot {
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     font-weight: 700;
     color: white;
     flex-shrink: 0;
@@ -3959,12 +3962,42 @@ html.theme-transitioning *::after {
     opacity: 1;
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
 }
+/* Variante compact (5×5 réduite ou 3×3 encore plus petite) */
+.risk-matrix-compact .risk-cell,
+.risk-matrix[data-compact] .risk-cell {
+    min-height: 32px;
+    padding: 2px;
+    gap: 2px;
+}
+.risk-matrix-compact .risk-dot,
+.risk-matrix[data-compact] .risk-dot {
+    width: 18px;
+    height: 18px;
+    font-size: 0.5rem;
+}
+.risk-matrix-compact .risk-cell-label,
+.risk-matrix[data-compact] .risk-cell-label {
+    font-size: 0.52rem;
+}
+.risk-matrix-compact .risk-row-label,
+.risk-matrix[data-compact] .risk-row-label,
+.risk-matrix-compact .risk-col-label,
+.risk-matrix[data-compact] .risk-col-label {
+    font-size: 0.58rem;
+}
+.risk-matrix-compact .risk-axis-y,
+.risk-matrix[data-compact] .risk-axis-y,
+.risk-matrix-compact .risk-axis-x,
+.risk-matrix[data-compact] .risk-axis-x {
+    font-size: 0.62rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .risk-matrix-wrap { overflow-x: auto; }
-    .risk-grid { min-width: 340px; }
-    .risk-dot { width: 22px; height: 22px; font-size: 0.55rem; }
-    .risk-cell { min-height: 44px; }
+    .risk-grid { min-width: 280px; }
+    .risk-dot { width: 18px; height: 18px; font-size: 0.52rem; }
+    .risk-cell { min-height: 36px; }
 }
 
 /* ===== SETTINGS PANEL ===== */

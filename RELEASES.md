@@ -1,5 +1,14 @@
 # Releases
 
+## 2.24.2 — 2026-04-13 — Fix risk matrix — taille intermédiaire + compact 5×5
+
+### Changed
+- Risk Matrix 5×5 par défaut : `max-width: 600px`, `min-height: 42px` (vs 56px), dots 22px (vs 28px) — grille plus compacte (#147)
+- Responsive mobile : `min-width` grille 280px (vs 340px), cellules 36px, dots 18px
+- Ajout modificateur `.risk-matrix-compact` / `[data-compact]` : cellules 32px, dots 18px, typo réduite
+- Ajout démo « 5×5 Compact » dans `pages/data.html` (`max-width:360px`)
+- Note Usage enrichie : mention classe `.risk-matrix-compact`
+
 ## 2.24.1 — 2026-04-13 — Fix lazy-load init composants Sprint 8+
 
 ### Fixed
