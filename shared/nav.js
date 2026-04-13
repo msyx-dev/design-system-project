@@ -58,7 +58,8 @@ const NAV_SECTIONS = [
         { label: 'Pie & Donut', icon: '&#9685;', href: '/pages/data.html#pie-donut' },
         { label: 'Tree View', icon: '&#9656;', href: '/pages/data.html#tree-view' },
         { label: 'Gauge', icon: '&#9685;', href: '/pages/data.html#gauge' },
-        { label: 'Listes', icon: '&#9776;', href: '/pages/data.html#lists' }
+        { label: 'Listes', icon: '&#9776;', href: '/pages/data.html#lists' },
+        { label: 'Matrice Risque', icon: '&#9888;', href: '/pages/data.html#risk-matrix' }
     ]},
     { title: 'Feedback', links: [
         { label: 'Alertes', icon: '&#9888;', href: '/pages/feedback.html#alerts' },
@@ -79,7 +80,10 @@ const NAV_SECTIONS = [
         { label: 'Carousel', icon: '&#9654;', href: '/pages/divers.html#carousel' },
         { label: 'Lightbox', icon: '&#128247;', href: '/pages/divers.html#lightbox' },
         { label: 'Context Menu', icon: '&#9776;', href: '/pages/divers.html#context-menu' },
-        { label: 'Cmd Palette', icon: '&#8984;', href: '/pages/divers.html#command-palette' }
+        { label: 'Cmd Palette', icon: '&#8984;', href: '/pages/divers.html#command-palette' },
+        { label: 'Video Embed', icon: '&#127909;', href: '/pages/divers.html#video-embed' },
+        { label: 'Decision Tree', icon: '&#9656;', href: '/pages/divers.html#decision-tree' },
+        { label: 'Before/After', icon: '&#8596;', href: '/pages/divers.html#before-after' }
     ]},
     { title: 'Templates', links: [
         { label: 'Kanban', icon: '&#8862;', href: '/pages/templates.html#kanban' },
