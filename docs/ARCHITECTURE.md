@@ -5,6 +5,7 @@
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 **86 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
+Version courante : **v2.24.4**.
 
 ## Structure
 
@@ -27,7 +28,7 @@ shared/
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
-  sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur
+  sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
   check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides
   check-components.sh        # Lint consommateurs — détecte composants custom hors DS
@@ -59,6 +60,8 @@ docs/
 - Position fixed, sous le header (`top: var(--header-h)`)
 - Contenu : liens de navigation uniquement (sections des pages)
 - Scroll-spy : highlight automatique de la section visible, auto-scroll sidebar
+- `.sidebar-link-disabled` / `[aria-disabled="true"]` : variante disabled (opacity 0.4, pointer-events none)
+- `.sidebar-sublinks` : container sous-navigation indentee (padding-left, font-size reduit)
 - Mobile : drawer (translateX), ouvert/ferme via burger header
 
 ### Navigation SPA

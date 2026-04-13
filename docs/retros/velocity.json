@@ -12,5 +12,6 @@
   {"sprint": 11, "planned_sp": 12, "delivered_sp": 12, "accuracy": 100},
   {"sprint": 12, "planned_sp": 23, "delivered_sp": 23, "accuracy": 100},
   {"sprint": 13, "planned_sp": 10, "delivered_sp": 10, "accuracy": 100},
-  {"sprint": 14, "planned_sp": 14, "delivered_sp": 14, "accuracy": 100}
+  {"sprint": 14, "planned_sp": 14, "delivered_sp": 14, "accuracy": 100},
+  {"sprint": 15, "planned_sp": 3, "delivered_sp": 3, "accuracy": 100}
 ]
