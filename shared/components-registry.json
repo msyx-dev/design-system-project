@@ -1,5 +1,5 @@
 {
-  "version": "2.24.2",
+  "version": "2.24.3",
   "generated": "2026-04-13",
   "components": [
     {
@@ -331,6 +331,24 @@
       "page": "divers",
       "cssClasses": [".dtree", ".dtree-node", ".dtree-choices", ".dtree-choice", ".dtree-connector"],
       "jsInit": "initDecisionTree"
+    },
+    {
+      "name": "sidebar-link-disabled",
+      "page": "navigation",
+      "cssClasses": [".sidebar-link-disabled"],
+      "jsInit": null
+    },
+    {
+      "name": "sidebar-sublinks",
+      "page": "navigation",
+      "cssClasses": [".sidebar-sublinks"],
+      "jsInit": null
+    },
+    {
+      "name": "avatar-img",
+      "page": "composants",
+      "cssClasses": [".avatar-img"],
+      "jsInit": null
     }
   ]
 }
