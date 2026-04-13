@@ -29,8 +29,8 @@
 .btn-ghost:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
 .btn-lg { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 14px; }
-.btn-xs { padding: 0.3rem 0.7rem; font-size: 0.72rem; border-radius: var(--radius-xs); }
-.btn-icon { width: 40px; height: 40px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all var(--duration-slow); font-size: 1rem; }
+.btn-xs { padding: 0.3rem 0.7rem; font-size: 0.72rem; border-radius: var(--radius-xs); min-height: 32px; }
+.btn-icon { min-width: 44px; min-height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all var(--duration-slow); font-size: 1rem; }
 .btn-icon:hover { border-color: var(--border-hover); color: var(--text); }
 .btn-danger { background: linear-gradient(135deg, var(--danger), var(--danger-dark)); }
 .btn-success { background: linear-gradient(135deg, var(--success), var(--success-dark)); }
@@ -50,10 +50,19 @@
 /* :disabled natif — boutons */
 .btn-primary:disabled, .btn-secondary:disabled, .btn-ghost:disabled,
 .btn-icon:disabled, .btn-danger:disabled, .btn-success:disabled,
-.btn-warning:disabled, .btn-outline-danger:disabled {
+.btn-warning:disabled, .btn-outline-danger:disabled,
+.btn-primary[disabled], .btn-secondary[disabled], .btn-ghost[disabled],
+.btn-icon[disabled], .btn-danger[disabled], .btn-success[disabled],
+.btn-warning[disabled], .btn-outline-danger[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+/* :active — feedback tactile */
+.btn-primary:active:not(:disabled), .btn-secondary:active:not(:disabled), .btn-ghost:active:not(:disabled) {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
 }
 
 /* ===== CARDS ===== */
