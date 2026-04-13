@@ -14,6 +14,7 @@
     --accent-light: #60a5fa;
     --accent-glow: rgba(var(--accent-rgb), 0.12);
     --surface: rgba(30, 41, 59, 0.6);
+    --surface-alt: rgba(255, 255, 255, 0.15);
     --surface-solid: #1e293b;
     --surface-light: #334155;
     --text: #f1f5f9;
@@ -153,6 +154,7 @@
     --primary: #f8fafc;
     --primary-light: #f1f5f9;
     --surface: rgba(255, 255, 255, 0.8);
+    --surface-alt: rgba(0, 0, 0, 0.08);
     --surface-solid: #ffffff;
     --surface-light: #e2e8f0;
     --text: #0f172a;
