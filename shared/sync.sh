@@ -28,10 +28,11 @@ cp "$DS_DIR/layout.css" "$TARGET/ds-layout.css"
 cp "$DS_DIR/components.css" "$TARGET/ds-components.css"
 
 # Strip showcase rules from ds-layout.css if --no-showcase
+# Uses @strip:showcase-start / @strip:showcase-end markers in layout.css
 if $NO_SHOWCASE; then
-    sed -i '/^\/\* ===== SHOWCASE/,/^\.gradient-text/{ /^\.gradient-text/!d; }' "$TARGET/ds-layout.css"
-    sed -i '/\.main \.demo-grid/d; /\.main section/d' "$TARGET/ds-layout.css"
-    sed -i '/@media (max-width: 1024px)/,/^}/d' "$TARGET/ds-layout.css"
+    awk '/@strip:showcase-start/{skip=1; next} /@strip:showcase-end/{skip=0; next} !skip' \
+        "$TARGET/ds-layout.css" > "$TARGET/ds-layout.css.tmp" && \
+        mv "$TARGET/ds-layout.css.tmp" "$TARGET/ds-layout.css"
 fi
 
 VERSION=$(grep -oP '@ds-version:\s*\K[\d.]+' "$DS_DIR/tokens.css" || echo "unknown")
