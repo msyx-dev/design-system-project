@@ -3868,6 +3868,13 @@ function initUsageMeter() {
         fill.style.width = '0';
         if (obs) {
             obs.observe(meter);
+            // Fallback: si le meter est déjà visible dans le viewport, appliquer immédiatement
+            var rect = meter.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                var pct = parseFloat(meter.dataset.value) || 0;
+                setTimeout(function() { fill.style.width = pct + '%'; }, 80);
+                obs.unobserve(meter);
+            }
         } else {
             var pct = parseFloat(meter.dataset.value) || 0;
             fill.style.width = pct + '%';

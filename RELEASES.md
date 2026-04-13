@@ -6,6 +6,11 @@
 - Risk Matrix : dots invisibles en navigation SPA — ajout détection de visibilité immédiate après IntersectionObserver (#137)
 
 
+## 2.23.2 — 2026-04-13 — Fix Usage Meter width:0 en SPA
+
+### Fixed
+- Usage Meter : fallback immédiat si le composant est déjà visible au moment de l'init, corrige les barres à width:0 en navigation SPA (#138)
+
 ## 2.23.1 — 2026-04-13 — Fix carousel cards overflow
 
 ### Fixed
