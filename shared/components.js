@@ -3715,6 +3715,19 @@ function initRiskMatrix() {
             });
         }, { threshold: 0.1 });
         dotObs.observe(matrix);
+
+        // SPA fix: if matrix is already visible, trigger animation immediately
+        var rect = matrix.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            var allDots = Array.from(matrix.querySelectorAll('.risk-dot.risk-dot-hidden'));
+            allDots.forEach(function(d, i) {
+                setTimeout(function() {
+                    d.classList.remove('risk-dot-hidden');
+                    d.classList.add('risk-dot-visible');
+                }, i * 60);
+            });
+            dotObs.unobserve(matrix);
+        }
     });
 }
 window.__initRiskMatrix = initRiskMatrix;

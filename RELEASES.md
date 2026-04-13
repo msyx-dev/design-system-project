@@ -1,5 +1,10 @@
 # Releases
 
+## 2.23.2 — 2026-04-13 — Fix risk matrix dots invisible en SPA
+
+### Fixed
+- Risk Matrix : dots invisibles en navigation SPA — ajout détection de visibilité immédiate après IntersectionObserver (#137)
+
 
 ## 2.23.1 — 2026-04-13 — Fix carousel cards overflow
 
