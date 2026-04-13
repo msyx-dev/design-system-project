@@ -1,5 +1,11 @@
 # Releases
 
+## 2.24.3 — 2026-04-13 — Fix sync.sh --no-showcase propriétés CSS orphelines
+
+### Fixed
+- `sync.sh --no-showcase` laissait des propriétés CSS orphelines dans `ds-layout.css` — les `sed` supprimaient les sélecteurs showcase mais pas les blocs complets (#146)
+- Remplacement des 3 `sed` fragiles par 1 `awk` robuste utilisant des marqueurs `@strip:showcase-start/end` dans `layout.css`
+
 ## 2.24.2 — 2026-04-13 — Fix risk matrix — taille intermédiaire + compact 5×5
 
 ### Changed
