@@ -1,5 +1,10 @@
 # Releases
 
+
+## 2.23.1 — 2026-04-13 — Fix carousel cards overflow
+
+### Fixed
+- Carousel variant `--cards` : ajout `overflow: hidden` sur `.carousel-track` pour clipper les slides lors des transitions (#134)
 ## 2.23.0 — 2026-04-13 — Sprint 2 + Sprint 3 complets
 
 ### Added — Sprint 2 (Audit P0+P1, 55 SP)
