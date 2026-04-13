@@ -1,4 +1,4 @@
-/* @ds-version: 2.20.1 */
+/* @ds-version: 2.24.4 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -50,6 +50,20 @@
 }
 .sidebar-link.active { color: var(--accent-light); background: var(--sidebar-link-active-bg); border-inline-start-color: var(--accent); }
 .sidebar-link .icon { width: 18px; text-align: center; font-size: 0.9rem; }
+/* Sidebar link disabled */
+.sidebar-link-disabled,
+.sidebar-link[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* Sidebar sublinks */
+.sidebar-sublinks {
+  padding-left: var(--space-lg);
+}
+.sidebar-sublinks .sidebar-link {
+  font-size: 0.85rem;
+}
 .sidebar-footer { margin-top: auto; padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border); }
 .sidebar-footer p { font-size: 0.72rem; color: var(--text-dim); }
 
