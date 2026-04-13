@@ -1,5 +1,11 @@
 # Releases
 
+## 2.24.1 — 2026-04-13 — Fix lazy-load init composants Sprint 8+
+
+### Fixed
+- `__initComponents()` ne réinitialisait que les composants fondateurs — les 13 composants Sprint 8+ (risk matrix, usage meter, pricing, wizard, etc.) restaient non-initialisés en lazy-load sur site.html (#143)
+- Nouvelle fonction `reinitAll()` appelant tous les init*, exposée via `window.__initComponents`
+
 ## 2.24.0 — 2026-04-13 — Sprint 4 (14 SP, 5 issues)
 
 ### Added

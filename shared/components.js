@@ -3935,7 +3935,24 @@ function initConfirmPopover() {
 }
 window.__initConfirmPopover = initConfirmPopover;
 
-window.__initComponents = initComponents;
+// reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
+function reinitAll() {
+    initComponents();
+    initPricing();
+    initNotificationCenter();
+    initActivityFeed();
+    initWizard();
+    initInlineEdit();
+    initActionMenu();
+    initSidebarRail();
+    initRiskMatrix();
+    initAutoSave();
+    initComments();
+    initAuthFlows();
+    initUsageMeter();
+    initConfirmPopover();
+}
+window.__initComponents = reinitAll;
 
 // Close dropdowns and action menus on outside click (once)
 document.addEventListener('click', () => {
@@ -3953,19 +3970,4 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    initComponents();
-    initPricing();
-    initNotificationCenter();
-    initActivityFeed();
-    initWizard();
-    initInlineEdit();
-    initActionMenu();
-    initSidebarRail();
-    initRiskMatrix();
-    initAutoSave();
-    initComments();
-    initAuthFlows();
-    initUsageMeter();
-    initConfirmPopover();
-});
+document.addEventListener('DOMContentLoaded', reinitAll);
