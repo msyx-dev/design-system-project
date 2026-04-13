@@ -1,4 +1,4 @@
-/* @ds-version: 2.23.0 */
+/* @ds-version: 2.24.3 */
 /* components.css — Composants UI du design system msyx.design
    Import : @import url('css/components.css'); */
 
@@ -196,6 +196,14 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 .avatar-status.online::after { background: var(--success); }
 .avatar-status.offline::after { background: var(--text-dim); }
 .avatar-status.busy::after { background: var(--danger); }
+/* Avatar image */
+.avatar img,
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
 
 /* ===== TABLE ===== */
 .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
@@ -2056,8 +2064,8 @@ tbody tr:last-child .comparison-recommended {
     .hero { min-height: auto; padding: 5rem 1.5rem 3rem; }
     .hero-stats { gap: 1.5rem; }
     .chart-legend { justify-content: center; }
-    .kanban-board, .sprint-board { overflow-x: auto; }
-    .kanban-column { min-width: 240px; }
+    .kanban-board, .sprint-board { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .kanban-column { min-width: 85vw; scroll-snap-align: start; }
     .roadmap-track { min-width: 700px; }
     .backlog-filters { flex-wrap: wrap; }
     .sprint-header { flex-direction: column; align-items: flex-start; }
