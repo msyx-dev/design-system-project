@@ -1,20 +1,19 @@
 # Releases
 
-## 2.23.2 — 2026-04-13 — Fix risk matrix dots invisible en SPA
+## 2.24.0 — 2026-04-13 — Sprint 4 (14 SP, 5 issues)
+
+### Added
+- Header enrichi démo activé sur toutes les pages du DS — avatar, dropdown, notifications (#136)
 
 ### Fixed
-- Risk Matrix : dots invisibles en navigation SPA — ajout détection de visibilité immédiate après IntersectionObserver (#137)
+- NAV_SECTIONS : ajout 4 sections manquantes dans la sidebar — risk-matrix, video-embed, decision-tree, before-after (#135)
+- Carousel `--cards` : ajout `overflow: hidden` sur `.carousel-track` pour clipper les slides (#134)
+- Risk Matrix : dots invisibles en navigation SPA — fallback visibilité immédiate après IntersectionObserver (#137)
+- Usage Meter : barres à width:0 en SPA — fallback immédiat si composant déjà visible au init (#138)
 
+### Changed
+- Version 2.23.0 → 2.24.0
 
-## 2.23.2 — 2026-04-13 — Fix Usage Meter width:0 en SPA
-
-### Fixed
-- Usage Meter : fallback immédiat si le composant est déjà visible au moment de l'init, corrige les barres à width:0 en navigation SPA (#138)
-
-## 2.23.1 — 2026-04-13 — Fix carousel cards overflow
-
-### Fixed
-- Carousel variant `--cards` : ajout `overflow: hidden` sur `.carousel-track` pour clipper les slides lors des transitions (#134)
 ## 2.23.0 — 2026-04-13 — Sprint 2 + Sprint 3 complets
 
 ### Added — Sprint 2 (Audit P0+P1, 55 SP)
