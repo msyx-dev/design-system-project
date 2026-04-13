@@ -988,6 +988,48 @@
         </div>
     </div>
 
+    <!-- Variante 5×5 compacte -->
+    <div class="demo-box">
+        <span class="demo-label">5&times;5 &mdash; Compact</span>
+        <div class="risk-matrix risk-matrix-compact" data-size="5" data-label-x="Impact" data-label-y="Probabilit&eacute;" style="max-width:360px;">
+            <div class="risk-item"
+                data-prob="5" data-impact="5"
+                data-label="Panne critique"
+                data-level="critical"
+                data-owner="CTO"
+                data-detail="Panne totale du syst&egrave;me en production. Plan de reprise d'activit&eacute; activ&eacute;.">
+            </div>
+            <div class="risk-item"
+                data-prob="3" data-impact="4"
+                data-label="Fuite donn&eacute;es"
+                data-level="high"
+                data-owner="RSSI"
+                data-detail="Acc&egrave;s non autoris&eacute; aux donn&eacute;es sensibles.">
+            </div>
+            <div class="risk-item"
+                data-prob="4" data-impact="2"
+                data-label="Retard sprint"
+                data-level="medium"
+                data-owner="Scrum Master"
+                data-detail="Livraison retard&eacute;e de 1 &agrave; 2 jours.">
+            </div>
+            <div class="risk-item"
+                data-prob="1" data-impact="3"
+                data-label="Panne r&eacute;seau"
+                data-level="low"
+                data-owner="Ops"
+                data-detail="Coupure r&eacute;seau ponctuelle. Redondance en place.">
+            </div>
+            <div class="risk-item"
+                data-prob="2" data-impact="5"
+                data-label="Bug critique prod"
+                data-level="high"
+                data-owner="Lead Dev"
+                data-detail="D&eacute;faut majeur affect&eacute; les transactions. Rollback possible.">
+            </div>
+        </div>
+    </div>
+
     <!-- Variante collision -->
     <div class="demo-box">
         <span class="demo-label">5&times;5 &mdash; Collision de points (m&ecirc;me case)</span>
@@ -1034,6 +1076,7 @@
         <span class="demo-label">Usage</span>
         <p class="demo-note">Structure&nbsp;: <code class="code-inline">.risk-matrix[data-size="3|4|5"]</code> contenant des <code class="code-inline">.risk-item</code> avec <code class="code-inline">data-prob</code>, <code class="code-inline">data-impact</code>, <code class="code-inline">data-label</code>, <code class="code-inline">data-level</code>, <code class="code-inline">data-owner</code>, <code class="code-inline">data-detail</code>.</p>
         <p class="demo-note">Axes&nbsp;: <code class="code-inline">data-label-x</code> (abscisse) et <code class="code-inline">data-label-y</code> (ordonn&eacute;e) sur le conteneur.</p>
+        <p class="demo-note">Variante compacte&nbsp;: ajouter la classe <code class="code-inline">.risk-matrix-compact</code> (ou l'attribut <code class="code-inline">data-compact</code>) + un <code class="code-inline">style="max-width:360px;"</code> pour une vue r&eacute;duite.</p>
         <p class="demo-note-last">JS&nbsp;: <code class="code-inline">initRiskMatrix()</code> &mdash; g&eacute;n&egrave;re la grille dynamiquement, g&egrave;re collisions, tooltip hover, modal d&eacute;tail.</p>
     </div>
 </section>
