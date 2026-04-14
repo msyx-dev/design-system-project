@@ -329,6 +329,7 @@ dialog.modal-dialog {
   padding: 0;
   max-width: 480px;
   width: 90%;
+  margin: auto;
   box-shadow: var(--shadow-lg);
   animation: modalIn 0.2s ease-out;
 }

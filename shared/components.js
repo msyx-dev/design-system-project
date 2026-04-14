@@ -3682,7 +3682,14 @@ function initRiskMatrix() {
                   (dot.dataset.riskDetail ? '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted);vertical-align:top;">Description</td><td style="padding:0.4rem 0.6rem;">' + escapeAttr(dot.dataset.riskDetail) + '</td></tr>' : '') +
                 '</table>';
             if (window.__openModal) {
-                window.__openModal({ title: dot.dataset.riskLabel || 'Risque', bodyHTML: bodyHTML });
+                window.__openModal({
+                    title: dot.dataset.riskLabel || 'Risque',
+                    bodyHTML: bodyHTML,
+                    actions: [
+                        { label: 'Modifier', style: 'secondary' },
+                        { label: 'Fermer', style: 'primary' }
+                    ]
+                });
             }
         }
 
