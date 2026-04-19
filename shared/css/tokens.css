@@ -1,4 +1,4 @@
-/* @ds-version: 2.24.4 */
+/* @ds-version: 2.25.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -267,6 +267,21 @@
     --danger-dark: #dc2626;
     --info-dark: #0e7490;
 
+    /* Status tokens (fg/bg/border triplets pour Alert, Input error, Button danger) */
+    /* Mode dark ACSSI : fg = couleur claire sur fond marine, bg/border alpha */
+    --status-warn-fg: #fb923c;
+    --status-warn-bg: rgba(251, 146, 60, 0.15);
+    --status-warn-border: rgba(251, 146, 60, 0.40);
+    --status-error-fg: #f87171;
+    --status-error-bg: rgba(248, 113, 113, 0.15);
+    --status-error-border: rgba(248, 113, 113, 0.40);
+    --status-info-fg: #7dd3fc;
+    --status-info-bg: rgba(125, 211, 252, 0.15);
+    --status-info-border: rgba(125, 211, 252, 0.40);
+    --status-success-fg: #4ade80;
+    --status-success-bg: rgba(74, 222, 128, 0.15);
+    --status-success-border: rgba(74, 222, 128, 0.40);
+
     /* Code syntax */
     --code-keyword: #e0cd1e;
     --code-string: #4ade80;
@@ -360,6 +375,21 @@
     --warning-dark: #c2410c;
     --danger-dark: #b91c1c;
     --info-dark: #0c6b88;
+
+    /* Status tokens (fg/bg/border triplets pour Alert, Input error, Button danger) */
+    /* Mode light : fg WCAG AA sur #ffffff — bg/border via color-mix */
+    --status-warn-fg: #c2410c;
+    --status-warn-bg: color-mix(in srgb, #c2410c 8%, #ffffff);
+    --status-warn-border: color-mix(in srgb, #c2410c 24%, #ffffff);
+    --status-error-fg: #dc2626;
+    --status-error-bg: color-mix(in srgb, #dc2626 8%, #ffffff);
+    --status-error-border: color-mix(in srgb, #dc2626 24%, #ffffff);
+    --status-info-fg: #0369a1;
+    --status-info-bg: color-mix(in srgb, #0369a1 8%, #ffffff);
+    --status-info-border: color-mix(in srgb, #0369a1 24%, #ffffff);
+    --status-success-fg: #15803d;
+    --status-success-bg: color-mix(in srgb, #15803d 8%, #ffffff);
+    --status-success-border: color-mix(in srgb, #15803d 24%, #ffffff);
 
     /* Code syntax — adapte fond clair */
     --code-keyword: #00345f;

@@ -1,5 +1,16 @@
 # Releases
 
+## 2.25.0 — 2026-04-19 — Tokens status (warn/error/info/success) fg/bg/border
+
+### Added
+- 12 tokens CSS semantic `--status-{warn,error,info,success}-{fg,bg,border}` dans `shared/css/tokens.css` (blocs `[data-theme="acssi"]` + `[data-theme="acssi"][data-mode="light"]`) — base du feedback utilisateur (Alert, Input error, Button danger, banners de lock)
+- Section preview `#status-tokens` dans `pages/feedback.html` — 4 blocs démontrant les triplets fg/bg/border
+- Mode light : fg WCAG AA sur `#ffffff` (warn `#c2410c` 5.82:1, error `#dc2626` 4.83:1, info `#0369a1` 6.45:1, success `#15803d` 5.14:1), bg/border via `color-mix()`
+- Mode dark : fg light variant + rgba alpha 0.15/0.40 pour bg/border
+
+### Changed
+- Bump `@ds-version` 2.24.4 → 2.25.0 (tokens.css, layout.css, utilities.css, nav.js header)
+
 ## 2.24.4 — 2026-04-13 — Fix sync.sh --no-showcase propriétés CSS orphelines
 
 ### Fixed

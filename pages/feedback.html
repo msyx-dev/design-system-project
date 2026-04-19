@@ -55,6 +55,31 @@
     </div>
 </section>
 
+<!-- STATUS TOKENS -->
+<section id="status-tokens">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Tokens status (fg / bg / border)</h2><p>Triplets semantic pour Alert, Input (etat erreur), Button (variant danger), banners de lock. Contraste WCAG AA valide en mode light sur <code style="color:var(--accent);">--surface-solid</code>.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Apercu</span>
+        <div class="component-demo" style="display: grid; gap: var(--space-md); grid-template-columns: repeat(2, 1fr);">
+            <div style="padding: var(--space-md); border-radius: var(--radius-md); color: var(--status-warn-fg); background: var(--status-warn-bg); border: 1px solid var(--status-warn-border);">
+                <strong>warn</strong> &mdash; Avertissement non-bloquant
+            </div>
+            <div style="padding: var(--space-md); border-radius: var(--radius-md); color: var(--status-error-fg); background: var(--status-error-bg); border: 1px solid var(--status-error-border);">
+                <strong>error</strong> &mdash; Erreur bloquante
+            </div>
+            <div style="padding: var(--space-md); border-radius: var(--radius-md); color: var(--status-info-fg); background: var(--status-info-bg); border: 1px solid var(--status-info-border);">
+                <strong>info</strong> &mdash; Information neutre
+            </div>
+            <div style="padding: var(--space-md); border-radius: var(--radius-md); color: var(--status-success-fg); background: var(--status-success-bg); border: 1px solid var(--status-success-border);">
+                <strong>success</strong> &mdash; Confirmation
+            </div>
+        </div>
+        <div class="component-description">
+            <p class="typo-small">Chaque status expose 3 variantes : <code style="color:var(--accent);">-fg</code> (texte/icone), <code style="color:var(--accent);">-bg</code> (fond teinte), <code style="color:var(--accent);">-border</code> (bordure). Tokens disponibles : <code style="color:var(--accent);">--status-{warn,error,info,success}-{fg,bg,border}</code>.</p>
+        </div>
+    </div>
+</section>
+
 <!-- TOASTS -->
 <section id="toasts">
     <div class="section-header"><span class="overline">Feedback</span><h2>Toasts</h2><p>Notifications ephemeres non-bloquantes avec auto-dismiss.</p></div>
