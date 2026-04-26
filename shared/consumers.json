@@ -1,7 +1,24 @@
 {
   "consumers": [
-    {"name": "acssi-core", "path": "/home/deployer/projects/prod/acssi-core-project", "css_dir": "src/styles"},
-    {"name": "acssistender", "path": "/home/deployer/projects/prod/acssistender", "css_dir": "frontend/src/styles"},
-    {"name": "aksyva", "path": "/home/deployer/projects/prod/aksyva-project", "css_dir": "src/styles"}
+    {
+      "name": "acssi-core",
+      "path": "/home/deployer/projects/prod/acssi-core-project",
+      "css_dir": "src/styles"
+    },
+    {
+      "name": "acssistender",
+      "path": "/home/deployer/projects/prod/acssistender",
+      "css_dir": "frontend/src/styles"
+    },
+    {
+      "name": "aksyva",
+      "path": "/home/deployer/projects/prod/aksyva-project",
+      "css_dir": "src/styles"
+    },
+    {
+      "name": "aksy",
+      "path": "/home/deployer/projects/prod/aksy",
+      "css_dir": "web/assets/css"
+    }
   ]
 }
