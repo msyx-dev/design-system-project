@@ -9,7 +9,8 @@
 - Mode dark : fg light variant + rgba alpha 0.15/0.40 pour bg/border
 
 ### Changed
-- Bump `@ds-version` 2.24.4 → 2.25.0 (tokens.css, layout.css, utilities.css, nav.js header)
+- Bump `@ds-version` 2.24.4 → 2.25.0 (tokens.css, layout.css, utilities.css, components.css, nav.js header)
+- Fix aksy#106 — components.css avait été oublié dans le bump 51a3da0, drift v2.24.3 vs v2.25.0 corrigé (procédure de bump : @ds-version est globale, mettre à jour les 4 CSS + nav.js même si le commit ne touche pas leur contenu)
 
 ## 2.24.4 — 2026-04-13 — Fix sync.sh --no-showcase propriétés CSS orphelines
 
