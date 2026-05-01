@@ -1,5 +1,16 @@
 # Releases
 
+## 2.26.0 — 2026-05-01 — Utilitaire .text-truncate (alias Bootstrap-compat)
+
+### Added
+- Classe utilitaire `.text-truncate` — alias Bootstrap-compatible de `.truncate` (troncature monoligne avec overflow hidden + ellipsis) dans `shared/css/utilities.css`
+- `max-width: 100%` ajouté au sélecteur groupé `.truncate, .text-truncate` — sécurise le rendu en flex/grid layouts (zéro régression dans les contextes block standard)
+- Démo enrichie dans `pages/fondation.html` (section Typographie > Troncature) : exemple `.text-truncate` côte à côte avec `.truncate` pour illustrer l'équivalence
+
+### Changed
+- Bump `@ds-version` 2.25.0 → 2.26.0 (tokens.css, utilities.css, nav.js header)
+- Migration DS-EXCEPTION aksy #218 §4 : `.text-truncate` désormais disponible nativement dans le DS
+
 ## 2.25.0 — 2026-04-19 — Tokens status (warn/error/info/success) fg/bg/border
 
 ### Added
