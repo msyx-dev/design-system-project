@@ -1,11 +1,11 @@
 {
-  "version": "2.26.0",
+  "version": "2.27.0",
   "generated": "2026-05-01",
   "components": [
     {
       "name": "buttons",
       "page": "composants",
-      "cssClasses": [".btn-primary", ".btn-secondary", ".btn-ghost", ".btn-sm", ".btn-lg", ".btn-xs", ".btn-icon", ".btn-danger", ".btn-success", ".btn-warning", ".btn-outline-danger", ".btn-loading"],
+      "cssClasses": [".btn-primary", ".btn-secondary", ".btn-ghost", ".btn-sm", ".btn-lg", ".btn-xs", ".btn-icon", ".btn-icon--danger", ".btn-danger", ".btn-success", ".btn-warning", ".btn-outline-danger", ".btn-loading"],
       "jsInit": null
     },
     {
