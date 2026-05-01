@@ -1,4 +1,4 @@
-/* @ds-version: 2.28.0 */
+/* @ds-version: 2.29.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -208,6 +208,9 @@
     --accent-light: #ead92e;
     --accent-glow: rgba(var(--accent-rgb), 0.12);
 
+    /* Texte sur fond accent — marine sur or (WCAG AAA 8.21:1) */
+    --text-on-accent: #00243f;
+
     /* Surfaces */
     --surface: rgba(0, 69, 122, 0.6);
     --surface-solid: #00457a;
@@ -219,7 +222,8 @@
     --text-dim: #9eb3c8;
 
     /* Gradients corporate */
-    --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
+    /* gradient-1 : or→or-foncé (marine foncé lisible partout, WCAG AA ≥ 4.8:1) */
+    --gradient-1: linear-gradient(135deg, #e0cd1e, #b8a51a);
     --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
     --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
     --gradient-4: linear-gradient(135deg, #e0cd1e, #f59e0b);
@@ -320,6 +324,9 @@
     --accent-rgb: 0, 52, 95;
     --accent-light: #00457a;
     --accent-glow: rgba(var(--accent-rgb), 0.10);
+
+    /* Texte sur fond accent — blanc sur marine (WCAG AAA 12.7:1) */
+    --text-on-accent: #ffffff;
 
     /* Surfaces */
     --surface: rgba(255, 255, 255, 0.85);
