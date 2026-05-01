@@ -4,8 +4,8 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**87 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
-Version courante : **v2.30.1**.
+**87 composants UI** repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0.
+Version courante : **v2.31.0**.
 
 ## Structure
 
@@ -27,7 +27,7 @@ shared/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.) — variantes boutons : .btn-icon--danger (destructif, v2.27.0)
+    components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.) — variantes boutons : .btn-icon--danger (destructif, v2.27.0). Bloc "RESET NATIF" en tete (v2.31.0) : reset a {} (WCAG 1.4.3) + :focus-visible {} global (WCAG 2.4.7), cascade garantie par specificite inferieure aux composants DS.
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
   check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides

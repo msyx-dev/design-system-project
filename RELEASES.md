@@ -1,5 +1,23 @@
 # Releases
 
+## v2.31.0 — 2026-05-01 — Sprint 17 — A11y reset natif
+
+### Added
+- **Reset natif `<a>`** : couleur user-agent `#0000ee` remplacee par `var(--accent)` theme-aware. Resout le ratio 1.35:1 sur fond ACSSI dark `#00345f` → >= 4.5:1 dans tous les themes/modes (closes #166). Hover : `text-decoration-thickness: 2px` (WCAG 1.4.1 feedback non-couleur). `text-underline-offset: 0.15em` pour lisibilite.
+- **Reset natif `:focus-visible`** : outline `2px solid var(--accent)` + `outline-offset: 2px` sur tous les elements focusables sans focus custom. Resout l'outline 1px user-agent insuffisant (~2:1) en dark mode (closes #167, absorbe par #166 — meme zone CSS, meme sprint). Cascade garantie : les composants DS avec focus custom (`.btn-*`, `.input`, `.accordion-header`, `.dropdown-option`, `.fab`, `.hub-card`) ont une specificite superieure et gardent leur apparence.
+- **Demo** : nouvelle section "Reset natif" dans `pages/composants.html#reset-natif` avec 2 sous-sections (liens natifs + focus visible global). Elements demo : `<a>`, `<button>` natif, `<input>` natif, `<span tabindex="0">`.
+- Bloc CSS `/* ===== RESET NATIF ===== */` en tete de `shared/css/components.css` (avant `.hero`, cascade naturelle).
+
+### Conformite
+- WCAG 1.4.3 (Contrast Minimum, 4.5:1) — liens natifs tous themes
+- WCAG 1.4.1 (Use of Color) — hover feedback non-couleur
+- WCAG 2.4.7 (Focus Visible, >= 3:1 + >= 2px) — focus-visible global
+
+### Note consolidation
+L'issue #167 (focus-visible natif outline 1px) a ete absorbee dans cette PR pour garantir la coherence cascade CSS et eviter tout conflit/regression croisee sur la meme zone. #167 sera ferme par le parent post-merge.
+
+---
+
 ## v2.30.1 — 2026-05-01 — Sprint 17
 
 ### Fixed (a11y)
