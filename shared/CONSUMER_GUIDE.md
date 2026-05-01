@@ -353,3 +353,37 @@ Recalibrage effectué en v2.30.0 (closes #164, fixes consumer bugs aksy#267 #268
 - **Texte sur fond surface clair** → `--text` (body) ou `--text-muted` (secondaire)
 - **`--text-dim`** → seulement decoratif (legend, label de chart) sur fond `--surface-solid` blanc — jamais sur surfaces marines
 - **`--accent-light`** → decoratif sur fonds **tintes transparents** (`color-mix --accent 8-12%`), JAMAIS sur `--accent` solide
+
+---
+
+## Bannir `color: white` côté consumer (v2.30.1, #165)
+
+**Règle** : ne jamais utiliser `color: white`, `color: #fff` ou `color: #ffffff` en dur dans le code consumer.
+
+### Pourquoi ?
+
+Les tokens `--accent`, `--gradient-*` et `--danger` varient par thème. En ACSSI dark, l'accent est **or** (`#e0cd1e`) — du blanc sur fond or donne un ratio < 3:1, illisible. Le token `--text-on-accent` est thème-aware et garantit WCAG AA minimum dans toutes les combinaisons.
+
+### Tokens à utiliser
+
+| Situation | Token correct | Ne pas écrire |
+|-----------|---------------|---------------|
+| Texte sur fond `--accent` | `color: var(--text-on-accent)` | `color: #fff` |
+| Texte sur fond `--gradient-1` / `--gradient-*` | `color: var(--text-on-accent)` | `color: white` |
+| Texte sur fond `--danger` | `color: var(--text-on-accent)` | `color: #ffffff` |
+| Badge/compteur sur fond coloré | `color: var(--text-on-accent)` | `color: #fff` |
+
+### Dérogation autorisée
+
+Si le fond est **thème-indépendant** (ex. `rgba(0,0,0,0.5)`, fond noir overlay), conserver `#fff` est correct. Documenter le choix avec un commentaire :
+
+```css
+color: #fff; /* a11y: fond noir 50% indépendant du thème, blanc lisible toujours (ratio ~10:1) */
+```
+
+### Vérification rapide
+
+```bash
+grep -rn "color:\s*white\|color:\s*#fff" votre-projet/src/
+# → aucun résultat sans commentaire de dérogation
+```

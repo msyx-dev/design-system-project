@@ -1,5 +1,16 @@
 # Releases
 
+## v2.30.1 — 2026-05-01 — Sprint 17
+
+### Fixed (a11y)
+- **Bannir `color: white` hardcodé** — 7 occurrences remplacées par `color: var(--text-on-accent)` dans `layout.css` et `components.css` (closes #165)
+  - `layout.css` : `.header-notification-badge`, `.header-avatar-trigger`
+  - `components.css` : `.video-embed-play`, `.before-after-handle::after`, `.notif-trigger-count`, `.wizard-step.active .wizard-step-dot`, `.risk-dot`
+  - Dérogation maintenue : `.before-after-label` (fond `rgba(0,0,0,0.5)` indépendant du thème, commentaire explicite)
+- Zéro occurrence `color: white|#fff|#ffffff` hardcodée restante (sauf la dérogation justifiée)
+
+---
+
 ## v2.30.0 — 2026-05-01 — Sprint 17
 
 ### Fixed (a11y)

@@ -239,7 +239,7 @@
     height: 16px;
     padding: 0 4px;
     background: var(--danger, #ef4444);
-    color: #fff;
+    color: var(--text-on-accent);
     font-size: 0.62rem;
     font-weight: 700;
     border-radius: 999px;
@@ -264,7 +264,7 @@
     background: var(--gradient-1);
     border: 2px solid transparent;
     background-clip: padding-box;
-    color: #fff;
+    color: var(--text-on-accent);
     font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
