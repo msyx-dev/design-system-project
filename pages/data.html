@@ -374,6 +374,12 @@
 <!-- DATA GRID -->
 <section id="data-grid">
     <div class="section-header"><span class="overline">Data</span><h2>Data Grid</h2><p>Table enrichie avec tri multi-colonne, filtres inline et selection multiple.</p></div>
+    <div class="alert alert-info" style="margin-bottom: var(--space-md);">
+        <span class="alert-icon">ⓘ</span>
+        <div>
+            <strong>Convention de tri</strong> — les en-têtes triables utilisent <code>.data-grid-sortable</code> sur le <code>&lt;th&gt;</code> et <code>.data-grid-sort-icon</code> sur l'icône enfant. Le JS <code>initDataGrids()</code> gère <code>aria-sort="ascending|descending|none"</code> au clic. Caractères suggérés : <code>↕</code> (none), <code>↑</code> (asc), <code>↓</code> (desc). Ne pas utiliser de classe non-préfixée comme <code>.sort-icon</code>.
+        </div>
+    </div>
     <div class="demo-box">
         <div class="data-grid-wrap">
             <table class="data-grid" id="data-grid-main">
@@ -403,6 +409,25 @@
         <div class="data-grid-footer">
             <span class="data-grid-count"></span>
             <span class="data-grid-selection"></span>
+        </div>
+    </div>
+    <div class="demo-box" style="margin-top: var(--space-md);">
+        <h4 style="margin: 0 0 var(--space-sm) 0; font-size: 0.85rem; color: var(--text-muted);">Etat initial trie (aria-sort="ascending" au repos)</h4>
+        <div class="data-grid-wrap" style="max-height: 200px;">
+            <table class="data-grid" id="data-grid-presort" data-bound="1">
+                <thead>
+                    <tr class="data-grid-header-row">
+                        <th class="data-grid-sortable" data-col="0" aria-sort="ascending">Nom <span class="data-grid-sort-icon">↑</span></th>
+                        <th class="data-grid-sortable" data-col="1">Date <span class="data-grid-sort-icon">↕</span></th>
+                        <th class="data-grid-sortable" data-col="2">Statut <span class="data-grid-sort-icon">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody class="data-grid-body">
+                    <tr><td>Alpha</td><td>2026-04-01</td><td>OK</td></tr>
+                    <tr><td>Beta</td><td>2026-04-15</td><td>KO</td></tr>
+                    <tr><td>Gamma</td><td>2026-04-30</td><td>OK</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

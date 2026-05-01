@@ -1,6 +1,6 @@
 # Releases
 
-## 2.26.0 — 2026-05-01 — Utilitaire .text-truncate (alias Bootstrap-compat)
+## 2.26.0 — 2026-05-01 — Utilitaire .text-truncate + Convention tri data-grid
 
 ### Added
 - Classe utilitaire `.text-truncate` — alias Bootstrap-compatible de `.truncate` (troncature monoligne avec overflow hidden + ellipsis) dans `shared/css/utilities.css`
@@ -8,6 +8,8 @@
 - Démo enrichie dans `pages/fondation.html` (section Typographie > Troncature) : exemple `.text-truncate` côte à côte avec `.truncate` pour illustrer l'équivalence
 
 ### Changed
+- Convention de tri data-grid documentée explicitement dans `pages/data.html` : encadré info `.data-grid-sortable` + `.data-grid-sort-icon` + `aria-sort` ; deuxième démo avec `aria-sort="ascending"` au repos (#153)
+- `shared/components-registry.json` entrée `data-grid` : champ `notes` ajouté — convention canonique tri DS, anti-alias `.sort-icon` non-préfixé
 - Bump `@ds-version` 2.25.0 → 2.26.0 (tokens.css, utilities.css, nav.js header)
 - Migration DS-EXCEPTION aksy #218 §4 : `.text-truncate` désormais disponible nativement dans le DS
 
