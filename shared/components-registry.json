@@ -1,6 +1,6 @@
 {
-  "version": "2.25.0",
-  "generated": "2026-04-13",
+  "version": "2.26.0",
+  "generated": "2026-05-01",
   "components": [
     {
       "name": "buttons",
@@ -60,7 +60,8 @@
       "name": "data-grid",
       "page": "data",
       "cssClasses": [".data-grid-wrap", ".data-grid", ".data-grid-header-row", ".data-grid-filter-row", ".data-grid-sortable", ".data-grid-sort-icon", ".data-grid-filter", ".data-grid-body", ".data-grid-footer", ".data-grid-selection"],
-      "jsInit": "initDataGrids"
+      "jsInit": "initDataGrids",
+      "notes": "Tri : appliquer .data-grid-sortable sur <th> + .data-grid-sort-icon sur l'icone enfant. Le JS gere aria-sort=ascending|descending|none au clic. Convention canonique DS — ne pas utiliser de classe non-prefixee comme .sort-icon."
     },
     {
       "name": "tree-view",
