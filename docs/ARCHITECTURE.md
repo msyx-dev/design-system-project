@@ -4,8 +4,8 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**86 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
-Version courante : **v2.24.4**.
+**87 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
+Version courante : **v2.28.0**.
 
 ## Structure
 
