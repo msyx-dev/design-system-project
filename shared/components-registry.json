@@ -350,6 +350,12 @@
       "page": "composants",
       "cssClasses": [".avatar-img"],
       "jsInit": null
+    },
+    {
+      "name": "filter-bar",
+      "page": "formulaires",
+      "cssClasses": [".filter-bar", ".filter-bar-search", ".filter-bar-actions"],
+      "jsInit": null
     }
   ]
 }

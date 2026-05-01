@@ -1,17 +1,22 @@
 # Releases
 
-## 2.27.0 — 2026-05-01 — Variante destructive .btn-icon--danger
+## 2.27.0 — 2026-05-01 — Variante destructive .btn-icon--danger + Composant .filter-bar
 
 ### Added
 - `.btn-icon--danger` — variante destructive de `.btn-icon` (couleur, border et hover en `--danger`). Cas d'usage : icônes d'action destructive (supprimer ligne, retirer collaborateur). Migré depuis aksy DS-EXCEPTION #24. (#156)
 - Démo dans `pages/composants.html#boutons` (sous-section "Boutons icones destructifs") avec 3 variantes + état disabled
 - Focus-visible et :disabled intégrés aux sélecteurs groupés de `.btn-icon--danger`
+- Composant `.filter-bar` — barre de filtres horizontale standardisée pour vues master/listes filtrées (#154). Pattern extrait de aksy `.chantiers-filter-bar` (DS-EXCEPTION §4). Mobile-first, bascule colonne à 600px. Variantes : standard (selects + recherche), compact, actions trailing (`.filter-bar-actions`).
+- Classes : `.filter-bar`, `.filter-bar-search` (flex-grow champ recherche), `.filter-bar-actions` (actions trailing margin-left:auto)
+- Démo dans `pages/formulaires.html` — section `#filter-bar` avec 3 variantes + usage doc
+- Entrée `filter-bar` dans `shared/components-registry.json`
 
 ### Docs
 - `shared/CONSUMER_GUIDE.md` : section "Mapping aksy DS-EXCEPTION → DS msyx.fr" — `.btn-ghost.btn-danger` ≡ `.btn-outline-danger`, `.btn-primary.btn-danger` ≡ `.btn-danger`
 
 ### Changed
 - Bump `@ds-version` 2.26.0 → 2.27.0 (tokens.css, utilities.css, components.css, layout.css, nav.js header)
+- Compteur composants `site.html` : 86 → 87 / hub card Formulaires : 15 → 16 sections
 
 ## 2.26.0 — 2026-05-01 — Utilitaire .text-truncate + Convention tri data-grid
 

@@ -997,6 +997,53 @@
     </div>
 </section>
 
+<!-- FILTER BAR -->
+<section id="filter-bar">
+    <div class="section-header">
+        <span class="overline">Formulaires</span>
+        <h2>Filter Bar</h2>
+        <p class="section-subtitle">Barre de filtres horizontale pour vues liste / master tableau. Mobile-first, bascule en colonne à 600px. Composant 100% CSS, sans JS.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">Standard — selects + recherche</span>
+        <div class="filter-bar">
+            <select class="input" aria-label="Domaine"><option>Domaine — Tous</option><option>Sécurité</option><option>Qualité</option><option>Conformité</option></select>
+            <select class="input" aria-label="Cycle"><option>Cycle — Tous</option><option>2026</option><option>2025</option></select>
+            <select class="input" aria-label="Priorité"><option>Priorité — Toutes</option><option>Haute</option><option>Moyenne</option><option>Basse</option></select>
+            <input type="search" class="input filter-bar-search" placeholder="Rechercher…" aria-label="Recherche">
+        </div>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">Compact — 2 selects + recherche</span>
+        <div class="filter-bar">
+            <select class="input" aria-label="Statut"><option>Statut — Tous</option><option>Actif</option><option>Archivé</option></select>
+            <select class="input" aria-label="Type"><option>Type — Tous</option><option>Type A</option><option>Type B</option></select>
+            <input type="search" class="input filter-bar-search" placeholder="Rechercher…" aria-label="Recherche">
+        </div>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">Avec actions trailing</span>
+        <div class="filter-bar">
+            <select class="input" aria-label="Domaine"><option>Domaine — Tous</option><option>Sécurité</option></select>
+            <select class="input" aria-label="Statut"><option>Statut — Tous</option><option>Actif</option><option>Fermé</option></select>
+            <input type="search" class="input filter-bar-search" placeholder="Rechercher…" aria-label="Recherche">
+            <div class="filter-bar-actions">
+                <button class="btn btn-ghost btn-sm" type="button">Réinitialiser</button>
+                <button class="btn btn-secondary btn-sm" type="button">Exporter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-box" style="margin-top:var(--space-md);">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Classe racine : <code class="code-inline">.filter-bar</code>. Inputs/selects héritent <code class="code-inline">.input</code>. Champ de recherche : ajouter <code class="code-inline">.filter-bar-search</code> (flex-grow automatique). Actions trailing : <code class="code-inline">.filter-bar-actions</code> (margin-left:auto).</p>
+        <p class="demo-note-last">Responsive : colonne pleine largeur à 600px. Aucun JS requis. Extrait de aksy <code class="code-inline">.chantiers-filter-bar</code> (DS-EXCEPTION §4, #154).</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

@@ -4141,3 +4141,20 @@ html.theme-transitioning *::after {
 @media (max-width: 600px) {
     .skeleton-dashboard { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ===== FILTER BAR ===== */
+/* Barre de filtres horizontale — pattern réutilisable pour vues master/listes filtrées */
+/* Extrait de aksy .chantiers-filter-bar (DS-EXCEPTION §4, issue #154) */
+.filter-bar { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; margin-bottom: var(--space-md); }
+.filter-bar .input,
+.filter-bar select.input { min-width: 160px; flex: 0 1 auto; }
+.filter-bar .filter-bar-search,
+.filter-bar input[type="search"].input { flex: 1 1 240px; min-width: 200px; }
+.filter-bar .filter-bar-actions { margin-left: auto; display: flex; gap: var(--space-xs); align-items: center; }
+@media (max-width: 600px) {
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .filter-bar .input,
+    .filter-bar select.input,
+    .filter-bar .filter-bar-search { min-width: 0; width: 100%; flex: 1 1 auto; }
+    .filter-bar .filter-bar-actions { margin-left: 0; justify-content: flex-end; }
+}
