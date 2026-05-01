@@ -1,5 +1,19 @@
 # Releases
 
+## 2.28.0 — 2026-05-01 — Modifier `.data-grid-col-sticky-end` — colonne actions sticky right
+
+### Added
+- Modifier `.data-grid-col-sticky-end` dans `.data-grid` — permet de pinner la dernière colonne (typiquement Actions) à droite lors du scroll horizontal. 100% CSS, aucun JS. Promu depuis DS-EXCEPTION aksy (chantiers/orga/SAP post-audit v0.2.9+) — #157
+- Classes : `.data-grid-col-sticky-end` (sur `<th>` ET `<td>` de la colonne à pinner)
+- Z-index : 1 (td body) / 3 (th header — coin top-right au-dessus du thead z=2)
+- Fond : `--surface-solid` (cohérent avec `.data-grid-header-row th`), ombre : `var(--shadow-sm)` (token DS, pas de hex)
+- Hover/selected : `color-mix(in srgb, var(--accent) 3%/7%, var(--surface-solid))` — cohérence avec le reste de la ligne
+- Démo dans `pages/data.html#data-grid` : table 8 colonnes forçant scroll horizontal + 5 lignes
+
+### Changed
+- Bump `@ds-version` 2.27.0 → 2.28.0 (tokens.css, utilities.css, components.css, layout.css, nav.js header)
+- `shared/components-registry.json` : entrée `data-grid.cssClasses` étendue avec `.data-grid-col-sticky-end` + version 2.28.0
+
 ## 2.27.0 — 2026-05-01 — Variante destructive .btn-icon--danger + Composant .filter-bar
 
 ### Added
