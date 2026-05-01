@@ -412,6 +412,49 @@
         </div>
     </div>
     <div class="demo-box" style="margin-top: var(--space-md);">
+        <h4 style="margin: 0 0 var(--space-sm) 0; font-size: 0.85rem; color: var(--text-muted);">Variante — Colonne actions sticky end</h4>
+        <p style="margin: 0 0 var(--space-sm) 0; font-size: 0.82rem; color: var(--text-muted);">Modifier <code>.data-grid-col-sticky-end</code> sur le <code>&lt;th&gt;</code> et les <code>&lt;td&gt;</code> de la dernière colonne — utile sur tableaux à 6+ colonnes avec scroll horizontal. Pattern issu d'AKSY (chantiers/orga/SAP), formalisé en v2.28.0.</p>
+        <div class="data-grid-wrap">
+            <table class="data-grid">
+                <thead>
+                    <tr class="data-grid-header-row">
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Référence</th>
+                        <th>Catégorie</th>
+                        <th>Statut</th>
+                        <th>Date création</th>
+                        <th>Responsable</th>
+                        <th class="data-grid-col-sticky-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="data-grid-body">
+                    <tr>
+                        <td>#001</td><td>Composant Alpha</td><td>REF-2026-001</td><td>UI</td><td>Actif</td><td>2026-04-12</td><td>Mike</td>
+                        <td class="data-grid-col-sticky-end"><button class="btn-icon" aria-label="Editer" title="Editer" style="min-width:32px;min-height:32px;">&#9998;</button> <button class="btn-icon btn-icon--danger" aria-label="Supprimer" title="Supprimer" style="min-width:32px;min-height:32px;">&#128465;</button></td>
+                    </tr>
+                    <tr>
+                        <td>#002</td><td>Composant Beta</td><td>REF-2026-002</td><td>Form</td><td>Brouillon</td><td>2026-04-15</td><td>Anna</td>
+                        <td class="data-grid-col-sticky-end"><button class="btn-icon" aria-label="Editer" title="Editer" style="min-width:32px;min-height:32px;">&#9998;</button> <button class="btn-icon btn-icon--danger" aria-label="Supprimer" title="Supprimer" style="min-width:32px;min-height:32px;">&#128465;</button></td>
+                    </tr>
+                    <tr>
+                        <td>#003</td><td>Composant Gamma</td><td>REF-2026-003</td><td>Data</td><td>Actif</td><td>2026-04-18</td><td>Lucas</td>
+                        <td class="data-grid-col-sticky-end"><button class="btn-icon" aria-label="Editer" title="Editer" style="min-width:32px;min-height:32px;">&#9998;</button> <button class="btn-icon btn-icon--danger" aria-label="Supprimer" title="Supprimer" style="min-width:32px;min-height:32px;">&#128465;</button></td>
+                    </tr>
+                    <tr>
+                        <td>#004</td><td>Composant Delta</td><td>REF-2026-004</td><td>Nav</td><td>Archivé</td><td>2026-04-20</td><td>Sophie</td>
+                        <td class="data-grid-col-sticky-end"><button class="btn-icon" aria-label="Editer" title="Editer" style="min-width:32px;min-height:32px;">&#9998;</button> <button class="btn-icon btn-icon--danger" aria-label="Supprimer" title="Supprimer" style="min-width:32px;min-height:32px;">&#128465;</button></td>
+                    </tr>
+                    <tr>
+                        <td>#005</td><td>Composant Epsilon</td><td>REF-2026-005</td><td>Feedback</td><td>Actif</td><td>2026-04-25</td><td>Marc</td>
+                        <td class="data-grid-col-sticky-end"><button class="btn-icon" aria-label="Editer" title="Editer" style="min-width:32px;min-height:32px;">&#9998;</button> <button class="btn-icon btn-icon--danger" aria-label="Supprimer" title="Supprimer" style="min-width:32px;min-height:32px;">&#128465;</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="margin: var(--space-xs) 0 0 0; font-size: 0.78rem; color: var(--text-muted);">Scroller horizontalement → la colonne Actions reste visible avec ombre signal. Pattern utile sur 6+ colonnes ; contre-productif sur mobile si moins de 4 colonnes.</p>
+    </div>
+    <div class="demo-box" style="margin-top: var(--space-md);">
         <h4 style="margin: 0 0 var(--space-sm) 0; font-size: 0.85rem; color: var(--text-muted);">Etat initial trie (aria-sort="ascending" au repos)</h4>
         <div class="data-grid-wrap" style="max-height: 200px;">
             <table class="data-grid" id="data-grid-presort" data-bound="1">

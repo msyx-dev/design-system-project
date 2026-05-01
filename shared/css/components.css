@@ -1,4 +1,4 @@
-/* @ds-version: 2.27.0 */
+/* @ds-version: 2.28.0 */
 /* components.css — Composants UI du design system msyx.design
    Import : @import url('css/components.css'); */
 
@@ -233,6 +233,21 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .data-grid-body td input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
 .data-grid-footer { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); gap: 1rem; }
 .data-grid-selection { color: var(--accent-light); font-weight: 500; }
+
+/* Modifier — colonne sticky end (typiquement actions). Promu depuis DS-EXCEPTION aksy v0.2.9+ (chantiers/orga/SAP).
+   Application : ajouter la classe sur le th ET tous les td de la même colonne (généralement la dernière).
+   Prérequis : .data-grid-wrap doit avoir overflow-x: auto (déjà présent). */
+.data-grid th.data-grid-col-sticky-end,
+.data-grid td.data-grid-col-sticky-end {
+  position: sticky;
+  right: 0;
+  z-index: 1; /* sous thead sticky (z=2) — coin top-right du header reste prioritaire */
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-sm);
+}
+.data-grid thead .data-grid-col-sticky-end { z-index: 3; } /* coin top-right : au-dessus de thead (2) ET col sticky body (1) */
+.data-grid-body tr:hover td.data-grid-col-sticky-end { background: color-mix(in srgb, var(--accent) 3%, var(--surface-solid)); }
+.data-grid-body tr.selected td.data-grid-col-sticky-end { background: color-mix(in srgb, var(--accent) 7%, var(--surface-solid)); }
 
 /* ===== TREE VIEW ===== */
 .tree { list-style: none; margin: 0; padding: 0; }
