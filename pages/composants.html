@@ -904,6 +904,36 @@
     </div>
 </section>
 
+<!-- RESET NATIF -->
+<section id="reset-natif">
+    <div class="section-header">
+        <span class="overline">A11y</span>
+        <h2>Reset natif</h2>
+        <p>Resets globaux pour les elements user-agent illisibles en dark mode.
+        Conforme WCAG 1.4.3 (contraste liens &ge; 4.5:1) et WCAG 2.4.7 (focus visible &ge; 3:1, &ge; 2px).
+        Consolide closes #166 + closes #167.</p>
+    </div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Liens natifs</span>
+            <p>Voici un <a href="#reset-natif">lien natif sans classe</a> dans un paragraphe.</p>
+            <p>Lien externe : <a href="https://msyx.fr">msyx.fr</a>. Lien avec texte plus long : <a href="#reset-natif">documentation du design system</a>.</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--space-sm);">Avant le reset : couleur user-agent <code class="code-inline">#0000ee</code> &mdash; ratio 1.35:1 sur ACSSI dark (invisible). Apres : <code class="code-inline">var(--accent)</code> theme-aware &ge; 4.5:1 dans tous les themes.</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);">Survol : <code class="code-inline">text-decoration-thickness: 2px</code> (feedback non-couleur WCAG 1.4.1). Focus clavier (Tab) : outline 2px accent.</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Focus visible global</span>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--space-md);">Naviguer au clavier (Tab) sur les elements ci-dessous &mdash; outline 2px <code class="code-inline">var(--accent)</code>, offset 2px. Les composants DS avec focus custom (<code class="code-inline">.btn-*</code>, <code class="code-inline">.input</code>, etc.) gardent leur apparence propre.</p>
+            <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;align-items:center;">
+                <a href="#reset-natif">Lien focusable</a>
+                <button type="button" style="padding:0.4rem 0.9rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);cursor:pointer;font-family:var(--font-sans);font-size:0.85rem;">Bouton natif</button>
+                <input type="text" placeholder="Input natif" style="padding:0.4rem 0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:0.85rem;">
+                <span tabindex="0" style="padding:0.4rem 0.9rem;border:1px dashed var(--border);border-radius:var(--radius-sm);cursor:default;font-size:0.85rem;" aria-label="Span focusable demo">Span [tabindex]</span>
+            </div>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

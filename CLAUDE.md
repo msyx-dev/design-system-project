@@ -17,7 +17,7 @@ site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
   fondation.html    # Couleurs, typographie, espacements, ombres, theming, classes utilitaires
-  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu
+  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu, reset natif (a + :focus-visible, v2.31.0)
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html         # Tables, data grid (+ col actions sticky-end), stats, charts, KPI, tree view, activity feed, matrice risque

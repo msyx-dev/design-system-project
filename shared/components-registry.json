@@ -1,5 +1,5 @@
 {
-  "version": "2.30.1",
+  "version": "2.31.0",
   "generated": "2026-05-01",
   "components": [
     {
@@ -356,6 +356,13 @@
       "page": "formulaires",
       "cssClasses": [".filter-bar", ".filter-bar-search", ".filter-bar-actions"],
       "jsInit": null
+    },
+    {
+      "name": "reset-natif",
+      "page": "composants",
+      "cssClasses": null,
+      "jsInit": null,
+      "description": "Reset global a + :focus-visible — WCAG 1.4.3 (contraste liens >= 4.5:1) et WCAG 2.4.7 (focus visible >= 3:1, >= 2px). Consolide #166 + #167."
     }
   ]
 }
