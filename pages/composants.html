@@ -36,6 +36,10 @@
         <div class="demo-row"><button class="btn-icon" aria-label="Menu">&#9776;</button><button class="btn-icon" aria-label="Fermer">&#10005;</button><button class="btn-icon" aria-label="Editer">&#9998;</button><button class="btn-icon notif-dot" aria-label="Notifications">&#128276;</button><div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-comp-settings" aria-label="Parametres">&#9881;</button><span class="tooltip" id="tt-comp-settings" role="tooltip">Parametres</span></div></div>
     </div>
     <div class="subsection">
+        <span class="demo-label">Boutons icones destructifs</span>
+        <div class="demo-row"><button class="btn-icon btn-icon--danger" aria-label="Supprimer">&#128465;</button><button class="btn-icon btn-icon--danger" aria-label="Retirer">&#10005;</button><button class="btn-icon btn-icon--danger" aria-label="Reinitialiser">&#10227;</button><button class="btn-icon btn-icon--danger" disabled aria-label="Supprimer (desactive)">&#128465;</button></div>
+    </div>
+    <div class="subsection">
         <span class="demo-label">Groupe de boutons</span>
         <div style="display:inline-flex;border-radius:10px;overflow:hidden;border:1px solid var(--border);"><button class="tab active" style="border:none;border-radius:0;padding:0.5rem 1.2rem;">Jour</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Semaine</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Mois</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Annee</button></div>
     </div>
@@ -67,7 +71,10 @@
 &lt;button class="btn-primary btn-loading"&gt;Chargement...&lt;/button&gt;
 
 &lt;!-- Bouton icone (aria-label obligatoire) --&gt;
-&lt;button class="btn-icon" aria-label="Fermer"&gt;&amp;#10005;&lt;/button&gt;</div>
+&lt;button class="btn-icon" aria-label="Fermer"&gt;&amp;#10005;&lt;/button&gt;
+
+&lt;!-- Bouton icone destructif (aria-label obligatoire) --&gt;
+&lt;button class="btn-icon btn-icon--danger" aria-label="Supprimer"&gt;&amp;#128465;&lt;/button&gt;</div>
     </div>
 </section>
 

@@ -1,5 +1,18 @@
 # Releases
 
+## 2.27.0 — 2026-05-01 — Variante destructive .btn-icon--danger
+
+### Added
+- `.btn-icon--danger` — variante destructive de `.btn-icon` (couleur, border et hover en `--danger`). Cas d'usage : icônes d'action destructive (supprimer ligne, retirer collaborateur). Migré depuis aksy DS-EXCEPTION #24. (#156)
+- Démo dans `pages/composants.html#boutons` (sous-section "Boutons icones destructifs") avec 3 variantes + état disabled
+- Focus-visible et :disabled intégrés aux sélecteurs groupés de `.btn-icon--danger`
+
+### Docs
+- `shared/CONSUMER_GUIDE.md` : section "Mapping aksy DS-EXCEPTION → DS msyx.fr" — `.btn-ghost.btn-danger` ≡ `.btn-outline-danger`, `.btn-primary.btn-danger` ≡ `.btn-danger`
+
+### Changed
+- Bump `@ds-version` 2.26.0 → 2.27.0 (tokens.css, utilities.css, components.css, layout.css, nav.js header)
+
 ## 2.26.0 — 2026-05-01 — Utilitaire .text-truncate + Convention tri data-grid
 
 ### Added

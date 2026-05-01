@@ -295,3 +295,28 @@ Pour eviter le flash de theme au chargement, ajouter ce script inline dans `<hea
   })();
 </script>
 ```
+
+## Mapping aksy DS-EXCEPTION → DS msyx.fr (v2.27.0+)
+
+Les variantes destructives suivantes utilisees en aksy sont couvertes par le DS standard :
+
+| Classe aksy (custom) | Equivalent DS | Notes |
+|---|---|---|
+| `.btn-ghost.btn-danger` | `.btn-outline-danger` | Border + texte rouge sans fond, hover = bg rouge transparent. Semantiquement identique. |
+| `.btn-primary.btn-danger` | `.btn-primary.btn-danger` (gradient) | DS expose `.btn-danger` en gradient (style charte msyx). Si flat strict requis, override projet (DS-EXCEPTION acceptee). |
+| `.btn-icon--danger` | `.btn-icon.btn-icon--danger` | Disponible depuis v2.27.0 (#156). Combine `.btn-icon` (taille 44x44, forme) et `.btn-icon--danger` (couleur rouge). |
+
+Les projets consumers SHOULD migrer leurs overrides custom vers les classes DS pour profiter du theming automatique (3 themes x 2 modes).
+
+**Exemple d'usage :**
+```html
+<!-- Bouton icone destructif (aria-label obligatoire) -->
+<button class="btn-icon btn-icon--danger" aria-label="Supprimer">&#128465;</button>
+<button class="btn-icon btn-icon--danger" aria-label="Retirer">&#10005;</button>
+
+<!-- Bouton outline danger (equivalent .btn-ghost.btn-danger) -->
+<button class="btn-secondary btn-outline-danger">Annuler</button>
+
+<!-- Bouton plein danger (equivalent .btn-primary.btn-danger) -->
+<button class="btn-primary btn-danger">Supprimer</button>
+```
