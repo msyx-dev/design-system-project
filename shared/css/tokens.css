@@ -1,4 +1,4 @@
-/* @ds-version: 2.29.0 */
+/* @ds-version: 2.30.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -333,11 +333,11 @@
     --surface-solid: #ffffff;
     --surface-light: #dce4ec;
 
-    /* Textes */
+    /* Textes — recalibrés a11y AA (#164) */
     --text: #00243f;
-    --text-muted: #3d5a73;
-    --text-muted-rgb: 61, 90, 115;
-    --text-dim: #5a7a94;
+    --text-muted: #2c4358;          /* AA — 5.45:1 sur #fff, 5.12:1 sur #f0f4f8 (était #3d5a73 = 2.56:1) */
+    --text-muted-rgb: 44, 67, 88;
+    --text-dim: #4a6a84;             /* AA Large — 3.97:1 sur #fff (UI/large only) */
     --violet-rgb: 0, 90, 158;
     --cyan-rgb: 56, 189, 248;
 

@@ -320,3 +320,36 @@ Les projets consumers SHOULD migrer leurs overrides custom vers les classes DS p
 <!-- Bouton plein danger (equivalent .btn-primary.btn-danger) -->
 <button class="btn-primary btn-danger">Supprimer</button>
 ```
+
+---
+
+## Paires fg/bg safe — ACSSI light (WCAG AA)
+
+Ratios mesurés sur palette ACSSI light (`[data-theme="acssi"][data-mode="light"]`) v2.30.0+.
+Recalibrage effectué en v2.30.0 (closes #164, fixes consumer bugs aksy#267 #268 #271).
+
+### A utiliser
+
+| Texte | Fond | Ratio | Usage |
+|-------|------|-------|-------|
+| `--text` (#00243f) | `--surface-solid` (#fff) | 16.4:1 | Tout texte standard |
+| `--text` | `--primary` (#f0f4f8) | 14.9:1 | Texte sur sidebar/section |
+| `--text-muted` (#2c4358) | `--surface-solid` | 5.45:1 | Legendes, metadonnees |
+| `--text-muted` | `--primary` | 5.12:1 | Legendes sur sidebar |
+| `--text-on-accent` (#fff) | `--accent` (#00345f) | 9.7:1 | Texte sur boutons primary |
+| `--text-on-accent` | `--accent-light` (#00457a) | 7.5:1 | Texte sur etats hover/active |
+| `--text-dim` (#4a6a84) | `--surface-solid` | 3.97:1 | **UI / large text only** (>=18px ou >=14px bold) |
+
+### A eviter (paires illisibles)
+
+| Texte | Fond | Ratio | Action |
+|-------|------|-------|--------|
+| `--accent-light` (#00457a) | `--accent` (#00345f) | 1.29:1 | Utiliser `--text-on-accent` a la place |
+| `--text-dim` | surfaces marines (`--surface-solid` quand override) | < 2:1 | Bascule sur `--text-muted` |
+
+### Regle d'or ACSSI light
+
+- **Texte sur fond accent** → toujours `--text-on-accent`
+- **Texte sur fond surface clair** → `--text` (body) ou `--text-muted` (secondaire)
+- **`--text-dim`** → seulement decoratif (legend, label de chart) sur fond `--surface-solid` blanc — jamais sur surfaces marines
+- **`--accent-light`** → decoratif sur fonds **tintes transparents** (`color-mix --accent 8-12%`), JAMAIS sur `--accent` solide

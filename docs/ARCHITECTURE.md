@@ -5,7 +5,7 @@
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 **87 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
-Version courante : **v2.28.0**.
+Version courante : **v2.30.0**.
 
 ## Structure
 
@@ -122,6 +122,14 @@ docs/
   | Nhood dark/light    | `#ffffff`  | 4.6:1 sur vert (AA)      |
 
   Usage : `color: var(--text-on-accent)` quand un composant pose son texte sur fond `var(--accent)` (ou `color-mix` densément teinté accent ≥ 80%). Ne pas utiliser `--accent-light` comme couleur de texte sur fond `--accent` plein.
+
+- **Recalibrage a11y ACSSI light v2.30.0** (#164) : tokens texte du bloc `[data-theme="acssi"][data-mode="light"]` recalibrés pour conformité WCAG AA :
+  - `--text-muted` : `#3d5a73` → `#2c4358` (2.56:1 → 5.45:1 sur blanc — AA normal text)
+  - `--text-muted-rgb` : sync triplet `61, 90, 115` → `44, 67, 88`
+  - `--text-dim` : `#5a7a94` → `#4a6a84` (3.97:1 sur blanc — AA Large/UI only)
+  - `--text-on-accent` : déjà figé à `#ffffff` dans le bloc light (9.7:1 sur marine `#00345f` — AAA)
+  - `--accent-light` (#00457a) : inchangé — reste décoratif sur fonds tintés, jamais comme texte sur `--accent` solide
+  - Paires safe documentées dans `shared/CONSUMER_GUIDE.md` § "Paires fg/bg safe — ACSSI light"
 - **Code syntax** : code-keyword, code-string, code-comment, code-function, code-number
 - **Overlays** : overlay, overlay-heavy
 - **Hub backgrounds** : hub-bg-violet, hub-bg-cyan, hub-bg-pink, hub-bg-success, hub-bg-warning

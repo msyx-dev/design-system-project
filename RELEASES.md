@@ -1,5 +1,24 @@
 # Releases
 
+## v2.30.0 — 2026-05-01 — Sprint 17
+
+### Fixed (a11y)
+- **Palette ACSSI light** — recalibrage tokens texte pour atteindre WCAG AA (closes #164, fixes consumer bugs aksy#267 #268 #271)
+  - `--text-muted` : `#3d5a73` → `#2c4358` (ratio 2.56:1 → 5.45:1 sur blanc / 5.12:1 sur `#f0f4f8`)
+  - `--text-muted-rgb` : sync triplet `61, 90, 115` → `44, 67, 88`
+  - `--text-dim` : `#5a7a94` → `#4a6a84` (3.97:1 sur blanc — AA Large/UI only)
+  - `--text-on-accent` : déjà présent et figé à `#ffffff` dans bloc light (9.7:1 sur `--accent #00345f`)
+
+### Added
+- `shared/CONSUMER_GUIDE.md` : nouvelle section "Paires fg/bg safe — ACSSI light" avec ratios mesurés et paires interdites
+
+### Migration
+Resync `shared/css/tokens.css` chez les consumers ACSSI. Aucun changement de classe ou de composant.
+Vérifier visuellement les textes en `var(--text-muted)` (légèrement plus foncés, meilleure lisibilité).
+Si un usage `color: var(--text-dim)` apparaît sur fond marine → bascule sur `var(--text-muted)` (ratio AA garanti).
+
+---
+
 ## v2.29.0 — 2026-05-01 — Sprint 17
 
 ### Fixed

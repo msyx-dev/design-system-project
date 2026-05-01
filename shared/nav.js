@@ -184,7 +184,7 @@ function buildHeader() {
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.29.0</span>'
+        + '<span class="header-version">v2.30.0</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
