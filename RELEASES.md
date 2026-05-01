@@ -5,9 +5,12 @@
 ### Fixed
 - **a11y ACSSI dark** : composition `color: var(--accent-light)` × `background: var(--accent)` rendait le texte illisible (ratio 1.12:1). Token `--text-on-accent` désormais thème-aware en ACSSI (marine `#00243f` sur or, ratio 8.21:1 — WCAG AAA). Closes #163.
 - **a11y boutons or** : `.number-input-btn:active` et `.cal-day.today:hover` n'utilisent plus `var(--accent-light)` comme background (qui produisait blanc-sur-or-clair en ACSSI). Migration vers `color-mix(in srgb, var(--accent) 85%, black|white)` thème-agnostique.
+- **a11y ACSSI gradient-1** : `--gradient-1` en thème ACSSI dark ajusté en or→or-foncé (`#e0cd1e → #b8a51a`) pour rester lisible avec `--text-on-accent: #00243f` (ratio ≥ 7.6:1 sur tout le gradient — WCAG AAA).
+- **visuel ACSSI toggle** : `.toggle-slider::before` (bouton knob) forcé blanc en ACSSI dark via sélecteur thème-aware — le token `--text-on-accent` est marine en ACSSI dark (sémantique texte-sur-fond) mais le knob du toggle est un élément décoratif qui doit rester visible sur fond sombre.
 
 ### Compatibilité
 - Aucun breaking change pour consumers : le token `--text-on-accent` était déjà publié et les valeurs `--accent`/`--accent-light` ACSSI restent identiques. Pas de migration requise.
+- Changement visuel ACSSI dark : `--gradient-1` passe de marine→or à or→or-foncé. Impact bouton primary + login — aspect plus uniforme or. Intentionnel pour cohérence a11y.
 
 ---
 

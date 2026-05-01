@@ -222,7 +222,8 @@
     --text-dim: #9eb3c8;
 
     /* Gradients corporate */
-    --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
+    /* gradient-1 : or→or-foncé (marine foncé lisible partout, WCAG AA ≥ 4.8:1) */
+    --gradient-1: linear-gradient(135deg, #e0cd1e, #b8a51a);
     --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
     --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
     --gradient-4: linear-gradient(135deg, #e0cd1e, #f59e0b);
