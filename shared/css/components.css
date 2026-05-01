@@ -2414,7 +2414,7 @@ tbody tr:last-child .comparison-recommended {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--text-on-accent);
     font-size: 1.5rem;
     transition: transform 0.2s;
     padding-left: 4px;
@@ -2633,7 +2633,7 @@ tbody tr:last-child .comparison-recommended {
     position: absolute;
     padding: 0.3rem 0.8rem;
     background: rgba(0, 0, 0, 0.5);
-    color: #fff;
+    color: #fff; /* a11y: fond noir 50% indépendant du thème, blanc lisible toujours (ratio ~10:1) */
     border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -2675,7 +2675,7 @@ tbody tr:last-child .comparison-recommended {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #fff;
+    color: var(--text-on-accent);
     font-size: 0.7rem;
     z-index: 3;
     pointer-events: none;
@@ -3092,7 +3092,7 @@ html.theme-transitioning *::after {
     min-width: 18px;
     height: 18px;
     background: var(--danger);
-    color: #fff;
+    color: var(--text-on-accent);
     border-radius: 9px;
     font-size: 0.65rem;
     font-weight: var(--fw-bold);
@@ -3389,7 +3389,7 @@ html.theme-transitioning *::after {
 .wizard-step.active .wizard-step-dot {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff;
+    color: var(--text-on-accent);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .wizard-step.completed .wizard-step-dot {
@@ -3880,7 +3880,7 @@ html.theme-transitioning *::after {
     justify-content: center;
     font-size: 0.58rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-on-accent);
     flex-shrink: 0;
     position: relative;
     transition: transform 0.2s, box-shadow 0.2s;

@@ -5,7 +5,7 @@
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 **87 composants** repartis sur 8 pages thematiques, 3 themes, mode dark/light.
-Version courante : **v2.30.0**.
+Version courante : **v2.30.1**.
 
 ## Structure
 
@@ -222,6 +222,14 @@ Fichiers modifies pour chaque composant :
 7. `docs/ARCHITECTURE.md` — structure + composants JS
 8. `CLAUDE.md` — description page + conventions
 9. `RELEASES.md` — changelog
+
+## Convention a11y — zéro `color: white` hardcodé (v2.30.1, #165)
+
+Règle absolue depuis v2.30.1 : **aucune valeur `color: white`, `color: #fff` ou `color: #ffffff` hardcodée** dans `shared/css/`. Utiliser exclusivement `color: var(--text-on-accent)` quand le texte est posé sur un fond `--accent`, `--gradient-*`, `--danger` ou tout fond teinté.
+
+Exception autorisée : si le fond est **thème-indépendant** (ex. `rgba(0,0,0,0.5)`) et que `--text-on-accent` produirait un contraste inversé, conserver `#fff` avec commentaire explicite `/* a11y: fond indépendant du thème, blanc lisible toujours */`.
+
+Vérification : `grep -rn "color:\s*white\|color:\s*#fff[^a-f]" shared/css/` doit retourner uniquement les dérogations commentées.
 
 ## Dette technique connue
 
