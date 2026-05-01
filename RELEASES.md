@@ -1,5 +1,16 @@
 # Releases
 
+## v2.29.0 — 2026-05-01 — Sprint 17
+
+### Fixed
+- **a11y ACSSI dark** : composition `color: var(--accent-light)` × `background: var(--accent)` rendait le texte illisible (ratio 1.12:1). Token `--text-on-accent` désormais thème-aware en ACSSI (marine `#00243f` sur or, ratio 8.21:1 — WCAG AAA). Closes #163.
+- **a11y boutons or** : `.number-input-btn:active` et `.cal-day.today:hover` n'utilisent plus `var(--accent-light)` comme background (qui produisait blanc-sur-or-clair en ACSSI). Migration vers `color-mix(in srgb, var(--accent) 85%, black|white)` thème-agnostique.
+
+### Compatibilité
+- Aucun breaking change pour consumers : le token `--text-on-accent` était déjà publié et les valeurs `--accent`/`--accent-light` ACSSI restent identiques. Pas de migration requise.
+
+---
+
 ## 2.28.0 — 2026-05-01 — Modifier `.data-grid-col-sticky-end` — colonne actions sticky right
 
 ### Added

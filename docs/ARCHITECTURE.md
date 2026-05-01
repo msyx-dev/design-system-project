@@ -112,6 +112,16 @@ docs/
 - **Couleurs** : primary, accent, surface, text, semantic (success/warning/danger/info)
 - **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`, `--violet-rgb`, `--cyan-rgb`, `--text-muted-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
 - **Couleurs etendues** : violet, cyan, pink, success/warning/danger-light/dark
+- **Token thème-aware `--text-on-accent`** : couleur de texte garantissant WCAG AA minimum sur fond `var(--accent)`. Valeurs par thème :
+
+  | Thème / Mode        | Valeur     | Contraste sur `--accent` |
+  | ------------------- | ---------- | ------------------------ |
+  | MSYX dark/light     | `#ffffff`  | 4.5:1 sur bleu (AA)      |
+  | ACSSI dark          | `#00243f`  | 8.21:1 sur or (AAA)      |
+  | ACSSI light         | `#ffffff`  | 12.7:1 sur marine (AAA)  |
+  | Nhood dark/light    | `#ffffff`  | 4.6:1 sur vert (AA)      |
+
+  Usage : `color: var(--text-on-accent)` quand un composant pose son texte sur fond `var(--accent)` (ou `color-mix` densément teinté accent ≥ 80%). Ne pas utiliser `--accent-light` comme couleur de texte sur fond `--accent` plein.
 - **Code syntax** : code-keyword, code-string, code-comment, code-function, code-number
 - **Overlays** : overlay, overlay-heavy
 - **Hub backgrounds** : hub-bg-violet, hub-bg-cyan, hub-bg-pink, hub-bg-success, hub-bg-warning
