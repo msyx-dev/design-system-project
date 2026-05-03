@@ -1119,6 +1119,11 @@ footer p { color: var(--text-dim); font-size: 0.78rem; }
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
 .drawer-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 320px; background: var(--surface-solid); border-left: 1px solid var(--border); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 10; display: flex; flex-direction: column; }
 .drawer-panel.open { transform: translateX(0); }
+/* Variante plein-écran : le panel et son overlay couvrent toute la fenêtre (position:fixed).
+   Utile quand le drawer n'est pas enfant d'un .drawer-preview container.
+   Usage : <div class="drawer-overlay drawer-overlay--fullscreen"> + <div class="drawer-panel drawer-panel--fullscreen"> */
+.drawer-overlay--fullscreen { position: fixed; inset: 0; z-index: 200; }
+.drawer-panel--fullscreen { position: fixed; top: 0; right: 0; bottom: 0; z-index: 201; }
 .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); }
 .drawer-header h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; }
 .drawer-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; padding: 0; }
@@ -2127,6 +2132,7 @@ tbody tr:last-child .comparison-recommended {
     .hub-grid { grid-template-columns: 1fr; }
     .cmd-palette { margin: 0 1rem; }
     .drawer-panel { width: 85%; }
+    .drawer-panel--fullscreen { width: 100%; }
 }
 
 /* ===========================
