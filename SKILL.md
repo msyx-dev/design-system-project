@@ -25,7 +25,7 @@ Source de vérité UI pour tous les projets msyx.fr.
 - **Tokens-only** : jamais de `#hex`, `rgb()`, ou `rgba()` hardcodés. Toujours `var(--)`.
 - Bleu accent → `var(--accent)` ; texte sur fond accent → `var(--text-on-accent)`.
 - Cards/surfaces → `var(--bg-elevated)` ; bordures → `var(--border-color)`.
-- Dégradés → `var(--gradient-accent)` ou `var(--gradient-hero)`.
+- Dégradés → `var(--gradient-1)` à `var(--gradient-4)` (bleu-violet, cyan-bleu, violet-rose, ambre-rouge).
 - Exceptions autorisées : `transparent`, `currentColor`, `inherit`, `none`.
 
 ## Voix & copy

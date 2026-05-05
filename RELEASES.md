@@ -10,6 +10,7 @@
 
 ### Changed
 - **`CLAUDE.md` §Process point 5** : convention `@ds-version` corrigee — bump sur **5 fichiers** (tokens.css, utilities.css, components.css, layout.css, nav.js) au lieu de 3. Documentation de la pre-allocation des versions par /sprint parent (validee Sprint 17, 0 conflit).
+- **`docs/ARCHITECTURE.md`** : structure mise a jour avec `SKILL.md`, `prompts.md`, `canonical-pages/` + section « Agent ergonomics » + compteur composants aligne sur le registre (60 entrees).
 
 ### Note
 Cette release absorbe deux decisions retro Sprint 17 (2026-05-01) :
