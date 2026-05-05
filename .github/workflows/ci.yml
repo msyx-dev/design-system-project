@@ -11,3 +11,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check HTML files exist
         run: test -f index.html && test -f site.html
+      - name: Check diacritics (user-facing copy)
+        run: |
+          chmod +x shared/check-diacritics.sh
+          ./shared/check-diacritics.sh
+      - name: Run lint script tests
+        run: |
+          chmod +x tests/test-check-diacritics.sh
+          ./tests/test-check-diacritics.sh

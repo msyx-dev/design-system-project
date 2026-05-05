@@ -1,5 +1,17 @@
 # Releases
 
+## v2.32.2 — 2026-05-06 — Sprint 18 — Diacritic / copy lint
+
+### Fixed
+- **Copy française normalisée full diacritics** : 9 occurrences corrigées dans `pages/fondation.html`, `pages/composants.html`, `pages/divers.html` (×3), `pages/feedback.html`, `pages/data.html` (×3), `pages/formulaires.html` (closes #178).
+- Patterns ciblés : voir `shared/check-diacritics.sh` (11 regex POSIX, mots-frontière `\b`).
+
+### Added
+- `shared/check-diacritics.sh` : linter shell POSIX qui détecte les mots français sans diacritiques sur le contenu user-facing (whitelist : `index.html`, `site.html`, `pages/*.html`, `RELEASES.md`). Exit 1 si occurrence détectée, exit 0 sinon.
+- `tests/fixtures/bad-diacritics.html` : fixture volontairement fautive contenant des patterns sans diacritique, utilisée pour valider le linter.
+- `tests/test-check-diacritics.sh` : wrapper de non-régression — Run A (repo propre → exit 0) + Run B (fixture contient les patterns → détection confirmée).
+- Steps CI `Check diacritics (user-facing copy)` + `Run lint script tests` dans `.github/workflows/ci.yml` (job `lint`).
+
 ## v2.32.1 — 2026-05-06 — Sprint 18 — Visual regression filet
 
 ### Added
