@@ -1,5 +1,23 @@
 # Releases
 
+## v2.32.0 — 2026-05-05 — Sprint 18 — Agent ergonomics
+
+### Added
+- **`SKILL.md`** a la racine — manifest user-invocable (frontmatter YAML, <100 lignes), pointe vers les fichiers cles et liste les regles tokens / voix / glass-vs-solid / workflow d'absorption / versioning. Cible : Claude Code et autres agents.
+- **`canonical-pages/`** — 6 pages HTML autonomes (login, settings, dashboard-kanban, empty-state, error-404, billing) que les agents copient comme references d'usage. Tokens-only, dark + light fonctionnels, anti-FOUC inline.
+- **`prompts.md`** a la racine — 12 phrases-types reutilisables full-diacritics (« Use msyx tokens. No hardcoded hex. Glass cards on dark, solid cards on light. »).
+- **`components-registry.json`** : nouveau champ `example` (string HTML) sur les 60 entrees existantes — copy-paste ready pour agents (closes #176).
+
+### Changed
+- **`CLAUDE.md` §Process point 5** : convention `@ds-version` corrigee — bump sur **5 fichiers** (tokens.css, utilities.css, components.css, layout.css, nav.js) au lieu de 3. Documentation de la pre-allocation des versions par /sprint parent (validee Sprint 17, 0 conflit).
+
+### Note
+Cette release absorbe deux decisions retro Sprint 17 (2026-05-01) :
+1. Pattern d'absorption d'issue (#167 absorbed par #166) — desormais documente dans `SKILL.md` section workflow.
+2. Pre-allocation des versions par /sprint parent — desormais documentee dans `CLAUDE.md` §Process point 5.
+
+---
+
 ## v2.31.0 — 2026-05-01 — Sprint 17 — A11y reset natif
 
 ### Added

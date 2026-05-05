@@ -91,10 +91,11 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Pattern `dataset.bound` anti-double-bind sur les event listeners
    - Appel dans le bloc `reinitAll()` pour compatibilite SPA
 4. **Compteur** : mettre a jour le nombre dans `site.html` (hero + hub cards si applicable)
-5. **Version** : bumper `@ds-version` dans `shared/css/tokens.css` ET `shared/css/utilities.css`
-   - Feature : minor (2.9 → 2.10)
-   - Fix : patch (2.9.0 → 2.9.1)
-   - Bumper aussi la version dans `shared/nav.js` (header-version)
+5. **Version** : bumper `@ds-version` dans **5 fichiers** : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/nav.js` (header-version)
+   - Feature : minor (2.31 → 2.32)
+   - Fix : patch (2.31.0 → 2.31.1)
+   - Convention validee Sprint 16 + 17 (memory.md 2026-05-01)
+   - **Pre-allocation des versions** : pour les sprints multi-bumps (>2 issues touchant @ds-version), le parent /sprint pre-alloue les versions et les injecte dans le prompt /dev de chaque issue (« Ta version cible : v2.X.Y »). Garantit zero conflit git sur les bumps. Valide Sprint 17 (0 conflit vs 2 attendus en S16).
 6. **Docs** :
    - `docs/ARCHITECTURE.md` : ajouter dans la structure + section composants JS si init*
    - `CLAUDE.md` : mettre a jour la liste des composants dans la description de la page

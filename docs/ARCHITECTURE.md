@@ -4,8 +4,8 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**87 composants UI** repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0.
-Version courante : **v2.31.0**.
+**60 composants UI** (registre shared/components-registry.json) repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0.
+Version courante : **v2.32.0**.
 
 ## Structure
 
@@ -41,7 +41,27 @@ shared/
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint + velocity.json
+SKILL.md                # Manifest agent user-invocable (v2.32.0) — regles tokens, voix, glass/solid, workflow absorption, versioning
+prompts.md              # Phrases-types reutilisables pour agents (v2.32.0)
+canonical-pages/        # 6 pages HTML de reference agent (v2.32.0)
+  login.html            # Page de connexion : card centree, inputs email+password, toggle remember-me
+  settings.html         # Parametres : 2 colonnes, 4 sections (profil, securite, notifications, preferences)
+  dashboard-kanban.html # Tableau Kanban : 4 colonnes, toolbar (search + filter-bar + CTA)
+  empty-state.html      # 3 variantes : aucun resultat, pas de donnees, erreur chargement
+  error-404.html        # Erreur 404 : code large, card centree, 2 CTA
+  billing.html          # Facturation : 3 plans tarifaires, abonnement actuel, historique
 ```
+
+## Agent ergonomics (v2.32.0)
+
+Depuis v2.32.0, le DS expose des artefacts destines aux agents IA (Claude Code et autres) :
+
+- **`SKILL.md`** : manifest user-invocable (frontmatter YAML `user-invocable: true`). Regle tokens, voix, glass/solid, pattern absorption issue, pré-allocation versions.
+- **`prompts.md`** : 12 phrases-types full-diacritics pour inclure dans les prompts agents.
+- **`canonical-pages/`** : 6 pages HTML autonomes (tokens-only, anti-FOUC, multi-theme) que les agents copient comme reference d'usage plutôt que d'inventer.
+- **`shared/components-registry.json`** : champ `example` (string HTML) sur chaque composant — copy-paste ready.
+
+Ces fichiers ne sont pas des demos publiques (pas de lien depuis site.html) : ils sont des references pour les agents, pas pour les utilisateurs finaux.
 
 ## Navigation et layout
 

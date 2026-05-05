@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="msyx" data-mode="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facturation — msyx Design System</title>
+  <!-- Anti-FOUC inline (synchrone, avant peinture) -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('msyx-theme') || 'msyx';
+      var m = localStorage.getItem('msyx-mode') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-mode', m);
+    })();
+  </script>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    .billing-page {
+      min-height: 100vh;
+      background: var(--primary);
+      padding: var(--space-xl) var(--space-lg);
+    }
+    .billing-container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .billing-header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+    .billing-overline {
+      font-size: 0.75rem;
+      font-weight: var(--fw-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: var(--space-sm);
+    }
+    .billing-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: var(--fw-bold);
+      color: var(--text);
+      margin: 0 0 var(--space-sm);
+    }
+    .billing-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    /* Pricing table */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      backdrop-filter: blur(8px);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .pricing-card--featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), var(--shadow);
+    }
+    .pricing-card-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .pricing-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text-muted);
+      margin: 0 0 var(--space-md);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .pricing-price {
+      margin-bottom: var(--space-md);
+    }
+    .pricing-amount {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: var(--fw-extrabold);
+      color: var(--text);
+      line-height: 1;
+    }
+    .pricing-period {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .pricing-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-lg);
+    }
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 var(--space-xl);
+      flex: 1;
+    }
+    .pricing-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      padding: var(--space-sm) 0;
+      font-size: 0.875rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-feature:last-child {
+      border-bottom: none;
+    }
+    .pricing-feature-icon {
+      color: var(--success);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .pricing-feature-icon--no {
+      color: var(--text-muted);
+      opacity: 0.4;
+    }
+    .pricing-cta {
+      width: 100%;
+    }
+    /* Invoices section */
+    .billing-section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text);
+      margin: 0 0 var(--space-lg);
+    }
+    .billing-current {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg) var(--space-xl);
+      backdrop-filter: blur(8px);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .billing-plan-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text);
+      margin: 0 0 var(--space-xs);
+    }
+    .billing-plan-info p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .billing-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+    .billing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .billing-table th {
+      font-size: 0.75rem;
+      font-weight: var(--fw-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: var(--space-md) var(--space-lg);
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .billing-table td {
+      padding: var(--space-md) var(--space-lg);
+      font-size: 0.875rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .billing-table tr:last-child td {
+      border-bottom: none;
+    }
+    .billing-table tr:hover td {
+      background: var(--sidebar-link-hover-bg);
+    }
+    .billing-status-paid {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: var(--fw-medium);
+      color: var(--success);
+    }
+    @media (max-width: 768px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+      .billing-current {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="billing-page">
+    <div class="billing-container">
+
+      <!-- En-tête -->
+      <div class="billing-header">
+        <p class="billing-overline">Tarification</p>
+        <h1 class="billing-title">Choisissez votre plan</h1>
+        <p class="billing-subtitle">Des tarifs simples et transparents pour tous les projets. Changez de plan à tout moment.</p>
+      </div>
+
+      <!-- Plans tarifaires -->
+      <div class="pricing-grid">
+
+        <!-- Free -->
+        <div class="pricing-card">
+          <p class="pricing-name">Free</p>
+          <div class="pricing-price">
+            <span class="pricing-amount">0 €</span>
+            <span class="pricing-period"> / mois</span>
+          </div>
+          <p class="pricing-desc">Pour les projets personnels et l'exploration.</p>
+          <ul class="pricing-features">
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              3 projets actifs
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Sous-domaine *.msyx.fr
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Auth gate incluse
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon pricing-feature-icon--no" aria-hidden="true">&#10007;</span>
+              <span style="color:var(--text-muted);">Domaines personnalisés</span>
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon pricing-feature-icon--no" aria-hidden="true">&#10007;</span>
+              <span style="color:var(--text-muted);">Support prioritaire</span>
+            </li>
+          </ul>
+          <button class="btn-ghost pricing-cta" type="button">Commencer gratuitement</button>
+        </div>
+
+        <!-- Pro — mis en avant -->
+        <div class="pricing-card pricing-card--featured">
+          <div class="pricing-card-badge">
+            <span class="badge badge-primary">Recommandé</span>
+          </div>
+          <p class="pricing-name" style="color:var(--accent);">Pro</p>
+          <div class="pricing-price">
+            <span class="pricing-amount">19 €</span>
+            <span class="pricing-period"> / mois</span>
+          </div>
+          <p class="pricing-desc">Pour les développeurs et équipes créatives.</p>
+          <ul class="pricing-features">
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Projets illimités
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Domaines personnalisés
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Auth gate avancée (RBAC)
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Monitoring & alertes
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Support prioritaire 24h
+            </li>
+          </ul>
+          <button class="btn-primary pricing-cta" type="button">Passer à Pro</button>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card">
+          <p class="pricing-name">Enterprise</p>
+          <div class="pricing-price">
+            <span class="pricing-amount">Sur devis</span>
+          </div>
+          <p class="pricing-desc">Pour les organisations avec des besoins sur mesure.</p>
+          <ul class="pricing-features">
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Tout ce qu'inclut Pro
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              SSO SAML / OIDC
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Infra dédiée
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              SLA 99.9 % garanti
+            </li>
+            <li class="pricing-feature">
+              <span class="pricing-feature-icon" aria-hidden="true">&#10003;</span>
+              Account manager dédié
+            </li>
+          </ul>
+          <button class="btn-ghost pricing-cta" type="button">Nous contacter</button>
+        </div>
+
+      </div>
+
+      <!-- Plan actuel -->
+      <h2 class="billing-section-title">Abonnement actuel</h2>
+      <div class="billing-current">
+        <div class="billing-plan-info">
+          <h3>Plan Pro <span class="badge badge-success" style="vertical-align:middle;">Actif</span></h3>
+          <p>Renouvellement le 1 juin 2026 — 19 € / mois</p>
+        </div>
+        <div style="display:flex;gap:var(--space-sm);">
+          <button class="btn-ghost btn-sm" type="button">Changer de plan</button>
+          <button class="btn-ghost btn-sm" style="color:var(--danger);" type="button">Annuler</button>
+        </div>
+      </div>
+
+      <!-- Historique de facturation -->
+      <h2 class="billing-section-title">Historique de facturation</h2>
+      <div class="billing-table-wrap">
+        <table class="billing-table">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col">Montant</th>
+              <th scope="col">Statut</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1 mai 2026</td>
+              <td>Plan Pro — mai 2026</td>
+              <td>19,00 €</td>
+              <td><span class="billing-status-paid">&#10003; Payé</span></td>
+              <td><a href="#" class="btn-ghost btn-xs">Télécharger</a></td>
+            </tr>
+            <tr>
+              <td>1 avr. 2026</td>
+              <td>Plan Pro — avril 2026</td>
+              <td>19,00 €</td>
+              <td><span class="billing-status-paid">&#10003; Payé</span></td>
+              <td><a href="#" class="btn-ghost btn-xs">Télécharger</a></td>
+            </tr>
+            <tr>
+              <td>1 mars 2026</td>
+              <td>Plan Pro — mars 2026</td>
+              <td>19,00 €</td>
+              <td><span class="billing-status-paid">&#10003; Payé</span></td>
+              <td><a href="#" class="btn-ghost btn-xs">Télécharger</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../shared/nav.js"></script>
+  <script src="../shared/components.js"></script>
+</body>
+</html>

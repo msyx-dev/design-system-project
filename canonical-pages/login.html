@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="msyx" data-mode="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — msyx Design System</title>
+  <!-- Anti-FOUC inline (synchrone, avant peinture) -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('msyx-theme') || 'msyx';
+      var m = localStorage.getItem('msyx-mode') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-mode', m);
+    })();
+  </script>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+      background: var(--primary);
+    }
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+    .login-logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--gradient-1);
+      font-family: var(--font-display);
+      font-weight: var(--fw-bold);
+      font-size: 1.5rem;
+      color: var(--text);
+      margin-bottom: var(--space-sm);
+    }
+    .login-logo-name {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text);
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-xl);
+      backdrop-filter: blur(12px);
+    }
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 1.375rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text);
+      margin: 0 0 var(--space-xs);
+    }
+    .login-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 0 0 var(--space-xl);
+    }
+    .login-form .input-group {
+      margin-bottom: var(--space-md);
+    }
+    .login-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .login-forgot {
+      font-size: 0.8125rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .login-forgot:hover {
+      text-decoration: underline;
+    }
+    .login-submit {
+      width: 100%;
+    }
+    .login-divider {
+      position: relative;
+      text-align: center;
+      margin: var(--space-lg) 0;
+    }
+    .login-divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--border);
+    }
+    .login-divider span {
+      position: relative;
+      background: var(--surface-solid);
+      padding: 0 var(--space-sm);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .login-sso {
+      width: 100%;
+      margin-bottom: var(--space-sm);
+    }
+    .login-register {
+      text-align: center;
+      margin-top: var(--space-lg);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .login-register a {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <main class="login-page">
+    <div class="login-wrap">
+      <div class="login-logo">
+        <div class="login-logo-mark">M</div>
+        <div class="login-logo-name">msyx</div>
+      </div>
+
+      <div class="login-card">
+        <h1 class="login-title">Connexion</h1>
+        <p class="login-subtitle">Bienvenue sur le Design System msyx.fr</p>
+
+        <form class="login-form" novalidate>
+          <div class="input-group">
+            <label class="input-label" for="login-email">Adresse e-mail</label>
+            <div class="input-with-icon">
+              <span class="input-icon" aria-hidden="true">&#9993;</span>
+              <input class="input" id="login-email" type="email" placeholder="vous@exemple.fr" autocomplete="email">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="login-password">Mot de passe</label>
+            <div class="input-with-icon">
+              <span class="input-icon" aria-hidden="true">&#128274;</span>
+              <input class="input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password">
+            </div>
+          </div>
+
+          <div class="login-footer-row">
+            <label class="checkbox">
+              <input type="checkbox" id="remember-me">
+              Se souvenir de moi
+            </label>
+            <a href="#" class="login-forgot">Mot de passe oublié ?</a>
+          </div>
+
+          <button type="submit" class="btn-primary login-submit">Se connecter</button>
+        </form>
+
+        <div class="login-divider"><span>ou continuer avec</span></div>
+
+        <button type="button" class="btn-ghost login-sso">SSO entreprise</button>
+
+        <p class="login-register">
+          Pas encore de compte ? <a href="#">Créer un compte</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="../shared/nav.js"></script>
+  <script src="../shared/components.js"></script>
+</body>
+</html>
