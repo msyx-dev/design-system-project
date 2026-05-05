@@ -5,7 +5,7 @@
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 **60 composants UI** (registre shared/components-registry.json) repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0.
-Version courante : **v2.32.0**.
+Version courante : **v2.32.1**.
 
 ## Structure
 
@@ -62,6 +62,17 @@ Depuis v2.32.0, le DS expose des artefacts destines aux agents IA (Claude Code e
 - **`shared/components-registry.json`** : champ `example` (string HTML) sur chaque composant — copy-paste ready.
 
 Ces fichiers ne sont pas des demos publiques (pas de lien depuis site.html) : ils sont des references pour les agents, pas pour les utilisateurs finaux.
+
+## Visual regression (depuis v2.32.1)
+
+Filet de regression visuel automatique via Playwright. Detaille dans le README.
+
+- **Outils** : `@playwright/test` + `serve` (devDeps uniquement)
+- **Perimetre** : 16 baselines (msyx x dark+light x 8 pages thematiques x 1280)
+- **Localisation baselines** : `visual-tests/baseline/{project}/{slug}.png`
+- **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil
+- **Extension future** : Sprint 22 -> 96 baselines (3 themes x 2 modes x 2 viewports)
+- **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
 
 ## Navigation et layout
 

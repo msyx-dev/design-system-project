@@ -1,2 +1,8 @@
 .env
 .claude/worktrees/
+
+# Visual regression (Playwright) — ajouté v2.32.1
+node_modules/
+visual-tests/diffs/
+test-results/
+playwright-report/
