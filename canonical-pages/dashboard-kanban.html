@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="msyx" data-mode="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau Kanban — msyx Design System</title>
+  <!-- Anti-FOUC inline (synchrone, avant peinture) -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('msyx-theme') || 'msyx';
+      var m = localStorage.getItem('msyx-mode') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-mode', m);
+    })();
+  </script>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    .kanban-page {
+      min-height: 100vh;
+      background: var(--primary);
+      display: flex;
+      flex-direction: column;
+    }
+    .kanban-topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      padding: var(--space-md) var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .kanban-topbar-title {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text);
+      margin-right: auto;
+    }
+    .kanban-content {
+      flex: 1;
+      padding: var(--space-xl);
+      overflow-x: auto;
+    }
+    .kanban-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+    .kanban-page-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: var(--fw-bold);
+      color: var(--text);
+      margin: 0 auto 0 0;
+    }
+    .kanban-columns {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(260px, 1fr));
+      gap: var(--space-md);
+      min-width: 0;
+    }
+    .kanban-column-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+    }
+    .kanban-column-name {
+      font-weight: var(--fw-semibold);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .kanban-card-assignees {
+      display: flex;
+      gap: -4px;
+      margin-top: var(--space-sm);
+    }
+    .kanban-card-assignees .avatar {
+      width: 24px;
+      height: 24px;
+      font-size: 0.6rem;
+      border: 2px solid var(--surface-solid);
+    }
+    .kanban-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-sm);
+    }
+    .kanban-card-chips {
+      display: flex;
+      gap: var(--space-xs);
+      flex-wrap: wrap;
+      margin-top: var(--space-sm);
+    }
+    .kanban-add-col {
+      background: none;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: border-color var(--duration-fast), color var(--duration-fast);
+      width: 100%;
+      text-align: center;
+    }
+    .kanban-add-col:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    @media (max-width: 768px) {
+      .kanban-columns {
+        grid-template-columns: minmax(260px, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="kanban-page">
+
+    <!-- Barre d'outils -->
+    <div class="kanban-topbar">
+      <span class="kanban-topbar-title">Sprint 18 — Design System</span>
+      <div class="search-input" style="min-width:200px;">
+        <span class="search-icon" aria-hidden="true">&#128269;</span>
+        <input type="search" placeholder="Rechercher une tâche..." aria-label="Rechercher">
+      </div>
+      <div class="filter-bar" style="margin:0;">
+        <button class="filter-btn active" data-filter="all" type="button">Toutes</button>
+        <button class="filter-btn" data-filter="feat" type="button">Features</button>
+        <button class="filter-btn" data-filter="fix" type="button">Corrections</button>
+      </div>
+      <button class="btn-primary btn-sm" type="button">&#43; Nouvelle tâche</button>
+    </div>
+
+    <div class="kanban-content">
+      <div class="kanban-meta">
+        <h1 class="kanban-page-title">Tableau de sprint</h1>
+        <span class="badge badge-info">9 SP</span>
+        <span class="badge badge-success">En cours</span>
+      </div>
+
+      <!-- Colonnes -->
+      <div class="kanban-columns" id="kanban-board">
+
+        <!-- Backlog -->
+        <div class="kanban-column" data-column="backlog">
+          <div class="kanban-column-header">
+            <span class="kanban-column-name">Backlog</span>
+            <span class="badge badge-secondary">2</span>
+          </div>
+          <div class="kanban-cards">
+
+            <div class="kanban-card">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm">Feature</span>
+                <span class="chip chip-sm chip-warning">3 SP</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">SKILL.md + canonical-pages</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#176</span>
+              </div>
+            </div>
+
+            <div class="kanban-card">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm">Feature</span>
+                <span class="chip chip-sm chip-warning">2 SP</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">Visual regression Playwright</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#177</span>
+              </div>
+            </div>
+
+          </div>
+          <button class="kanban-add-col" type="button">&#43; Ajouter une tâche</button>
+        </div>
+
+        <!-- En cours -->
+        <div class="kanban-column" data-column="in-progress">
+          <div class="kanban-column-header">
+            <span class="kanban-column-name">En cours</span>
+            <span class="badge badge-info">2</span>
+          </div>
+          <div class="kanban-cards">
+
+            <div class="kanban-card kanban-card--active">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm chip-accent">DX</span>
+                <span class="chip chip-sm chip-warning">3 SP</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">Diacritic copy lint</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#178</span>
+              </div>
+            </div>
+
+            <div class="kanban-card">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm">Fix</span>
+                <span class="chip chip-sm chip-success">1 SP</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">board-update.sh auto-add</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#179</span>
+              </div>
+            </div>
+
+          </div>
+          <button class="kanban-add-col" type="button">&#43; Ajouter une tâche</button>
+        </div>
+
+        <!-- Review -->
+        <div class="kanban-column" data-column="review">
+          <div class="kanban-column-header">
+            <span class="kanban-column-name">Review</span>
+            <span class="badge badge-warning">1</span>
+          </div>
+          <div class="kanban-cards">
+
+            <div class="kanban-card">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm chip-danger">Priority:High</span>
+                <span class="chip chip-sm chip-warning">2 SP</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">A11y focus-visible global</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#171</span>
+              </div>
+            </div>
+
+          </div>
+          <button class="kanban-add-col" type="button">&#43; Ajouter une tâche</button>
+        </div>
+
+        <!-- Done -->
+        <div class="kanban-column" data-column="done">
+          <div class="kanban-column-header">
+            <span class="kanban-column-name">Terminé</span>
+            <span class="badge badge-success">3</span>
+          </div>
+          <div class="kanban-cards">
+
+            <div class="kanban-card" style="opacity:0.7;">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm chip-success">Done</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">Reset natif &lt;a&gt; + :focus-visible</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#166</span>
+              </div>
+            </div>
+
+            <div class="kanban-card" style="opacity:0.7;">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm chip-success">Done</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">Drawer panel fullscreen</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#175</span>
+              </div>
+            </div>
+
+            <div class="kanban-card" style="opacity:0.7;">
+              <div class="kanban-card-chips">
+                <span class="chip chip-sm chip-success">Done</span>
+              </div>
+              <p style="margin:var(--space-sm) 0 0;font-size:0.875rem;color:var(--text);">bump ds-layout.css v2.31.0</p>
+              <div class="kanban-card-footer">
+                <div class="kanban-card-assignees">
+                  <div class="avatar">MS</div>
+                </div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">#173</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/nav.js"></script>
+  <script src="../shared/components.js"></script>
+</body>
+</html>

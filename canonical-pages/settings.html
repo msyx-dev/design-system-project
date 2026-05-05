@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="msyx" data-mode="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paramètres — msyx Design System</title>
+  <!-- Anti-FOUC inline (synchrone, avant peinture) -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('msyx-theme') || 'msyx';
+      var m = localStorage.getItem('msyx-mode') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-mode', m);
+    })();
+  </script>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    .settings-layout {
+      min-height: 100vh;
+      background: var(--primary);
+      padding: var(--space-xl) var(--space-lg);
+    }
+    .settings-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .settings-header {
+      margin-bottom: var(--space-xl);
+    }
+    .settings-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: var(--fw-bold);
+      color: var(--text);
+      margin: 0 0 var(--space-xs);
+    }
+    .settings-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      margin: 0;
+    }
+    .settings-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-xl);
+    }
+    .settings-nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm);
+      height: fit-content;
+      backdrop-filter: blur(12px);
+    }
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: var(--fw-medium);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--duration-fast) var(--ease-standard);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .settings-nav-item:hover {
+      background: var(--sidebar-link-hover-bg);
+      color: var(--text);
+    }
+    .settings-nav-item.active {
+      background: var(--sidebar-link-active-bg);
+      color: var(--accent);
+    }
+    .settings-nav-icon {
+      width: 18px;
+      text-align: center;
+      opacity: 0.7;
+    }
+    .settings-main {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+    .settings-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg) var(--space-xl);
+      backdrop-filter: blur(8px);
+    }
+    .settings-section-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text);
+      margin: 0 0 var(--space-md);
+    }
+    .settings-section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: var(--space-md) 0;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-lg);
+      padding: var(--space-sm) 0;
+    }
+    .settings-row-label {
+      font-size: 0.875rem;
+      font-weight: var(--fw-medium);
+      color: var(--text);
+    }
+    .settings-row-desc {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .settings-avatar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+    .settings-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+    .settings-form-full {
+      grid-column: 1 / -1;
+    }
+    .settings-actions {
+      display: flex;
+      gap: var(--space-sm);
+      justify-content: flex-end;
+      margin-top: var(--space-lg);
+    }
+    @media (max-width: 768px) {
+      .settings-body {
+        grid-template-columns: 1fr;
+      }
+      .settings-form-grid {
+        grid-template-columns: 1fr;
+      }
+      .settings-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+      }
+      .settings-nav-item {
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-layout">
+    <div class="settings-container">
+      <div class="settings-header">
+        <h1 class="settings-title">Paramètres</h1>
+        <p class="settings-subtitle">Gérez votre compte et vos préférences.</p>
+      </div>
+
+      <div class="settings-body">
+        <!-- Sidebar nav -->
+        <nav class="settings-nav" aria-label="Navigation des paramètres">
+          <a href="#profile" class="settings-nav-item active">
+            <span class="settings-nav-icon" aria-hidden="true">&#128100;</span>
+            Profil
+          </a>
+          <a href="#security" class="settings-nav-item">
+            <span class="settings-nav-icon" aria-hidden="true">&#128274;</span>
+            Sécurité
+          </a>
+          <a href="#notifications" class="settings-nav-item">
+            <span class="settings-nav-icon" aria-hidden="true">&#128276;</span>
+            Notifications
+          </a>
+          <a href="#preferences" class="settings-nav-item">
+            <span class="settings-nav-icon" aria-hidden="true">&#9881;</span>
+            Préférences
+          </a>
+        </nav>
+
+        <!-- Main content -->
+        <main class="settings-main">
+
+          <!-- Profil -->
+          <section id="profile" class="settings-section">
+            <h2 class="settings-section-title">Profil</h2>
+
+            <div class="settings-avatar-row">
+              <div class="avatar avatar-lg">PR</div>
+              <div>
+                <p style="margin:0 0 var(--space-sm);font-size:0.875rem;color:var(--text);">Photo de profil</p>
+                <div style="display:flex;gap:var(--space-sm);">
+                  <button class="btn-secondary btn-sm">Modifier</button>
+                  <button class="btn-ghost btn-sm">Supprimer</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-form-grid">
+              <div class="input-group">
+                <label class="input-label" for="s-firstname">Prénom</label>
+                <input class="input" id="s-firstname" type="text" value="Preview">
+              </div>
+              <div class="input-group">
+                <label class="input-label" for="s-lastname">Nom</label>
+                <input class="input" id="s-lastname" type="text" value="Utilisateur">
+              </div>
+              <div class="input-group settings-form-full">
+                <label class="input-label" for="s-email">Adresse e-mail</label>
+                <input class="input" id="s-email" type="email" value="preview@msyx.fr">
+              </div>
+              <div class="input-group settings-form-full">
+                <label class="input-label" for="s-bio">Biographie</label>
+                <textarea class="input" id="s-bio" rows="3" placeholder="Décrivez-vous en quelques mots...">Administrateur du Design System msyx.fr</textarea>
+              </div>
+            </div>
+
+            <div class="settings-actions">
+              <button class="btn-ghost">Annuler</button>
+              <button class="btn-primary">Enregistrer</button>
+            </div>
+          </section>
+
+          <!-- Sécurité -->
+          <section id="security" class="settings-section">
+            <h2 class="settings-section-title">Sécurité</h2>
+
+            <div class="input-group">
+              <label class="input-label" for="s-current-pass">Mot de passe actuel</label>
+              <input class="input" id="s-current-pass" type="password" placeholder="••••••••">
+            </div>
+            <div class="settings-form-grid">
+              <div class="input-group">
+                <label class="input-label" for="s-new-pass">Nouveau mot de passe</label>
+                <input class="input" id="s-new-pass" type="password" placeholder="••••••••">
+              </div>
+              <div class="input-group">
+                <label class="input-label" for="s-confirm-pass">Confirmer</label>
+                <input class="input" id="s-confirm-pass" type="password" placeholder="••••••••">
+              </div>
+            </div>
+
+            <hr class="settings-section-divider">
+
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Authentification à deux facteurs</div>
+                <div class="settings-row-desc">Protégez votre compte avec une étape de vérification supplémentaire.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" aria-label="Activer l'authentification à deux facteurs">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-actions">
+              <button class="btn-primary">Mettre à jour le mot de passe</button>
+            </div>
+          </section>
+
+          <!-- Notifications -->
+          <section id="notifications" class="settings-section">
+            <h2 class="settings-section-title">Notifications</h2>
+
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Notifications par e-mail</div>
+                <div class="settings-row-desc">Recevez les mises à jour importantes par e-mail.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked aria-label="Activer les notifications par e-mail">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <hr class="settings-section-divider">
+
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Notifications push</div>
+                <div class="settings-row-desc">Recevez des alertes en temps réel dans le navigateur.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" aria-label="Activer les notifications push">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <hr class="settings-section-divider">
+
+            <div class="settings-row">
+              <div>
+                <div class="settings-row-label">Résumé hebdomadaire</div>
+                <div class="settings-row-desc">Récapitulatif de l'activité chaque lundi matin.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked aria-label="Activer le résumé hebdomadaire">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </section>
+
+          <!-- Préférences -->
+          <section id="preferences" class="settings-section">
+            <h2 class="settings-section-title">Préférences</h2>
+
+            <div class="input-group">
+              <label class="input-label" for="s-language">Langue</label>
+              <select class="input" id="s-language">
+                <option selected>Français</option>
+                <option>English</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="s-timezone">Fuseau horaire</label>
+              <select class="input" id="s-timezone">
+                <option selected>Europe/Paris (UTC+2)</option>
+                <option>UTC</option>
+                <option>America/New_York</option>
+              </select>
+            </div>
+
+            <div class="settings-actions">
+              <button class="btn-ghost">Annuler</button>
+              <button class="btn-primary">Enregistrer</button>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/nav.js"></script>
+  <script src="../shared/components.js"></script>
+</body>
+</html>

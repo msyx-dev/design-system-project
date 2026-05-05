@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="msyx" data-mode="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>États vides — msyx Design System</title>
+  <!-- Anti-FOUC inline (synchrone, avant peinture) -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('msyx-theme') || 'msyx';
+      var m = localStorage.getItem('msyx-mode') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-mode', m);
+    })();
+  </script>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    .empty-page {
+      min-height: 100vh;
+      background: var(--primary);
+      padding: var(--space-xl) var(--space-lg);
+    }
+    .empty-page-header {
+      max-width: 960px;
+      margin: 0 auto var(--space-xl);
+    }
+    .empty-page-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: var(--fw-bold);
+      color: var(--text);
+      margin: 0 0 var(--space-xs);
+    }
+    .empty-page-subtitle {
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .empty-grid {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+    .empty-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-xl);
+      backdrop-filter: blur(8px);
+    }
+    .empty-card-label {
+      font-size: 0.75rem;
+      font-weight: var(--fw-semibold);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-lg);
+    }
+    @media (max-width: 768px) {
+      .empty-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="empty-page">
+    <div class="empty-page-header">
+      <h1 class="empty-page-title">États vides</h1>
+      <p class="empty-page-subtitle">Trois variantes d'état vide selon le contexte.</p>
+    </div>
+
+    <div class="empty-grid">
+
+      <!-- Variante 1 : Aucun résultat -->
+      <div class="empty-card">
+        <p class="empty-card-label">Aucun résultat</p>
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">&#128269;</div>
+          <h2 class="empty-state-title">Aucun résultat trouvé</h2>
+          <p class="empty-state-description">Votre recherche ne correspond à aucun élément. Essayez des mots-clés différents ou réinitialisez les filtres.</p>
+          <button class="btn-ghost" type="button">Réinitialiser la recherche</button>
+        </div>
+      </div>
+
+      <!-- Variante 2 : Pas encore de données -->
+      <div class="empty-card">
+        <p class="empty-card-label">Pas encore de données</p>
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">&#128203;</div>
+          <h2 class="empty-state-title">Aucun projet pour l'instant</h2>
+          <p class="empty-state-description">Vous n'avez pas encore créé de projet. Commencez maintenant et déployez votre première application.</p>
+          <button class="btn-primary" type="button">&#43; Créer un projet</button>
+        </div>
+      </div>
+
+      <!-- Variante 3 : Erreur de chargement -->
+      <div class="empty-card">
+        <p class="empty-card-label">Erreur de chargement</p>
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">&#9888;</div>
+          <h2 class="empty-state-title">Impossible de charger les données</h2>
+          <p class="empty-state-description">Une erreur est survenue lors de la récupération des données. Vérifiez votre connexion ou réessayez dans quelques instants.</p>
+          <div style="display:flex;gap:var(--space-sm);justify-content:center;">
+            <button class="btn-primary" type="button">Réessayer</button>
+            <button class="btn-ghost" type="button">Signaler le problème</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../shared/nav.js"></script>
+  <script src="../shared/components.js"></script>
+</body>
+</html>
