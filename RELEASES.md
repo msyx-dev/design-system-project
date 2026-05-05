@@ -1,5 +1,24 @@
 # Releases
 
+## v2.32.1 — 2026-05-06 — Sprint 18 — Visual regression filet
+
+### Added
+- **Visual regression tests Playwright** — premier filet de regression visuel automatique. 16 baselines committees (`visual-tests/baseline/msyx-{dark,light}/{8 pages}.png`). Workflow `.github/workflows/visual.yml` execute le check sur chaque PR, upload diffs en artefact `visual-diffs` en cas d'echec. Closes #177.
+- **Stack Node introduite** : `package.json` + `package-lock.json` a la racine. DevDeps : `@playwright/test ^1.48`, `serve ^14`. Aucun impact sur le deploiement Caddy file_server (stack uniquement dev/CI).
+- **Scripts npm** : `test:visual` (run), `test:visual:update` (regenerate baselines), `test:visual:report` (open HTML).
+- **README** : nouvelle section "Visual regression tests" (workflow local + CI + update baseline + perimetre).
+- **`.gitignore`** : ajout `node_modules/`, `visual-tests/diffs/`, `test-results/`, `playwright-report/`.
+
+### Perimetre v2.32.1
+- 1 theme (msyx) x 2 modes (dark+light) x 8 pages thematiques x 1 viewport (1280)
+- Hors scope : `index.html`, `site.html`, `getting-started.html` (peu de surface visuelle)
+- Extension matrice complete (ACSSI + Nhood + 375px) prevue Sprint 22
+
+### Compatibilite
+Aucun changement runtime / API CSS / JS. Pas de migration consumer requise. Le bump version est purement infra-tooling.
+
+---
+
 ## v2.32.0 — 2026-05-05 — Sprint 18 — Agent ergonomics
 
 ### Added
