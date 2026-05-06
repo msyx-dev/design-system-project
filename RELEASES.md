@@ -1,5 +1,19 @@
 # Releases
 
+## v2.37.0 — 2026-05-06 — Sprint 21 — Type modular scale 1.25 + tokens line-height + pairing rules
+
+### Changed
+- **Tokens typographiques** — Ajout de 8 tokens `--type-*` (echelle modulaire ratio 1.25 / Major Third) dans `shared/css/tokens.css` : `--type-12` (0.75rem) a `--type-49` (3.052rem). Les 4 tokens `--lh-*` existants conserves sans modification. Ferme #189.
+- **Classes `.typo-*`** — 10 classes (`.typo-h1` a `.typo-mono`) dans `shared/css/components/theming.css` mises a jour pour pointer vers `--type-*`. Diffs visuels dans la fourchette garde-fou : h1 (-0.9px), h2 (+2.4px), small/mono/text-sm (+0.4px). `.typo-display` conserve `3.5rem` literal (legacy hero).
+- **Classes `.text-*`** — 5 utilitaires (`.text-xs/sm/base/xl`) dans `shared/css/utilities.css` mappes sur `--type-*`. `.text-lg` conserve `1.125rem` literal (sweet spot hors echelle).
+- **Section Pairing** — Sous-section `#type-pairing` ajoutee dans `pages/fondation.html#typography` : 4 combinaisons canoniques (Hero, Section, Card, Data) avec exemples visuels.
+- **SKILL.md** — Bloc « Typographie — regles de pairing » ajoute : tableau tokens, exceptions legacy, 4 pairings canoniques, regle de saut max 2 marches.
+- `@ds-version` bumpe a `2.37.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
+### Notes techniques
+- Baseline VR : diffs attendus sur 3 classes (h1, h2, small/mono). Baseline update requis avec approbation Mike avant merge.
+- Consumer aksy : 0 impact — nouveaux tokens `--type-*` non consommes. Classes existantes maintiennent le rendu via aliases ou diffs sub-pixel.
+
 ## v2.36.0 — 2026-05-06 — Sprint 21 — Split components.css → 25 modules + barrel
 
 ### Changed

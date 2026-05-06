@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.37.0 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -216,11 +216,13 @@
 .text-left   { text-align: left; }
 .text-center { text-align: center; }
 .text-right  { text-align: right; }
-.text-xs     { font-size: 0.75rem; }
-.text-sm     { font-size: 0.85rem; }
-.text-base   { font-size: 1rem; }
+/* font-size mappes sur l'echelle modulaire ratio 1.25 (--type-*) — v2.37.0 */
+/* .text-lg conserve 1.125rem literal (legacy sweet spot, hors echelle) */
+.text-xs     { font-size: var(--type-12); }
+.text-sm     { font-size: var(--type-14); }
+.text-base   { font-size: var(--type-16); }
 .text-lg     { font-size: 1.125rem; }
-.text-xl     { font-size: 1.25rem; }
+.text-xl     { font-size: var(--type-20); }
 .uppercase   { text-transform: uppercase; }
 .capitalize  { text-transform: capitalize; }
 .font-mono    { font-family: var(--font-mono); }
