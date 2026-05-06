@@ -1,5 +1,11 @@
 # Releases
 
+## v2.40.0 — 2026-05-06 — Sprint 23 — Fix WCAG AA `--text-muted` dark ACSSI (closes #172)
+
+### Fixed
+- **a11y / tokens** — `--text-muted` dark ACSSI recalibré de `#94a3b8` (2.77:1 KO) à `#cbd5e1` : ratios WCAG AA atteints sur toutes les surfaces ACSSI dark (8.54:1 sur `--primary`, 6.63:1 sur `--surface-solid`, 4.78:1 sur `--surface-light`). `--text-muted-rgb` synced à `203, 213, 225`. Seul le bloc dark `[data-theme="acssi"]` est modifié — le light mode était déjà correct depuis v2.31.0.
+- `@ds-version` bumpé à `2.40.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.39.0 — 2026-05-06 — Sprint 22 — Theme generator JSON → CSS, scaffold-theme, byte-identité
 
 ### Changed

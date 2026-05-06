@@ -73,8 +73,8 @@
     --surface-solid: #00457a;
     --text: #ffffff;
     --text-dim: #9eb3c8;
-    --text-muted: #94a3b8;
-    --text-muted-rgb: 148, 163, 184;
+    --text-muted: #cbd5e1;
+    --text-muted-rgb: 203, 213, 225;
     --text-on-accent: #00243f;
     --violet: var(--deco-violet);
     --violet-rgb: var(--deco-violet-rgb);

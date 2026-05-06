@@ -1,4 +1,4 @@
-/* @ds-version: 2.39.0 */
+/* @ds-version: 2.40.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -248,7 +248,7 @@
 
     /* Textes * /
     --text: #ffffff;
-    --text-muted: #94a3b8;
+    --text-muted: #cbd5e1;          /* AA — 8.54:1 sur #00345f, 6.63:1 sur #00457a, 4.78:1 sur #005a9e (was #94a3b8 = 2.77:1 KO) */
     --text-dim: #9eb3c8;
 
     /* Gradients corporate * /
@@ -293,7 +293,7 @@
     --cyan: var(--deco-cyan); /* deprecated, remove in v3 * /
     --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 * /
     --pink: var(--deco-pink); /* deprecated, remove in v3 * /
-    --text-muted-rgb: 148, 163, 184;
+    --text-muted-rgb: 203, 213, 225;  /* synced with --text-muted: #cbd5e1 */
 
     /* Semantic light * /
     --success-light: #4ade80;
