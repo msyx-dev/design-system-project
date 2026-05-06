@@ -1,4 +1,4 @@
-/* @ds-version: 2.40.0 */
+/* @ds-version: 2.40.1 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -13,6 +13,7 @@
     font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700;
     background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     white-space: nowrap; text-decoration: none;
+    display: inline-flex; align-items: center; min-height: 44px; /* WCAG 2.5.5 tap target */
 }
 .site-header .header-version { font-size: 0.68rem; color: var(--text-dim); white-space: nowrap; }
 .site-header .header-spacer { flex: 1; }

@@ -1,5 +1,11 @@
 # Releases
 
+## v2.40.1 — 2026-05-06 — Sprint 23 — Fix a11y tap target header-logo (WCAG 2.5.5)
+
+### Fixed
+- **header-logo tap target** — `.site-header .header-logo` : ajout de `display: inline-flex`, `align-items: center` et `min-height: 44px` pour respecter WCAG 2.5.5 (seuil 44px). L'élément `<a>` étant `inline` par défaut, `min-height` était ignoré sans `display` block-like. Closes #173.
+- `@ds-version` bumpé à `2.40.1` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.40.0 — 2026-05-06 — Sprint 23 — Fix WCAG AA `--text-muted` dark ACSSI (closes #172)
 
 ### Fixed
