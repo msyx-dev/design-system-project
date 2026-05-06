@@ -56,36 +56,36 @@
 
 **Pourquoi cap à 11** : risque le plus haut de la roadmap (refactor visuel, 50 glyphes, migration de 18 occurrences emoji UI). Nécessite VR (#177 du S18) en place.
 
-### Sprint 20 — Cleanup tokens + motion (cible 7 SP — buffer prudent)
+### Sprint 20 — Cleanup tokens + motion (cible 7 SP — buffer prudent) — issues créées 2026-05-06
 
-| Issue prévue | Ticket | SP |
+| Issue | Ticket | SP |
 |---|---|---|
-| Token rename (`--border` → `--border-color`, etc.) + codemod + aliases legacy | 04 | 3 |
-| Motion reference page | 05 | 4 |
+| [#186](https://github.com/msyx-dev/design-system-project/issues/186) Token rename (`--border` → `--border-color`, etc.) + codemod + aliases legacy | 04 | 3 |
+| [#187](https://github.com/msyx-dev/design-system-project/issues/187) Motion reference page | 05 | 4 |
 
 **Pourquoi 7 SP** : sprint qui suit un gros lift (S19), on respire.
 
-### Sprint 21 — Refactor structurel + typo (cible 9 SP)
+### Sprint 21 — Refactor structurel + typo (cible 9 SP) — issues créées 2026-05-06
 
-| Issue prévue | Ticket | SP |
+| Issue | Ticket | SP |
 |---|---|---|
-| Split `components.css` en per-component + barrel + tree-shake guide | 08 | 6 |
-| Type modular scale + pairing rules | 09 | 3 |
+| [#188](https://github.com/msyx-dev/design-system-project/issues/188) Split `components.css` en per-component + barrel + tree-shake guide | 08 | 6 |
+| [#189](https://github.com/msyx-dev/design-system-project/issues/189) Type modular scale + pairing rules | 09 | 3 |
 
-### Sprint 22 — Theme system + extension VR (cible 10 SP)
+### Sprint 22 — Theme system + extension VR (cible 10 SP) — issues créées 2026-05-06
 
-| Issue prévue | Ticket | SP |
+| Issue | Ticket | SP |
 |---|---|---|
-| Theme generator (JSON → CSS) | 10 | 6 |
-| Extension VR matrice complète (16 → 96 baselines, 3 thèmes × 2 modes × 2 breakpoints) | dérivé 03 | 4 |
+| [#190](https://github.com/msyx-dev/design-system-project/issues/190) Theme generator (JSON → CSS) | 10 | 6 |
+| [#191](https://github.com/msyx-dev/design-system-project/issues/191) Extension VR matrice complète (16 → 96 baselines, 3 thèmes × 2 modes × 2 breakpoints) | dérivé 03 | 4 |
 
 **Pourquoi ce pairing** : le theme generator BESOIN du filet VR complet pour valider la byte-identité des CSS générés.
 
-### Sprint 23 — Brand motif (cible 8 SP — partiellement off-keyboard)
+### Sprint 23 — Brand motif (cible 8 SP — partiellement off-keyboard) — issue créée 2026-05-06
 
-| Issue prévue | Ticket | SP |
+| Issue | Ticket | SP |
 |---|---|---|
-| Wordmark + signature spatiale + `--texture-grain` (12 absorbé) | 11 + 12 | 8 |
+| [#192](https://github.com/msyx-dev/design-system-project/issues/192) Wordmark + signature spatiale + `--texture-grain` (12 absorbé) | 11 + 12 | 8 |
 
 **Pourquoi partiellement off-keyboard** : nécessite arbitrage Mike sur 4 explorations SVG. Sprint à planifier quand la dispo synchrone est OK.
 
@@ -99,6 +99,12 @@
 
 1. **Milestones GitHub créés (2026-05-06)** : Sprint 18 (#19, closed), Sprint 19 (#20), Sprint 20 (#21), Sprint 21 (#22), Sprint 22 (#23), Sprint 23 (#24). Permet `/sprint <N>` direct depuis session neuve via lecture milestone (vs ancienne convention label-only). Labels `Sprint:N` conservés en complément (filtrage transverse, board #7 sans milestone).
 2. **Status board #7** : pas de colonne « Backlog » disponible, on utilise « Todo » pour les issues planifiées non démarrées.
-3. **Issues Sprint 19 créées** (2026-05-06) : #184 (iconography Lucide, 10 SP) + #185 (backdrop fallback absorbé, 1 SP) — total 11 SP, milestone Sprint 19, board Status=Todo via `board-update.sh --auto-add`.
-4. **Issues S20+ pas créées** : créer au début de chaque sprint après /groom pour profiter du contexte le plus à jour. Les milestones existent déjà (gh) — il suffit de `gh issue create --milestone "Sprint X"` au début du sprint. La trace de ce qui doit être fait reste ce fichier ROADMAP.md + les 12 tickets sources `docs/claude_design/0X-*.md`.
+3. **Toutes les issues S19→S23 créées** (2026-05-06) : 9 issues #184-#192 sur le board #7, avec milestones gh + labels Sprint:N + Priority + Size auto-detectés via `board-update.sh --auto-add`. Permet `/sprint <N>` direct depuis session neuve sans étape de création préalable.
+   - S19 (11 SP) : #184 + #185
+   - S20 (7 SP) : #186 + #187
+   - S21 (9 SP) : #188 + #189
+   - S22 (10 SP) : #190 + #191
+   - S23 (8 SP) : #192
+   - **Total roadmap : 45 SP / 6 sprints** (S18 livré + S19-S23 backloggés)
+4. **Le contenu des issues S20+ peut être affiné en début de sprint** via `/groom` : le body actuel pointe vers le ticket source `docs/claude_design/0X-*.md` qui contient le plan détaillé, mais la spec /spec finalisera le périmètre exact selon le contexte du moment.
 5. **Convention pré-allocation versions** : pour chaque sprint multi-bumps (>2 issues touchant `@ds-version`), le parent /sprint doit injecter `ta version cible : v2.X.Y` dans chaque prompt /dev. Décision 2026-05-01 — formalisée dans `CLAUDE.md` §Process point 5 via #176 mergé Sprint 18.

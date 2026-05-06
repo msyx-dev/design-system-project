@@ -12,11 +12,14 @@
 
 ## Prochaine étape
 - **Déploiement v2.32.2 effectué le 2026-05-06 07:19** : prod sur design-system.msyx.fr (deploy_tag `deploy-20260506-071914`), registry.json maj (commit `10c5cfc`), gh release publiée, smoke test HTTP 200 sur site.html / SKILL.md / canonical-pages/login.html (302 → /login attendu via auth gate)
-- **Sprint 19 ready (2026-05-06)** — milestone Sprint 19 (#20) + 2 issues créées :
-  - **#184** Iconographie Lucide sprite + tokens + .icon + migration UI (10 SP, P1, ticket source 07)
-  - **#185** backdrop-filter @supports not fallback + doc « glass vs solid » (1 SP, P3, ticket source 06 absorbé)
-  - Total 11 SP — cohérent cible roadmap, board Status=Todo via `board-update.sh --auto-add` (livrable Sprint 18 #179)
-- **Milestones futurs créés (gh)** : Sprint 20 (#21), Sprint 21 (#22), Sprint 22 (#23), Sprint 23 (#24). Permet `gh issue create --milestone "Sprint X"` direct depuis session neuve. Issues S20+ à créer au début de chaque sprint (pattern actuel).
+- **Backlog complet S19-S23 créé (2026-05-06)** — 9 issues #184-#192 sur board #7, milestones gh #20-#24 :
+  - **S19 (11 SP)** : #184 Iconographie Lucide (10 SP, P1) + #185 backdrop-filter fallback (1 SP, P3, absorbé)
+  - **S20 (7 SP)** : #186 Token rename (3 SP, P2) + #187 Motion ref page (4 SP, P2)
+  - **S21 (9 SP)** : #188 Split components.css (6 SP, P1) + #189 Type modular scale (3 SP, P2)
+  - **S22 (10 SP)** : #190 Theme generator (6 SP, P2) + #191 Extension VR matrice complète 96 baselines (4 SP, P2)
+  - **S23 (8 SP, partiellement off-keyboard)** : #192 Brand motif wordmark + signature + texture-grain (8 SP, P1, absorbe ticket 12)
+  - **Total backloggé : 45 SP / 5 sprints futurs** — board Status=Todo via `board-update.sh --auto-add` (livrable Sprint 18 #179, fonctionne en live)
+  - Permet `/sprint <N>` direct depuis session neuve : milestone gh + issues + Priority + Size déjà configurés.
 - Dépendances levées : #177 (VR) MERGED → débloque sprints 19-22 (iconographie, token rename, split components.css, type scale, theme generator) qui ont besoin du filet visual regression
 
 ## Décisions sprint 18 (2026-05-06)
