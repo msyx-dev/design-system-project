@@ -2,42 +2,26 @@
 # Niveau 3 — État session
 
 ## Contexte courant
-- Sprint 17 déployé le 2026-05-01 — v2.31.0 en prod sur design-system.msyx.fr (Caddy file_server, mode static)
-- 5/5 issues closed (4 PRs + #167 absorbed), 8/8 SP, 100% velocity (17e sprint consécutif)
-- 87 composants + reset natif `<a>` + `:focus-visible` global sur 8 pages, 3 thèmes (MSYX, ACSSI, Nhood)
-- Tous les findings a11y consumer aksy résolus (#262 #263 #264 #267 #268 #269 #271 #303)
-- Auth gate active, registry.json à jour (deploy_tag deploy-20260501-225840)
+- Sprint 18 terminé le 2026-05-06 — v2.32.2 sur main (déploiement à venir)
+- 4/4 issues closed (3 PRs DS #181 #182 #183 + commit hors-repo dans `~/.claude/`), 9/9 SP, 100% velocity (18e sprint consécutif)
+- 87 composants + reset natif + **agent-ready** : SKILL.md user-invocable, 6 canonical-pages (login/settings/dashboard-kanban/empty-state/error-404/billing), prompts.md, components-registry.json enrichi (champ `example`)
+- **Visual regression Playwright** en CI : 16 baselines msyx dark+light × 8 pages × 1280, workflow `.github/workflows/visual.yml` actif sur PR
+- **Diacritic lint** en CI : `shared/check-diacritics.sh` POSIX, 11 patterns, fixture test, étendu dans `.github/workflows/ci.yml` job lint
+- **Pipeline board** : `~/.claude/scripts/pipeline/board-update.sh --auto-add <issue-url>` opérationnel, lookup dynamique IDs via GraphQL, mapping Priority + parsing Size depuis body
+- Auth gate active, registry.json à jour (deploy_tag deploy-20260501-225840 — sera mis à jour au prochain /deploy)
 
 ## Prochaine étape
-- **Sprint 18 backlog créé (2026-05-05)** — 4 issues sur board #7, cible 9 SP :
-  - #176 SKILL.md + canonical-pages + prompts.md (3 SP, P1, v2.32.0) — absorbe doc retro pré-allocation/absorption + CLAUDE.md §Process point 5
-  - #177 Visual regression Playwright minimal — msyx × dark+light × 8 pages = 16 baselines (4 SP, P1, v2.32.1)
-  - #178 Diacritic / copy lint + CI hook (1 SP, P3, v2.32.2)
-  - #179 board-update.sh auto-add (1 SP, P2, outillage `~/.claude/`)
-- Roadmap S18→S23 documentée dans `docs/claude_design/ROADMAP.md` — 12 tickets claude-design redécoupés en 6 sprints (vs 4 dans plan original) selon vélocité réelle 9.4 SP/sprint
-- Dépendances : #177 (VR) bloque les sprints 19-22 (iconographie, token rename, split components.css, type scale, theme generator)
+- **Déploiement v2.32.2** : lancer `/deploy` quand prêt (Caddy file_server, statique, modifier les fichiers → visible immédiatement)
+- **Sprint 19** à planifier — selon roadmap `docs/claude_design/ROADMAP.md` : iconography Lucide (ticket 07) + backdrop fallback absorbé (ticket 06). Cible ~9 SP cohérente avec mediane S14-S18.
+- Dépendances levées : #177 (VR) MERGED → débloque sprints 19-22 (iconographie, token rename, split components.css, type scale, theme generator) qui ont besoin du filet visual regression
 
-## ⛓️ Sprint 18 — ordre de merge contraint
-Pré-allocation versions (convention 2026-05-01) impose l'ordre de merge :
-1. **#176 → v2.32.0** (Added : SKILL.md + canonical-pages + prompts.md)
-2. **#177 → v2.32.1** (Added : VR Playwright minimal)
-3. **#178 → v2.32.2** (Fixed : diacritic lint)
-4. **#179** : pas de bump @ds-version (livrable hors repo design-system-project, dans `~/.claude/scripts/pipeline/board-update.sh`)
-
-Worktrees parallèles autorisés. Seul le **merge** est ordonné. Si une issue est bloquée, les suivantes attendent ou requalifier les versions et l'annoncer ici.
-
-## ⚠️ #179 — workflow non-standard
-- Livrable dans repo `~/.claude/` (autonome), PAS dans design-system-project
-- Diff git du repo DS = vide ; commit dans `~/.claude/`
-- Label `Quick` ajouté → skip /groom et /spec
-- Pas de bump @ds-version, pas de PR sur msyx-dev/design-system-project
-- Quality gate adapté : test manuel sur 2 projets différents
-
-## Décisions sprint 18 (2026-05-05)
-- Plan claude-design analysé et challengé sur la base de la vélocité historique (médiane 5 derniers sprints = 10 SP, pas 8)
+## Décisions sprint 18 (2026-05-06)
+- Plan claude-design analysé et challengé sur la base de la vélocité historique (médiane 5 derniers sprints = 8-10 SP)
 - Ticket 03 (VR) réduit en S18 : 16 baselines au lieu de 96 — extension matrice complète renvoyée au S22 quand le theme generator nécessitera le filet complet
 - Ticket 12 (noise texture) absorbé dans ticket 11 (S23) — déjà mentionné par le ticket source
 - Tickets 06 (backdrop fallback) absorbé dans S19 (iconography) car même fichier CSS impacté
+- **Pattern "rate-limit recovery"** validé Sprint 18 : reprise idempotente §3d-5 + cron wake-up post-reset quota (01:15 Europe/Berlin). Pendant /review #176, subagent a hit rate limit après `gh pr create` → parent a spawné un subagent successeur /review-only avec contexte (PR num, branche, spec URL) → review livrée + corrections pushées. 0 perte de travail.
+- **Pattern "issue hors-repo"** validé Sprint 18 (#179) : tracage sur board fonctionnel, livraison dans repo infra (`~/.claude/`), commit hors-repo, ACs adaptés (pas de bump version DS, pas de PR sur le projet origine), label Quick + body explicite documentant les 6 points de divergence.
 
 ## Décisions permanentes
 - 2026-03-07 : templates de suivi projet = sections statiques mockées (pas de backend), CSS inline
@@ -55,3 +39,4 @@ Worktrees parallèles autorisés. Seul le **merge** est ordonné. Si une issue e
 - 2026-05-01 22:55 — Sprint 17 terminé : 4 PRs (#168 #169 #170 #171) + #167 absorbed, 8/8 SP, v2.31.0, 100% velocity, fix a11y palette ACSSI dark+light + reset natif `<a>`/`:focus-visible`
 - 2026-05-01 23:00 — Sprint 17 déployé : v2.31.0 en prod sur design-system.msyx.fr, registry.json maj (deploy_tag deploy-20260501-225840), gh release publiée, smoke test HTTP 200 sur site.html + tokens.css + components.css
 - 2026-05-05 — Plan claude-design (`docs/claude_design/`, 12 tickets + IMPROVEMENT_PLAN) analysé et redécoupé. Backlog Sprint 18 créé : 4 issues #176-#179 sur board #7, label `Sprint:18`, Status=Todo, Priority/Size configurés. Roadmap S18→S23 dans `docs/claude_design/ROADMAP.md`.
+- 2026-05-06 01:30 — Sprint 18 terminé : 3 PRs DS (#181 #182 #183) + 1 commit hors-repo (`~/.claude/` a74a282), 9/9 SP, v2.32.2, 100% velocity, agent ergonomics (SKILL.md + canonical-pages + prompts.md) + visual regression Playwright + diacritic lint + board-update auto-add. Rate limit Anthropic hit pendant /review #176, mitigation par subagent successeur + cron wake-up à 01:15.
