@@ -10,6 +10,7 @@ const NAV_SECTIONS = [
         { label: 'Tokens CSS', icon: '{}', href: '/pages/fondation.html#tokens' },
         { label: 'Theming', icon: '&#9775;', href: '/pages/fondation.html#theming' },
         { label: 'Utilitaires', icon: '&#9638;', href: '/pages/fondation.html#utilities' },
+        { label: 'Texture', icon: '&#9617;', href: '/pages/fondation.html#texture' },
         { label: 'Motion', icon: '&#9889;', href: '/pages/motion.html#durations' }
     ]},
     { title: 'Composants', links: [
@@ -184,8 +185,8 @@ function buildHeader() {
 
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
-        + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.41.0</span>'
+        + '<a href="/site.html" class="header-logo"><img src="/assets/logo-msyx.svg" alt="msyx Design System" width="120" height="32" class="header-logo-img"></a>'
+        + '<span class="header-version">v2.42.0</span>
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
