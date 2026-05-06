@@ -11,7 +11,7 @@
 - Auth gate active, registry.json à jour (deploy_tag deploy-20260506-071914 — sera mis à jour au prochain /deploy)
 
 ## Prochaine étape
-- **Déployer v2.33.0 sur design-system.msyx.fr** (registry.json à mettre à jour, gh release v2.33.0 à publier, smoke tests post-deploy)
+- **v2.33.0 déployé en prod le 2026-05-06 10:44** : design-system.msyx.fr (deploy_tag `deploy-20260506-104425`), registry.json maj, gh release publiée, smoke tests OK
 - **Backlog Sprint 20** prêt : #186 Token rename (3 SP, P2) + #187 Motion ref page (4 SP, P2) = 7 SP cible. Milestone GH #21 ouvert.
 - Sprite Lucide propage aux consumers via `shared/sync-all.sh` au prochain deploy (consommateurs : aksy, aksyva, acssistender)
 - **Backlog futurs sprints (déjà créés)** :
@@ -55,3 +55,4 @@
 - 2026-05-06 07:19 — Sprint 18 déployé : v2.32.2 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260506-071914`, previous `deploy-20260501-225840`), registry.json maj (commit `10c5cfc`), gh release v2.32.2 publiée, smoke tests HTTP OK.
 - 2026-05-06 — Préparation Sprint 19+ : milestones gh créés S19-S23 (#20-#24), issues Sprint 19 créées (#184 iconography 10 SP P1, #185 backdrop fallback 1 SP P3 absorbé), board=Todo, total 11 SP cible roadmap. Convention milestone gh systematique pour faciliter `/sprint <N>` depuis session neuve.
 - 2026-05-06 — Sprint 19 terminé : 1 PR DS (#193, closes #184 + #185), 11/11 SP, v2.33.0, 100% velocity (19e sprint consécutif). Iconography Lucide (sprite 50 glyphes, tokens, classe `.icon`, migration UI) + fallback `@supports not (backdrop-filter)` (#185 absorbé). 2 subagents ont timeout successivement sur gros lift, parent finalisé manuellement. CI verte (lint + visual). Anomalie hook bloque-merge (faux positif sur agents-active.json non nettoyé) traitée par cleanup manuel.
+- 2026-05-06 10:44 — Sprint 19 déployé : v2.33.0 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260506-104425`, previous `deploy-20260506-071914`), registry.json maj (commit `3b2916e` dans `~/projects/_global/`), gh release v2.33.0 publiée, smoke tests OK (HTTP 302 auth gate sur site.html / sprite.svg / components.css / SKILL.md). Audit sécu pre-deploy : VERDICT OK (pas de vecteur XSS dans le sprite SVG). Reco non bloquante : `build-sprite.sh` accessible publiquement (sans secret) — durcissement Caddy `@hidden path *.sh` à envisager au prochain sprint.
