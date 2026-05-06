@@ -9,7 +9,8 @@ const NAV_SECTIONS = [
         { label: 'Spacing', icon: '&#9638;', href: '/pages/fondation.html#spacing' },
         { label: 'Tokens CSS', icon: '{}', href: '/pages/fondation.html#tokens' },
         { label: 'Theming', icon: '&#9775;', href: '/pages/fondation.html#theming' },
-        { label: 'Utilitaires', icon: '&#9638;', href: '/pages/fondation.html#utilities' }
+        { label: 'Utilitaires', icon: '&#9638;', href: '/pages/fondation.html#utilities' },
+        { label: 'Motion', icon: '&#9889;', href: '/pages/motion.html#durations' }
     ]},
     { title: 'Composants', links: [
         { label: 'Boutons', icon: '&#9654;', href: '/pages/composants.html#buttons' },
@@ -184,7 +185,7 @@ function buildHeader() {
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
         + '<a href="/site.html" class="header-logo">msyx.design</a>'
-        + '<span class="header-version">v2.34.0</span>'
+        + '<span class="header-version">v2.35.0</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
@@ -682,6 +683,7 @@ var lazyObserver = null;
 
 var PAGE_TO_LAZY = {
     '/pages/fondation.html': 'lazy-fondation',
+    '/pages/motion.html': 'lazy-motion',
     '/pages/composants.html': 'lazy-composants',
     '/pages/formulaires.html': 'lazy-formulaires',
     '/pages/navigation.html': 'lazy-navigation',

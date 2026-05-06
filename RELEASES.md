@@ -1,5 +1,17 @@
 # Releases
 
+## v2.35.0 — 2026-05-06 — Sprint 20 — Motion reference page
+
+### Added
+- **Motion reference page** (`pages/motion.html`) — nouvelle page thématique : durations (fast/base/slow), easings (standard/spring + courbes SVG + démo boule animée) et 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce). Closes #187.
+- `initMotionReplay()` dans `components.js` — bouton Replay par pattern, toggle classe + reflow forcé (`void offsetWidth`), pattern `dataset.bound` anti-double-bind.
+- `initMotionViewport()` dans `components.js` — IntersectionObserver pause les animations hors viewport (perf mobile).
+- Bloc CSS `/* ===== MOTION REFERENCE PAGE ===== */` dans `components.css` — keyframes `motionFadeIn`, `motionSlideUp`, `motionScaleIn`, `motionBounceIn`, `motionBarFill`, `motionBallSlide`. Zéro valeur hardcodée.
+- Lien « Motion » dans la sidebar (sous Fondation) et card Motion dans le hub `site.html`.
+- Compteur hero : 87 → 88 composants, 8 → 9 pages.
+- `prefers-reduced-motion: reduce` respecté via le bloc global `@media (prefers-reduced-motion: reduce)` (animation-duration: 0.01ms sur tous les éléments).
+- `@ds-version` bumpé à `2.35.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.34.0 — 2026-05-06 — Sprint 20 — Token rename + aliases legacy
 
 ### Changed

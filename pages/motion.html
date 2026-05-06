@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion — msyx.design</title>
+    <meta name="description" content="Durations, easings et 6 patterns canoniques d'animation du design system msyx.fr.">
+    <link rel="stylesheet" href="/shared/styles.css">
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+    <script>window.MSYX_HEADER={auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Motion ajouté au DS',icon:'⚡',time:'2min',unread:true},{title:'Mise à jour v2.35',desc:'Motion reference page',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #194 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
+</head>
+<body>
+    <header class="site-header" id="site-header"></header>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+
+<!-- ===== SECTION 1 : DURATIONS ===== -->
+<section id="durations">
+    <div class="section-header">
+        <span class="overline">Motion</span>
+        <h2>Durations</h2>
+        <p>3 durées canoniques pour les transitions et animations courtes. Préférer toujours un token, jamais une valeur hardcodée.</p>
+    </div>
+    <div class="demo-box motion-demo">
+        <div class="motion-duration-row">
+            <span class="motion-token">--duration-fast</span>
+            <span class="motion-value">150ms · cubic-bezier(0.4, 0, 0.2, 1)</span>
+            <div class="motion-bar"><div class="motion-bar-fill motion-bar--fast"></div></div>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-bar--fast" aria-label="Replay animation duration-fast">Replay</button>
+        </div>
+        <div class="motion-duration-row">
+            <span class="motion-token">--duration-base</span>
+            <span class="motion-value">200ms · cubic-bezier(0.4, 0, 0.2, 1)</span>
+            <div class="motion-bar"><div class="motion-bar-fill motion-bar--base"></div></div>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-bar--base" aria-label="Replay animation duration-base">Replay</button>
+        </div>
+        <div class="motion-duration-row">
+            <span class="motion-token">--duration-slow</span>
+            <span class="motion-value">350ms · cubic-bezier(0.4, 0, 0.2, 1)</span>
+            <div class="motion-bar"><div class="motion-bar-fill motion-bar--slow"></div></div>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-bar--slow" aria-label="Replay animation duration-slow">Replay</button>
+        </div>
+        <pre><code class="typo-mono">/* Usage */
+transition: all var(--duration-base) var(--ease-standard);
+animation: fadeIn var(--duration-slow) var(--ease-spring);</code></pre>
+    </div>
+</section>
+
+<!-- ===== SECTION 2 : EASINGS ===== -->
+<section id="easings">
+    <div class="section-header">
+        <span class="overline">Motion</span>
+        <h2>Easings</h2>
+        <p>2 courbes cubic-bezier : <code class="code-inline">standard</code> pour les transitions classiques, <code class="code-inline">spring</code> pour les apparitions avec overshoot léger (effet rebond).</p>
+    </div>
+    <div class="demo-box motion-demo">
+        <div class="motion-easing-row">
+            <span class="motion-token">--ease-standard</span>
+            <span class="motion-value">cubic-bezier(0.4, 0, 0.2, 1)</span>
+            <svg viewBox="0 0 100 100" class="motion-curve" aria-hidden="true" role="img">
+                <!-- Axes -->
+                <line x1="0" y1="100" x2="100" y2="100" stroke="var(--border-color)" stroke-width="1"/>
+                <line x1="0" y1="0"   x2="0"   y2="100" stroke="var(--border-color)" stroke-width="1"/>
+                <!-- Courbe : cubic-bezier(0.4, 0, 0.2, 1) → C 40,100 20,0 100,0 -->
+                <path d="M 0 100 C 40 100, 20 0, 100 0" stroke="var(--accent)" fill="none" stroke-width="2"/>
+            </svg>
+            <div class="motion-ball-track" aria-hidden="true"><div class="motion-ball motion-ball--standard"></div></div>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-ball--standard" aria-label="Replay ease-standard">Replay</button>
+        </div>
+        <div class="motion-easing-row">
+            <span class="motion-token">--ease-spring</span>
+            <span class="motion-value">cubic-bezier(0.34, 1.56, 0.64, 1)</span>
+            <svg viewBox="0 0 100 100" class="motion-curve" aria-hidden="true" role="img">
+                <!-- Axes -->
+                <line x1="0" y1="100" x2="100" y2="100" stroke="var(--border-color)" stroke-width="1"/>
+                <line x1="0" y1="0"   x2="0"   y2="100" stroke="var(--border-color)" stroke-width="1"/>
+                <!-- Courbe : cubic-bezier(0.34, 1.56, 0.64, 1) → overshoot → C 34,-56 64,0 100,0 -->
+                <path d="M 0 100 C 34 -56, 64 0, 100 0" stroke="var(--deco-violet)" fill="none" stroke-width="2"/>
+            </svg>
+            <div class="motion-ball-track" aria-hidden="true"><div class="motion-ball motion-ball--spring"></div></div>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-ball--spring" aria-label="Replay ease-spring">Replay</button>
+        </div>
+        <pre><code class="typo-mono">/* standard — transitions classiques (entrées, sorties, états) */
+transition: transform var(--duration-base) var(--ease-standard);
+
+/* spring — apparitions et feedbacks positifs */
+animation: scaleIn var(--duration-slow) var(--ease-spring);</code></pre>
+    </div>
+</section>
+
+<!-- ===== SECTION 3 : PATTERNS CANONIQUES ===== -->
+<section id="patterns">
+    <div class="section-header">
+        <span class="overline">Motion</span>
+        <h2>Patterns canoniques</h2>
+        <p>6 patterns prêts à copier. Chaque pattern utilise uniquement des tokens — zéro valeur hardcodée. Copier la classe CSS et le keyframe associé dans votre projet.</p>
+    </div>
+
+    <!-- Pattern 1 : fade-in -->
+    <div class="demo-box motion-pattern">
+        <div class="motion-pattern-header">
+            <h3>1. Fade-in</h3>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-fade-in-demo" aria-label="Replay fade-in">Replay</button>
+        </div>
+        <div class="motion-stage" aria-label="Démonstration fade-in">
+            <div class="motion-card-demo motion-fade-in-demo">Fade In</div>
+        </div>
+        <pre><code class="typo-mono">/* CSS */
+.fade-in {
+    animation: motionFadeIn var(--duration-base) var(--ease-standard);
+}
+@keyframes motionFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}</code></pre>
+    </div>
+
+    <!-- Pattern 2 : slide-up -->
+    <div class="demo-box motion-pattern">
+        <div class="motion-pattern-header">
+            <h3>2. Slide-up</h3>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-slide-up-demo" aria-label="Replay slide-up">Replay</button>
+        </div>
+        <div class="motion-stage" aria-label="Démonstration slide-up">
+            <div class="motion-card-demo motion-slide-up-demo">Slide Up</div>
+        </div>
+        <pre><code class="typo-mono">/* CSS */
+.slide-up {
+    animation: motionSlideUp var(--duration-base) var(--ease-standard);
+}
+@keyframes motionSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}</code></pre>
+    </div>
+
+    <!-- Pattern 3 : scale-in -->
+    <div class="demo-box motion-pattern">
+        <div class="motion-pattern-header">
+            <h3>3. Scale-in</h3>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-scale-in-demo" aria-label="Replay scale-in">Replay</button>
+        </div>
+        <div class="motion-stage" aria-label="Démonstration scale-in">
+            <div class="motion-card-demo motion-scale-in-demo">Scale In</div>
+        </div>
+        <pre><code class="typo-mono">/* CSS */
+.scale-in {
+    animation: motionScaleIn var(--duration-base) var(--ease-standard);
+}
+@keyframes motionScaleIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+}</code></pre>
+    </div>
+
+    <!-- Pattern 4 : stagger -->
+    <div class="demo-box motion-pattern">
+        <div class="motion-pattern-header">
+            <h3>4. Stagger</h3>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-stagger-demo" aria-label="Replay stagger">Replay</button>
+        </div>
+        <div class="motion-stage" aria-label="Démonstration stagger — 3 enfants décalés 0/100/200ms">
+            <div class="motion-stagger-demo">
+                <div class="motion-card-demo">Item 1</div>
+                <div class="motion-card-demo">Item 2</div>
+                <div class="motion-card-demo">Item 3</div>
+            </div>
+        </div>
+        <pre><code class="typo-mono">/* CSS */
+.stagger > * {
+    animation: motionFadeIn var(--duration-base) var(--ease-standard);
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 100ms; }
+.stagger > *:nth-child(3) { animation-delay: 200ms; }</code></pre>
+    </div>
+
+    <!-- Pattern 5 : skeleton-shimmer -->
+    <div class="demo-box motion-pattern">
+        <div class="motion-pattern-header">
+            <h3>5. Skeleton shimmer</h3>
+            <span class="badge badge-info typo-xs">Réutilise <code>@keyframes shimmer</code></span>
+        </div>
+        <div class="motion-stage" aria-label="Démonstration skeleton shimmer">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);width:240px;">
+                <div class="motion-skeleton-demo" style="width:100%;height:16px;"></div>
+                <div class="motion-skeleton-demo" style="width:80%;height:14px;"></div>
+                <div class="motion-skeleton-demo" style="width:60%;height:12px;"></div>
+            </div>
+        </div>
+        <pre><code class="typo-mono">/* CSS — réutilise le keyframe shimmer global */
+.skeleton-line {
+    background: linear-gradient(
+        90deg,
+        var(--surface-solid) 25%,
+        var(--surface-light) 50%,
+        var(--surface-solid) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}</code></pre>
+    </div>
+
+    <!-- Pattern 6 : success-bounce -->
+    <div class="demo-box motion-pattern">
+        <div class="motion-pattern-header">
+            <h3>6. Success bounce</h3>
+            <button class="btn-secondary motion-replay" data-motion-target=".motion-bounce-demo" aria-label="Replay success-bounce">Replay</button>
+        </div>
+        <div class="motion-stage" aria-label="Démonstration success-bounce avec ease-spring">
+            <div class="motion-bounce-demo" role="img" aria-label="Icône succès animée">✓</div>
+        </div>
+        <pre><code class="typo-mono">/* CSS — utilise --ease-spring pour l'overshoot */
+.success-bounce {
+    animation: motionBounceIn var(--duration-slow) var(--ease-spring);
+}
+@keyframes motionBounceIn {
+    from { opacity: 0; transform: scale(0.3); }
+    to   { opacity: 1; transform: scale(1); }
+}</code></pre>
+    </div>
+
+</section>
+
+    </div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>
