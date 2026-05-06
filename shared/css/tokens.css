@@ -1,4 +1,4 @@
-/* @ds-version: 2.32.2 */
+/* @ds-version: 2.33.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -147,6 +147,12 @@
 
     /* Border */
     --border-width: 1px;
+
+    /* Icons */
+    --icon-size-sm: 16px;
+    --icon-size-md: 20px;
+    --icon-size-lg: 24px;
+    --icon-stroke: 1.5;
 }
 
 /* ----- Mode Light (generique, toutes palettes) ----- */

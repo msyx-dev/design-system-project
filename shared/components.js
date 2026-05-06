@@ -1751,8 +1751,8 @@ function initLightbox() {
         overlay.innerHTML =
             '<div class="lightbox-img-wrap" id="lb-img-wrap"></div>' +
             '<button class="lightbox-close" id="lb-close" aria-label="Fermer">&#10005;</button>' +
-            '<button class="lightbox-btn lightbox-prev" id="lb-prev" aria-label="Image precedente">&#8249;</button>' +
-            '<button class="lightbox-btn lightbox-next" id="lb-next" aria-label="Image suivante">&#8250;</button>' +
+            '<button class="lightbox-btn lightbox-prev" id="lb-prev" aria-label="Image precedente"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button>' +
+            '<button class="lightbox-btn lightbox-next" id="lb-next" aria-label="Image suivante"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></button>' +
             '<div class="lightbox-caption" id="lb-caption"></div>' +
             '<div class="lightbox-counter" id="lb-counter"></div>';
         document.body.appendChild(overlay);

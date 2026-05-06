@@ -18,10 +18,10 @@
 <section id="alerts">
     <div class="section-header"><span class="overline">Feedback</span><h2>Alertes</h2><p>Messages contextuels pour informer l'utilisateur.</p></div>
     <div class="demo-flex-col demo-max-w-md">
-        <div class="alert alert-info"><span class="alert-icon">&#8505;</span><span>Nouvelle version disponible. Mettez a jour pour profiter des dernieres fonctionnalites.</span></div>
-        <div class="alert alert-success"><span class="alert-icon">&#10003;</span><span>Deploiement reussi sur production. Temps de build : 34s.</span></div>
-        <div class="alert alert-warning"><span class="alert-icon">&#9888;</span><span>Utilisation CPU elevee (89%). Surveillez les performances.</span></div>
-        <div class="alert alert-danger"><span class="alert-icon">&#10007;</span><span>Echec de connexion a la base de donnees. Retry dans 30s.</span></div>
+        <div class="alert alert-info"><span class="alert-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></span><span>Nouvelle version disponible. Mettez a jour pour profiter des dernieres fonctionnalites.</span></div>
+        <div class="alert alert-success"><span class="alert-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span><span>Deploiement reussi sur production. Temps de build : 34s.</span></div>
+        <div class="alert alert-warning"><span class="alert-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></span><span>Utilisation CPU elevee (89%). Surveillez les performances.</span></div>
+        <div class="alert alert-danger"><span class="alert-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-x"/></svg></span><span>Echec de connexion a la base de donnees. Retry dans 30s.</span></div>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">Usage</span>
@@ -86,10 +86,10 @@
     <div class="subsection">
         <span class="demo-label">Variantes</span>
         <div class="demo-flex-col demo-max-w-sm">
-            <div class="toast toast-success"><span class="text-success-md">&#10003;</span><span>Fichier sauvegarde avec succes</span><button class="toast-close">&times;</button></div>
-            <div class="toast toast-error"><span class="text-danger-md">&#10007;</span><span>Erreur de connexion au serveur</span><button class="toast-close">&times;</button></div>
-            <div class="toast toast-info"><span class="text-info-md">&#8505;</span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
-            <div class="toast toast-warning"><span class="text-warning-md">&#9888;</span><span>Session expire dans 5 minutes</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-success"><span class="text-success-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span><span>Fichier sauvegarde avec succes</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-error"><span class="text-danger-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-x"/></svg></span><span>Erreur de connexion au serveur</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-info"><span class="text-info-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></span><span>3 mises a jour disponibles</span><button class="toast-close">&times;</button></div>
+            <div class="toast toast-warning"><span class="text-warning-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></span><span>Session expire dans 5 minutes</span><button class="toast-close">&times;</button></div>
         </div>
     </div>
     <div class="subsection">
@@ -307,9 +307,9 @@
                     </div>
                     <div class="drawer-body" style="padding:0;">
                         <div class="list">
-                            <div class="list-item"><span class="text-success-md">&#10003;</span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">design-system.msyx.fr — il y a 5 min</div></div></div>
-                            <div class="list-item"><span class="text-warning-md">&#9888;</span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
-                            <div class="list-item"><span class="text-info-md">&#8505;</span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
+                            <div class="list-item"><span class="text-success-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">design-system.msyx.fr — il y a 5 min</div></div></div>
+                            <div class="list-item"><span class="text-warning-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
+                            <div class="list-item"><span class="text-info-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
                         </div>
                     </div>
                 </div>
@@ -351,7 +351,7 @@
     <div class="demo-grid demo-grid-3">
         <div class="demo-box">
             <div class="empty-state">
-                <div class="empty-state-icon">&#128230;</div>
+                <div class="empty-state-icon"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-package"/></svg></div>
                 <h3>Aucun projet</h3>
                 <p>Vous n'avez pas encore cree de projet. Commencez par en creer un.</p>
                 <button class="btn-primary btn-sm">&plus; Creer un projet</button>
@@ -359,7 +359,7 @@
         </div>
         <div class="demo-box">
             <div class="empty-state">
-                <div class="empty-state-icon">&#128269;</div>
+                <div class="empty-state-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-search"/></svg></div>
                 <h3>Aucun resultat</h3>
                 <p>Aucun element ne correspond a votre recherche. Essayez avec d'autres termes.</p>
                 <button class="btn-secondary btn-sm">Effacer les filtres</button>
@@ -428,10 +428,10 @@
                     </div>
                     <div class="bottom-sheet-content" style="padding:0;">
                         <div class="list">
-                            <div class="list-item bs-list-action"><span style="color:var(--accent);font-size:1rem;">&#128203;</span><div class="list-item-content"><div class="list-item-title">Dupliquer</div><div class="list-item-desc">Creer une copie du projet</div></div></div>
-                            <div class="list-item bs-list-action"><span class="text-success-md">&#10003;</span><div class="list-item-content"><div class="list-item-title">Archiver</div><div class="list-item-desc">Deplacer en archive</div></div></div>
-                            <div class="list-item bs-list-action"><span class="text-warning-md">&#9993;</span><div class="list-item-content"><div class="list-item-title">Partager</div><div class="list-item-desc">Inviter des collaborateurs</div></div></div>
-                            <div class="list-item bs-list-action"><span class="text-danger-md">&#10007;</span><div class="list-item-content"><div class="list-item-title">Supprimer</div><div class="list-item-desc">Action irreversible</div></div></div>
+                            <div class="list-item bs-list-action"><span style="color:var(--accent);font-size:1rem;"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span><div class="list-item-content"><div class="list-item-title">Dupliquer</div><div class="list-item-desc">Creer une copie du projet</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-success-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span><div class="list-item-content"><div class="list-item-title">Archiver</div><div class="list-item-desc">Deplacer en archive</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-warning-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-mail"/></svg></span><div class="list-item-content"><div class="list-item-title">Partager</div><div class="list-item-desc">Inviter des collaborateurs</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-danger-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-x"/></svg></span><div class="list-item-content"><div class="list-item-title">Supprimer</div><div class="list-item-desc">Action irreversible</div></div></div>
                         </div>
                     </div>
                 </div>
@@ -541,9 +541,9 @@
         <div class="demo-box">
             <span class="demo-label">Mini FAB</span>
             <div class="fab-demo-area" style="align-items:flex-end;justify-content:flex-end;gap:var(--space-sm);">
-                <button class="fab fab-mini fab-success" aria-label="Valider">&#10003;</button>
-                <button class="fab fab-mini" aria-label="Editer">&#9998;</button>
-                <button class="fab fab-mini fab-danger" aria-label="Supprimer">&#128465;</button>
+                <button class="fab fab-mini fab-success" aria-label="Valider"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
+                <button class="fab fab-mini" aria-label="Editer"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></button>
+                <button class="fab fab-mini fab-danger" aria-label="Supprimer"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></button>
             </div>
             <p class="demo-hint-dim">Classe <code class="code-inline">.fab-mini</code> — 40px vs 56px standard</p>
         </div>
@@ -567,11 +567,11 @@
                         </div>
                         <div class="fab-action">
                             <span class="fab-action-label">Modifier</span>
-                            <button class="fab-action-btn" aria-label="Modifier">&#9998;</button>
+                            <button class="fab-action-btn" aria-label="Modifier"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></button>
                         </div>
                         <div class="fab-action">
                             <span class="fab-action-label">Supprimer</span>
-                            <button class="fab-action-btn" aria-label="Supprimer" style="color:var(--danger);">&#128465;</button>
+                            <button class="fab-action-btn" aria-label="Supprimer" style="color:var(--danger);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></button>
                         </div>
                     </div>
                     <button class="fab fab-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Ouvrir les actions">
@@ -614,7 +614,7 @@
                                 <div class="notif-text"><strong>Mickael</strong> a déployé le projet <em>design-system</em></div>
                                 <div class="notif-time">il y a 2 min</div>
                             </div>
-                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
                         </div>
                         <div class="notif-item notif-item--unread">
                             <div class="notif-avatar" style="background:var(--gradient-3);">CB</div>
@@ -622,7 +622,7 @@
                                 <div class="notif-text"><strong>Claude</strong> a termine l&apos;issue <em>#126 Composants SaaS</em></div>
                                 <div class="notif-time">il y a 15 min</div>
                             </div>
-                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
                         </div>
                         <div class="notif-item notif-item--unread">
                             <div class="notif-avatar" style="background:var(--gradient-4);">SY</div>
@@ -630,7 +630,7 @@
                                 <div class="notif-text"><strong>Systeme</strong> : backup quotidien <em>termine avec succes</em></div>
                                 <div class="notif-time">il y a 1 h</div>
                             </div>
-                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
                         </div>
                         <div class="notif-item">
                             <div class="notif-avatar">AB</div>
@@ -638,7 +638,7 @@
                                 <div class="notif-text"><strong>Admin</strong> a modifie les permissions du role <em>deployer</em></div>
                                 <div class="notif-time">hier</div>
                             </div>
-                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu">&#10003;</button>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
                         </div>
                     </div>
                 </div>
@@ -708,7 +708,7 @@
         <div class="demo-box">
             <span class="demo-label">Banner standard</span>
             <div class="upgrade-banner">
-                <div class="upgrade-banner-icon">&#9889;</div>
+                <div class="upgrade-banner-icon"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-zap"/></svg></div>
                 <div class="upgrade-banner-body">
                     <div class="upgrade-banner-title">Passez au plan Pro</div>
                     <div class="upgrade-banner-desc">Debloquez les exports illimites, l'API avancee et le support prioritaire. Essai gratuit 14 jours, sans engagement.</div>
@@ -722,7 +722,7 @@
         <div class="demo-box" style="margin-top:var(--space-md);">
             <span class="demo-label">Banner warning (limite atteinte)</span>
             <div class="upgrade-banner upgrade-banner--warning">
-                <div class="upgrade-banner-icon">&#9888;</div>
+                <div class="upgrade-banner-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></div>
                 <div class="upgrade-banner-body">
                     <div class="upgrade-banner-title">Limite de stockage presque atteinte</div>
                     <div class="upgrade-banner-desc">Vous avez utilise 85% de votre stockage (850 Mo / 1 Go). Augmentez votre quota pour continuer.</div>
