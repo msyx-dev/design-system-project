@@ -13,8 +13,14 @@
 
 ## Prochaine étape
 - `/deploy` v2.39.0 sur design-system.msyx.fr (cumule v2.34.0 → v2.39.0 depuis le dernier deploy v2.33.0). Sync consumers via `shared/sync-all.sh`. Aliases legacy + theme generator garantissent 0 régression rendu.
-- Sprint 23 prêt : milestone GH #24, #192 brand motif (cible 8 SP). Lancer `/sprint 23` quand voulu.
-- Actions S22 reportées : #1 ajouter `check-diacritics.sh` au quality gate /dev (lint CI fail observé sur les 2 PRs S22, friction évitable), #2 hisser convention « pré-allocation versions » au N1 cross-projet (5e application consécutive, pattern stable), #3 bug post-merge.sh préfix repo (3e report depuis S20).
+- Sprint 23 prêt (élargi 2026-05-06) : milestone GH #24, **5 issues, cible 14 SP, off-keyboard partiel** :
+  - #192 brand motif (8 SP P1) — wordmark SVG + signature spatiale + `--texture-grain`. **Off-keyboard créatif** : nécessite arbitrages Mike (4 explorations wordmark + 3 options signature + approbation baseline VR).
+  - #172 ACSSI `--text-muted` dark recalibration (1 SP P1 Quick) — fix WCAG AA, débloque DS-EXCEPTION aksy #265.
+  - #173 header-logo `min-height: 44px` (1 SP P2 Quick) — fix WCAG 2.5.5 tap-target, débloque DS-EXCEPTION aksy #278.
+  - #174 modal-focus.js helper dans DS partagé (3 SP P2) — migration helper aksy → DS, câblage `initModals()`, distribution sync, débloque DS-EXCEPTION aksy.
+  - #175 règle CSS globale `[disabled]:not(.btn-*):not(.input)` (1 SP P3 Quick) — promotion DS-EXCEPTION aksy #301.
+- À lancer dans une **session propre** (Mike présent, dispo synchrone) — combinaison brand creative + cleanup a11y/DS-EXCEPTION cross-projet.
+- Actions S22 reportées : #1 ajouter `check-diacritics.sh` au quality gate /dev (lint CI fail observé sur les 2 PRs S22, friction évitable, à créer comme Quick S23+), #2 hisser convention « pré-allocation versions » au N1 cross-projet (5e application consécutive, pattern stable), #3 bug post-merge.sh préfix repo (3e report depuis S20).
 
 ## Décisions sprint 22 (2026-05-06)
 - **Pré-allocation versions explicite — 5e application consécutive** (S17/S19/S20/S21/S22) : #191 → v2.38.0, #190 → v2.39.0. 0 conflit @ds-version. Pattern stabilisé. À hisser au N1 cross-projet.
