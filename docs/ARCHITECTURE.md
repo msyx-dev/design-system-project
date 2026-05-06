@@ -4,8 +4,8 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**60 composants UI** (registre shared/components-registry.json) repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0.
-Version courante : **v2.32.1**.
+**87 composants UI** (registre shared/components-registry.json) repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0.
+Version courante : **v2.33.0**.
 
 ## Structure
 
@@ -27,7 +27,7 @@ shared/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.) — variantes boutons : .btn-icon--danger (destructif, v2.27.0). Bloc "RESET NATIF" en tete (v2.31.0) : reset a {} (WCAG 1.4.3) + :focus-visible {} global (WCAG 2.4.7), cascade garantie par specificite inferieure aux composants DS.
+    components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.) — variantes boutons : .btn-icon--danger (destructif, v2.27.0). Bloc "RESET NATIF" en tete (v2.31.0) : reset a {} (WCAG 1.4.3) + :focus-visible {} global (WCAG 2.4.7), cascade garantie par specificite inferieure aux composants DS. Classe `.icon` + variantes `.icon--sm`/`.icon--lg` (v2.33.0) : `width/height: var(--icon-size-md)`, `stroke: currentColor`, `fill: none`. Fallback `@supports not (backdrop-filter: blur(20px))` (v2.33.0) : surfaces glass deviennent solides via `var(--surface)` quand `backdrop-filter` non supporte.
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
   check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides
@@ -41,9 +41,12 @@ shared/
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint + velocity.json
-SKILL.md                # Manifest agent user-invocable (v2.32.0) — regles tokens, voix, glass/solid, workflow absorption, versioning
+SKILL.md                # Manifest agent user-invocable (v2.32.0) — regles tokens, voix, glass/solid, workflow absorption, versioning. Section « Glass vs solid » (v2.33.0).
 prompts.md              # Phrases-types reutilisables pour agents (v2.32.0)
 canonical-pages/        # 6 pages HTML de reference agent (v2.32.0)
+shared/icons/           # Sprite SVG Lucide self-hosted (v2.33.0)
+  sprite.svg            # 50 glyphes Lucide concatenes (21 KB apres svgo, < 50 KB cible)
+  build-sprite.sh       # Build reproductible : npm install lucide-static + svgo + concat
   login.html            # Page de connexion : card centree, inputs email+password, toggle remember-me
   settings.html         # Parametres : 2 colonnes, 4 sections (profil, securite, notifications, preferences)
   dashboard-kanban.html # Tableau Kanban : 4 colonnes, toolbar (search + filter-bar + CTA)
@@ -62,6 +65,17 @@ Depuis v2.32.0, le DS expose des artefacts destines aux agents IA (Claude Code e
 - **`shared/components-registry.json`** : champ `example` (string HTML) sur chaque composant — copy-paste ready.
 
 Ces fichiers ne sont pas des demos publiques (pas de lien depuis site.html) : ils sont des references pour les agents, pas pour les utilisateurs finaux.
+
+## Iconography (depuis v2.33.0)
+
+Sprite SVG self-hosted Lucide (~50 glyphes) — convention `<svg class="icon"><use href="/shared/icons/sprite.svg#i-name"/></svg>`.
+
+- **Tokens** : `--icon-size-sm` (16px), `--icon-size-md` (20px), `--icon-size-lg` (24px), `--icon-stroke` (1.5)
+- **Classe** : `.icon` (default `--icon-size-md`) + variantes `.icon--sm` / `.icon--lg`. `stroke: currentColor` permet l'heritage de couleur depuis le contexte.
+- **Build** : `bash shared/icons/build-sprite.sh` — pipeline reproductible (lucide-static npm + svgo --multipass + concat symboles)
+- **Glyphes disponibles** : 50 — navigation (home, menu, chevron-{up,down,left,right}, arrow-{left,right}), action (plus, minus, edit, trash, copy, link, external-link, download, upload, refresh-cw), status (check, x, info, alert-{circle,triangle}, check-circle, x-circle, loader), content (file, folder, image, code, terminal, layout, layers, package), user (user, users, mail, phone, calendar, clock, eye, lock, search, bell, message-circle), system (sun, moon, palette, settings, zap, sparkles, rocket, github, slack, git-branch)
+- **Migration v2.32.2 → v2.33.0** : entites HTML (`&#XXXX;`) + emoji UI cibles → convention `<use>` sur 8 pages thematiques + index.html + site.html + canonical-pages + components.js. Cas non migres intentionnellement : symboles typographiques (kbd `⌘`/`⇧`, drag handles `⋮⋮`, `+`, `×`, `★`, `●`), donnees JS dans `MSYX_HEADER`, emoji UGC, glyphes sans equivalent Lucide.
+- **Fallback CSS** (#185 absorbe) : `@supports not (backdrop-filter: blur(20px))` retourne `var(--surface)` solide pour `.glass-card`, `.modal*`, `.sidebar`, `.header`, `.toast`, `.drawer`. Regle DS : « glass for chrome, solid for content » (documentee dans `pages/fondation.html` + `SKILL.md`).
 
 ## Visual regression (depuis v2.32.1)
 

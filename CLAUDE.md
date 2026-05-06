@@ -16,7 +16,7 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html    # Couleurs, typographie, espacements, ombres, theming, classes utilitaires
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming, classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
   composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu, reset natif (a + :focus-visible, v2.31.0)
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
@@ -36,6 +36,9 @@ shared/
   check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
   CONSUMER_GUIDE.md          # Guide d'integration pour projets consommateurs
+  icons/
+    sprite.svg             # Sprite SVG Lucide self-hosted (v2.33.0) — 50 glyphes, ~21 KB
+    build-sprite.sh        # Build reproductible (lucide-static + svgo)
   nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
   components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll, command palette, matrice risque)
 ```
