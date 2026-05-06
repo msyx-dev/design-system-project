@@ -2,22 +2,30 @@
 # Niveau 3 — État session
 
 ## Contexte courant
-- Sprint 19 terminé le 2026-05-06 — v2.33.0 sur main (déploiement à venir)
-- 2/2 issues closed (PR #193 — #184 absorbe #185), 11/11 SP, 100% velocity (19e sprint consécutif)
-- 87 composants + reset natif + **agent-ready** + **iconography Lucide** : SKILL.md user-invocable, 6 canonical-pages, prompts.md, components-registry.json (champ `example`), sprite SVG self-hosted (50 glyphes Lucide, 21 KB), tokens icon, classe `.icon`, fallback `@supports not (backdrop-filter)` (#185 absorbé)
-- **Visual regression Playwright** en CI : 16 baselines msyx dark+light × 8 pages × 1280, workflow `.github/workflows/visual.yml` actif sur PR — VR PASS sur PR #193 malgré migration UI (test tolérant)
-- **Diacritic lint** en CI : `shared/check-diacritics.sh` POSIX, 11 patterns, fixture test, étendu dans `.github/workflows/ci.yml` job lint
+- Sprint 20 terminé le 2026-05-06 — v2.35.0 sur main (déploiement à venir)
+- 2/2 issues closed (PR #194 v2.34.0 + PR #195 v2.35.0), 7/7 SP, 100% velocity (20e sprint consécutif)
+- 88 composants + reset natif + **agent-ready** + **iconography Lucide** + **motion reference** : SKILL.md user-invocable, 6 canonical-pages, prompts.md, components-registry.json, sprite SVG self-hosted (50 glyphes Lucide, 21 KB), tokens icon + duration + ease, classe `.icon`, page motion (durations, easings, 6 patterns canoniques fade-in/slide-up/scale-in/stagger/skeleton-shimmer/success-bounce + `prefers-reduced-motion` honoré)
+- **Tokens renames v2.34.0** : `--border` → `--border-color`, `--violet/cyan/pink` → `--deco-violet/cyan/pink`, `--radius` → `--radius-card`. Aliases legacy bidirectionnels en place (`/* deprecated, remove in v3 */`). Codemod idempotent `shared/codemod-rename-tokens.sh` (5 renames, sed -E word-boundaries).
+- **Visual regression Playwright** en CI : 18 baselines msyx dark+light × 9 pages × 1280 (motion ajoutée S20), workflow `.github/workflows/visual.yml` actif sur PR
+- **Diacritic lint** en CI : `shared/check-diacritics.sh` POSIX, 11 patterns, fixture test
 - **Pipeline board** : `~/.claude/scripts/pipeline/board-update.sh --auto-add <issue-url>` opérationnel, lookup dynamique IDs via GraphQL, mapping Priority + parsing Size depuis body
-- Auth gate active, registry.json à jour (deploy_tag deploy-20260506-071914 — sera mis à jour au prochain /deploy)
+- Auth gate active, registry.json à jour (deploy_tag deploy-20260506-104425 — sera mis à jour au prochain /deploy)
 
 ## Prochaine étape
-- **v2.33.0 déployé en prod le 2026-05-06 10:44** : design-system.msyx.fr (deploy_tag `deploy-20260506-104425`), registry.json maj, gh release publiée, smoke tests OK
-- **Backlog Sprint 20** prêt : #186 Token rename (3 SP, P2) + #187 Motion ref page (4 SP, P2) = 7 SP cible. Milestone GH #21 ouvert.
-- Sprite Lucide propage aux consumers via `shared/sync-all.sh` au prochain deploy (consommateurs : aksy, aksyva, acssistender)
+- **Sprint 20 mergé sur main** (PR #194 v2.34.0 + PR #195 v2.35.0). Déploiement à lancer : `/deploy` → tag `v2.35.0` (ou tag double v2.34.0 + v2.35.0 selon décision).
+- Sprite Lucide + tokens motion propagent aux consumers via `shared/sync-all.sh` au prochain deploy (consommateurs : aksy, aksyva, acssistender). Aliases legacy `--border/--violet/--cyan/--pink/--radius` garantissent 0 régression côté consumers (rendu identique).
+- CONSUMER_GUIDE.md section « Tokens dépréciés » avec deadline v3.0.0 — aux consumers de migrer leurs usages internes avant cette échéance.
 - **Backlog futurs sprints (déjà créés)** :
   - **S21 (9 SP)** : #188 Split components.css (6 SP, P1) + #189 Type modular scale (3 SP, P2)
-  - **S22 (10 SP)** : #190 Theme generator (6 SP, P2) + #191 Extension VR matrice complète 96 baselines (4 SP, P2)
+  - **S22 (10 SP)** : #190 Theme generator (6 SP, P2) + #191 Extension VR matrice complète 18 → 108 baselines (4 SP, P2)
   - **S23 (8 SP, partiellement off-keyboard)** : #192 Brand motif wordmark + signature + texture-grain (8 SP, P1, absorbe ticket 12)
+
+## Décisions sprint 20 (2026-05-06)
+- **Pré-allocation versions explicite** reconfirmée S20 (3e application après S17 + S19 implicite) : sprint multi-bumps (2 PRs touchant @ds-version) → parent injecte `ta version cible : v2.34.0/v2.35.0` dans chaque prompt /dev. 0 conflit git observé. Pattern à figer comme convention obligatoire dès 2 issues qui touchent le bump.
+- **Codemod idempotent comme pattern de refactor token** : sed -E avec word-boundaries (`(^|[^a-zA-Z0-9_-])--TOKEN([^a-zA-Z0-9_-]|$)`), aliases legacy bidirectionnels, run 1× = N modifs / run 2× = 0 modif. Réutilisable pour tout futur rename de token (#188 split, futurs renames).
+- **Aliases legacy en `tokens.css`** : pattern `--border: var(--border-color); /* deprecated, remove in v3 */` garantit 0 régression rendu. Permet split temporel : DS bump majeur + consumers migrent à leur rythme jusqu'à v3.0.0 deadline.
+- **Subagent #187 sans ligne RESULT** : Sonnet a finit `/review` sur quality gate report PASS (table formatée) mais a omis la ligne `RESULT: STATUS=pushed` obligatoire ET la branche n'était pas pushée (commit local clean dans worktree). Reprise idempotente §3d-5 : parent push direct + `gh pr create`. ~2 min friction. À noter dans /sprint workflow comme cas distinct du timeout pur.
+- **post-merge.sh — bug double préfix repo** : `~/.claude/scripts/pipeline/post-merge.sh "msyx-dev/design-system-project" 186` génère requête GraphQL `repos/msyx-dev/msyx-dev/design-system-project` (NOT_FOUND). Mitigation : `board-update.sh "design-system-project"` sans préfix owner. Bug silencieux, à investiguer en S21 (créer Task).
 
 ## Décisions sprint 19 (2026-05-06)
 - Sprite SVG self-hosted Lucide retenu (vs CDN runtime) : reproductibilité, pas de SPOF externe, anti-FOUC (sprite synchrone dans le HTML)
@@ -56,3 +64,4 @@
 - 2026-05-06 — Préparation Sprint 19+ : milestones gh créés S19-S23 (#20-#24), issues Sprint 19 créées (#184 iconography 10 SP P1, #185 backdrop fallback 1 SP P3 absorbé), board=Todo, total 11 SP cible roadmap. Convention milestone gh systematique pour faciliter `/sprint <N>` depuis session neuve.
 - 2026-05-06 — Sprint 19 terminé : 1 PR DS (#193, closes #184 + #185), 11/11 SP, v2.33.0, 100% velocity (19e sprint consécutif). Iconography Lucide (sprite 50 glyphes, tokens, classe `.icon`, migration UI) + fallback `@supports not (backdrop-filter)` (#185 absorbé). 2 subagents ont timeout successivement sur gros lift, parent finalisé manuellement. CI verte (lint + visual). Anomalie hook bloque-merge (faux positif sur agents-active.json non nettoyé) traitée par cleanup manuel.
 - 2026-05-06 10:44 — Sprint 19 déployé : v2.33.0 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260506-104425`, previous `deploy-20260506-071914`), registry.json maj (commit `3b2916e` dans `~/projects/_global/`), gh release v2.33.0 publiée, smoke tests OK (HTTP 302 auth gate sur site.html / sprite.svg / components.css / SKILL.md). Audit sécu pre-deploy : VERDICT OK (pas de vecteur XSS dans le sprite SVG). Reco non bloquante : `build-sprite.sh` accessible publiquement (sans secret) — durcissement Caddy `@hidden path *.sh` à envisager au prochain sprint.
+- 2026-05-06 — Sprint 20 terminé : 2 PRs DS (#194 v2.34.0 token rename + codemod + aliases legacy ; #195 v2.35.0 motion reference page + 6 patterns canoniques + prefers-reduced-motion), 7/7 SP, 100% velocity (20e sprint consécutif). CI verte du premier coup pour les 2 (lint + visual). VR : #194 PASS sans baseline update (aliases legacy = rendu identique), #195 PASS avec 2 nouvelles baselines (motion-dark + motion-light, 16 → 18 totales). Anomalie : subagent #187 terminé sans ligne RESULT (quality gate PASS produit mais branche non pushée), parent finalise push+PR (~2 min friction, 2e application du pattern). Bug post-merge.sh préfix repo détecté → mitigation manuelle board-update.sh.
