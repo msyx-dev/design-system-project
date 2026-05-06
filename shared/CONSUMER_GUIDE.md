@@ -387,3 +387,49 @@ color: #fff; /* a11y: fond noir 50% indépendant du thème, blanc lisible toujou
 grep -rn "color:\s*white\|color:\s*#fff" votre-projet/src/
 # → aucun résultat sans commentaire de dérogation
 ```
+
+---
+
+## Tokens dépréciés (deadline v3.0.0)
+
+Depuis **v2.34.0** (Sprint 20), cinq tokens ont été renommés pour lever des ambiguïtés sémantiques. Les anciens noms sont conservés comme **aliases** dans `tokens.css` jusqu'à la v3.0.0 — vos CSS continuent de fonctionner sans modification.
+
+### Tableau de migration
+
+| Ancien token (déprécié) | Nouveau token canonique | Raison |
+|-------------------------|-------------------------|--------|
+| `--border` | `--border-color` | Évite la confusion avec `--border-width` (longueur) |
+| `--radius` | `--radius-card` | Évite la confusion avec l'échelle `--radius-{xs,sm,md,lg,full}` |
+| `--violet` | `--deco-violet` | Couleur décorative, pas un rôle sémantique |
+| `--violet-rgb` | `--deco-violet-rgb` | Idem |
+| `--cyan` | `--deco-cyan` | Idem |
+| `--cyan-rgb` | `--deco-cyan-rgb` | Idem |
+| `--pink` | `--deco-pink` | Idem |
+
+### Ce qui se passe en v3.0.0
+
+Les aliases seront supprimés. Si votre projet utilise encore les anciens noms à ce moment, vos composants se casseront visuellement (les tokens renverront `unset`).
+
+### Migration recommandée
+
+À votre prochain sprint UI, exécutez le codemod fourni dans le design system (depuis votre dossier `shared/` après un `sync.sh`) :
+
+```bash
+./shared/codemod-rename-tokens.sh
+```
+
+Puis vérifiez l'idempotence :
+
+```bash
+./shared/codemod-rename-tokens.sh --check-idempotent
+```
+
+### Vérification manuelle
+
+Pour lister les occurrences restantes dans votre codebase :
+
+```bash
+grep -rn -- '--border[^-]' --include="*.css" --include="*.html" --include="*.js" .
+grep -rn -- '--radius[^-]' --include="*.css" --include="*.html" --include="*.js" .
+grep -rn -- '--violet\|--cyan\|--pink' --include="*.css" --include="*.html" --include="*.js" .
+```

@@ -155,7 +155,7 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
 ~75 variables dans `:root` de shared/styles.css (+ overrides dans chaque bloc theme/mode) :
 - **Couleurs** : primary, accent, surface, text, semantic (success/warning/danger/info)
-- **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`, `--violet-rgb`, `--cyan-rgb`, `--text-muted-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
+- **Couleurs RGB** : `--accent-rgb`, `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`, `--deco-violet-rgb`, `--deco-cyan-rgb`, `--text-muted-rgb` (triplets bruts pour `rgba(var(...), opacity)`)
 - **Couleurs etendues** : violet, cyan, pink, success/warning/danger-light/dark
 - **Token thème-aware `--text-on-accent`** : couleur de texte garantissant WCAG AA minimum sur fond `var(--accent)`. Valeurs par thème :
 

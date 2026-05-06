@@ -5,10 +5,10 @@
 ## CONTEXT
 
 Tokens ambigus :
-- `--border` (couleur) vs `--border-width` (longueur) → `--border-color`
+- `--border-color` (couleur) vs `--border-width` (longueur) → `--border-color`
 - `--shadow` (filtre) vs `--shadow-sm` → laisser, c'est OK
-- `--radius` (16) vs `--radius-md` (12) → confus, deprecate `--radius`
-- `--violet`, `--cyan`, `--pink` non sémantiques → `--deco-violet`, etc.
+- `--radius-card` (16) vs `--radius-md` (12) → confus, deprecate `--radius-card`
+- `--deco-violet`, `--deco-cyan`, `--deco-pink` non sémantiques → `--deco-violet`, etc.
 
 Sans VR (ticket 03), ne pas faire ce ticket.
 
@@ -23,14 +23,14 @@ Plan en 5 lignes avant écriture.
 
 Objectif :
 1. Créer un script `shared/codemod-rename-tokens.sh` (sed-based, idempotent) qui applique :
-   --border (couleur uniquement) → --border-color
-   --violet → --deco-violet
-   --cyan   → --deco-cyan
-   --pink   → --deco-pink
-   --radius (sans suffixe) → --radius-card
+   --border-color (couleur uniquement) → --border-color
+   --deco-violet → --deco-violet
+   --deco-cyan   → --deco-cyan
+   --deco-pink   → --deco-pink
+   --radius-card (sans suffixe) → --radius-card
 2. Ajouter des aliases legacy dans tokens.css :
-   --border: var(--border-color);  /* deprecated, remove in v3 */
-   --violet: var(--deco-violet);   /* deprecated */
+   --border-color: var(--border-color);  /* deprecated, remove in v3 */
+   --deco-violet: var(--deco-violet);   /* deprecated */
    etc.
 3. Lance le codemod sur tout le repo. Liste-moi les fichiers modifiés AVANT commit.
 4. Lance `npm run test:visual` — DOIT passer (les aliases garantissent le rendu identique).
