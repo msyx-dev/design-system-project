@@ -604,6 +604,31 @@ function showToast(message, type, duration) {
 }
 window.__showToast = showToast;
 
+// Modal focus restoration (WAI APG)
+// Ref: aksy modal-focus.js (UC-288, Sprint 14) — integre directement dans DS (issue #174, v2.41.0)
+// Helper prive, non expose sur window (cablage automatique via initModals + __openModal)
+function attachFocusRestore(dialog) {
+    if (!dialog || dialog.tagName !== 'DIALOG') return;
+    if (dialog.__focusRestoreAttached) return; // idempotent
+    dialog.__focusRestoreAttached = true;
+
+    var _trigger = null;
+    var _origShowModal = dialog.showModal.bind(dialog);
+    dialog.showModal = function() {
+        _trigger = (document.activeElement instanceof HTMLElement)
+            ? document.activeElement
+            : null;
+        return _origShowModal();
+    };
+
+    dialog.addEventListener('close', function() {
+        if (_trigger && document.contains(_trigger)) {
+            _trigger.focus();
+        }
+        _trigger = null;
+    });
+}
+
 // Modal Dialog
 function initModals() {
     document.querySelectorAll('[data-modal-trigger]').forEach(btn => {
@@ -619,6 +644,8 @@ function initModals() {
     document.querySelectorAll('dialog.modal-dialog').forEach(dialog => {
         if (dialog.dataset.bound) return;
         dialog.dataset.bound = '1';
+
+        attachFocusRestore(dialog); // a11y WAI APG focus restore (WCAG 2.4.3)
 
         // Close on backdrop click
         dialog.addEventListener('click', (e) => {
@@ -643,6 +670,8 @@ window.__openModal = function(config) {
         document.body.appendChild(dialog);
         dialog.addEventListener('click', function(e) { if (e.target === dialog) dialog.close(); });
     }
+
+    attachFocusRestore(dialog); // a11y WAI APG focus restore (idempotent)
 
     var actionsHtml = '';
     if (actions) {

@@ -1,5 +1,13 @@
 # Releases
 
+## v2.41.0 — 2026-05-06 — Sprint 23 — Focus restore WAI APG sur les modales (a11y WCAG 2.4.3)
+
+### Added
+- **shared/components.js — attachFocusRestore** — Helper prive `attachFocusRestore(dialog)` integre directement dans `components.js` (pattern WAI APG Dialog Modal). Capture `document.activeElement` au `showModal()`, restaure le focus au `close`. Couvre les 4 voies de fermeture (ESC, backdrop, bouton `[data-modal-close]`, `dialog.close()` programmatique). Idempotent via flag `__focusRestoreAttached`. Edge cases : trigger null ou supprime du DOM => skip silencieux. Cables automatiquement dans `initModals()` (modales statiques `dialog.modal-dialog`) et `window.__openModal` (modale dynamique). Corrige WCAG 2.4.3 (Focus Order) et WCAG 2.4.7 (Focus Visible) sur toutes les modales DS. Promeut le pattern valide en prod chez aksy (UC-288, Sprint 14 v0.7.10). Closes #174.
+- **visual-tests/modal-focus.spec.ts** — Smoke test Playwright : focus restaure apres Esc sur modale statique (1 voie x 1 modale).
+- **shared/components-registry.json** — Entree `modal` annotee avec champ `a11y.focusRestore: true` (pattern WAI APG, ref issue #174 / aksy UC-288).
+- `@ds-version` bumpe a `2.41.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.40.2 — 2026-05-06 — Sprint 23 — Disabled global : règle CSS éléments natifs hors DS
 
 ### Added

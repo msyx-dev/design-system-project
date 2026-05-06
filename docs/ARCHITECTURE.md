@@ -4,8 +4,8 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 25 modules + barrel + tree-shake depuis v2.36.0. + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 108 baselines (3 thèmes × 2 modes × 9 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0.
-Version courante : **v2.39.0**.
+**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 25 modules + barrel + tree-shake depuis v2.36.0. + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 108 baselines (3 thèmes × 2 modes × 9 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0. + Focus restore WAI APG sur modales (helper prive `attachFocusRestore` dans components.js, WCAG 2.4.3) depuis v2.41.0.
+Version courante : **v2.41.0**.
 
 ## Structure
 
@@ -219,7 +219,7 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
 ### Sprint 1-5 (composants fondateurs)
 - **Toasts** (`showToast()`) : variantes colorees, auto-dismiss, stack
-- **Modals** (`openModal()`) : `<dialog>` natif HTML avec `.showModal()`, focus trap gratuit, fermeture ESC/backdrop, 3 variantes
+- **Modals** (`openModal()`) : `<dialog>` natif HTML avec `.showModal()`, focus trap gratuit, fermeture ESC/backdrop, 3 variantes. Helper prive `attachFocusRestore(dialog)` integre dans `initModals()` + `__openModal` (v2.41.0) : pattern WAI APG — capture `document.activeElement` au `showModal()`, restore au `close`, idempotent via `__focusRestoreAttached`, couvre les 4 voies de fermeture, edge cases trigger null/removed geres silencieusement. Ref : aksy UC-288, issue #174.
 - **Tabs / Accordion** : toggle sections, dataset.bound anti-double-bind
 - **Sliders** (`initSliders()`) : sync bidirectionnelle range-number, fill dynamique via `--slider-fill`
 - **Dropdowns** (`initDropdowns()`) : search, multi-select, option filtering

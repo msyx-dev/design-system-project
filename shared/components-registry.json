@@ -1,5 +1,5 @@
 {
-  "version": "2.39.0",
+  "version": "2.41.0",
   "generated": "2026-05-06",
   "components": [
     {
@@ -120,6 +120,11 @@
       "page": "composants",
       "cssClasses": [".modal-preview", ".modal-overlay", ".modal-content", ".modal-actions", ".modal-dialog"],
       "jsInit": "openModal",
+      "a11y": {
+        "focusRestore": true,
+        "pattern": "WAI APG Dialog Modal",
+        "ref": "issue #174 / aksy UC-288"
+      },
       "example": "<!-- Bouton déclencheur -->\n<button class=\"btn-primary\" onclick=\"openModal('modal-exemple')\">Ouvrir la modal</button>\n\n<!-- Structure modal -->\n<div class=\"modal-preview\" id=\"modal-exemple\">\n  <div class=\"modal-overlay\" onclick=\"closeModal('modal-exemple')\"></div>\n  <div class=\"modal-content\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-titre\">\n    <h2 id=\"modal-titre\">Titre de la modal</h2>\n    <p>Contenu de la modal.</p>\n    <div class=\"modal-actions\">\n      <button class=\"btn-ghost\" onclick=\"closeModal('modal-exemple')\">Annuler</button>\n      <button class=\"btn-primary\">Confirmer</button>\n    </div>\n  </div>\n</div>"
     },
     {
