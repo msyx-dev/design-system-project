@@ -41,7 +41,7 @@
     </div>
     <div class="subsection">
         <span class="demo-label">Groupe de boutons</span>
-        <div style="display:inline-flex;border-radius:10px;overflow:hidden;border:1px solid var(--border);"><button class="tab active" style="border:none;border-radius:0;padding:0.5rem 1.2rem;">Jour</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Semaine</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Mois</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border);padding:0.5rem 1.2rem;">Annee</button></div>
+        <div style="display:inline-flex;border-radius:10px;overflow:hidden;border:1px solid var(--border-color);"><button class="tab active" style="border:none;border-radius:0;padding:0.5rem 1.2rem;">Jour</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border-color);padding:0.5rem 1.2rem;">Semaine</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border-color);padding:0.5rem 1.2rem;">Mois</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border-color);padding:0.5rem 1.2rem;">Annee</button></div>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">Usage</span>
@@ -84,13 +84,13 @@
         <span class="demo-label">Cards standard</span>
         <div class="demo-grid demo-grid-3">
             <div class="card"><div class="card-icon card-icon--accent"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-zap"/></svg></div><h3>Performance</h3><p>Optimisation des temps de chargement et rendu cote serveur.</p><div class="demo-row mt-md"><span class="tag">Next.js</span><span class="tag">SSR</span><span class="tag">Edge</span></div></div>
-            <div class="card"><div class="card-icon card-icon--violet"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-lock"/></svg></div><h3>Securite</h3><p>Authentification robuste, chiffrement et protection OWASP.</p><div class="demo-row mt-md"><span class="tag">OAuth</span><span class="tag">HTTPS</span><span class="tag">RBAC</span></div></div>
-            <div class="card"><div class="card-icon card-icon--cyan"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-palette"/></svg></div><h3>Design</h3><p>Interface soignee avec micro-animations et accessibilite.</p><div class="demo-row mt-md"><span class="tag">a11y</span><span class="tag">Motion</span><span class="tag">Dark</span></div></div>
+            <div class="card"><div class="card-icon card-icon--deco-violet"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-lock"/></svg></div><h3>Securite</h3><p>Authentification robuste, chiffrement et protection OWASP.</p><div class="demo-row mt-md"><span class="tag">OAuth</span><span class="tag">HTTPS</span><span class="tag">RBAC</span></div></div>
+            <div class="card"><div class="card-icon card-icon--deco-cyan"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-palette"/></svg></div><h3>Design</h3><p>Interface soignee avec micro-animations et accessibilite.</p><div class="demo-row mt-md"><span class="tag">a11y</span><span class="tag">Motion</span><span class="tag">Dark</span></div></div>
         </div>
     </div>
     <div class="subsection">
         <span class="demo-label">Card horizontale</span>
-        <div class="card card-horizontal" style="max-width:500px;"><div class="card-icon card-icon--pink"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-rocket"/></svg></div><div><h3>Deploiement continu</h3><p>Push sur main, deploy automatique via GitHub Actions + Docker.</p></div></div>
+        <div class="card card-horizontal" style="max-width:500px;"><div class="card-icon card-icon--deco-pink"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-rocket"/></svg></div><div><h3>Deploiement continu</h3><p>Push sur main, deploy automatique via GitHub Actions + Docker.</p></div></div>
     </div>
     <div class="subsection">
         <span class="demo-label">Cards compactes</span>
@@ -120,7 +120,7 @@
 
 &lt;!-- Card horizontale --&gt;
 &lt;div class="card card-horizontal"&gt;
-    &lt;div class="card-icon card-icon--violet"&gt;&amp;#128640;&lt;/div&gt;
+    &lt;div class="card-icon card-icon--deco-violet"&gt;&amp;#128640;&lt;/div&gt;
     &lt;div&gt;
         &lt;h3&gt;Titre compact&lt;/h3&gt;
         &lt;p&gt;Description courte.&lt;/p&gt;
@@ -133,7 +133,7 @@
     &lt;p class="typo-small"&gt;Feature&lt;/p&gt;
 &lt;/div&gt;
 
-&lt;!-- Couleurs card-icon disponibles : --accent --violet --cyan --pink --green --&gt;</div>
+&lt;!-- Couleurs card-icon disponibles : --accent --deco-violet --deco-cyan --deco-pink --green --&gt;</div>
     </div>
 </section>
 
@@ -771,7 +771,7 @@
         <div class="demo-box">
             <span class="demo-label">Dans une liste</span>
             <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border-color);">
                     <div>
                         <div style="font-weight:600;font-size:0.9rem;">design-system</div>
                         <div style="font-size:0.76rem;color:var(--text-muted);">v2.18</div>
@@ -787,7 +787,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border-color);">
                     <div>
                         <div style="font-weight:600;font-size:0.9rem;">poc-dashboard</div>
                         <div style="font-size:0.76rem;color:var(--text-muted);">v1.4</div>
@@ -926,9 +926,9 @@
             <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--space-md);">Naviguer au clavier (Tab) sur les elements ci-dessous &mdash; outline 2px <code class="code-inline">var(--accent)</code>, offset 2px. Les composants DS avec focus custom (<code class="code-inline">.btn-*</code>, <code class="code-inline">.input</code>, etc.) gardent leur apparence propre.</p>
             <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;align-items:center;">
                 <a href="#reset-natif">Lien focusable</a>
-                <button type="button" style="padding:0.4rem 0.9rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);cursor:pointer;font-family:var(--font-sans);font-size:0.85rem;">Bouton natif</button>
-                <input type="text" placeholder="Input natif" style="padding:0.4rem 0.75rem;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:0.85rem;">
-                <span tabindex="0" style="padding:0.4rem 0.9rem;border:1px dashed var(--border);border-radius:var(--radius-sm);cursor:default;font-size:0.85rem;" aria-label="Span focusable demo">Span [tabindex]</span>
+                <button type="button" style="padding:0.4rem 0.9rem;background:transparent;border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text);cursor:pointer;font-family:var(--font-sans);font-size:0.85rem;">Bouton natif</button>
+                <input type="text" placeholder="Input natif" style="padding:0.4rem 0.75rem;border:1px solid var(--border-color);background:var(--surface);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:0.85rem;">
+                <span tabindex="0" style="padding:0.4rem 0.9rem;border:1px dashed var(--border-color);border-radius:var(--radius-sm);cursor:default;font-size:0.85rem;" aria-label="Span focusable demo">Span [tabindex]</span>
             </div>
         </div>
     </div>

@@ -1,5 +1,26 @@
 # Releases
 
+## v2.34.0 — 2026-05-06 — Sprint 20 — Token rename + aliases legacy
+
+### Changed
+- **Tokens renommes** pour disambiguation semantique (closes #186) :
+  - `--border` (couleur) → `--border-color` (vs `--border-width` longueur)
+  - `--radius` (16px sans suffixe) → `--radius-card` (vs echelle `--radius-{xs,sm,md,lg,full}`)
+  - `--violet` / `--violet-rgb` → `--deco-violet` / `--deco-violet-rgb` (couleur decorative non-semantique)
+  - `--cyan` / `--cyan-rgb` → `--deco-cyan` / `--deco-cyan-rgb`
+  - `--pink` → `--deco-pink`
+- `@ds-version` bumpe a `2.34.0` sur les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
+### Added
+- `shared/codemod-rename-tokens.sh` : script bash idempotent (sed -E avec word-boundaries) pour appliquer les renames sur le repo et sur les projets consumers.
+- `shared/CONSUMER_GUIDE.md` : nouvelle section "Tokens deprecies (deadline v3.0.0)".
+
+### Deprecated
+- Aliases `--border`, `--radius`, `--violet`, `--violet-rgb`, `--cyan`, `--cyan-rgb`, `--pink` conserves dans `tokens.css` jusqu'a v3.0.0. Deadline retrait : **v3.0.0**.
+
+### Compatibilite
+Pas de breaking change sur cette version — aliases legacy garantissent rendu identique. Migration consumer optionnelle, recommandee avant v3.0.0.
+
 ## v2.33.0 — 2026-05-06 — Sprint 19 — Iconographie Lucide + backdrop-filter fallback
 
 ### Added
@@ -407,7 +428,7 @@ Si un usage `color: var(--text-dim)` apparaît sur fond marine → bascule sur `
 ### Added
 - Theme ACSSI light : palette complete (60+ variables) — fond #f0f4f8, accent marine #00345f
 - Toggle dark/light fonctionnel pour ACSSI (plus grise)
-- Nouveaux tokens RGB : `--violet-rgb`, `--cyan-rgb`, `--text-muted-rgb` (tous themes)
+- Nouveaux tokens RGB : `--deco-violet-rgb`, `--deco-cyan-rgb`, `--text-muted-rgb` (tous themes)
 - Semantiques WCAG AA dans le bloc light generique (protection futurs themes)
 - Semantiques WCAG AA dans le bloc Nhood light (meme pattern qu'ACSSI)
 
@@ -415,7 +436,7 @@ Si un usage `color: var(--text-dim)` apparaît sur fond marine → bascule sur `
 - Contraste WCAG AA : success/warning/info assombries en ACSSI light (#15803d, #c2410c, #0369a1)
 - Contraste WCAG AA : code-string et code-comment assombries (ACSSI + Nhood light)
 - badge-neutral : rgba hardcode → `rgba(var(--text-muted-rgb),...)`
-- Orbs hero : violet/cyan MSYX hardcodes → `rgba(var(--violet-rgb/--cyan-rgb),...)`
+- Orbs hero : violet/cyan MSYX hardcodes → `rgba(var(--deco-violet-rgb/--deco-cyan-rgb),...)`
 - 13 box-shadow hardcodees → `var(--shadow)` / `var(--shadow-lg)`
 - Composants ACSSI light : correction couleurs hardcodees (accordion, badges, pulse-dot, before/after)
 - Layout ACSSI light : bordures sidebar/header adaptees au bleu marine

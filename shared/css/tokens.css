@@ -1,4 +1,4 @@
-/* @ds-version: 2.33.0 */
+/* @ds-version: 2.34.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -24,9 +24,9 @@
     --gradient-2: linear-gradient(135deg, #06b6d4, #3b82f6);
     --gradient-3: linear-gradient(135deg, #8b5cf6, #ec4899);
     --gradient-4: linear-gradient(135deg, #f59e0b, #ef4444);
-    --border: rgba(var(--accent-rgb), 0.08);
+    --border-color: rgba(var(--accent-rgb), 0.08);
     --border-hover: rgba(var(--accent-rgb), 0.25);
-    --radius: 16px;
+    --radius-card: 16px;
     --radius-lg: 24px;
     --radius-md: 12px;
     --radius-sm: 8px;
@@ -58,11 +58,11 @@
     --space-4xl: 5rem;
 
     /* === Couleurs etendues (theming) === */
-    --violet: #8b5cf6;
-    --violet-rgb: 139, 92, 246;
-    --cyan: #06b6d4;
-    --cyan-rgb: 6, 182, 212;
-    --pink: #ec4899;
+    --deco-violet: #8b5cf6;
+    --deco-violet-rgb: 139, 92, 246;
+    --deco-cyan: #06b6d4;
+    --deco-cyan-rgb: 6, 182, 212;
+    --deco-pink: #ec4899;
     --text-muted-rgb: 148, 163, 184;
 
     /* Semantic light (badges/alerts text) */
@@ -153,6 +153,15 @@
     --icon-size-md: 20px;
     --icon-size-lg: 24px;
     --icon-stroke: 1.5;
+
+    /* === Aliases legacy — deprecated, remove in v3 === */
+    --border: var(--border-color); /* deprecated, remove in v3 */
+    --radius: var(--radius-card); /* deprecated, remove in v3 */
+    --violet: var(--deco-violet); /* deprecated, remove in v3 */
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 */
+    --cyan: var(--deco-cyan); /* deprecated, remove in v3 */
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 */
+    --pink: var(--deco-pink); /* deprecated, remove in v3 */
 }
 
 /* ----- Mode Light (generique, toutes palettes) ----- */
@@ -167,8 +176,9 @@
     --text-muted: #475569;
     --text-muted-rgb: 71, 85, 105;
     --text-dim: #64748b;
-    --border: rgba(15, 23, 42, 0.08);
+    --border-color: rgba(15, 23, 42, 0.08);
     --border-hover: rgba(15, 23, 42, 0.20);
+    --border: var(--border-color); /* deprecated, remove in v3 */
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -240,8 +250,9 @@
     --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.10);
 
     /* Bordures */
-    --border: rgba(var(--accent-rgb), 0.12);
+    --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.35);
+    --border: var(--border-color); /* deprecated, remove in v3 */
 
     /* Ombres */
     --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
@@ -258,11 +269,16 @@
     --info-rgb: 56, 189, 248;
 
     /* Couleurs etendues */
-    --violet: #005a9e;
-    --violet-rgb: 0, 90, 158;
-    --cyan: #38bdf8;
-    --cyan-rgb: 56, 189, 248;
-    --pink: #f97316;
+    --deco-violet: #005a9e;
+    --deco-violet-rgb: 0, 90, 158;
+    --deco-cyan: #38bdf8;
+    --deco-cyan-rgb: 56, 189, 248;
+    --deco-pink: #f97316;
+    --violet: var(--deco-violet); /* deprecated, remove in v3 */
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 */
+    --cyan: var(--deco-cyan); /* deprecated, remove in v3 */
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 */
+    --pink: var(--deco-pink); /* deprecated, remove in v3 */
     --text-muted-rgb: 148, 163, 184;
 
     /* Semantic light */
@@ -344,8 +360,10 @@
     --text-muted: #2c4358;          /* AA — 5.45:1 sur #fff, 5.12:1 sur #f0f4f8 (était #3d5a73 = 2.56:1) */
     --text-muted-rgb: 44, 67, 88;
     --text-dim: #4a6a84;             /* AA Large — 3.97:1 sur #fff (UI/large only) */
-    --violet-rgb: 0, 90, 158;
-    --cyan-rgb: 56, 189, 248;
+    --deco-violet-rgb: 0, 90, 158;
+    --deco-cyan-rgb: 56, 189, 248;
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 */
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 */
 
     /* Gradients — or decoratif sur fond marine */
     --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
@@ -359,8 +377,9 @@
     --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.08);
 
     /* Bordures */
-    --border: rgba(var(--accent-rgb), 0.12);
+    --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.30);
+    --border: var(--border-color); /* deprecated, remove in v3 */
 
     /* Ombres — legeres, teintees bleu marine */
     --shadow: 0 4px 20px rgba(0, 30, 60, 0.08);
@@ -450,8 +469,9 @@
     --gradient-2: linear-gradient(135deg, #22c55e, #008837);
     --gradient-3: linear-gradient(135deg, #008837, #00b84d);
     --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
-    --border: rgba(var(--accent-rgb), 0.12);
+    --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.35);
+    --border: var(--border-color); /* deprecated, remove in v3 */
     --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
     --success: #22c55e;
@@ -462,11 +482,16 @@
     --warning-rgb: 249, 115, 22;
     --danger-rgb: 239, 68, 68;
     --info-rgb: 56, 189, 248;
-    --violet: #7c3aed;
-    --violet-rgb: 124, 58, 237;
-    --cyan: #06b6d4;
-    --cyan-rgb: 6, 182, 212;
-    --pink: #ec4899;
+    --deco-violet: #7c3aed;
+    --deco-violet-rgb: 124, 58, 237;
+    --deco-cyan: #06b6d4;
+    --deco-cyan-rgb: 6, 182, 212;
+    --deco-pink: #ec4899;
+    --violet: var(--deco-violet); /* deprecated, remove in v3 */
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 */
+    --cyan: var(--deco-cyan); /* deprecated, remove in v3 */
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 */
+    --pink: var(--deco-pink); /* deprecated, remove in v3 */
     --text-muted-rgb: 143, 191, 160;
     --success-light: #4ade80;
     --warning-light: #fb923c;
@@ -516,8 +541,9 @@
     --gradient-2: linear-gradient(135deg, #008837, #73c69c);
     --gradient-3: linear-gradient(135deg, #005a22, #00b84d);
     --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
-    --border: rgba(var(--accent-rgb), 0.14);
+    --border-color: rgba(var(--accent-rgb), 0.14);
     --border-hover: rgba(var(--accent-rgb), 0.35);
+    --border: var(--border-color); /* deprecated, remove in v3 */
     --shadow: 0 4px 20px rgba(0, 50, 20, 0.10);
     --shadow-lg: 0 12px 40px rgba(0, 50, 20, 0.14);
     --shadow-sm: 0 2px 8px rgba(0, 50, 20, 0.06);

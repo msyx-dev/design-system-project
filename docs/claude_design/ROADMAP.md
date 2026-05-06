@@ -60,7 +60,7 @@
 
 | Issue | Ticket | SP |
 |---|---|---|
-| [#186](https://github.com/msyx-dev/design-system-project/issues/186) Token rename (`--border` → `--border-color`, etc.) + codemod + aliases legacy | 04 | 3 |
+| [#186](https://github.com/msyx-dev/design-system-project/issues/186) Token rename (`--border-color` → `--border-color`, etc.) + codemod + aliases legacy | 04 | 3 |
 | [#187](https://github.com/msyx-dev/design-system-project/issues/187) Motion reference page | 05 | 4 |
 
 **Pourquoi 7 SP** : sprint qui suit un gros lift (S19), on respire.

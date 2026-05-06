@@ -66,9 +66,9 @@
 
 ### 6. **Naming inconsistencies** (low-effort, high-payoff)
 - French copy oscillates between "coherente" and "cohérente". **Standardize on full diacritics.** A grep + lint rule catches it.
-- `--radius` (no suffix) vs `--radius-md` (12 px) is confusing — `--radius` is 16, `--radius-md` is 12. **Rename `--radius` → `--radius-lg-default` or just deprecate it** and force everyone to pick a step.
-- `--border` (a colour) vs `--border-width` (a length) — the colour token should be `--border-color`. Same problem with `--shadow`.
-- `--violet`, `--cyan`, `--pink` are *named* but not in the semantic system. Either promote them to `--accent-2/3/4` (semantic) or move them to a "decorative" namespace (`--deco-violet`).
+- `--radius-card` (no suffix) vs `--radius-md` (12 px) is confusing — `--radius-card` is 16, `--radius-md` is 12. **Rename `--radius-card` → `--radius-lg-default` or just deprecate it** and force everyone to pick a step.
+- `--border-color` (a colour) vs `--border-width` (a length) — the colour token should be `--border-color`. Same problem with `--shadow`.
+- `--deco-violet`, `--deco-cyan`, `--deco-pink` are *named* but not in the semantic system. Either promote them to `--accent-2/3/4` (semantic) or move them to a "decorative" namespace (`--deco-violet`).
 
 ### 7. **Glassmorphism + `backdrop-filter` perf**
 **Symptom.** Multiple stacked blur layers (sidebar + modal + toast) on a low-end Android = jank.
@@ -105,7 +105,7 @@ ACSSI dark+light works. Nhood works. But the "Add a theme" docs say "1 bloc CSS 
 | **P0** | `SKILL.md` + canonical-pages folder for agents | S (½ sprint) | Unlocks Claude Code velocity 3-5× |
 | **P0** | Visual regression tests (Playwright + lost-pixel) | S (½ sprint) | Prevents theme drift forever |
 | **P1** | Split `components.css` into per-component files | M (1 sprint) | Better consumer bundle, easier code review |
-| **P1** | Token naming cleanup (`--border` → `--border-color`, etc.) | S (1 day) | Prevents future debt; do it before more consumers ship |
+| **P1** | Token naming cleanup (`--border-color` → `--border-color`, etc.) | S (1 day) | Prevents future debt; do it before more consumers ship |
 | **P1** | Motion reference page (`pages/motion.html`) | S (1 day) | Fills the only fully-undocumented foundation |
 | **P1** | Brand motif decision — wordmark + spatial signature | M (1 sprint, partly off-keyboard) | Unlocks marketing surfaces, OG images |
 | **P2** | Theme generator script / JSON-compiled themes | M (1 sprint) | Lowers cost of next theme to <30 min |
@@ -131,7 +131,7 @@ If you want to act on this in the next 30 minutes, pick from this menu and I'll 
 
 1. **Generate the Lucide sprite + `<Icon>` convention** (drop-in for `shared/icons/`, with a 50-glyph starter set covering everything in the live site).
 2. **Write the `SKILL.md` + 5 canonical pages** for Claude Code agent consumption, formatted to drop into your repo.
-3. **Refactor token names** with a codemod script (sed-based, safe, idempotent) covering `--border` → `--border-color`, etc., across CSS + HTML + JS.
+3. **Refactor token names** with a codemod script (sed-based, safe, idempotent) covering `--border-color` → `--border-color`, etc., across CSS + HTML + JS.
 4. **Set up the Playwright visual regression rig** as a single PR (config + 8 page captures × 5 theme/mode combos).
 5. **Draft a wordmark in 4 directions** (geometric / monogram / wordmark / lockup) for you to pick from.
 

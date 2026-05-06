@@ -27,7 +27,7 @@
         <!-- Demo interactive -->
         <div class="demo-box" style="grid-column: 1 / -1;">
             <span class="demo-label">Demo interactive — header avec utilisateur connecte</span>
-            <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;justify-content:space-between;flex-wrap:wrap;">
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;justify-content:space-between;flex-wrap:wrap;">
                 <!-- Simulation header -->
                 <div style="display:flex;align-items:center;gap:1rem;">
                     <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">msyx.design</span>
@@ -93,12 +93,12 @@
         <!-- Mode sans auth -->
         <div class="demo-box">
             <span class="demo-label">Mode sans auth — <code style="font-family:'Fira Code',monospace;font-size:0.82em;">auth: false</code></span>
-            <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;">
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;">
                 <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);">msyx.design</span>
                 <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.25rem 0.5rem;font-size:0.72rem;color:var(--text-muted);">MSYX &#9660;</div>
+                    <div style="background:var(--surface);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.25rem 0.5rem;font-size:0.72rem;color:var(--text-muted);">MSYX &#9660;</div>
                     <div style="display:flex;gap:0.25rem;">
-                        <button style="width:28px;height:28px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:0.85rem;cursor:pointer;">&#9790;</button>
+                        <button style="width:28px;height:28px;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--surface);color:var(--text-muted);font-size:0.85rem;cursor:pointer;">&#9790;</button>
                         <button style="width:28px;height:28px;border-radius:var(--radius-sm);border:1px solid var(--accent);background:var(--accent-glow);color:var(--accent-light);font-size:0.85rem;cursor:pointer;">&#9788;</button>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
         <!-- API config -->
         <div class="demo-box">
             <span class="demo-label">Configuration window.MSYX_HEADER</span>
-            <pre style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--accent-light);background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;overflow-x:auto;line-height:1.7;margin:0;">window.MSYX_HEADER = {
+            <pre style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--accent-light);background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:1rem;overflow-x:auto;line-height:1.7;margin:0;">window.MSYX_HEADER = {
   auth: true,
   user: {
     name: 'Mike',
@@ -140,10 +140,10 @@
                 Changer de theme ou de mode via les boutons du header declenche automatiquement :
             </p>
             <div class="demo-row">
-                <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.82rem;color:var(--text-muted);">
+                <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.82rem;color:var(--text-muted);">
                     <span style="color:var(--success-light,#86efac);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Transition douce <code style="font-family:'Fira Code',monospace;font-size:0.8em;">html.theme-transitioning</code> sur bg/borders/couleurs (250ms)
                 </div>
-                <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.82rem;color:var(--text-muted);">
+                <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.82rem;color:var(--text-muted);">
                     <span style="color:var(--success-light,#86efac);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Toast de confirmation ("Theme : ACSSI", "Mode : Light")
                 </div>
             </div>
@@ -163,7 +163,7 @@
         </div>
         <div class="demo-box">
             <span class="demo-label">Tabs pilule</span>
-            <div style="display:inline-flex;background:var(--primary);border-radius:10px;padding:3px;gap:2px;border:1px solid var(--border);margin-bottom:1rem;">
+            <div style="display:inline-flex;background:var(--primary);border-radius:10px;padding:3px;gap:2px;border:1px solid var(--border-color);margin-bottom:1rem;">
                 <button style="padding:0.4rem 1rem;border-radius:8px;border:none;background:var(--accent);color:white;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Tous</button>
                 <button style="padding:0.4rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;">Actifs</button>
                 <button style="padding:0.4rem 1rem;border-radius:8px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;">Archives</button>
@@ -373,7 +373,7 @@
 
         <div class="demo-box">
             <span class="demo-label">Usage en production (mobile only)</span>
-            <div style="background:var(--primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.8;">
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:1rem;font-size:0.82rem;color:var(--text-muted);line-height:1.8;">
                 <p style="margin-bottom:0.5rem;color:var(--text);font-weight:600;">Integration dans un vrai projet :</p>
                 <code style="font-family:'Fira Code',monospace;font-size:0.75rem;color:var(--accent-light);">&lt;nav class="bottom-nav"&gt;...&lt;/nav&gt;</code>
                 <p style="margin-top:0.75rem;">La classe <code style="font-family:'Fira Code',monospace;color:var(--accent-light);">.bottom-nav</code> est automatiquement cachee sur desktop via media query <code style="font-family:'Fira Code',monospace;color:var(--accent-light);">@media (min-width: 768px)</code>.</p>
