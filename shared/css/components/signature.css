@@ -1,0 +1,20 @@
+/* @ds-version: 2.42.0 */
+/* signature.css — Brand signature spatiale msyx
+   Gradient underline 2px sous le label overline de chaque .section-header.
+   Subtil mais présent partout — rend le DS reconnaissable même en grayscale. */
+
+.main .section-header .overline {
+    position: relative;
+    padding-bottom: calc(var(--space-sm) + 2px);
+}
+
+.main .section-header .overline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 32px;
+    height: 2px;
+    background: var(--gradient-1);
+    border-radius: 2px;
+}

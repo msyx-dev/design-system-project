@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" role="img" aria-label="msyx wordmark exploration B — sommets arrondis">
+  <title>msyx wordmark exploration B — sommets arrondis</title>
+  <defs>
+    <linearGradient id="msyx-grad-exp-b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="45%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <!-- Exploration B : sommets arrondis (courbes douces, blob plus ample) -->
+  <path fill="url(#msyx-grad-exp-b)" fill-rule="evenodd" d="
+    M 30 3
+    C 14 3 2 13 2 27
+    C 2 38 9 47 17 52
+    C 21 55 25 58 30 58
+    C 35 58 39 55 43 52
+    C 51 47 58 38 58 27
+    C 58 13 46 3 30 3 Z
+    M 12 44
+    Q 14 28 18 24
+    Q 21 32 24 36
+    Q 27 24 30 16
+    Q 33 24 36 36
+    Q 39 32 42 24
+    Q 46 28 48 44
+    L 42 44
+    Q 39 31 36 28
+    Q 33 40 30 48
+    Q 27 40 24 28
+    Q 21 31 18 44 Z
+  "/>
+  <text x="70" y="38"
+    font-family="'Space Grotesk', system-ui, sans-serif"
+    font-size="22"
+    font-weight="700"
+    letter-spacing="-0.5"
+    fill="currentColor">msyx</text>
+</svg>

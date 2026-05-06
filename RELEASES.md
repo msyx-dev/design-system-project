@@ -1,5 +1,19 @@
 # Releases
 
+## v2.42.0 — 2026-05-07 — Sprint 23 — Brand motif : wordmark SVG, signature spatiale, --texture-grain
+
+### Added
+- **assets/ — Brand identity SVG** — 4 fichiers SVG finaux : `logo-msyx.svg` (PRIMARY lockup 200×60), `logo-msyx-mark.svg` (mark seule 60×60, favicon-ready), `logo-msyx-dark.svg` (variante fond sombre), `logo-msyx-light.svg` (variante fond clair). Mark : blob organique (plectre arrondi) + M en espace négatif double sommet (vagues/montagnes), `fill-rule="evenodd"`. Gradient vertical `linearGradient` : `#10b981` turquoise → `#3b82f6` bleu → `#8b5cf6` violet. Wordmark « msyx » en `currentColor` (adaptation thème). ≤ 1 path complexe par variante. `role="img"` + `<title>` (a11y). 2 explorations Monogram dans `assets/explorations/` (historique conception). Closes #192.
+- **shared/css/components/signature.css** — Nouveau module brand signature spatiale. Gradient underline 2px via `::after` sur `.main .section-header .overline`. Accent visuel 32×2px, `var(--gradient-1)`, `border-radius: 2px`. Rend le DS reconnaissable même en grayscale/impression mono. Importé dans `components.css` après `_base.css`.
+- **tokens.css — --texture-grain** — Token `--texture-grain` (URL SVG feTurbulence inline, noise 0.9Hz 4 octaves stitch) + `--texture-grain-opacity: 0.015`. Formalise `--noise-texture` (#12). `body::after` dans `styles.css` refactorisé pour utiliser ces tokens (plus d'URL hardcodée dans styles.css).
+- **pages/fondation.html#texture** — Nouvelle sous-section « Texture grain » (Brand motif) : tokens, usage code, principe. Entrée sidebar « Texture » ajoutée dans `nav.js` NAV_SECTIONS Fondation.
+
+### Changed
+- **Header logo** — `buildHeader()` dans `nav.js` : texte gradient `msyx.design` remplacé par `<img src="/assets/logo-msyx.svg">` (120×32). CSS `layout.css` : `.header-logo` nettoyé (gradient text-clip retiré, flex propre conservé). `.header-logo-img` ajouté.
+- **index.html** — Div `.logo DS` remplacée par `<img src="/assets/logo-msyx-mark.svg">` (48×48).
+- **canonical-pages/login.html** — `login-logo-mark M` + `login-logo-name msyx` remplacés par `<img src="/assets/logo-msyx.svg">` (140px).
+- `@ds-version` bumpé à `2.42.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.41.0 — 2026-05-06 — Sprint 23 — Focus restore WAI APG sur les modales (a11y WCAG 2.4.3)
 
 ### Added

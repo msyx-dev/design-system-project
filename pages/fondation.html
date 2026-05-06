@@ -636,6 +636,27 @@
         </div>
     </div>
 </section>
+
+<section id="texture">
+    <div class="section-header"><span class="overline">Brand motif</span><h2>Texture grain</h2><p>Layer noise SVG appliqué globalement via <code class="code-inline">body::after</code>. Ajoute une signature visuelle subtile sur tout le DS — perçu comme « profondeur » même en grayscale.</p></div>
+    <div class="demo-box">
+        <div class="subsection">
+            <span class="demo-label">Tokens (v2.42.0)</span>
+            <div class="token-list">
+                <div class="flex-center-gap"><code class="text-xs">--texture-grain</code><span class="text-muted text-xs">URL SVG inline — filtre feTurbulence 0.9 Hz, 4 octaves, stitch</span></div>
+                <div class="flex-center-gap"><code class="text-xs">--texture-grain-opacity</code><span class="text-muted text-xs">0.015 — subtil, perceptible sur fond uni en lumière directe</span></div>
+            </div>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Usage</span>
+            <div class="code-block text-xxs-lh"><span class="kw">body</span>::after {<br>&nbsp;&nbsp;<span class="fn">content</span>: <span class="str">''</span>;<br>&nbsp;&nbsp;<span class="fn">position</span>: fixed; <span class="fn">inset</span>: 0;<br>&nbsp;&nbsp;<span class="fn">pointer-events</span>: none; <span class="fn">z-index</span>: 9999;<br>&nbsp;&nbsp;<span class="fn">opacity</span>: <span class="kw">var(--texture-grain-opacity)</span>;<br>&nbsp;&nbsp;<span class="fn">background-image</span>: <span class="kw">var(--texture-grain)</span>;<br>}</div>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Principe</span>
+            <p class="text-muted text-sm">Le grain est positionné en <code class="code-inline">fixed</code> avec <code class="code-inline">z-index: 9999</code> et <code class="code-inline">pointer-events: none</code> — invisible aux interactions, présent visuellement sur toutes les couches de l'UI. Identité visuelle reconnaissable même sur impression monochrome ou capture d'écran.</p>
+        </div>
+    </div>
+</section>
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

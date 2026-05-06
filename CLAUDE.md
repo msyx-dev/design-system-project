@@ -12,6 +12,12 @@ Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abo
 
 ## Structure
 ```
+assets/             # Brand assets SVG (v2.42.0)
+  logo-msyx.svg     # PRIMARY lockup mark+wordmark (200×60)
+  logo-msyx-mark.svg  # Mark seule (60×60) — favicon-ready
+  logo-msyx-dark.svg  # Variante fond sombre
+  logo-msyx-light.svg # Variante fond clair
+  explorations/     # Historique conception (monogram-a, monogram-b)
 index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
@@ -31,9 +37,9 @@ shared/
     tokens.css      # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css   # Classes utilitaires couleur, backgrounds, bordures, espacement, layout, radius, shadows, typo, accessibilité
     layout.css      # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css       # Barrel pur (v2.36.0) — 25 @import vers components/ dans l'ordre cascade
+    components.css       # Barrel pur (v2.36.0) — 26 @import vers components/ dans l'ordre cascade
     components-core.css  # Barrel essentiel (v2.36.0) — 7 modules essentiels ~42KB pour consumers légers
-    components/          # 25 modules CSS (v2.36.0) : _base, cards, buttons, badges, theming, forms, data,
+    components/          # 26 modules CSS (v2.42.0) : _base, signature (v2.42.0), cards, buttons, badges, theming, forms, data,
                          #   avatars, tables, lists, alerts, overlays, navigation, modals, feedback,
                          #   interactive, templates, media, _responsive, tracker, quiz, _a11y,
                          #   pricing, notifications, motion
@@ -82,6 +88,9 @@ shared/
 - Gradients : bleu→violet, cyan→bleu, violet→rose
 - Typo : Space Grotesk (titres) + Inter (corps) + Fira Code (mono)
 - Glassmorphism + border glow subtil
+- **Logo officiel (v2.42.0)** : `assets/logo-msyx.svg` — blob organique + M espace négatif double sommet + gradient turquoise→bleu→violet. Toujours utiliser ce fichier SVG (pas de texte CSS gradient). Variantes dark/light dans `assets/`. Mark seule : `assets/logo-msyx-mark.svg`.
+- **Signature spatiale (v2.42.0)** : gradient underline 2px sous `.section-header .overline` via `signature.css`. Automatique sur toutes les pages.
+- **Texture grain (v2.42.0)** : `--texture-grain` + `--texture-grain-opacity: 0.015` dans `tokens.css`. `body::after` global.
 
 ## Process ajout composant
 Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
