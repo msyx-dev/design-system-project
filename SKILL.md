@@ -64,6 +64,34 @@ Procédure :
 Pour les sprints multi-bumps (> 2 issues touchant `@ds-version`), le parent `/sprint` pré-alloue les versions et les injecte dans le prompt `/dev` de chaque issue.
 Garantit zéro conflit git sur les bumps. Voir `CLAUDE.md` §Process point 5.
 
+## Typographie — règles de pairing (v2.37.0)
+
+Echelle modulaire ratio 1.25 (Major Third). Tokens `--type-*` dans `shared/css/tokens.css`.
+
+| Token | Valeur | Usage canonique |
+|---|---|---|
+| `--type-12` | 0.75rem | `.typo-xs`, `.typo-overline`, `.text-xs` |
+| `--type-14` | 0.875rem | `.typo-small`, `.typo-mono`, `.text-sm` |
+| `--type-16` | 1rem | `.typo-body`, `.typo-h4`, `.text-base` |
+| `--type-20` | 1.25rem | `.typo-h3`, `.text-xl` |
+| `--type-25` | 1.5625rem | Sous-titres custom |
+| `--type-31` | 1.953rem | `.typo-h2` |
+| `--type-39` | 2.441rem | `.typo-h1` |
+| `--type-49` | 3.052rem | Grands titres custom |
+
+**Exceptions legacy (hors echelle, conservees)** :
+- `.typo-display` : `3.5rem` litteral (hero size, entre `--type-49` et `--type-61` non defini)
+- `.text-lg` : `1.125rem` litteral (sweet spot legacy entre `--type-16` et `--type-20`)
+
+**4 combinaisons canoniques** (voir `pages/fondation.html#type-pairing`) :
+1. **Hero** : `.typo-display` + `.typo-body` — lh-tight / lh-relaxed
+2. **Section** : `.typo-h2` + `.typo-body` — lh-snug / lh-base
+3. **Card** : `.typo-h3` + `.typo-small` — lh-snug / lh-base
+4. **Data** : `.typo-h4` + `.typo-xs` + `.typo-mono` — lh-snug / lh-base
+
+**Regle** : ne jamais sauter plus de 2 marches de l'echelle entre titre et corps.
+Les 4 tokens `--lh-*` (tight 1.1, snug 1.3, base 1.5, relaxed 1.7) sont dans `tokens.css`.
+
 ## Anti-patterns
 
 - Pas de `#hex` hardcodé dans les pages ou composants
