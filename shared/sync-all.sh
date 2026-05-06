@@ -14,10 +14,12 @@ DS_TOKENS="$SCRIPT_DIR/css/tokens.css"
 
 NO_SHOWCASE=false
 DRY_RUN=false
+COMPONENTS_LIST=""    # Optionnel : "core" ou "buttons,cards,forms" pour copie sélective
 for ARG in "$@"; do
     case "$ARG" in
-        --no-showcase) NO_SHOWCASE=true ;;
-        --dry-run)     DRY_RUN=true ;;
+        --no-showcase)     NO_SHOWCASE=true ;;
+        --dry-run)         DRY_RUN=true ;;
+        --components=*)    COMPONENTS_LIST="${ARG#--components=}" ;;
     esac
 done
 
@@ -76,21 +78,20 @@ for i in $(seq 0 $((CONSUMER_COUNT - 1))); do
         LOCAL_VERSION="absent"
     fi
 
+    # Exécuter sync.sh (ou dry-run)
+    SYNC_ARGS=()
+    $NO_SHOWCASE && SYNC_ARGS+=("--no-showcase")
+    [ -n "$COMPONENTS_LIST" ] && SYNC_ARGS+=("--components=$COMPONENTS_LIST")
+
     if $DRY_RUN; then
-        echo "  DRY   [$NAME] : v${LOCAL_VERSION} → v${DS_VERSION}  ($TARGET)"
+        COMPONENTS_NOTE=""
+        [ -n "$COMPONENTS_LIST" ] && COMPONENTS_NOTE=" [--components=$COMPONENTS_LIST]"
+        echo "  DRY   [$NAME] : v${LOCAL_VERSION} → v${DS_VERSION}  ($TARGET)${COMPONENTS_NOTE}"
         SYNCED=$((SYNCED + 1))
         continue
     fi
 
-    # Exécuter sync.sh
-    SYNC_ARGS=""
-    $NO_SHOWCASE && SYNC_ARGS="--no-showcase"
-
-    if $NO_SHOWCASE; then
-        OUTPUT=$("$SYNC_SH" --no-showcase "$TARGET" 2>&1) && STATUS=0 || STATUS=$?
-    else
-        OUTPUT=$("$SYNC_SH" "$TARGET" 2>&1) && STATUS=0 || STATUS=$?
-    fi
+    OUTPUT=$("$SYNC_SH" "${SYNC_ARGS[@]}" "$TARGET" 2>&1) && STATUS=0 || STATUS=$?
 
     if [ $STATUS -eq 0 ]; then
         echo "  OK    [$NAME] : v${LOCAL_VERSION} → v${DS_VERSION}"

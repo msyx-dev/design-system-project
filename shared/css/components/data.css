@@ -1,0 +1,388 @@
+/* @ds-version: 2.36.0 */
+/* data.css — extracted from components.css v2.35.0 */
+
+/* ===== PROGRESS ===== */
+.progress-bar { width: 100%; height: 8px; background: var(--surface-light); border-radius: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 8px; transition: width 1.5s ease; }
+.progress-bar-striped .progress-fill { background-image: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%); background-size: 1rem 1rem; animation: stripes 1s linear infinite; }
+@keyframes stripes { to { background-position: 1rem 0; } }
+.progress-ring { display: inline-flex; align-items: center; justify-content: center; position: relative; }
+.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring circle { fill: none; stroke-width: 4; }
+.progress-ring .bg { stroke: var(--surface-light); }
+.progress-ring .fill { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+.progress-ring .value { position: absolute; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; }
+
+/* ===== STATS ===== */
+.stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700; background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+
+/* ===== CHARTS ===== */
+.chart-wrap { position: relative; }
+.chart-wrap svg { display: block; overflow: visible; width: 100%; height: auto; }
+.chart-axis-label { fill: var(--text-muted); font-size: 10px; font-family: 'Inter', sans-serif; }
+.chart-grid-line { stroke: var(--border-color); stroke-width: 0.5; stroke-dasharray: 4 4; }
+.chart-bar { transition: filter 0.2s; cursor: pointer; }
+.chart-bar:hover { filter: brightness(1.3); }
+.chart-donut-slice { transition: transform 0.2s; transform-origin: center; cursor: pointer; }
+.chart-donut-slice:hover { transform: scale(1.05); }
+.chart-point { transition: r 0.2s, filter 0.2s; cursor: pointer; }
+.chart-point:hover { r: 5; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 50%, transparent)); }
+.chart-legend { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: 0.75rem; }
+.chart-legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; color: var(--text-muted); }
+.chart-legend-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; }
+.chart-tooltip { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem 0.7rem; font-size: 0.75rem; color: var(--text); pointer-events: none; opacity: 0; transition: opacity 0.15s; white-space: nowrap; z-index: 10; box-shadow: var(--shadow); }
+.chart-tooltip.visible { opacity: 1; }
+.spark-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border-color); }
+.spark-row:last-child { border-bottom: none; }
+.spark-row .spark-info { min-width: 80px; }
+.spark-row .spark-label { font-size: 0.78rem; color: var(--text-muted); }
+.spark-row .spark-value { font-size: 1rem; font-weight: 700; }
+.spark-row .spark-line { flex: 1; height: 32px; }
+.spark-row .spark-line svg { width: 100%; height: 100%; }
+.spark-row .spark-change { font-size: 0.75rem; font-weight: 600; min-width: 40px; text-align: right; }
+.spark-row .spark-change.up { color: var(--success); }
+.spark-row .spark-change.down { color: var(--danger); }
+
+/* Chart animations */
+.chart-animated { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.chart-visible { opacity: 1; transform: translateY(0); }
+.chart-animated .chart-bar { transform-origin: bottom; animation: none; }
+.chart-visible .chart-bar { animation: chartGrow 0.8s ease forwards; }
+@keyframes chartGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes drawLine { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+.chart-visible .chart-line-animated { stroke-dasharray: 1000; animation: drawLine 1.5s ease forwards; }
+.chart-visible .chart-area-animated { opacity: 0; animation: chartAreaFade 1s 0.5s ease forwards; }
+@keyframes chartAreaFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== PIE & DONUT CHART ===== */
+.pie-chart { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+.pie-chart svg { width: 160px; height: 160px; overflow: visible; display: block; }
+.pie-chart--mini svg { width: 70px; height: 70px; }
+.pie-chart--mini { gap: 0.4rem; }
+.pie-center-value {
+    position: absolute;
+    top: 80px; left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700; font-size: 1.2rem;
+    color: var(--text);
+    pointer-events: none;
+}
+.pie-chart--mini .pie-center-value {
+    top: 35px;
+    font-size: 0.75rem;
+}
+.pie-legend { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; justify-content: center; font-size: 0.78rem; color: var(--text-muted); }
+.pie-legend-item { display: flex; align-items: center; gap: 0.35rem; cursor: default; transition: opacity 0.2s; }
+.pie-legend-item.dimmed { opacity: 0.35; }
+.pie-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+/* Segment hover */
+.pie-segment { transition: opacity 0.2s, transform 0.2s; transform-origin: 100px 100px; cursor: pointer; }
+.pie-segment:hover { opacity: 0.85; transform: scale(1.04); }
+.pie-chart--mini .pie-segment { transform-origin: 40px 40px; }
+/* Donut segment (circle stroke technique) */
+.pie-donut-segment { transition: opacity 0.2s; cursor: pointer; }
+.pie-donut-segment:hover { opacity: 0.85; }
+/* Entrance animation via JS-driven stroke-dashoffset */
+@keyframes pieSegmentIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== GAUGE / SPEEDOMETER ===== */
+.gauge { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.gauge svg { width: 180px; display: block; overflow: visible; }
+.gauge--mini svg { width: 90px; }
+.gauge-track { fill: none; stroke: var(--border-color); stroke-width: 12; stroke-linecap: round; }
+.gauge-fill { fill: none; stroke: var(--accent); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); }
+.gauge-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    fill: var(--text);
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+.gauge--mini .gauge-value { font-size: 0.75rem; }
+.gauge-label { font-size: 0.75rem; color: var(--text-muted); text-align: center; font-weight: 500; }
+.gauge--mini .gauge-label { font-size: 0.68rem; }
+.gauge-group { display: flex; gap: var(--space-xl); flex-wrap: wrap; justify-content: center; align-items: flex-end; }
+
+/* ===== ANIMATED COUNTERS ===== */
+.counter {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+.counter-value {
+    font-variant-numeric: tabular-nums;
+}
+.counter-prefix,
+.counter-suffix {
+    font-size: 1.2rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+.counter-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+@media (max-width: 640px) {
+    .counter { font-size: 2rem; }
+}
+
+
+/* ===== RISK MATRIX ===== */
+.risk-matrix {
+    max-width: 600px;
+}
+.risk-matrix-wrap {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+.risk-axis-y {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+    align-self: center;
+    flex-shrink: 0;
+}
+.risk-matrix-inner {
+    flex: 1;
+    min-width: 0;
+}
+.risk-grid {
+    display: grid;
+    gap: 3px;
+    aspect-ratio: 1;
+}
+.risk-cell {
+    position: relative;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xs);
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+    background: var(--surface);
+    transition: border-color 0.15s;
+}
+.risk-cell[data-score="low"] {
+    background: rgba(var(--success-rgb), 0.08);
+    border-color: rgba(var(--success-rgb), 0.15);
+}
+.risk-cell[data-score="medium"] {
+    background: rgba(var(--warning-rgb), 0.08);
+    border-color: rgba(var(--warning-rgb), 0.15);
+}
+.risk-cell[data-score="high"] {
+    background: rgba(var(--danger-rgb), 0.08);
+    border-color: rgba(var(--danger-rgb), 0.15);
+}
+.risk-cell[data-score="critical"] {
+    background: rgba(var(--danger-rgb), 0.15);
+    border-color: rgba(var(--danger-rgb), 0.25);
+}
+.risk-cell-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    opacity: 0.6;
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+}
+/* Row/col axis labels generated by JS */
+.risk-row-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 0 4px;
+    flex-shrink: 0;
+}
+.risk-col-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 4px 0;
+    flex-shrink: 0;
+}
+/* Risk dot */
+.risk-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: var(--text-on-accent);
+    flex-shrink: 0;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 1;
+    outline: none;
+}
+.risk-dot:hover,
+.risk-dot:focus-visible {
+    transform: scale(1.25);
+    z-index: 10;
+}
+.risk-dot:focus-visible {
+    box-shadow: 0 0 0 3px var(--accent);
+}
+.risk-dot[data-level="low"] { background: var(--success); }
+.risk-dot[data-level="medium"] { background: var(--warning); color: #1a1a1a; }
+.risk-dot[data-level="high"] { background: var(--danger); }
+.risk-dot[data-level="critical"] {
+    background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+    box-shadow: 0 0 10px rgba(var(--danger-rgb), 0.45);
+    animation: risk-pulse 2s ease-in-out infinite;
+}
+.risk-dot-overflow {
+    background: var(--surface-solid);
+    border: 2px solid var(--border-hover);
+    color: var(--text-muted);
+    font-size: 0.58rem;
+    font-weight: 700;
+}
+@keyframes risk-pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(var(--danger-rgb), 0.4); }
+    50% { box-shadow: 0 0 18px rgba(var(--danger-rgb), 0.7); }
+}
+/* Tooltip riche */
+.risk-tooltip {
+    position: fixed;
+    background: var(--surface-solid);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.85rem;
+    min-width: 190px;
+    max-width: 260px;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    box-shadow: var(--shadow-lg);
+    display: none;
+}
+.risk-tooltip.visible {
+    opacity: 1;
+    display: block;
+}
+.risk-tooltip-title {
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+    line-height: 1.3;
+}
+.risk-tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+}
+.risk-tooltip-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.5rem;
+    border-radius: 50px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.risk-tooltip-badge.low { background: rgba(var(--success-rgb), 0.18); color: var(--success); }
+.risk-tooltip-badge.medium { background: rgba(var(--warning-rgb), 0.18); color: var(--warning); }
+.risk-tooltip-badge.high { background: rgba(var(--danger-rgb), 0.18); color: var(--danger); }
+.risk-tooltip-badge.critical { background: rgba(var(--danger-rgb), 0.25); color: var(--danger); }
+.risk-tooltip-owner {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.risk-tooltip-hint {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+    font-style: italic;
+}
+/* Axis bottom */
+.risk-axis-x {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-top: var(--space-xs);
+}
+/* Dot animation at scroll */
+.risk-dot.risk-dot-hidden {
+    transform: scale(0);
+    opacity: 0;
+}
+.risk-dot.risk-dot-visible {
+    transform: scale(1);
+    opacity: 1;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+}
+/* Variante compact (5×5 réduite ou 3×3 encore plus petite) */
+.risk-matrix-compact .risk-cell,
+.risk-matrix[data-compact] .risk-cell {
+    min-height: 32px;
+    padding: 2px;
+    gap: 2px;
+}
+.risk-matrix-compact .risk-dot,
+.risk-matrix[data-compact] .risk-dot {
+    width: 18px;
+    height: 18px;
+    font-size: 0.5rem;
+}
+.risk-matrix-compact .risk-cell-label,
+.risk-matrix[data-compact] .risk-cell-label {
+    font-size: 0.52rem;
+}
+.risk-matrix-compact .risk-row-label,
+.risk-matrix[data-compact] .risk-row-label,
+.risk-matrix-compact .risk-col-label,
+.risk-matrix[data-compact] .risk-col-label {
+    font-size: 0.58rem;
+}
+.risk-matrix-compact .risk-axis-y,
+.risk-matrix[data-compact] .risk-axis-y,
+.risk-matrix-compact .risk-axis-x,
+.risk-matrix[data-compact] .risk-axis-x {
+    font-size: 0.62rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .risk-matrix-wrap { overflow-x: auto; }
+    .risk-grid { min-width: 280px; }
+    .risk-dot { width: 18px; height: 18px; font-size: 0.52rem; }
+    .risk-cell { min-height: 36px; }
+}
+
