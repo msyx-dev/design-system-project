@@ -31,8 +31,13 @@ shared/
     tokens.css      # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css   # Classes utilitaires couleur, backgrounds, bordures, espacement, layout, radius, shadows, typo, accessibilité
     layout.css      # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css  # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.)
-  sync.sh                    # Sync les 4 fichiers CSS vers un projet consommateur
+    components.css       # Barrel pur (v2.36.0) — 25 @import vers components/ dans l'ordre cascade
+    components-core.css  # Barrel essentiel (v2.36.0) — 7 modules essentiels ~42KB pour consumers légers
+    components/          # 25 modules CSS (v2.36.0) : _base, cards, buttons, badges, theming, forms, data,
+                         #   avatars, tables, lists, alerts, overlays, navigation, modals, feedback,
+                         #   interactive, templates, media, _responsive, tracker, quiz, _a11y,
+                         #   pricing, notifications, motion
+  sync.sh                    # Sync CSS vers un projet consommateur (--no-showcase, --components=core|list)
   check-sync.sh              # Vérifie version (@ds-version) + mode --check-overrides
   check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)

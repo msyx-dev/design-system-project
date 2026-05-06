@@ -390,6 +390,49 @@ grep -rn "color:\s*white\|color:\s*#fff" votre-projet/src/
 
 ---
 
+## Tree-shaking — sélectionner uniquement les composants nécessaires
+
+Depuis v2.36, le DS expose 3 niveaux d'intégration :
+
+### Niveau 1 — Tout (par défaut, recommandé)
+```bash
+./sync.sh /path/to/target/styles/
+```
+Copie `ds-components.css` (barrel complet, ~175 KB d'overhead initial, ~25 KB après gzip).
+
+### Niveau 2 — Core (consumers légers : auth gate, landing)
+Couvre ~80% des cas courants (boutons, cards, forms, alerts, badges).
+```bash
+./sync.sh --components=core /path/to/target/styles/
+```
+Copie `components-core.css` (~42 KB) vers `ds-components.css` + 7 modules dans `components/`.
+
+### Niveau 3 — Sélection custom (avancé)
+```bash
+./sync.sh --components=buttons,cards,modals,forms /path/to/target/styles/
+```
+Copie un barrel généré à la volée + uniquement les modules listés dans `components/`.
+
+### Modules disponibles
+`buttons`, `cards`, `badges`, `alerts`, `forms`, `navigation`, `tables`, `modals`, `overlays`,
+`data`, `lists`, `feedback`, `media`, `interactive`, `avatars`, `theming`, `templates`,
+`tracker`, `pricing`, `notifications`, `quiz`, `motion`.
+
+Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `_a11y` (focus-visible global), `_responsive`.
+
+### Avertissement
+- **Cascade** : l'ordre est imposé par le barrel généré. Ne pas réordonner manuellement.
+- **Mise à jour** : à chaque sync ultérieur, repasser le même flag `--components=<list>`.
+- **Pas de tree-shake automatique** : si vous ajoutez un composant côté consumer, ajouter son module à la liste.
+
+### Dry-run (test sans modification)
+```bash
+./sync-all.sh --components=buttons,cards --dry-run
+# Affiche les fichiers qui seraient copiés sans rien modifier
+```
+
+---
+
 ## Tokens dépréciés (deadline v3.0.0)
 
 Depuis **v2.34.0** (Sprint 20), cinq tokens ont été renommés pour lever des ambiguïtés sémantiques. Les anciens noms sont conservés comme **aliases** dans `tokens.css` jusqu'à la v3.0.0 — vos CSS continuent de fonctionner sans modification.

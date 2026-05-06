@@ -1,5 +1,24 @@
 # Releases
 
+## v2.36.0 — 2026-05-06 — Sprint 21 — Split components.css → 25 modules + barrel
+
+### Changed
+- **Architecture CSS** — `shared/css/components.css` (175 KB monolithique, 4429 lignes) splité en **25 modules** dans `shared/css/components/` par affinité fonctionnelle. Barrel `components.css` (< 1.5 KB) reproduit l'ordre de la cascade. Aucun changement de rendu. Ferme #188.
+- **Sync infra** — `shared/sync.sh` et `shared/sync-all.sh` étendus avec flag `--components=<list>` pour copie sélective. `components-core.css` (7 modules essentiels, ~42 KB) disponible pour consumers légers via `--components=core`.
+- **Documentation** — `shared/CONSUMER_GUIDE.md` : nouvelle section « Tree-shaking » (3 niveaux d'intégration : complet / core / custom).
+- `@ds-version` bumpé à `2.36.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
+### Migration
+- Aucune action requise pour les consumers existants : `ds-components.css` continue d'exposer 100% du DS via le barrel.
+- Pour activer le tree-shake : voir `CONSUMER_GUIDE.md` section Tree-shaking.
+
+### Notes techniques
+- 25 modules : `_base`, `cards`, `buttons`, `badges`, `theming`, `forms`, `data`, `avatars`, `tables`, `lists`, `alerts`, `overlays`, `navigation`, `modals`, `feedback`, `interactive`, `templates`, `media`, `_responsive`, `tracker`, `quiz`, `_a11y`, `pricing`, `notifications`, `motion`.
+- Regroupements par affinité fonctionnelle (blocs non-contigus possibles par module). La cascade CSS reste correcte pour des sélecteurs indépendants par composant.
+- Historique git : commit de renommage explicite (`components.css → _full.tmp.css`) puis extraction sur le commit suivant.
+- `components-core.css` mesuré à ~42 KB (> cible 30 KB). Hors scope d'optimisation pour ce sprint.
+- VR Playwright PASS 18/18 sans baseline update.
+
 ## v2.35.0 — 2026-05-06 — Sprint 20 — Motion reference page
 
 ### Added

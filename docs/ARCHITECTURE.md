@@ -4,8 +4,8 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0.
-Version courante : **v2.35.0**.
+**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 25 modules + barrel + tree-shake depuis v2.36.0.
+Version courante : **v2.36.0**.
 
 ## Structure
 
@@ -28,7 +28,34 @@ shared/
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css      # Tous les composants UI (buttons, cards, badges, forms, modals, tables, etc.) — variantes boutons : .btn-icon--danger (destructif, v2.27.0). Bloc "RESET NATIF" en tete (v2.31.0) : reset a {} (WCAG 1.4.3) + :focus-visible {} global (WCAG 2.4.7), cascade garantie par specificite inferieure aux composants DS. Classe `.icon` + variantes `.icon--sm`/`.icon--lg` (v2.33.0) : `width/height: var(--icon-size-md)`, `stroke: currentColor`, `fill: none`. Fallback `@supports not (backdrop-filter: blur(20px))` (v2.33.0) : surfaces glass deviennent solides via `var(--surface)` quand `backdrop-filter` non supporte.
+    components.css      # Barrel pur (v2.36.0) — 25 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
+    components-core.css # Barrel essentiel (v2.36.0) — 7 modules (~42 KB) : _base+buttons+cards+forms+alerts+badges+_a11y. Pour consumers légers.
+    components/         # 25 modules CSS par affinité fonctionnelle (v2.36.0) :
+      _base.css         #   Reset natif (a, :focus-visible global) — v2.31.0
+      buttons.css       #   .btn-primary, .btn-secondary, .btn-ghost, .btn-icon, .btn-icon--danger (v2.27.0)
+      cards.css         #   .card, hero sections, hub, lazy sections
+      badges.css        #   .badge, .chip, .kbd, .notification-dot, .achievement-badge
+      theming.css       #   COLORS, TYPOGRAPHY, FOOTER, THEMING, BACKDROP-FILTER FALLBACK
+      forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR
+      data.css          #   PROGRESS, STATS, CHARTS, PIE, GAUGE, ANIMATED COUNTERS, RISK MATRIX
+      avatars.css       #   .avatar, .avatar-img, .avatar-initials
+      tables.css        #   TABLE, DATA GRID, COMPARISON TABLE
+      lists.css         #   TREE VIEW, LIST, TIMELINE, ACCORDION, SORTABLE LIST, ACTIVITY FEED
+      alerts.css        #   .alert, .toast, .zone-banner
+      overlays.css      #   TOOLTIP, CONTEXT MENU, ACTION MENU
+      navigation.css    #   TABS, BREADCRUMB, STEPPER, BOTTOM NAVIGATION, SIDEBAR RAIL
+      modals.css        #   MODAL, MODAL DIALOG, POPOVER, COMMAND PALETTE, DRAWER, BOTTOM SHEET, CONFIRM POPOVER
+      feedback.css      #   SKELETON, DIVIDER, RATING, EMPTY STATES, PAGINATION, SPINNERS, SKELETON PREFABS
+      interactive.css   #   CODE, COPY BUTTON, FAB, SEGMENTED CONTROL, INLINE EDITING, AUTO-SAVE, ICON (.icon v2.33.0)
+      templates.css     #   TEMPLATES (kanban, sprint, roadmap, backlog)
+      media.css         #   CAROUSEL, LIGHTBOX, VIDEO EMBED, BEFORE/AFTER SLIDER
+      _responsive.css   #   @media composants
+      tracker.css       #   PROGRESS TRACKER, DECISION TREE, WIZARD MULTI-STEP
+      quiz.css          #   QUIZ / POLL
+      _a11y.css         #   ACCESSIBILITY (focus-visible global, theme-transition, prefers-reduced-motion)
+      pricing.css       #   PRICING TABLE, SETTINGS PANEL, COMMENTS/THREAD, AUTH FLOWS, UPGRADE PROMPT
+      notifications.css #   NOTIFICATION CENTER
+      motion.css        #   MOTION REFERENCE PAGE (durations, easings, 6 patterns — v2.35.0)
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
   check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides
