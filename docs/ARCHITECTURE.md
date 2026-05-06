@@ -52,7 +52,7 @@ shared/
       _responsive.css   #   @media composants
       tracker.css       #   PROGRESS TRACKER, DECISION TREE, WIZARD MULTI-STEP
       quiz.css          #   QUIZ / POLL
-      _a11y.css         #   ACCESSIBILITY (focus-visible global, theme-transition, prefers-reduced-motion)
+      _a11y.css         #   ACCESSIBILITY (focus-visible global, theme-transition, prefers-reduced-motion, disabled global v2.40.2)
       pricing.css       #   PRICING TABLE, SETTINGS PANEL, COMMENTS/THREAD, AUTH FLOWS, UPGRADE PROMPT
       notifications.css #   NOTIFICATION CENTER
       motion.css        #   MOTION REFERENCE PAGE (durations, easings, 6 patterns — v2.35.0)

@@ -18,7 +18,7 @@ pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
   fondation.html    # Couleurs, typographie, espacements, ombres, theming, classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
   motion.html       # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce)
-  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu, reset natif (a + :focus-visible, v2.31.0)
+  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html         # Tables, data grid (+ col actions sticky-end), stats, charts, KPI, tree view, activity feed, matrice risque

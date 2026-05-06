@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.40.2 */
 /* _a11y.css — extracted from components.css v2.35.0 */
 
 /* ===== ACCESSIBILITY — focus-visible global ===== */
@@ -34,6 +34,16 @@ html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* ===== DISABLED — éléments natifs hors classes DS ===== */
+/* Couvre les éléments [disabled] non gérés par .btn-* ou .input (aksy #301, DS-EXCEPTION → DS) */
+/* Exclusions : classes DS avec leur propre gestion disabled (.btn-*, .input, .mode-toggle-btn) */
+[disabled]:not(.btn-primary):not(.btn-secondary):not(.btn-ghost):not(.btn-icon):not(.btn-icon--danger):not(.btn-danger):not(.btn-success):not(.btn-warning):not(.btn-outline-danger):not(.input):not(.mode-toggle-btn),
+a[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 /* ===== ACCESSIBILITY — prefers-reduced-motion ===== */

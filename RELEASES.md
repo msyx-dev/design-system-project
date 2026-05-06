@@ -1,5 +1,12 @@
 # Releases
 
+## v2.40.2 — 2026-05-06 — Sprint 23 — Disabled global : règle CSS éléments natifs hors DS
+
+### Added
+- **_a11y.css — disabled global** — Règle CSS `[disabled]:not(.btn-*):not(.input)` et `a[aria-disabled="true"]` : opacité 0.5, cursor not-allowed, pointer-events none. Promue depuis aksy DS-EXCEPTION (#301) vers le DS pour bénéficier à tous les consumers. Couvre select, textarea, input natifs, boutons et liens sans classe DS. Les classes `.btn-*` et `.input` gardent leur gestion propre ; le sélecteur `.sidebar-link[aria-disabled="true"]` (spécificité 0,2,0) n'est pas affecté. Closes #175.
+- **composants.html#disabled-global** — Section démo A11y « Disabled global » avec exemples : bouton/input/select/checkbox/radio/textarea natifs et lien aria-disabled.
+- `@ds-version` bumpé à `2.40.2` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.40.1 — 2026-05-06 — Sprint 23 — Fix a11y tap target header-logo (WCAG 2.5.5)
 
 ### Fixed

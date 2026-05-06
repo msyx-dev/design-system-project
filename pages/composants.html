@@ -934,6 +934,49 @@
     </div>
 </section>
 
+<section id="disabled-global">
+    <div class="section-header">
+        <span class="overline">A11y</span>
+        <h2>Disabled global</h2>
+        <p>Règle CSS globale pour styliser l'état disabled des éléments natifs non couverts par <code class="code-inline">.btn-*</code> ou <code class="code-inline">.input</code>.
+        Promue depuis aksy DS-EXCEPTION (#301). Couvre : <code class="code-inline">select</code>, <code class="code-inline">textarea</code>, <code class="code-inline">input[type=checkbox/radio]</code>, boutons et liens sans classe DS, lignes <code class="code-inline">tr</code>, etc.</p>
+    </div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Éléments natifs [disabled]</span>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div style="display:flex;align-items:center;gap:var(--space-md);flex-wrap:wrap;">
+                    <button type="button" disabled style="padding:0.4rem 0.9rem;background:transparent;border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font-sans);font-size:0.85rem;">Bouton natif</button>
+                    <input type="text" disabled placeholder="Input sans .input" style="padding:0.4rem 0.75rem;border:1px solid var(--border-color);background:var(--surface);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:0.85rem;">
+                    <select disabled style="padding:0.4rem 0.75rem;border:1px solid var(--border-color);background:var(--surface);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:0.85rem;"><option>Sélecteur</option></select>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                    <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;"><input type="checkbox" disabled> Checkbox</label>
+                    <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;"><input type="radio" disabled> Radio</label>
+                    <textarea disabled placeholder="Textarea" style="padding:0.4rem 0.75rem;border:1px solid var(--border-color);background:var(--surface);color:var(--text);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:0.85rem;resize:none;height:3rem;width:120px;"></textarea>
+                </div>
+                <p style="font-size:0.82rem;color:var(--text-muted);">Opacité 0.5, cursor not-allowed — discernables de l'état idle dans tous les thèmes.</p>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Lien aria-disabled vs lien actif</span>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;align-items:center;">
+                    <a href="#disabled-global">Lien actif</a>
+                    <a href="#" aria-disabled="true" onclick="return false;">Lien aria-disabled</a>
+                </div>
+                <p style="font-size:0.82rem;color:var(--text-muted);">
+                    <code class="code-inline">a[aria-disabled="true"]</code> → opacité 0.5, pointer-events none.<br>
+                    Les <code class="code-inline">.sidebar-link[aria-disabled]</code> (spécificité 0,2,0) ne sont pas affectés.
+                </p>
+                <div style="font-size:0.82rem;color:var(--text-muted);">
+                    <strong>Sélecteur exclusion :</strong> les classes DS <code class="code-inline">.btn-*</code> et <code class="code-inline">.input</code> gardent leur propre gestion disabled.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
