@@ -11,8 +11,12 @@
 - Auth gate active, registry.json à jour (deploy_tag deploy-20260501-225840 — sera mis à jour au prochain /deploy)
 
 ## Prochaine étape
-- **Déploiement v2.32.2** : lancer `/deploy` quand prêt (Caddy file_server, statique, modifier les fichiers → visible immédiatement)
-- **Sprint 19** à planifier — selon roadmap `docs/claude_design/ROADMAP.md` : iconography Lucide (ticket 07) + backdrop fallback absorbé (ticket 06). Cible ~9 SP cohérente avec mediane S14-S18.
+- **Déploiement v2.32.2 effectué le 2026-05-06 07:19** : prod sur design-system.msyx.fr (deploy_tag `deploy-20260506-071914`), registry.json maj (commit `10c5cfc`), gh release publiée, smoke test HTTP 200 sur site.html / SKILL.md / canonical-pages/login.html (302 → /login attendu via auth gate)
+- **Sprint 19 ready (2026-05-06)** — milestone Sprint 19 (#20) + 2 issues créées :
+  - **#184** Iconographie Lucide sprite + tokens + .icon + migration UI (10 SP, P1, ticket source 07)
+  - **#185** backdrop-filter @supports not fallback + doc « glass vs solid » (1 SP, P3, ticket source 06 absorbé)
+  - Total 11 SP — cohérent cible roadmap, board Status=Todo via `board-update.sh --auto-add` (livrable Sprint 18 #179)
+- **Milestones futurs créés (gh)** : Sprint 20 (#21), Sprint 21 (#22), Sprint 22 (#23), Sprint 23 (#24). Permet `gh issue create --milestone "Sprint X"` direct depuis session neuve. Issues S20+ à créer au début de chaque sprint (pattern actuel).
 - Dépendances levées : #177 (VR) MERGED → débloque sprints 19-22 (iconographie, token rename, split components.css, type scale, theme generator) qui ont besoin du filet visual regression
 
 ## Décisions sprint 18 (2026-05-06)
@@ -40,3 +44,5 @@
 - 2026-05-01 23:00 — Sprint 17 déployé : v2.31.0 en prod sur design-system.msyx.fr, registry.json maj (deploy_tag deploy-20260501-225840), gh release publiée, smoke test HTTP 200 sur site.html + tokens.css + components.css
 - 2026-05-05 — Plan claude-design (`docs/claude_design/`, 12 tickets + IMPROVEMENT_PLAN) analysé et redécoupé. Backlog Sprint 18 créé : 4 issues #176-#179 sur board #7, label `Sprint:18`, Status=Todo, Priority/Size configurés. Roadmap S18→S23 dans `docs/claude_design/ROADMAP.md`.
 - 2026-05-06 01:30 — Sprint 18 terminé : 3 PRs DS (#181 #182 #183) + 1 commit hors-repo (`~/.claude/` a74a282), 9/9 SP, v2.32.2, 100% velocity, agent ergonomics (SKILL.md + canonical-pages + prompts.md) + visual regression Playwright + diacritic lint + board-update auto-add. Rate limit Anthropic hit pendant /review #176, mitigation par subagent successeur + cron wake-up à 01:15.
+- 2026-05-06 07:19 — Sprint 18 déployé : v2.32.2 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260506-071914`, previous `deploy-20260501-225840`), registry.json maj (commit `10c5cfc`), gh release v2.32.2 publiée, smoke tests HTTP OK.
+- 2026-05-06 — Préparation Sprint 19+ : milestones gh créés S19-S23 (#20-#24), issues Sprint 19 créées (#184 iconography 10 SP P1, #185 backdrop fallback 1 SP P3 absorbé), board=Todo, total 11 SP cible roadmap. Convention milestone gh systematique pour faciliter `/sprint <N>` depuis session neuve.

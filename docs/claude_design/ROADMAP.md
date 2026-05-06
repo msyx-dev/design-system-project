@@ -47,12 +47,12 @@
 
 **⚠️ #179 hors-repo** : livrable dans `~/.claude/scripts/pipeline/board-update.sh` (repo git autonome), pas dans design-system-project. Label `Quick` posé → skip /groom et /spec. Diff git du repo DS = vide. Quality gate adapté : test manuel sur 2 projets différents. Détails dans le body de l'issue.
 
-### Sprint 19 — Iconographie (cible 11 SP — ticket à risque)
+### Sprint 19 — Iconographie (cible 11 SP — ticket à risque) — issues créées 2026-05-06
 
-| Issue prévue | Ticket | SP | Priorité |
+| Issue | Ticket | SP | Priorité |
 |---|---|---|---|
-| Iconographie Lucide sprite + tokens + .icon + migration UI | 07 | 10 | P0 |
-| backdrop-filter fallback (absorbé) | 06 | 1 | P2 |
+| [#184](https://github.com/msyx-dev/design-system-project/issues/184) Iconographie Lucide sprite + tokens + .icon + migration UI | 07 | 10 | P0 |
+| [#185](https://github.com/msyx-dev/design-system-project/issues/185) backdrop-filter fallback (absorbé) | 06 | 1 | P2 |
 
 **Pourquoi cap à 11** : risque le plus haut de la roadmap (refactor visuel, 50 glyphes, migration de 18 occurrences emoji UI). Nécessite VR (#177 du S18) en place.
 
@@ -97,7 +97,8 @@
 
 ## Notes d'arbitrage
 
-1. **Pas de milestones GitHub** sur ce projet → on utilise les labels `Sprint:N`.
+1. **Milestones GitHub créés (2026-05-06)** : Sprint 18 (#19, closed), Sprint 19 (#20), Sprint 20 (#21), Sprint 21 (#22), Sprint 22 (#23), Sprint 23 (#24). Permet `/sprint <N>` direct depuis session neuve via lecture milestone (vs ancienne convention label-only). Labels `Sprint:N` conservés en complément (filtrage transverse, board #7 sans milestone).
 2. **Status board #7** : pas de colonne « Backlog » disponible, on utilise « Todo » pour les issues planifiées non démarrées.
-3. **Issues S19+ pas créées** : créer au début de chaque sprint après /groom pour profiter du contexte le plus à jour. La trace de ce qui doit être fait reste ce fichier ROADMAP.md + les 12 tickets sources `docs/claude_design/0X-*.md`.
-4. **Convention pré-allocation versions** : pour chaque sprint multi-bumps (>2 issues touchant `@ds-version`), le parent /sprint doit injecter `ta version cible : v2.X.Y` dans chaque prompt /dev. Décision 2026-05-01 — à formaliser dans `CLAUDE.md` §Process point 5 (issue #176 traite ce point).
+3. **Issues Sprint 19 créées** (2026-05-06) : #184 (iconography Lucide, 10 SP) + #185 (backdrop fallback absorbé, 1 SP) — total 11 SP, milestone Sprint 19, board Status=Todo via `board-update.sh --auto-add`.
+4. **Issues S20+ pas créées** : créer au début de chaque sprint après /groom pour profiter du contexte le plus à jour. Les milestones existent déjà (gh) — il suffit de `gh issue create --milestone "Sprint X"` au début du sprint. La trace de ce qui doit être fait reste ce fichier ROADMAP.md + les 12 tickets sources `docs/claude_design/0X-*.md`.
+5. **Convention pré-allocation versions** : pour chaque sprint multi-bumps (>2 issues touchant `@ds-version`), le parent /sprint doit injecter `ta version cible : v2.X.Y` dans chaque prompt /dev. Décision 2026-05-01 — formalisée dans `CLAUDE.md` §Process point 5 via #176 mergé Sprint 18.
