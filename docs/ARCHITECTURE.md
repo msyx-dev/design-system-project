@@ -4,16 +4,17 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**87 composants UI** (registre shared/components-registry.json) repartis sur 8 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0.
-Version courante : **v2.33.0**.
+**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0.
+Version courante : **v2.35.0**.
 
 ## Structure
 
 ```
 index.html              # Page login auth gate
-site.html               # Hub principal + lazy-loader des 8 categories
+site.html               # Hub principal + lazy-loader des 9 categories
 pages/
   fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration)
+  motion.html           # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce) + boutons Replay + prefers-reduced-motion
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
@@ -115,7 +116,7 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 - `popstate` : gere le back/forward navigateur
 
 ### LazyLoader (site.html uniquement)
-- 8 placeholders `.lazy-section` sous le hub grid
+- 9 placeholders `.lazy-section` sous le hub grid (8 → 9 depuis v2.35.0 : ajout motion)
 - `IntersectionObserver` (rootMargin 200px) trigger `loadSection()` au scroll
 - `loadSection()` : fetch page, DOMParser, inject contenu, reinit composants + scroll spy
 - Deep-links : `#fondation` (categorie) et `#colors` (sub-section) supportes
@@ -234,6 +235,10 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 - **Decision Tree** (`initDecisionTree()`) : arbre de decision interactif step-by-step, clic sur `.dtree-choice` revele le noeud suivant (data-next), connecteurs `.dtree-connector` animes, bouton reset, variante resultat `.dtree-node--result` en couleur success, anti-double-bind dataset.bound
 - **Risk Matrix** (`initRiskMatrix()`) : grille CSS Grid NxN (3/4/5) probabilite x impact, cellules colorees par niveau de risque (score = prob * impact), points interactifs data-prob/data-impact, tooltip riche hover/focus, modal detail via `__openModal(bodyHTML)`, gestion collisions avec stack et overflow badge, IntersectionObserver animation apparition + fallback visibilité immédiate pour SPA, pattern dataset.bound
 - **Usage Meter** (`initUsageMeter()`) : barres de progression avec fill animé, IntersectionObserver + fallback visibilité immédiate pour SPA, pattern dataset.bound
+
+### Sprint 20 (Motion reference page — v2.35.0)
+- **Motion Replay** (`initMotionReplay()`) : bouton « Replay » par pattern — retire les classes d'animation, force un reflow (`void offsetWidth`), les réajoute. Pattern `dataset.bound` anti-double-bind.
+- **Motion Viewport** (`initMotionViewport()`) : `IntersectionObserver` (threshold 0.1) qui ajoute `.is-paused` aux sections `.motion-demo` et `.motion-pattern` hors viewport, pausant toutes leurs animations (perf mobile).
 
 ### Pattern commun
 - Anti-double-bind : `dataset.bound` / `dataset.xxxBound` sur chaque conteneur

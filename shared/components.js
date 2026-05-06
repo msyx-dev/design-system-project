@@ -3942,6 +3942,42 @@ function initConfirmPopover() {
 }
 window.__initConfirmPopover = initConfirmPopover;
 
+// ===== MOTION REFERENCE PAGE =====
+function initMotionReplay() {
+    const buttons = document.querySelectorAll('.motion-replay');
+    buttons.forEach(btn => {
+        if (btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', () => {
+            const sel = btn.dataset.motionTarget;
+            if (!sel) return;
+            const targets = document.querySelectorAll(sel);
+            targets.forEach(target => {
+                // Récupérer les classes d'animation actuelles
+                const animClasses = Array.from(target.classList).filter(c =>
+                    c.startsWith('motion-') && c !== 'motion-replay'
+                );
+                // Retirer temporairement les classes d'animation
+                animClasses.forEach(c => target.classList.remove(c));
+                void target.offsetWidth; // reflow forcé pour réinitialiser l'animation
+                animClasses.forEach(c => target.classList.add(c));
+            });
+        });
+    });
+}
+
+// Pause animations hors viewport (perf mobile)
+function initMotionViewport() {
+    const sections = document.querySelectorAll('.motion-demo, .motion-pattern');
+    if (!sections.length || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            e.target.classList.toggle('is-paused', !e.isIntersecting);
+        });
+    }, { threshold: 0.1 });
+    sections.forEach(s => io.observe(s));
+}
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initComponents();
@@ -3958,6 +3994,8 @@ function reinitAll() {
     initAuthFlows();
     initUsageMeter();
     initConfirmPopover();
+    initMotionReplay();
+    initMotionViewport();
 }
 window.__initComponents = reinitAll;
 

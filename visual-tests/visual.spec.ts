@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 
 const PAGES = [
   { slug: "fondation", path: "/pages/fondation.html" },
+  { slug: "motion", path: "/pages/motion.html" },
   { slug: "composants", path: "/pages/composants.html" },
   { slug: "navigation", path: "/pages/navigation.html" },
   { slug: "formulaires", path: "/pages/formulaires.html" },
@@ -12,7 +13,7 @@ const PAGES = [
 ] as const;
 
 // La matrice mode dark/light est geree via Playwright `projects[]` (msyx-dark, msyx-light)
-// -> 8 pages x 2 projets = 16 baselines.
+// -> 9 pages x 2 projets = 18 baselines (+ 2 nouvelles : motion-msyx-dark, motion-msyx-light depuis v2.35.0).
 
 const setMode = async (
   page: import("@playwright/test").Page,

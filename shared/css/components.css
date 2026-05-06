@@ -1,4 +1,4 @@
-/* @ds-version: 2.34.0 */
+/* @ds-version: 2.35.0 */
 /* components.css — Composants UI du design system msyx.design
    Import : @import url('css/components.css'); */
 
@@ -4242,4 +4242,192 @@ html.theme-transitioning *::after {
     background: var(--surface-solid);
     backdrop-filter: none;
   }
+}
+
+/* ===== MOTION REFERENCE PAGE ===== */
+
+/* Layout sections durations/easings */
+.motion-demo { display: flex; flex-direction: column; gap: var(--space-md); }
+
+.motion-duration-row,
+.motion-easing-row {
+    display: grid;
+    grid-template-columns: 180px 260px 1fr auto;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.motion-token {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-light);
+}
+.motion-value {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Barres de durée */
+.motion-bar {
+    height: 8px;
+    background: var(--surface-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+.motion-bar-fill {
+    height: 100%;
+    width: 0;
+    background: var(--gradient-1);
+    border-radius: inherit;
+}
+.motion-bar--fast  { animation: motionBarFill var(--duration-fast)  var(--ease-standard) infinite alternate; }
+.motion-bar--base  { animation: motionBarFill var(--duration-base)  var(--ease-standard) infinite alternate; }
+.motion-bar--slow  { animation: motionBarFill var(--duration-slow)  var(--ease-standard) infinite alternate; }
+@keyframes motionBarFill { from { width: 0; } to { width: 100%; } }
+
+/* Courbes easing */
+.motion-curve {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+.motion-ball-track {
+    height: 32px;
+    background: var(--surface-light);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+}
+.motion-ball {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background: var(--accent);
+}
+.motion-ball--standard { animation: motionBallSlide var(--duration-slow) var(--ease-standard) infinite alternate; }
+.motion-ball--spring   { animation: motionBallSlide var(--duration-slow) var(--ease-spring)   infinite alternate; background: var(--deco-violet); }
+@keyframes motionBallSlide { from { left: 8px; } to { left: calc(100% - 24px); } }
+
+/* Patterns canoniques — layout */
+.motion-pattern { margin-bottom: var(--space-lg); }
+.motion-pattern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+.motion-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    padding: var(--space-lg);
+    background: var(--surface-light);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    overflow: hidden;
+}
+.motion-card-demo {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--gradient-1);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    font-weight: var(--fw-semibold);
+}
+
+/* Pattern 1 — fade-in */
+.motion-fade-in-demo {
+    animation: motionFadeIn var(--duration-base) var(--ease-standard) infinite alternate;
+}
+@keyframes motionFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Pattern 2 — slide-up */
+.motion-slide-up-demo {
+    animation: motionSlideUp var(--duration-base) var(--ease-standard) infinite alternate;
+}
+@keyframes motionSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pattern 3 — scale-in */
+.motion-scale-in-demo {
+    animation: motionScaleIn var(--duration-base) var(--ease-standard) infinite alternate;
+}
+@keyframes motionScaleIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Pattern 4 — stagger (3 enfants décalés 0/100/200ms) */
+.motion-stagger-demo {
+    display: flex;
+    gap: var(--space-sm);
+}
+.motion-stagger-demo > * {
+    animation: motionFadeIn var(--duration-base) var(--ease-standard) infinite alternate;
+}
+.motion-stagger-demo > *:nth-child(1) { animation-delay: 0ms; }
+.motion-stagger-demo > *:nth-child(2) { animation-delay: 100ms; }
+.motion-stagger-demo > *:nth-child(3) { animation-delay: 200ms; }
+
+/* Pattern 5 — skeleton-shimmer (réutilise @keyframes shimmer existant) */
+.motion-skeleton-demo {
+    width: 220px;
+    height: 16px;
+    background: linear-gradient(90deg, var(--surface-solid) 25%, var(--surface-light) 50%, var(--surface-solid) 75%);
+    background-size: 200% 100%;
+    border-radius: var(--radius-sm);
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Pattern 6 — success-bounce (utilise --ease-spring) */
+.motion-bounce-demo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--success);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    animation: motionBounceIn var(--duration-slow) var(--ease-spring) infinite alternate;
+}
+@keyframes motionBounceIn {
+    from { opacity: 0; transform: scale(0.3); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Pause animations hors viewport via IntersectionObserver */
+.motion-demo.is-paused *,
+.motion-pattern.is-paused * {
+    animation-play-state: paused !important;
+}
+
+/* Responsive 320px–768px */
+@media (max-width: 768px) {
+    .motion-duration-row,
+    .motion-easing-row {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+    }
+    .motion-bar,
+    .motion-ball-track,
+    .motion-curve {
+        grid-column: 1 / -1;
+    }
+    .motion-replay {
+        grid-column: 1 / -1;
+        justify-self: end;
+    }
 }

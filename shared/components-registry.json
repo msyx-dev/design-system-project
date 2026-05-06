@@ -1,5 +1,5 @@
 {
-  "version": "2.34.0",
+  "version": "2.35.0",
   "generated": "2026-05-06",
   "components": [
     {
@@ -431,6 +431,14 @@
       "jsInit": null,
       "description": "Composant icone via sprite SVG Lucide self-hoste. 53 symboles disponibles dans /shared/icons/sprite.svg. Convention : <svg class=\"icon\"><use href=\"/shared/icons/sprite.svg#i-{nom}\"/></svg>. Tokens : --icon-size-sm (16px), --icon-size-md (20px, defaut), --icon-size-lg (24px), --icon-stroke (1.5).",
       "example": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-home\"/></svg>\n<svg class=\"icon icon--sm\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-check\"/></svg>\n<svg class=\"icon icon--lg\" role=\"img\" aria-label=\"Parametres\"><use href=\"/shared/icons/sprite.svg#i-settings\"/></svg>\n<button class=\"btn-icon\" aria-label=\"Supprimer\"><svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-trash\"/></svg></button>"
+    },
+    {
+      "name": "motion-replay",
+      "page": "motion",
+      "cssClasses": [".motion-pattern", ".motion-demo", ".motion-bar", ".motion-ball", ".motion-replay", ".motion-fade-in-demo", ".motion-slide-up-demo", ".motion-scale-in-demo", ".motion-stagger-demo", ".motion-skeleton-demo", ".motion-bounce-demo"],
+      "jsInit": "initMotionReplay",
+      "description": "Motion reference page (v2.35.0). Durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques avec boutons Replay. initMotionReplay() : toggle classe + void offsetWidth reflow. initMotionViewport() : IntersectionObserver pause hors viewport. prefers-reduced-motion geré via bloc global components.css.",
+      "example": "<!-- Fade-in -->\n<div class=\"motion-fade-in-demo\">Hello</div>\n\n<!-- Slide-up -->\n<div class=\"motion-slide-up-demo\">Hello</div>\n\n<!-- Scale-in -->\n<div class=\"motion-scale-in-demo\">Hello</div>\n\n<!-- Stagger (3 enfants) -->\n<div class=\"motion-stagger-demo\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</div>\n\n<!-- Success bounce -->\n<div class=\"motion-bounce-demo\">✓</div>\n\n<!-- Replay bouton -->\n<button class=\"btn-secondary motion-replay\" data-motion-target=\".motion-fade-in-demo\">Replay</button>"
     }
   ]
 }
