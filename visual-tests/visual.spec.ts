@@ -12,26 +12,39 @@ const PAGES = [
   { slug: "divers", path: "/pages/divers.html" },
 ] as const;
 
-// La matrice mode dark/light est geree via Playwright `projects[]` (msyx-dark, msyx-light)
-// -> 9 pages x 2 projets = 18 baselines (+ 2 nouvelles : motion-msyx-dark, motion-msyx-light depuis v2.35.0).
+// Matrice complete : 9 pages x 12 projets = 108 baselines (v2.38.0)
+// Naming convention : <theme>-<mode>-<viewport> (ex: msyx-dark-desktop, acssi-light-mobile)
 
-const setMode = async (
-  page: import("@playwright/test").Page,
-  mode: "dark" | "light",
-) => {
-  await page.addInitScript((m: string) => {
-    try {
-      localStorage.setItem("msyx-theme", "msyx");
-      localStorage.setItem("msyx-mode", m);
-    } catch {}
-  }, mode);
+type Theme = "msyx" | "acssi" | "nhood";
+type Mode = "dark" | "light";
+
+// Parse "<theme>-<mode>-<viewport>" → { theme, mode }
+const parseProjectName = (name: string): { theme: Theme; mode: Mode } => {
+  const parts = name.split("-");
+  return { theme: parts[0] as Theme, mode: parts[1] as Mode };
 };
 
-test.describe("Visual regression — msyx", () => {
+const setThemeAndMode = async (
+  page: import("@playwright/test").Page,
+  theme: Theme,
+  mode: Mode,
+) => {
+  await page.addInitScript(
+    ({ t, m }: { t: string; m: string }) => {
+      try {
+        localStorage.setItem("msyx-theme", t);
+        localStorage.setItem("msyx-mode", m);
+      } catch {}
+    },
+    { t: theme, m: mode },
+  );
+};
+
+test.describe("Visual regression — full matrix", () => {
   for (const { slug, path } of PAGES) {
     test(`${slug}`, async ({ page }, testInfo) => {
-      const mode = testInfo.project.name.endsWith("-light") ? "light" : "dark";
-      await setMode(page, mode);
+      const { theme, mode } = parseProjectName(testInfo.project.name);
+      await setThemeAndMode(page, theme, mode);
       await page.goto(path, { waitUntil: "networkidle" });
       await page.waitForFunction(
         () => document.fonts && document.fonts.status === "loaded",

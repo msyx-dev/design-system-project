@@ -7,7 +7,7 @@ on:
 jobs:
   visual:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30  # +15 min : 6x plus de captures (18 → 108)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

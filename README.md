@@ -45,11 +45,11 @@ Puis review le diff via `git diff --stat visual-tests/baseline/` et commit les n
 
 Le workflow `.github/workflows/visual.yml` s'execute sur chaque PR vers `main`. En cas d'echec, les diffs PNG + le report HTML sont uploades en artefact `visual-diffs` (retention 14 jours).
 
-### Perimetre actuel (v2.32.1)
+### Perimetre actuel (v2.38.0)
 
-- **Theme** : msyx (dark + light)
-- **Pages** : 8 thematiques (`fondation`, `composants`, `navigation`, `formulaires`, `data`, `templates`, `feedback`, `divers`)
-- **Viewport** : 1280x800
-- **Total** : 16 baselines
+- **Themes** : msyx, acssi, nhood (dark + light pour chacun)
+- **Pages** : 9 thematiques (`fondation`, `motion`, `composants`, `navigation`, `formulaires`, `data`, `templates`, `feedback`, `divers`)
+- **Viewports** : desktop 1280x800 + mobile 375x667
+- **Total** : 108 baselines (3 themes x 2 modes x 9 pages x 2 viewports)
 
-Extension a 96 baselines (ACSSI + Nhood x 2 modes x 2 viewports) prevue Sprint 22 (theme generator).
+Filet utilise pour valider la byte-identite du CSS lors des refontes theme generator (#190) ou de toute modification de tokens.

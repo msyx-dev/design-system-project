@@ -110,10 +110,10 @@ Sprite SVG self-hosted Lucide (~50 glyphes) — convention `<svg class="icon"><u
 Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
 - **Outils** : `@playwright/test` + `serve` (devDeps uniquement)
-- **Perimetre** : 18 baselines (msyx x dark+light x 9 pages thematiques x 1280) — motion.html ajoutee Sprint 20
-- **Localisation baselines** : `visual-tests/baseline/{project}/{slug}.png`
-- **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil
-- **Roadmap** : Sprint 22 ciblera 108 baselines (3 themes x 2 modes x 9 pages x 2 viewports)
+- **Perimetre** : 108 baselines (3 themes x 2 modes x 9 pages thematiques x 2 viewports) — etendu Sprint 22 (#191, v2.38.0)
+- **Projects Playwright** : 12 (`<theme>-<mode>-<viewport>`, ex: `msyx-dark-desktop`, `acssi-light-mobile`)
+- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>.png`
+- **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil, timeout 30 min
 - **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
 
 ## Navigation et layout
