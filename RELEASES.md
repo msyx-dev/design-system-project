@@ -11,7 +11,7 @@
 - `@ds-version` bumpe a `2.37.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
 
 ### Notes techniques
-- Baseline VR : diffs attendus sur 3 classes (h1, h2, small/mono). Baseline update requis avec approbation Mike avant merge.
+- Baseline VR : aucune update necessaire. Diffs sub-pixel (h1 -0.9px, h2 +2.4px, small/mono +0.4px) tous absorbes par la tolerance Playwright. CI VR PASS 18/18 du premier coup, sans approbation Mike requise.
 - Consumer aksy : 0 impact — nouveaux tokens `--type-*` non consommes. Classes existantes maintiennent le rendu via aliases ou diffs sub-pixel.
 
 ## v2.36.0 — 2026-05-06 — Sprint 21 — Split components.css → 25 modules + barrel
