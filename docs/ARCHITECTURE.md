@@ -4,16 +4,24 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 25 modules + barrel + tree-shake depuis v2.36.0. + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 108 baselines (3 thèmes × 2 modes × 9 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0. + Focus restore WAI APG sur modales (helper prive `attachFocusRestore` dans components.js, WCAG 2.4.3) depuis v2.41.0.
-Version courante : **v2.41.0**.
+**88 composants UI** (registre shared/components-registry.json) repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (50 glyphes) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 25 modules + barrel + tree-shake depuis v2.36.0. + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 108 baselines (3 thèmes × 2 modes × 9 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0. + Focus restore WAI APG sur modales (helper prive `attachFocusRestore` dans components.js, WCAG 2.4.3) depuis v2.41.0. + Brand identity (wordmark SVG, signature spatiale, texture-grain token) depuis v2.42.0.
+Version courante : **v2.42.0**.
 
 ## Structure
 
 ```
+assets/                 # Brand assets SVG (v2.42.0)
+  logo-msyx.svg         #   PRIMARY lockup mark+wordmark (200×60)
+  logo-msyx-mark.svg    #   Mark seule (60×60) — blob organique + M espace négatif + gradient turquoise→bleu→violet
+  logo-msyx-dark.svg    #   Variante fond sombre (wordmark #f1f5f9)
+  logo-msyx-light.svg   #   Variante fond clair (gradient saturé + wordmark #0a0f1e)
+  explorations/
+    wordmark-monogram-a.svg  #   Exploration A — sommets aigus
+    wordmark-monogram-b.svg  #   Exploration B — sommets arrondis
 index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 9 categories
 pages/
-  fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration)
+  fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration), texture grain (v2.42.0)
   motion.html           # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce) + boutons Replay + prefers-reduced-motion
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
@@ -32,6 +40,7 @@ shared/
     components-core.css # Barrel essentiel (v2.36.0) — 7 modules (~42 KB) : _base+buttons+cards+forms+alerts+badges+_a11y. Pour consumers légers.
     components/         # 25 modules CSS par affinité fonctionnelle (v2.36.0) :
       _base.css         #   Reset natif (a, :focus-visible global) — v2.31.0
+      signature.css     #   Brand signature spatiale — gradient underline 2px sous .section-header .overline (v2.42.0)
       buttons.css       #   .btn-primary, .btn-secondary, .btn-ghost, .btn-icon, .btn-icon--danger (v2.27.0)
       cards.css         #   .card, hero sections, hub, lazy sections
       badges.css        #   .badge, .chip, .kbd, .notification-dot, .achievement-badge
@@ -284,6 +293,34 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 - Security headers importes dans le Caddyfile
 - CSP : `script-src 'self' 'unsafe-inline'` (requis pour anti-FOUC)
 - Deploy : git push → visible immediatement (pas de build)
+
+## Brand identity (depuis v2.42.0)
+
+### Wordmark SVG
+
+Le logo msyx est un SVG vectoriel généré sans outil éditeur graphique. Il capture l'esprit du logo historique (PNG `/tmp/sprint-23-context/reference-logo-msyx.png`) :
+
+- **Blob organique** : forme arrondie irrégulière (plectre/bec de guitare), chemin cubique
+- **M en espace négatif** : double sommet (vagues/montagnes), créé via `fill-rule="evenodd"` sur le même `path` complexe
+- **Gradient vertical** : `#10b981` (turquoise) → `#3b82f6` (bleu) → `#8b5cf6` (violet)
+- **Wordmark texte** : "msyx" en `currentColor` (adaptation thème automatique) — Space Grotesk 700
+
+Fichiers dans `assets/` :
+- `logo-msyx.svg` (200×60) — lockup PRIMARY pour headers
+- `logo-msyx-mark.svg` (60×60) — mark seule, favicon-ready
+- `logo-msyx-dark.svg` (200×60) — variante fond sombre explicite
+- `logo-msyx-light.svg` (200×60) — variante fond clair (gradient saturé)
+- `explorations/wordmark-monogram-{a,b}.svg` — historique de conception
+
+Contraintes respectées : ≤ 1 path complexe par variante, pas de garbage éditeur, `role="img"` + `<title>`, viewBox normalisé.
+
+### Signature spatiale
+
+Module `signature.css` (importé dans `components.css` après `_base.css`). Gradient underline 2px via `::after` sur `.main .section-header .overline`. Accent visuel 32×2px, `var(--gradient-1)`, `border-radius: 2px`. Appliqué automatiquement sur toutes les pages via le barrel.
+
+### Token texture grain
+
+`--texture-grain` + `--texture-grain-opacity: 0.015` dans `tokens.css`. Formalise `--noise-texture` (#12). `body::after` dans `styles.css` utilise ces tokens. Documenté dans `pages/fondation.html#texture`.
 
 ## Process ajout composant
 

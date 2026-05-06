@@ -1,6 +1,6 @@
 {
-  "version": "2.41.0",
-  "generated": "2026-05-06",
+  "version": "2.42.0",
+  "generated": "2026-05-07",
   "components": [
     {
       "name": "buttons",
@@ -436,6 +436,30 @@
       "jsInit": null,
       "description": "Composant icone via sprite SVG Lucide self-hoste. 53 symboles disponibles dans /shared/icons/sprite.svg. Convention : <svg class=\"icon\"><use href=\"/shared/icons/sprite.svg#i-{nom}\"/></svg>. Tokens : --icon-size-sm (16px), --icon-size-md (20px, defaut), --icon-size-lg (24px), --icon-stroke (1.5).",
       "example": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-home\"/></svg>\n<svg class=\"icon icon--sm\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-check\"/></svg>\n<svg class=\"icon icon--lg\" role=\"img\" aria-label=\"Parametres\"><use href=\"/shared/icons/sprite.svg#i-settings\"/></svg>\n<button class=\"btn-icon\" aria-label=\"Supprimer\"><svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-trash\"/></svg></button>"
+    },
+    {
+      "name": "brand-wordmark",
+      "page": "fondation",
+      "cssClasses": [".header-logo", ".header-logo-img"],
+      "jsInit": null,
+      "description": "Wordmark SVG msyx (v2.42.0). Mark M autonome (logo-msyx-mark.svg, 60×60) + lockup primary (logo-msyx.svg, 200×60). Blob organique + double sommet en espace négatif + gradient turquoise→bleu→violet. Variantes dark/light dans assets/. Utilisé dans header (buildHeader()), index.html, canonical-pages/login.html.",
+      "example": "<!-- Header (injecté par buildHeader() dans nav.js) -->\n<a href=\"/site.html\" class=\"header-logo\">\n  <img src=\"/assets/logo-msyx.svg\" alt=\"msyx Design System\" width=\"120\" height=\"32\" class=\"header-logo-img\">\n</a>\n\n<!-- Mark seule (favicon, login) -->\n<img src=\"/assets/logo-msyx-mark.svg\" alt=\"msyx\" width=\"48\" height=\"48\">\n\n<!-- Variantes thématiques -->\n<img src=\"/assets/logo-msyx-dark.svg\" alt=\"msyx\" width=\"120\" height=\"36\">\n<img src=\"/assets/logo-msyx-light.svg\" alt=\"msyx\" width=\"120\" height=\"36\">"
+    },
+    {
+      "name": "brand-signature",
+      "page": "fondation",
+      "cssClasses": [".main .section-header .overline"],
+      "jsInit": null,
+      "description": "Signature spatiale msyx (v2.42.0). Gradient underline 2px via ::after sur chaque .section-header .overline. Accent visuel 32×2px, var(--gradient-1), border-radius 2px. Module signature.css importé dans components.css après _base.css. Rend le DS reconnaissable même en grayscale.",
+      "example": "<!-- Appliqué automatiquement via signature.css sur tous les .section-header .overline -->\n<div class=\"section-header\">\n  <span class=\"overline\">Catégorie</span>\n  <h2>Titre section</h2>\n</div>"
+    },
+    {
+      "name": "texture-grain",
+      "page": "fondation",
+      "cssClasses": [],
+      "jsInit": null,
+      "description": "Token texture grain (v2.42.0). --texture-grain (URL SVG feTurbulence inline) + --texture-grain-opacity (0.015). Appliqué via body::after en fixed inset:0 z-index:9999 pointer-events:none. Absorbe ticket #12 (--noise-texture formalisé). Documenté dans fondation.html#texture.",
+      "example": "/* tokens.css */\n--texture-grain: url(\"data:image/svg+xml,...\");\n--texture-grain-opacity: 0.015;\n\n/* styles.css */\nbody::after {\n  background-image: var(--texture-grain);\n  opacity: var(--texture-grain-opacity);\n}"
     },
     {
       "name": "motion-replay",
