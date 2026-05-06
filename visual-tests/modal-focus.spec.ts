@@ -14,10 +14,17 @@ test.describe("Modal focus restore (WAI APG) — ref aksy UC-288", () => {
   test("Esc ferme la modale et restaure le focus sur le declencheur", async ({
     page,
   }) => {
+    // serve v14 avec -s redirige /pages/feedback.html vers /pages/feedback (clean URL 301)
+    // puis /pages/feedback → index.html (SPA fallback). On intercepte la requete .html
+    // pour servir le fichier directement depuis le disque (CSS/JS restent sur le serveur).
+    await page.route("**/pages/feedback.html", async (route) => {
+      await route.fulfill({ path: "pages/feedback.html" });
+    });
+
     await page.goto("/pages/feedback.html");
 
     // Attendre que la page soit prete (nav.js + components.js charges)
-    await page.waitForLoadState("domcontentloaded");
+    await page.waitForLoadState("networkidle");
 
     // Cibler le 1er bouton [data-modal-trigger] de la section modals
     const trigger = page.locator("[data-modal-trigger]").first();
