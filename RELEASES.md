@@ -1,5 +1,14 @@
 # Releases
 
+## v2.38.0 — 2026-05-06 — Sprint 22 — Visual regression matrice complete 108 baselines
+
+### Added
+- **Visual regression matrice complete** — Extension de 18 a 108 baselines (3 themes x 2 modes x 9 pages x 2 viewports). Filet de protection pour le theme generator (#190) et toute modification CSS large. Closes #191.
+- `playwright.config.ts` : 12 projects nommes `<theme>-<mode>-<viewport>` (msyx/acssi/nhood x dark/light x desktop-1280/mobile-375). Suppression du viewport global.
+- `visual-tests/visual.spec.ts` : parseProjectName() extrait theme+mode depuis le project name ; setThemeAndMode() remplace setMode() (support multi-theme). Baselines renommees `visual-tests/baseline/<theme>-<mode>-<viewport>/<page>.png`.
+- `.github/workflows/visual.yml` : timeout-minutes 15 → 30 (6x plus de captures).
+- `@ds-version` bumpe a `2.38.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
 ## v2.37.0 — 2026-05-06 — Sprint 21 — Type modular scale 1.25 + tokens line-height + pairing rules
 
 ### Changed

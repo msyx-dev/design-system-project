@@ -2,6 +2,27 @@ import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4173;
 
+// Matrice complete : 3 themes x 2 modes x 2 viewports = 12 projects
+// 12 projects x 9 pages = 108 baselines (v2.38.0)
+const THEMES = ["msyx", "acssi", "nhood"] as const;
+const MODES = ["dark", "light"] as const;
+const VIEWPORTS = [
+  { name: "desktop", width: 1280, height: 800 },
+  { name: "mobile", width: 375, height: 667 },
+] as const;
+
+const projects = THEMES.flatMap((theme) =>
+  MODES.flatMap((mode) =>
+    VIEWPORTS.map((vp) => ({
+      name: `${theme}-${mode}-${vp.name}`,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: vp.width, height: vp.height },
+      },
+    })),
+  ),
+);
+
 export default defineConfig({
   testDir: "visual-tests",
   fullyParallel: true,
@@ -13,7 +34,7 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
-    viewport: { width: 1280, height: 800 },
+    // viewport retire du use global : chaque project porte le sien
     animations: "disabled",
     caret: "hide",
   },
@@ -23,22 +44,7 @@ export default defineConfig({
       maxDiffPixelRatio: 0.01,
     },
   },
-  projects: [
-    {
-      name: "msyx-dark",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1280, height: 800 },
-      },
-    },
-    {
-      name: "msyx-light",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1280, height: 800 },
-      },
-    },
-  ],
+  projects,
   webServer: {
     command: `npx serve -l ${PORT} -s .`,
     port: PORT,
