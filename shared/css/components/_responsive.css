@@ -1,0 +1,26 @@
+/* @ds-version: 2.36.0 */
+/* _responsive.css — extracted from components.css v2.35.0 */
+
+/* ===== RESPONSIVE — Composants ===== */
+@media (max-width: 1024px) {
+    .hub-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .hero { min-height: auto; padding: 5rem 1.5rem 3rem; }
+    .hero-stats { gap: 1.5rem; }
+    .chart-legend { justify-content: center; }
+    .kanban-board, .sprint-board { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .kanban-column { min-width: 85vw; scroll-snap-align: start; }
+    .roadmap-track { min-width: 700px; }
+    .backlog-filters { flex-wrap: wrap; }
+    .sprint-header { flex-direction: column; align-items: flex-start; }
+    .sprint-stats { gap: 1rem; }
+    .login-preview { min-height: 280px; }
+    .login-compact { flex-wrap: wrap; }
+    .cal-grid { gap: 1px; }
+    .hub-grid { grid-template-columns: 1fr; }
+    .cmd-palette { margin: 0 1rem; }
+    .drawer-panel { width: 85%; }
+    .drawer-panel--fullscreen { width: 100%; }
+}
+

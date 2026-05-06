@@ -1,0 +1,28 @@
+/* @ds-version: 2.36.0 */
+/* avatars.css — extracted from components.css v2.35.0 */
+
+/* ===== AVATAR ===== */
+.avatar { border-radius: 50%; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-family: 'Space Grotesk', sans-serif; color: var(--text-on-accent); flex-shrink: 0; }
+.avatar-xs { width: 24px; height: 24px; font-size: 0.55rem; }
+.avatar-sm { width: 32px; height: 32px; font-size: 0.7rem; }
+.avatar-md { width: 40px; height: 40px; font-size: 0.85rem; }
+.avatar-lg { width: 56px; height: 56px; font-size: 1.1rem; }
+.avatar-xl { width: 80px; height: 80px; font-size: 1.6rem; }
+.avatar-gradient { background: var(--gradient-1); }
+.avatar-group { display: flex; }
+.avatar-group .avatar { margin-left: -8px; border: 2px solid var(--primary); }
+.avatar-group .avatar:first-child { margin-left: 0; }
+.avatar-status { position: relative; display: inline-flex; }
+.avatar-status::after { content: ''; position: absolute; bottom: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--primary); }
+.avatar-status.online::after { background: var(--success); }
+.avatar-status.offline::after { background: var(--text-dim); }
+.avatar-status.busy::after { background: var(--danger); }
+/* Avatar image */
+.avatar img,
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+

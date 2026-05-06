@@ -1,0 +1,114 @@
+/* @ds-version: 2.36.0 */
+/* badges.css — extracted from components.css v2.35.0 */
+
+/* ===== BADGES & TAGS ===== */
+.badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+.badge-primary { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-light); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+.badge-success { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success-light); border: 1px solid color-mix(in srgb, var(--success) 20%, transparent); }
+.badge-warning { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning-light); border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent); }
+.badge-danger { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--danger-light); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
+.badge-info { background: color-mix(in srgb, var(--info) 10%, transparent); color: var(--info-light); border: 1px solid color-mix(in srgb, var(--info) 20%, transparent); }
+.badge-neutral { background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--text-muted); border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent); }
+.tag { display: inline-block; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent-light); padding: 0.22rem 0.65rem; border-radius: var(--radius-xs); font-size: 0.72rem; font-weight: var(--fw-semibold); letter-spacing: 0.02em; }
+.pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 8px color-mix(in srgb, var(--success) 50%, transparent); flex-shrink: 0; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
+
+/* ===== CHIPS ===== */
+.chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.7rem 0.3rem 0.85rem; border-radius: 50px; font-size: 0.8rem; font-weight: var(--fw-medium); background: var(--surface-light); border: 1px solid var(--border-color); color: var(--text); transition: border-color var(--duration-base), background var(--duration-base); white-space: nowrap; }
+.chip-close { display: inline-flex; align-items: center; justify-content: center; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: transparent; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; line-height: 1; padding: 0; margin-left: 0.1rem; transition: background var(--duration-fast), color var(--duration-fast); }
+.chip-close:hover { background: color-mix(in srgb, var(--danger) 20%, transparent); color: var(--danger-light); }
+.chip.chip-icon { padding-left: 0.5rem; }
+.chip-icon-slot { font-size: 0.85rem; line-height: 1; flex-shrink: 0; }
+.chip-filter { cursor: pointer; background: var(--surface-light); border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.3rem 0.85rem; transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast); }
+.chip-filter:hover { border-color: var(--accent); color: var(--text); }
+.chip-filter.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent-light); }
+.chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip-input-wrapper { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; padding: 0.45rem 0.7rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); min-height: 2.6rem; cursor: text; transition: border-color var(--duration-base), box-shadow var(--duration-base); }
+.chip-input-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
+.chip-input-item { background: color-mix(in srgb, var(--accent) 12%, transparent); border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
+.chip-input-field { flex: 1; min-width: 120px; background: transparent; border: none; outline: none; color: var(--text); font-size: 0.85rem; font-family: var(--font-sans); padding: 0; }
+.chip-input-field::placeholder { color: var(--text-dim); }
+
+/* ===== KBD ===== */
+kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 0.4rem; background: var(--surface-solid); border: 1px solid var(--border-color); border-bottom-width: 2px; border-radius: 5px; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--text-muted); }
+
+/* ===== NOTIFICATION DOT ===== */
+.notif-dot { position: relative; }
+.notif-dot::after { content: ''; position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid var(--primary); }
+
+/* ===== ACHIEVEMENT BADGES ===== */
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+.achievement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-card);
+    transition: all 0.3s;
+}
+.achievement:hover:not(.locked) {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+.achievement-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+.achievement-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+}
+.achievement-state {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+.achievement.locked {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+.achievement.locked .achievement-icon {
+    filter: grayscale(1);
+}
+.achievement.new {
+    animation: achievementGlow 2s infinite;
+    border-color: var(--accent);
+}
+@keyframes achievementGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
+    50%       { box-shadow: 0 0 20px 4px color-mix(in srgb, var(--accent) 30%, transparent); }
+}
+.achievement--bronze { border-color: #cd7f32; }
+.achievement--silver { border-color: #c0c0c0; }
+.achievement--gold   { border-color: #ffd700; }
+.achievement-progress {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+.achievement-progress-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.achievement-progress-bar {
+    height: 8px;
+    background: var(--surface-light);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+.achievement-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.5s;
+}
+

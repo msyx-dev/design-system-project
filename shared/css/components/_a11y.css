@@ -1,0 +1,47 @@
+/* @ds-version: 2.36.0 */
+/* _a11y.css — extracted from components.css v2.35.0 */
+
+/* ===== ACCESSIBILITY — focus-visible global ===== */
+.carousel-btn:focus-visible,
+.carousel-dot:focus-visible,
+.modal-close:focus-visible,
+.toast-close:focus-visible,
+.cal-day:focus-visible,
+.tab:focus-visible,
+.hub-card:focus-visible,
+.card:focus-visible,
+.data-grid-body tr:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* sr-only utility — texte pour lecteurs d'écran uniquement */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ===== THEME TRANSITION ===== */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* ===== ACCESSIBILITY — prefers-reduced-motion ===== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
