@@ -494,6 +494,118 @@
         </div>
     </div>
 </section>
+
+<section id="iconographie">
+    <div class="section-header"><span class="overline">Reference</span><h2>Iconographie</h2><p>Sprite SVG Lucide self-hoste. Acces via la convention <code class="code-inline">&lt;svg class="icon"&gt;&lt;use href="/shared/icons/sprite.svg#i-{nom}"/&gt;&lt;/svg&gt;</code>.</p></div>
+    <div class="demo-box">
+        <p class="text-muted text-sm" style="margin-bottom:var(--space-md);">53 icones disponibles (stroke, fill:none). Prefixe ID : <code class="code-inline">i-{nom-lucide}</code>.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:var(--space-sm);margin-bottom:var(--space-lg);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-home"/></svg>
+                <span class="text-xs text-muted">home</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-settings"/></svg>
+                <span class="text-xs text-muted">settings</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-search"/></svg>
+                <span class="text-xs text-muted">search</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                <span class="text-xs text-muted">bell</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-user"/></svg>
+                <span class="text-xs text-muted">user</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-check"/></svg>
+                <span class="text-xs text-muted">check</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-x"/></svg>
+                <span class="text-xs text-muted">x</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg>
+                <span class="text-xs text-muted">alert-triangle</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-info"/></svg>
+                <span class="text-xs text-muted">info</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-edit"/></svg>
+                <span class="text-xs text-muted">edit</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-trash"/></svg>
+                <span class="text-xs text-muted">trash</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:var(--space-sm);background:var(--surface-solid);border-radius:var(--radius-sm);">
+                <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-plus"/></svg>
+                <span class="text-xs text-muted">plus</span>
+            </div>
+        </div>
+        <div class="subsection">
+            <span class="demo-label">Snippet d'usage</span>
+            <div class="demo-box">
+                <div class="flex-center-gap" style="gap:var(--space-md);flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:var(--space-xs);">
+                        <svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-home"/></svg>
+                        <span class="text-xs text-muted">.icon--sm (16px)</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:var(--space-xs);">
+                        <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-home"/></svg>
+                        <span class="text-xs text-muted">.icon (20px, defaut)</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:var(--space-xs);">
+                        <svg class="icon icon--lg" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-home"/></svg>
+                        <span class="text-xs text-muted">.icon--lg (24px)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Regles a11y</span>
+            <div class="demo-box">
+                <div class="token-list">
+                    <div class="flex-center-gap"><code class="text-xs">aria-hidden="true"</code><span class="text-muted text-xs">Icone decorative — deja decrite par le texte voisin</span></div>
+                    <div class="flex-center-gap"><code class="text-xs">role="img" + aria-label</code><span class="text-muted text-xs">Icone semantique seule, sans texte visible</span></div>
+                    <div class="flex-center-gap"><code class="text-xs">aria-label sur &lt;button&gt;</code><span class="text-muted text-xs">Bouton icone seule — label sur le bouton, pas sur le SVG</span></div>
+                    <div class="flex-center-gap"><code class="text-xs">stroke: currentColor</code><span class="text-muted text-xs">La couleur suit automatiquement le texte parent</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="performance-glass">
+    <div class="section-header"><span class="overline">Design Rule</span><h2>Performance &amp; Glassmorphism</h2><p>Regle « glass for chrome, solid for content » — quand utiliser backdrop-filter et quand le proscrire.</p></div>
+    <div class="demo-box">
+        <div class="token-list">
+            <div class="flex-center-gap"><code class="text-xs">Chrome UI (glass)</code><span class="text-muted text-xs">Header, sidebar, toasts — surfaces navigationnelles persistantes, petites zones</span></div>
+            <div class="flex-center-gap"><code class="text-xs">Content (solid)</code><span class="text-muted text-xs">Modals dialogues longs, tables data-heavy, drawers pleins ecrans — lisibilite prioritaire</span></div>
+            <div class="flex-center-gap"><code class="text-xs">@supports fallback</code><span class="text-muted text-xs">backdrop-filter absent (Firefox flag off) → background: var(--surface-solid) + opacity 0.95</span></div>
+        </div>
+        <p class="text-muted text-sm" style="margin-top:var(--space-md);">Le glassmorphism renforce l'identite visuelle MSYX sur les navigateurs recents. Pour les contextes de contenu dense (tableaux, formulaires longs, modals de confirmation avec texte), privilegier <code class="code-inline">var(--surface-solid)</code> pour maximiser le contraste WCAG AA.</p>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Demo comparaison</span>
+            <div class="demo-box" style="display:flex;gap:var(--space-md);flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-md);">
+                    <p class="text-xs text-muted" style="margin-bottom:4px;">Glass (chrome)</p>
+                    <p class="text-sm">Header, sidebar, toasts</p>
+                </div>
+                <div style="flex:1;min-width:200px;background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-md);">
+                    <p class="text-xs text-muted" style="margin-bottom:4px;">Solid (content)</p>
+                    <p class="text-sm">Modals, tables, drawers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

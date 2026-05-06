@@ -1,6 +1,6 @@
 {
-  "version": "2.32.0",
-  "generated": "2026-05-05",
+  "version": "2.33.0",
+  "generated": "2026-05-06",
   "components": [
     {
       "name": "buttons",
@@ -423,6 +423,14 @@
       "jsInit": null,
       "description": "Reset global a + :focus-visible — WCAG 1.4.3 (contraste liens >= 4.5:1) et WCAG 2.4.7 (focus visible >= 3:1, >= 2px). Consolide #166 + #167.",
       "example": "<!-- Automatiquement appliqué via shared/styles.css (components.css section RESET NATIF) -->\n<!-- Les liens natifs utilisent var(--accent), hover souligne avec épaisseur 2px -->\n<!-- Le :focus-visible global applique outline 2px solid var(--accent) + offset 2px -->\n<a href=\"/exemple\">Lien natif avec couleur d'accent</a>\n<button>Bouton avec focus visible</button>"
+    },
+    {
+      "name": "icon",
+      "page": "fondation",
+      "cssClasses": [".icon", ".icon--sm", ".icon--lg"],
+      "jsInit": null,
+      "description": "Composant icone via sprite SVG Lucide self-hoste. 53 symboles disponibles dans /shared/icons/sprite.svg. Convention : <svg class=\"icon\"><use href=\"/shared/icons/sprite.svg#i-{nom}\"/></svg>. Tokens : --icon-size-sm (16px), --icon-size-md (20px, defaut), --icon-size-lg (24px), --icon-stroke (1.5).",
+      "example": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-home\"/></svg>\n<svg class=\"icon icon--sm\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-check\"/></svg>\n<svg class=\"icon icon--lg\" role=\"img\" aria-label=\"Parametres\"><use href=\"/shared/icons/sprite.svg#i-settings\"/></svg>\n<button class=\"btn-icon\" aria-label=\"Supprimer\"><svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-trash\"/></svg></button>"
     }
   ]
 }

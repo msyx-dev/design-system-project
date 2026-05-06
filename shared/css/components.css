@@ -1,4 +1,4 @@
-/* @ds-version: 2.32.2 */
+/* @ds-version: 2.33.0 */
 /* components.css — Composants UI du design system msyx.design
    Import : @import url('css/components.css'); */
 
@@ -4211,4 +4211,35 @@ html.theme-transitioning *::after {
     .filter-bar select.input,
     .filter-bar .filter-bar-search { min-width: 0; width: 100%; flex: 1 1 auto; }
     .filter-bar .filter-bar-actions { margin-left: 0; justify-content: flex-end; }
+}
+
+/* ===== ICON ===== */
+/* Convention : <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-{nom}"/></svg> */
+.icon {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  fill: none;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.icon--sm { width: var(--icon-size-sm); height: var(--icon-size-sm); }
+.icon--lg { width: var(--icon-size-lg); height: var(--icon-size-lg); }
+
+/* ===== BACKDROP-FILTER FALLBACK (#185 absorbé) ===== */
+/* Pour Firefox avec layout.css.backdrop-filter.enabled = false */
+@supports not (backdrop-filter: blur(20px)) {
+  .card,
+  .sidebar,
+  .header,
+  .modal-dialog,
+  .login-card,
+  .login-compact,
+  .cal-wrap,
+  .hub-card,
+  .cmd-overlay {
+    background: var(--surface-solid);
+    backdrop-filter: none;
+  }
 }

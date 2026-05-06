@@ -38,6 +38,9 @@ Source de vérité UI pour tous les projets msyx.fr.
 
 - **Glass** pour le chrome (header, sidebar, modal, drawer). Cap : 2 couches de blur simultanées.
 - **Solid** pour le contenu (cards, listes, tableaux).
+- **Regle** : « glass for chrome, solid for content ». Le glassmorphism (backdrop-filter + surface semi-transparente) renforce l'identite visuelle sur les navigateurs recents. Pour les zones de contenu dense (tableaux, formulaires longs, drawers pleins ecrans), privilegier `var(--surface-solid)` pour maximiser le contraste WCAG AA.
+- **Fallback Firefox** : `@supports not (backdrop-filter: blur(20px))` dans `components.css` — background: `var(--surface-solid)`, backdrop-filter: none. Refacteur automatique, transparent pour les consommateurs.
+- **Icones** : utiliser le sprite SVG Lucide (`/shared/icons/sprite.svg`) via `<svg class="icon"><use href="...#i-{nom}"/></svg>`. Jamais d'emoji dans le chrome UI (sauf contenu utilisateur).
 
 ## Thèmes et modes
 

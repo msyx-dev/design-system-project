@@ -1,5 +1,23 @@
 # Releases
 
+## v2.33.0 — 2026-05-06 — Sprint 19 — Iconographie Lucide + backdrop-filter fallback
+
+### Added
+- **Sprite SVG Lucide self-hoste** (`shared/icons/sprite.svg`) : 53 symboles Lucide, < 50 KB apres svgo --multipass. Script de build reproductible `shared/icons/build-sprite.sh`. Closes #184.
+- **Tokens icones** dans `shared/css/tokens.css` : `--icon-size-sm: 16px`, `--icon-size-md: 20px`, `--icon-size-lg: 24px`, `--icon-stroke: 1.5`.
+- **Classe `.icon`** + variantes `.icon--sm`, `.icon--lg` dans `shared/css/components.css`. Convention : `<svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-{nom}"/></svg>`.
+- **Fallback backdrop-filter** (`@supports not (backdrop-filter: blur(20px))`) pour Firefox — background solid automatique sur `.card`, `.sidebar`, `.header`, `.modal-dialog`, `.login-card`, `.hub-card`, etc. Closes #185.
+- **Section Iconographie** dans `pages/fondation.html` : grille 12 icones representativas, snippet d'usage (3 tailles), regles a11y (aria-hidden, role=img, aria-label).
+- **Section Performance & Glassmorphism** dans `pages/fondation.html` : regle « glass for chrome, solid for content », demo comparaison, documentation fallback.
+
+### Changed
+- **Migration UI** : entites HTML (`&#8249;`/`&#8250;`/`&#9660;`/`&#9654;`) et emoji UI → convention `<svg class="icon"><use>` dans `pages/divers.html` (accordion-arrows, carousel-btns, video-embed-play, cmd-item-icon, context-arrow), `pages/formulaires.html` (cal-nav), `pages/navigation.html` (rail-toggle), `site.html` (hub-card-icon), `shared/components.js` (lightbox-btns). Emoji UGC (notifications simulees) preserves.
+- **SKILL.md** : section Glass vs solid enrichie avec la regle fallback et la convention icones sprite.
+- `@ds-version` bumpe a `2.33.0` sur les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
+### Compatibilite
+Pas de breaking change. Migration UI optionnelle pour les projets consommateurs (entites HTML toujours valides, le sprite est purement additif).
+
 ## v2.32.2 — 2026-05-06 — Sprint 18 — Diacritic / copy lint
 
 ### Fixed
