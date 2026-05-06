@@ -21,14 +21,12 @@ for ARG in "$@"; do
     esac
 done
 
-# Retirer les flags pour ne garder que le répertoire cible
-set -- "${@//--no-showcase/}"
-set -- "${@//--components=*/}"
-# Reconstruire les args positionnels sans les flags
+# Reconstruire les args positionnels sans les flags (ni chaînes vides issues des substitutions)
 POSITIONAL=()
 for ARG in "$@"; do
     case "$ARG" in
-        --*) ;;
+        --*) ;;          # ignorer les flags
+        "") ;;           # ignorer les chaînes vides (résidu de substitution)
         *) POSITIONAL+=("$ARG") ;;
     esac
 done
