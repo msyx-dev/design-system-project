@@ -1,4 +1,5 @@
 .env
+.coder-notes.md
 .claude/worktrees/
 
 # Visual regression (Playwright) — ajouté v2.32.1
