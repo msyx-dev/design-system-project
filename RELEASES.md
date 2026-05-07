@@ -1,6 +1,9 @@
 # Releases
 
-## v2.42.1 (2026-05-07) — HOTFIX
+## v2.42.1 (2026-05-07) — HOTFIX — DEPLOYED
+Deploy tag: `deploy-20260507-113853`
+Deployed: 2026-05-07 09:40 UTC
+
 ### Fixed
 - nav.js : quote fermante manquante ligne 189 introduite par v2.42.0 cassait la SyntaxError JS, supprimant header/sidebar/logos sur toutes les pages prod (#206)
 
