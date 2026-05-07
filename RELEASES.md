@@ -1,5 +1,9 @@
 # Releases
 
+## v2.42.1 (2026-05-07) — HOTFIX
+### Fixed
+- nav.js : quote fermante manquante ligne 189 introduite par v2.42.0 cassait la SyntaxError JS, supprimant header/sidebar/logos sur toutes les pages prod (#206)
+
 ## v2.42.0 — 2026-05-07 — Sprint 23 — Brand motif : wordmark SVG, signature spatiale, --texture-grain
 
 ### Added
