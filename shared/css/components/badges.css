@@ -9,6 +9,16 @@
 .badge-danger { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--danger-light); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
 .badge-info { background: color-mix(in srgb, var(--info) 10%, transparent); color: var(--info-light); border: 1px solid color-mix(in srgb, var(--info) 20%, transparent); }
 .badge-neutral { background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--text-muted); border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent); }
+
+/* ===== BADGE-NAV (variante compacte sidebar/nav) ===== */
+.badge-nav {
+  margin-left: auto;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
 .tag { display: inline-block; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent-light); padding: 0.22rem 0.65rem; border-radius: var(--radius-xs); font-size: 0.72rem; font-weight: var(--fw-semibold); letter-spacing: 0.02em; }
 .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 8px color-mix(in srgb, var(--success) 50%, transparent); flex-shrink: 0; }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
