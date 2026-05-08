@@ -92,6 +92,26 @@ Echelle modulaire ratio 1.25 (Major Third). Tokens `--type-*` dans `shared/css/t
 **Regle** : ne jamais sauter plus de 2 marches de l'echelle entre titre et corps.
 Les 4 tokens `--lh-*` (tight 1.1, snug 1.3, base 1.5, relaxed 1.7) sont dans `tokens.css`.
 
+## Tests E2E DS — interception redirect SPA mode
+
+**Symptôme** : le test Playwright tombe sur une page inattendue (page de login / auth gate) alors que le markup est correct — les sélecteurs ne trouvent rien.
+
+**Cause** : `serve` v14 avec le flag `-s` (SPA mode) renvoie un redirect 301 sur les URLs `.html` (clean URL), ce qui déclenche le SPA fallback → `index.html` (page login auth gate). Le test atterrit sur la mauvaise page.
+
+**Pattern** : intercepter la redirection côté Playwright avec `page.route()` **avant** de naviguer :
+
+```typescript
+// À placer avant page.goto() — intercepte la requête HTML avant le redirect 301
+await page.route('**/pages/feedback.html', route =>
+  route.fulfill({ path: 'pages/feedback.html' })
+);
+await page.goto('/pages/feedback.html');
+```
+
+**Quand l'utiliser** : tout test E2E qui charge une URL `pages/*.html` via `page.goto()`. Sans ce pattern, `serve -s` redirige vers `index.html` (auth gate) et les sélecteurs échouent silencieusement.
+
+**Référence** : commit `a4aab54` — fix(test): bypasser le clean-URL redirect de serve v14 dans modal-focus E2E (Sprint 23, #204).
+
 ## Anti-patterns
 
 - Pas de `#hex` hardcodé dans les pages ou composants
