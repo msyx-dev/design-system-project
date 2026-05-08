@@ -8,13 +8,12 @@
 - **Sprint 25 livré 2026-05-08** — 12/12 SP = 100% velocity. 4 PRs séquentielles sur `forms.css` (épicentre conflit) : #221 chevron theme-aware v2.44.0, #222 transitions ciblées v2.45.0, #223 tokenisation `--space-*` v2.46.0, #224 restructure composants × pages v2.47.0. Milestone #26 CLOSED.
 - **Sprint 24 livré + déployé 2026-05-08** — v2.43.1 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260508-145548`, previous `deploy-20260507-113853`). 9/9 SP. PRs : #213 logo officiel v2.43.0, #214 refactor nav.js v2.43.1, #220 audit Phase 1, #215 doc SKILL.md.
 - Pipeline durci : `claude-config#24` CLOSED. Cause structurelle de #206 éliminée S24 #211. Action S25 AI-25.1 ouverte sur [`claude-config#29`](https://github.com/msyx-dev/claude-config/issues/29).
-- Auth gate active. Versions : **prod = v2.48.0** (déployé 2026-05-08 21:03, deploy_tag `deploy-20260508-210320`), main = v2.49.0 (S28 promotions + S28 fix registry — à déployer).
+- Auth gate active. Versions : **prod = v2.49.0** (déployé 2026-05-08 22:52, deploy_tag `deploy-20260508-225244`, previous `deploy-20260508-210320`), main = v2.49.0 (sync). Sprint 28 livré + déployé même jour.
 - DS-EXCEPTIONs aksy S23 : **notifications envoyées Sprint 27** (4 commentaires postés). aksy doit resync v2.36.0 → v2.48.0 puis retirer 3 overrides CSS + 1 helper JS. Suivi côté aksy.
 
 ## Prochaine étape
-- **Déployer v2.49.0** sur design-system.msyx.fr (3 promotions DS + fix registry). Pas de risque utilisateur (ajouts purs additifs CSS, fix registry interne). Lancer `/deploy` quand prêt.
 - **Sprint 29** : pas de candidats prioritaires identifiés à date. Backlog disponible :
-  - **3 dettes consumers (S27 findings)** : 1 issue par consumer (resync DS + cleanup overrides), à ouvrir côté aksyva, acssi-core, aksy respectivement (hors DS).
+  - **3 dettes consumers ouvertes** : [`aksyva#117`](https://github.com/msyx-dev/aksyva/issues/117) (drift -25 minor, 1-2 SP), [`acssi-core#523`](https://github.com/msyx-dev/acssi-core/issues/523) (drift -35 minor, 2-3 SP), [`aksy#456`](https://github.com/msyx-dev/aksy/issues/456) (drift -13 minor + 4 DS-EXCEPTIONs S23, 2-3 SP). À sprinter depuis chaque repo respectif (hors DS).
   - **Audit Phase 2** ? À composer si besoin (perf, a11y, browser compat).
 - **Issues claude-config en backlog** (~7 SP cumulé, à sprinter depuis le repo claude-config) :
   - [`#29`](https://github.com/msyx-dev/claude-config/issues/29) AI-25.1 (P1, 2 SP) hook anti-merge inter-projet
