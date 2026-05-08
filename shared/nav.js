@@ -185,8 +185,8 @@ function buildHeader() {
 
     header.innerHTML = ''
         + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
-        + '<a href="/site.html" class="header-logo"><img src="/assets/logo-msyx.svg" alt="msyx Design System" width="120" height="32" class="header-logo-img"></a>'
-        + '<span class="header-version">v2.42.1</span>'
+        + '<a href="/site.html" class="header-logo"><img src="/assets/logo-msyx.svg" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a>'
+        + '<span class="header-version">v2.43.0</span>'
         + '<span class="header-spacer"></span>'
         + '<div class="header-controls">'
         +   '<div class="theme-switcher">'
