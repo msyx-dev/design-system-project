@@ -1,4 +1,4 @@
-/* @ds-version: 2.43.1 */
+/* @ds-version: 2.44.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -20,6 +20,8 @@
     --text: #f1f5f9;
     --text-muted: #94a3b8;
     --text-dim: #7c8db5;
+    /* Chevron SVG theme-aware pour select.input — couleur miroir de --text-dim */
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237c8db5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
     --gradient-2: linear-gradient(135deg, #06b6d4, #3b82f6);
     --gradient-3: linear-gradient(135deg, #8b5cf6, #ec4899);
@@ -190,6 +192,7 @@
     --text-muted: #475569;
     --text-muted-rgb: 71, 85, 105;
     --text-dim: #64748b;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --border-color: rgba(15, 23, 42, 0.08);
     --border-hover: rgba(15, 23, 42, 0.20);
     --border: var(--border-color); /* deprecated, remove in v3 */
@@ -254,6 +257,7 @@
     --text: #ffffff;
     --text-muted: #cbd5e1;          /* AA — 8.54:1 sur #00345f, 6.63:1 sur #00457a, 4.78:1 sur #005a9e (was #94a3b8 = 2.77:1 KO) */
     --text-dim: #9eb3c8;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239eb3c8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 
     /* Gradients corporate * /
     /* gradient-1 : or→or-foncé (marine foncé lisible partout, WCAG AA ≥ 4.8:1) * /
@@ -378,6 +382,7 @@
     --text-muted: #2c4358;          /* AA — 5.45:1 sur #fff, 5.12:1 sur #f0f4f8 (était #3d5a73 = 2.56:1) * /
     --text-muted-rgb: 44, 67, 88;
     --text-dim: #4a6a84;             /* AA Large — 3.97:1 sur #fff (UI/large only) * /
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a6a84' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --deco-violet-rgb: 0, 90, 158;
     --deco-cyan-rgb: 56, 189, 248;
     --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 * /
@@ -483,6 +488,7 @@
     --text: #f0faf4;
     --text-muted: #8fbfa0;
     --text-dim: #6a9e7a;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a9e7a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #008837, #73c69c);
     --gradient-2: linear-gradient(135deg, #22c55e, #008837);
     --gradient-3: linear-gradient(135deg, #008837, #00b84d);
@@ -555,6 +561,7 @@
     --text: #1a1a1a;
     --text-muted: #3d6b4a;
     --text-dim: #5a8a68;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a8a68' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #006e2c, #008837);
     --gradient-2: linear-gradient(135deg, #008837, #73c69c);
     --gradient-3: linear-gradient(135deg, #005a22, #00b84d);
