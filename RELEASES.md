@@ -1,5 +1,21 @@
 # Releases
 
+## v2.44.0 — 2026-05-08 — Sprint 25 — Audit Phase 1 : chevron theme-aware, sprite cleanup, context-menu icones
+
+### Changed
+- Chevron `select.input` desormais theme-aware via variable CSS `--chevron-select` (6 declinaisons theme/mode dans `tokens.css`). Resout l'invisibilite du chevron sur ACSSI dark et le faible contraste en mode light (P-02, P-09 audit Phase 1).
+- Sprite `shared/icons/sprite.svg` nettoye : suppression des `<svg>` wrappers internes des `<symbol>` (P-01 audit). Taille reduite de ~21 KB a ~10 KB. Aucun changement visuel.
+- Context-menu `pages/divers.html` : 4 emojis Unicode (Couper, Selectionner tout, Partager, Slack) substitues par icones sprite Lucide (P-03 audit). Rendu coherent cross-OS.
+
+### Added
+- Variable CSS `--chevron-select` documentee dans `pages/fondation.html` section Performance > SVG theme-aware.
+- Sprite Lucide etendu a 55 glyphes (+`scissors`, +`square-check` vs v2.43.1).
+
+### Resolved
+- Closes #217 (audit Phase 1 — pictos/images, sous-issue de #210).
+
+---
+
 ## v2.43.1 — 2026-05-08 — Sprint 24 — Refactor nav.js : extraction VERSION + template literals
 
 ### Changed

@@ -17,12 +17,12 @@ if [ ! -d "$PROJECT_ROOT/node_modules/lucide-static" ]; then
   npm install --prefix "$PROJECT_ROOT" lucide-static svgo 2>&1
 fi
 
-# Liste des 50 glyphes cibles (groupés par usage)
+# Liste des 55 glyphes cibles (groupés par usage) — v2.44.0: +scissors +square-check vs v2.43.1
 ICONS=(
   # Navigation (8)
   home menu chevron-left chevron-right chevron-up chevron-down arrow-left arrow-right
-  # Action (10)
-  plus minus edit trash copy link external-link download upload refresh-cw
+  # Action (12) — +scissors +square-check pour context-menu
+  plus minus edit trash copy link external-link download upload refresh-cw scissors square-check
   # Status (8)
   check x info alert-circle alert-triangle check-circle x-circle loader
   # Content (8)

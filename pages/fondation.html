@@ -657,6 +657,32 @@
         </div>
     </div>
 </section>
+
+<section id="svg-theme-aware">
+    <div class="section-header"><span class="overline">Performance</span><h2>SVG theme-aware</h2><p>Pattern pour que les SVG inlines (data:uri ou inline <code class="code-inline">&lt;svg&gt;</code>) suivent le theme et le mode actif du design system.</p></div>
+    <div class="demo-box">
+        <div class="subsection">
+            <span class="demo-label">Probleme</span>
+            <p class="text-muted text-sm">Les data:uri utilises dans <code class="code-inline">background-image</code> ne resolvent pas <code class="code-inline">currentColor</code> ni les variables CSS — la couleur est figee a la compilation. Resultat : un chevron <code class="code-inline">stroke="#94a3b8"</code> reste gris fixe sur tous les themes, causant un contraste insuffisant sur ACSSI dark et une visibilite reduite en mode light (P-02 audit Phase 1).</p>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Solution — variable CSS contenant le data:uri complet</span>
+            <div class="code-block text-xxs-lh"><span class="cm">/* tokens.css — 6 declinaisons theme/mode */</span><br><span class="kw">:root</span> {<br>&nbsp;&nbsp;<span class="fn">--chevron-select</span>: <span class="str">url("data:image/svg+xml,%3Csvg...stroke='%237c8db5'...")</span>;<br>}<br><span class="kw">[data-mode="light"]</span> { <span class="fn">--chevron-select</span>: <span class="str">url("...stroke='%2364748b'...")</span>; }<br><span class="kw">[data-theme="acssi"]</span> { <span class="fn">--chevron-select</span>: <span class="str">url("...stroke='%239eb3c8'...")</span>; }<br><span class="kw">[data-theme="acssi"][data-mode="light"]</span> { <span class="fn">--chevron-select</span>: <span class="str">url("...stroke='%234a6a84'...")</span>; }<br><span class="kw">[data-theme="nhood"]</span> { <span class="fn">--chevron-select</span>: <span class="str">url("...stroke='%236a9e7a'...")</span>; }<br><span class="kw">[data-theme="nhood"][data-mode="light"]</span> { <span class="fn">--chevron-select</span>: <span class="str">url("...stroke='%235a8a68'...")</span>; }</div>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Usage dans le composant</span>
+            <div class="code-block text-xxs-lh"><span class="kw">select</span>.input {<br>&nbsp;&nbsp;<span class="fn">background-image</span>: <span class="kw">var(--chevron-select)</span>; <span class="cm">/* theme-aware via token */</span><br>}</div>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Antipattern</span>
+            <div class="code-block text-xxs-lh"><span class="cm">/* NE PAS FAIRE — couleur hardcodee, ne s'adapte pas au theme */</span><br><span class="kw">select</span>.input {<br>&nbsp;&nbsp;<span class="fn">background-image</span>: <span class="str">url("data:image/svg+xml,...stroke='%2394a3b8'...")</span>;<br>}</div>
+        </div>
+        <div class="subsection mt-sm">
+            <span class="demo-label">Principe</span>
+            <p class="text-muted text-sm">La couleur est encodee directement dans l'URL SVG (<code class="code-inline">#</code> → <code class="code-inline">%23</code>). La variable CSS <code class="code-inline">--chevron-select</code> est definie en miroir de <code class="code-inline">--text-dim</code> dans chaque bloc theme/mode de <code class="code-inline">tokens.css</code>. Ce pattern est extensible : tout SVG inline peut etre tokenise de cette facon. (v2.44.0)</p>
+        </div>
+    </div>
+</section>
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
