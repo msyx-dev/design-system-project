@@ -1,5 +1,5 @@
 {
-  "version": "2.48.0",
+  "version": "2.48.1",
   "generated": "2026-05-08",
   "components": [
     {
@@ -424,9 +424,9 @@
     {
       "name": "reset-natif",
       "page": "composants",
-      "cssClasses": null,
+      "cssClasses": [],
       "jsInit": null,
-      "description": "Reset global a + :focus-visible — WCAG 1.4.3 (contraste liens >= 4.5:1) et WCAG 2.4.7 (focus visible >= 3:1, >= 2px). Consolide #166 + #167.",
+      "description": "Reset global a + :focus-visible — WCAG 1.4.3 (contraste liens >= 4.5:1) et WCAG 2.4.7 (focus visible >= 3:1, >= 2px). Consolide #166 + #167. cssClasses=[] : composant agissant sur sélecteurs natifs, aucune classe explicite à exposer.",
       "example": "<!-- Automatiquement appliqué via shared/styles.css (components.css section RESET NATIF) -->\n<!-- Les liens natifs utilisent var(--accent), hover souligne avec épaisseur 2px -->\n<!-- Le :focus-visible global applique outline 2px solid var(--accent) + offset 2px -->\n<a href=\"/exemple\">Lien natif avec couleur d'accent</a>\n<button>Bouton avec focus visible</button>"
     },
     {
