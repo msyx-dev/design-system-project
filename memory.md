@@ -10,7 +10,7 @@
 
 ## Prochaine étape
 - **`/deploy`** — main = v2.47.0 (cumul S25), prod = v2.43.1. Cumul de 4 bumps mineurs à déployer. Audit secu auto avant deploy.
-- **AI-25.1 (P1)** : ouvrir issue claude-config pour filtrer le hook anti-merge par projet — faux positif inter-projet a bloqué S25 #218 pendant ~3h à cause d'un coder aksyva actif.
+- **AI-25.1 (P1)** : ✅ ouverte → [`msyx-dev/claude-config#29`](https://github.com/msyx-dev/claude-config/issues/29) (hook anti-merge filtrer par projet, 2 SP). Faux positif inter-projet S25 #218 ~3h.
 - **AI-25.2 / AI-25.3 (P2)** : hisser dans le prompt /dev N1 (claude-config) le pattern « budget tool_uses + warning anomalie récente » et l'instruction « lancer `./shared/check-diacritics.sh` avant push si RELEASES.md touché ».
 - Notifier aksy pour retirer overrides locaux des 4 DS-EXCEPTIONs débloquées S23.
 - Capitalisation S24 hors-DS dans claude-config (cleanup agents-active.json, durcir prompt push, hisser pré-allocation N1) — à traiter dans repo Klaude au prochain passage.
