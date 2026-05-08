@@ -18,7 +18,7 @@
 .hero-stat .label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
 
 /* ===== CARDS ===== */
-.card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); transition: all 0.4s var(--ease-standard); position: relative; overflow: hidden; container-type: inline-size; }
+.card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); will-change: transform; transition: transform 0.4s var(--ease-standard), border-color 0.4s var(--ease-standard), box-shadow 0.4s var(--ease-standard); position: relative; overflow: hidden; container-type: inline-size; }
 @container (max-width: 280px) {
   .card { padding: var(--space-md); }
   .card h3 { font-size: 0.9rem; }
@@ -39,7 +39,7 @@
 
 /* ===== HUB ===== */
 .hub-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; }
-.hub-card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 0.8rem; }
+.hub-card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), border-color 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 0.8rem; }
 .hub-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-1); opacity: 0; transition: opacity 0.4s; }
 .hub-card:hover { transform: translateY(-6px); border-color: var(--border-hover); box-shadow: var(--shadow-lg); }
 .hub-card:hover::before { opacity: 1; }

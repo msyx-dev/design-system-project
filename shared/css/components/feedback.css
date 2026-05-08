@@ -35,7 +35,7 @@
 
 /* ===== PAGINATION ===== */
 .pagination { display: flex; align-items: center; gap: 0.3rem; }
-.page-btn { min-width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.page-btn { min-width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: border-color 0.2s var(--ease-standard), color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: 'Inter', sans-serif; }
 .page-btn:hover { border-color: var(--border-hover); color: var(--text); }
 .page-btn.active { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
 .page-btn:disabled { opacity: 0.4; pointer-events: none; }

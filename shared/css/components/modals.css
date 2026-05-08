@@ -50,7 +50,7 @@ dialog.modal-dialog .modal-actions {
 /* ===== POPOVER ===== */
 .popover-wrap { position: relative; display: inline-block; }
 /* Position par défaut : top */
-.popover { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; min-width: 240px; opacity: 0; pointer-events: none; transition: all 0.2s; box-shadow: var(--shadow-lg); z-index: 50; }
+.popover { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; min-width: 240px; opacity: 0; pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); box-shadow: var(--shadow-lg); z-index: 50; }
 .popover.open { opacity: 1; pointer-events: auto; }
 .popover::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--surface-solid); }
 /* Popover bottom */

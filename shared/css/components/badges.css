@@ -51,7 +51,7 @@ kbd { display: inline-flex; align-items: center; justify-content: center; min-wi
     background: var(--surface);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-card);
-    transition: all 0.3s;
+    transition: transform 0.3s var(--ease-standard), border-color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard);
 }
 .achievement:hover:not(.locked) {
     border-color: var(--border-hover);

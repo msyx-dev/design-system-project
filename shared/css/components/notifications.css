@@ -18,7 +18,7 @@
     justify-content: center;
     cursor: pointer;
     color: var(--text-muted);
-    transition: all var(--duration-slow);
+    transition: border-color var(--duration-slow) var(--ease-standard), color var(--duration-slow) var(--ease-standard);
     font-size: 1.1rem;
 }
 .notif-trigger:hover {
