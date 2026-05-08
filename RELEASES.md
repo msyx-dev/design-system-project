@@ -12,7 +12,7 @@
 
 ### Notes
 - `@media (prefers-reduced-motion: reduce)` reste fonctionnel via `_a11y.css` (verifie).
-- Aucune regression visuelle sur les 120 E2E Playwright (3 themes x 2 modes x 2 viewports x 10 pages).
+- Aucune régression visuelle sur les 120 E2E Playwright (3 thèmes × 2 modes × 2 viewports × 10 pages).
 
 ---
 
