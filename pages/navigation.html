@@ -385,47 +385,6 @@
     </div>
 </section>
 
-<!-- PAGINATION -->
-<section id="pagination">
-    <div class="section-header"><span class="overline">Navigation</span><h2>Pagination</h2><p>Navigation paginee avec numeros, ellipsis et info.</p></div>
-    <div class="demo-grid demo-grid-1">
-        <div class="demo-box">
-            <span class="demo-label">Standard</span>
-            <div class="pagination">
-                <button class="page-btn nav" disabled>&laquo; Prev</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <span class="page-ellipsis">&hellip;</span>
-                <button class="page-btn">12</button>
-                <button class="page-btn nav">Next &raquo;</button>
-            </div>
-        </div>
-        <div class="demo-box">
-            <span class="demo-label">Avec info</span>
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
-                <span class="pagination-info">Affichage 1-10 sur 124 resultats</span>
-                <div class="pagination">
-                    <button class="page-btn nav" disabled>&larr;</button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
-                    <button class="page-btn nav">&rarr;</button>
-                </div>
-            </div>
-        </div>
-        <div class="demo-box">
-            <span class="demo-label">Compact</span>
-            <div class="pagination">
-                <button class="page-btn nav">&larr;</button>
-                <span style="font-size:0.85rem;color:var(--text-muted);padding:0 0.8rem;">Page 3 sur 12</span>
-                <button class="page-btn nav">&rarr;</button>
-            </div>
-        </div>
-    </div>
-</section>
 
     </div>
     <script src="/shared/nav.js"></script>
@@ -569,6 +528,90 @@
         <span class="demo-label">Usage</span>
         <p class="demo-note">HTML : <code class="code-inline">.rail-demo</code> contient <code class="code-inline">.rail-sidebar</code> + <code class="code-inline">.rail-content</code>. Toggle : <code class="code-inline">.rail-toggle</code> bascule <code class="code-inline">.rail-sidebar.collapsed</code>.</p>
         <p class="demo-note-last">Tooltips automatiques en mode rail au hover. JS : <code class="code-inline">initSidebarRail()</code>. CSS : transition width 0.28s cubic-bezier.</p>
+    </div>
+</section>
+
+<!-- ACTION MENU -->
+<section id="action-menu">
+    <div class="section-header"><span class="overline">Navigation</span><h2>Action Menu</h2><p>Menu contextuel déclenché par un bouton "···" — liste d'actions avec item danger et divider. Fermeture clic extérieur et Escape.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">Sur une card</span>
+            <div class="card" style="position:relative;padding-right:2.5rem;">
+                <div style="position:absolute;top:var(--space-md);right:var(--space-md);">
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-icon card-icon--accent"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-zap"/></svg></div>
+                <h3>Mon projet</h3>
+                <p>Next.js + FastAPI + PostgreSQL</p>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Dans une liste</span>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border-color);">
+                    <div>
+                        <div style="font-weight:600;font-size:0.9rem;">design-system</div>
+                        <div style="font-size:0.76rem;color:var(--text-muted);">v2.18</div>
+                    </div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border-color);">
+                    <div>
+                        <div style="font-weight:600;font-size:0.9rem;">poc-dashboard</div>
+                        <div style="font-size:0.76rem;color:var(--text-muted);">v1.4</div>
+                    </div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Variante icones enrichies</span>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start;">
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem;">Taille standard</div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Actions">&#8942;</button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span> Dupliquer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-link"/></svg></span> Copier le lien</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span> Archiver</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="demo-note-last" style="margin-top:1rem;">Fermeture : clic extérieur ou touche Escape. JS : <code class="code-inline">initActionMenu()</code>.</p>
+        </div>
     </div>
 </section>
 

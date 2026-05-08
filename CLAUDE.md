@@ -23,14 +23,14 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html    # Couleurs, typographie, espacements, ombres, theming, classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming, theme switcher (v2.47.0), classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
   motion.html       # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce)
-  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals (+ focus restore WAI APG v2.41.0), toasts, segmented control, theme switcher, achievement badges, tooltips, popovers, pricing table, action menu, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
-  navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation
+  composants.html   # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals (+ focus restore WAI APG v2.41.0), toasts, segmented control, achievement badges, popovers, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
+  navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation, action-menu (v2.47.0)
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html         # Tables, data grid (+ col actions sticky-end), stats, charts, KPI, tree view, activity feed, matrice risque
-  templates.html    # Kanban, roadmap, backlog, sprint board
-  feedback.html     # Empty states, spinners, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB, notification center
+  templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
+  feedback.html     # Empty states, spinners, pagination (v2.47.0), tooltip (v2.47.0), drawer, zone banner, modals interactifs, bottom sheet, FAB, notification center, comments (v2.47.0)
   divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed) + Interaction (accordion, command palette fonctionnelle, context menu, copy button)
 shared/
   styles.css        # Agregateur CSS — imports des 4 modules + base reset

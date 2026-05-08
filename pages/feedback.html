@@ -820,6 +820,191 @@
     </div>
 </section>
 
+
+<!-- TOOLTIP & POPOVER -->
+<section id="tooltip">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Tooltip &amp; Popover</h2><p>Infobulles au hover et popovers riches au clic. 4 positions disponibles.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Tooltips — position top (defaut)</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-hover">Hover moi</button><span class="tooltip" id="tt-hover" role="tooltip">Info rapide</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-settings" aria-label="Parametres"><svg class="icon"><use href="/shared/icons/sprite.svg#i-settings"/></svg></button><span class="tooltip" id="tt-settings" role="tooltip">Parametres</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-notif" aria-label="Notifications"><svg class="icon"><use href="/shared/icons/sprite.svg#i-bell"/></svg></button><span class="tooltip" id="tt-notif" role="tooltip">Notifications</span></div>
+                <div class="tooltip-wrap"><span class="badge badge-primary" tabindex="0" aria-describedby="tt-beta">Beta</span><span class="tooltip" id="tt-beta" role="tooltip">Version beta publique</span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Tooltips — 4 positions</span>
+            <div class="demo-row" style="gap:2.5rem; justify-content:center; padding:1.5rem 0;">
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-top">Top</button><span class="tooltip" id="tt-top" role="tooltip">Position top</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-bottom">Bottom</button><span class="tooltip tooltip--bottom" id="tt-bottom" role="tooltip">Position bottom</span></div>
+                <div class="tooltip-wrap" style="margin-left:3.5rem;"><button class="btn-secondary btn-sm" aria-describedby="tt-left">Left</button><span class="tooltip tooltip--left" id="tt-left" role="tooltip">Position left</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-right">Right</button><span class="tooltip tooltip--right" id="tt-right" role="tooltip">Position right</span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers — position top (defaut)</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Plus d'info</button>
+                    <div class="popover">
+                        <h4>Deploiement automatique</h4>
+                        <p>Chaque push sur main declenche un build Docker et un reload Caddy automatique.</p>
+                        <div style="margin-top:0.8rem;"><button class="btn-primary btn-xs">En savoir plus</button></div>
+                    </div>
+                </div>
+                <div class="popover-wrap">
+                    <button class="btn-icon" onclick="this.nextElementSibling.classList.toggle('open')"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></button>
+                    <div class="popover">
+                        <h4>Aide contextuelle</h4>
+                        <p>Cliquez sur les icones d'aide pour afficher des informations supplementaires.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers — 4 positions</span>
+            <div class="demo-row" style="gap:2rem; flex-wrap:wrap; padding:1.5rem 0;">
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Top</button>
+                    <div class="popover"><h4>Popover top</h4><p>Position par defaut, s'affiche au-dessus.</p></div>
+                </div>
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Bottom</button>
+                    <div class="popover popover--bottom"><h4>Popover bottom</h4><p>S'affiche en-dessous du declencheur.</p></div>
+                </div>
+                <div class="popover-wrap" style="margin-top:1rem;">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Left</button>
+                    <div class="popover popover--left" style="min-width:160px;"><h4>Popover left</h4><p>S'affiche a gauche.</p></div>
+                </div>
+                <div class="popover-wrap" style="margin-top:1rem;">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Right</button>
+                    <div class="popover popover--right" style="min-width:160px;"><h4>Popover right</h4><p>S'affiche a droite.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PAGINATION -->
+<section id="pagination">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Pagination</h2><p>Navigation paginee avec numeros, ellipsis et info.</p></div>
+    <div class="demo-grid demo-grid-1">
+        <div class="demo-box">
+            <span class="demo-label">Standard</span>
+            <div class="pagination">
+                <button class="page-btn nav" disabled>&laquo; Prev</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span class="page-ellipsis">&hellip;</span>
+                <button class="page-btn">12</button>
+                <button class="page-btn nav">Next &raquo;</button>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Avec info</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+                <span class="pagination-info">Affichage 1-10 sur 124 resultats</span>
+                <div class="pagination">
+                    <button class="page-btn nav" disabled>&larr;</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn nav">&rarr;</button>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Compact</span>
+            <div class="pagination">
+                <button class="page-btn nav">&larr;</button>
+                <span style="font-size:0.85rem;color:var(--text-muted);padding:0 0.8rem;">Page 3 sur 12</span>
+                <button class="page-btn nav">&rarr;</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COMMENTS / THREAD -->
+<section id="comments">
+    <div class="section-header"><span class="overline">Feedback</span><h2>Comments / Thread</h2><p>Avatar, auteur, date, actions (reply, like) et thread imbrique avec ligne connectrice.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Commentaires</span>
+            <div>
+                <div class="comment">
+                    <div class="comment-avatar">MS</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">Mike</span>
+                            <span class="comment-date">il y a 5 min</span>
+                        </div>
+                        <div class="comment-text">Super implementation du skeleton loading ! Le shimmer est vraiment fluide, ca donne un bon retour visuel pendant le chargement.</div>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" data-reply-trigger aria-label="Repondre">&#8617; Repondre</button>
+                            <button class="comment-action-btn" data-like-trigger aria-label="J'aime">&#9825; <span class="like-count">3</span></button>
+                        </div>
+                        <div class="comment-reply-form" aria-label="Formulaire de reponse">
+                            <textarea class="comment-reply-input" placeholder="Votre reponse..." rows="2" aria-label="Votre reponse"></textarea>
+                            <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs);">
+                                <button class="btn-primary btn-xs">Envoyer</button>
+                                <button class="btn-ghost btn-xs">Annuler</button>
+                            </div>
+                        </div>
+                        <div class="comment-thread">
+                            <div class="comment">
+                                <div class="comment-avatar" style="background:var(--gradient-3);width:30px;height:30px;font-size:0.68rem;">CB</div>
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <span class="comment-author">Claude</span>
+                                        <span class="comment-date">il y a 2 min</span>
+                                    </div>
+                                    <div class="comment-text">Merci ! J'ai utilise une animation CSS @keyframes avec background-position pour le shimmer.</div>
+                                    <div class="comment-actions">
+                                        <button class="comment-action-btn" data-like-trigger aria-label="J'aime">&#9825; <span class="like-count">1</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar" style="background:var(--gradient-4);">AB</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">Alice</span>
+                            <span class="comment-date">hier</span>
+                        </div>
+                        <div class="comment-text">Est-ce qu'on peut ajouter un skeleton pour les graphiques aussi ? Ca manque dans la section data.</div>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" data-reply-trigger aria-label="Repondre">&#8617; Repondre</button>
+                            <button class="comment-action-btn" data-like-trigger aria-label="J'aime">&#9825; <span class="like-count">0</span></button>
+                        </div>
+                        <div class="comment-reply-form" aria-label="Formulaire de reponse">
+                            <textarea class="comment-reply-input" placeholder="Votre reponse..." rows="2" aria-label="Votre reponse"></textarea>
+                            <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs);">
+                                <button class="btn-primary btn-xs">Envoyer</button>
+                                <button class="btn-ghost btn-xs">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Structure : <code class="code-inline">.comment</code> &gt; <code class="code-inline">.comment-avatar</code> + <code class="code-inline">.comment-body</code> (<code class="code-inline">-header</code>, <code class="code-inline">-text</code>, <code class="code-inline">-actions</code>).</p>
+            <p class="demo-note">Thread imbrique : <code class="code-inline">.comment-thread</code> dans <code class="code-inline">.comment-body</code> &mdash; ligne connectrice CSS automatique.</p>
+            <p class="demo-note">Actions : <code class="code-inline">[data-reply-trigger]</code> toggle le formulaire, <code class="code-inline">[data-like-trigger]</code> incremente le compteur.</p>
+            <p class="demo-note-last">JS : <code class="code-inline">initComments()</code>.</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
