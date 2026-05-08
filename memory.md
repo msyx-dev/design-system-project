@@ -2,16 +2,16 @@
 # Niveau 3 — État session
 
 ## Contexte courant
-- **Sprint 24 livré 2026-05-08** — v2.43.1 mergé sur main. 9/9 SP = 100% velocity. 24e sprint consécutif. Issues : #209 (logo officiel mark-only vectorisé v2.43.0), #211 (refactor nav.js extract VERSION + template literals v2.43.1), #210 (audit visuel Phase 1 — 40 findings, 4 sous-issues #216-#219), #212 (doc page.route() SKILL.md Quick).
-- Pipeline durci 2026-05-07 : `claude-config#24` CLOSED (node -c + smoke DOM + post-deploy auto-rollback). Cause structurelle de #206 supprimée S24 #211 (extract VERSION + template literals).
-- 4 sous-issues remédiation S25+ créées (#216-#219) : margins/padding, pictos/images, flicker boutons, restructure composants.
-- Auth gate active. Versions : prod = v2.42.1 (déploiement S23), main = v2.43.1 (à déployer).
+- **Sprint 24 livré + déployé 2026-05-08** — v2.43.1 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260508-145548`, previous `deploy-20260507-113853`). 9/9 SP = 100% velocity. 24e sprint consécutif. PRs : #213 logo officiel v2.43.0, #214 refactor nav.js v2.43.1, #220 audit Phase 1, #215 doc SKILL.md.
+- **Sprint 25 composé et prêt** — milestone #26 créé, 4 issues #216-#219 assignées (12 SP cible). Stratégie d'exécution + pré-allocation versions documentée sur #210 commentaire 4406614141.
+- Pipeline durci : `claude-config#24` CLOSED. Cause structurelle de #206 éliminée S24 #211.
+- Auth gate active. Versions : prod = v2.43.1, main = v2.43.1.
 - DS-EXCEPTIONs aksy débloquées S23 : #265, #278, #301, modal-focus UC-288 (à notifier aksy).
 
 ## Prochaine étape
-- **Déployer v2.43.1** sur design-system.msyx.fr (`/deploy`) — cumule v2.43.0 (logo officiel) + v2.43.1 (refactor nav.js prévention #206) depuis le hotfix v2.42.1.
-- Composer Sprint 25 = remédiation findings #210 (sous-issues #216-#219) + actions reportées S24.
+- **`/sprint 25`** — 12 SP, 4 issues séquentielles sur `forms.css` : #217 chevron+sprite (P1, v2.44.0) → #218 flicker (P1, v2.45.0) → #216 margins/padding (P2, v2.46.0) → #219 restructure (P2, v2.47.0). Round arbitrage Mike upfront sur R-03/R-04/R-07 en début de session (cf. #210 commentaire stratégie).
 - Notifier aksy pour retirer overrides locaux des 4 DS-EXCEPTIONs débloquées S23.
+- Capitalisation S24 hors-DS dans claude-config (cleanup agents-active.json, durcir prompt push, hisser pré-allocation N1) — à traiter dans repo Klaude au prochain passage.
 
 ## Décisions permanentes
 - 2026-05-08 : Refactor nav.js prévention #206 (Sprint 24 #211) — pattern fragile `+ '<span>...</span>'` éliminé. `const VERSION = '2.X.Y'` extrait en tête de fichier, toutes concaténations HTML remplacées par template literals ES6 (10 zones : `buildHeader`, `buildSidebar`, `renderNotifications`, `updateHeaderUser`, `loadSection`). Refactor strictement isofonctionnel : 0 changement DOM, 0 changement API publique, VR 108/108 PASS sans baseline update. Filet `claude-config#24` (node -c quality-gate) reste actif en complément. **Convention pour tout futur JS DS : pas de concat HTML ligne par ligne — toujours template literals + const extracted pour les constants visibles.**
