@@ -80,7 +80,10 @@ with open('$REGISTRY') as f:
     data = json.load(f)
 classes = []
 for c in data.get('components', []):
-    classes.extend(c.get('cssClasses', []))
+    css_classes = c.get('cssClasses') or []
+    if not isinstance(css_classes, list):
+        continue
+    classes.extend(css_classes)
 print('\n'.join(classes))
 ")
 elif command -v node &>/dev/null; then
