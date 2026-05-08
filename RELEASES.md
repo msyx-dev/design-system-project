@@ -1,5 +1,29 @@
 # Releases
 
+## v2.48.0 — 2026-05-08
+
+### Added
+- **Tokens avatars** : famille `--avatar-size-xs/sm/md/lg/xl` (24/32/40/56/80 px) dans `tokens.css`, exposée aux consommateurs.
+- **Tokens card-icon** : `--card-icon-size` (52px), `--card-icon-size-sm` (40px responsive), `--card-icon-radius` (14px) dans `tokens.css`.
+
+### Changed
+- **Audit Phase 1 — Tokenisation icon/avatar sizes (#225, P-04 à P-08)** : 11 sélecteurs migrés vers tokens.
+  - `avatars.css` : `.avatar-xs/sm/md/lg/xl` utilisent `--avatar-size-*` (5 sélecteurs)
+  - `layout.css` : `.sidebar-link .icon` 18px → `var(--icon-size-sm)` (16px, drift -2px assumé pour cohérence d'échelle)
+  - `interactive.css` : `.copy-btn svg` 14px et `.copy-btn--icon svg` 15px → `var(--icon-size-sm)` (16px, drift ≤2px assumé)
+  - `cards.css` : `.card-icon` et `.hub-card-icon` (4 occurrences dont responsive) utilisent `--card-icon-size/-sm/-radius`
+- Documentation tokens dans `pages/fondation.html` section `#tokens` (sous-sections Avatars + Card icons).
+
+### Notes
+- **Aucune régression fonctionnelle attendue** — refacto CSS pure, valeurs effectives préservées pour avatars et card-icons.
+- **Drift visuel volontairement assumé ≤ 2px** sur 3 sélecteurs (sidebar-link, copy-btn ×2) au profit de la cohérence d'échelle (précédent S25 #216).
+- **Thèmes testés** : 5 combinaisons (MSYX dark/light, ACSSI dark/light, Nhood dark/light) — cohérent partout.
+
+### Resolved
+- Closes #225 (audit Phase 1 — tokenisation icon/avatar sizes, sous-issue de #210).
+
+---
+
 ## v2.47.0 — 2026-05-08
 
 ### Changed

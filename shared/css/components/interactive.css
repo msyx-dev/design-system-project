@@ -20,9 +20,9 @@
 }
 .copy-btn:hover { border-color: var(--border-hover); color: var(--text); background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .copy-btn.copy-btn--success { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, transparent); background: color-mix(in srgb, var(--success) 8%, transparent); }
-.copy-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+.copy-btn svg { width: var(--icon-size-sm); height: var(--icon-size-sm); flex-shrink: 0; }
 .copy-btn--icon { width: 32px; height: 32px; padding: 0; border-radius: var(--radius-sm); }
-.copy-btn--icon svg { width: 15px; height: 15px; }
+.copy-btn--icon svg { width: var(--icon-size-sm); height: var(--icon-size-sm); }
 
 /* Copy button inline dans code-block */
 .code-block-wrap { position: relative; }
