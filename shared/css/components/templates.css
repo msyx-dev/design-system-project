@@ -63,32 +63,6 @@
 .burndown-animated polyline { stroke-dasharray: 500; stroke-dashoffset: 500; }
 .burndown-visible polyline { animation: drawLine 1.5s ease forwards; }
 
-/* Login / Auth */
-.login-preview { background: var(--primary); border-radius: var(--radius-card); padding: var(--space-xl); min-height: 360px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-.login-preview .orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.15; pointer-events: none; }
-.login-preview .orb-1 { width: 300px; height: 300px; background: var(--accent); top: -80px; right: -60px; }
-.login-preview .orb-2 { width: 250px; height: 250px; background: var(--deco-violet); bottom: -60px; left: -60px; }
-.login-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; width: 100%; max-width: 360px; text-align: center; box-shadow: var(--shadow-lg); backdrop-filter: blur(20px); position: relative; z-index: 1; }
-.login-logo { width: 48px; height: 48px; margin: 0 auto 1.2rem; background: var(--gradient-1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: var(--text-on-accent); font-family: 'Space Grotesk', sans-serif; }
-.login-card h3 { font-family: 'Space Grotesk', sans-serif; color: var(--text); font-size: 1.2rem; margin-bottom: 0.4rem; }
-.login-card .subtitle { color: var(--text-muted); font-size: 0.82rem; margin-bottom: var(--space-lg); }
-.login-form { display: flex; flex-direction: column; gap: 0.65rem; }
-.login-form input { padding: 0.7rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
-.login-form input:focus-visible { border-color: var(--accent); }
-.login-form input::placeholder { color: var(--text-muted); }
-.login-submit { padding: 0.7rem; border-radius: 10px; border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 0.3rem; transition: opacity 0.2s; }
-.login-submit:hover { opacity: 0.85; }
-.login-error { color: var(--danger); font-size: 0.8rem; margin-top: 0.8rem; }
-.login-divider { display: flex; align-items: center; gap: 0.8rem; margin: var(--space-md) 0; color: var(--text-dim); font-size: 0.78rem; }
-.login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
-.login-social-btn { display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.65rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text); font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.2s, background 0.2s; width: 100%; }
-.login-social-btn:hover { border-color: var(--border-hover); background: var(--primary-light); }
-.login-social-btn svg { width: 18px; height: 18px; }
-.login-compact { display: flex; gap: 0.5rem; align-items: center; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 0.8rem 1rem; backdrop-filter: blur(20px); }
-.login-compact input { flex: 1; padding: 0.55rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: 'Inter', sans-serif; min-width: 0; }
-.login-compact input:focus-visible { border-color: var(--accent); }
-.login-compact button { padding: 0.55rem 1.2rem; border-radius: 8px; border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
-
 /* Calendar */
 .cal-wrap { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 1.2rem; backdrop-filter: blur(20px); }
 .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-md); }

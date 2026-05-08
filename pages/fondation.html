@@ -253,6 +253,27 @@
     </div>
 </section>
 
+<!-- THEME SWITCHER -->
+<section id="theme-switcher">
+    <div class="section-header"><span class="overline">Fondation</span><h2>Theme Switcher</h2><p>Selecteur de theme persistant. Bascule entre MSYX et ACSSI via localStorage.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Selecteur de theme</span>
+        <div class="demo-box" style="max-width:220px;">
+            <div class="theme-switcher">
+                <label class="theme-switcher-label" for="theme-select-demo">&#9775; Theme</label>
+                <select id="theme-select-demo" class="theme-switcher-select" aria-label="Demo theme switcher">
+                    <option value="msyx">MSYX</option>
+                    <option value="acssi">ACSSI</option>
+                </select>
+            </div>
+        </div>
+        <span class="demo-label" style="margin-top:var(--space-md);">Usage</span>
+        <div class="demo-box">
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Injecte automatiquement dans la sidebar. Persistance localStorage (cle <code class="code-inline">msyx-theme</code>). Anti-FOUC via script inline dans <code class="code-inline">&lt;head&gt;</code>.</p>
+        </div>
+    </div>
+</section>
+
 <section id="consommation">
     <div class="section-header"><span class="overline">Guide</span><h2>Consommation</h2><p>Comment integrer le design system dans vos projets.</p></div>
 

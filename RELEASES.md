@@ -1,5 +1,31 @@
 # Releases
 
+## v2.47.0 — 2026-05-08
+
+### Changed
+- **Audit Phase 1 — Restructure composants × pages (#219)** : 7 sections déplacées pour cohérence sémantique (R-01 à R-07)
+  - pagination : navigation → feedback (pattern feedback)
+  - tooltip : composants → feedback (feedback contextuel)
+  - action-menu : composants → navigation (navigation secondaire)
+  - pricing : composants → templates (template page complète)
+  - comments : composants → feedback (pattern social)
+  - theme-switcher : composants → fondation (config fondation)
+- **CSS login** : sélecteurs `.login-form/.login-card/.login-submit` (et famille) déplacés de `templates.css` → `forms.css` (cohérence : HTML en formulaires.html, CSS en forms.css)
+
+### Fixed
+- `shared/components-registry.json` : ajout des 4 entries manquantes (action-menu, pricing, comments, theme-switcher) + correction des champs `page` desync (pagination, tooltip) + version 2.47.0
+- `CLAUDE.md` (N2) : descriptions des `pages/*.html` synchronisées avec la nouvelle organisation
+
+### Notes
+- **Aucun changement visuel attendu** — pure réorganisation HTML/CSS
+- **Aucune régression fonctionnelle** — toutes les classes CSS et IDs JS conservés
+- Sidebars des 5 pages mises à jour (ancres déplacées avec leurs sections)
+
+### Resolved
+- Closes #219 (audit Phase 1 — restructure composants × pages, sous-issue de #210)
+
+---
+
 ## v2.46.0 — 2026-05-08
 
 ### Added
