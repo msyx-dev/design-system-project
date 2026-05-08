@@ -3,7 +3,7 @@
 
 /* ===== TABS ===== */
 .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-color); margin-bottom: var(--space-lg); }
-.tab { padding: 0.7rem 1.3rem; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.3s var(--ease-standard), border-bottom-color 0.3s var(--ease-standard); background: none; border-top: none; border-left: none; border-right: none; font-family: 'Inter', sans-serif; }
+.tab { padding: var(--space-2) var(--space-lg); font-size: 0.85rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.3s var(--ease-standard), border-bottom-color 0.3s var(--ease-standard); background: none; border-top: none; border-left: none; border-right: none; font-family: 'Inter', sans-serif; }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent-light); border-bottom-color: var(--accent); }
 

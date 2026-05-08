@@ -8,7 +8,7 @@
 .kanban-column-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .kanban-column-title { font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 .kanban-count { font-size: 0.7rem; background: var(--surface); padding: 0.15rem 0.5rem; border-radius: 10px; color: var(--text-muted); }
-.kanban-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.9rem; cursor: grab; transition: transform 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), opacity 0.2s var(--ease-standard); }
+.kanban-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: var(--space-md); cursor: grab; transition: transform 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), opacity 0.2s var(--ease-standard); }
 .kanban-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
 .kanban-card.dragging { opacity: 0.5; transform: rotate(2deg); }
 .kanban-card-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; }
@@ -36,10 +36,10 @@
 
 /* Backlog */
 .backlog-filters { display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg); flex-wrap: wrap; }
-.backlog-filters .btn-filter { padding: 0.4rem 0.9rem; font-size: 0.78rem; border-radius: 8px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: color 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); }
+.backlog-filters .btn-filter { padding: 0.4rem 0.9rem; font-size: 0.78rem; border-radius: var(--radius-md); background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: color 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); }
 .backlog-filters .btn-filter:hover { color: var(--text); border-color: var(--border-hover); }
 .backlog-filters .btn-filter.active { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-light); border-color: var(--accent); }
-.backlog-item { display: flex; align-items: center; gap: var(--space-md); padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border-color); transition: background-color 0.2s var(--ease-standard); }
+.backlog-item { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md) var(--space-5); border-bottom: 1px solid var(--border-color); transition: background-color 0.2s var(--ease-standard); }
 .backlog-item:last-child { border-bottom: none; }
 .backlog-item:hover { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .backlog-item.hidden { display: none; }

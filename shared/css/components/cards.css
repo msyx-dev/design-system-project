@@ -33,13 +33,13 @@
 .card p { font-size: 0.85rem; color: var(--text-muted); line-height: var(--lh-relaxed); }
 .card-flat { background: var(--primary-light); border: 1px solid var(--border-color); }
 .card-flat:hover { transform: translateY(-3px); }
-.card-compact { padding: 1.2rem; }
+.card-compact { padding: var(--space-5); }
 .card-horizontal { display: flex; gap: var(--space-lg); align-items: flex-start; }
 .card-horizontal .card-icon { margin-bottom: 0; flex-shrink: 0; }
 
 /* ===== HUB ===== */
 .hub-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; }
-.hub-card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), border-color 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 0.8rem; }
+.hub-card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), border-color 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 0.8rem; }
 .hub-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-1); opacity: 0; transition: opacity 0.4s; }
 .hub-card:hover { transform: translateY(-6px); border-color: var(--border-hover); box-shadow: var(--shadow-lg); }
 .hub-card:hover::before { opacity: 1; }

@@ -1,5 +1,29 @@
 # Releases
 
+## v2.46.0 — 2026-05-08
+
+### Added
+- `--space-2: 0.75rem` et `--space-5: 1.25rem` — tokens intermédiaires pour combler les trous d'échelle entre `sm`/`md` et `md`/`lg` (audit findings M-01 à M-12).
+
+### Changed
+- 12 sélecteurs migrés vers tokens `--space-*` :
+  - `cards.css` : `.card-compact`, `.hub-card`
+  - `buttons.css` : `.btn-lg` (padding + border-radius)
+  - `templates.css` : `.kanban-card`, `.backlog-item`, `.backlog-filters .btn-filter` (radius)
+  - `navigation.css` : `.tab`
+  - `forms.css` : `.input`, `.dropdown-trigger`
+  - `modals.css` : `.modal-content`, `.popover`
+  - `interactive.css` : `.segmented-item`
+- Drift visuel volontairement accepté <2px pour 5 sélecteurs (`.kanban-card`, `.tab`, `.btn-lg`, `.segmented-item`, `.btn-filter` radius) au profit de la cohérence d'échelle.
+
+### Fixed
+- Élimination de 4 occurrences de `0.7rem` et 3 de `1.2rem` hardcodés dans les modules CSS, source de drift visuel inter-composants.
+
+### Resolved
+- Closes #216 (audit Phase 1 — tokenisation margins/paddings, sous-issue de #210).
+
+---
+
 ## v2.45.0 — 2026-05-08 — Sprint 25 — Audit Phase 1 : flicker boutons + cards (transitions ciblees + will-change)
 
 ### Changed

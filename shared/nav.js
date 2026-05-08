@@ -1,4 +1,4 @@
-/* @ds-version 2.45.0 */
+/* @ds-version 2.46.0 */
 const VERSION = '2.45.0';
 
 const NAV_SECTIONS = [
