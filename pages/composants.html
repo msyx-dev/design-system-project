@@ -101,9 +101,21 @@
             <div class="card card-compact" style="text-align:center;"><div style="font-size:1.8rem;margin-bottom:0.5rem;">&#128736;</div><p class="typo-small">Reliable</p></div>
         </div>
     </div>
+    <div class="subsection">
+        <span class="demo-label">Card cliquable (a11y)</span>
+        <p class="typo-small mb-md">Wrapper <code style="color:var(--accent);">card-link</code> pour rendre une card entierement cliquable. Focus-visible et hover geres sur la card enfant. Semantiquement un lien <code style="color:var(--accent);">&lt;a&gt;</code>.</p>
+        <div class="demo-grid demo-grid-2">
+            <a href="#" class="card-link" onclick="event.preventDefault();">
+                <div class="card"><div class="card-icon card-icon--accent"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-folder"/></svg></div><h3>Projet Aksyva</h3><p>Cliquer pour ouvrir le detail du projet.</p></div>
+            </a>
+            <a href="#" class="card-link" onclick="event.preventDefault();">
+                <div class="card"><div class="card-icon card-icon--deco-violet"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-folder"/></svg></div><h3>Projet Acssi</h3><p>Cliquer pour ouvrir le detail du projet.</p></div>
+            </a>
+        </div>
+    </div>
     <div class="subsection mt-md">
         <span class="demo-label">Usage</span>
-        <p class="typo-small">Utiliser <code style="color:var(--accent);">card</code> pour les contenus richement structures (titre + description + actions). Utiliser <code style="color:var(--accent);">card-compact</code> pour les grilles de features ou les KPI courts. Utiliser <code style="color:var(--accent);">card-horizontal</code> pour les listes avec icone + texte sur une seule ligne. Ne pas imbriquer des cards — preferer une <code style="color:var(--accent);">demo-box</code> ou une <code style="color:var(--accent);">subsection</code> pour les conteneurs secondaires.</p>
+        <p class="typo-small">Utiliser <code style="color:var(--accent);">card</code> pour les contenus richement structures (titre + description + actions). Utiliser <code style="color:var(--accent);">card-compact</code> pour les grilles de features ou les KPI courts. Utiliser <code style="color:var(--accent);">card-horizontal</code> pour les listes avec icone + texte sur une seule ligne. Utiliser <code style="color:var(--accent);">card-link</code> (wrapper <code style="color:var(--accent);">&lt;a&gt;</code>) pour rendre une card entierement cliquable avec focus-visible a11y. Ne pas imbriquer des cards — preferer une <code style="color:var(--accent);">demo-box</code> ou une <code style="color:var(--accent);">subsection</code> pour les conteneurs secondaires.</p>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">HTML</span>
@@ -133,6 +145,14 @@
     &lt;p class="typo-small"&gt;Feature&lt;/p&gt;
 &lt;/div&gt;
 
+&lt;!-- Card cliquable (wrapper a11y) --&gt;
+&lt;a href="/projet" class="card-link"&gt;
+    &lt;div class="card"&gt;
+        &lt;h3&gt;Titre&lt;/h3&gt;
+        &lt;p&gt;Description.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/a&gt;
+
 &lt;!-- Couleurs card-icon disponibles : --accent --deco-violet --deco-cyan --deco-pink --green --&gt;</div>
     </div>
 </section>
@@ -156,8 +176,29 @@
 </section>
 
     <div class="subsection mt-md">
+        <span class="demo-label">Badge compact (sidebar/nav)</span>
+        <p class="typo-small mb-md">Variante <code style="color:var(--accent);">badge-nav</code> pour les compteurs/percentages dans une sidebar ou item de nav. <code style="color:var(--accent);">margin-left:auto</code> push-right, <code style="color:var(--accent);">min-width:1.5rem</code> stable.</p>
+        <div class="demo-box" style="max-width:280px;">
+            <div style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.8rem;border:1px solid var(--border-color);border-radius:8px;">
+                <svg class="icon"><use href="/shared/icons/sprite.svg#i-mail"/></svg>
+                <span>Inbox</span>
+                <span class="badge badge-primary badge-nav">12</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.8rem;border:1px solid var(--border-color);border-radius:8px;margin-top:0.5rem;">
+                <svg class="icon"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                <span>Notifications</span>
+                <span class="badge badge-danger badge-nav">3</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.8rem;border:1px solid var(--border-color);border-radius:8px;margin-top:0.5rem;">
+                <svg class="icon"><use href="/shared/icons/sprite.svg#i-check-circle"/></svg>
+                <span>Done</span>
+                <span class="badge badge-success badge-nav">98%</span>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-md">
         <span class="demo-label">Usage</span>
-        <p class="typo-small">Utiliser les badges pour indiquer un statut (déployé, en attente, erreur) ou une catégorie sur un élément de liste ou une card. <code style="color:var(--accent);">badge-success</code> pour les états positifs, <code style="color:var(--accent);">badge-warning</code> pour les alertes non-critiques, <code style="color:var(--accent);">badge-danger</code> pour les erreurs et <code style="color:var(--accent);">badge-info</code> pour les informations neutres. Ne pas utiliser des badges pour des actions — préférer des boutons. Limiter à 3-4 badges visibles simultanément pour éviter la surcharge visuelle.</p>
+        <p class="typo-small">Utiliser les badges pour indiquer un statut (déployé, en attente, erreur) ou une catégorie sur un élément de liste ou une card. <code style="color:var(--accent);">badge-success</code> pour les états positifs, <code style="color:var(--accent);">badge-warning</code> pour les alertes non-critiques, <code style="color:var(--accent);">badge-danger</code> pour les erreurs et <code style="color:var(--accent);">badge-info</code> pour les informations neutres. Utiliser <code style="color:var(--accent);">badge-nav</code> pour les compteurs compacts dans une sidebar ou nav (push-right via margin-left:auto). Ne pas utiliser des badges pour des actions — préférer des boutons. Limiter à 3-4 badges visibles simultanément pour éviter la surcharge visuelle.</p>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">HTML</span>
@@ -168,6 +209,10 @@
 &lt;span class="badge badge-danger"&gt;Erreur&lt;/span&gt;
 &lt;span class="badge badge-info"&gt;Info&lt;/span&gt;
 &lt;span class="badge badge-neutral"&gt;Archive&lt;/span&gt;
+
+&lt;!-- Badge compact sidebar/nav --&gt;
+&lt;span class="badge badge-primary badge-nav"&gt;12&lt;/span&gt;
+&lt;span class="badge badge-success badge-nav"&gt;98%&lt;/span&gt;
 
 &lt;!-- Tags (variante texte simple) --&gt;
 &lt;span class="tag"&gt;React&lt;/span&gt;

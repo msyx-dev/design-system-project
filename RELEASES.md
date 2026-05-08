@@ -1,5 +1,24 @@
 # Releases
 
+## v2.49.0 — 2026-05-08
+### Added
+- `.card-link` (cards.css) — wrapper a11y pour cards entierement cliquables (focus-visible gere, hover sur la card enfant). Demo dans pages/composants.html section cards.
+- `.badge-nav` (badges.css) — variante compacte badge pour compteurs/percentages dans sidebar/nav (margin-left:auto, min-width:1.5rem). Demo dans pages/composants.html section badges.
+- `.toast-message` (alerts.css) — wrapper texte avec flex:1 dans .toast pour layout grow correct entre icone et close.
+
+### Changed
+- pages/feedback.html : 4 exemples toast (success/error/info/warning) mis a jour pour utiliser `<span class="toast-message">` au lieu de `<span>` brut. Coherence DS.
+
+### Resolved
+- Dette consumer S27 (#227) : 3 classes promues depuis aksyva-overrides + acssi-overrides. Reste a eliminer cote consumers via resync v2.49.0 + retrait overrides.
+
+### Notes
+- Compteur hero site.html inchange (variantes, pas nouveaux composants).
+- Pas de JS init (composants pure CSS).
+- Aucune regression sur .card / .badge / .toast existants (ajouts purs additifs).
+
+---
+
 ## v2.48.1 — 2026-05-08
 
 ### Fixed

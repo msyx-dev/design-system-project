@@ -1,5 +1,5 @@
 {
-  "version": "2.48.1",
+  "version": "2.49.0",
   "generated": "2026-05-08",
   "components": [
     {
@@ -12,16 +12,16 @@
     {
       "name": "cards",
       "page": "composants",
-      "cssClasses": [".card", ".card-icon", ".card-flat", ".card-compact", ".card-horizontal"],
+      "cssClasses": [".card", ".card-icon", ".card-flat", ".card-compact", ".card-horizontal", ".card-link"],
       "jsInit": null,
-      "example": "<div class=\"card\">\n  <div class=\"card-icon card-icon--accent\">&#9889;</div>\n  <h3>Titre de la card</h3>\n  <p>Description de contenu de la card.</p>\n</div>\n\n<div class=\"card-flat\">\n  <h3>Card interactive</h3>\n  <p>Utiliser pour les éléments cliquables.</p>\n</div>"
+      "example": "<div class=\"card\">\n  <div class=\"card-icon card-icon--accent\">&#9889;</div>\n  <h3>Titre de la card</h3>\n  <p>Description de contenu de la card.</p>\n</div>\n\n<div class=\"card-flat\">\n  <h3>Card interactive</h3>\n  <p>Utiliser pour les éléments cliquables.</p>\n</div>\n\n<a href=\"/projet\" class=\"card-link\">\n  <div class=\"card\">\n    <h3>Titre</h3>\n    <p>Description.</p>\n  </div>\n</a>"
     },
     {
       "name": "badges",
       "page": "composants",
-      "cssClasses": [".badge", ".badge-primary", ".badge-success", ".badge-warning", ".badge-danger", ".badge-info", ".badge-neutral", ".tag", ".pulse-dot"],
+      "cssClasses": [".badge", ".badge-primary", ".badge-success", ".badge-warning", ".badge-danger", ".badge-info", ".badge-neutral", ".badge-nav", ".tag", ".pulse-dot"],
       "jsInit": null,
-      "example": "<span class=\"badge badge-primary\">Nouveau</span>\n<span class=\"badge badge-success\">Actif</span>\n<span class=\"badge badge-warning\">En attente</span>\n<span class=\"badge badge-danger\">Erreur</span>\n<span class=\"badge badge-info\">Info</span>\n<span class=\"tag\">Next.js</span>\n<span class=\"tag\">TypeScript</span>"
+      "example": "<span class=\"badge badge-primary\">Nouveau</span>\n<span class=\"badge badge-success\">Actif</span>\n<span class=\"badge badge-warning\">En attente</span>\n<span class=\"badge badge-danger\">Erreur</span>\n<span class=\"badge badge-info\">Info</span>\n<span class=\"tag\">Next.js</span>\n<span class=\"tag\">TypeScript</span>\n\n<!-- Badge compact sidebar/nav -->\n<span class=\"badge badge-primary badge-nav\">12</span>"
     },
     {
       "name": "chips",
@@ -90,7 +90,7 @@
     {
       "name": "toast",
       "page": "feedback",
-      "cssClasses": [".toast", ".toast-close", ".toast-success", ".toast-error", ".toast-warning", ".toast-info", ".toast-container"],
+      "cssClasses": [".toast", ".toast-message", ".toast-close", ".toast-success", ".toast-error", ".toast-warning", ".toast-info", ".toast-container"],
       "jsInit": "showToast",
       "example": "<!-- Déclencher via JS -->\n<script>\n  showToast('Enregistrement réussi', 'success');\n  showToast('Erreur de connexion', 'error');\n  showToast('Action en attente', 'warning');\n  showToast('Mise à jour disponible', 'info');\n</script>"
     },
