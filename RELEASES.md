@@ -1,5 +1,16 @@
 # Releases
 
+## v2.48.1 — 2026-05-08
+
+### Fixed
+- `shared/components-registry.json` : entrée `reset-natif` — `cssClasses: null` → `cssClasses: []` (sémantique correcte, contrat string[] respecté). Registry `version` bump 2.48.0 → 2.48.1.
+- `shared/check-components.sh` : durcissement defensive du parsing Python (`or []` + `isinstance check`) — ne crash plus si une entrée registry a `cssClasses` null/absent/non-array (closes #229).
+
+### Resolved
+- Closes #229 (registry reset-natif cssClasses null cause crash check-components.sh).
+
+---
+
 ## Sprint 27 — 2026-05-08 (coordination, no version bump)
 
 ### Coordination cross-projet
