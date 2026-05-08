@@ -4,7 +4,7 @@
 /* ===== INPUTS ===== */
 .input-group { display: flex; flex-direction: column; gap: 0.4rem; }
 .input-label { font-size: 0.85rem; font-weight: var(--fw-medium); color: var(--text); }
-.input { padding: 0.7rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-sans); transition: border-color var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard), background-color var(--duration-base) var(--ease-standard); width: 100%; }
+.input { padding: var(--space-2) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-sans); transition: border-color var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard), background-color var(--duration-base) var(--ease-standard); width: 100%; }
 .input:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
 .input:disabled { opacity: 0.5; cursor: not-allowed; background: var(--surface); }
 .input::placeholder { color: var(--text-dim); }
@@ -36,7 +36,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 
 /* ===== DROPDOWN ===== */
 .dropdown { position: relative; width: 100%; }
-.dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; cursor: pointer; transition: border-color 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: 'Inter', sans-serif; width: 100%; }
+.dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-md); border-radius: 10px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; cursor: pointer; transition: border-color 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: 'Inter', sans-serif; width: 100%; }
 .dropdown-trigger:hover { border-color: var(--border-hover); }
 .dropdown-trigger.open { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
 .dropdown-trigger .arrow { transition: transform 0.2s; color: var(--text-dim); font-size: 0.8rem; }

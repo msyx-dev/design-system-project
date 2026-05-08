@@ -11,7 +11,7 @@
 .btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--accent-light); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; border: none; cursor: pointer; transition: color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); font-family: var(--font-sans); }
 .btn-ghost:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
-.btn-lg { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 14px; }
+.btn-lg { padding: var(--space-md) var(--space-2xl); font-size: 1rem; border-radius: var(--radius-lg); }
 .btn-xs { padding: 0.3rem 0.7rem; font-size: 0.72rem; border-radius: var(--radius-xs); min-height: 32px; }
 .btn-icon { min-width: 44px; min-height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: border-color var(--duration-slow) var(--ease-standard), color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); font-size: 1rem; }
 .btn-icon:hover { border-color: var(--border-hover); color: var(--text); }

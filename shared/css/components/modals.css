@@ -4,7 +4,7 @@
 /* ===== MODAL ===== */
 .modal-preview { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-color); }
 .modal-overlay { background: var(--overlay); padding: 2.5rem; display: flex; align-items: center; justify-content: center; }
-.modal-content { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; max-width: 420px; width: 100%; }
+.modal-content { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); max-width: 420px; width: 100%; }
 .modal-content h3 { font-family: 'Space Grotesk', sans-serif; margin-bottom: 0.6rem; }
 .modal-content p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.6; }
 .modal-actions { display: flex; gap: 0.7rem; justify-content: flex-end; }
@@ -50,7 +50,7 @@ dialog.modal-dialog .modal-actions {
 /* ===== POPOVER ===== */
 .popover-wrap { position: relative; display: inline-block; }
 /* Position par défaut : top */
-.popover { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; min-width: 240px; opacity: 0; pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); box-shadow: var(--shadow-lg); z-index: 50; }
+.popover { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: var(--space-md); min-width: 240px; opacity: 0; pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); box-shadow: var(--shadow-lg); z-index: 50; }
 .popover.open { opacity: 1; pointer-events: auto; }
 .popover::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--surface-solid); }
 /* Popover bottom */
