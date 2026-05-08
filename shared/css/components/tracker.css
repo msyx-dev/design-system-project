@@ -254,7 +254,7 @@
     color: var(--text-muted);
     position: relative;
     z-index: 1;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s var(--ease-standard), border-color 0.3s var(--ease-standard), color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard);
 }
 .wizard-step.active .wizard-step-dot {
     background: var(--accent);
