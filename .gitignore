@@ -7,3 +7,7 @@ node_modules/
 visual-tests/diffs/
 test-results/
 playwright-report/
+
+# Build artifacts locaux (shared/build.sh) — ajouté avant deploy v2.48.0
+shared/dist/
+pnpm-lock.yaml
