@@ -1,5 +1,5 @@
-/* @ds-version 2.47.0 */
-const VERSION = '2.45.0';
+/* @ds-version 2.48.0 */
+const VERSION = '2.48.0';
 
 const NAV_SECTIONS = [
     { title: null, links: [
