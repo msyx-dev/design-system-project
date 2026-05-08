@@ -1,5 +1,23 @@
 # Releases
 
+## v2.43.0 — 2026-05-08 — Sprint 24 — Logo officiel MSYX mark-only vectorisé
+
+### Changed
+- **Logo officiel MSYX (mark only, vectorisé)** — `assets/logo-msyx.svg`, `logo-msyx-mark.svg`, `logo-msyx-dark.svg`, `logo-msyx-light.svg` remplacent le wordmark Monogram v2.42.0 (#192, réinterprétation paths-by-agent S23) par le mark vectorisé depuis le source officiel `msyx.fr/media/logo/logoMSYX.png`. Vectorisation potrace → svgo (1.1 KB). Gradient vertical 4 stops : `#3eb89d` turquoise → `#4ab695` vert → `#3a6cb8` bleu → `#5b3eaa` violet. ViewBox 1475×1562 (ratio quasi-carré 1:1.06). Mark-only (pas de wordmark texte). Closes #209.
+- **Header `nav.js` ligne 188** — Ratio image `120×32` → `40×40` carré. CSS `.header-logo-img` mis à jour en conséquence (`layout.css`).
+- **`canonical-pages/login.html`** — Ratio image `140×42` → `120×120` carré.
+- **Variante light** — Gradients assombris pour contraste WCAG AA sur fond clair : `#2d8b73`→`#358a70`→`#2c548b`→`#43308a`.
+- `@ds-version` bumpé à `2.43.0` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
+### Added
+- **`assets/sources/logoMSYX.png`** — PNG source officiel (1475×1562, 95 KB) conservé pour reproductibilité du tracé potrace. Référence canonique pour toute future mise à jour du mark.
+
+### Notes
+- `assets/explorations/wordmark-monogram-{a,b}.svg` conservés intacts (historique S23 #192).
+- Wordmark Monogram v2.42.0 = exploration historique uniquement. Mark vectorisé = canonical. Décision figée.
+
+---
+
 ## v2.42.1 (2026-05-07) — HOTFIX — DEPLOYED
 Deploy tag: `deploy-20260507-113853`
 Deployed: 2026-05-07 09:40 UTC

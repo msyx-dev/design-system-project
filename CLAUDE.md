@@ -12,12 +12,13 @@ Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abo
 
 ## Structure
 ```
-assets/             # Brand assets SVG (v2.42.0)
-  logo-msyx.svg     # PRIMARY lockup mark+wordmark (200×60)
-  logo-msyx-mark.svg  # Mark seule (60×60) — favicon-ready
-  logo-msyx-dark.svg  # Variante fond sombre
-  logo-msyx-light.svg # Variante fond clair
-  explorations/     # Historique conception (monogram-a, monogram-b)
+assets/             # Brand assets SVG (v2.43.0)
+  logo-msyx.svg     # PRIMARY mark vectorisé depuis source officiel (viewBox 1475×1562, quasi-carré)
+  logo-msyx-mark.svg  # Mark alias (identique à logo-msyx.svg)
+  logo-msyx-dark.svg  # Variante fond sombre (gradients identiques, saturés)
+  logo-msyx-light.svg # Variante fond clair (gradients assombris pour contraste WCAG AA)
+  sources/          # Sources de référence — logoMSYX.png (1475×1562 PNG officiel msyx.fr)
+  explorations/     # Historique conception S23 (wordmark-monogram-a/b, NE PAS SUPPRIMER)
 index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
@@ -88,7 +89,7 @@ shared/
 - Gradients : bleu→violet, cyan→bleu, violet→rose
 - Typo : Space Grotesk (titres) + Inter (corps) + Fira Code (mono)
 - Glassmorphism + border glow subtil
-- **Logo officiel (v2.42.0)** : `assets/logo-msyx.svg` — blob organique + M espace négatif double sommet + gradient turquoise→bleu→violet. Toujours utiliser ce fichier SVG (pas de texte CSS gradient). Variantes dark/light dans `assets/`. Mark seule : `assets/logo-msyx-mark.svg`.
+- **Logo officiel (v2.43.0)** : `assets/logo-msyx.svg` — mark seul vectorisé depuis le source officiel MSYX (`msyx.fr/media/logo/logoMSYX.png`, mark only, 1475×1562 PNG conservé en `assets/sources/logoMSYX.png`). Gradient vertical turquoise→vert→bleu→violet. ViewBox 1475×1562 (ratio quasi-carré). Pas de wordmark texte. Toujours utiliser ce fichier SVG (pas de texte CSS gradient, pas de réinterprétation paths). Variantes dark/light dans `assets/`. Mark alias : `assets/logo-msyx-mark.svg`. Wordmark Monogram historique conservé en `assets/explorations/`.
 - **Signature spatiale (v2.42.0)** : gradient underline 2px sous `.section-header .overline` via `signature.css`. Automatique sur toutes les pages.
 - **Texture grain (v2.42.0)** : `--texture-grain` + `--texture-grain-opacity: 0.015` dans `tokens.css`. `body::after` global.
 

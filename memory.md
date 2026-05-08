@@ -14,6 +14,7 @@
 - Sprint 24 à composer après #208 : suite IMPROVEMENT_PLAN + actions reportées (resolve-version-conflicts.sh, doc `page.route()`, post-merge.sh préfix S23).
 
 ## Décisions permanentes
+- 2026-05-08 : Logo officiel MSYX (Sprint 24 #209) — wordmark Monogram v2.42.0 (paths-by-agent S23 #192) **remplacé** par le mark vectorisé du source officiel `msyx.fr/media/logo/logoMSYX.png`. PNG source conservé en `assets/sources/logoMSYX.png` (reproductibilité du tracé via potrace+svgo). Mark-only (pas de wordmark texte), variantes light/dark unifiées sur le même mark. Header ratio 40×40 carré (CSS `layout.css` + `nav.js` ligne 188). Wordmark Monogram historique conservé en `assets/explorations/`. Décision figée : tout futur usage du logo MSYX = ce mark vectorisé, jamais une réinterprétation paths.
 - 2026-03-07 : templates de suivi projet = sections statiques mockées (pas de backend), CSS inline
 - 2026-03-19 : migration oneshot → projet prod (design-system-project)
 - 2026-03-20 : mise à niveau pipeline agentique (board, labels, backlog, docs, auth gate)

@@ -1,39 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" role="img" aria-label="msyx Design System">
-  <title>msyx Design System</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1475 1562" role="img" aria-label="msyx">
+  <title>msyx</title>
   <defs>
-    <linearGradient id="msyx-grad-primary" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#10b981"/>
-      <stop offset="45%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
+    <linearGradient id="msyx-grad-official" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3eb89d"/>
+      <stop offset="40%" stop-color="#4ab695"/>
+      <stop offset="55%" stop-color="#3a6cb8"/>
+      <stop offset="100%" stop-color="#5b3eaa"/>
     </linearGradient>
   </defs>
-  <!-- Mark: blob organique + M en espace négatif double sommet (60×60 dans un lockup 200×60) -->
-  <path fill="url(#msyx-grad-primary)" fill-rule="evenodd" d="
-    M 30 2
-    C 16 2 3 11 3 25
-    C 3 36 9 45 16 51
-    C 20 55 25 58 30 58
-    C 35 58 40 55 44 51
-    C 51 45 57 36 57 25
-    C 57 11 44 2 30 2 Z
-    M 13 44
-    L 18 23
-    L 24 36
-    L 30 17
-    L 36 36
-    L 42 23
-    L 47 44
-    L 42 44
-    L 36 30
-    L 30 49
-    L 24 30
-    L 18 44 Z
-  "/>
-  <!-- Wordmark "msyx" en currentColor (adaptation theme automatique) -->
-  <text x="68" y="38"
-    font-family="'Space Grotesk', system-ui, sans-serif"
-    font-size="22"
-    font-weight="700"
-    letter-spacing="-0.5"
-    fill="currentColor">msyx</text>
+  <path fill="url(#msyx-grad-official)" d="M8720 15560c-862-55-1580-230-2555-620-969-388-2128-979-2945-1503-861-551-1596-1221-2158-1965-351-464-650-1024-807-1512-284-882-269-1731 46-2577 150-403 409-928 685-1389 463-775 1294-1931 2058-2863 637-778 1276-1402 2016-1970C6071 385 6640 123 7525 23c181-20 574-23 720-4 597 74 1104 283 1765 726 722 484 1403 1118 1884 1755 442 585 845 1268 1356 2295 576 1161 892 1952 1119 2810 185 698 326 1590 371 2342 13 223 13 738 0 935-40 577-168 1152-377 1683-498 1265-1397 2149-2663 2620-496 184-1061 299-1770 361-215 18-996 27-1210 14" transform="matrix(.1 0 0 -.1 0 1562)"/>
 </svg>

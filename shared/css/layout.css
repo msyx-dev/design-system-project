@@ -1,4 +1,4 @@
-/* @ds-version: 2.42.1 */
+/* @ds-version: 2.43.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -16,7 +16,7 @@
 }
 .site-header .header-logo .header-logo-img {
     display: block;
-    width: 120px; height: 32px;
+    width: 40px; height: 40px;
     object-fit: contain;
 }
 .site-header .header-version { font-size: 0.68rem; color: var(--text-dim); white-space: nowrap; }
