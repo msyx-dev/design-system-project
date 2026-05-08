@@ -1,5 +1,21 @@
 # Releases
 
+## Sprint 27 — 2026-05-08 (coordination, no version bump)
+
+### Coordination cross-projet
+- **#227 (P1, 3 SP)** Vérif consumers post-deploy v2.48.0 — verdict **PASS-AVEC-DETTE** (0 régression DS).
+  - aksyva-project sync v2.24.1 (drift -24 minor), 2 classes hors DS (`.card-link`, `.input-filter-project`)
+  - acssi-core-project sync v2.14.3 (drift -34 minor), 2 classes hors DS (`.badge-nav`, `.toast-message`)
+  - aksy local sync v2.36.0 (drift -12 minor, bonus check)
+  - Aucune suite VR configurée chez les consumers
+- **#228 (P2, 1 SP)** Notify aksy DS-EXCEPTIONs S23 — 4 commentaires postés sur `msyx-dev/aksy#265, #278, #301, #254` (UC-288). Action attendue côté aksy : resync v2.36.0 → v2.48.0 puis retrait 3 overrides CSS + 1 helper JS.
+
+### Findings → backlog
+- **Bug DS interne mineur** : `shared/components-registry.json` entrée `reset-natif` a `cssClasses: null` → crash `shared/check-components.sh`. P3 Task à ouvrir.
+- **3 dettes consumers** identifiées (resync + cleanup overrides) — issues à ouvrir côté chaque consumer.
+
+---
+
 ## v2.48.0 — 2026-05-08
 
 ### Added
