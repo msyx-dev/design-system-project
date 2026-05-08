@@ -1,5 +1,21 @@
 # Releases
 
+## v2.45.0 — 2026-05-08 — Sprint 25 — Audit Phase 1 : flicker boutons + cards (transitions ciblees + will-change)
+
+### Changed
+- **Transitions ciblees** : 30 occurrences de `transition: all` remplacees par des proprietes ciblees (`transform`, `box-shadow`, `border-color`, `background-color`, `opacity`) sur 13 modules CSS (`buttons.css`, `cards.css`, `forms.css`, `navigation.css`, `interactive.css`, `templates.css`, `lists.css`, `modals.css`, `notifications.css`, `feedback.css`, `tracker.css`, `badges.css`, `layout.css`). Resout les flicker sur Safari mobile et Chrome (F-01 a F-09 audit Phase 1).
+- **`will-change` strict** : ajoute uniquement sur `.card` et `.hub-card` (les seuls selecteurs combinant `backdrop-filter` + `transform:hover` triggant des compositing layers). Pas d'usage systematique pour eviter d'epuiser la GPU memory.
+- Pattern transition canonique documente : `transition: transform 0.4s var(--ease-standard), box-shadow 0.4s var(--ease-standard), border-color 0.4s var(--ease-standard);`.
+
+### Resolved
+- Closes #218 (audit Phase 1 — flicker boutons/cards, sous-issue de #210).
+
+### Notes
+- `@media (prefers-reduced-motion: reduce)` reste fonctionnel via `_a11y.css` (verifie).
+- Aucune regression visuelle sur les 120 E2E Playwright (3 themes x 2 modes x 2 viewports x 10 pages).
+
+---
+
 ## v2.44.0 — 2026-05-08 — Sprint 25 — Audit Phase 1 : chevron theme-aware, sprite cleanup, context-menu icones
 
 ### Changed
