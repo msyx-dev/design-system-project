@@ -2,20 +2,20 @@
 # Niveau 3 — État session
 
 ## Contexte courant
+- **Sprint 28 livré 2026-05-08** — 3/3 SP = 100% velocity. 28e sprint consécutif. 2 PRs parallèles : #231 fix registry `reset-natif` cssClasses null→[] + check-components.sh defensive Python (registry v2.48.1, closes #229) + #232 promotions DS v2.49.0 (3 classes consumer→DS : `.card-link` cards.css, `.badge-nav` badges.css, `.toast-message` alerts.css, closes #230). Milestone #29 CLOSED. **Friction technique** : conflit RELEASES.md + components-registry.json (version) entre #231 et #232 (les 2 mergeables en // mais touchent même fichiers) résolu manuellement par parent en 5 min. Hook anti-merge faux positif inter-projet (devops-deployer aksyva PID 678365) bloqué pendant ~10 min jusqu'à fin du process. Versions : prod v2.48.0 / main v2.49.0 (à déployer).
 - **Sprint 27 livré 2026-05-08** — 4/4 SP = 100% velocity. 27e sprint consécutif. Sprint coordination cross-projet « no-PR » : #227 vérif consumers post-deploy v2.48.0 (P1, 3 SP, PASS-AVEC-DETTE) + #228 notify aksy DS-EXCEPTIONs S23 (P2, 1 SP). 0 régression DS détectée. **Findings drift consumers** : aksyva v2.24.1 (-24 minor), acssi-core v2.14.3 (-34 minor), aksy v2.36.0 (-12 minor). 4 commentaires postés sur aksy#265, #278, #301, #254/UC-288. Milestone #28 CLOSED.
 - **Sprint 26 livré 2026-05-08** — 2/2 SP = 100% velocity. 26e sprint consécutif. Mini-sprint 1 issue : #226 tokenisation icon/avatar sizes v2.48.0 closes #225 (reliquat audit P-04 à P-08). **Audit Phase 1 (#210) 100% clôturé** (40/40 findings remédiés via 5 sous-issues). Milestone #27 CLOSED.
 - **Sprint 25 livré 2026-05-08** — 12/12 SP = 100% velocity. 4 PRs séquentielles sur `forms.css` (épicentre conflit) : #221 chevron theme-aware v2.44.0, #222 transitions ciblées v2.45.0, #223 tokenisation `--space-*` v2.46.0, #224 restructure composants × pages v2.47.0. Milestone #26 CLOSED.
 - **Sprint 24 livré + déployé 2026-05-08** — v2.43.1 en prod sur design-system.msyx.fr (deploy_tag `deploy-20260508-145548`, previous `deploy-20260507-113853`). 9/9 SP. PRs : #213 logo officiel v2.43.0, #214 refactor nav.js v2.43.1, #220 audit Phase 1, #215 doc SKILL.md.
 - Pipeline durci : `claude-config#24` CLOSED. Cause structurelle de #206 éliminée S24 #211. Action S25 AI-25.1 ouverte sur [`claude-config#29`](https://github.com/msyx-dev/claude-config/issues/29).
-- Auth gate active. Versions : **prod = v2.48.0** (déployé 2026-05-08 21:03, deploy_tag `deploy-20260508-210320`), main = v2.48.0 (sync).
+- Auth gate active. Versions : **prod = v2.48.0** (déployé 2026-05-08 21:03, deploy_tag `deploy-20260508-210320`), main = v2.49.0 (S28 promotions + S28 fix registry — à déployer).
 - DS-EXCEPTIONs aksy S23 : **notifications envoyées Sprint 27** (4 commentaires postés). aksy doit resync v2.36.0 → v2.48.0 puis retirer 3 overrides CSS + 1 helper JS. Suivi côté aksy.
 
 ## Prochaine étape
-- **Sprint 28** : pas de candidats prioritaires identifiés à date. Backlog disponible :
-  - **Bug DS interne (S27 finding)** : `components-registry.json` entrée `reset-natif` a `cssClasses: null` → crash `check-components.sh`. P3 Task, ~1 SP. À ouvrir dans le DS.
-  - **3 dettes consumers (S27 findings)** : 1 issue par consumer (resync DS + cleanup overrides), à ouvrir côté aksyva, acssi-core, aksy respectivement.
-  - **Promotion classes consumer** : `.card-link` (aksyva), `.badge-nav` (acssi), `.toast-message` (acssi), `.input-filter-project` (aksyva) — évaluer promotion dans le DS au prochain sprint design.
-  - **Audit Phase 2** ? À composer en S28+ si besoin (perf, a11y, browser compat).
+- **Déployer v2.49.0** sur design-system.msyx.fr (3 promotions DS + fix registry). Pas de risque utilisateur (ajouts purs additifs CSS, fix registry interne). Lancer `/deploy` quand prêt.
+- **Sprint 29** : pas de candidats prioritaires identifiés à date. Backlog disponible :
+  - **3 dettes consumers (S27 findings)** : 1 issue par consumer (resync DS + cleanup overrides), à ouvrir côté aksyva, acssi-core, aksy respectivement (hors DS).
+  - **Audit Phase 2** ? À composer si besoin (perf, a11y, browser compat).
 - **Issues claude-config en backlog** (~7 SP cumulé, à sprinter depuis le repo claude-config) :
   - [`#29`](https://github.com/msyx-dev/claude-config/issues/29) AI-25.1 (P1, 2 SP) hook anti-merge inter-projet
   - [`#30`](https://github.com/msyx-dev/claude-config/issues/30) AI-25.2 (P2, 1 SP) prompt /dev N1 budget tool_uses
