@@ -1,3 +1,6 @@
+/* @ds-version 2.43.1 */
+const VERSION = '2.43.1';
+
 const NAV_SECTIONS = [
     { title: null, links: [
         { label: 'Hub', icon: '&#9670;', href: '/site.html' },
@@ -117,7 +120,7 @@ function buildHeader() {
     // Construire l'avatar (initiales ou image)
     var avatarContent = '';
     if (user.avatar) {
-        avatarContent = '<img src="' + user.avatar + '" alt="' + (user.name || 'Utilisateur') + '">';
+        avatarContent = `<img src="${user.avatar}" alt="${user.name || 'Utilisateur'}">`;
     } else {
         avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
     }
@@ -125,19 +128,16 @@ function buildHeader() {
     // Construire les items du dropdown
     var dropdownItems = '';
     if (user.name) {
-        dropdownItems += '<div class="header-dropdown-header"><span class="header-dropdown-name">' + user.name + '</span></div>';
+        dropdownItems += `<div class="header-dropdown-header"><span class="header-dropdown-name">${user.name}</span></div>`;
     }
     menuItems.forEach(function(item) {
         if (item.divider) {
             dropdownItems += '<div class="header-dropdown-divider"></div>';
         } else {
             var cls = 'header-dropdown-item' + (item['class'] ? ' ' + item['class'] : '');
-            var dataAction = item.action ? ' data-action="' + item.action + '"' : '';
+            var dataAction = item.action ? ` data-action="${item.action}"` : '';
             var href = item.href || '#';
-            dropdownItems += '<a href="' + href + '" class="' + cls + '"' + dataAction + '>'
-                + (item.icon ? '<span>' + item.icon + '</span>' : '')
-                + item.label
-                + '</a>';
+            dropdownItems += `<a href="${href}" class="${cls}"${dataAction}>${item.icon ? `<span>${item.icon}</span>` : ''}${item.label}</a>`;
         }
     });
 
@@ -148,62 +148,20 @@ function buildHeader() {
         var notifVisible = notifCfg.enabled !== false;
         var badgeHtml = '';
         if (notifCount > 0) {
-            badgeHtml = '<span class="header-notification-badge" id="header-notif-badge">'
-                + (notifCount > 99 ? '99+' : notifCount)
-                + '</span>';
+            badgeHtml = `<span class="header-notification-badge" id="header-notif-badge">${notifCount > 99 ? '99+' : notifCount}</span>`;
         } else {
             badgeHtml = '<span class="header-notification-badge hidden" id="header-notif-badge"></span>';
         }
 
         var notifBellHtml = '';
         if (notifVisible) {
-            notifBellHtml = '<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false">'
-                + '&#128276;'
-                + badgeHtml
-                + '</button>'
-                + '<div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications">'
-                +   '<div class="header-notif-panel-header">'
-                +     '<span>Notifications</span>'
-                +     '<button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button>'
-                +   '</div>'
-                +   '<div class="header-notif-list" id="header-notif-list">'
-                +     '<div class="header-notif-empty">Aucune notification</div>'
-                +   '</div>'
-                + '</div>';
+            notifBellHtml = `<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false">&#128276;${badgeHtml}</button><div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications"><div class="header-notif-panel-header"><span>Notifications</span><button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button></div><div class="header-notif-list" id="header-notif-list"><div class="header-notif-empty">Aucune notification</div></div></div>`;
         }
 
-        userZoneHtml = '<div class="header-user-zone" id="header-user-zone">'
-            + notifBellHtml
-            + '<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">'
-            +   avatarContent
-            + '</button>'
-            + '<div class="header-dropdown" id="header-dropdown" role="menu">'
-            +   dropdownItems
-            + '</div>'
-            + '</div>';
+        userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div></div>`;
     }
 
-    header.innerHTML = ''
-        + '<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button>'
-        + '<a href="/site.html" class="header-logo"><img src="/assets/logo-msyx.svg" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a>'
-        + '<span class="header-version">v2.43.0</span>'
-        + '<span class="header-spacer"></span>'
-        + '<div class="header-controls">'
-        +   '<div class="theme-switcher">'
-        +     '<label class="theme-switcher-label" for="theme-select">Theme</label>'
-        +     '<select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme">'
-        +       '<option value="msyx">MSYX</option>'
-        +       '<option value="acssi">ACSSI</option>'
-        +       '<option value="nhood">Nhood</option>'
-        +     '</select>'
-        +   '</div>'
-        +   '<div class="mode-toggle">'
-        +     '<span class="mode-toggle-label">Mode</span>'
-        +     '<button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button>'
-        +     '<button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button>'
-        +   '</div>'
-        + '</div>'
-        + userZoneHtml;
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo"><img src="/assets/logo-msyx.svg" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls"><div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div><div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button><button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
@@ -357,14 +315,7 @@ function renderNotifications(items) {
     var html = '';
     items.forEach(function(n) {
         var unreadCls = n.unread ? ' unread' : '';
-        html += '<div class="header-notif-item' + unreadCls + '">'
-            + (n.icon ? '<span class="header-notif-icon">' + n.icon + '</span>' : '')
-            + '<div class="header-notif-body">'
-            +   '<div class="header-notif-title">' + (n.title || '') + '</div>'
-            +   (n.desc ? '<div class="header-notif-desc">' + n.desc + '</div>' : '')
-            + '</div>'
-            + (n.time ? '<span class="header-notif-time">' + n.time + '</span>' : '')
-            + '</div>';
+        html += `<div class="header-notif-item${unreadCls}">${n.icon ? `<span class="header-notif-icon">${n.icon}</span>` : ''}<div class="header-notif-body"><div class="header-notif-title">${n.title || ''}</div>${n.desc ? `<div class="header-notif-desc">${n.desc}</div>` : ''}</div>${n.time ? `<span class="header-notif-time">${n.time}</span>` : ''}</div>`;
     });
     list.innerHTML = html;
 }
@@ -375,7 +326,7 @@ function updateHeaderUser(user) {
     if (!btn) return;
     var avatarContent = '';
     if (user.avatar) {
-        avatarContent = '<img src="' + user.avatar + '" alt="' + (user.name || 'Utilisateur') + '">';
+        avatarContent = `<img src="${user.avatar}" alt="${user.name || 'Utilisateur'}">`;
     } else {
         avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
     }
@@ -402,9 +353,9 @@ function buildSidebar() {
     if (!sidebar) return;
     let html = '<div class="sidebar-filter-wrap"><input class="sidebar-filter" type="search" placeholder="Filtrer..." aria-label="Filtrer la navigation" autocomplete="off"></div>';
     NAV_SECTIONS.forEach(section => {
-        if (section.title) html += '<div class="sidebar-section" data-section-title>' + section.title + '</div>';
+        if (section.title) html += `<div class="sidebar-section" data-section-title>${section.title}</div>`;
         section.links.forEach(link => {
-            html += '<a href="' + link.href + '" class="sidebar-link" data-href="' + link.href + '"><span class="icon">' + link.icon + '</span> ' + link.label + '</a>';
+            html += `<a href="${link.href}" class="sidebar-link" data-href="${link.href}"><span class="icon">${link.icon}</span> ${link.label}</a>`;
         });
     });
     html += '<div class="sidebar-footer"><p>msyx.fr — 2026</p></div>';
@@ -718,7 +669,7 @@ async function loadSection(container) {
         if (scrollSpyObserver) { scrollSpyObserver.disconnect(); scrollSpyObserver = null; }
         initScrollSpy();
     } catch (err) {
-        container.innerHTML = '<div class="lazy-error"><p>Erreur de chargement — <a href="' + page + '">ouvrir la page</a></p></div>';
+        container.innerHTML = `<div class="lazy-error"><p>Erreur de chargement — <a href="${page}">ouvrir la page</a></p></div>`;
         container.classList.add('lazy-loaded');
         loadedSections.delete(page);
     }

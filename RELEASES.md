@@ -1,5 +1,13 @@
 # Releases
 
+## v2.43.1 — 2026-05-08 — Sprint 24 — Refactor nav.js : extraction VERSION + template literals
+
+### Changed
+- **refactor: extract VERSION + template literals (prevention #206)** — `shared/nav.js` : extraction de `const VERSION = '2.43.1'` en tête de fichier (avant `NAV_SECTIONS`) et remplacement de toutes les concaténations HTML fragiles (`'literal' + var + 'literal'`) par des template literals ES6 dans les 10 zones identifiées (`buildHeader` avatarContent, dropdownItems, badgeHtml, notifBellHtml, userZoneHtml, header.innerHTML ; `renderNotifications`, `updateHeaderUser`, `buildSidebar`, `loadSection` lazy-error). La string hardcodée `'v2.43.0'` dans `header.innerHTML` est remplacée par `` `v${VERSION}` ``. Refactor strictement isofonctionnel : API publique, DOM rendu et comportement runtime inchangés. Ferme structurellement la classe d'incidents #206 (quote oubliée dans une longue concat string). Closes #211.
+- `@ds-version` bumpé à `2.43.1` dans les 5 fichiers : `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`.
+
+---
+
 ## v2.43.0 — 2026-05-08 — Sprint 24 — Logo officiel MSYX mark-only vectorisé
 
 ### Changed

@@ -15,11 +15,17 @@ try {
   process.exit(1);
 }
 
-// 2. Le span header-version doit etre correctement clos
-// La quote fermante apres </span> est la correction du bug #206
-const headerVersionMatches = src.match(/<span class="header-version">v[\d.]+<\/span>'/g);
-if (!headerVersionMatches || headerVersionMatches.length !== 1) {
-  console.error('FAIL: header-version span mal forme ou manquant');
+// 2. Le span header-version doit etre correctement clos (prevention #206)
+// Apres refactor #211 : template literal avec ${VERSION}, pas de concat fragile
+// On verifie que le pattern template literal est bien ferme et que VERSION est definie
+const headerVersionTemplateLiteral = src.match(/`[^`]*<span class="header-version">v\$\{VERSION\}<\/span>[^`]*`/);
+const versionConstant = src.match(/const VERSION = '[0-9]+\.[0-9]+\.[0-9]+';/);
+if (!headerVersionTemplateLiteral) {
+  console.error('FAIL: header-version span absent ou mal forme dans template literal (prevention #206)');
+  process.exit(1);
+}
+if (!versionConstant) {
+  console.error('FAIL: const VERSION manquante en tete de nav.js (AC1 #211)');
   process.exit(1);
 }
 
