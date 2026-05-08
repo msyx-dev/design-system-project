@@ -10,10 +10,13 @@
 - DS-EXCEPTIONs aksy débloquées S23 : #265, #278, #301, modal-focus UC-288 (toujours à notifier aksy, en attente depuis S23).
 
 ## Prochaine étape
-- **Audit Phase 2** ? À composer si besoin (perf, a11y, browser compat, consumers DS post-deploy).
-- Notifier aksy + acssi-core consumers : v2.48.0 en prod, vérifier absence régression sur 5 bumps mineurs cumulés (chevron theme-aware, transitions ciblées, tokens space, restructure pages, tokens icon/avatar).
-- **AI-25.1 (P1)** : ✅ ouverte → [`msyx-dev/claude-config#29`](https://github.com/msyx-dev/claude-config/issues/29) (hook anti-merge filtrer par projet, 2 SP). Faux positif inter-projet S25 #218 ~3h.
-- **AI-25.2 / AI-25.3 (P2)** : hisser dans le prompt /dev N1 (claude-config) le pattern « budget tool_uses + warning anomalie récente » et l'instruction « lancer `./shared/check-diacritics.sh` avant push si RELEASES.md touché ».
+- **`/sprint 27`** — 4 SP, 2 issues séquentielles coordination cross-projet : #227 vérif consumers post-deploy v2.48.0 (P1, 3 SP) → #228 notify aksy DS-EXCEPTIONs S23 (P2, 1 SP). Stratégie + spécificités « no-PR expected » documentées sur #227 commentaire 4409171142. Milestone #28 créé.
+- **Issues claude-config en backlog** (~7 SP cumulé, à sprinter depuis le repo claude-config) :
+  - [`#29`](https://github.com/msyx-dev/claude-config/issues/29) AI-25.1 (P1, 2 SP) hook anti-merge inter-projet
+  - [`#30`](https://github.com/msyx-dev/claude-config/issues/30) AI-25.2 (P2, 1 SP) prompt /dev N1 budget tool_uses
+  - [`#31`](https://github.com/msyx-dev/claude-config/issues/31) AI-25.3 (P2, 1 SP) prompt /dev N1 check-diacritics avant push
+  - [`#32`](https://github.com/msyx-dev/claude-config/issues/32) capitalisation S24 hors-DS (P2, 3 SP) push obligatoire + cleanup orphelins + pré-allocation versions N1
+- **Audit Phase 2** ? À composer en S28+ si besoin (perf, a11y, browser compat, consumers DS post-deploy). Reporté pour focus sur #227 d'abord (validation post-deploy = priorité).
 - Notifier aksy pour retirer overrides locaux des 4 DS-EXCEPTIONs débloquées S23.
 - Capitalisation S24 hors-DS dans claude-config (cleanup agents-active.json, durcir prompt push, hisser pré-allocation N1) — à traiter dans repo Klaude au prochain passage.
 - **Sprint 26** : pas de candidats prioritaires identifiés à date. Si /deploy v2.47.0 OK → focus consumers (aksyva, acssi-core) pour valider absence régression sur 4 bumps mineurs.
