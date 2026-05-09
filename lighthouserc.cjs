@@ -1,18 +1,35 @@
-// lighthouserc.cjs — Lighthouse CI config (DS v2.53.0)
-// Scope: 1 page × 1 theme (MSYX dark), warn-only mode
-// Multi-themes extension planned in #241
+// lighthouserc.cjs — Lighthouse CI config (DS v2.54.0)
+// Scope: 1 page × 3 themes × 2 modes = 6 runs, warn-only mode
+// THEME_CONFIG (components.js): msyx/acssi/nhood — modes: ['dark','light'] pour les 3
+// Multi-themes extension: #241
 
 'use strict';
+
+const BASE_URL = 'http://localhost:3001/pages/composants.html';
+
+// 3 themes × 2 modes = 6 runs (tous valides d'après THEME_CONFIG)
+const THEME_MODES = [
+  { theme: 'msyx',  mode: 'dark'  },
+  { theme: 'msyx',  mode: 'light' },
+  { theme: 'acssi', mode: 'dark'  },
+  { theme: 'acssi', mode: 'light' },
+  { theme: 'nhood', mode: 'dark'  },
+  { theme: 'nhood', mode: 'light' },
+];
+
+const urls = THEME_MODES.map(
+  ({ theme, mode }) => `${BASE_URL}?theme=${theme}&mode=${mode}`
+);
 
 module.exports = {
   ci: {
     collect: {
-      url: ['http://localhost:3001/pages/composants.html'],
+      url: urls,
       settings: {
         preset: 'desktop',
         chromeFlags: '--no-sandbox --headless',
-        // MSYX dark is the default theme (no localStorage manipulation needed)
-        // data-theme="msyx" data-mode="dark" are defaults in HTML
+        // Theme/mode appliqués via query param → script inline anti-FOUC dans composants.html
+        // Le script lit ?theme=X&mode=Y et l'écrit dans localStorage avant le render
       },
       // Use Playwright's Chromium if available (CI and local dev)
       chromePath: process.env.CHROMIUM_PATH || undefined,
@@ -20,7 +37,7 @@ module.exports = {
     },
     assert: {
       assertions: {
-        // Performance metrics — warn-only on first ticket, block mode planned in #241
+        // Performance metrics — warn-only (block mode planifié post-S31)
         'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }],
         'total-blocking-time': ['warn', { maxNumericValue: 300 }],
         'cumulative-layout-shift': ['warn', { maxNumericValue: 0.1 }],

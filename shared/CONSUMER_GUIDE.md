@@ -431,6 +431,45 @@ Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `
 # Affiche les fichiers qui seraient copiés sans rien modifier
 ```
 
+### Poids reels par module (gzip -9) — baseline v2.54.0
+
+Mesure effectuee le 2026-05-09 sur `shared/css/components/`.
+Modules tries par poids decroissant.
+
+| Module | Taille gzip | Cas d'usage |
+|--------|-------------|-------------|
+| `forms` | 4 540 B | Inputs, selects, checkboxes, OTP, tag input, file upload |
+| `data` | 3 421 B | Tables, data grid, stats, charts, tree view |
+| `interactive` | 3 111 B | Accordion, command palette, context menu, copy button |
+| `pricing` | 2 728 B | Cartes pricing, plans |
+| `modals` | 2 663 B | Modals, focus trap, backdrop |
+| `navigation` | 2 498 B | Header, sidebar, tabs, breadcrumbs, stepper, bottom nav |
+| `media` | 2 415 B | Carousel, lightbox, video embed |
+| `templates` | 2 114 B | Kanban, roadmap, sprint board |
+| `lists` | 2 086 B | Listes structurees, activity feed |
+| `cards` | 1 979 B | Cards, card-link a11y |
+| `feedback` | 1 870 B | Empty states, spinners, pagination, tooltip, drawer, FAB |
+| `badges` | 1 829 B | Badges, badge-nav, achievement badges |
+| `tracker` | 1 695 B | Progress tracker, stepper avance |
+| `overlays` | 1 616 B | Toasts, popovers, notification center |
+| `tables` | 1 542 B | Tables simples (sans data grid) |
+| `motion` | 1 542 B | Animations canoniques, transitions |
+| `buttons` | 1 289 B | Boutons, btn-icon, variantes |
+| `notifications` | 1 214 B | Notification center, bottom sheet |
+| `theming` | 1 194 B | Theme switcher, mode toggle |
+| `alerts` | 1 060 B | Alertes, bannieres |
+| `quiz` | 975 B | Quiz/poll, filter-bar |
+| `_a11y` | 876 B | Focus-visible global (inclus auto) |
+| `_base` | 714 B | Reset natif (inclus auto) |
+| `avatars` | 609 B | Avatars, initiales |
+| `_responsive` | 551 B | Media queries transverses (inclus auto) |
+| `signature` | 360 B | Gradient underline overline |
+
+**Total modules non-transverses** : ~41 KB gzip (ensemble complet)
+**Core preset (7 modules)** : buttons + cards + badges + alerts + forms + navigation + modals ≈ 14 KB gzip
+
+Pour un projet minimal (auth gate, landing page) : `--components=core` suffit (~14 KB vs ~41 KB en plein).
+
 ---
 
 ## Tokens dépréciés (deadline v3.0.0)
