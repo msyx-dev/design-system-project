@@ -588,8 +588,11 @@ function showToast(message, type, duration) {
     var colors = { success: 'var(--success)', error: 'var(--danger)', warning: 'var(--warning)', info: 'var(--info)' };
     var toast = document.createElement('div');
     toast.className = 'toast toast-' + type + ' toast-enter';
-    toast.setAttribute('role', 'status');
-    toast.innerHTML = '<span style="color:' + colors[type] + ';font-size:1rem;">' + icons[type] + '</span><span>' + escapeHTML(message) + '</span><button class="toast-close">&times;</button>';
+    // a11y v2.54.8 (#255) : alert pour error/warning (interruption assistive), status pour success/info (poli)
+    var role = (type === 'error' || type === 'warning') ? 'alert' : 'status';
+    toast.setAttribute('role', role);
+    toast.setAttribute('aria-live', role === 'alert' ? 'assertive' : 'polite');
+    toast.innerHTML = '<span class="toast-message"><span style="color:' + colors[type] + ';font-size:1rem;" aria-hidden="true">' + icons[type] + '</span>' + escapeHTML(message) + '</span><button class="toast-close" aria-label="Fermer">&times;</button>';
     container.appendChild(toast);
     var closeBtn = toast.querySelector('.toast-close');
     function dismiss() {
