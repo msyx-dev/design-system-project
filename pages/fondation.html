@@ -172,11 +172,11 @@
         </div>
         <div class="demo-box">
             <span class="demo-label">Cascade 4 couches</span>
-            <div class="flex-col-gap-xs">
-                <div class="token-item"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--accent-light);">1</span><span class="typo-small"><span class="code-inline">:root</span> — valeurs dark MSYX par defaut</span></div>
-                <div class="token-item"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--deco-violet);">2</span><span class="typo-small"><span class="code-inline">[data-theme]</span> — surcharge palette</span></div>
-                <div class="token-item"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--deco-cyan);">3</span><span class="typo-small"><span class="code-inline">[data-mode="light"]</span> — surcharge luminosite</span></div>
-                <div class="token-item"><span style="font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--deco-pink);">4</span><span class="typo-small"><span class="code-inline">[data-theme][data-mode]</span> — combinaison fine</span></div>
+            <div class="flex-col gap-xs">
+                <div class="demo-flex"><span class="typo-mono" style="color:var(--accent-light);">1</span><span class="typo-small"><span class="code-inline">:root</span> — valeurs dark MSYX par defaut</span></div>
+                <div class="demo-flex"><span class="typo-mono" style="color:var(--deco-violet);">2</span><span class="typo-small"><span class="code-inline">[data-theme]</span> — surcharge palette</span></div>
+                <div class="demo-flex"><span class="typo-mono" style="color:var(--deco-cyan);">3</span><span class="typo-small"><span class="code-inline">[data-mode="light"]</span> — surcharge luminosite</span></div>
+                <div class="demo-flex"><span class="typo-mono" style="color:var(--deco-pink);">4</span><span class="typo-small"><span class="code-inline">[data-theme][data-mode]</span> — combinaison fine</span></div>
             </div>
         </div>
     </div>
@@ -184,29 +184,38 @@
     <div class="demo-grid demo-grid-2 mt-lg">
         <div class="demo-box">
             <span class="demo-label">Variables themables</span>
-            <div class="demo-flex-col">
-                <div class="token-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span class="typo-small">Surfaces — <span class="code-inline">--primary</span>, <span class="code-inline">--surface</span>, <span class="code-inline">--surface-solid</span></span></div>
-                <div class="token-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span class="typo-small">Texte — <span class="code-inline">--text</span>, <span class="code-inline">--text-muted</span>, <span class="code-inline">--text-dim</span></span></div>
-                <div class="token-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--deco-violet);flex-shrink:0;"></div><span class="typo-small">Accents — <span class="code-inline">--accent</span>, <span class="code-inline">--deco-violet</span>, <span class="code-inline">--deco-cyan</span>, <span class="code-inline">--deco-pink</span></span></div>
-                <div class="token-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;"></div><span class="typo-small">Semantique — <span class="code-inline">--success</span>, <span class="code-inline">--warning</span>, <span class="code-inline">--danger</span>, <span class="code-inline">--info</span></span></div>
-                <div class="token-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--chart-1);flex-shrink:0;"></div><span class="typo-small">Charts — <span class="code-inline">--chart-1</span> a <span class="code-inline">--chart-5</span></span></div>
-                <div class="token-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--code-keyword);flex-shrink:0;"></div><span class="typo-small">Syntax — <span class="code-inline">--code-keyword</span>, <span class="code-inline">--code-string</span>, etc.</span></div>
-                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.4rem 0;"><div style="width:8px;height:8px;border-radius:50%;background:var(--sidebar-bg);border:1px solid var(--border-color);flex-shrink:0;"></div><span class="typo-small">Sidebar — <span class="code-inline">--sidebar-bg</span>, <span class="code-inline">--sidebar-link-hover-bg</span>, <span class="code-inline">--sidebar-link-active-bg</span></span></div>
+            <div class="flex-col gap-xs">
+                <div class="demo-flex"><div class="theme-token-dot" style="background:var(--accent);"></div><span class="typo-small">Surfaces — <span class="code-inline">--primary</span>, <span class="code-inline">--surface</span>, <span class="code-inline">--surface-solid</span></span></div>
+                <div class="demo-flex"><div class="theme-token-dot" style="background:var(--accent);"></div><span class="typo-small">Texte — <span class="code-inline">--text</span>, <span class="code-inline">--text-muted</span>, <span class="code-inline">--text-dim</span></span></div>
+                <div class="demo-flex"><div class="theme-token-dot" style="background:var(--deco-violet);"></div><span class="typo-small">Accents — <span class="code-inline">--accent</span>, <span class="code-inline">--deco-violet</span>, <span class="code-inline">--deco-cyan</span>, <span class="code-inline">--deco-pink</span></span></div>
+                <div class="demo-flex"><div class="theme-token-dot" style="background:var(--success);"></div><span class="typo-small">Semantique — <span class="code-inline">--success</span>, <span class="code-inline">--warning</span>, <span class="code-inline">--danger</span>, <span class="code-inline">--info</span></span></div>
+                <div class="demo-flex"><div class="theme-token-dot" style="background:var(--chart-1);"></div><span class="typo-small">Charts — <span class="code-inline">--chart-1</span> a <span class="code-inline">--chart-5</span></span></div>
+                <div class="demo-flex"><div class="theme-token-dot" style="background:var(--code-keyword);"></div><span class="typo-small">Syntax — <span class="code-inline">--code-keyword</span>, <span class="code-inline">--code-string</span>, etc.</span></div>
+                <div class="demo-flex"><div class="theme-token-dot theme-token-dot--bordered" style="background:var(--sidebar-bg);"></div><span class="typo-small">Sidebar — <span class="code-inline">--sidebar-bg</span>, <span class="code-inline">--sidebar-link-hover-bg</span>, <span class="code-inline">--sidebar-link-active-bg</span></span></div>
             </div>
         </div>
         <div class="demo-box">
             <span class="demo-label">Modes disponibles par theme</span>
-            <div class="flex-col-gap-sm">
+            <div class="flex-col gap-sm">
                 <div class="theme-card">
-                    <div class="flex-between-sm"><span class="typo-small fw-600">MSYX</span><span class="badge badge-success text-2xs">dark + light</span></div>
+                    <div class="theme-card-head">
+                        <span class="typo-small fw-600">MSYX</span>
+                        <span class="badge badge-success text-2xs">dark + light</span>
+                    </div>
                     <span class="typo-xs">Palette bleu profond — les deux modes disponibles via le toggle lune/soleil.</span>
                 </div>
                 <div class="theme-card">
-                    <div class="flex-between-sm"><span class="typo-small fw-600">ACSSI</span><span class="badge badge-neutral text-2xs">dark only</span></div>
-                    <span class="typo-xs">Palette bleu marine/or — le bouton light est grise (dark-only). Extensible en v2.</span>
+                    <div class="theme-card-head">
+                        <span class="typo-small fw-600">ACSSI</span>
+                        <span class="badge badge-success text-2xs">dark + light</span>
+                    </div>
+                    <span class="typo-xs">Palette bleu marine/or — fix de cascade applique en v2.54.x (#251).</span>
                 </div>
-                <div style="padding:0.6rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border-color);opacity:0.6;">
-                    <div class="flex-between-sm"><span class="typo-small fw-600">Futur theme</span><span class="badge badge-primary text-2xs">dark + light</span></div>
+                <div class="theme-card theme-card--future">
+                    <div class="theme-card-head">
+                        <span class="typo-small fw-600">Futur theme</span>
+                        <span class="badge badge-primary text-2xs">dark + light</span>
+                    </div>
                     <span class="typo-xs">Ajouter dans THEME_CONFIG : <span class="code-inline">{ modes: ['dark','light'], defaultMode: 'dark' }</span></span>
                 </div>
             </div>
@@ -229,11 +238,35 @@
         <div class="demo-box grid-full">
             <span class="demo-label">Theme ACSSI — palette dark</span>
             <p class="typo-body mb-md">Theme corporate inspire de <strong>acssi.fr</strong> — bleu marine, or, blanc.</p>
-            <div class="flex-wrap-mb">
-                <div style="width:60px;height:60px;border-radius:12px;background:#00345f;border:1px solid rgba(224,205,30,0.3);"></div>
-                <div style="width:60px;height:60px;border-radius:12px;background:#00457a;border:1px solid rgba(224,205,30,0.3);"></div>
-                <div style="width:60px;height:60px;border-radius:12px;background:#e0cd1e;border:1px solid rgba(224,205,30,0.3);"></div>
-                <div style="width:60px;height:60px;border-radius:12px;background:#ffffff;border:1px solid var(--border-color);"></div>
+            <div class="color-grid color-grid--compact">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#00345f;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Primary</div>
+                        <div class="color-hex">#00345f</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#00457a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface</div>
+                        <div class="color-hex">#00457a</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#e0cd1e;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Accent (or)</div>
+                        <div class="color-hex">#e0cd1e</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#ffffff;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text</div>
+                        <div class="color-hex">#ffffff</div>
+                    </div>
+                </div>
             </div>
             <div class="code-block text-xs-lh"><span class="cm">/* Activer le theme ACSSI */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'acssi'</span>;<br><br><span class="cm">/* Revenir au theme MSYX */</span><br><span class="kw">delete</span> <span class="fn">document.documentElement.dataset.theme</span>;</div>
         </div>
@@ -242,11 +275,35 @@
         <div class="demo-box grid-full">
             <span class="demo-label">Theme Nhood</span>
             <p class="typo-body mb-md">Theme inspire de <strong>nhood.fr</strong> — vert fonce, vert menthe, blanc. Supporte dark et light.</p>
-            <div class="flex-wrap-mb">
-                <div style="width:60px;height:60px;border-radius:12px;background:#008837;border:1px solid rgba(0,136,55,0.3);"></div>
-                <div style="width:60px;height:60px;border-radius:12px;background:#73c69c;border:1px solid rgba(0,136,55,0.3);"></div>
-                <div style="width:60px;height:60px;border-radius:12px;background:#ffffff;border:1px solid var(--border-color);"></div>
-                <div style="width:60px;height:60px;border-radius:12px;background:#1a1a1a;border:1px solid var(--border-color);"></div>
+            <div class="color-grid color-grid--compact">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#008837;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Primary</div>
+                        <div class="color-hex">#008837</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#73c69c;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Accent (menthe)</div>
+                        <div class="color-hex">#73c69c</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#ffffff;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface light</div>
+                        <div class="color-hex">#ffffff</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#1a1a1a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text on light</div>
+                        <div class="color-hex">#1a1a1a</div>
+                    </div>
+                </div>
             </div>
             <div class="code-block text-xs-lh"><span class="cm">/* Activer Nhood dark */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'nhood'</span>;<br><br><span class="cm">/* Activer Nhood light */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'nhood'</span>;<br><span class="fn">document.documentElement.dataset.mode</span> = <span class="str">'light'</span>;</div>
         </div>
