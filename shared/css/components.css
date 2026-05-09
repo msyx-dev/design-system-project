@@ -1,4 +1,4 @@
-/* @ds-version: 2.54.1 */
+/* @ds-version: 2.54.2 */
 /* components.css — Barrel. Pour un sous-ensemble : components-core.css ou modules à la carte.
    Tree-shaking : shared/CONSUMER_GUIDE.md#tree-shaking */
 @import url('./components/_base.css');

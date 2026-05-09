@@ -1,5 +1,5 @@
-/* @ds-version 2.54.1 */
-const VERSION = '2.54.1';
+/* @ds-version 2.54.2 */
+const VERSION = '2.54.2';
 
 const NAV_SECTIONS = [
     { title: null, links: [
@@ -173,8 +173,13 @@ function buildHeader() {
             });
         }
     }
-    if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
+    // FIX #251 — ordre garanti : initModeSwitcher AVANT initThemeSwitcher.
+    // initModeSwitcher pose les listeners + lit data-theme/data-mode actuel ;
+    // initThemeSwitcher rappelle updateModeButtons() apres pour re-synchroniser
+    // l'etat disabled des boutons dark/light si l'attribut data-theme a ete
+    // pose tardivement (race anti-FOUC).
     if (typeof initModeSwitcher === 'function') initModeSwitcher();
+    if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
     if (authEnabled) {
         initHeaderUser();
         if ((cfg.notifications || {}).enabled !== false) initHeaderNotifications();
