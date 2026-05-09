@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.54.7 */
 /* theming.css — extracted from components.css v2.35.0 */
 
 /* ===== COLORS ===== */
@@ -9,6 +9,13 @@
 .color-info { padding: 0.6rem 0.7rem; background: var(--surface-solid); }
 .color-name { font-size: 0.75rem; font-weight: 600; margin-bottom: 0.15rem; }
 .color-hex { font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* Variante compacte pour palettes themes — v2.54.7 (#249) */
+.color-grid--compact { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); }
+.color-grid--compact .color-preview { height: 56px; }
+.color-grid--compact .color-info { padding: 0.45rem 0.55rem; }
+.color-grid--compact .color-name { font-size: 0.7rem; }
+.color-grid--compact .color-hex { font-size: 0.64rem; }
 
 /* ===== TYPOGRAPHY ===== */
 /* font-size mappes sur l'echelle modulaire ratio 1.25 (--type-*) — v2.37.0 */
@@ -57,5 +64,42 @@ html { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3
     background: var(--surface-solid);
     backdrop-filter: none;
   }
+}
+
+/* ===== THEME PREVIEW CARDS — v2.54.7 (#249) ===== */
+/* Cards listant les modes par theme dans pages/fondation.html#theming */
+.theme-card {
+  padding: var(--space-md);
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  transition: border-color var(--duration-base, 0.2s) ease;
+}
+.theme-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+}
+.theme-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.theme-card--future {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+/* Pastilles de couleur pour la liste "Variables themables" — v2.54.7 (#249) */
+.theme-token-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.theme-token-dot--bordered {
+  border: 1px solid var(--border-color);
 }
 
