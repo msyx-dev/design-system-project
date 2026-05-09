@@ -36,6 +36,21 @@
 <!-- CODE -->
 <section id="code">
     <div class="section-header"><span class="overline">Avancé</span><h2>Code blocks</h2><p>Affichage de code avec coloration syntaxique.</p></div>
+    <div class="demo-box" style="margin-bottom:var(--space-md);">
+        <span class="demo-label">Code inline (.code-inline)</span>
+        <h3 style="margin:0 0 var(--space-sm);font-size:1rem;">Référence technique au fil du texte</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;">
+            Pour des références techniques courtes (paths, commandes, identifiants) au fil du texte.
+            Exemple : exécuter <code class="code-inline">docker compose up -d</code> puis ouvrir
+            <code class="code-inline">/etc/caddy/Caddyfile</code>.
+        </p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:var(--space-md);">
+            Variantes contextuelles : dans une alerte, un empty-state, un tooltip — la classe
+            s'adapte (font-size relatif <code class="code-inline">0.9em</code> + tokens DS canoniques :
+            <code class="code-inline">--font-mono</code>, <code class="code-inline">--surface-solid</code>,
+            <code class="code-inline">--border-color</code>, <code class="code-inline">--radius-xs</code>).
+        </p>
+    </div>
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
             <span class="demo-label">CSS</span>

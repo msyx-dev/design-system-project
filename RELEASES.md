@@ -1,5 +1,26 @@
 # Releases
 
+## v2.50.0 — 2026-05-09
+
+### Changed
+- `.code-inline` (interactive.css) — refactor visuel : background neutre (`--surface-solid`)
+  + border subtle (`--border-color`) + tokens canoniques (`--font-mono`, `--radius-xs`).
+  Promotion d'une DS-EXCEPTION aksy (UC-373 / aksy#470). Pas de breaking : classe
+  préexistante, ~30 usages dans pages/composants + pages/templates conservés.
+- pages/divers.html : nouvelle démo dédiée `.code-inline` dans la section "code"
+  (`.demo-box` placée avant la grille des `.code-block`).
+- `shared/components-registry.json` : ajout entrée `code-inline` (page divers,
+  module `interactive.css`) + bump `version` 2.49.0 → 2.50.0.
+
+### Notes
+- Tokens utilisés : `--font-mono`, `--surface-solid`, `--border-color`, `--radius-xs`
+  — tous définis dans tous les thèmes (MSYX/ACSSI/Nhood × dark/light).
+- Pas de JS init (composant pure CSS), pas de FOUC à craindre.
+- Compteur hero `site.html` inchangé (refactor + démo, pas un nouveau composant).
+- Cleanup aksy DS-EXCEPTION (UC-373 / aksy#470) à planifier après resync v2.50.0.
+
+---
+
 ## v2.49.1 — 2026-05-09
 ### Fixed
 - **tokens.css ACSSI** : suppression du bloc legacy commenté L244-616 (#233). Le commentaire `/* ----- Themes externalises vers themes/*.json (v2.39.0) -----` ouvert L244 n'était jamais correctement fermé (marqueurs `* /` avec espace = invalides), englobant les 4 blocs `[data-theme="acssi"]` (dark+light) et `[data-theme="nhood"]` (dark+light). Code mort : les thèmes sont déjà servis par `themes/*.json` → `themes.css`. Aucun impact rendu (le bloc était déjà ignoré par le parser CSS), mais nettoyage indispensable car ces blocs auraient été ré-activés par tout fix qui aurait choisi l'option "refermer correctement".

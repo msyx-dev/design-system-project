@@ -8,7 +8,14 @@
 .code-block .cm { color: var(--code-comment); font-style: italic; }
 .code-block .fn { color: var(--code-function); }
 .code-block .num { color: var(--code-number); }
-.code-inline { font-family: 'Fira Code', monospace; font-size: 0.82rem; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent-light); padding: 0.15rem 0.5rem; border-radius: 5px; }
+.code-inline {
+    font-family: var(--font-mono);
+    background: var(--surface-solid);
+    padding: 0.1em 0.4em;
+    border-radius: var(--radius-xs);
+    font-size: 0.9em;
+    border: 1px solid var(--border-color);
+}
 
 /* ===== COPY BUTTON ===== */
 .copy-btn {

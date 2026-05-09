@@ -1,5 +1,5 @@
 {
-  "version": "2.49.0",
+  "version": "2.50.0",
   "generated": "2026-05-08",
   "components": [
     {
@@ -140,6 +140,15 @@
       "cssClasses": [".code-block", ".code-header", ".code-lang", ".code-body"],
       "jsInit": "initCopyButtons",
       "example": "<div class=\"code-block\">\n  <div class=\"code-header\">\n    <span class=\"code-lang\">css</span>\n    <button class=\"copy-btn\" data-copy-target=\"code-exemple\" aria-label=\"Copier\">Copier</button>\n  </div>\n  <pre class=\"code-body\" id=\"code-exemple\"><code>var(--accent)</code></pre>\n</div>"
+    },
+    {
+      "name": "code-inline",
+      "page": "divers",
+      "section": "code",
+      "module": "shared/css/components/interactive.css",
+      "cssClasses": [".code-inline"],
+      "jsInit": null,
+      "example": "<p>Exécuter <code class=\"code-inline\">docker compose up -d</code> puis ouvrir <code class=\"code-inline\">/etc/caddy/Caddyfile</code>.</p>"
     },
     {
       "name": "copy-button",
