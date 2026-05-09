@@ -1,13 +1,15 @@
 {
-  "lcp_ms": 364,
-  "tbt_ms": 12,
-  "cls": 0.012076,
-  "performance_score": 1.0,
-  "fcp_ms": 358,
-  "page": "http://localhost:3001/pages/composants.html",
-  "theme": "msyx-dark",
+  "version": "v2.54.0",
+  "measured_at": "2026-05-09",
+  "page": "composants.html",
   "preset": "desktop",
-  "measured_at": "2026-05-09T17:22:43.098Z",
-  "version": "2.53.0",
-  "notes": "Baseline run #1 — local serve, Playwright Chromium 1217, 1 run, warn-only assertions. Thresholds: LCP<2500ms, TBT<300ms, CLS<0.1, Perf>=0.85."
+  "notes": "6 runs (3 themes × 2 modes) — local serve, Playwright Chromium 1217, 1 run/URL, warn-only assertions. Seuils: LCP<2500ms, TBT<300ms, CLS<0.1, Perf>=0.85.",
+  "runs": {
+    "msyx-dark":  { "lcp_ms": 291, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 273 },
+    "msyx-light": { "lcp_ms": 290, "tbt_ms": 49, "cls": 0, "performance_score": 1.0, "fcp_ms": 232 },
+    "acssi-dark": { "lcp_ms": 253, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 245 },
+    "acssi-light":{ "lcp_ms": 251, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 251 },
+    "nhood-dark": { "lcp_ms": 292, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 249 },
+    "nhood-light":{ "lcp_ms": 265, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 265 }
+  }
 }
