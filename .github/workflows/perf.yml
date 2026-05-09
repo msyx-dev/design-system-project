@@ -1,0 +1,46 @@
+name: Lighthouse CI (perf budget)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers (Chromium for lhci)
+        run: npx playwright install chromium
+
+      - name: Start local server
+        run: npx serve -s . -l 3001 &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3001 --timeout 30000
+
+      - name: Run Lighthouse CI
+        run: npx lhci autorun
+        continue-on-error: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse report artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 30

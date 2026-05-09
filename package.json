@@ -13,8 +13,10 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.48.0",
-    "serve": "^14.2.4"
+    "serve": "^14.2.4",
+    "wait-on": "^9.0.5"
   },
   "engines": {
     "node": ">=20"

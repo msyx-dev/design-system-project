@@ -1,0 +1,13 @@
+{
+  "lcp_ms": 364,
+  "tbt_ms": 12,
+  "cls": 0.012076,
+  "performance_score": 1.0,
+  "fcp_ms": 358,
+  "page": "http://localhost:3001/pages/composants.html",
+  "theme": "msyx-dark",
+  "preset": "desktop",
+  "measured_at": "2026-05-09T17:22:43.098Z",
+  "version": "2.53.0",
+  "notes": "Baseline run #1 — local serve, Playwright Chromium 1217, 1 run, warn-only assertions. Thresholds: LCP<2500ms, TBT<300ms, CLS<0.1, Perf>=0.85."
+}
