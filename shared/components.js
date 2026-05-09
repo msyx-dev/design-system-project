@@ -775,6 +775,10 @@ function initThemeSwitcher() {
     if (!select) return;
     var current = document.documentElement.getAttribute('data-theme') || 'msyx';
     select.value = current;
+    // FIX #251 — recalcule l'etat des boutons dark/light apres lecture du
+    // data-theme initial. Couvre la race anti-FOUC ou initModeSwitcher peut
+    // avoir tourne avant que data-theme ne soit pose sur <html>.
+    if (typeof updateModeButtons === 'function') updateModeButtons();
     if (select.dataset.bound) return;
     select.dataset.bound = '1';
     select.addEventListener('change', function() {
