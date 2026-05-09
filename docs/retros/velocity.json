@@ -166,5 +166,11 @@
     "planned_sp": 3,
     "delivered_sp": 3,
     "accuracy": 100
+  },
+  {
+    "sprint": 29,
+    "planned_sp": 4,
+    "delivered_sp": 4,
+    "accuracy": 100
   }
 ]
