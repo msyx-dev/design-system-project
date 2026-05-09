@@ -1,5 +1,5 @@
 {
-  "version": "2.54.7",
+  "version": "2.54.8",
   "generated": "2026-05-09",
   "components": [
     {
@@ -505,14 +505,6 @@
       "cssClasses": [".theme-switcher", ".theme-switcher-label", ".theme-switcher-select", ".mode-toggle"],
       "jsInit": "initThemeSwitcher",
       "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>"
-    },
-    {
-      "name": "theme-card",
-      "page": "fondation",
-      "cssClasses": [".theme-card", ".theme-card-head", ".theme-card--future", ".color-grid--compact", ".theme-token-dot"],
-      "jsInit": null,
-      "description": "Cards de presentation des themes dans la section #theming de fondation.html (v2.54.7, #249). Reutilise le pattern .color-grid + .color-swatch en variante --compact pour afficher les palettes ACSSI / Nhood avec nom + hex visibles. Remplace les classes orphelines (theme-card, flex-wrap-mb, flex-between-sm, flex-col-gap-*, token-row).",
-      "example": "<div class=\"theme-card\">\n  <div class=\"theme-card-head\">\n    <span class=\"typo-small fw-600\">MSYX</span>\n    <span class=\"badge badge-success text-2xs\">dark + light</span>\n  </div>\n  <span class=\"typo-xs\">Description du theme.</span>\n</div>\n\n<div class=\"color-grid color-grid--compact\">\n  <div class=\"color-swatch\">\n    <div class=\"color-preview\" style=\"background:#00345f;\"></div>\n    <div class=\"color-info\">\n      <div class=\"color-name\">Primary</div>\n      <div class=\"color-hex\">#00345f</div>\n    </div>\n  </div>\n</div>"
     }
   ]
 }
