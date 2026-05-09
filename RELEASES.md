@@ -1,5 +1,34 @@
 # Releases
 
+## v2.51.0 — 2026-05-09
+
+### Added
+- **Perf budget — mesure gzip + step CI warn (#239)**. Outillage de plomberie
+  pour suivre l'évolution du poids gzippé des 5 fichiers clés du DS :
+  `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`,
+  `shared/css/components-core.css`, `shared/components.js`.
+- `shared/perf-budget.sh` — script bash zero-dépendance (gzip + wc) qui mesure
+  la taille gzippée et compare aux seuils de `shared/perf-budget.json`. Sortie
+  human-readable par défaut, `--json` pour CI, `--check` pour mode block.
+- `shared/perf-budget.json` — baseline + seuils versionnés (mesure 2026-05-09
+  + buffer 5%). Source de vérité unique.
+- `.github/workflows/ci.yml` — nouveau job `perf-budget` (warn-only, ne bloque
+  pas la PR), résultats publiés en `$GITHUB_STEP_SUMMARY`.
+- `shared/CONSUMER_GUIDE.md` — section "Perf budget" : procédure de mise à jour
+  baseline pour les agents et humains.
+
+### Notes
+- Pas de nouvelle dépendance npm (gzip + wc -c POSIX, Node optionnel pour parser
+  le JSON, fallback grep si Node absent).
+- Mesure courante (v2.51.0) : 41.34 KB gzippé total sur les 5 fichiers, dont
+  components.js = 33.39 KB (≈ 81% du budget).
+- Convention : à chaque PR qui modifie un des 5 fichiers, le job CI rapporte
+  l'écart vs baseline. Si dépassement → mettre à jour `perf-budget.json` dans
+  la même PR (ou justifier dans la description).
+
+---
+
+
 ## v2.50.0 — 2026-05-09
 
 ### Changed
