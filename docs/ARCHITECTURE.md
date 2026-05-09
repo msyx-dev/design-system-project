@@ -125,6 +125,21 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 - **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil, timeout 30 min
 - **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
 
+## A11y audit (depuis v2.52.0 — #242)
+
+Infrastructure d'audit d'accessibilité automatisé via axe-core.
+
+- **Outils** : `@axe-core/playwright` v4.x (devDep) — API Deque officielle `AxeBuilder`
+- **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les 108 baselines VR
+- **Matrice** : 9 pages × 3 thèmes × 2 modes = 54 runs (même couverture que VR sans viewport)
+- **Règles** : `wcag2a`, `wcag2aa`, `wcag21aa` (WCAG 2.0 + 2.1 A/AA)
+- **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001, séparé du pipeline VR
+- **Mode dry-run** : ne fait jamais échouer le test sur violation (logger seulement)
+- **Rapport** : `docs/audit-a11y-<date>.md` — généré en `afterAll`, tableau par règle + détail par run
+- **CI** : `.github/workflows/a11y.yml` — séparé de `visual.yml`, `continue-on-error: true`, artifact uploadé
+- **Scripts npm** : `test:a11y` (run) + `test:a11y:report` (open report HTML)
+- **Résultat initial** (v2.52.0, 2026-05-09) : 0 violations sur 54 runs Chromium local
+
 ## Navigation et layout
 
 ### Header fixe (56px)

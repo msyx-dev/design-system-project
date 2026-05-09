@@ -11,3 +11,5 @@ playwright-report/
 # Build artifacts locaux (shared/build.sh) — ajouté avant deploy v2.48.0
 shared/dist/
 pnpm-lock.yaml
+test-results-a11y/
+playwright-report-a11y/
