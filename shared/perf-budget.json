@@ -1,0 +1,39 @@
+{
+  "_comment": "Seuils perf budget DS — taille gzippée (zlib level 9). Baseline = mesure 2026-05-09 + buffer 5%.",
+  "_baseline_date": "2026-05-09",
+  "_baseline_version": "v2.50.0",
+  "_method": "gzip -c -9 <file> | wc -c",
+  "_update_procedure": "Voir shared/CONSUMER_GUIDE.md section 'Perf budget' ou ./shared/perf-budget.sh --json pour mesure courante.",
+  "files": [
+    {
+      "path": "shared/css/tokens.css",
+      "threshold_bytes": 5392,
+      "baseline_bytes": 5136,
+      "note": "Tokens CSS — variables uniquement"
+    },
+    {
+      "path": "shared/css/utilities.css",
+      "threshold_bytes": 2489,
+      "baseline_bytes": 2371,
+      "note": "Classes utilitaires"
+    },
+    {
+      "path": "shared/css/components.css",
+      "threshold_bytes": 382,
+      "baseline_bytes": 364,
+      "note": "Barrel CSS complet (26 @import) — taille hors imports résolus"
+    },
+    {
+      "path": "shared/css/components-core.css",
+      "threshold_bytes": 287,
+      "baseline_bytes": 274,
+      "note": "Barrel CSS essentiel (7 @import) — pour consumers légers"
+    },
+    {
+      "path": "shared/components.js",
+      "threshold_bytes": 35896,
+      "baseline_bytes": 34187,
+      "note": "JS partagé — composants interactifs"
+    }
+  ]
+}

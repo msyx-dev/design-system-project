@@ -19,3 +19,22 @@ jobs:
         run: |
           chmod +x tests/test-check-diacritics.sh
           ./tests/test-check-diacritics.sh
+  perf-budget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run perf budget (warn-only)
+        run: |
+          chmod +x shared/perf-budget.sh
+          ./shared/perf-budget.sh
+        continue-on-error: true
+      - name: Emit summary
+        run: |
+          echo "## Perf budget report" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ./shared/perf-budget.sh >> $GITHUB_STEP_SUMMARY 2>&1 || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
