@@ -13,3 +13,6 @@ shared/dist/
 pnpm-lock.yaml
 test-results-a11y/
 playwright-report-a11y/
+
+# Lighthouse CI run artifacts (rapports locaux — baseline versionnee dans lhci-baseline.json)
+.lighthouseci/
