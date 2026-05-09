@@ -1,4 +1,4 @@
-/* @ds-version: 2.49.1 */
+/* @ds-version: 2.50.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -241,3 +241,376 @@
     --accent-glow: rgba(var(--accent-rgb), 0.08);
 }
 
+/* ----- Themes externalises vers themes/*.json (v2.39.0) -----
+   MIGRATED: themes/acssi.json + themes/nhood.json — to remove in v2.40.0
+   @import url('css/themes.css') added to styles.css
+
+/* ----- Theme ACSSI ----- * /
+/* Palette : bleu marine #00345f / or #e0cd1e / blanc #ffffff * /
+/* Activation : document.documentElement.dataset.theme = 'acssi' * /
+[data-theme="acssi"] {
+    /* Backgrounds * /
+    --primary: #00345f;
+    --primary-light: #00457a;
+
+    /* Accent or * /
+    --accent: #e0cd1e;
+    --accent-rgb: 224, 205, 30;
+    --accent-light: #ead92e;
+    --accent-glow: rgba(var(--accent-rgb), 0.12);
+
+    /* Texte sur fond accent — marine sur or (WCAG AAA 8.21:1) * /
+    --text-on-accent: #00243f;
+
+    /* Surfaces * /
+    --surface: rgba(0, 69, 122, 0.6);
+    --surface-solid: #00457a;
+    --surface-light: #005a9e;
+
+    /* Textes * /
+    --text: #ffffff;
+    --text-muted: #cbd5e1;          /* AA — 8.54:1 sur #00345f, 6.63:1 sur #00457a, 4.78:1 sur #005a9e (was #94a3b8 = 2.77:1 KO) */
+    --text-dim: #9eb3c8;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239eb3c8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+    /* Gradients corporate * /
+    /* gradient-1 : or→or-foncé (marine foncé lisible partout, WCAG AA ≥ 4.8:1) * /
+    --gradient-1: linear-gradient(135deg, #e0cd1e, #b8a51a);
+    --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
+    --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
+    --gradient-4: linear-gradient(135deg, #e0cd1e, #f59e0b);
+
+    /* Layout shell * /
+    --sidebar-bg: rgba(0, 52, 95, 0.9);
+    --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.06);
+    --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.10);
+
+    /* Bordures * /
+    --border-color: rgba(var(--accent-rgb), 0.12);
+    --border-hover: rgba(var(--accent-rgb), 0.35);
+    --border: var(--border-color); /* deprecated, remove in v3 * /
+
+    /* Ombres * /
+    --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+    /* Semantiques * /
+    --success: #22c55e;
+    --warning: #f97316;
+    --danger: #ef4444;
+    --info: #38bdf8;
+    --success-rgb: 34, 197, 94;
+    --warning-rgb: 249, 115, 22;
+    --danger-rgb: 239, 68, 68;
+    --info-rgb: 56, 189, 248;
+
+    /* Couleurs etendues * /
+    --deco-violet: #005a9e;
+    --deco-violet-rgb: 0, 90, 158;
+    --deco-cyan: #38bdf8;
+    --deco-cyan-rgb: 56, 189, 248;
+    --deco-pink: #f97316;
+    --violet: var(--deco-violet); /* deprecated, remove in v3 * /
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 * /
+    --cyan: var(--deco-cyan); /* deprecated, remove in v3 * /
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 * /
+    --pink: var(--deco-pink); /* deprecated, remove in v3 * /
+    --text-muted-rgb: 203, 213, 225;  /* synced with --text-muted: #cbd5e1 */
+
+    /* Semantic light * /
+    --success-light: #4ade80;
+    --warning-light: #fb923c;
+    --danger-light: #f87171;
+    --info-light: #7dd3fc;
+
+    /* Semantic dark * /
+    --success-dark: #16a34a;
+    --warning-dark: #ea580c;
+    --danger-dark: #dc2626;
+    --info-dark: #0e7490;
+
+    /* Status tokens (fg/bg/border triplets pour Alert, Input error, Button danger) * /
+    /* Mode dark ACSSI : fg = couleur claire sur fond marine, bg/border alpha * /
+    --status-warn-fg: #fb923c;
+    --status-warn-bg: rgba(251, 146, 60, 0.15);
+    --status-warn-border: rgba(251, 146, 60, 0.40);
+    --status-error-fg: #f87171;
+    --status-error-bg: rgba(248, 113, 113, 0.15);
+    --status-error-border: rgba(248, 113, 113, 0.40);
+    --status-info-fg: #7dd3fc;
+    --status-info-bg: rgba(125, 211, 252, 0.15);
+    --status-info-border: rgba(125, 211, 252, 0.40);
+    --status-success-fg: #4ade80;
+    --status-success-bg: rgba(74, 222, 128, 0.15);
+    --status-success-border: rgba(74, 222, 128, 0.40);
+
+    /* Code syntax * /
+    --code-keyword: #e0cd1e;
+    --code-string: #4ade80;
+    --code-comment: #5a7a96;
+    --code-function: #38bdf8;
+    --code-number: #fb923c;
+
+    /* Overlays * /
+    --overlay: rgba(0, 0, 0, 0.55);
+    --overlay-heavy: rgba(0, 30, 60, 0.85);
+
+    /* Hub card backgrounds * /
+    --hub-bg-violet: rgba(0, 90, 158, 0.15);
+    --hub-bg-cyan: rgba(56, 189, 248, 0.12);
+    --hub-bg-pink: rgba(249, 115, 22, 0.12);
+    --hub-bg-success: rgba(34, 197, 94, 0.12);
+    --hub-bg-warning: rgba(var(--accent-rgb), 0.12);
+
+    /* Chart palette * /
+    --chart-1: #e0cd1e;
+    --chart-2: #38bdf8;
+    --chart-3: #4ade80;
+    --chart-4: #f97316;
+    --chart-5: #00457a;
+}
+
+/* ----- Theme ACSSI + Mode Light ----- * /
+/* Accent principal : bleu marine #00345f — or reserve aux gradients/decorations * /
+[data-theme="acssi"][data-mode="light"] {
+    /* Backgrounds * /
+    --primary: #f0f4f8;
+    --primary-light: #e8eef4;
+
+    /* Accent bleu marine * /
+    --accent: #00345f;
+    --accent-rgb: 0, 52, 95;
+    --accent-light: #00457a;
+    --accent-glow: rgba(var(--accent-rgb), 0.10);
+
+    /* Texte sur fond accent — blanc sur marine (WCAG AAA 12.7:1) * /
+    --text-on-accent: #ffffff;
+
+    /* Surfaces * /
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-solid: #ffffff;
+    --surface-light: #dce4ec;
+
+    /* Textes — recalibrés a11y AA (#164) * /
+    --text: #00243f;
+    --text-muted: #2c4358;          /* AA — 5.45:1 sur #fff, 5.12:1 sur #f0f4f8 (était #3d5a73 = 2.56:1) * /
+    --text-muted-rgb: 44, 67, 88;
+    --text-dim: #4a6a84;             /* AA Large — 3.97:1 sur #fff (UI/large only) * /
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a6a84' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    --deco-violet-rgb: 0, 90, 158;
+    --deco-cyan-rgb: 56, 189, 248;
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 * /
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 * /
+
+    /* Gradients — or decoratif sur fond marine * /
+    --gradient-1: linear-gradient(135deg, #00345f, #e0cd1e);
+    --gradient-2: linear-gradient(135deg, #e0cd1e, #f59e0b);
+    --gradient-3: linear-gradient(135deg, #00345f, #005a9e);
+    --gradient-4: linear-gradient(135deg, #00457a, #00345f);
+
+    /* Layout shell * /
+    --sidebar-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.05);
+    --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.08);
+
+    /* Bordures * /
+    --border-color: rgba(var(--accent-rgb), 0.12);
+    --border-hover: rgba(var(--accent-rgb), 0.30);
+    --border: var(--border-color); /* deprecated, remove in v3 * /
+
+    /* Ombres — legeres, teintees bleu marine * /
+    --shadow: 0 4px 20px rgba(0, 30, 60, 0.08);
+    --shadow-lg: 0 12px 40px rgba(0, 30, 60, 0.12);
+    --shadow-sm: 0 2px 8px rgba(0, 30, 60, 0.06);
+
+    /* Semantiques — assombries pour contraste WCAG AA sur fond clair * /
+    --success: #15803d;
+    --warning: #c2410c;
+    --danger: #dc2626;
+    --info: #0369a1;
+    --success-rgb: 21, 128, 61;
+    --warning-rgb: 194, 65, 12;
+    --danger-rgb: 220, 38, 38;
+    --info-rgb: 3, 105, 161;
+
+    /* Semantic light * /
+    --success-light: #22c55e;
+    --warning-light: #f97316;
+    --danger-light: #ef4444;
+    --info-light: #0ea5e9;
+
+    /* Semantic dark * /
+    --success-dark: #15803d;
+    --warning-dark: #c2410c;
+    --danger-dark: #b91c1c;
+    --info-dark: #0c6b88;
+
+    /* Status tokens (fg/bg/border triplets pour Alert, Input error, Button danger) * /
+    /* Mode light : fg WCAG AA sur #ffffff — bg/border via color-mix * /
+    --status-warn-fg: #c2410c;
+    --status-warn-bg: color-mix(in srgb, #c2410c 8%, #ffffff);
+    --status-warn-border: color-mix(in srgb, #c2410c 24%, #ffffff);
+    --status-error-fg: #dc2626;
+    --status-error-bg: color-mix(in srgb, #dc2626 8%, #ffffff);
+    --status-error-border: color-mix(in srgb, #dc2626 24%, #ffffff);
+    --status-info-fg: #0369a1;
+    --status-info-bg: color-mix(in srgb, #0369a1 8%, #ffffff);
+    --status-info-border: color-mix(in srgb, #0369a1 24%, #ffffff);
+    --status-success-fg: #15803d;
+    --status-success-bg: color-mix(in srgb, #15803d 8%, #ffffff);
+    --status-success-border: color-mix(in srgb, #15803d 24%, #ffffff);
+
+    /* Code syntax — adapte fond clair * /
+    --code-keyword: #00345f;
+    --code-string: #15803d;
+    --code-comment: #5a7a90;
+    --code-function: #0056a0;
+    --code-number: #b45309;
+
+    /* Overlays * /
+    --overlay: rgba(0, 0, 0, 0.30);
+    --overlay-heavy: rgba(240, 244, 248, 0.90);
+
+    /* Hub card backgrounds * /
+    --hub-bg-violet: rgba(0, 90, 158, 0.08);
+    --hub-bg-cyan: rgba(2, 132, 199, 0.07);
+    --hub-bg-pink: rgba(234, 88, 12, 0.07);
+    --hub-bg-success: rgba(22, 163, 74, 0.07);
+    --hub-bg-warning: rgba(224, 205, 30, 0.08);
+
+    /* Chart palette * /
+    --chart-1: #00345f;
+    --chart-2: #0284c7;
+    --chart-3: #16a34a;
+    --chart-4: #ea580c;
+    --chart-5: #b45309;
+}
+
+/* ----- Theme Nhood ----- * /
+/* Palette : vert fonce #008837 / menthe #73c69c / blanc #ffffff / noir #1a1a1a * /
+/* Activation : document.documentElement.dataset.theme = 'nhood' * /
+[data-theme="nhood"] {
+    --primary: #0a1a0f;
+    --primary-light: #0f2415;
+    --accent: #008837;
+    --accent-rgb: 0, 136, 55;
+    --accent-light: #73c69c;
+    --accent-glow: rgba(var(--accent-rgb), 0.14);
+    --surface: rgba(15, 36, 21, 0.65);
+    --surface-solid: #0f2415;
+    --surface-light: #1a3d22;
+    --text: #f0faf4;
+    --text-muted: #8fbfa0;
+    --text-dim: #6a9e7a;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a9e7a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    --gradient-1: linear-gradient(135deg, #008837, #73c69c);
+    --gradient-2: linear-gradient(135deg, #22c55e, #008837);
+    --gradient-3: linear-gradient(135deg, #008837, #00b84d);
+    --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
+    --border-color: rgba(var(--accent-rgb), 0.12);
+    --border-hover: rgba(var(--accent-rgb), 0.35);
+    --border: var(--border-color); /* deprecated, remove in v3 * /
+    --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+    --success: #22c55e;
+    --warning: #f97316;
+    --danger: #ef4444;
+    --info: #38bdf8;
+    --success-rgb: 34, 197, 94;
+    --warning-rgb: 249, 115, 22;
+    --danger-rgb: 239, 68, 68;
+    --info-rgb: 56, 189, 248;
+    --deco-violet: #7c3aed;
+    --deco-violet-rgb: 124, 58, 237;
+    --deco-cyan: #06b6d4;
+    --deco-cyan-rgb: 6, 182, 212;
+    --deco-pink: #ec4899;
+    --violet: var(--deco-violet); /* deprecated, remove in v3 * /
+    --violet-rgb: var(--deco-violet-rgb); /* deprecated, remove in v3 * /
+    --cyan: var(--deco-cyan); /* deprecated, remove in v3 * /
+    --cyan-rgb: var(--deco-cyan-rgb); /* deprecated, remove in v3 * /
+    --pink: var(--deco-pink); /* deprecated, remove in v3 * /
+    --text-muted-rgb: 143, 191, 160;
+    --success-light: #4ade80;
+    --warning-light: #fb923c;
+    --danger-light: #f87171;
+    --info-light: #7dd3fc;
+    --success-dark: #16a34a;
+    --warning-dark: #ea580c;
+    --danger-dark: #dc2626;
+    --info-dark: #0e7490;
+    --code-keyword: #73c69c;
+    --code-string: #4ade80;
+    --code-comment: #4a7a56;
+    --code-function: #38bdf8;
+    --code-number: #fb923c;
+    --overlay: rgba(0, 0, 0, 0.55);
+    --overlay-heavy: rgba(10, 26, 15, 0.85);
+    --sidebar-bg: rgba(10, 26, 15, 0.9);
+    --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.06);
+    --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.10);
+    --hub-bg-violet: rgba(124, 58, 237, 0.12);
+    --hub-bg-cyan: rgba(6, 182, 212, 0.10);
+    --hub-bg-pink: rgba(236, 72, 153, 0.10);
+    --hub-bg-success: rgba(var(--accent-rgb), 0.15);
+    --hub-bg-warning: rgba(249, 115, 22, 0.12);
+    --chart-1: #008837;
+    --chart-2: #73c69c;
+    --chart-3: #38bdf8;
+    --chart-4: #f97316;
+    --chart-5: #7c3aed;
+}
+
+/* ----- Theme Nhood + Mode Light ----- * /
+[data-theme="nhood"][data-mode="light"] {
+    --primary: #f5fbf7;
+    --primary-light: #ecf7f0;
+    --accent: #006e2c;
+    --accent-rgb: 0, 110, 44;
+    --accent-light: #008837;
+    --accent-glow: rgba(var(--accent-rgb), 0.10);
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-solid: #ffffff;
+    --surface-light: #e6f5eb;
+    --text: #1a1a1a;
+    --text-muted: #3d6b4a;
+    --text-dim: #5a8a68;
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a8a68' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    --gradient-1: linear-gradient(135deg, #006e2c, #008837);
+    --gradient-2: linear-gradient(135deg, #008837, #73c69c);
+    --gradient-3: linear-gradient(135deg, #005a22, #00b84d);
+    --gradient-4: linear-gradient(135deg, #f97316, #ef4444);
+    --border-color: rgba(var(--accent-rgb), 0.14);
+    --border-hover: rgba(var(--accent-rgb), 0.35);
+    --border: var(--border-color); /* deprecated, remove in v3 * /
+    --shadow: 0 4px 20px rgba(0, 50, 20, 0.10);
+    --shadow-lg: 0 12px 40px rgba(0, 50, 20, 0.14);
+    --shadow-sm: 0 2px 8px rgba(0, 50, 20, 0.06);
+    --info-dark: #0c6b88;
+    --sidebar-bg: rgba(255, 255, 255, 0.95);
+    --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.05);
+    --sidebar-link-active-bg: rgba(var(--accent-rgb), 0.08);
+    --overlay: rgba(0, 0, 0, 0.30);
+    --overlay-heavy: rgba(245, 251, 247, 0.90);
+    --hub-bg-success: rgba(var(--accent-rgb), 0.10);
+    --hub-bg-warning: rgba(249, 115, 22, 0.08);
+    --hub-bg-violet: rgba(124, 58, 237, 0.07);
+    --hub-bg-cyan: rgba(6, 182, 212, 0.07);
+    --hub-bg-pink: rgba(236, 72, 153, 0.07);
+    /* Semantiques — assombries pour contraste WCAG AA * /
+    --success: #15803d;
+    --warning: #c2410c;
+    --danger: #dc2626;
+    --info: #0369a1;
+    --success-rgb: 21, 128, 61;
+    --warning-rgb: 194, 65, 12;
+    --danger-rgb: 220, 38, 38;
+    --info-rgb: 3, 105, 161;
+    --info-dark: #0c6b88;
+    --code-keyword: #006e2c;
+    --code-string: #15803d;
+    --code-comment: #5a7a90;
+    --code-function: #2563eb;
+    --code-number: #d97706;
+}
+*/

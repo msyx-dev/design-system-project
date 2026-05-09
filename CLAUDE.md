@@ -31,7 +31,7 @@ pages/
   data.html         # Tables, data grid (+ col actions sticky-end), stats, charts, KPI, tree view, activity feed, matrice risque
   templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
   feedback.html     # Empty states, spinners, pagination (v2.47.0), tooltip (v2.47.0), drawer, zone banner, modals interactifs, bottom sheet, FAB, notification center, comments (v2.47.0)
-  divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed) + Interaction (accordion, command palette fonctionnelle, context menu, copy button)
+  divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed) + Interaction (accordion, command palette fonctionnelle, context menu, copy button)
 shared/
   styles.css        # Agregateur CSS — imports des 4 modules + base reset
   css/
