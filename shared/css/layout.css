@@ -1,4 +1,4 @@
-/* @ds-version: 2.54.3 */
+/* @ds-version: 2.54.4 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -79,8 +79,6 @@
     z-index: 10;
     padding: var(--space-sm) var(--space-md);
     background: var(--sidebar-bg);
-    -webkit-backdrop-filter: blur(12px) saturate(1.5);
-    backdrop-filter: blur(12px) saturate(1.5);
     border-bottom: 1px solid var(--border-color);
 }
 .sidebar-filter {

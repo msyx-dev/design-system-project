@@ -1,5 +1,5 @@
-/* @ds-version 2.54.3 */
-const VERSION = '2.54.3';
+/* @ds-version 2.54.4 */
+const VERSION = '2.54.4';
 
 const NAV_SECTIONS = [
     { title: null, links: [
