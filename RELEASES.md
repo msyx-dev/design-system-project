@@ -1,5 +1,16 @@
 # Releases
 
+## v2.49.1 — 2026-05-09
+### Fixed
+- **tokens.css ACSSI** : suppression du bloc legacy commenté L244-616 (#233). Le commentaire `/* ----- Themes externalises vers themes/*.json (v2.39.0) -----` ouvert L244 n'était jamais correctement fermé (marqueurs `* /` avec espace = invalides), englobant les 4 blocs `[data-theme="acssi"]` (dark+light) et `[data-theme="nhood"]` (dark+light). Code mort : les thèmes sont déjà servis par `themes/*.json` → `themes.css`. Aucun impact rendu (le bloc était déjà ignoré par le parser CSS), mais nettoyage indispensable car ces blocs auraient été ré-activés par tout fix qui aurait choisi l'option "refermer correctement".
+
+### Notes
+- `tokens.css` passe de 616 à 243 lignes (-373).
+- Aucun changement visuel attendu : les thèmes ACSSI/Nhood restent servis par `themes.css` autogénéré.
+- Smoke test : `/*` et `*/` balanced (52/52) après suppression.
+
+---
+
 ## v2.49.0 — 2026-05-08
 ### Added
 - `.card-link` (cards.css) — wrapper a11y pour cards entierement cliquables (focus-visible gere, hover sur la card enfant). Demo dans pages/composants.html section cards.
