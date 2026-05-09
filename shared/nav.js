@@ -1,5 +1,5 @@
-/* @ds-version 2.54.8 */
-const VERSION = '2.54.8';
+/* @ds-version 2.54.9 */
+const VERSION = '2.54.9';
 
 const NAV_SECTIONS = [
     { title: null, links: [
@@ -155,7 +155,7 @@ function buildHeader() {
 
         var notifBellHtml = '';
         if (notifVisible) {
-            notifBellHtml = `<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false">&#128276;${badgeHtml}</button><div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications"><div class="header-notif-panel-header"><span>Notifications</span><button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button></div><div class="header-notif-list" id="header-notif-list"><div class="header-notif-empty">Aucune notification</div></div></div>`;
+            notifBellHtml = `<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>${badgeHtml}</button><div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications"><div class="header-notif-panel-header"><span>Notifications</span><button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button></div><div class="header-notif-list" id="header-notif-list"><div class="header-notif-empty">Aucune notification</div></div></div>`;
         }
 
         userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div></div>`;
