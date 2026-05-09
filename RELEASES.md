@@ -1,5 +1,78 @@
 # Releases
 
+## v2.54.0 — 2026-05-09
+
+### Added
+- **Lighthouse CI multi-thèmes + `docs/PERF-BUDGET.md` (#241)**. Étend la mesure
+  Lighthouse à la matrice 3 thèmes × 2 modes = 6 runs sur `composants.html`.
+- `lighthouserc.cjs` étendu : 6 URLs distinctes via query params `?theme=X&mode=Y`.
+- `pages/composants.html` : script anti-FOUC inline `<head>` qui mappe les query
+  params vers `localStorage` avant render (permet à Lighthouse de pivoter le
+  thème sans interaction).
+- `lhci-baseline.json` : structure étendue `runs.{theme}-{mode}` avec les 6 mesures.
+- `docs/PERF-BUDGET.md` : référentiel complet des 3 outils perf (gzip, Lighthouse,
+  axe-core), workflows CI, procédure mise à jour baseline.
+- `shared/CONSUMER_GUIDE.md` : section "Tree-shake guide" actualisée avec poids
+  réels par module.
+
+### Notes
+- 6 runs Lighthouse desktop sur DS v2.54.0 — tous Performance score = 1.0 (100/100) :
+  - msyx-dark : LCP 291ms, TBT 0ms, CLS 0
+  - msyx-light : LCP 290ms, TBT 49ms, CLS 0
+  - acssi-dark : LCP 253ms, TBT 0ms, CLS 0
+  - acssi-light : LCP 251ms, TBT 0ms, CLS 0
+  - nhood-dark : LCP 292ms, TBT 0ms, CLS 0
+  - nhood-light : LCP 265ms, TBT 0ms, CLS 0
+- Aucun changement de CSS rendu (que des configs CI + docs + version bumps).
+
+---
+
+## v2.53.0 — 2026-05-09
+
+### Added
+- **Lighthouse CI baseline 1 page × MSYX dark (#240)**. Setup minimal de Lighthouse
+  CI pour mesurer les Core Web Vitals du DS sur la page `composants.html`.
+- `lighthouserc.cjs` : config `@lhci/cli` (preset desktop, 1 run/URL, assertions
+  warn-only sur LCP < 2500ms, TBT < 300ms, CLS < 0.1, Performance score ≥ 0.85).
+- `lhci-baseline.json` : baseline mesurée locale (LCP 364ms, TBT 12ms, CLS 0.012,
+  Performance 1.0).
+- `.github/workflows/perf.yml` : workflow CI dédié, séparé de `ci.yml` (perf-budget
+  gzip) et `a11y.yml` (axe-core), `continue-on-error: true`, artifact upload.
+- devDeps : `@lhci/cli ^0.15.1`, `wait-on` (reproductibilité CI).
+
+### Notes
+- DS sur Caddy + auth gate → lhci tourne en local via `npx serve` (port 3001) en
+  background, wait-on, puis `lhci autorun`. Pattern transposable au workflow CI.
+- Score Performance = 1.0 confirme que le DS est déjà bien optimisé (page statique
+  HTML/CSS, pas de JS bloquant render-path).
+
+---
+
+## v2.52.0 — 2026-05-09
+
+### Added
+- **A11y dry-run infrastructure (#242)**. Greffe `@axe-core/playwright` à la suite
+  Playwright pour automatiser la détection des violations WCAG 2.0 A/AA + WCAG 2.1
+  AA sur la matrice complète.
+- `visual-tests/a11y.spec.ts` : 54 runs (9 pages × 3 thèmes × 2 modes), mode
+  dry-run (ne fail jamais), rapport markdown `afterAll`.
+- `playwright.a11y.config.ts` : config dédiée (port 3001, séparée de la VR).
+- `.github/workflows/a11y.yml` : workflow CI séparé, `continue-on-error: true`,
+  artifact upload du rapport.
+- `docs/audit-a11y-2026-05-09.md` : premier rapport généré.
+- `docs/ARCHITECTURE.md` : section "A11y audit (depuis v2.52.0)" ajoutée.
+
+### Notes
+- **0 violations sur 54 runs.** Le DS passe axe-core sans aucun fix nécessaire —
+  conséquence des efforts manuels cumulés (Audit Phase 1 #210, contrastes v2.31.0,
+  focus restore WAI APG v2.41.0, reset natif `:focus-visible`, disabled global
+  v2.40.2).
+- `#238-fix` (remédiation envisagée pendant le groom) **non créé** : pas de dette
+  à rembourser. Le filet anti-régression est en place pour les PR futures.
+- Une seule devDep ajoutée : `@axe-core/playwright`.
+
+---
+
 ## v2.51.0 — 2026-05-09
 
 ### Added
