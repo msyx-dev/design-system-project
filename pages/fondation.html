@@ -312,7 +312,7 @@
 
 <!-- THEME SWITCHER -->
 <section id="theme-switcher">
-    <div class="section-header"><span class="overline">Fondation</span><h2>Theme Switcher</h2><p>Selecteur de theme persistant. Bascule entre MSYX et ACSSI via localStorage.</p></div>
+    <div class="section-header"><span class="overline">Fondation</span><h2>Theme Switcher</h2><p>Selecteur de theme persistant. Bascule entre MSYX, ACSSI, Nhood via localStorage. Mode dark/light via switch toggle iOS-style (v2.55.0).</p></div>
     <div class="subsection">
         <span class="demo-label">Selecteur de theme</span>
         <div class="demo-box" style="max-width:220px;">
@@ -327,6 +327,64 @@
         <span class="demo-label" style="margin-top:var(--space-md);">Usage</span>
         <div class="demo-box">
             <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Injecte automatiquement dans la sidebar. Persistance localStorage (cle <code class="code-inline">msyx-theme</code>). Anti-FOUC via script inline dans <code class="code-inline">&lt;head&gt;</code>.</p>
+        </div>
+    </div>
+
+    <!-- Mode Switch showcase — v2.55.0 -->
+    <div class="subsection mt-xl">
+        <span class="demo-label">Mode switch (v2.55.0)</span>
+        <div class="demo-box">
+            <div class="demo-row" style="gap:var(--space-xl);flex-wrap:wrap;align-items:center;">
+
+                <!-- Etat light (OFF) -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <span class="text-muted" style="font-size:0.7rem;">Light (OFF)</span>
+                    <button class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre">
+                        <span class="mode-switch-track">
+                            <svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg>
+                            <svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg>
+                            <span class="mode-switch-thumb"></span>
+                        </span>
+                    </button>
+                    <code class="code-inline" style="font-size:0.65rem;">aria-checked="false"</code>
+                </div>
+
+                <!-- Etat dark (ON) -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <span class="text-muted" style="font-size:0.7rem;">Dark (ON)</span>
+                    <button class="mode-switch is-dark" role="switch" aria-checked="true" aria-label="Basculer mode clair/sombre">
+                        <span class="mode-switch-track">
+                            <svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg>
+                            <svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg>
+                            <span class="mode-switch-thumb"></span>
+                        </span>
+                    </button>
+                    <code class="code-inline" style="font-size:0.65rem;">aria-checked="true"</code>
+                </div>
+
+                <!-- Etat disabled -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-sm);">
+                    <span class="text-muted" style="font-size:0.7rem;">Disabled (mode unique)</span>
+                    <button class="mode-switch is-dark" role="switch" aria-checked="true" aria-disabled="true" aria-label="Basculer mode clair/sombre" title="Dark only">
+                        <span class="mode-switch-track">
+                            <svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg>
+                            <svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg>
+                            <span class="mode-switch-thumb"></span>
+                        </span>
+                    </button>
+                    <code class="code-inline" style="font-size:0.65rem;">aria-disabled="true"</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code snippet -->
+        <span class="demo-label" style="margin-top:var(--space-md);">HTML</span>
+        <div class="demo-box">
+            <div class="code-block text-xxs-lh"><span class="cm">&lt;!-- Switch mode dark/light dans le header --&gt;</span><br><span class="kw">&lt;button</span> <span class="fn">id</span>=<span class="str">"mode-switch"</span> <span class="fn">class</span>=<span class="str">"mode-switch"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">role</span>=<span class="str">"switch"</span> <span class="fn">aria-checked</span>=<span class="str">"false"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">aria-label</span>=<span class="str">"Basculer mode clair/sombre"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;span</span> <span class="fn">class</span>=<span class="str">"mode-switch-track"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;svg</span> <span class="fn">class</span>=<span class="str">"mode-switch-icon mode-switch-icon--sun"</span> <span class="fn">aria-hidden</span>=<span class="str">"true"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;use</span> <span class="fn">href</span>=<span class="str">"/shared/icons/sprite.svg#i-sun"</span><span class="kw">&gt;&lt;/use&gt;&lt;/svg&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;svg</span> <span class="fn">class</span>=<span class="str">"mode-switch-icon mode-switch-icon--moon"</span> <span class="fn">aria-hidden</span>=<span class="str">"true"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;use</span> <span class="fn">href</span>=<span class="str">"/shared/icons/sprite.svg#i-moon"</span><span class="kw">&gt;&lt;/use&gt;&lt;/svg&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;span</span> <span class="fn">class</span>=<span class="str">"mode-switch-thumb"</span><span class="kw">&gt;&lt;/span&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;/span&gt;</span><br><span class="kw">&lt;/button&gt;</span></div>
+        </div>
+        <span class="demo-label" style="margin-top:var(--space-md);">Notes</span>
+        <div class="demo-box">
+            <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Injecte automatiquement dans le header via <code class="code-inline">buildHeader()</code> dans <code class="code-inline">shared/nav.js</code>. Persistance localStorage (<code class="code-inline">msyx-mode</code>). Zone tactile >= 44x44px (WCAG 2.5.5). Desactive automatiquement si le theme ne supporte qu'un mode (<code class="code-inline">THEME_CONFIG[theme].modes.length === 1</code>).</p>
         </div>
     </div>
 </section>

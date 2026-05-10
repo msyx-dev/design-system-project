@@ -250,7 +250,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Dropdowns** (`initDropdowns()`) : search, multi-select, option filtering
 - **Kanban** : drag & drop natif HTML5 (dragstart, dragover, drop)
 - **Calendrier** : navigation mois, selection date
-- **Theme/Mode switcher** : THEME_CONFIG, applyMode(), updateModeButtons()
+- **Theme/Mode switcher** : THEME_CONFIG, applyMode(), updateModeSwitch() (v2.55.0 — remplace updateModeButtons()), initModeSwitcher() sur switch unique #mode-switch (role="switch", aria-checked, kbd, tactile WCAG 2.5.5)
 
 ### Sprint 6 (6 composants)
 - **Chips** (`initChips()`) : suppression animee, filter toggle, chip input dynamique (Enter/virgule/Backspace), anti-doublon

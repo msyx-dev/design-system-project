@@ -38,8 +38,8 @@ html.theme-transitioning *::after {
 
 /* ===== DISABLED — éléments natifs hors classes DS ===== */
 /* Couvre les éléments [disabled] non gérés par .btn-* ou .input (aksy #301, DS-EXCEPTION → DS) */
-/* Exclusions : classes DS avec leur propre gestion disabled (.btn-*, .input, .mode-toggle-btn) */
-[disabled]:not(.btn-primary):not(.btn-secondary):not(.btn-ghost):not(.btn-icon):not(.btn-icon--danger):not(.btn-danger):not(.btn-success):not(.btn-warning):not(.btn-outline-danger):not(.input):not(.mode-toggle-btn),
+/* Exclusions : classes DS avec leur propre gestion disabled (.btn-*, .input, .mode-switch) */
+[disabled]:not(.btn-primary):not(.btn-secondary):not(.btn-ghost):not(.btn-icon):not(.btn-icon--danger):not(.btn-danger):not(.btn-success):not(.btn-warning):not(.btn-outline-danger):not(.input):not(.mode-switch),
 a[aria-disabled="true"] {
     opacity: 0.5;
     cursor: not-allowed;

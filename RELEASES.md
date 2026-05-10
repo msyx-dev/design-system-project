@@ -1,5 +1,12 @@
 # Releases
 
+## [v2.55.0] — 2026-05-10
+
+### Changed
+- **#265 — Mode toggle : 2 boutons sun/moon → 1 switch iOS-style** (`role="switch"`, `aria-checked`, animation slide, icônes Lucide `i-sun`/`i-moon`, tactile WCAG 2.5.5 >= 44x44px). Showcase ajouté dans `pages/fondation.html` section Theme Switcher. Renommage interne `updateModeButtons` → `updateModeSwitch`. Closes #265.
+
+---
+
 ## v2.54.11 — 2026-05-10
 
 ### Changed

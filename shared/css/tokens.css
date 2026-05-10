@@ -1,4 +1,4 @@
-/* @ds-version: 2.54.11 */
+/* @ds-version: 2.55.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -184,12 +184,6 @@
     --texture-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
     --texture-grain-opacity: 0.015;
 
-    /* Bouton sémantique foreground & shadow (v2.54.11, #266) */
-    --btn-on-danger: #ffffff;       /* AA — 4.83:1 sur #ef4444 */
-    --btn-on-success: #ffffff;      /* AA — 4.55:1 sur #22c55e (large text) */
-    --btn-on-warning: #1a0f00;      /* AAA — 11.7:1 sur #f59e0b (noir chaud sur ambre) */
-    --btn-shadow-alpha: 35%;
-
     /* === Aliases legacy — deprecated, remove in v3 === */
     --border: var(--border-color); /* deprecated, remove in v3 */
     --radius: var(--radius-card); /* deprecated, remove in v3 */
@@ -245,11 +239,6 @@
     --code-function: #2563eb;
     --code-number: #d97706;
     --accent-glow: rgba(var(--accent-rgb), 0.08);
-    /* Bouton sémantique — light mode (#266) */
-    --btn-on-danger: #ffffff;       /* AA — 5.91:1 sur #dc2626 */
-    --btn-on-success: #ffffff;      /* AA — 4.85:1 sur #15803d */
-    --btn-on-warning: #ffffff;      /* AA — 4.71:1 sur #c2410c */
-    --btn-shadow-alpha: 22%;        /* ombres adoucies en light */
 }
 
 /* ----- Themes externalises vers themes/*.json (v2.39.0) -----

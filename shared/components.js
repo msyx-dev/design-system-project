@@ -781,7 +781,7 @@ function initThemeSwitcher() {
     // FIX #251 — recalcule l'etat des boutons dark/light apres lecture du
     // data-theme initial. Couvre la race anti-FOUC ou initModeSwitcher peut
     // avoir tourne avant que data-theme ne soit pose sur <html>.
-    if (typeof updateModeButtons === 'function') updateModeButtons();
+    if (typeof updateModeSwitch === 'function') updateModeSwitch();
     if (select.dataset.bound) return;
     select.dataset.bound = '1';
     select.addEventListener('change', function() {
@@ -799,7 +799,7 @@ function initThemeSwitcher() {
             if (config.modes.indexOf(currentMode) === -1) {
                 applyMode(config.defaultMode);
             }
-            updateModeButtons();
+            updateModeSwitch();
         });
         if (typeof showToast === 'function') {
             showToast('Theme : ' + (THEME_LABELS[theme] || theme), 'info', 2000);
@@ -817,36 +817,42 @@ function applyMode(mode) {
     localStorage.setItem('msyx-mode', mode);
 }
 
-function updateModeButtons() {
-    var darkBtn = document.getElementById('mode-dark');
-    var lightBtn = document.getElementById('mode-light');
-    if (!darkBtn || !lightBtn) return;
+function updateModeSwitch() {
+    var sw = document.getElementById('mode-switch');
+    if (!sw) return;
     var currentTheme = document.documentElement.getAttribute('data-theme') || 'msyx';
     var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
     var config = THEME_CONFIG[currentTheme] || THEME_CONFIG.msyx;
-    var lightAvailable = config.modes.indexOf('light') !== -1;
-    lightBtn.disabled = !lightAvailable;
-    lightBtn.title = lightAvailable ? 'Light' : 'Dark only';
-    darkBtn.classList.toggle('active', currentMode === 'dark');
-    lightBtn.classList.toggle('active', currentMode === 'light');
+    var bothModesAvailable = config.modes.length > 1;
+    var isDark = currentMode === 'dark';
+    sw.setAttribute('aria-checked', isDark ? 'true' : 'false');
+    sw.classList.toggle('is-dark', isDark);
+    if (!bothModesAvailable) {
+        sw.setAttribute('aria-disabled', 'true');
+        sw.title = config.modes[0] === 'dark' ? 'Dark only' : 'Light only';
+    } else {
+        sw.removeAttribute('aria-disabled');
+        sw.title = '';
+    }
 }
 
 function initModeSwitcher() {
-    var darkBtn = document.getElementById('mode-dark');
-    var lightBtn = document.getElementById('mode-light');
-    if (!darkBtn || !lightBtn) return;
-    updateModeButtons();
-    if (darkBtn.dataset.bound) return;
-    darkBtn.dataset.bound = '1';
-    lightBtn.dataset.bound = '1';
-    darkBtn.addEventListener('click', function() {
-        applyThemeTransition(function() { applyMode('dark'); updateModeButtons(); });
-        if (typeof showToast === 'function') showToast('Mode : Dark', 'info', 2000);
-    });
-    lightBtn.addEventListener('click', function() {
-        if (lightBtn.disabled) return;
-        applyThemeTransition(function() { applyMode('light'); updateModeButtons(); });
-        if (typeof showToast === 'function') showToast('Mode : Light', 'info', 2000);
+    var sw = document.getElementById('mode-switch');
+    if (!sw) return;
+    updateModeSwitch();
+    if (sw.dataset.bound) return;
+    sw.dataset.bound = '1';
+    var toggle = function() {
+        if (sw.getAttribute('aria-disabled') === 'true') return;
+        var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
+        var next = currentMode === 'light' ? 'dark' : 'light';
+        applyThemeTransition(function() { applyMode(next); updateModeSwitch(); });
+        var MODE_LABELS = { dark: 'Dark', light: 'Light' };
+        if (typeof showToast === 'function') showToast('Mode : ' + (MODE_LABELS[next] || next), 'info', 2000);
+    };
+    sw.addEventListener('click', toggle);
+    sw.addEventListener('keydown', function(e) {
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
     });
 }
 window.__initModeSwitcher = initModeSwitcher;
@@ -3086,7 +3092,7 @@ function initCommandPalette() {
             var sb = document.getElementById('sidebar');
             if (sb) sb.classList.toggle('open');
         } else if (action === 'toggle-mode') {
-            var btn = document.getElementById('mode-dark');
+            var btn = document.getElementById('mode-switch');
             var html = document.documentElement;
             var current = html.getAttribute('data-mode');
             if (current === 'light') {
@@ -3096,6 +3102,7 @@ function initCommandPalette() {
                 html.setAttribute('data-mode', 'light');
                 localStorage.setItem('msyx-mode', 'light');
             }
+            if (typeof updateModeSwitch === 'function') updateModeSwitch();
         }
     }
 

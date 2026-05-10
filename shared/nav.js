@@ -1,5 +1,5 @@
-/* @ds-version 2.54.11 */
-const VERSION = '2.54.10';
+/* @ds-version 2.55.0 */
+const VERSION = '2.55.0';
 
 const NAV_SECTIONS = [
     { title: null, links: [
@@ -161,7 +161,7 @@ function buildHeader() {
         userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div></div>`;
     }
 
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo"><img src="/assets/sources/logoMSYX.png" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls"><div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div><div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button><button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button></div></div>${userZoneHtml}`;
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo"><img src="/assets/sources/logoMSYX.png" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls"><div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div><div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
@@ -175,8 +175,8 @@ function buildHeader() {
     }
     // FIX #251 — ordre garanti : initModeSwitcher AVANT initThemeSwitcher.
     // initModeSwitcher pose les listeners + lit data-theme/data-mode actuel ;
-    // initThemeSwitcher rappelle updateModeButtons() apres pour re-synchroniser
-    // l'etat disabled des boutons dark/light si l'attribut data-theme a ete
+    // initThemeSwitcher rappelle updateModeSwitch() apres pour re-synchroniser
+    // l'etat disabled du switch si l'attribut data-theme a ete
     // pose tardivement (race anti-FOUC).
     if (typeof initModeSwitcher === 'function') initModeSwitcher();
     if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
