@@ -1,5 +1,5 @@
 {
-  "version": "2.54.11",
+  "version": "2.55.0",
   "generated": "2026-05-10",
   "components": [
     {
@@ -502,9 +502,9 @@
     {
       "name": "theme-switcher",
       "page": "fondation",
-      "cssClasses": [".theme-switcher", ".theme-switcher-label", ".theme-switcher-select", ".mode-toggle"],
+      "cssClasses": [".theme-switcher", ".theme-switcher-label", ".theme-switcher-select", ".mode-toggle", ".mode-switch", ".mode-switch-track", ".mode-switch-thumb", ".mode-switch-icon"],
       "jsInit": "initThemeSwitcher",
-      "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>"
+      "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>\n<div class=\"mode-toggle\">\n  <button id=\"mode-switch\" class=\"mode-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"Basculer mode clair/sombre\">\n    <span class=\"mode-switch-track\">\n      <svg class=\"mode-switch-icon mode-switch-icon--sun\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-sun\"></use></svg>\n      <svg class=\"mode-switch-icon mode-switch-icon--moon\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-moon\"></use></svg>\n      <span class=\"mode-switch-thumb\"></span>\n    </span>\n  </button>\n</div>"
     }
   ]
 }
