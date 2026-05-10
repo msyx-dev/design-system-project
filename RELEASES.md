@@ -1,5 +1,22 @@
 # Releases
 
+## Sprint 32 — v2.56.0 — 2026-05-10
+
+**Sprint Brand + Polish theming** : 3 PRs livrées (11 SP, 100% vélocité, **32e sprint consécutif à 100%**). Issues remontées en revue post-S31 par Mike :
+- **#266 v2.54.11** — Polish boutons `.btn-danger`/`.btn-success`/`.btn-warning` theme-aware (Option C hybride : tokens fg dédiés + shadow alpha modulable + border subtil) — 3 SP
+- **#265 v2.55.0** — Mode toggle : 2 boutons sun/moon → 1 switch iOS-style (`role="switch"`, animation slide, Lucide sprite, WCAG 2.5.5 ≥ 44×44) — 3 SP
+- **#268 v2.56.0** — Brand identity : wordmark `design-system` en header + mark `DS` 72px login, nouveau module `brand.css`, section fondation `#brand` — 5 SP
+
+**Pré-allocation versions** : 13e application consécutive S17→S32, 0 conflit subagent — tous gérés par parent en rebase chain. **Arbitrage upfront Mike** (3e application du pattern S23 #192) appliqué sur #268 brand identity.
+
+**Anomalies subagents lot 1** (2/2 récidive S24 #209 + S25 #218) : subagents `/dev` ont fini code + quality gate PASS mais ont oublié `git push` + `gh pr create` → mitigation parent (~5 min/PR : push + create PR manuel). **Anomaly warning explicite injecté dans lot 2** → #268 a respecté push-and-return (1/1 succès, 120 tool_uses RESULT propre).
+
+**Friction rebase chain S32** : `--theirs` aveugle sur 7 fichiers a écrasé les modifs cross-PR sur `nav.js` (mode-switch perdu), `layout.css` (styles mode-switch perdus), `components-registry.json` (entrées brand-* perdues + classes mode-switch supprimées du theme-switcher). Mitigation parent : merge intelligent fichier par fichier (~15 min). **Capit S32 à hisser claude-config** : la rebase chain doit distinguer fichiers de version pure (bump seul, `--theirs` OK) des fichiers logique (modifs croisées, merge manuel ou cherry-pick).
+
+**Tension #247 ↔ #268 arbitrée** : pas de fusion. #247 (vrai SVG MSYX fidèle) reste close — hotfix PNG considéré acceptable durablement comme marque maison-mère discrète. Si besoin perf SVG plus tard : ticket Quick séparé S33+.
+
+---
+
 ## v2.56.0 — 2026-05-10
 
 ### Added
