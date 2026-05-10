@@ -1,5 +1,5 @@
 {
-  "version": "2.55.0",
+  "version": "2.56.0",
   "generated": "2026-05-10",
   "components": [
     {
@@ -502,9 +502,25 @@
     {
       "name": "theme-switcher",
       "page": "fondation",
-      "cssClasses": [".theme-switcher", ".theme-switcher-label", ".theme-switcher-select", ".mode-toggle", ".mode-switch", ".mode-switch-track", ".mode-switch-thumb", ".mode-switch-icon"],
+      "cssClasses": [".theme-switcher", ".theme-switcher-label", ".theme-switcher-select", ".mode-toggle"],
       "jsInit": "initThemeSwitcher",
-      "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>\n<div class=\"mode-toggle\">\n  <button id=\"mode-switch\" class=\"mode-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"Basculer mode clair/sombre\">\n    <span class=\"mode-switch-track\">\n      <svg class=\"mode-switch-icon mode-switch-icon--sun\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-sun\"></use></svg>\n      <svg class=\"mode-switch-icon mode-switch-icon--moon\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-moon\"></use></svg>\n      <span class=\"mode-switch-thumb\"></span>\n    </span>\n  </button>\n</div>"
+      "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>"
+    },
+    {
+      "name": "brand-wordmark",
+      "page": "fondation",
+      "cssClasses": [".brand-wordmark"],
+      "jsInit": null,
+      "version": "2.56.0",
+      "example": "<span class=\"brand-wordmark\">design-system</span>"
+    },
+    {
+      "name": "brand-mark-ds",
+      "page": "fondation",
+      "cssClasses": [".brand-mark-ds", ".brand-mark-ds--sm", ".brand-mark-ds--lg"],
+      "jsInit": null,
+      "version": "2.56.0",
+      "example": "<div class=\"brand-mark-ds\" aria-label=\"Design System\">DS</div>"
     }
   ]
 }

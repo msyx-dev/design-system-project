@@ -1,0 +1,107 @@
+/* @ds-version 2.56.0 */
+/* brand.css — Identité visuelle design-system
+   Wordmark header + Mark DS login/splash.
+   Séparé de signature.css (qui gère le gradient underline section-header). */
+
+/* ===== BRAND MARK "DS" (login, splash, forme courte) ===== */
+.brand-mark-ds {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    /* Gradient text */
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Fallback navigateurs sans background-clip:text */
+    color: var(--accent);
+    display: inline-block;
+    user-select: none;
+}
+
+/* Variante petite (docs, cards de démonstration) */
+.brand-mark-ds--sm {
+    font-size: 40px;
+}
+
+/* Variante large (splash screens futurs) */
+.brand-mark-ds--lg {
+    font-size: 96px;
+}
+
+/* ===== BRAND WORDMARK (header principal) ===== */
+.brand-wordmark {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    /* Gradient text */
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Fallback */
+    color: var(--accent);
+    display: inline-block;
+    user-select: none;
+    white-space: nowrap;
+}
+
+/* Mobile : masquer le wordmark header, garder pictogramme + version */
+@media (max-width: 639px) {
+    .brand-wordmark {
+        display: none;
+    }
+}
+
+/* ===== BRAND GRID (docs fondation.html) ===== */
+.brand-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin: 24px 0;
+}
+
+.brand-card {
+    padding: 24px;
+    background: var(--surface-1);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-1);
+}
+
+.brand-card h3 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-1);
+    margin-bottom: 4px;
+}
+
+.brand-card p {
+    font-size: 0.875rem;
+    color: var(--text-2);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.brand-card .overline {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+}
+
+.brand-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    margin-bottom: 16px;
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}

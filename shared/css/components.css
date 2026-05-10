@@ -1,8 +1,9 @@
-/* @ds-version: 2.55.0 */
+/* @ds-version: 2.56.0 */
 /* components.css — Barrel. Pour un sous-ensemble : components-core.css ou modules à la carte.
    Tree-shaking : shared/CONSUMER_GUIDE.md#tree-shaking */
 @import url('./components/_base.css');
 @import url('./components/signature.css');
+@import url('./components/brand.css');
 @import url('./components/cards.css');
 @import url('./components/buttons.css');
 @import url('./components/badges.css');

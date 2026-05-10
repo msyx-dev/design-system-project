@@ -33,7 +33,7 @@ if (!versionConstant) {
 // Note: le logo reference logoMSYX.png depuis le hotfix #247 (v2.54.10)
 // Note: mode-toggle-btn remplace par mode-switch depuis v2.55.0 (#265)
 const requiredPatterns = [
-  { pattern: /<a href="\/site\.html" class="header-logo">/, label: 'header-logo link' },
+  { pattern: /<a href="\/site\.html" class="header-logo"[^>]*>/, label: 'header-logo link' },
   { pattern: /<img src="\/assets\/sources\/logoMSYX\.png"/, label: 'logoMSYX.png img' },
   { pattern: /<span class="header-spacer">/, label: 'header-spacer' },
   { pattern: /<div class="theme-switcher">/, label: 'theme-switcher' },

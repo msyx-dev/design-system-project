@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accès — msyx.design</title>
     <meta name="description" content="Acces au design system msyx.fr — authentification requise.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0a0f1e;
@@ -42,10 +45,24 @@
             position: relative; z-index: 1;
         }
         .logo {
-            width: 56px; height: 56px; margin: 0 auto 1.5rem;
+            margin: 0 auto 1.5rem;
             display: flex; align-items: center; justify-content: center;
         }
-        .logo img { width: 48px; height: 48px; }
+        /* Brand mark DS — gradient text (72px Space Grotesk 700) */
+        .brand-mark-ds {
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            font-weight: 700;
+            font-size: 72px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: var(--accent);
+            display: inline-block;
+            user-select: none;
+        }
         h2 {
             font-family: 'Space Grotesk', sans-serif;
             color: var(--text); font-size: 1.4rem; margin-bottom: 0.5rem;
@@ -83,7 +100,7 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="card">
-        <div class="logo"><img src="/assets/sources/logoMSYX.png" alt="msyx Design System" width="48" height="48" style="display:block;"></div>
+        <div class="logo"><div class="brand-mark-ds" aria-label="Design System">DS</div></div>
         <h2>Accès restreint</h2>
         <p class="subtitle">Ce site est en accès privé. Veuillez vous identifier.</p>
         <form id="auth-form">
