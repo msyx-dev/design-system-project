@@ -1,5 +1,5 @@
-/* @ds-version 2.54.9 */
-const VERSION = '2.54.9';
+/* @ds-version 2.54.10 */
+const VERSION = '2.54.10';
 
 const NAV_SECTIONS = [
     { title: null, links: [
@@ -161,7 +161,7 @@ function buildHeader() {
         userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div></div>`;
     }
 
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo"><img src="/assets/logo-msyx.svg" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls"><div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div><div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button><button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button></div></div>${userZoneHtml}`;
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo"><img src="/assets/sources/logoMSYX.png" alt="msyx Design System" width="40" height="40" class="header-logo-img"></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls"><div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div><div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-dark" class="mode-toggle-btn" aria-label="Mode sombre" title="Dark">&#9790;</button><button id="mode-light" class="mode-toggle-btn" aria-label="Mode clair" title="Light">&#9788;</button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
