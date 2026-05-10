@@ -5,70 +5,156 @@
     {
       "name": "buttons",
       "page": "composants",
-      "cssClasses": [".btn-primary", ".btn-secondary", ".btn-ghost", ".btn-sm", ".btn-lg", ".btn-xs", ".btn-icon", ".btn-icon--danger", ".btn-danger", ".btn-success", ".btn-warning", ".btn-outline-danger", ".btn-loading"],
+      "cssClasses": [
+        ".btn-primary",
+        ".btn-secondary",
+        ".btn-ghost",
+        ".btn-sm",
+        ".btn-lg",
+        ".btn-xs",
+        ".btn-icon",
+        ".btn-icon--danger",
+        ".btn-danger",
+        ".btn-success",
+        ".btn-warning",
+        ".btn-outline-danger",
+        ".btn-loading"
+      ],
       "jsInit": null,
       "example": "<button class=\"btn-primary\">Action principale</button>\n<button class=\"btn-secondary\">Action secondaire</button>\n<button class=\"btn-ghost\">Action tertiaire</button>\n<button class=\"btn-primary btn-danger\">Supprimer</button>\n<button class=\"btn-primary btn-sm\">Petit</button>\n<button class=\"btn-primary btn-loading\">Chargement...</button>\n<button class=\"btn-icon\" aria-label=\"Menu\">&#9776;</button>"
     },
     {
       "name": "cards",
       "page": "composants",
-      "cssClasses": [".card", ".card-icon", ".card-flat", ".card-compact", ".card-horizontal", ".card-link"],
+      "cssClasses": [
+        ".card",
+        ".card-icon",
+        ".card-flat",
+        ".card-compact",
+        ".card-horizontal",
+        ".card-link"
+      ],
       "jsInit": null,
       "example": "<div class=\"card\">\n  <div class=\"card-icon card-icon--accent\">&#9889;</div>\n  <h3>Titre de la card</h3>\n  <p>Description de contenu de la card.</p>\n</div>\n\n<div class=\"card-flat\">\n  <h3>Card interactive</h3>\n  <p>Utiliser pour les éléments cliquables.</p>\n</div>\n\n<a href=\"/projet\" class=\"card-link\">\n  <div class=\"card\">\n    <h3>Titre</h3>\n    <p>Description.</p>\n  </div>\n</a>"
     },
     {
       "name": "badges",
       "page": "composants",
-      "cssClasses": [".badge", ".badge-primary", ".badge-success", ".badge-warning", ".badge-danger", ".badge-info", ".badge-neutral", ".badge-nav", ".tag", ".pulse-dot"],
+      "cssClasses": [
+        ".badge",
+        ".badge-primary",
+        ".badge-success",
+        ".badge-warning",
+        ".badge-danger",
+        ".badge-info",
+        ".badge-neutral",
+        ".badge-nav",
+        ".tag",
+        ".pulse-dot"
+      ],
       "jsInit": null,
       "example": "<span class=\"badge badge-primary\">Nouveau</span>\n<span class=\"badge badge-success\">Actif</span>\n<span class=\"badge badge-warning\">En attente</span>\n<span class=\"badge badge-danger\">Erreur</span>\n<span class=\"badge badge-info\">Info</span>\n<span class=\"tag\">Next.js</span>\n<span class=\"tag\">TypeScript</span>\n\n<!-- Badge compact sidebar/nav -->\n<span class=\"badge badge-primary badge-nav\">12</span>"
     },
     {
       "name": "chips",
       "page": "composants",
-      "cssClasses": [".chip", ".chip-close", ".chip-filter", ".chip-group", ".chip-input-wrapper", ".chip-input-item", ".chip-input-field"],
+      "cssClasses": [
+        ".chip",
+        ".chip-close",
+        ".chip-filter",
+        ".chip-group",
+        ".chip-input-wrapper",
+        ".chip-input-item",
+        ".chip-input-field"
+      ],
       "jsInit": "initChips",
       "example": "<div class=\"chip-group\">\n  <span class=\"chip\">Feature</span>\n  <span class=\"chip chip-accent\">Sprint:18</span>\n  <span class=\"chip chip-warning\">3 SP</span>\n  <span class=\"chip chip-success\">Done</span>\n</div>\n\n<div class=\"chip-input-wrapper\" data-placeholder=\"Ajouter un tag...\">\n  <div class=\"chip-input-field\" contenteditable=\"true\"></div>\n</div>"
     },
     {
       "name": "inputs",
       "page": "formulaires",
-      "cssClasses": [".input", ".input-group", ".input-label", ".input-hint", ".input-error", ".input-error-msg", ".input-success", ".input-disabled", ".input-with-icon", ".toggle", ".toggle-slider", ".checkbox", ".radio"],
+      "cssClasses": [
+        ".input",
+        ".input-group",
+        ".input-label",
+        ".input-hint",
+        ".input-error",
+        ".input-error-msg",
+        ".input-success",
+        ".input-disabled",
+        ".input-with-icon",
+        ".toggle",
+        ".toggle-slider",
+        ".checkbox",
+        ".radio"
+      ],
       "jsInit": null,
       "example": "<div class=\"input-group\">\n  <label class=\"input-label\" for=\"example-input\">Nom du projet</label>\n  <input class=\"input\" id=\"example-input\" type=\"text\" placeholder=\"mon-projet\">\n  <span class=\"input-hint\">Lettres minuscules et tirets uniquement.</span>\n</div>\n\n<div class=\"input-group\">\n  <label class=\"input-label\" for=\"example-error\">Email (erreur)</label>\n  <input class=\"input input-error\" id=\"example-error\" type=\"email\" value=\"invalide@\">\n  <span class=\"input-error-msg\">Format d'e-mail invalide.</span>\n</div>\n\n<label class=\"toggle\">\n  <input type=\"checkbox\" checked>\n  <span class=\"toggle-slider\"></span>\n</label>\n\n<label class=\"checkbox\">\n  <input type=\"checkbox\" checked> Option activée\n</label>"
     },
     {
       "name": "progress",
       "page": "data",
-      "cssClasses": [".progress-bar", ".progress-fill", ".progress-bar-striped", ".progress-ring"],
+      "cssClasses": [
+        ".progress-bar",
+        ".progress-fill",
+        ".progress-bar-striped",
+        ".progress-ring"
+      ],
       "jsInit": null,
       "example": "<div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"75\" aria-valuemin=\"0\" aria-valuemax=\"100\">\n  <div class=\"progress-fill\" style=\"width:75%\"></div>\n</div>\n\n<div class=\"progress-bar progress-bar-striped\">\n  <div class=\"progress-fill\" style=\"width:45%\"></div>\n</div>"
     },
     {
       "name": "stats",
       "page": "data",
-      "cssClasses": [".stat-value", ".stat-label"],
+      "cssClasses": [
+        ".stat-value",
+        ".stat-label"
+      ],
       "jsInit": null,
       "example": "<div style=\"text-align:center;\">\n  <div class=\"stat-value\">2 847</div>\n  <div class=\"stat-label\">Utilisateurs actifs</div>\n</div>"
     },
     {
       "name": "avatar",
       "page": "composants",
-      "cssClasses": [".avatar", ".avatar-xs", ".avatar-sm", ".avatar-md", ".avatar-lg", ".avatar-xl", ".avatar-gradient", ".avatar-group", ".avatar-status"],
+      "cssClasses": [
+        ".avatar",
+        ".avatar-xs",
+        ".avatar-sm",
+        ".avatar-md",
+        ".avatar-lg",
+        ".avatar-xl",
+        ".avatar-gradient",
+        ".avatar-group",
+        ".avatar-status"
+      ],
       "jsInit": null,
       "example": "<div class=\"avatar\">PR</div>\n<div class=\"avatar avatar-sm\">MS</div>\n<div class=\"avatar avatar-lg avatar-gradient\">AI</div>\n\n<div class=\"avatar-group\">\n  <div class=\"avatar avatar-sm\">AA</div>\n  <div class=\"avatar avatar-sm\">BB</div>\n  <div class=\"avatar avatar-sm\">CC</div>\n</div>\n\n<div class=\"avatar avatar-status\">\n  <img class=\"avatar-img\" src=\"photo.jpg\" alt=\"Prénom Nom\">\n</div>"
     },
     {
       "name": "table",
       "page": "data",
-      "cssClasses": [".table-wrap"],
+      "cssClasses": [
+        ".table-wrap"
+      ],
       "jsInit": null,
       "example": "<div class=\"table-wrap\">\n  <table>\n    <thead>\n      <tr><th scope=\"col\">Nom</th><th scope=\"col\">Statut</th><th scope=\"col\">Date</th></tr>\n    </thead>\n    <tbody>\n      <tr><td>Projet Alpha</td><td><span class=\"badge badge-success\">Actif</span></td><td>2026-05-01</td></tr>\n      <tr><td>Projet Beta</td><td><span class=\"badge badge-warning\">En cours</span></td><td>2026-04-15</td></tr>\n    </tbody>\n  </table>\n</div>"
     },
     {
       "name": "data-grid",
       "page": "data",
-      "cssClasses": [".data-grid-wrap", ".data-grid", ".data-grid-header-row", ".data-grid-filter-row", ".data-grid-sortable", ".data-grid-sort-icon", ".data-grid-filter", ".data-grid-body", ".data-grid-footer", ".data-grid-selection", ".data-grid-col-sticky-end"],
+      "cssClasses": [
+        ".data-grid-wrap",
+        ".data-grid",
+        ".data-grid-header-row",
+        ".data-grid-filter-row",
+        ".data-grid-sortable",
+        ".data-grid-sort-icon",
+        ".data-grid-filter",
+        ".data-grid-body",
+        ".data-grid-footer",
+        ".data-grid-selection",
+        ".data-grid-col-sticky-end"
+      ],
       "jsInit": "initDataGrids",
       "notes": "Tri : appliquer .data-grid-sortable sur <th> + .data-grid-sort-icon sur l'icone enfant. Le JS gere aria-sort=ascending|descending|none au clic. Convention canonique DS — ne pas utiliser de classe non-prefixee comme .sort-icon. | Sticky col : appliquer .data-grid-col-sticky-end sur le <th> ET tous les <td> de la colonne a pinner (typiquement la derniere colonne Actions).",
       "example": "<div class=\"data-grid-wrap\">\n  <table class=\"data-grid\" data-grid-id=\"exemple\">\n    <thead>\n      <tr class=\"data-grid-header-row\">\n        <th class=\"data-grid-sortable\">Nom <span class=\"data-grid-sort-icon\">&#8597;</span></th>\n        <th>Statut</th>\n        <th class=\"data-grid-col-sticky-end\">Actions</th>\n      </tr>\n      <tr class=\"data-grid-filter-row\">\n        <th><input class=\"data-grid-filter\" type=\"text\" placeholder=\"Filtrer...\"></th>\n        <th></th>\n        <th class=\"data-grid-col-sticky-end\"></th>\n      </tr>\n    </thead>\n    <tbody class=\"data-grid-body\">\n      <tr>\n        <td>Exemple</td>\n        <td><span class=\"badge badge-success\">Actif</span></td>\n        <td class=\"data-grid-col-sticky-end\"><button class=\"btn-icon btn-icon--danger\" aria-label=\"Supprimer\">&#128465;</button></td>\n      </tr>\n    </tbody>\n    <tfoot class=\"data-grid-footer\">\n      <tr><td colspan=\"3\" class=\"pagination-info\">1 résultat</td></tr>\n    </tfoot>\n  </table>\n</div>"
@@ -76,49 +162,93 @@
     {
       "name": "tree-view",
       "page": "data",
-      "cssClasses": [".tree", ".tree-children", ".tree-item", ".tree-branch", ".tree-toggle", ".tree-leaf", ".tree-chevron", ".tree-icon", ".tree-label"],
+      "cssClasses": [
+        ".tree",
+        ".tree-children",
+        ".tree-item",
+        ".tree-branch",
+        ".tree-toggle",
+        ".tree-leaf",
+        ".tree-chevron",
+        ".tree-icon",
+        ".tree-label"
+      ],
       "jsInit": "initTreeView",
       "example": "<ul class=\"tree\">\n  <li class=\"tree-item tree-branch\">\n    <span class=\"tree-toggle\">\n      <span class=\"tree-chevron\">&#9654;</span>\n      <span class=\"tree-icon\">&#128193;</span>\n      <span class=\"tree-label\">src/</span>\n    </span>\n    <ul class=\"tree-children\">\n      <li class=\"tree-item tree-leaf\">\n        <span class=\"tree-icon\">&#128196;</span>\n        <span class=\"tree-label\">index.html</span>\n      </li>\n    </ul>\n  </li>\n</ul>"
     },
     {
       "name": "alert",
       "page": "composants",
-      "cssClasses": [".alert", ".alert-icon", ".alert-info", ".alert-success", ".alert-warning", ".alert-danger"],
+      "cssClasses": [
+        ".alert",
+        ".alert-icon",
+        ".alert-info",
+        ".alert-success",
+        ".alert-warning",
+        ".alert-danger"
+      ],
       "jsInit": null,
       "example": "<div class=\"alert alert-info\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#128712;</span>\n  Mise à jour disponible pour votre projet.\n</div>\n\n<div class=\"alert alert-success\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#10003;</span>\n  Déploiement réussi.\n</div>\n\n<div class=\"alert alert-warning\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#9888;</span>\n  Certificat SSL expirant dans 7 jours.\n</div>"
     },
     {
       "name": "toast",
       "page": "feedback",
-      "cssClasses": [".toast", ".toast-message", ".toast-close", ".toast-success", ".toast-error", ".toast-warning", ".toast-info", ".toast-container"],
+      "cssClasses": [
+        ".toast",
+        ".toast-message",
+        ".toast-close",
+        ".toast-success",
+        ".toast-error",
+        ".toast-warning",
+        ".toast-info",
+        ".toast-container"
+      ],
       "jsInit": "showToast",
       "example": "<!-- Déclencher via JS -->\n<script>\n  showToast('Enregistrement réussi', 'success');\n  showToast('Erreur de connexion', 'error');\n  showToast('Action en attente', 'warning');\n  showToast('Mise à jour disponible', 'info');\n</script>"
     },
     {
       "name": "zone-banner",
       "page": "feedback",
-      "cssClasses": [".zone-banner", ".zone-loss", ".zone-warning", ".zone-profit", ".zone-info"],
+      "cssClasses": [
+        ".zone-banner",
+        ".zone-loss",
+        ".zone-warning",
+        ".zone-profit",
+        ".zone-info"
+      ],
       "jsInit": null,
       "example": "<div class=\"zone-banner zone-profit\">Tous les systèmes opérationnels</div>\n<div class=\"zone-banner zone-warning\">Maintenance programmée demain à 2h</div>\n<div class=\"zone-banner zone-loss\">Incident en cours — dégradation partielle</div>"
     },
     {
       "name": "tooltip",
       "page": "feedback",
-      "cssClasses": [".tooltip-wrap", ".tooltip"],
+      "cssClasses": [
+        ".tooltip-wrap",
+        ".tooltip"
+      ],
       "jsInit": null,
       "example": "<div class=\"tooltip-wrap\">\n  <button class=\"btn-icon\" aria-describedby=\"tt-example\" aria-label=\"Paramètres\">&#9881;</button>\n  <span class=\"tooltip\" id=\"tt-example\" role=\"tooltip\">Paramètres</span>\n</div>"
     },
     {
       "name": "tabs",
       "page": "navigation",
-      "cssClasses": [".tabs", ".tab"],
+      "cssClasses": [
+        ".tabs",
+        ".tab"
+      ],
       "jsInit": "initTabs",
       "example": "<div class=\"tabs\" role=\"tablist\">\n  <button class=\"tab active\" role=\"tab\" aria-selected=\"true\" data-tab=\"tab-1\">Aperçu</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-2\">Détails</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-3\">Historique</button>\n</div>\n<div id=\"tab-1\" role=\"tabpanel\">Contenu de l'aperçu</div>\n<div id=\"tab-2\" role=\"tabpanel\" hidden>Contenu des détails</div>"
     },
     {
       "name": "modal",
       "page": "composants",
-      "cssClasses": [".modal-preview", ".modal-overlay", ".modal-content", ".modal-actions", ".modal-dialog"],
+      "cssClasses": [
+        ".modal-preview",
+        ".modal-overlay",
+        ".modal-content",
+        ".modal-actions",
+        ".modal-dialog"
+      ],
       "jsInit": "openModal",
       "a11y": {
         "focusRestore": true,
@@ -130,14 +260,25 @@
     {
       "name": "skeleton",
       "page": "feedback",
-      "cssClasses": [".skeleton", ".skeleton-text", ".skeleton-circle", ".skeleton-btn", ".skeleton-card"],
+      "cssClasses": [
+        ".skeleton",
+        ".skeleton-text",
+        ".skeleton-circle",
+        ".skeleton-btn",
+        ".skeleton-card"
+      ],
       "jsInit": null,
       "example": "<div class=\"skeleton skeleton-card\"></div>\n\n<div>\n  <div class=\"skeleton skeleton-text\" style=\"width:60%\"></div>\n  <div class=\"skeleton skeleton-text\" style=\"width:90%\"></div>\n  <div class=\"skeleton skeleton-text\" style=\"width:75%\"></div>\n</div>\n\n<div style=\"display:flex;gap:1rem;align-items:center;\">\n  <div class=\"skeleton skeleton-circle\"></div>\n  <div class=\"skeleton skeleton-btn\"></div>\n</div>"
     },
     {
       "name": "code",
       "page": "divers",
-      "cssClasses": [".code-block", ".code-header", ".code-lang", ".code-body"],
+      "cssClasses": [
+        ".code-block",
+        ".code-header",
+        ".code-lang",
+        ".code-body"
+      ],
       "jsInit": "initCopyButtons",
       "example": "<div class=\"code-block\">\n  <div class=\"code-header\">\n    <span class=\"code-lang\">css</span>\n    <button class=\"copy-btn\" data-copy-target=\"code-exemple\" aria-label=\"Copier\">Copier</button>\n  </div>\n  <pre class=\"code-body\" id=\"code-exemple\"><code>var(--accent)</code></pre>\n</div>"
     },
@@ -146,287 +287,503 @@
       "page": "divers",
       "section": "code",
       "module": "shared/css/components/interactive.css",
-      "cssClasses": [".code-inline"],
+      "cssClasses": [
+        ".code-inline"
+      ],
       "jsInit": null,
       "example": "<p>Exécuter <code class=\"code-inline\">docker compose up -d</code> puis ouvrir <code class=\"code-inline\">/etc/caddy/Caddyfile</code>.</p>"
     },
     {
       "name": "copy-button",
       "page": "divers",
-      "cssClasses": [".copy-btn"],
+      "cssClasses": [
+        ".copy-btn"
+      ],
       "jsInit": "initCopyButtons",
       "example": "<button class=\"copy-btn\" data-copy-target=\"texte-a-copier\" aria-label=\"Copier\">Copier</button>\n<span id=\"texte-a-copier\" style=\"display:none\">Texte copié dans le presse-papiers</span>"
     },
     {
       "name": "divider",
       "page": "composants",
-      "cssClasses": [".divider", ".divider-label"],
+      "cssClasses": [
+        ".divider",
+        ".divider-label"
+      ],
       "jsInit": null,
       "example": "<hr class=\"divider\">\n\n<div class=\"divider-label\">ou</div>"
     },
     {
       "name": "rating",
       "page": "composants",
-      "cssClasses": [".rating", ".rating-star"],
+      "cssClasses": [
+        ".rating",
+        ".rating-star"
+      ],
       "jsInit": "initRating",
       "example": "<div class=\"rating\" data-rating=\"4\" data-max=\"5\" aria-label=\"Note : 4 sur 5\">\n  <span class=\"rating-star\" data-value=\"1\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"2\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"3\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"4\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"5\">&#9733;</span>\n</div>"
     },
     {
       "name": "breadcrumb",
       "page": "navigation",
-      "cssClasses": [".breadcrumb", ".breadcrumb-item"],
+      "cssClasses": [
+        ".breadcrumb",
+        ".breadcrumb-item"
+      ],
       "jsInit": null,
       "example": "<nav class=\"breadcrumb\" aria-label=\"Fil d'Ariane\">\n  <a class=\"breadcrumb-item\" href=\"/\">Accueil</a>\n  <a class=\"breadcrumb-item\" href=\"/projets\">Projets</a>\n  <span class=\"breadcrumb-item\" aria-current=\"page\">Design System</span>\n</nav>"
     },
     {
       "name": "timeline",
       "page": "divers",
-      "cssClasses": [".timeline", ".timeline-item", ".timeline-dot", ".timeline-content"],
+      "cssClasses": [
+        ".timeline",
+        ".timeline-item",
+        ".timeline-dot",
+        ".timeline-content"
+      ],
       "jsInit": null,
       "example": "<div class=\"timeline\">\n  <div class=\"timeline-item\">\n    <div class=\"timeline-dot\"></div>\n    <div class=\"timeline-content\">\n      <strong>v2.32.0 — Agent ergonomics</strong>\n      <p>SKILL.md + canonical-pages + prompts.md</p>\n      <time>2026-05-05</time>\n    </div>\n  </div>\n  <div class=\"timeline-item\">\n    <div class=\"timeline-dot\"></div>\n    <div class=\"timeline-content\">\n      <strong>v2.31.0 — A11y reset natif</strong>\n      <p>Reset a + :focus-visible WCAG 1.4.3/2.4.7</p>\n      <time>2026-05-01</time>\n    </div>\n  </div>\n</div>"
     },
     {
       "name": "accordion",
       "page": "divers",
-      "cssClasses": [".accordion", ".accordion-item", ".accordion-header", ".accordion-body"],
+      "cssClasses": [
+        ".accordion",
+        ".accordion-item",
+        ".accordion-header",
+        ".accordion-body"
+      ],
       "jsInit": "initAccordion",
       "example": "<div class=\"accordion\">\n  <div class=\"accordion-item\">\n    <button class=\"accordion-header\" aria-expanded=\"false\">Section 1</button>\n    <div class=\"accordion-body\">Contenu de la section 1.</div>\n  </div>\n  <div class=\"accordion-item\">\n    <button class=\"accordion-header\" aria-expanded=\"true\">Section 2</button>\n    <div class=\"accordion-body\">Contenu de la section 2 (ouvert par défaut).</div>\n  </div>\n</div>"
     },
     {
       "name": "stepper",
       "page": "navigation",
-      "cssClasses": [".stepper", ".step", ".step-dot", ".step-label"],
+      "cssClasses": [
+        ".stepper",
+        ".step",
+        ".step-dot",
+        ".step-label"
+      ],
       "jsInit": null,
       "example": "<div class=\"stepper\" aria-label=\"Étapes de configuration\">\n  <div class=\"step step-done\">\n    <div class=\"step-dot\">&#10003;</div>\n    <span class=\"step-label\">Compte</span>\n  </div>\n  <div class=\"step step-active\">\n    <div class=\"step-dot\">2</div>\n    <span class=\"step-label\">Profil</span>\n  </div>\n  <div class=\"step\">\n    <div class=\"step-dot\">3</div>\n    <span class=\"step-label\">Confirmation</span>\n  </div>\n</div>"
     },
     {
       "name": "dropdown",
       "page": "formulaires",
-      "cssClasses": [".dropdown", ".dropdown-trigger", ".dropdown-menu", ".dropdown-search", ".dropdown-option", ".dropdown-tags", ".dropdown-tag"],
+      "cssClasses": [
+        ".dropdown",
+        ".dropdown-trigger",
+        ".dropdown-menu",
+        ".dropdown-search",
+        ".dropdown-option",
+        ".dropdown-tags",
+        ".dropdown-tag"
+      ],
       "jsInit": "initDropdowns",
       "example": "<div class=\"dropdown\" data-dropdown-id=\"dd-exemple\">\n  <button class=\"dropdown-trigger btn-secondary\" type=\"button\">Sélectionner...</button>\n  <div class=\"dropdown-menu\">\n    <div class=\"dropdown-search\"><input type=\"text\" placeholder=\"Filtrer...\"></div>\n    <div class=\"dropdown-option\" data-value=\"opt1\">Option 1</div>\n    <div class=\"dropdown-option\" data-value=\"opt2\">Option 2</div>\n    <div class=\"dropdown-option\" data-value=\"opt3\">Option 3</div>\n  </div>\n</div>"
     },
     {
       "name": "file-upload",
       "page": "formulaires",
-      "cssClasses": [".file-upload", ".file-upload-icon", ".file-upload-text", ".file-upload-hint", ".file-list", ".file-item"],
+      "cssClasses": [
+        ".file-upload",
+        ".file-upload-icon",
+        ".file-upload-text",
+        ".file-upload-hint",
+        ".file-list",
+        ".file-item"
+      ],
       "jsInit": null,
       "example": "<label class=\"file-upload\">\n  <input type=\"file\" multiple hidden accept=\".png,.jpg,.pdf\">\n  <span class=\"file-upload-icon\" aria-hidden=\"true\">&#8679;</span>\n  <span class=\"file-upload-text\">Déposer des fichiers ou <u>parcourir</u></span>\n  <span class=\"file-upload-hint\">PNG, JPG, PDF — 10 Mo max</span>\n</label>\n\n<div class=\"file-list\">\n  <div class=\"file-item\">rapport.pdf <button aria-label=\"Supprimer rapport.pdf\">&#10005;</button></div>\n</div>"
     },
     {
       "name": "slider",
       "page": "formulaires",
-      "cssClasses": [".slider-group", ".slider-header", ".slider-value-display", ".slider-track", ".slider-value", ".slider-disabled"],
+      "cssClasses": [
+        ".slider-group",
+        ".slider-header",
+        ".slider-value-display",
+        ".slider-track",
+        ".slider-value",
+        ".slider-disabled"
+      ],
       "jsInit": "initSliders",
       "example": "<div class=\"slider-group\" data-slider-id=\"slider-exemple\">\n  <div class=\"slider-header\">\n    <label class=\"input-label\">Opacité</label>\n    <span class=\"slider-value-display\">75%</span>\n  </div>\n  <div class=\"slider-track\">\n    <input class=\"slider-value\" type=\"range\" min=\"0\" max=\"100\" value=\"75\" aria-label=\"Opacité\">\n  </div>\n</div>"
     },
     {
       "name": "number-input",
       "page": "formulaires",
-      "cssClasses": [".number-input-wrap", ".number-input-btn", ".number-input-field"],
+      "cssClasses": [
+        ".number-input-wrap",
+        ".number-input-btn",
+        ".number-input-field"
+      ],
       "jsInit": "initNumberInputs",
       "example": "<div class=\"number-input-wrap\">\n  <button class=\"number-input-btn\" data-action=\"decrement\" aria-label=\"Diminuer\">&#8722;</button>\n  <input class=\"number-input-field\" type=\"number\" value=\"1\" min=\"0\" max=\"99\" aria-label=\"Quantité\">\n  <button class=\"number-input-btn\" data-action=\"increment\" aria-label=\"Augmenter\">&#43;</button>\n</div>"
     },
     {
       "name": "search-input",
       "page": "formulaires",
-      "cssClasses": [".search-input-wrap", ".search-input", ".search-icon", ".search-clear", ".search-suggestions", ".search-item", ".search-compact"],
+      "cssClasses": [
+        ".search-input-wrap",
+        ".search-input",
+        ".search-icon",
+        ".search-clear",
+        ".search-suggestions",
+        ".search-item",
+        ".search-compact"
+      ],
       "jsInit": "initSearchInputs",
       "example": "<div class=\"search-input-wrap\" data-search-id=\"search-exemple\">\n  <span class=\"search-icon\" aria-hidden=\"true\">&#128269;</span>\n  <input class=\"search-input\" type=\"search\" placeholder=\"Rechercher...\" aria-label=\"Recherche\">\n  <button class=\"search-clear\" aria-label=\"Effacer la recherche\" hidden>&#10005;</button>\n  <div class=\"search-suggestions\" hidden role=\"listbox\">\n    <div class=\"search-item\" role=\"option\">Résultat 1</div>\n    <div class=\"search-item\" role=\"option\">Résultat 2</div>\n  </div>\n</div>"
     },
     {
       "name": "popover",
       "page": "composants",
-      "cssClasses": [".popover-wrap", ".popover"],
+      "cssClasses": [
+        ".popover-wrap",
+        ".popover"
+      ],
       "jsInit": null,
       "example": "<div class=\"popover-wrap\">\n  <button class=\"btn-ghost\" aria-haspopup=\"true\">Plus d'infos</button>\n  <div class=\"popover\" role=\"tooltip\">\n    <strong>Détails</strong>\n    <p>Contenu enrichi avec du texte et éventuellement des liens.</p>\n  </div>\n</div>"
     },
     {
       "name": "command-palette",
       "page": "divers",
-      "cssClasses": [".cmd-overlay", ".cmd-palette", ".cmd-input-wrap", ".cmd-input", ".cmd-results", ".cmd-group-title", ".cmd-item", ".cmd-footer", ".cmd-empty"],
+      "cssClasses": [
+        ".cmd-overlay",
+        ".cmd-palette",
+        ".cmd-input-wrap",
+        ".cmd-input",
+        ".cmd-results",
+        ".cmd-group-title",
+        ".cmd-item",
+        ".cmd-footer",
+        ".cmd-empty"
+      ],
       "jsInit": "initCommandPalette",
       "example": "<!-- Déclencher via Ctrl+K ou JS : openCommandPalette() -->\n<div class=\"cmd-overlay\" id=\"cmd-palette\" hidden>\n  <div class=\"cmd-palette\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Palette de commandes\">\n    <div class=\"cmd-input-wrap\">\n      <input class=\"cmd-input\" type=\"text\" placeholder=\"Rechercher une commande...\" aria-label=\"Recherche\">\n    </div>\n    <div class=\"cmd-results\" role=\"listbox\">\n      <div class=\"cmd-group-title\">Navigation</div>\n      <div class=\"cmd-item\" role=\"option\">Aller aux composants</div>\n      <div class=\"cmd-item\" role=\"option\">Aller à la fondation</div>\n    </div>\n    <div class=\"cmd-footer\">&#8593;&#8595; naviguer &nbsp; &#8629; sélectionner &nbsp; Echap fermer</div>\n  </div>\n</div>"
     },
     {
       "name": "drawer",
       "page": "feedback",
-      "cssClasses": [".drawer-preview", ".drawer-overlay", ".drawer-panel", ".drawer-header", ".drawer-close", ".drawer-body", ".drawer-footer"],
+      "cssClasses": [
+        ".drawer-preview",
+        ".drawer-overlay",
+        ".drawer-panel",
+        ".drawer-header",
+        ".drawer-close",
+        ".drawer-body",
+        ".drawer-footer"
+      ],
       "jsInit": null,
       "example": "<div class=\"drawer-preview\" id=\"drawer-exemple\">\n  <div class=\"drawer-overlay\" onclick=\"this.closest('.drawer-preview').classList.remove('open')\"></div>\n  <div class=\"drawer-panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"drawer-titre\">\n    <div class=\"drawer-header\">\n      <h2 id=\"drawer-titre\">Titre du panneau</h2>\n      <button class=\"drawer-close\" aria-label=\"Fermer\">&#10005;</button>\n    </div>\n    <div class=\"drawer-body\">Contenu du drawer.</div>\n    <div class=\"drawer-footer\">\n      <button class=\"btn-ghost\">Annuler</button>\n      <button class=\"btn-primary\">Confirmer</button>\n    </div>\n  </div>\n</div>"
     },
     {
       "name": "bottom-sheet",
       "page": "feedback",
-      "cssClasses": [".bottom-sheet", ".bottom-sheet-overlay", ".bottom-sheet-handle-wrap", ".bottom-sheet-handle", ".bottom-sheet-header", ".bottom-sheet-close", ".bottom-sheet-content"],
+      "cssClasses": [
+        ".bottom-sheet",
+        ".bottom-sheet-overlay",
+        ".bottom-sheet-handle-wrap",
+        ".bottom-sheet-handle",
+        ".bottom-sheet-header",
+        ".bottom-sheet-close",
+        ".bottom-sheet-content"
+      ],
       "jsInit": "initBottomSheet",
       "example": "<div class=\"bottom-sheet\" id=\"bs-exemple\">\n  <div class=\"bottom-sheet-overlay\"></div>\n  <div class=\"bottom-sheet-handle-wrap\">\n    <div class=\"bottom-sheet-handle\"></div>\n  </div>\n  <div class=\"bottom-sheet-header\">\n    <span>Options</span>\n    <button class=\"bottom-sheet-close\" aria-label=\"Fermer\">&#10005;</button>\n  </div>\n  <div class=\"bottom-sheet-content\">Contenu de la feuille bas.</div>\n</div>"
     },
     {
       "name": "empty-state",
       "page": "feedback",
-      "cssClasses": [".empty-state", ".empty-state-icon"],
+      "cssClasses": [
+        ".empty-state",
+        ".empty-state-icon"
+      ],
       "jsInit": null,
       "example": "<div class=\"empty-state\">\n  <div class=\"empty-state-icon\" aria-hidden=\"true\">&#128203;</div>\n  <h2 class=\"empty-state-title\">Aucun projet pour l'instant</h2>\n  <p class=\"empty-state-description\">Commencez par créer votre premier projet.</p>\n  <button class=\"btn-primary\" type=\"button\">&#43; Créer un projet</button>\n</div>"
     },
     {
       "name": "pagination",
       "page": "feedback",
-      "cssClasses": [".pagination", ".page-btn", ".page-ellipsis", ".pagination-info"],
+      "cssClasses": [
+        ".pagination",
+        ".page-btn",
+        ".page-ellipsis",
+        ".pagination-info"
+      ],
       "jsInit": null,
       "example": "<nav class=\"pagination\" aria-label=\"Pagination\">\n  <button class=\"page-btn\" aria-label=\"Page précédente\">&#8592;</button>\n  <button class=\"page-btn active\" aria-current=\"page\">1</button>\n  <button class=\"page-btn\">2</button>\n  <button class=\"page-btn\">3</button>\n  <span class=\"page-ellipsis\">…</span>\n  <button class=\"page-btn\">10</button>\n  <button class=\"page-btn\" aria-label=\"Page suivante\">&#8594;</button>\n</nav>\n<p class=\"pagination-info\">1–20 de 200 résultats</p>"
     },
     {
       "name": "spinner",
       "page": "feedback",
-      "cssClasses": [".spinner", ".spinner-sm", ".spinner-md", ".spinner-lg", ".spinner-dots", ".loading-bar", ".loading-overlay"],
+      "cssClasses": [
+        ".spinner",
+        ".spinner-sm",
+        ".spinner-md",
+        ".spinner-lg",
+        ".spinner-dots",
+        ".loading-bar",
+        ".loading-overlay"
+      ],
       "jsInit": null,
       "example": "<div class=\"spinner spinner-md\" role=\"status\" aria-label=\"Chargement\"></div>\n<div class=\"spinner spinner-sm\" role=\"status\" aria-label=\"Chargement\"></div>\n<div class=\"spinner-dots\" role=\"status\" aria-label=\"Chargement\">\n  <span></span><span></span><span></span>\n</div>\n<div class=\"loading-bar\" role=\"progressbar\" aria-label=\"Chargement\"></div>"
     },
     {
       "name": "carousel",
       "page": "divers",
-      "cssClasses": [".carousel", ".carousel-track", ".carousel-slide", ".carousel-btn", ".carousel-dots", ".carousel-dot"],
+      "cssClasses": [
+        ".carousel",
+        ".carousel-track",
+        ".carousel-slide",
+        ".carousel-btn",
+        ".carousel-dots",
+        ".carousel-dot"
+      ],
       "jsInit": "initCarousel",
       "example": "<div class=\"carousel\" data-carousel-id=\"carousel-exemple\">\n  <div class=\"carousel-track\">\n    <div class=\"carousel-slide\">Diapo 1</div>\n    <div class=\"carousel-slide\">Diapo 2</div>\n    <div class=\"carousel-slide\">Diapo 3</div>\n  </div>\n  <button class=\"carousel-btn\" data-dir=\"prev\" aria-label=\"Précédent\">&#8592;</button>\n  <button class=\"carousel-btn\" data-dir=\"next\" aria-label=\"Suivant\">&#8594;</button>\n  <div class=\"carousel-dots\">\n    <button class=\"carousel-dot active\" aria-label=\"Diapo 1\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 2\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 3\"></button>\n  </div>\n</div>"
     },
     {
       "name": "lightbox",
       "page": "divers",
-      "cssClasses": [".lightbox-gallery", ".lightbox-trigger", ".lightbox-thumb"],
+      "cssClasses": [
+        ".lightbox-gallery",
+        ".lightbox-trigger",
+        ".lightbox-thumb"
+      ],
       "jsInit": "initLightbox",
       "example": "<div class=\"lightbox-gallery\">\n  <button class=\"lightbox-trigger\" data-src=\"image1-full.jpg\" aria-label=\"Agrandir image 1\">\n    <img class=\"lightbox-thumb\" src=\"image1-thumb.jpg\" alt=\"Aperçu 1\">\n  </button>\n  <button class=\"lightbox-trigger\" data-src=\"image2-full.jpg\" aria-label=\"Agrandir image 2\">\n    <img class=\"lightbox-thumb\" src=\"image2-thumb.jpg\" alt=\"Aperçu 2\">\n  </button>\n</div>"
     },
     {
       "name": "bottom-nav",
       "page": "navigation",
-      "cssClasses": [".bottom-nav", ".bottom-nav-item", ".bottom-nav-icon", ".bottom-nav-label", ".bottom-nav-badge"],
+      "cssClasses": [
+        ".bottom-nav",
+        ".bottom-nav-item",
+        ".bottom-nav-icon",
+        ".bottom-nav-label",
+        ".bottom-nav-badge"
+      ],
       "jsInit": "initBottomNav",
       "example": "<nav class=\"bottom-nav\" aria-label=\"Navigation principale\">\n  <a class=\"bottom-nav-item active\" href=\"/\" aria-current=\"page\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#8962;</span>\n    <span class=\"bottom-nav-label\">Accueil</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/projets\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128193;</span>\n    <span class=\"bottom-nav-label\">Projets</span>\n    <span class=\"bottom-nav-badge\">3</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/profil\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128100;</span>\n    <span class=\"bottom-nav-label\">Profil</span>\n  </a>\n</nav>"
     },
     {
       "name": "fab",
       "page": "feedback",
-      "cssClasses": [".fab", ".fab-mini", ".fab-success", ".fab-danger", ".fab-extended", ".fab-menu", ".fab-actions", ".fab-action", ".fab-action-btn"],
+      "cssClasses": [
+        ".fab",
+        ".fab-mini",
+        ".fab-success",
+        ".fab-danger",
+        ".fab-extended",
+        ".fab-menu",
+        ".fab-actions",
+        ".fab-action",
+        ".fab-action-btn"
+      ],
       "jsInit": "initFAB",
       "example": "<button class=\"fab\" aria-label=\"Créer\" data-fab-id=\"fab-exemple\">&#43;</button>\n\n<!-- FAB avec menu d'actions -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\" hidden>\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>"
     },
     {
       "name": "segmented-control",
       "page": "composants",
-      "cssClasses": [".segmented", ".segmented-indicator", ".segmented-item"],
+      "cssClasses": [
+        ".segmented",
+        ".segmented-indicator",
+        ".segmented-item"
+      ],
       "jsInit": "initSegmentedControls",
       "example": "<div class=\"segmented\" role=\"tablist\" data-segmented-id=\"seg-exemple\">\n  <div class=\"segmented-indicator\"></div>\n  <button class=\"segmented-item active\" role=\"tab\" aria-selected=\"true\">Semaine</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Mois</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Année</button>\n</div>"
     },
     {
       "name": "otp-input",
       "page": "formulaires",
-      "cssClasses": [".otp-group", ".otp-digit"],
+      "cssClasses": [
+        ".otp-group",
+        ".otp-digit"
+      ],
       "jsInit": "initOTPInputs",
       "example": "<div class=\"otp-group\" aria-label=\"Code de vérification à 6 chiffres\">\n  <input class=\"otp-digit\" type=\"text\" maxlength=\"1\" inputmode=\"numeric\" pattern=\"[0-9]\" aria-label=\"Chiffre 1\">\n  <input class=\"otp-digit\" type=\"text\" maxlength=\"1\" inputmode=\"numeric\" pattern=\"[0-9]\" aria-label=\"Chiffre 2\">\n  <input class=\"otp-digit\" type=\"text\" maxlength=\"1\" inputmode=\"numeric\" pattern=\"[0-9]\" aria-label=\"Chiffre 3\">\n  <input class=\"otp-digit\" type=\"text\" maxlength=\"1\" inputmode=\"numeric\" pattern=\"[0-9]\" aria-label=\"Chiffre 4\">\n  <input class=\"otp-digit\" type=\"text\" maxlength=\"1\" inputmode=\"numeric\" pattern=\"[0-9]\" aria-label=\"Chiffre 5\">\n  <input class=\"otp-digit\" type=\"text\" maxlength=\"1\" inputmode=\"numeric\" pattern=\"[0-9]\" aria-label=\"Chiffre 6\">\n</div>"
     },
     {
       "name": "tag-input",
       "page": "formulaires",
-      "cssClasses": [".tag-input-wrap", ".tag-input-tag", ".tag-input-remove", ".tag-input-field", ".tag-input-hint"],
+      "cssClasses": [
+        ".tag-input-wrap",
+        ".tag-input-tag",
+        ".tag-input-remove",
+        ".tag-input-field",
+        ".tag-input-hint"
+      ],
       "jsInit": "initTagInputs",
       "example": "<div class=\"tag-input-wrap\" data-tag-input-id=\"ti-exemple\">\n  <span class=\"tag-input-tag\">Next.js <button class=\"tag-input-remove\" aria-label=\"Supprimer Next.js\">&#10005;</button></span>\n  <span class=\"tag-input-tag\">TypeScript <button class=\"tag-input-remove\" aria-label=\"Supprimer TypeScript\">&#10005;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Nouveau tag\">\n</div>\n<span class=\"tag-input-hint\">Appuyez sur Entrée pour valider.</span>"
     },
     {
       "name": "comparison-table",
       "page": "data",
-      "cssClasses": [".comparison-table", ".comparison-recommended", ".comparison-yes", ".comparison-no"],
+      "cssClasses": [
+        ".comparison-table",
+        ".comparison-recommended",
+        ".comparison-yes",
+        ".comparison-no"
+      ],
       "jsInit": null,
       "example": "<div class=\"comparison-table\">\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\">Fonctionnalité</th>\n        <th scope=\"col\">Free</th>\n        <th scope=\"col\" class=\"comparison-recommended\">Pro</th>\n        <th scope=\"col\">Enterprise</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>Projets actifs</td>\n        <td>3</td>\n        <td class=\"comparison-recommended\">Illimités</td>\n        <td>Illimités</td>\n      </tr>\n      <tr>\n        <td>Domaines personnalisés</td>\n        <td class=\"comparison-no\">&#10007;</td>\n        <td class=\"comparison-recommended comparison-yes\">&#10003;</td>\n        <td class=\"comparison-yes\">&#10003;</td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
     },
     {
       "name": "counter",
       "page": "data",
-      "cssClasses": [".counter", ".counter-value", ".counter-prefix", ".counter-suffix", ".counter-label"],
+      "cssClasses": [
+        ".counter",
+        ".counter-value",
+        ".counter-prefix",
+        ".counter-suffix",
+        ".counter-label"
+      ],
       "jsInit": "initCounters",
       "example": "<div class=\"counter\" data-counter-target=\"2847\" data-counter-duration=\"1200\">\n  <span class=\"counter-prefix\">+</span>\n  <span class=\"counter-value\">0</span>\n  <span class=\"counter-suffix\"> utilisateurs</span>\n  <div class=\"counter-label\">Inscrits ce mois</div>\n</div>"
     },
     {
       "name": "context-menu",
       "page": "divers",
-      "cssClasses": [".context-menu", ".context-menu-item", ".context-menu-divider"],
+      "cssClasses": [
+        ".context-menu",
+        ".context-menu-item",
+        ".context-menu-divider"
+      ],
       "jsInit": "initContextMenu",
       "example": "<!-- Zone déclenchant le menu contextuel au clic droit -->\n<div data-context-menu=\"ctx-exemple\" style=\"padding:2rem;border:1px dashed var(--border);border-radius:var(--radius-sm);\">\n  Clic droit pour ouvrir le menu\n</div>\n\n<!-- Définition du menu -->\n<div class=\"context-menu\" id=\"ctx-exemple\" hidden>\n  <button class=\"context-menu-item\">&#9998; Renommer</button>\n  <button class=\"context-menu-item\">&#128275; Partager</button>\n  <hr class=\"context-menu-divider\">\n  <button class=\"context-menu-item\" style=\"color:var(--danger);\">&#128465; Supprimer</button>\n</div>"
     },
     {
       "name": "progress-tracker",
       "page": "data",
-      "cssClasses": [".progress-tracker", ".progress-tracker-center", ".progress-tracker-value", ".progress-tracker-label", ".progress-tracker-multi"],
+      "cssClasses": [
+        ".progress-tracker",
+        ".progress-tracker-center",
+        ".progress-tracker-value",
+        ".progress-tracker-label",
+        ".progress-tracker-multi"
+      ],
       "jsInit": null,
       "example": "<div class=\"progress-tracker\">\n  <div class=\"progress-tracker-value\">75%</div>\n  <div class=\"progress-tracker-label\">Objectif mensuel</div>\n  <div class=\"progress-bar\">\n    <div class=\"progress-fill\" style=\"width:75%\"></div>\n  </div>\n</div>"
     },
     {
       "name": "sortable-list",
       "page": "composants",
-      "cssClasses": [".sortable-list", ".sortable-item", ".sortable-handle"],
+      "cssClasses": [
+        ".sortable-list",
+        ".sortable-item",
+        ".sortable-handle"
+      ],
       "jsInit": "initSortableList",
       "example": "<ul class=\"sortable-list\" data-sortable-id=\"sort-exemple\">\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 1\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 2\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 3\n  </li>\n</ul>"
     },
     {
       "name": "video-embed",
       "page": "divers",
-      "cssClasses": [".video-embed", ".video-embed-overlay", ".video-embed-play", ".video-card"],
+      "cssClasses": [
+        ".video-embed",
+        ".video-embed-overlay",
+        ".video-embed-play",
+        ".video-card"
+      ],
       "jsInit": "initVideoEmbeds",
       "example": "<div class=\"video-card\">\n  <div class=\"video-embed\" data-video-id=\"dQw4w9WgXcQ\" data-video-provider=\"youtube\">\n    <img src=\"https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg\" alt=\"Aperçu de la vidéo\">\n    <div class=\"video-embed-overlay\">\n      <button class=\"video-embed-play\" aria-label=\"Lire la vidéo\">&#9654;</button>\n    </div>\n  </div>\n</div>"
     },
     {
       "name": "quiz-poll",
       "page": "formulaires",
-      "cssClasses": [".quiz", ".quiz-progress", ".quiz-question", ".quiz-option", ".quiz-feedback", ".quiz-result", ".quiz-poll-results"],
+      "cssClasses": [
+        ".quiz",
+        ".quiz-progress",
+        ".quiz-question",
+        ".quiz-option",
+        ".quiz-feedback",
+        ".quiz-result",
+        ".quiz-poll-results"
+      ],
       "jsInit": "initQuiz",
       "example": "<div class=\"quiz\" data-quiz-id=\"quiz-exemple\">\n  <div class=\"quiz-progress\">\n    <div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:33%\"></div></div>\n  </div>\n  <p class=\"quiz-question\">Quel token utiliser pour la couleur d'accent ?</p>\n  <div class=\"quiz-option\" data-correct=\"true\">var(--accent)</div>\n  <div class=\"quiz-option\">#3b82f6</div>\n  <div class=\"quiz-option\">rgb(59, 130, 246)</div>\n  <div class=\"quiz-feedback\" hidden></div>\n</div>"
     },
     {
       "name": "before-after",
       "page": "divers",
-      "cssClasses": [".before-after", ".before-after-after", ".before-after-before", ".before-after-label", ".before-after-handle"],
+      "cssClasses": [
+        ".before-after",
+        ".before-after-after",
+        ".before-after-before",
+        ".before-after-label",
+        ".before-after-handle"
+      ],
       "jsInit": "initBeforeAfter",
       "example": "<div class=\"before-after\" data-before-after-id=\"ba-exemple\">\n  <div class=\"before-after-before\">\n    <span class=\"before-after-label\">Avant</span>\n    <img src=\"before.jpg\" alt=\"Avant\">\n  </div>\n  <div class=\"before-after-after\">\n    <span class=\"before-after-label\">Après</span>\n    <img src=\"after.jpg\" alt=\"Après\">\n  </div>\n  <div class=\"before-after-handle\" aria-label=\"Glisser pour comparer\"></div>\n</div>"
     },
     {
       "name": "achievement-badge",
       "page": "composants",
-      "cssClasses": [".achievement", ".achievement-icon", ".achievement-title", ".achievement-state", ".achievement--bronze", ".achievement--silver", ".achievement--gold", ".achievement-progress"],
+      "cssClasses": [
+        ".achievement",
+        ".achievement-icon",
+        ".achievement-title",
+        ".achievement-state",
+        ".achievement--bronze",
+        ".achievement--silver",
+        ".achievement--gold",
+        ".achievement-progress"
+      ],
       "jsInit": null,
       "example": "<div class=\"achievement achievement--gold\">\n  <div class=\"achievement-icon\" aria-hidden=\"true\">&#127942;</div>\n  <div class=\"achievement-title\">Contributeur Gold</div>\n  <div class=\"achievement-state\">Débloqué</div>\n</div>\n\n<div class=\"achievement achievement--silver\">\n  <div class=\"achievement-icon\" aria-hidden=\"true\">&#127941;</div>\n  <div class=\"achievement-title\">50 commits</div>\n  <div class=\"achievement-progress\">\n    <div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:80%\"></div></div>\n  </div>\n</div>"
     },
     {
       "name": "decision-tree",
       "page": "divers",
-      "cssClasses": [".dtree", ".dtree-node", ".dtree-choices", ".dtree-choice", ".dtree-connector"],
+      "cssClasses": [
+        ".dtree",
+        ".dtree-node",
+        ".dtree-choices",
+        ".dtree-choice",
+        ".dtree-connector"
+      ],
       "jsInit": "initDecisionTree",
       "example": "<div class=\"dtree\" data-dtree-id=\"dtree-exemple\">\n  <div class=\"dtree-node\" id=\"dtree-root\">\n    <p>Ce projet a-t-il un backend ?</p>\n    <div class=\"dtree-choices\">\n      <button class=\"dtree-choice\" data-next=\"node-yes\">Oui</button>\n      <button class=\"dtree-choice\" data-next=\"node-no\">Non</button>\n    </div>\n  </div>\n  <div class=\"dtree-node\" id=\"node-yes\" hidden>\n    <p>Utiliser FastAPI + PostgreSQL + Prisma.</p>\n  </div>\n  <div class=\"dtree-node\" id=\"node-no\" hidden>\n    <p>Servir avec Caddy file_server statique.</p>\n  </div>\n</div>"
     },
     {
       "name": "sidebar-link-disabled",
       "page": "navigation",
-      "cssClasses": [".sidebar-link-disabled"],
+      "cssClasses": [
+        ".sidebar-link-disabled"
+      ],
       "jsInit": null,
       "example": "<a href=\"#\" class=\"sidebar-link-disabled\" aria-disabled=\"true\" tabindex=\"-1\">Fonctionnalité à venir</a>"
     },
     {
       "name": "sidebar-sublinks",
       "page": "navigation",
-      "cssClasses": [".sidebar-sublinks"],
+      "cssClasses": [
+        ".sidebar-sublinks"
+      ],
       "jsInit": null,
       "example": "<nav>\n  <a href=\"#section-1\">Section 1</a>\n  <div class=\"sidebar-sublinks\">\n    <a href=\"#sub-1\">Sous-section 1.1</a>\n    <a href=\"#sub-2\">Sous-section 1.2</a>\n  </div>\n  <a href=\"#section-2\">Section 2</a>\n</nav>"
     },
     {
       "name": "avatar-img",
       "page": "composants",
-      "cssClasses": [".avatar-img"],
+      "cssClasses": [
+        ".avatar-img"
+      ],
       "jsInit": null,
       "example": "<div class=\"avatar avatar-md\">\n  <img class=\"avatar-img\" src=\"photo.jpg\" alt=\"Alice Dupont\">\n</div>\n\n<div class=\"avatar avatar-lg avatar-status\">\n  <img class=\"avatar-img\" src=\"photo2.jpg\" alt=\"Bob Martin\">\n</div>"
     },
     {
       "name": "filter-bar",
       "page": "formulaires",
-      "cssClasses": [".filter-bar", ".filter-bar-search", ".filter-bar-actions"],
+      "cssClasses": [
+        ".filter-bar",
+        ".filter-bar-search",
+        ".filter-bar-actions"
+      ],
       "jsInit": null,
       "example": "<div class=\"filter-bar\">\n  <div class=\"filter-bar-search\">\n    <input class=\"input\" type=\"search\" placeholder=\"Filtrer...\" aria-label=\"Filtrer les résultats\">\n  </div>\n  <div class=\"filter-bar-actions\">\n    <button class=\"filter-btn active\" data-filter=\"all\" type=\"button\">Tous</button>\n    <button class=\"filter-btn\" data-filter=\"active\" type=\"button\">Actifs</button>\n    <button class=\"filter-btn\" data-filter=\"archived\" type=\"button\">Archivés</button>\n  </div>\n</div>"
     },
@@ -441,15 +798,22 @@
     {
       "name": "icon",
       "page": "fondation",
-      "cssClasses": [".icon", ".icon--sm", ".icon--lg"],
+      "cssClasses": [
+        ".icon",
+        ".icon--sm",
+        ".icon--lg"
+      ],
       "jsInit": null,
       "description": "Composant icone via sprite SVG Lucide self-hoste. 53 symboles disponibles dans /shared/icons/sprite.svg. Convention : <svg class=\"icon\"><use href=\"/shared/icons/sprite.svg#i-{nom}\"/></svg>. Tokens : --icon-size-sm (16px), --icon-size-md (20px, defaut), --icon-size-lg (24px), --icon-stroke (1.5).",
       "example": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-home\"/></svg>\n<svg class=\"icon icon--sm\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-check\"/></svg>\n<svg class=\"icon icon--lg\" role=\"img\" aria-label=\"Parametres\"><use href=\"/shared/icons/sprite.svg#i-settings\"/></svg>\n<button class=\"btn-icon\" aria-label=\"Supprimer\"><svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-trash\"/></svg></button>"
     },
     {
-      "name": "brand-wordmark",
+      "name": "brand-logo-svg",
       "page": "fondation",
-      "cssClasses": [".header-logo", ".header-logo-img"],
+      "cssClasses": [
+        ".header-logo",
+        ".header-logo-img"
+      ],
       "jsInit": null,
       "description": "Wordmark SVG msyx (v2.42.0). Mark M autonome (logo-msyx-mark.svg, 60×60) + lockup primary (logo-msyx.svg, 200×60). Blob organique + double sommet en espace négatif + gradient turquoise→bleu→violet. Variantes dark/light dans assets/. Utilisé dans header (buildHeader()), index.html, canonical-pages/login.html.",
       "example": "<!-- Header (injecté par buildHeader() dans nav.js) -->\n<a href=\"/site.html\" class=\"header-logo\">\n  <img src=\"/assets/logo-msyx.svg\" alt=\"msyx Design System\" width=\"120\" height=\"32\" class=\"header-logo-img\">\n</a>\n\n<!-- Mark seule (favicon, login) -->\n<img src=\"/assets/logo-msyx-mark.svg\" alt=\"msyx\" width=\"48\" height=\"48\">\n\n<!-- Variantes thématiques -->\n<img src=\"/assets/logo-msyx-dark.svg\" alt=\"msyx\" width=\"120\" height=\"36\">\n<img src=\"/assets/logo-msyx-light.svg\" alt=\"msyx\" width=\"120\" height=\"36\">"
@@ -457,7 +821,9 @@
     {
       "name": "brand-signature",
       "page": "fondation",
-      "cssClasses": [".main .section-header .overline"],
+      "cssClasses": [
+        ".main .section-header .overline"
+      ],
       "jsInit": null,
       "description": "Signature spatiale msyx (v2.42.0). Gradient underline 2px via ::after sur chaque .section-header .overline. Accent visuel 32×2px, var(--gradient-1), border-radius 2px. Module signature.css importé dans components.css après _base.css. Rend le DS reconnaissable même en grayscale.",
       "example": "<!-- Appliqué automatiquement via signature.css sur tous les .section-header .overline -->\n<div class=\"section-header\">\n  <span class=\"overline\">Catégorie</span>\n  <h2>Titre section</h2>\n</div>"
@@ -473,7 +839,19 @@
     {
       "name": "motion-replay",
       "page": "motion",
-      "cssClasses": [".motion-pattern", ".motion-demo", ".motion-bar", ".motion-ball", ".motion-replay", ".motion-fade-in-demo", ".motion-slide-up-demo", ".motion-scale-in-demo", ".motion-stagger-demo", ".motion-skeleton-demo", ".motion-bounce-demo"],
+      "cssClasses": [
+        ".motion-pattern",
+        ".motion-demo",
+        ".motion-bar",
+        ".motion-ball",
+        ".motion-replay",
+        ".motion-fade-in-demo",
+        ".motion-slide-up-demo",
+        ".motion-scale-in-demo",
+        ".motion-stagger-demo",
+        ".motion-skeleton-demo",
+        ".motion-bounce-demo"
+      ],
       "jsInit": "initMotionReplay",
       "description": "Motion reference page (v2.35.0). Durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques avec boutons Replay. initMotionReplay() : toggle classe + void offsetWidth reflow. initMotionViewport() : IntersectionObserver pause hors viewport. prefers-reduced-motion geré via bloc global components.css.",
       "example": "<!-- Fade-in -->\n<div class=\"motion-fade-in-demo\">Hello</div>\n\n<!-- Slide-up -->\n<div class=\"motion-slide-up-demo\">Hello</div>\n\n<!-- Scale-in -->\n<div class=\"motion-scale-in-demo\">Hello</div>\n\n<!-- Stagger (3 enfants) -->\n<div class=\"motion-stagger-demo\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</div>\n\n<!-- Success bounce -->\n<div class=\"motion-bounce-demo\">✓</div>\n\n<!-- Replay bouton -->\n<button class=\"btn-secondary motion-replay\" data-motion-target=\".motion-fade-in-demo\">Replay</button>"
@@ -481,45 +859,104 @@
     {
       "name": "action-menu",
       "page": "navigation",
-      "cssClasses": [".action-menu-wrap", ".action-menu-trigger", ".action-menu", ".action-menu-item", ".action-menu-divider", ".action-menu-icon"],
+      "cssClasses": [
+        ".action-menu-wrap",
+        ".action-menu-trigger",
+        ".action-menu",
+        ".action-menu-item",
+        ".action-menu-divider",
+        ".action-menu-icon"
+      ],
       "jsInit": "initActionMenus",
       "example": "<div class=\"action-menu-wrap\">\n  <button class=\"action-menu-trigger\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-label=\"Actions\">&#8942;</button>\n  <div class=\"action-menu\" role=\"menu\">\n    <button class=\"action-menu-item\" role=\"menuitem\">Éditer</button>\n    <button class=\"action-menu-item danger\" role=\"menuitem\">Supprimer</button>\n  </div>\n</div>"
     },
     {
       "name": "pricing",
       "page": "templates",
-      "cssClasses": [".pricing-section", ".pricing-toggle", ".pricing-toggle-switch", ".pricing-toggle-label", ".pricing-badge", ".pricing-grid", ".pricing-card", ".pricing-card--recommended", ".pricing-card-badge", ".pricing-plan", ".pricing-price", ".pricing-price-currency", ".pricing-price-amount", ".pricing-price-period", ".pricing-desc", ".pricing-features", ".pricing-feature", ".pricing-feature--disabled", ".pricing-feature-icon", ".pricing-cta"],
+      "cssClasses": [
+        ".pricing-section",
+        ".pricing-toggle",
+        ".pricing-toggle-switch",
+        ".pricing-toggle-label",
+        ".pricing-badge",
+        ".pricing-grid",
+        ".pricing-card",
+        ".pricing-card--recommended",
+        ".pricing-card-badge",
+        ".pricing-plan",
+        ".pricing-price",
+        ".pricing-price-currency",
+        ".pricing-price-amount",
+        ".pricing-price-period",
+        ".pricing-desc",
+        ".pricing-features",
+        ".pricing-feature",
+        ".pricing-feature--disabled",
+        ".pricing-feature-icon",
+        ".pricing-cta"
+      ],
       "jsInit": "initPricing",
       "example": "<div class=\"pricing-grid\">\n  <div class=\"pricing-card\">\n    <div class=\"pricing-plan\">Free</div>\n    <div class=\"pricing-price\"><span class=\"pricing-price-currency\">&euro;</span><span class=\"pricing-price-amount\" data-price-monthly=\"0\" data-price-yearly=\"0\">0</span><span class=\"pricing-price-period\">/ mois</span></div>\n    <ul class=\"pricing-features\"><li class=\"pricing-feature\">Feature A</li></ul>\n    <div class=\"pricing-cta\"><button class=\"btn-secondary\" style=\"width:100%;\">Commencer</button></div>\n  </div>\n</div>"
     },
     {
       "name": "comments",
       "page": "feedback",
-      "cssClasses": [".comment", ".comment-avatar", ".comment-body", ".comment-header", ".comment-author", ".comment-date", ".comment-text", ".comment-actions", ".comment-action-btn", ".comment-reply-form", ".comment-reply-input", ".comment-thread", ".like-count"],
+      "cssClasses": [
+        ".comment",
+        ".comment-avatar",
+        ".comment-body",
+        ".comment-header",
+        ".comment-author",
+        ".comment-date",
+        ".comment-text",
+        ".comment-actions",
+        ".comment-action-btn",
+        ".comment-reply-form",
+        ".comment-reply-input",
+        ".comment-thread",
+        ".like-count"
+      ],
       "jsInit": "initComments",
       "example": "<div class=\"comment\">\n  <div class=\"comment-avatar\">MS</div>\n  <div class=\"comment-body\">\n    <div class=\"comment-header\"><span class=\"comment-author\">Mike</span><span class=\"comment-date\">il y a 5 min</span></div>\n    <div class=\"comment-text\">Super implementation !</div>\n    <div class=\"comment-actions\">\n      <button class=\"comment-action-btn\" data-reply-trigger aria-label=\"Repondre\">&#8617; Repondre</button>\n      <button class=\"comment-action-btn\" data-like-trigger aria-label=\"J'aime\">&#9825; <span class=\"like-count\">0</span></button>\n    </div>\n  </div>\n</div>"
     },
     {
       "name": "theme-switcher",
       "page": "fondation",
-      "cssClasses": [".theme-switcher", ".theme-switcher-label", ".theme-switcher-select", ".mode-toggle"],
+      "cssClasses": [
+        ".theme-switcher",
+        ".theme-switcher-label",
+        ".theme-switcher-select",
+        ".mode-toggle",
+        ".mode-switch",
+        ".mode-switch-track",
+        ".mode-switch-thumb",
+        ".mode-switch-icon"
+      ],
       "jsInit": "initThemeSwitcher",
-      "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>"
+      "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>\n<div class=\"mode-toggle\">\n  <button id=\"mode-switch\" class=\"mode-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"Basculer mode clair/sombre\">\n    <span class=\"mode-switch-track\">\n      <svg class=\"mode-switch-icon mode-switch-icon--sun\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-sun\"></use></svg>\n      <svg class=\"mode-switch-icon mode-switch-icon--moon\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-moon\"></use></svg>\n      <span class=\"mode-switch-thumb\"></span>\n    </span>\n  </button>\n</div>"
     },
     {
       "name": "brand-wordmark",
       "page": "fondation",
-      "cssClasses": [".brand-wordmark"],
+      "cssClasses": [
+        ".brand-wordmark"
+      ],
       "jsInit": null,
       "version": "2.56.0",
+      "description": "Wordmark texte 'design-system' (Space Grotesk 600 18px, gradient charte) affiché à côté du pictogramme MSYX en header desktop. Masqué mobile < 640px.",
       "example": "<span class=\"brand-wordmark\">design-system</span>"
     },
     {
       "name": "brand-mark-ds",
       "page": "fondation",
-      "cssClasses": [".brand-mark-ds", ".brand-mark-ds--sm", ".brand-mark-ds--lg"],
+      "cssClasses": [
+        ".brand-mark-ds",
+        ".brand-mark-ds--sm",
+        ".brand-mark-ds--lg"
+      ],
       "jsInit": null,
       "version": "2.56.0",
+      "description": "Mark stylisé 'DS' (Space Grotesk 700 72px, gradient charte) utilisé sur la page login en remplacement du pictogramme MSYX. Variantes --sm 32px / --lg 96px.",
       "example": "<div class=\"brand-mark-ds\" aria-label=\"Design System\">DS</div>"
     }
   ]

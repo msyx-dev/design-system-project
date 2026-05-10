@@ -1,4 +1,4 @@
-/* @ds-version 2.56.0 */
+/* @ds-version: 2.56.0 */
 /* brand.css — Identité visuelle design-system
    Wordmark header + Mark DS login/splash.
    Séparé de signature.css (qui gère le gradient underline section-header). */
@@ -67,22 +67,22 @@
 
 .brand-card {
     padding: 24px;
-    background: var(--surface-1);
+    background: var(--surface-solid);
     border-radius: var(--radius-lg);
-    border: 1px solid var(--border-1);
+    border: 1px solid var(--border-color);
 }
 
 .brand-card h3 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 600;
     font-size: 1rem;
-    color: var(--text-1);
+    color: var(--text);
     margin-bottom: 4px;
 }
 
 .brand-card p {
     font-size: 0.875rem;
-    color: var(--text-2);
+    color: var(--text-muted);
     margin-top: 8px;
     line-height: 1.5;
 }
@@ -92,7 +92,7 @@
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-3);
+    color: var(--text-dim);
 }
 
 .brand-preview {
@@ -101,7 +101,7 @@
     justify-content: center;
     height: 100px;
     margin-bottom: 16px;
-    background: var(--surface-2);
+    background: var(--surface);
     border-radius: var(--radius-md);
     overflow: hidden;
 }

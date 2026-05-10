@@ -1,5 +1,24 @@
 # Releases
 
+## v2.56.0 — 2026-05-10
+
+### Added
+- **#268 — Brand identity : wordmark `design-system` + mark `DS` propre au design-system**. Restaure une identité visuelle distincte du DS (vs pictogramme MSYX maison-mère qui reste en marque discrète à gauche). 3 livrables :
+  - **Header global** (`shared/nav.js`) : wordmark texte `design-system` Space Grotesk 600 18px gradient charte (turquoise→vert→bleu→violet) ajouté à côté du pictogramme MSYX 40×40. `aria-label="design-system — Accueil"` sur le lien `header-logo`, `alt=""` + `aria-hidden="true"` sur le pictogramme (décoratif, le wordmark texte porte l'identité).
+  - **Page login** (`index.html`) : remplacement du `<img logoMSYX.png 48×48>` par un mark `DS` 72px Space Grotesk 700 gradient charte. Le DS devient l'identité principale de la page d'auth.
+  - **Documentation** (`pages/fondation.html#brand`) : nouvelle sous-section "Brand identity" qui formalise les 3 niveaux (pictogramme MSYX = maison-mère discret, wordmark = identité projet DS, mark DS = forme courte pour contextes restreints).
+- **Nouveau module CSS** `shared/css/components/brand.css` (27e module). Classes `.brand-wordmark`, `.brand-mark-ds` (+ variantes `--sm` 32px / `--lg` 96px). Gradient text via `background-clip: text` + fallback `color: var(--accent)` pour navigateurs sans support. Mobile < 640px : wordmark masqué via `@media`, pictogramme + version conservés.
+
+### Changed
+- `pages/formulaires.html` : résidu historique `<div class="login-logo">DS</div>` cohérent avec la nouvelle `.brand-mark-ds`.
+- `components-registry.json` : entrée historique `brand-wordmark` (SVG logos S23) renommée `brand-logo-svg` pour éviter la collision avec la nouvelle `brand-wordmark` (texte). 2 nouvelles entrées : `brand-wordmark` (texte) + `brand-mark-ds`.
+
+### Notes
+- Arbitrage upfront Mike (pattern S23 #192, décision permanente 2026-05-10) : les 3 éléments coexistent — pas de fusion, pas de remplacement. Le pictogramme MSYX reste pour signaler l'appartenance à l'écosystème msyx.fr.
+- Issue #247 (vrai SVG MSYX fidèle) reste close — le PNG est acceptable durablement comme marque discrète. Si besoin de perf SVG vectoriel : ticket Quick séparé S33+.
+
+---
+
 ## [v2.55.0] — 2026-05-10
 
 ### Changed
