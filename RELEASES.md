@@ -1,5 +1,19 @@
 # Releases
 
+## v2.54.9 — 2026-05-10
+
+### Fixed
+- **icone notification cloche : remplacement de l'emoji systeme par le glyphe Lucide `i-bell` (#254)**.
+  Les 3 emplacements (`shared/nav.js` runtime header, `pages/navigation.html` demo header user zone,
+  `pages/feedback.html` demo notification-center) utilisaient `&#128276;` rendu OS-dependent
+  (Apple Color Emoji multicolore, hors charte). Swap vers `<svg class="icon" aria-hidden="true">
+  <use href="/shared/icons/sprite.svg#i-bell"/></svg>` deja present dans le sprite Lucide.
+  Rendu monochrome stroke `currentColor` coherent avec toutes les autres icones header.
+  Aucun changement CSS necessaire (taille `.icon` 20px deja adaptee aux conteneurs 34x34 et 40x40).
+  Bump patch v2.54.2 -> v2.54.9 (S31 multi-bumps pre-alloues).
+
+---
+
 ## v2.54.0 — 2026-05-09
 
 ### Added

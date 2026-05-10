@@ -1,6 +1,6 @@
 {
   "name": "msyx-design-system",
-  "version": "2.54.8",
+  "version": "2.54.9",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
   "scripts": {
