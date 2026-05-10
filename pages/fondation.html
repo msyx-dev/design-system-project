@@ -687,6 +687,73 @@
     </div>
 </section>
 
+<section id="brand">
+    <div class="section-header">
+        <span class="overline">Identité</span>
+        <h2>Brand identity</h2>
+        <p>Le design-system distingue 3 niveaux d'identité visuelle qui coexistent.</p>
+    </div>
+    <div class="brand-grid">
+        <!-- Niveau 1 : Pictogramme MSYX (maison-mère) -->
+        <div class="brand-card">
+            <div class="brand-preview">
+                <img src="/assets/sources/logoMSYX.png" alt="Pictogramme MSYX" width="64" height="64">
+            </div>
+            <h3>Pictogramme MSYX</h3>
+            <span class="overline">Maison-mère — discret</span>
+            <p>Marque ombrelle msyx.fr. Utilisé en header pour signaler l'appartenance à l'écosystème. Jamais le visuel principal.</p>
+        </div>
+        <!-- Niveau 2 : Wordmark "design-system" -->
+        <div class="brand-card">
+            <div class="brand-preview">
+                <span class="brand-wordmark" style="display:inline-block;">design-system</span>
+            </div>
+            <h3>Wordmark</h3>
+            <span class="overline">Identité projet DS</span>
+            <p>Nom complet du projet en typo charte (Space Grotesk 600) + gradient turquoise→vert→bleu→violet. Affiché en header desktop, masqué mobile.</p>
+        </div>
+        <!-- Niveau 3 : Mark "DS" -->
+        <div class="brand-card">
+            <div class="brand-preview">
+                <div class="brand-mark-ds brand-mark-ds--sm">DS</div>
+            </div>
+            <h3>Mark DS</h3>
+            <span class="overline">Forme courte</span>
+            <p>Initiales stylisées pour contextes restreints : page login, favicon, splash screens. Même typo + gradient que le wordmark.</p>
+        </div>
+    </div>
+    <div class="alert alert--info" style="margin-top: var(--space-md);">
+        <strong>Règle d'usage</strong> : Pictogramme MSYX + Wordmark coexistent en header. Mark DS s'utilise seul (login, favicon). Jamais les 3 ensemble.
+    </div>
+    <!-- Démo interactive des classes -->
+    <div class="demo-box" style="margin-top: var(--space-md);">
+        <span class="demo-label">Classes CSS disponibles</span>
+        <div style="display:flex;align-items:center;gap:var(--space-lg);flex-wrap:wrap;margin-bottom:var(--space-md);">
+            <div style="text-align:center;">
+                <div class="brand-mark-ds brand-mark-ds--sm">DS</div>
+                <code class="code-inline">.brand-mark-ds--sm</code>
+            </div>
+            <div style="text-align:center;">
+                <div class="brand-mark-ds">DS</div>
+                <code class="code-inline">.brand-mark-ds</code>
+            </div>
+            <div style="text-align:center;">
+                <span class="brand-wordmark" style="display:inline-block;">design-system</span>
+                <code class="code-inline">.brand-wordmark</code>
+            </div>
+        </div>
+        <pre class="code-block"><code>&lt;!-- Mark DS (login, splash) --&gt;
+&lt;div class="brand-mark-ds" aria-label="Design System"&gt;DS&lt;/div&gt;
+
+&lt;!-- Wordmark header --&gt;
+&lt;span class="brand-wordmark"&gt;design-system&lt;/span&gt;
+
+&lt;!-- Variantes taille --&gt;
+&lt;div class="brand-mark-ds brand-mark-ds--sm"&gt;DS&lt;/div&gt;
+&lt;div class="brand-mark-ds brand-mark-ds--lg"&gt;DS&lt;/div&gt;</code></pre>
+    </div>
+</section>
+
 <section id="iconographie">
     <div class="section-header"><span class="overline">Reference</span><h2>Iconographie</h2><p>Sprite SVG Lucide self-hoste. Acces via la convention <code class="code-inline">&lt;svg class="icon"&gt;&lt;use href="/shared/icons/sprite.svg#i-{nom}"/&gt;&lt;/svg&gt;</code>.</p></div>
     <div class="demo-box">

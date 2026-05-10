@@ -23,7 +23,7 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html    # Couleurs, typographie, espacements, ombres, theming (+ .theme-card / .color-grid--compact v2.54.7), theme switcher (v2.47.0), mode-switch iOS-style (v2.55.0), classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming (+ .theme-card / .color-grid--compact v2.54.7), theme switcher (v2.47.0), mode-switch iOS-style (v2.55.0), brand identity (wordmark + mark DS, v2.56.0), classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
   motion.html       # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce)
   composants.html   # Cards (+ card-link a11y v2.49.0), badges (+ badge-nav compact v2.49.0), boutons (+ polish sémantique theme-aware v2.54.11 : tokens fg dédiés --btn-on-*, shadow alpha --btn-shadow-alpha, border subtil), chips, dividers, rating, avatars, alertes, modals (+ focus restore WAI APG v2.41.0), toasts (+ toast-message v2.49.0), segmented control, achievement badges, popovers, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation, action-menu (v2.47.0)
@@ -40,7 +40,7 @@ shared/
     layout.css      # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css       # Barrel pur (v2.36.0) — 26 @import vers components/ dans l'ordre cascade
     components-core.css  # Barrel essentiel (v2.36.0) — 7 modules essentiels ~42KB pour consumers légers
-    components/          # 26 modules CSS (v2.42.0) : _base, signature (v2.42.0), cards, buttons, badges, theming, forms, data,
+    components/          # 27 modules CSS (v2.56.0) : _base, signature (v2.42.0), brand (v2.56.0 — wordmark + mark DS), cards, buttons, badges, theming, forms, data,
                          #   avatars, tables, lists, alerts, overlays, navigation, modals, feedback,
                          #   interactive, templates, media, _responsive, tracker, quiz, _a11y,
                          #   pricing, notifications, motion

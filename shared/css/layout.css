@@ -1,4 +1,4 @@
-/* @ds-version: 2.55.0 */
+/* @ds-version: 2.56.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -11,7 +11,7 @@
 }
 .site-header .header-logo {
     text-decoration: none;
-    display: inline-flex; align-items: center; min-height: 44px; /* WCAG 2.5.5 tap target */
+    display: inline-flex; align-items: center; gap: 12px; min-height: 44px; /* WCAG 2.5.5 tap target */
     flex-shrink: 0;
 }
 .site-header .header-logo .header-logo-img {
