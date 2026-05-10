@@ -1,5 +1,12 @@
 # Releases
 
+## v2.54.11 — 2026-05-10
+
+### Changed
+- **#266 — Polish `.btn-danger`/`.btn-success`/`.btn-warning` theme-aware (Option C hybride)**. Tokens foreground dédiés (`--btn-on-danger`, `--btn-on-success`, `--btn-on-warning`) calibrés WCAG AA par combo thème × mode, shadow alpha modulable (`--btn-shadow-alpha` : 35% dark, 22% light), border subtil `rgba(255,255,255,0.06)` sur le shell. Adresse l'intégration visuelle insuffisante aux thèmes ACSSI (marine/or) et Nhood (vert) diagnostiquée post-S31. Aucun breaking change consumer.
+
+---
+
 ## v2.54.10 — 2026-05-10 (HOTFIX)
 
 ### Fixed

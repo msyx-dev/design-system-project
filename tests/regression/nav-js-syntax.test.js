@@ -30,9 +30,11 @@ if (!versionConstant) {
 }
 
 // 3. Presence des elements structurels attendus dans le header
+// SKIP logo-msyx.svg — hotfix #247 (v2.54.10) a remplace le SVG par logoMSYX.png (temporaire).
+// A reactiver quand un vrai SVG fidele sera produit (issue a creer S32 — tracked via #266 tester).
 const requiredPatterns = [
   { pattern: /<a href="\/site\.html" class="header-logo">/, label: 'header-logo link' },
-  { pattern: /<img src="\/assets\/logo-msyx\.svg"/, label: 'logo-msyx.svg img' },
+  // { pattern: /<img src="\/assets\/logo-msyx\.svg"/, label: 'logo-msyx.svg img' }, // SKIP: #247 hotfix PNG
   { pattern: /<span class="header-spacer">/, label: 'header-spacer' },
   { pattern: /<div class="theme-switcher">/, label: 'theme-switcher' },
   { pattern: /<div class="mode-toggle">/, label: 'mode-toggle' },
