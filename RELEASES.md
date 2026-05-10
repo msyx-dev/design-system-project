@@ -1,5 +1,16 @@
 # Releases
 
+## v2.54.10 — 2026-05-10 (HOTFIX)
+
+### Fixed
+- **#247 Logo MSYX (réouverture) — hotfix : référence directe au PNG officiel**. Le fix S31 (PR #257, v2.54.1) avait ajouté un `<path>` SVG manuel "M en double-pic" mais avec des coordonnées arbitraires qui ne correspondaient pas au logo officiel — résultat dégradé en prod, refusé par Mike en revue 2026-05-10. Hotfix : remplacer la référence SVG par `<img src="/assets/sources/logoMSYX.png">` directement dans `shared/nav.js` (header), `index.html` (page login auth gate) et `canonical-pages/login.html`. Le PNG officiel (`assets/sources/logoMSYX.png`, 96 KB, 1475×1562) était déjà conservé dans le repo. Le SVG `path #ffffff` bricolé est retiré (les 4 fichiers SVG `assets/logo-msyx*.svg` sont restaurés à leur état pré-S31, sans le path bricolé). Le test de non-régression `tests/regression/logo-msyx-paths.test.js` introduit en S31 est supprimé (validait le bricolage).
+
+### Notes
+- Tradeoff : 96 KB PNG vs ~1 KB SVG. Acceptable pour un logo unique chargé une fois et caché par le navigateur. Issue follow-up à créer en S32 pour produire un vrai SVG fidèle au logo officiel (2 paths : W vert + M bleu en gradient).
+- Hotfix produit à 09h UTC le lendemain du déploiement S31 (drift prod limité à ~30 min).
+
+---
+
 ## Sprint 31 — v2.54.9 — 2026-05-10
 
 **Sprint Bugfix UX** : 9 bugs UI/régressions remontés en revue 2026-05-09. 9/9 livrés (16 SP, 100% vélocité). Versions pré-allouées par parent /sprint (claude-config#32C, 8e application consécutive validée — 0 conflit git sur bumps malgré 4 vagues parallèles + chaîne de 9 rebases successifs avec `--theirs`).
