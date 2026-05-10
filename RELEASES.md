@@ -1,16 +1,24 @@
 # Releases
 
-## v2.54.9 — 2026-05-10
+## Sprint 31 — v2.54.9 — 2026-05-10
+
+**Sprint Bugfix UX** : 9 bugs UI/régressions remontés en revue 2026-05-09. 9/9 livrés (16 SP, 100% vélocité). Versions pré-allouées par parent /sprint (claude-config#32C, 8e application consécutive validée — 0 conflit git sur bumps malgré 4 vagues parallèles + chaîne de 9 rebases successifs avec `--theirs`).
 
 ### Fixed
-- **icone notification cloche : remplacement de l'emoji systeme par le glyphe Lucide `i-bell` (#254)**.
-  Les 3 emplacements (`shared/nav.js` runtime header, `pages/navigation.html` demo header user zone,
-  `pages/feedback.html` demo notification-center) utilisaient `&#128276;` rendu OS-dependent
-  (Apple Color Emoji multicolore, hors charte). Swap vers `<svg class="icon" aria-hidden="true">
-  <use href="/shared/icons/sprite.svg#i-bell"/></svg>` deja present dans le sprite Lucide.
-  Rendu monochrome stroke `currentColor` coherent avec toutes les autres icones header.
-  Aucun changement CSS necessaire (taille `.icon` 20px deja adaptee aux conteneurs 34x34 et 40x40).
-  Bump patch v2.54.2 -> v2.54.9 (S31 multi-bumps pre-alloues).
+- **#247 — Logo MSYX : restauration du M en double-pic de montagne (v2.54.1)**. Régression PR #213/S24 #209 (vectorisation potrace mode trace simple — M absent). Ajout d'un `<path>` SVG manuel blanc (`fill="#ffffff"`) sur les 4 fichiers (`assets/logo-msyx.svg`, `-mark`, `-dark`, `-light`). Test de non-régression `tests/regression/logo-msyx-paths.test.js`.
+- **#251 — Theme switcher light/dark : plus jamais grisé à tort (v2.54.2)**. Race init `updateModeButtons` lue avant que l'anti-FOUC pose `data-theme` sur `<html>`. Fix défensif dans `shared/nav.js` : ordre `initModeSwitcher` → `initThemeSwitcher` durci + appel défensif `updateModeButtons()` à la fin de `initThemeSwitcher`. Tous les thèmes retrouvent leur toggle dark/light.
+- **#248 — Sidebar bleed-through au scroll (v2.54.3)**. `.sidebar-filter-wrap` sticky top:0 avec `background: var(--sidebar-bg)` (alpha 0.85-0.95) sans `backdrop-filter` → liens visibles à travers la barre de recherche. Ajout `backdrop-filter: blur(12px) saturate(1.5)` (+ `-webkit-` prefix) dans `shared/css/layout.css`.
+- **#250 — Code-block débordement col 3 grid (v2.54.4)**. Section `#consommation` de `pages/fondation.html` débordement de la 3e colonne `.demo-grid-3` par URL longue. Fix CSS `.code-block` : ajout `overflow-wrap: anywhere` + `min-width: 0` dans `shared/css/components/interactive.css`.
+- **#252 — Mise en page 4 sections showcase (v2.54.5)**. Régression structurelle HTML pure (4 sous-bugs) : section badges fermée trop tôt dans `pages/composants.html`, wrappers `.demo-grid demo-grid-1` manquants sur Activity Feed + Risk Matrix + Notification Center. 4 patches HTML minimaux.
+- **#253 — Polish .btn-danger / .btn-success / .btn-warning (v2.54.6)**. Refactor avec sélecteur partagé qui factorise position/overflow/`::before`/hover-lift, puis spécialisation `background` + `box-shadow:hover` color-mix par couleur. Extension du `:active` scale aux 3 variantes. Alignement glassmorphism sur `.btn-primary`.
+- **#249 — Section theming refactorée (v2.54.7)**. Classes CSS orphelines (`theme-card`, `flex-wrap-mb`, `flex-between-sm`, `flex-col-gap-xs/sm`, `token-row`, `token-item`) sans règles + palettes ACSSI/Nhood en swatches inline 60×60px sans nom ni hex. Définition `.theme-card` (+ `.theme-card-head`, variante `--future`) dans `shared/css/components/theming.css`, refonte palettes en `.color-grid--compact` + `.color-swatch` + `.color-info`, suppression inline-styles.
+- **#255 — Toasts : positioning + animation + a11y (v2.54.8)**. `top: 1.5rem` chevauchait header (56px), pas de stack-shift entre toasts, animation `ease` non DS-aligned, mobile non géré. Fix `top: calc(var(--header-h) + var(--space-md))`, `transition margin --ease-standard` (stack-shift), slide-in `--ease-spring`, `flex-shrink: 0`, `will-change`, media mobile ≤480px full-width. JS : `role` dynamique (alert/status selon type) sur création toast.
+- **#254 — Icône notification : Lucide i-bell au lieu d'emoji système (v2.54.9)**. Les 4 emplacements (`shared/nav.js`, `shared/dist/nav.min.js`, `pages/navigation.html:40`, `pages/feedback.html:608`) utilisaient `&#128276;` (🔔) rendu OS-dependent. Swap vers `<svg class="icon"><use href="/shared/icons/sprite.svg#i-bell"/></svg>`. Rendu monochrome stroke `currentColor` cohérent.
+
+### Notes
+- **CI** : 9 PRs × 5 checks (lint, perf-budget, lighthouse, a11y, visual) = 45 runs verts. Aucune régression visuelle détectée par Playwright.
+- **Pattern de merge** : ordre strict des versions v2.54.1 → v2.54.9, avec rebase `--theirs` sur les 7 fichiers de version (`package.json`, 4 CSS, `nav.js`, `components-registry.json`) à chaque merge intermédiaire. Pattern automatisable.
+- **Découverte** : `shared/components-registry.json` doit être inclus dans la liste --theirs lors des rebases multi-PR (capit. à intégrer dans la doc /sprint).
 
 ---
 
