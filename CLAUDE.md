@@ -5,6 +5,22 @@
 Design system vivant de msyx.fr — source de verite pour tous les composants UI.
 Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abord.
 
+## Principes & anti-patterns — lecture obligatoire
+**Avant toute modification de code DS, lire `docs/DS-PRINCIPLES.md`.** Le document consolide les règles de qualité (tokens-first, theming, a11y WCAG AA, mobile-first, perf budgets, naming, versioning), la checklist anti-dette par composant, et les anti-patterns observés sur les consumers à ne JAMAIS reproduire dans le DS.
+
+Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
+- **Aucune valeur hardcodée** (hex/rgb/px/font) — toujours `var(--token)` depuis `tokens.css`
+- **5 combos theme/mode à tester** — MSYX/ACSSI/Nhood × dark/light
+- **Mobile-first uniquement** — `@media (min-width: ...)`, jamais `max-width`
+- **A11y baseline** — `aria-label` sur icon-only, `:focus-visible`, contraste 4.5:1, target 44px mobile
+- **Anti-FOUC** — script synchrone inline `<head>`, lit `msyx-theme` + `msyx-mode` (jamais de naming divergent)
+- **Anti-double-bind JS** — pattern `dataset.bound` sur tous les event listeners
+- **Pas d'override de classe DS** — customiser via variables CSS, jamais redéfinir
+- **Version bump synchrone** — 5 fichiers (`tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`)
+- **Checklist anti-dette** — 9 dimensions à valider par composant (HTML/CSS/JS/A11y/Perf/Doc/Version/Registre/VR)
+
+Si une règle te paraît ambiguë : `docs/DS-PRINCIPLES.md` a un exemple ❌ Don't / ✅ Do pour chaque cas.
+
 ## Stack
 - HTML/CSS/JS statique pur (pas de framework, pas de build)
 - Servi par Caddy `file_server` (pas de Docker)
