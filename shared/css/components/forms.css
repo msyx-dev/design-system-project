@@ -421,29 +421,81 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     .filter-bar .filter-bar-actions { margin-left: 0; justify-content: flex-end; }
 }
 
-/* ===== LOGIN FORM ===== */
+/* ===== LOGIN FORM / LOGINSCREEN ===== */
+/* Pattern d'authentification msyx. Card glassmorphism + orbes + gradient submit.        */
+/* LoginScreen (v2.57.0, #285) : bouton Authentik primary + slots providers + 3 variants. */
 .login-preview { background: var(--primary); border-radius: var(--radius-card); padding: var(--space-xl); min-height: 360px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .login-preview .orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.15; pointer-events: none; }
 .login-preview .orb-1 { width: 300px; height: 300px; background: var(--accent); top: -80px; right: -60px; }
 .login-preview .orb-2 { width: 250px; height: 250px; background: var(--deco-violet); bottom: -60px; left: -60px; }
-.login-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; width: 100%; max-width: 360px; text-align: center; box-shadow: var(--shadow-lg); backdrop-filter: blur(20px); position: relative; z-index: 1; }
-.login-logo { width: 48px; height: 48px; margin: 0 auto 1.2rem; background: var(--gradient-1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: var(--text-on-accent); font-family: 'Space Grotesk', sans-serif; }
-.login-card h3 { font-family: 'Space Grotesk', sans-serif; color: var(--text); font-size: 1.2rem; margin-bottom: 0.4rem; }
+.login-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); width: 100%; max-width: 360px; text-align: center; box-shadow: var(--shadow-lg); backdrop-filter: blur(20px); position: relative; z-index: 1; }
+.login-logo { width: 48px; height: 48px; margin: 0 auto var(--space-md); background: var(--gradient-1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: var(--text-on-accent); font-family: var(--font-display); }
+.login-card h3 { font-family: var(--font-display); color: var(--text); font-size: 1.2rem; margin-bottom: 0.4rem; }
 .login-card .subtitle { color: var(--text-muted); font-size: 0.82rem; margin-bottom: var(--space-lg); }
 .login-form { display: flex; flex-direction: column; gap: 0.65rem; }
-.login-form input { padding: 0.7rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; }
+.login-form input { padding: 0.7rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-sans); transition: border-color 0.2s; }
 .login-form input:focus-visible { border-color: var(--accent); }
 .login-form input::placeholder { color: var(--text-muted); }
-.login-submit { padding: 0.7rem; border-radius: 10px; border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 0.3rem; transition: opacity 0.2s; }
+.login-submit { padding: 0.7rem; border-radius: var(--radius-sm); border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); margin-top: 0.3rem; transition: opacity 0.2s; }
 .login-submit:hover { opacity: 0.85; }
 .login-error { color: var(--danger); font-size: 0.8rem; margin-top: 0.8rem; }
 .login-divider { display: flex; align-items: center; gap: 0.8rem; margin: var(--space-md) 0; color: var(--text-dim); font-size: 0.78rem; }
 .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
-.login-social-btn { display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.65rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface); color: var(--text); font-size: 0.85rem; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.2s, background 0.2s; width: 100%; }
-.login-social-btn:hover { border-color: var(--border-hover); background: var(--primary-light); }
-.login-social-btn svg { width: 18px; height: 18px; }
+
+/* --- Slots providers (présentationnel — câblage = job du consumer, ADR-016) --- */
+.login-providers { display: flex; flex-direction: column; gap: 0.5rem; }
+.login-provider-btn,
+.login-social-btn { /* .login-social-btn = alias legacy conservé pour compat consumers */
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.65rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--login-provider-border);
+    background: var(--login-provider-bg);
+    color: var(--text); font-size: 0.85rem; font-weight: 500;
+    cursor: pointer; font-family: var(--font-sans);
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%; min-height: 44px; /* WCAG 2.5.5 target — DS-PRINCIPLES §3 */
+}
+.login-provider-btn:hover,
+.login-social-btn:hover { border-color: var(--border-hover); background: var(--login-provider-bg-hover); }
+.login-provider-btn:focus-visible,
+.login-social-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.login-provider-btn svg,
+.login-social-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.login-provider-btn[disabled],
+.login-social-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* Bouton Authentik — provider PRIMARY (toujours présent sur apps internes msyx) */
+.login-authentik-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.75rem; border-radius: var(--radius-sm);
+    border: none; border-left: 3px solid var(--login-authentik-accent);
+    background: var(--gradient-1);
+    color: var(--text-on-accent); font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; font-family: var(--font-sans);
+    width: 100%; min-height: 44px;
+    box-shadow: 0 0 0 1px rgba(var(--login-authentik-accent-rgb), 0.0);
+    transition: opacity 0.2s, box-shadow 0.2s;
+}
+.login-authentik-btn:hover { opacity: 0.9; box-shadow: 0 4px 16px rgba(var(--login-authentik-accent-rgb), 0.25); }
+.login-authentik-btn:focus-visible { outline: 2px solid var(--login-authentik-accent); outline-offset: 2px; }
+.login-authentik-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* Modifiers par provider — purement visuels (icône portée par le <svg> inline, cf §2.4) */
+.login-provider-btn--google:hover    { border-color: rgba(66, 133, 244, 0.5); }
+.login-provider-btn--apple:hover     { border-color: var(--border-hover); }
+.login-provider-btn--microsoft:hover { border-color: rgba(0, 120, 212, 0.5); }
+.login-provider-btn--github:hover    { border-color: var(--border-hover); }
+
+/* --- Variants de LoginScreen --- */
+/* internal-only : Authentik primary + form local fallback (apps internes msyx) */
+.login-card--internal-only .login-form { margin-top: var(--space-md); }
+/* public-multi-providers : Authentik + Google/Apple/Microsoft + form local (apps publiques) */
+.login-card--public-multi-providers .login-providers { margin-top: var(--space-sm); }
+/* internal-with-fallback : form local en premier + Authentik si dispo (préprod/staging) */
+.login-card--internal-with-fallback .login-authentik-btn { margin-top: var(--space-md); }
+
 .login-compact { display: flex; gap: 0.5rem; align-items: center; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 0.8rem 1rem; backdrop-filter: blur(20px); }
-.login-compact input { flex: 1; padding: 0.55rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: 'Inter', sans-serif; min-width: 0; }
+.login-compact input { flex: 1; padding: 0.55rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: var(--font-sans); min-width: 0; }
 .login-compact input:focus-visible { border-color: var(--accent); }
-.login-compact button { padding: 0.55rem 1.2rem; border-radius: 8px; border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.login-compact button { padding: 0.55rem 1.2rem; border-radius: var(--radius-sm); border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); white-space: nowrap; }
 
