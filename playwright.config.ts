@@ -3,7 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 4173;
 
 // Matrice complete : 3 themes x 2 modes x 2 viewports = 12 projects
-// 12 projects x 9 pages = 108 baselines (v2.38.0)
+// 12 projects x 9 pages, capture PAR SECTION depuis #286 (v2.56.1)
+// → 1 baseline par <section id> de chaque page (voir visual.spec.ts)
 const THEMES = ["msyx", "acssi", "nhood"] as const;
 const MODES = ["dark", "light"] as const;
 const VIEWPORTS = [

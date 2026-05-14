@@ -47,11 +47,40 @@ const setThemeAndMode = async (
   );
 };
 
+// --- Garde-fou stabilité VR (#286) ---
+// `animations: "disabled"` (playwright.config.ts) ne neutralise QUE les
+// animations CSS. Le carrousel (divers.html #carousel) tourne via JS
+// (components.js initCarousel, data-autoplay) → impossible de capturer
+// deux screenshots consécutifs stables ("Failed to take two consecutive
+// stable screenshots"). On retire data-autoplay AVANT l'init JS pour
+// figer le carrousel sur la 1re slide, de façon déterministe, sans
+// masquer le composant (la VR couvre toujours le carrousel).
+const freezeJsAnimations = async (page: import("@playwright/test").Page) => {
+  await page.addInitScript(() => {
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        document
+          .querySelectorAll<HTMLElement>(".carousel[data-autoplay]")
+          .forEach((c) => c.removeAttribute("data-autoplay"));
+      },
+      { once: true },
+    );
+  });
+};
+
 test.describe("Visual regression — full matrix (par section)", () => {
   for (const { slug, path, title } of PAGES) {
     test(`${slug}`, async ({ page }, testInfo) => {
+      // Une page = N captures de section (jusqu'à ~18 sur feedback.html).
+      // Le défaut 30s est trop court pour les pages longues → timeout.
+      // 120s couvre la page la plus dense avec marge (ce n'est PAS un
+      // élargissement de tolérance de diff, juste un budget temps réaliste).
+      test.setTimeout(120_000);
+
       const { theme, mode } = parseProjectName(testInfo.project.name);
       await setThemeAndMode(page, theme, mode);
+      await freezeJsAnimations(page);
       await page.goto(path, { waitUntil: "networkidle" });
 
       // --- Garde-fou anti-régression Bug 1 (#286) ---
@@ -81,7 +110,30 @@ test.describe("Visual regression — full matrix (par section)", () => {
       for (const sectionId of sectionIds) {
         const section = page.locator(`#${sectionId}`);
         await section.scrollIntoViewIfNeeded();
-        await expect(section).toHaveScreenshot(`${slug}__${sectionId}.png`);
+
+        // --- Garde-fou stabilité dimensionnelle (#286) ---
+        // Certaines sections (ex. feedback.html #alerts) voient leur
+        // hauteur de rendu osciller de ±1-3 px entre deux frames (settle
+        // sub-pixel tardif après scroll/fonts). toHaveScreenshot échoue
+        // alors en "Failed to take two consecutive stable screenshots".
+        // On attend ici que la hauteur soit identique sur 2 mesures
+        // consécutives avant de capturer : stabilisation déterministe,
+        // ciblée, SANS toucher threshold/maxDiffPixelRatio.
+        let prevH = -1;
+        for (let i = 0; i < 10; i++) {
+          const box = await section.boundingBox();
+          const h = box ? Math.round(box.height) : -1;
+          if (h === prevH) break;
+          prevH = h;
+          await page.waitForTimeout(120);
+        }
+
+        await expect(section).toHaveScreenshot(`${slug}__${sectionId}.png`, {
+          // Marge de temps pour les sections denses (le défaut 5s peut être
+          // juste sur une section très haute) — pas un élargissement de
+          // tolérance de diff, juste un budget de retry réaliste.
+          timeout: 15_000,
+        });
       }
     });
   }
