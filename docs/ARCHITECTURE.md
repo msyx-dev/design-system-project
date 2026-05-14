@@ -119,10 +119,11 @@ Sprite SVG self-hosted Lucide (~50 glyphes) — convention `<svg class="icon"><u
 
 Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
-- **Outils** : `@playwright/test` + `serve` (devDeps uniquement)
-- **Perimetre** : 108 baselines (3 themes x 2 modes x 9 pages thematiques x 2 viewports) — etendu Sprint 22 (#191, v2.38.0)
+- **Outils** : `@playwright/test` + `serve` (devDeps uniquement). `serve.json` à la racine désactive clean-URLs / SPA fallback (#286) — `/pages/x.html` servi tel quel.
+- **Perimetre** : capture **par section** depuis #286 (v2.56.1) — 1 baseline par `<section id>` des 9 pages × 12 projets (≈ N sections × 12, voir `visual.spec.ts`). `fullPage` retiré : hauteur non déterministe sur pages longues. Étendu Sprint 22 (#191, v2.38.0), refactor par section S33 (#286, v2.56.1).
 - **Projects Playwright** : 12 (`<theme>-<mode>-<viewport>`, ex: `msyx-dark-desktop`, `acssi-light-mobile`)
-- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>.png`
+- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>__<section-id>.png`
+- **Garde-fou** : assertion `toHaveTitle` dans `visual.spec.ts` / `a11y.spec.ts` / `modal-focus.spec.ts` — échec immédiat si le harness retombe sur `index.html` (régression Bug 1 #286).
 - **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil, timeout 30 min
 - **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
 
@@ -131,7 +132,7 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 - **Outils** : `@axe-core/playwright` v4.x (devDep) — API Deque officielle `AxeBuilder`
-- **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les 108 baselines VR
+- **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les baselines VR
 - **Matrice** : 9 pages × 3 thèmes × 2 modes = 54 runs (même couverture que VR sans viewport)
 - **Règles** : `wcag2a`, `wcag2aa`, `wcag21aa` (WCAG 2.0 + 2.1 A/AA)
 - **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001, séparé du pipeline VR
@@ -139,7 +140,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Rapport** : `docs/audit-a11y-<date>.md` — généré en `afterAll`, tableau par règle + détail par run
 - **CI** : `.github/workflows/a11y.yml` — séparé de `visual.yml`, `continue-on-error: true`, artifact uploadé
 - **Scripts npm** : `test:a11y` (run) + `test:a11y:report` (open report HTML)
-- **Résultat initial** (v2.52.0, 2026-05-09) : 0 violations sur 54 runs Chromium local
+- **Résultat initial** (v2.52.0, 2026-05-09) : « 0 violations / 54 runs » — **faux négatif** : le flag `-s` de `serve` faisait auditer `index.html` (issue #286). Rapport régénéré sur le vrai contenu en v2.56.1.
 
 ## Navigation et layout
 

@@ -26,6 +26,15 @@ const projects = THEMES.flatMap((theme) =>
 
 export default defineConfig({
   testDir: "visual-tests",
+  // testMatch RESTREINT (#286) : sans lui, `playwright test` ramassait aussi
+  // a11y.spec.ts (sa propre matrice interne de 54 runs) et le relançait 1×
+  // par projet VR (12×) — 648 runs a11y parasites + 12 réécritures
+  // concurrentes de docs/audit-a11y-<date>.md (rapport corrompu, données
+  // partielles selon le worker). a11y.spec.ts a sa config dédiée
+  // (playwright.a11y.config.ts) et son script `test:a11y` : il ne doit PAS
+  // tourner sous `test:visual`. On garde visual.spec.ts (VR) + modal-focus
+  // (smoke a11y rapide, 1 test) qui dépendent de cette config.
+  testMatch: ["**/visual.spec.ts", "**/modal-focus.spec.ts"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
