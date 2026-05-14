@@ -17,7 +17,7 @@
 - `formulaires.html` : inline styles supprimés de la démo « boutons sociaux » (`.login-providers` remplace `style="display:flex…"`), `<svg>` brand factorisés en `<symbol>`.
 
 ### Hors scope (cadrage groom)
-- Le retrofit des pages auth-gate existantes (`index.html`, cas Coolify) reste à la charge de tickets consumers séparés — le DS fournit le composant + la démo + l'exemple d'intégration.
+- Le retrofit des pages auth-gate existantes (`index.html`, cas Coolify) relève de tickets consumers séparés — le DS fournit le composant + la démo + l'exemple d'intégration.
 
 ---
 
