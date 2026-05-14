@@ -16,15 +16,20 @@ import * as path from "path";
 // → utiliser des chemins relatifs dans page.goto()
 
 const PAGES = [
-  { slug: "fondation", path: "/pages/fondation.html" },
-  { slug: "motion", path: "/pages/motion.html" },
-  { slug: "composants", path: "/pages/composants.html" },
-  { slug: "navigation", path: "/pages/navigation.html" },
-  { slug: "formulaires", path: "/pages/formulaires.html" },
-  { slug: "data", path: "/pages/data.html" },
-  { slug: "templates", path: "/pages/templates.html" },
-  { slug: "feedback", path: "/pages/feedback.html" },
-  { slug: "divers", path: "/pages/divers.html" },
+  { slug: "fondation", path: "/pages/fondation.html", title: "Fondation" },
+  { slug: "motion", path: "/pages/motion.html", title: "Motion" },
+  { slug: "composants", path: "/pages/composants.html", title: "Composants" },
+  { slug: "navigation", path: "/pages/navigation.html", title: "Navigation" },
+  {
+    slug: "formulaires",
+    path: "/pages/formulaires.html",
+    title: "Formulaires",
+  },
+  { slug: "data", path: "/pages/data.html", title: "Data" },
+  { slug: "templates", path: "/pages/templates.html", title: "Templates" },
+  { slug: "feedback", path: "/pages/feedback.html", title: "Feedback" },
+  // divers.html : le <title> du <head> est "Avancé — msyx.design" (et non "Divers")
+  { slug: "divers", path: "/pages/divers.html", title: "Avancé" },
 ] as const;
 
 // THEME_CONFIG — tous les thèmes ont dark + light (source : shared/components.js)
@@ -80,7 +85,7 @@ async function setThemeAndMode(
 // ---- Tests ----
 
 test.describe("A11y audit — dry-run (54 runs)", () => {
-  for (const { slug, path: pagePath } of PAGES) {
+  for (const { slug, path: pagePath, title } of PAGES) {
     for (const { theme, mode } of THEME_COMBOS) {
       const runLabel = `${slug} [${theme}-${mode}]`;
 
@@ -91,6 +96,10 @@ test.describe("A11y audit — dry-run (54 runs)", () => {
           waitUntil: "networkidle",
           timeout: 30_000,
         });
+
+        // Garde-fou anti-régression Bug 1 (#286) : verifie qu'on audite bien
+        // la page cible et pas index.html (fallback SPA du flag -s retire).
+        await expect(page).toHaveTitle(new RegExp(`^${title}\\b`));
 
         // Attente fonts + JS init
         await page
@@ -213,10 +222,13 @@ test.afterAll(async () => {
   // --- Génération Markdown ---
   const lines: string[] = [];
 
+  const reportDate = new Date().toISOString().slice(0, 10);
   lines.push("# Audit A11y — Design System MSYX");
   lines.push("");
-  lines.push("**Date** : 2026-05-09");
-  lines.push("**Version DS** : v2.52.0 (issue #242)");
+  lines.push(`**Date** : ${reportDate}`);
+  lines.push(
+    "**Version DS** : v2.56.1 (issue #286 — régénération sur vrai contenu)",
+  );
   lines.push(
     "**Scope** : WCAG 2.0 A/AA + WCAG 2.1 AA (`wcag2a`, `wcag2aa`, `wcag21aa`)",
   );
@@ -355,15 +367,13 @@ test.afterAll(async () => {
   lines.push("");
 
   // --- Écriture fichier ---
-  const reportPath = path.resolve(
-    __dirname,
-    "../docs/audit-a11y-2026-05-09.md",
-  );
+  const reportFile = `audit-a11y-${reportDate}.md`;
+  const reportPath = path.resolve(__dirname, `../docs/${reportFile}`);
   const content = lines.join("\n");
 
   fs.writeFileSync(reportPath, content, "utf8");
 
-  console.log(`\n[a11y] Rapport écrit : docs/audit-a11y-2026-05-09.md`);
+  console.log(`\n[a11y] Rapport écrit : docs/${reportFile}`);
   console.log(
     `[a11y] ${totalRuns} runs — ${totalViolations} violations — ${ruleMap.size} règles distinctes`,
   );

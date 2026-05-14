@@ -46,7 +46,10 @@ export default defineConfig({
   },
   projects,
   webServer: {
-    command: `npx serve -l ${PORT} -s .`,
+    // -s (--single) RETIRÉ : il forçait un fallback SPA vers index.html pour
+    // toute route sans extension → le harness testait index.html (issue #286).
+    // serve.json à la racine désactive clean-URLs : /pages/x.html servi tel quel.
+    command: `npx serve -l ${PORT} .`,
     port: PORT,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,

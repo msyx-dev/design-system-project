@@ -35,7 +35,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npx serve -l ${PORT} -s .`,
+    // -s RETIRÉ (issue #286) — voir playwright.config.ts pour le détail.
+    command: `npx serve -l ${PORT} .`,
     port: PORT,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
