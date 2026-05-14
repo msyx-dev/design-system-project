@@ -57,7 +57,9 @@ test.describe("Visual regression — full matrix (par section)", () => {
       // --- Garde-fou anti-régression Bug 1 (#286) ---
       // index.html a un <title> different : si le flag -s revient ou que
       // serve.json est mal configure, ce test echoue ICI, pas en silence.
-      await expect(page).toHaveTitle(new RegExp(`^${title}\\b`));
+      // Pattern de titre DS : "<Titre> — msyx.design". On ancre sur "<Titre> —"
+      // (et non \b : "Avancé" finit par "é", non-\w → \b ne matche pas).
+      await expect(page).toHaveTitle(new RegExp(`^${title} —`));
 
       await page.waitForFunction(
         () => document.fonts && document.fonts.status === "loaded",

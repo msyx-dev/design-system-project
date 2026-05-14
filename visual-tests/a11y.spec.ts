@@ -99,7 +99,9 @@ test.describe("A11y audit — dry-run (54 runs)", () => {
 
         // Garde-fou anti-régression Bug 1 (#286) : verifie qu'on audite bien
         // la page cible et pas index.html (fallback SPA du flag -s retire).
-        await expect(page).toHaveTitle(new RegExp(`^${title}\\b`));
+        // Pattern de titre DS : "<Titre> — msyx.design". Ancre sur "<Titre> —"
+        // (et non \b : "Avancé" finit par "é", non-\w → \b ne matche pas).
+        await expect(page).toHaveTitle(new RegExp(`^${title} —`));
 
         // Attente fonts + JS init
         await page

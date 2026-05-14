@@ -19,7 +19,8 @@ test.describe("Modal focus restore (WAI APG) — ref aksy UC-288", () => {
     await page.goto("/pages/feedback.html");
 
     // Garde-fou anti-régression Bug 1 (#286)
-    await expect(page).toHaveTitle(/^Feedback\b/);
+    // Pattern de titre DS : "<Titre> — msyx.design".
+    await expect(page).toHaveTitle(/^Feedback —/);
 
     // Attendre que la page soit prete (nav.js + components.js charges)
     await page.waitForLoadState("networkidle");
