@@ -1,5 +1,26 @@
 # Releases
 
+## v2.57.0 — 2026-05-14
+
+**LoginScreen DS msyx** (#285, Epic Fondation auth) — pattern d'écran de connexion standardisé, centré Authentik (ADR-016).
+
+### Added
+- **LoginScreen** : bouton Authentik primary (`.login-authentik-btn`, gradient + liseré couleur de marque), slots providers externes présentationnels (`.login-provider-btn` + modifiers `--google` / `--apple` / `--microsoft` / `--github`), conteneur `.login-providers`, fallback form local.
+- **3 variants** `.login-card--*` : `internal-only` (apps internes msyx), `public-multi-providers` (apps publiques), `internal-with-fallback` (préprod/staging) — démo-és dans `pages/formulaires.html` section `#login`.
+- **5 tokens** `--login-*` dans `tokens.css` (`--login-provider-bg/-hover/-border`, `--login-authentik-accent` + `-rgb`).
+- Symbols SVG providers réutilisables (`#provider-authentik|google|apple|microsoft|github`) dans `formulaires.html`.
+- Entrée `login-screen` dans `components-registry.json` (avec exemple d'intégration).
+
+### Changed
+- `forms.css` section `LOGIN FORM` : corrections de dette tokens (radius `10px`/`8px`/`12px` → `--radius-sm`/`--radius-md`, `font-family` littérales → `--font-display`/`--font-sans`).
+- `.login-social-btn` devient un **alias legacy** de `.login-provider-btn` (règle partagée — aucun consumer existant cassé).
+- `formulaires.html` : inline styles supprimés de la démo « boutons sociaux » (`.login-providers` remplace `style="display:flex…"`), `<svg>` brand factorisés en `<symbol>`.
+
+### Hors scope (cadrage groom)
+- Le retrofit des pages auth-gate existantes (`index.html`, cas Coolify) reste à la charge de tickets consumers séparés — le DS fournit le composant + la démo + l'exemple d'intégration.
+
+---
+
 ## Sprint 32 — v2.56.0 — 2026-05-10
 
 **Sprint Brand + Polish theming** : 3 PRs livrées (11 SP, 100% vélocité, **32e sprint consécutif à 100%**). Issues remontées en revue post-S31 par Mike :

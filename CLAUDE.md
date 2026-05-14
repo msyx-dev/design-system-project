@@ -43,7 +43,7 @@ pages/
   motion.html       # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce)
   composants.html   # Cards (+ card-link a11y v2.49.0), badges (+ badge-nav compact v2.49.0), boutons (+ polish sémantique theme-aware v2.54.11 : tokens fg dédiés --btn-on-*, shadow alpha --btn-shadow-alpha, border subtil), chips, dividers, rating, avatars, alertes, modals (+ focus restore WAI APG v2.41.0), toasts (+ toast-message v2.49.0), segmented control, achievement badges, popovers, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation, action-menu (v2.47.0)
-  formulaires.html  # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
+  formulaires.html  # Inputs, selects, checkboxes, file upload, login, login-screen (3 variants Authentik + slots providers, v2.57.0), calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html         # Tables, data grid (+ col actions sticky-end), stats, charts, KPI, tree view, activity feed, matrice risque
   templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
   feedback.html     # Empty states, spinners, pagination (v2.47.0), tooltip (v2.47.0), drawer, zone banner, modals interactifs, bottom sheet, FAB, notification center, comments (v2.47.0)

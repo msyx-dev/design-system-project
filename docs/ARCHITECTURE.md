@@ -46,7 +46,7 @@ shared/
       cards.css         #   .card, hero sections, hub, lazy sections, .card-link (a11y wrapper v2.49.0)
       badges.css        #   .badge, .badge-nav (compact sidebar/nav v2.49.0), .chip, .kbd, .notification-dot, .achievement-badge
       theming.css       #   COLORS (+ .color-grid--compact v2.54.7), TYPOGRAPHY, FOOTER, THEMING, BACKDROP-FILTER FALLBACK, THEME PREVIEW CARDS (.theme-card v2.54.7)
-      forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR
+      forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR, LOGIN / LOGINSCREEN (3 variants Authentik, slots providers, v2.57.0)
       data.css          #   PROGRESS, STATS, CHARTS, PIE, GAUGE, ANIMATED COUNTERS, RISK MATRIX
       avatars.css       #   .avatar, .avatar-img, .avatar-initials
       tables.css        #   TABLE, DATA GRID, COMPARISON TABLE
