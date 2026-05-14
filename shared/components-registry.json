@@ -1,6 +1,6 @@
 {
-  "version": "2.56.0",
-  "generated": "2026-05-10",
+  "version": "2.57.0",
+  "generated": "2026-05-14",
   "components": [
     {
       "name": "buttons",
@@ -786,6 +786,35 @@
       ],
       "jsInit": null,
       "example": "<div class=\"filter-bar\">\n  <div class=\"filter-bar-search\">\n    <input class=\"input\" type=\"search\" placeholder=\"Filtrer...\" aria-label=\"Filtrer les résultats\">\n  </div>\n  <div class=\"filter-bar-actions\">\n    <button class=\"filter-btn active\" data-filter=\"all\" type=\"button\">Tous</button>\n    <button class=\"filter-btn\" data-filter=\"active\" type=\"button\">Actifs</button>\n    <button class=\"filter-btn\" data-filter=\"archived\" type=\"button\">Archivés</button>\n  </div>\n</div>"
+    },
+    {
+      "name": "login-screen",
+      "page": "formulaires",
+      "cssClasses": [
+        ".login-preview",
+        ".login-card",
+        ".login-card--internal-only",
+        ".login-card--public-multi-providers",
+        ".login-card--internal-with-fallback",
+        ".login-logo",
+        ".login-form",
+        ".login-submit",
+        ".login-error",
+        ".login-divider",
+        ".login-providers",
+        ".login-provider-btn",
+        ".login-provider-btn--google",
+        ".login-provider-btn--apple",
+        ".login-provider-btn--microsoft",
+        ".login-provider-btn--github",
+        ".login-authentik-btn",
+        ".login-social-btn",
+        ".login-compact"
+      ],
+      "jsInit": "initAuthFlows",
+      "version": "2.57.0",
+      "description": "Écran de connexion standard msyx (v2.57.0, #285). Bouton Authentik primary (.login-authentik-btn, toujours présent sur apps internes), slots providers externes présentationnels (.login-provider-btn--{google|apple|microsoft|github}), fallback form local. 3 variants : internal-only, public-multi-providers, internal-with-fallback. Câblage OAuth = job du consumer (fédération dans Authentik, ADR-016). .login-social-btn = alias legacy conservé. Strength/steps via initAuthFlows().",
+      "example": "<div class=\"login-card login-card--internal-only\">\n  <div class=\"login-logo\">ms</div>\n  <h3>Connexion msyx</h3>\n  <button class=\"login-authentik-btn\"><svg aria-hidden=\"true\"><use href=\"#provider-authentik\"/></svg> Se connecter avec Authentik</button>\n  <div class=\"login-divider\">ou accès de secours</div>\n  <div class=\"login-form\">\n    <input type=\"text\" placeholder=\"Identifiant admin\">\n    <input type=\"password\" placeholder=\"Mot de passe\">\n    <button class=\"login-submit\">Connexion locale</button>\n  </div>\n</div>"
     },
     {
       "name": "reset-natif",
