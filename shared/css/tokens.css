@@ -1,4 +1,4 @@
-/* @ds-version: 2.56.0 */
+/* @ds-version: 2.57.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -34,6 +34,13 @@
     --radius-sm: 8px;
     --radius-xs: 4px;
     --radius-full: 9999px;
+
+    /* LoginScreen (v2.57.0, issue #285) */
+    --login-provider-bg: var(--surface);
+    --login-provider-bg-hover: var(--primary-light);
+    --login-provider-border: var(--border-color);
+    --login-authentik-accent: #fd4b2d;          /* couleur de marque Authentik — exception §1 DS-PRINCIPLES */
+    --login-authentik-accent-rgb: 253, 75, 45;
     --shadow: 0 4px 30px rgba(0,0,0,0.3);
     --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
