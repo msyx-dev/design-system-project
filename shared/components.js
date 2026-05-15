@@ -51,6 +51,7 @@
 //  Auth Flows                   initAuthFlows()              .login-strength[data-strength-target]
 //  Usage meter                  initUsageMeter()             .usage-meter[data-value]
 //  Confirm Popover              initConfirmPopover()         .popover-confirm-wrap
+//  User Menu (M3 standalone)    initUserMenu()               .user-menu[data-display-name]
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -4021,6 +4022,159 @@ function initMotionViewport() {
     sections.forEach(s => io.observe(s));
 }
 
+// ===== USER MENU (composant standalone M3) =====
+// Usage : <div class="user-menu" data-display-name="Mike" data-email="mike@msyx.fr"
+//              data-avatar-url="" data-authentik-user-url="https://auth.msyx.fr/if/user/"
+//              data-logout-url="/auth/logout"></div>
+// ou via initUserMenu(el, options) directement.
+function initUserMenu(rootOrSelector, options) {
+    var roots;
+    if (typeof rootOrSelector === 'string') {
+        roots = Array.from(document.querySelectorAll(rootOrSelector));
+    } else if (rootOrSelector instanceof Element) {
+        roots = [rootOrSelector];
+    } else {
+        roots = Array.from(document.querySelectorAll('.user-menu[data-display-name]'));
+    }
+
+    roots.forEach(function(root) {
+        if (root.dataset.bound) return;
+        root.dataset.bound = '1';
+
+        var opts = options || {};
+        var displayName = opts.displayName || root.dataset.displayName || 'Utilisateur';
+        var email = opts.email || root.dataset.email || '';
+        var avatarUrl = opts.avatarUrl !== undefined ? opts.avatarUrl : (root.dataset.avatarUrl || '');
+        var authentikUserUrl = opts.authentikUserUrl || root.dataset.authentikUserUrl || '#';
+        var logoutUrl = opts.logoutUrl || root.dataset.logoutUrl || '/auth/logout';
+
+        // Calcul initiales : 1ère lettre + 1ère lettre du 2e mot, sinon 2 premières lettres
+        function getInitials(name) {
+            var parts = (name || '').trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+            }
+            return (parts[0] || 'U').substring(0, 2).toUpperCase();
+        }
+        var initials = getInitials(displayName);
+
+        // Contenu avatar (img ou initials)
+        function avatarContent(size) {
+            if (avatarUrl) {
+                return '<img src="' + escapeHTML(avatarUrl) + '" alt="' + escapeHTML(displayName) + '">';
+            }
+            return escapeHTML(initials);
+        }
+
+        // Construire le HTML du composant
+        root.innerHTML =
+            '<button class="user-menu-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu utilisateur — ' + escapeHTML(displayName) + '">' +
+                '<span class="user-menu-avatar">' + avatarContent(32) + '</span>' +
+                '<svg class="user-menu-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>' +
+            '</button>' +
+            '<div class="user-menu-dropdown" role="menu" aria-label="Menu utilisateur">' +
+                '<div class="user-menu-dropdown-header">' +
+                    '<span class="user-menu-dropdown-avatar">' + avatarContent(48) + '</span>' +
+                    '<div class="user-menu-dropdown-info">' +
+                        '<span class="user-menu-dropdown-name">' + escapeHTML(displayName) + '</span>' +
+                        '<span class="user-menu-dropdown-email">' + escapeHTML(email) + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="user-menu-divider" role="separator"></div>' +
+                '<a href="' + escapeHTML(authentikUserUrl) + '" class="user-menu-item" role="menuitem" target="_blank" rel="noopener noreferrer">' +
+                    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                    'Mon compte' +
+                '</a>' +
+                '<form class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '">' +
+                    '<button type="submit" class="user-menu-item user-menu-item--danger" role="menuitem">' +
+                        '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
+                        'D&eacute;connexion' +
+                    '</button>' +
+                '</form>' +
+            '</div>';
+
+        var trigger = root.querySelector('.user-menu-trigger');
+        var dropdown = root.querySelector('.user-menu-dropdown');
+        if (!trigger || !dropdown) return;
+
+        function openMenu() {
+            dropdown.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+        function closeMenu() {
+            dropdown.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+        function isOpen() {
+            return dropdown.classList.contains('open');
+        }
+
+        // Toggle clic trigger
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isOpen()) { closeMenu(); } else { openMenu(); }
+        });
+
+        // Keyboard sur trigger
+        trigger.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (isOpen()) { closeMenu(); } else { openMenu(); }
+            }
+            if (e.key === 'Escape') { closeMenu(); }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                openMenu();
+                var first = dropdown.querySelector('[role="menuitem"]');
+                if (first) first.focus();
+            }
+        });
+
+        // Navigation clavier dans les items
+        dropdown.addEventListener('keydown', function(e) {
+            var items = Array.from(dropdown.querySelectorAll('[role="menuitem"]'));
+            var idx = items.indexOf(document.activeElement);
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeMenu();
+                trigger.focus();
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                var next = items[(idx + 1) % items.length];
+                if (next) next.focus();
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                var prev = items[(idx - 1 + items.length) % items.length];
+                if (prev) prev.focus();
+            }
+            if (e.key === 'Home') {
+                e.preventDefault();
+                if (items[0]) items[0].focus();
+            }
+            if (e.key === 'End') {
+                e.preventDefault();
+                if (items[items.length - 1]) items[items.length - 1].focus();
+            }
+            if (e.key === 'Tab') {
+                closeMenu();
+            }
+        });
+
+        // Clic en dehors ferme
+        document.addEventListener('click', function(e) {
+            if (!root.contains(e.target)) { closeMenu(); }
+        });
+
+        // Fermeture sur Escape global
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isOpen()) { closeMenu(); trigger.focus(); }
+        });
+    });
+}
+window.__initUserMenu = initUserMenu;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initComponents();
@@ -4039,6 +4193,7 @@ function reinitAll() {
     initConfirmPopover();
     initMotionReplay();
     initMotionViewport();
+    initUserMenu();
 }
 window.__initComponents = reinitAll;
 

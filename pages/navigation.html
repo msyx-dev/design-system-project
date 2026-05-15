@@ -615,5 +615,95 @@
     </div>
 </section>
 
+<!-- USER MENU -->
+<section id="user-menu">
+    <div class="section-header">
+        <span class="overline">Navigation</span>
+        <h2>User Menu</h2>
+        <p>Composant standalone pour afficher l'identité utilisateur dans le header des apps M3. Trigger avatar + caret, dropdown avec info session, lien "Mon compte" (Authentik) et déconnexion POST. Configurable via attributs <code class="code-inline">data-*</code> ou via <code class="code-inline">initUserMenu(el, options)</code>.</p>
+    </div>
+
+    <div class="demo-grid demo-grid-2">
+
+        <!-- Demo : initials (1 mot) -->
+        <div class="demo-box">
+            <span class="demo-label">Initials — 1 mot</span>
+            <div style="display:flex;align-items:center;justify-content:flex-end;padding:0.5rem;background:var(--primary);border-radius:var(--radius-sm);">
+                <div class="user-menu"
+                    data-display-name="Mike"
+                    data-email="mike@msyx.fr"
+                    data-authentik-user-url="https://auth.msyx.fr/if/user/"
+                    data-logout-url="/auth/logout">
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo : initials (2 mots) -->
+        <div class="demo-box">
+            <span class="demo-label">Initials — 2 mots</span>
+            <div style="display:flex;align-items:center;justify-content:flex-end;padding:0.5rem;background:var(--primary);border-radius:var(--radius-sm);">
+                <div class="user-menu"
+                    data-display-name="Jean Dupont"
+                    data-email="j.dupont@example.com"
+                    data-authentik-user-url="https://auth.msyx.fr/if/user/"
+                    data-logout-url="/auth/logout">
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo : avec avatarUrl -->
+        <div class="demo-box">
+            <span class="demo-label">Avec avatarUrl</span>
+            <div style="display:flex;align-items:center;justify-content:flex-end;padding:0.5rem;background:var(--primary);border-radius:var(--radius-sm);">
+                <div class="user-menu"
+                    data-display-name="akadmin"
+                    data-email="akadmin@authentik.local"
+                    data-avatar-url="https://ui-avatars.com/api/?name=akadmin&background=3b82f6&color=fff&size=48"
+                    data-authentik-user-url="https://auth.msyx.fr/if/user/"
+                    data-logout-url="/auth/logout">
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo : displayName long -->
+        <div class="demo-box">
+            <span class="demo-label">Nom long (edge case)</span>
+            <div style="display:flex;align-items:center;justify-content:flex-end;padding:0.5rem;background:var(--primary);border-radius:var(--radius-sm);">
+                <div class="user-menu"
+                    data-display-name="Administrateur Principal Système"
+                    data-email="admin.principal.systeme@longdomain-enterprise.example.com"
+                    data-authentik-user-url="https://auth.msyx.fr/if/user/"
+                    data-logout-url="/auth/logout">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="demo-box" style="margin-top:var(--space-lg);">
+        <span class="demo-label">Usage programmatique</span>
+        <pre class="code-block"><code>&lt;!-- Attributs data-* (auto-init au DOMContentLoaded) --&gt;
+&lt;div class="user-menu"
+     data-display-name="Mike"
+     data-email="mike@msyx.fr"
+     data-avatar-url=""
+     data-authentik-user-url="https://auth.msyx.fr/if/user/"
+     data-logout-url="/auth/logout"&gt;&lt;/div&gt;
+
+&lt;!-- Ou init manuelle avec options JS --&gt;
+&lt;div class="user-menu" id="my-user-menu"&gt;&lt;/div&gt;
+&lt;script&gt;
+initUserMenu(document.getElementById('my-user-menu'), {
+    displayName: 'Mike',
+    email: 'mike@msyx.fr',
+    avatarUrl: '',
+    authentikUserUrl: 'https://auth.msyx.fr/if/user/',
+    logoutUrl: '/auth/logout'
+});
+&lt;/script&gt;</code></pre>
+        <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted);">La déconnexion soumet un formulaire POST vers <code class="code-inline">logoutUrl</code> — compatible <code class="code-inline">@msyx-dev/auth-node</code> v0.3.0. Keyboard : Flèches haut/bas dans le menu, Escape pour fermer, Tab pour quitter.</p>
+    </div>
+</section>
+
 </body>
 </html>

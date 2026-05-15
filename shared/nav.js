@@ -1,5 +1,5 @@
-/* @ds-version 2.57.0 */
-const VERSION = '2.57.0';
+/* @ds-version 2.58.0 */
+const VERSION = '2.58.0';
 
 const NAV_SECTIONS = [
     { title: null, links: [
@@ -53,7 +53,8 @@ const NAV_SECTIONS = [
         { label: 'Segmented', icon: '&#9632;', href: '/pages/navigation.html#segmented-control' },
         { label: 'Pagination', icon: '&#8230;', href: '/pages/navigation.html#pagination' },
         { label: 'Bottom Nav', icon: '&#9635;', href: '/pages/navigation.html#bottom-nav' },
-        { label: 'Sidebar Rail', icon: '&#9646;', href: '/pages/navigation.html#sidebar-rail' }
+        { label: 'Sidebar Rail', icon: '&#9646;', href: '/pages/navigation.html#sidebar-rail' },
+        { label: 'User Menu', icon: '&#128100;', href: '/pages/navigation.html#user-menu' }
     ]},
     { title: 'Data', links: [
         { label: 'Stats', icon: '#', href: '/pages/data.html#stats' },

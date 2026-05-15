@@ -1007,6 +1007,75 @@
     </div>
 </section>
 
+
+<section id="access-denied">
+    <div class="section-header">
+        <span class="overline">Feedback</span>
+        <h2>Access Denied — Page 403</h2>
+        <p>Page d'acces refuse affichee quand l'utilisateur authentifie n'appartient pas au groupe <code class="code-inline">app-{name}</code>. Remplace l'erreur Authentik brute <code class="code-inline">HTTP 400 — Access denied</code>.</p>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Sans session (defaut)</span>
+        <div class="access-denied-preview">
+            <div class="orb orb-1" aria-hidden="true"></div>
+            <div class="orb orb-2" aria-hidden="true"></div>
+            <div class="access-denied-card">
+                <div class="access-denied-logo">
+                    <img src="/assets/sources/logoMSYX.png" alt="msyx" width="56" height="56">
+                </div>
+                <p class="access-denied-code" aria-hidden="true">403 &mdash; Acces refuse</p>
+                <h1>Acces refuse</h1>
+                <p class="access-denied-message">Vous n'avez pas les droits necessaires pour acceder a cette application. Si vous pensez que c'est une erreur, contactez l'administrateur.</p>
+                <div class="access-denied-actions">
+                    <a href="https://msyx.fr" class="access-denied-btn-primary">Retour a msyx.fr</a>
+                    <form method="POST" action="/auth/logout" style="display:contents;">
+                        <button type="submit" class="access-denied-btn-secondary">Se deconnecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Avec session + appName</span>
+        <div class="access-denied-preview">
+            <div class="orb orb-1" aria-hidden="true"></div>
+            <div class="orb orb-2" aria-hidden="true"></div>
+            <div class="access-denied-card">
+                <div class="access-denied-logo">
+                    <img src="/assets/sources/logoMSYX.png" alt="msyx" width="56" height="56">
+                </div>
+                <p class="access-denied-code" aria-hidden="true">403 &mdash; Acces refuse</p>
+                <h1>Acces refuse</h1>
+                <p class="access-denied-message">Vous n'avez pas acces a Laserbox. Si vous pensez que c'est une erreur, contactez l'administrateur.</p>
+                <div class="access-denied-user" aria-label="Compte connecte">
+                    <div class="access-denied-avatar" aria-hidden="true">MD</div>
+                    <div class="access-denied-user-info">
+                        <div class="access-denied-user-name">Mike Debout</div>
+                        <div class="access-denied-user-email">mike@msyx.fr</div>
+                    </div>
+                </div>
+                <div class="access-denied-actions">
+                    <a href="https://msyx.fr" class="access-denied-btn-primary">Retour a msyx.fr</a>
+                    <form method="POST" action="/auth/logout" style="display:contents;">
+                        <button type="submit" class="access-denied-btn-secondary">Se deconnecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Page standalone : <code class="code-inline">/access-denied.html</code>. Configurable via attributs <code class="code-inline">data-*</code> sur <code class="code-inline">&lt;body&gt;</code> :</p>
+        <p class="demo-note"><code class="code-inline">data-app-name</code> — nom de l'app (ex: "Laserbox"). Personalise le message.</p>
+        <p class="demo-note"><code class="code-inline">data-home-url</code> — URL du bouton retour (defaut: <code class="code-inline">https://msyx.fr</code>).</p>
+        <p class="demo-note"><code class="code-inline">data-logout-url</code> — URL de deconnexion POST (defaut: <code class="code-inline">/auth/logout</code>).</p>
+        <p class="demo-note"><code class="code-inline">data-user-name</code> / <code class="code-inline">data-user-email</code> — affiche le bloc utilisateur connecte si presentes.</p>
+        <p class="demo-note">Logout = <code class="code-inline">POST</code> (jamais GET) — conformite semantique HTTP.</p>
+        <p class="demo-note">CSS : classes <code class="code-inline">.access-denied-preview</code>, <code class="code-inline">.access-denied-card</code>, <code class="code-inline">.access-denied-user</code> (composant CSS dans <code class="code-inline">components/access-denied.css</code>).</p>
+        <p class="demo-note-last">Pour embedding dans une page DS : wrapper <code class="code-inline">.access-denied-preview</code> + structure HTML identique.</p>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

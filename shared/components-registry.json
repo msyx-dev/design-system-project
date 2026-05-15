@@ -1,6 +1,6 @@
 {
-  "version": "2.57.0",
-  "generated": "2026-05-14",
+  "version": "2.58.0",
+  "generated": "2026-05-15",
   "components": [
     {
       "name": "buttons",
@@ -987,6 +987,55 @@
       "version": "2.56.0",
       "description": "Mark stylisé 'DS' (Space Grotesk 700 72px, gradient charte) utilisé sur la page login en remplacement du pictogramme MSYX. Variantes --sm 32px / --lg 96px.",
       "example": "<div class=\"brand-mark-ds\" aria-label=\"Design System\">DS</div>"
+    },
+    {
+      "name": "user-menu",
+      "page": "navigation",
+      "cssClasses": [
+        ".user-menu",
+        ".user-menu-trigger",
+        ".user-menu-avatar",
+        ".user-menu-caret",
+        ".user-menu-dropdown",
+        ".user-menu-dropdown-header",
+        ".user-menu-dropdown-avatar",
+        ".user-menu-dropdown-info",
+        ".user-menu-dropdown-name",
+        ".user-menu-dropdown-email",
+        ".user-menu-divider",
+        ".user-menu-item",
+        ".user-menu-item--danger",
+        ".user-menu-logout-form"
+      ],
+      "jsInit": "initUserMenu",
+      "version": "2.58.0",
+      "description": "Composant standalone pour afficher l'identité utilisateur dans le header des apps M3. Trigger avatar circle 32px (initials ou image) + caret, dropdown avec info session (avatar 48px + displayName + email), lien Authentik 'Mon compte' et déconnexion POST. Configurable via data-* ou options JS. Keyboard: flèches, Escape, Tab. Déconnexion : formulaire POST (compatible @msyx-dev/auth-node v0.3.0).",
+      "example": "<div class=\"user-menu\" data-display-name=\"Mike\" data-email=\"mike@msyx.fr\" data-authentik-user-url=\"https://auth.msyx.fr/if/user/\" data-logout-url=\"/auth/logout\"></div>"
+    },
+    {
+      "name": "access-denied",
+      "page": "feedback",
+      "section": "access-denied",
+      "standalone": "/access-denied.html",
+      "cssClasses": [
+        ".access-denied-preview",
+        ".access-denied-card",
+        ".access-denied-logo",
+        ".access-denied-code",
+        ".access-denied-message",
+        ".access-denied-user",
+        ".access-denied-avatar",
+        ".access-denied-user-info",
+        ".access-denied-user-name",
+        ".access-denied-user-email",
+        ".access-denied-actions",
+        ".access-denied-btn-primary",
+        ".access-denied-btn-secondary"
+      ],
+      "jsInit": null,
+      "version": "2.58.0",
+      "description": "Page 403 standalone msyx (v2.58.0, issue #291). Affichee quand l'utilisateur authentifie n'appartient pas au groupe app-{name}. Remplace l'erreur Authentik raw. Page autonome /access-denied.html configurable via data-* sur <body>. CSS dans components/access-denied.css. Logout = form POST (jamais GET). Info utilisateur connecte optionnelle (initiales avatar).",
+      "example": "<!-- Page standalone — configurer via attributs data-* sur <body> -->\n<!-- data-app-name, data-home-url, data-logout-url, data-user-name, data-user-email -->\n\n<!-- Embedding dans une page DS -->\n<div class=\"access-denied-preview\">\n  <div class=\"orb orb-1\" aria-hidden=\"true\"></div>\n  <div class=\"orb orb-2\" aria-hidden=\"true\"></div>\n  <div class=\"access-denied-card\">\n    <div class=\"access-denied-logo\">\n      <img src=\"/assets/sources/logoMSYX.png\" alt=\"msyx\" width=\"56\" height=\"56\">\n    </div>\n    <p class=\"access-denied-code\" aria-hidden=\"true\">403</p>\n    <h1>Acces refuse</h1>\n    <p class=\"access-denied-message\">Vous n'avez pas les droits necessaires pour acceder a cette application.</p>\n    <div class=\"access-denied-actions\">\n      <a href=\"https://msyx.fr\" class=\"access-denied-btn-primary\">Retour a msyx.fr</a>\n      <form method=\"POST\" action=\"/auth/logout\" style=\"display:contents;\">\n        <button type=\"submit\" class=\"access-denied-btn-secondary\">Se deconnecter</button>\n      </form>\n    </div>\n  </div>\n</div>"
     }
   ]
 }
