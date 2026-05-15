@@ -1,6 +1,6 @@
 {
   "name": "msyx-design-system",
-  "version": "2.56.0",
+  "version": "2.56.1",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
   "scripts": {
@@ -15,7 +15,7 @@
     "@axe-core/playwright": "^4.11.3",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.48.0",
-    "serve": "^14.2.4",
+    "http-server": "^14.1.1",
     "wait-on": "^9.0.5"
   },
   "engines": {

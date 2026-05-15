@@ -5,8 +5,8 @@
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
 **69 composants UI** (registre shared/components-registry.json, refactor S25 #219 — components-registry resync), repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (52 glyphes post-cleanup S25) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 26 modules + barrel + tree-shake depuis v2.36.0. + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 120 baselines (3 thèmes × 2 modes × 10 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0. + Focus restore WAI APG sur modales (helper prive `attachFocusRestore` dans components.js, WCAG 2.4.3) depuis v2.41.0. + Brand identity (mark vectorisé officiel, signature spatiale, texture-grain token) depuis v2.42.0 (mark vectorisé depuis v2.43.0 #209). + Refactor nav.js prévention #206 (extract VERSION + template literals) depuis v2.43.1. + **Audit Phase 1 entièrement remédié S25** : chevron theme-aware via `--chevron-select` (v2.44.0), transitions ciblées + will-change cards (v2.45.0), tokenisation `--space-*` avec 2 nouveaux tokens (v2.46.0), restructure composants × pages (v2.47.0).
-Version courante : **v2.53.0** (S30 — Lighthouse CI baseline 1 page × MSYX dark, #240). + v2.52.0 (S30 — axe-core a11y dry-run infrastructure, #242). + v2.51.0 (S30 — perf budget gzip + CI warn-only, #239). + v2.50.0 (S29 — .code-inline refactor tokens canoniques). + v2.49.0 (S28 — promotions DS : .card-link, .badge-nav, .toast-message depuis consumers S27). + v2.48.0 (S26 — reliquat audit Phase 1 : tokenisation icon/avatar sizes, 8 nouveaux tokens `--avatar-size-*` + `--card-icon-*`, P-04 à P-08 fermés).
-last_reviewed: 2026-05-09
+Version courante : **v2.56.1** (#286 — fix harness VR/a11y, capture par section, baselines régénérées 1032). + v2.56.0 (S32 — brand identity, wordmark DS, mode-switch iOS). + v2.55.0 (S32 — mode toggle switch iOS-style). + v2.54.11 (S32 — polish boutons theme-aware). + v2.53.0 (S30 — Lighthouse CI baseline 1 page × MSYX dark, #240). + v2.52.0 (S30 — axe-core a11y dry-run infrastructure, #242). + v2.51.0 (S30 — perf budget gzip + CI warn-only, #239). + v2.50.0 (S29 — .code-inline refactor tokens canoniques). + v2.49.0 (S28 — promotions DS : .card-link, .badge-nav, .toast-message depuis consumers S27). + v2.48.0 (S26 — reliquat audit Phase 1 : tokenisation icon/avatar sizes, 8 nouveaux tokens `--avatar-size-*` + `--card-icon-*`, P-04 à P-08 fermés).
+last_reviewed: 2026-05-15
 
 ## Structure
 
@@ -119,10 +119,12 @@ Sprite SVG self-hosted Lucide (~50 glyphes) — convention `<svg class="icon"><u
 
 Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
-- **Outils** : `@playwright/test` + `serve` (devDeps uniquement)
-- **Perimetre** : 108 baselines (3 themes x 2 modes x 9 pages thematiques x 2 viewports) — etendu Sprint 22 (#191, v2.38.0)
+- **Outils** : `@playwright/test` + `http-server` (devDeps uniquement). Serveur statique de test = `http-server` (`npx http-server -p PORT -c-1 --silent .`) : sert les fichiers à plat, sans clean-URL ni fallback SPA, et tient la charge concurrente des workers Playwright. `serve` v14 retiré en #286 — son flag `-s`/--single faisait un fallback SPA vers `index.html` (le harness testait `index.html`) et il était instable sous charge. `reuseExistingServer: false` : Playwright démarre toujours un serveur propre (évite de réutiliser un serveur fantôme resté sur le port).
+- **Sélection des tests** : `playwright.config.ts` a un `testMatch` restreint à `visual.spec.ts` + `modal-focus.spec.ts` (#286) — `a11y.spec.ts` a sa config dédiée (`playwright.a11y.config.ts`, script `test:a11y`) et ne tourne PAS sous `test:visual`.
+- **Perimetre** : capture **par section** depuis #286 (v2.56.1) — 1 baseline par `<section id>` des 9 pages × 12 projets = 1032 baselines (86 sections × 12, voir `visual.spec.ts`). `fullPage` retiré : hauteur non déterministe sur pages longues. Étendu Sprint 22 (#191, v2.38.0), refactor par section S33 (#286, v2.56.1).
 - **Projects Playwright** : 12 (`<theme>-<mode>-<viewport>`, ex: `msyx-dark-desktop`, `acssi-light-mobile`)
-- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>.png`
+- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>-<section-id>.png` — `visual.spec.ts` passe `${slug}__${sectionId}` à `toHaveScreenshot`, Playwright normalise `__` en `-` sur le disque.
+- **Garde-fou** : assertion `toHaveTitle` dans `visual.spec.ts` / `a11y.spec.ts` / `modal-focus.spec.ts` — échec immédiat si le harness retombe sur `index.html` (régression Bug 1 #286).
 - **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil, timeout 30 min
 - **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
 
@@ -131,7 +133,7 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 - **Outils** : `@axe-core/playwright` v4.x (devDep) — API Deque officielle `AxeBuilder`
-- **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les 108 baselines VR
+- **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les baselines VR
 - **Matrice** : 9 pages × 3 thèmes × 2 modes = 54 runs (même couverture que VR sans viewport)
 - **Règles** : `wcag2a`, `wcag2aa`, `wcag21aa` (WCAG 2.0 + 2.1 A/AA)
 - **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001, séparé du pipeline VR
@@ -139,7 +141,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Rapport** : `docs/audit-a11y-<date>.md` — généré en `afterAll`, tableau par règle + détail par run
 - **CI** : `.github/workflows/a11y.yml` — séparé de `visual.yml`, `continue-on-error: true`, artifact uploadé
 - **Scripts npm** : `test:a11y` (run) + `test:a11y:report` (open report HTML)
-- **Résultat initial** (v2.52.0, 2026-05-09) : 0 violations sur 54 runs Chromium local
+- **Résultat initial** (v2.52.0, 2026-05-09) : « 0 violations / 54 runs » — **faux négatif** : le flag `-s` de `serve` faisait auditer `index.html` (issue #286). Rapport régénéré sur le vrai contenu en v2.56.1 : **141 violations réelles** (60 critical, 81 serious) sur 7 règles distinctes — défauts a11y DS pré-existants, tickets de suivi séparés (hors scope #286).
 
 ## Navigation et layout
 

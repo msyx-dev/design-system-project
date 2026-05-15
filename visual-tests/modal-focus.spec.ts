@@ -14,14 +14,13 @@ test.describe("Modal focus restore (WAI APG) — ref aksy UC-288", () => {
   test("Esc ferme la modale et restaure le focus sur le declencheur", async ({
     page,
   }) => {
-    // serve v14 avec -s redirige /pages/feedback.html vers /pages/feedback (clean URL 301)
-    // puis /pages/feedback → index.html (SPA fallback). On intercepte la requete .html
-    // pour servir le fichier directement depuis le disque (CSS/JS restent sur le serveur).
-    await page.route("**/pages/feedback.html", async (route) => {
-      await route.fulfill({ path: "pages/feedback.html" });
-    });
-
+    // Depuis #286 (serveur statique = http-server), /pages/feedback.html est
+    // servi directement à plat — plus de workaround page.route nécessaire.
     await page.goto("/pages/feedback.html");
+
+    // Garde-fou anti-régression Bug 1 (#286)
+    // Pattern de titre DS : "<Titre> — msyx.design".
+    await expect(page).toHaveTitle(/^Feedback —/);
 
     // Attendre que la page soit prete (nav.js + components.js charges)
     await page.waitForLoadState("networkidle");
