@@ -56,12 +56,21 @@ export default defineConfig({
   },
   projects,
   webServer: {
-    // -s (--single) RETIRÉ : il forçait un fallback SPA vers index.html pour
-    // toute route sans extension → le harness testait index.html (issue #286).
-    // serve.json à la racine désactive clean-URLs : /pages/x.html servi tel quel.
-    command: `npx serve -l ${PORT} .`,
+    // Serveur statique = `http-server` (#286). `serve` v14 a deux défauts
+    // rédhibitoires pour le harness : (1) le flag `-s`/--single faisait un
+    // fallback SPA vers index.html pour toute route /pages/*.html — le
+    // harness testait index.html ; (2) même sans `-s`, `serve` v14 se révèle
+    // instable sous la charge concurrente des 3 workers Playwright
+    // (ECONNRESET / EMPTY_RESPONSE puis process mort → 120 tests rouges).
+    // `http-server` (devDep, fallback prévu par la spec) sert les fichiers
+    // statiques à plat, sans clean-URL ni SPA, et tient la charge.
+    // -c-1 : désactive le cache HTTP (pas de 304, captures déterministes).
+    // reuseExistingServer:false : empêche Playwright de "réutiliser" un
+    // serveur fantôme resté sur le port (cause racine d'une série de runs
+    // ERR_CONNECTION_REFUSED) — il en démarre toujours un propre.
+    command: `npx http-server -p ${PORT} -c-1 --silent .`,
     port: PORT,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 30_000,
   },
   snapshotPathTemplate: "{testDir}/baseline/{projectName}/{arg}{ext}",

@@ -22,12 +22,17 @@
 ### Fixed
 - **#286 — Harness VR/a11y testait `index.html` au lieu des 9 pages**. Le flag
   `-s` (`--single`) de `serve` forçait un fallback SPA vers `index.html` pour
-  toute route `/pages/*.html`. Les 108 baselines VR et le rapport a11y
-  « 0 violation » étaient des faux. Corrections : retrait du `-s` dans les 2
-  configs Playwright, ajout `serve.json` (clean-URLs désactivés), capture VR
-  par `<section>` (`fullPage` retiré — hauteur non déterministe sur pages
-  longues), garde-fou `<title>` anti-régression dans les 3 specs. Baselines VR
-  et rapport a11y régénérés sur le vrai contenu.
+  toute route `/pages/*.html` ; et `serve` v14 s'est avéré instable sous la
+  charge concurrente de Playwright. Les 108 baselines VR et le rapport a11y
+  « 0 violation » étaient des faux. Corrections : passage du serveur statique
+  de test à `http-server` (`serve` + `serve.json` retirés) dans les 2 configs
+  Playwright, `reuseExistingServer: false` (plus de réutilisation d'un serveur
+  fantôme), capture VR par `<section>` (`fullPage` retiré — hauteur non
+  déterministe sur pages longues), `testMatch` restreint sur `playwright.config.ts`
+  (a11y.spec.ts ne tourne plus sous `test:visual`), garde-fou `<title>`
+  anti-régression dans les 3 specs. Baselines VR (1032, par section) et rapport
+  a11y régénérés sur le vrai contenu — révèle 141 violations a11y réelles
+  jusque-là masquées (tickets de suivi séparés).
 
 ---
 

@@ -35,10 +35,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // -s RETIRÉ (issue #286) — voir playwright.config.ts pour le détail.
-    command: `npx serve -l ${PORT} .`,
+    // Serveur statique = `http-server` (#286) — voir playwright.config.ts
+    // pour le détail (flag `-s` SPA + instabilité `serve` sous charge).
+    command: `npx http-server -p ${PORT} -c-1 --silent .`,
     port: PORT,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 30_000,
   },
   outputDir: "test-results-a11y/",

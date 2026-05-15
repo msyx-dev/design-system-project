@@ -14,8 +14,8 @@ test.describe("Modal focus restore (WAI APG) — ref aksy UC-288", () => {
   test("Esc ferme la modale et restaure le focus sur le declencheur", async ({
     page,
   }) => {
-    // Depuis #286 (flag -s retiré + serve.json), serve sert /pages/feedback.html
-    // directement — plus de workaround page.route nécessaire.
+    // Depuis #286 (serveur statique = http-server), /pages/feedback.html est
+    // servi directement à plat — plus de workaround page.route nécessaire.
     await page.goto("/pages/feedback.html");
 
     // Garde-fou anti-régression Bug 1 (#286)

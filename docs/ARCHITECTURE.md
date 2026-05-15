@@ -119,10 +119,11 @@ Sprite SVG self-hosted Lucide (~50 glyphes) — convention `<svg class="icon"><u
 
 Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
-- **Outils** : `@playwright/test` + `serve` (devDeps uniquement). `serve.json` à la racine désactive clean-URLs / SPA fallback (#286) — `/pages/x.html` servi tel quel.
-- **Perimetre** : capture **par section** depuis #286 (v2.56.1) — 1 baseline par `<section id>` des 9 pages × 12 projets (≈ N sections × 12, voir `visual.spec.ts`). `fullPage` retiré : hauteur non déterministe sur pages longues. Étendu Sprint 22 (#191, v2.38.0), refactor par section S33 (#286, v2.56.1).
+- **Outils** : `@playwright/test` + `http-server` (devDeps uniquement). Serveur statique de test = `http-server` (`npx http-server -p PORT -c-1 --silent .`) : sert les fichiers à plat, sans clean-URL ni fallback SPA, et tient la charge concurrente des workers Playwright. `serve` v14 retiré en #286 — son flag `-s`/--single faisait un fallback SPA vers `index.html` (le harness testait `index.html`) et il était instable sous charge. `reuseExistingServer: false` : Playwright démarre toujours un serveur propre (évite de réutiliser un serveur fantôme resté sur le port).
+- **Sélection des tests** : `playwright.config.ts` a un `testMatch` restreint à `visual.spec.ts` + `modal-focus.spec.ts` (#286) — `a11y.spec.ts` a sa config dédiée (`playwright.a11y.config.ts`, script `test:a11y`) et ne tourne PAS sous `test:visual`.
+- **Perimetre** : capture **par section** depuis #286 (v2.56.1) — 1 baseline par `<section id>` des 9 pages × 12 projets = 1032 baselines (86 sections × 12, voir `visual.spec.ts`). `fullPage` retiré : hauteur non déterministe sur pages longues. Étendu Sprint 22 (#191, v2.38.0), refactor par section S33 (#286, v2.56.1).
 - **Projects Playwright** : 12 (`<theme>-<mode>-<viewport>`, ex: `msyx-dark-desktop`, `acssi-light-mobile`)
-- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>__<section-id>.png`
+- **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>-<section-id>.png` — `visual.spec.ts` passe `${slug}__${sectionId}` à `toHaveScreenshot`, Playwright normalise `__` en `-` sur le disque.
 - **Garde-fou** : assertion `toHaveTitle` dans `visual.spec.ts` / `a11y.spec.ts` / `modal-focus.spec.ts` — échec immédiat si le harness retombe sur `index.html` (régression Bug 1 #286).
 - **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil, timeout 30 min
 - **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
@@ -140,7 +141,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Rapport** : `docs/audit-a11y-<date>.md` — généré en `afterAll`, tableau par règle + détail par run
 - **CI** : `.github/workflows/a11y.yml` — séparé de `visual.yml`, `continue-on-error: true`, artifact uploadé
 - **Scripts npm** : `test:a11y` (run) + `test:a11y:report` (open report HTML)
-- **Résultat initial** (v2.52.0, 2026-05-09) : « 0 violations / 54 runs » — **faux négatif** : le flag `-s` de `serve` faisait auditer `index.html` (issue #286). Rapport régénéré sur le vrai contenu en v2.56.1.
+- **Résultat initial** (v2.52.0, 2026-05-09) : « 0 violations / 54 runs » — **faux négatif** : le flag `-s` de `serve` faisait auditer `index.html` (issue #286). Rapport régénéré sur le vrai contenu en v2.56.1 : **141 violations réelles** (60 critical, 81 serious) sur 7 règles distinctes — défauts a11y DS pré-existants, tickets de suivi séparés (hors scope #286).
 
 ## Navigation et layout
 
