@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acces refuse — msyx.fr</title>
+    <meta name="description" content="Vous n'avez pas les droits necessaires pour acceder a cette application.">
+    <!-- Robots : ne pas indexer une page d'erreur 403 -->
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    <style>
+        /* Design tokens minimalistes pour page standalone (pas de dep styles.css) */
+        :root {
+            --primary:          #0a0f1e;
+            --primary-light:    #0f172a;
+            --accent:           #3b82f6;
+            --accent-rgb:       59, 130, 246;
+            --deco-violet:      #8b5cf6;
+            --surface:          rgba(30, 41, 59, 0.6);
+            --surface-solid:    #1e293b;
+            --text:             #f1f5f9;
+            --text-muted:       #94a3b8;
+            --text-dim:         #7c8db5;
+            --text-on-accent:   #ffffff;
+            --danger:           #ef4444;
+            --gradient-1:       linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --border-color:     rgba(59, 130, 246, 0.08);
+            --border-hover:     rgba(59, 130, 246, 0.25);
+            --shadow-lg:        0 20px 60px rgba(0,0,0,0.4);
+            --shadow-sm:        0 2px 8px rgba(0,0,0,0.15);
+            --radius-lg:        24px;
+            --radius-md:        12px;
+            --radius-sm:        8px;
+            --font-display:     'Space Grotesk', system-ui, sans-serif;
+            --font-sans:        'Inter', system-ui, sans-serif;
+            --font-mono:        'Fira Code', 'Courier New', monospace;
+            --duration-base:    180ms;
+            --ease-standard:    cubic-bezier(0.4, 0, 0.2, 1);
+            --space-sm:         0.5rem;
+            --space-2:          0.75rem;
+            --space-md:         1rem;
+            --space-lg:         1.5rem;
+            --space-xl:         2rem;
+            --space-2xl:        3rem;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-sans);
+            padding: var(--space-lg);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Orbes decoratifs (coherent avec index.html) */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        .orb-1 { width: 500px; height: 500px; background: var(--danger); top: -150px; right: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: var(--deco-violet); bottom: -100px; left: -100px; }
+
+        /* ===== CARD ===== */
+        .access-denied-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl) var(--space-xl);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Logo msyx PNG officiel */
+        .access-denied-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-xl);
+        }
+        .access-denied-logo img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Code 403 — decoratif */
+        .access-denied-code {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--danger);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+            opacity: 0.8;
+        }
+
+        /* Titre */
+        h1 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 var(--space-md);
+            line-height: 1.2;
+        }
+
+        /* Message explicatif */
+        .access-denied-message {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin: 0 auto var(--space-xl);
+            max-width: 360px;
+        }
+
+        /* Bloc utilisateur connecte (optionnel via JS) */
+        .access-denied-user {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: var(--primary-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-2) var(--space-md);
+            margin: 0 auto var(--space-xl);
+            max-width: 360px;
+            box-shadow: var(--shadow-sm);
+            text-align: left;
+        }
+        .access-denied-user[hidden] { display: none; }
+
+        .access-denied-avatar {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-on-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            user-select: none;
+        }
+
+        .access-denied-user-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+        .access-denied-user-name {
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+        .access-denied-user-email {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+
+        /* Actions */
+        .access-denied-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .access-denied-btn-primary,
+        .access-denied-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.75rem var(--space-lg);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            min-height: 44px;
+            transition:
+                opacity var(--duration-base) var(--ease-standard),
+                border-color var(--duration-base) var(--ease-standard),
+                color var(--duration-base) var(--ease-standard);
+            width: 100%;
+        }
+
+        .access-denied-btn-primary {
+            border: none;
+            background: var(--gradient-1);
+            color: var(--text-on-accent);
+        }
+        .access-denied-btn-primary:hover { opacity: 0.88; }
+        .access-denied-btn-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        .access-denied-btn-secondary {
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 500;
+            /* reset apparence bouton natif */
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .access-denied-btn-secondary:hover { border-color: var(--border-hover); color: var(--text); }
+        .access-denied-btn-secondary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        /* Bouton secondaire dans un form — pas de style supplementaire */
+        .logout-form { margin: 0; padding: 0; display: contents; }
+
+        @media (min-width: 400px) {
+            .access-denied-actions { flex-direction: row; }
+            .access-denied-btn-primary,
+            .access-denied-btn-secondary { width: auto; flex: 1; }
+        }
+    </style>
+    <!-- Anti-FOUC : lecture theme localStorage (coherent avec pages DS) -->
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);}());</script>
+</head>
+<body>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+
+    <main role="main" aria-labelledby="access-denied-title">
+        <div class="access-denied-card">
+
+            <!-- Logo msyx PNG officiel -->
+            <div class="access-denied-logo">
+                <img
+                    src="/assets/sources/logoMSYX.png"
+                    alt="msyx"
+                    width="56"
+                    height="56"
+                >
+            </div>
+
+            <!-- Code erreur decoratif -->
+            <p class="access-denied-code" aria-hidden="true">403 — Acces refuse</p>
+
+            <!-- Titre principal -->
+            <h1 id="access-denied-title">Acces refuse</h1>
+
+            <!-- Message — personnalisable via data-app-name -->
+            <p class="access-denied-message" id="access-denied-message">
+                <!-- Rempli par le script ci-dessous selon data-app-name -->
+            </p>
+
+            <!-- Bloc utilisateur connecte (optionnel — visible si data-user-name / data-user-email presents) -->
+            <div
+                class="access-denied-user"
+                id="access-denied-user"
+                hidden
+                aria-label="Compte connecte"
+            >
+                <div class="access-denied-avatar" id="access-denied-avatar" aria-hidden="true"></div>
+                <div class="access-denied-user-info">
+                    <div class="access-denied-user-name" id="access-denied-user-name"></div>
+                    <div class="access-denied-user-email" id="access-denied-user-email"></div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="access-denied-actions" role="group" aria-label="Actions disponibles">
+                <!-- Bouton primaire : lien, configurable via data-home-url -->
+                <a
+                    href="https://msyx.fr"
+                    id="access-denied-home-btn"
+                    class="access-denied-btn-primary"
+                    aria-label="Retourner a l'accueil msyx.fr"
+                >
+                    Retour a msyx.fr
+                </a>
+
+                <!-- Bouton secondaire : form POST (pas de GET pour deconnexion) -->
+                <form
+                    method="POST"
+                    action="/auth/logout"
+                    id="access-denied-logout-form"
+                    class="logout-form"
+                >
+                    <button
+                        type="submit"
+                        class="access-denied-btn-secondary"
+                        aria-label="Se deconnecter du compte actuel"
+                    >
+                        Se deconnecter
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!--
+        Configuration via attributs data-* sur l'element <body> (ou meta tags injectes par le serveur) :
+          data-app-name="Laserbox"          — nom de l'app (optionnel)
+          data-home-url="https://msyx.fr"   — URL du bouton retour (optionnel)
+          data-logout-url="/auth/logout"    — URL de deconnexion (optionnel)
+          data-user-name="Mike D."          — nom affiche du compte connecte (optionnel)
+          data-user-email="mike@msyx.fr"    — email du compte connecte (optionnel)
+    -->
+    <script>
+    (function () {
+        var body = document.body;
+        var appName    = body.dataset.appName    || '';
+        var homeUrl    = body.dataset.homeUrl    || 'https://msyx.fr';
+        var logoutUrl  = body.dataset.logoutUrl  || '/auth/logout';
+        var userName   = body.dataset.userName   || '';
+        var userEmail  = body.dataset.userEmail  || '';
+
+        // Message explicatif — personnalise si appName fourni
+        var msgEl = document.getElementById(‘access-denied-message’);
+        if (appName) {
+            msgEl.textContent =
+                "Vous n’avez pas accès à " + appName + ". Si vous pensez que c’est une erreur, contactez l’administrateur.";
+        } else {
+            msgEl.textContent =
+                "Vous n’avez pas les droits nécessaires pour accéder à cette application. Si vous pensez que c’est une erreur, contactez l’administrateur.";
+        }
+
+        // Bouton retour — homeUrl configurable
+        var homeBtn = document.getElementById('access-denied-home-btn');
+        homeBtn.setAttribute('href', homeUrl);
+        homeBtn.setAttribute('aria-label', "Retourner à " + homeUrl);
+
+        // Bouton deconnexion — logoutUrl configurable
+        var logoutForm = document.getElementById('access-denied-logout-form');
+        logoutForm.setAttribute('action', logoutUrl);
+
+        // Bloc utilisateur connecte
+        if (userName || userEmail) {
+            var userBlock  = document.getElementById('access-denied-user');
+            var avatarEl   = document.getElementById('access-denied-avatar');
+            var nameEl     = document.getElementById('access-denied-user-name');
+            var emailEl    = document.getElementById('access-denied-user-email');
+
+            // Initiales : jusqu'a 2 chars depuis displayName, sinon premier char email
+            var initials = '';
+            if (userName) {
+                var parts = userName.trim().split(/\s+/);
+                initials = parts.length >= 2
+                    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+                    : userName.slice(0, 2).toUpperCase();
+            } else if (userEmail) {
+                initials = userEmail[0].toUpperCase();
+            }
+
+            avatarEl.textContent = initials;
+            if (userName)  nameEl.textContent  = userName;
+            if (userEmail) emailEl.textContent = userEmail;
+
+            userBlock.removeAttribute('hidden');
+        }
+    }());
+    </script>
+</body>
+</html>
