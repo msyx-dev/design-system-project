@@ -176,28 +176,30 @@
 <script src="/shared/components.js"></script>
 <script>
 // M3 Authentik Proxy session bootstrap — fetch /me.json puis init UserMenu DS
-// Le header est déjà rendu par buildHeader() (appelé par nav.js DOMContentLoaded).
-// buildHeader sans cfg.user a injecté le slot #ds-user-menu vide.
-// Ce script l'hydrate avec les données Authentik (headers injectés par l'outpost).
+// Attend l'event 'msyx:header:ready' dispatché par buildHeader() (nav.js)
+// pour s'assurer que le slot #ds-user-menu est dans le DOM.
 (function() {
-    var slot = document.getElementById('ds-user-menu');
-    if (!slot) return;
-    fetch('/me.json', { credentials: 'same-origin' })
-        .then(function(r) { return r.ok ? r.json() : null; })
-        .catch(function() { return null; })
-        .then(function(me) {
-            if (!me || (!me.name && !me.username)) return;
-            // Fallback gracieux : si /me.json absent ou vide, slot reste vide (pas d'avatar)
-            slot.dataset.displayName = me.name || me.username || '';
-            slot.dataset.email = me.email || '';
-            slot.dataset.authentikUserUrl = 'https://auth.msyx.fr/if/user/';
-            slot.dataset.logoutUrl = '/auth/logout';
-            if (typeof window.__initUserMenu === 'function') {
-                window.__initUserMenu(slot);
-            } else if (typeof initUserMenu === 'function') {
-                initUserMenu(slot);
-            }
-        });
+    function hydrate() {
+        var slot = document.getElementById('ds-user-menu');
+        if (!slot) return;
+        fetch('/me.json', { credentials: 'same-origin' })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .catch(function() { return null; })
+            .then(function(me) {
+                if (!me || (!me.name && !me.username)) return;
+                slot.dataset.displayName = me.name || me.username || '';
+                slot.dataset.email = me.email || '';
+                slot.dataset.authentikUserUrl = 'https://auth.msyx.fr/if/user/';
+                slot.dataset.logoutUrl = '/auth/logout';
+                if (typeof initUserMenu === 'function') initUserMenu(slot);
+            });
+    }
+    // Si le header est déjà construit (race condition), hydrate direct
+    if (document.getElementById('ds-user-menu')) {
+        hydrate();
+    } else {
+        document.addEventListener('msyx:header:ready', hydrate, { once: true });
+    }
 }());
 </script>
 </body>

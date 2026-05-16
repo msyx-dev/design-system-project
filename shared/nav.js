@@ -202,6 +202,8 @@ function buildHeader() {
         // Notifications : présentes quel que soit le mode (legacy ou M3)
         if ((cfg.notifications || {}).enabled !== false) initHeaderNotifications();
     }
+    // M3 : notifie les consumers que le header DOM est rendu (slot #ds-user-menu disponible)
+    document.dispatchEvent(new CustomEvent('msyx:header:ready', { bubbles: true }));
 }
 
 // Initialise le dropdown avatar
