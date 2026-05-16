@@ -5,21 +5,22 @@
 
 FROM caddy:2-alpine
 
-ARG SOURCE_COMMIT=unknown
-
 # Copie des fichiers statiques (exclusions via .dockerignore)
 COPY . /srv
 
-# Injection du commit + built_at (computed UTC) dans version.json au build.
-# SOURCE_COMMIT auto-injecte par Coolify v4 (laserbox confirme le pattern).
-# BUILT_AT computed dans le RUN (frozen au build, immutable runtime).
-RUN BUILT_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)" && \
-    echo "{\"version\":\"2.58.0\",\"sha\":\"${SOURCE_COMMIT}\",\"built_at\":\"${BUILT_AT}\"}" > /srv/version.json
+# Freeze BUILT_AT au build (date UTC ISO 8601, immutable au runtime).
+# SOURCE_COMMIT est injecte par Coolify v4 au RUNTIME via env var (pas au build),
+# l'entrypoint.sh genere /srv/version.json au demarrage avec les 2 valeurs.
+RUN date -u +%Y-%m-%dT%H:%M:%SZ > /built_at
 
-# Config Caddy interne au container
 COPY Caddyfile.container /etc/caddy/Caddyfile
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://localhost/health.json || exit 1
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
