@@ -1,0 +1,36 @@
+{
+    admin off
+    auto_https off
+}
+
+:80 {
+    encode gzip
+
+    # Healthchecks publics (Uptime Kuma + Coolify probes)
+    @public path /health.json /version.json
+    handle @public {
+        root * /srv
+        file_server
+    }
+
+    # /me.json : retourne user info depuis les headers Authentik injectés par l'outpost
+    # (via Caddy edge wildcard miklaw_auth -> Traefik Coolify -> container)
+    handle /me.json {
+        header Content-Type "application/json"
+        respond `{"name":"{http.request.header.X-Authentik-Name}","email":"{http.request.header.X-Authentik-Email}","username":"{http.request.header.X-Authentik-Username}","groups":"{http.request.header.X-Authentik-Groups}","uid":"{http.request.header.X-Authentik-Uid}"}` 200
+    }
+
+    # Bouton logout DS (UserMenu fait POST /auth/logout) -> redirige vers sign_out natif outpost
+    # Note: syntaxe `redir * <url> <code>` obligatoire pour éviter l'ambiguité Caddy
+    # (sans matcher, Caddy parse le premier arg comme un path matcher)
+    handle /auth/logout {
+        redir * /outpost.goauthentik.io/sign_out 303
+    }
+
+    # Tout le reste : SPA fallback try_files (PAS rewrite * qui casserait les assets)
+    handle {
+        root * /srv
+        try_files {path} /site.html
+        file_server
+    }
+}
