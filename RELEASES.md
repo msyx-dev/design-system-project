@@ -1,5 +1,20 @@
 # Releases
 
+## v2.57.1 — 2026-05-16
+
+**Prep migration M3 — endpoints /health.json + /version.json** (#293, claude-config#109)
+
+### Added
+- `health.json` à la racine : `{"status":"ok"}` (conforme spec `~/projects/_global/docs/conventions/health-version.md`)
+- `version.json` à la racine : `{"version":"2.57.1"}` (sans `sha`/`built_at` car projet statique sans pipeline build)
+
+### Changed
+- `package.json` : bump `2.56.1` → `2.57.1` (feat infra, pas un nouveau composant DS)
+
+### Notes
+- Caddyfile **non touché** en Phase 1 — Phase 2 du runbook M3 ajoutera `handle /health.json` + `handle /version.json` avant le rewrite `* /site.html`.
+- Migration M3 design-system : pattern Authentik Provider Proxy mode `forward_single` (vs OIDC code-side impossible pour statique pur). Provider créés via blueprint `authentik#17`.
+
 ## v2.57.0 — 2026-05-14
 
 **LoginScreen DS msyx** (#285, Epic Fondation auth) — pattern d'écran de connexion standardisé, centré Authentik (ADR-016).
