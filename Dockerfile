@@ -6,14 +6,15 @@
 FROM caddy:2-alpine
 
 ARG SOURCE_COMMIT=unknown
-ARG BUILT_AT=unknown
 
 # Copie des fichiers statiques (exclusions via .dockerignore)
 COPY . /srv
 
-# Injection du commit dans version.json au build
-# (remplace le contenu statique pour que /version.json reflète le déploiement réel)
-RUN echo "{\"version\":\"2.58.0\",\"sha\":\"${SOURCE_COMMIT}\",\"built_at\":\"${BUILT_AT}\"}" > /srv/version.json
+# Injection du commit + built_at (computed UTC) dans version.json au build.
+# SOURCE_COMMIT auto-injecte par Coolify v4 (laserbox confirme le pattern).
+# BUILT_AT computed dans le RUN (frozen au build, immutable runtime).
+RUN BUILT_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)" && \
+    echo "{\"version\":\"2.58.0\",\"sha\":\"${SOURCE_COMMIT}\",\"built_at\":\"${BUILT_AT}\"}" > /srv/version.json
 
 # Config Caddy interne au container
 COPY Caddyfile.container /etc/caddy/Caddyfile
