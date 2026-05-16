@@ -7,7 +7,10 @@
     <meta name="description" content="Design system vivant de msyx.fr — 79 composants, 8 pages, dark theme, glassmorphism et gradients.">
     <link rel="stylesheet" href="/shared/styles.css">
     <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
-    <script>window.MSYX_HEADER={auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
+    <!-- M3 Authentik Proxy session bootstrap (v2.58.0) -->
+    <!-- cfg.user absent -> buildHeader injecte slot #ds-user-menu -> fetch /me.json init UserMenu DS -->
+    <!-- Fallback gracieux si /me.json indisponible (auth-gate legacy, container hors M3) : slot vide, pas d'avatar -->
+    <script>window.MSYX_HEADER={auth:true,notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]}};</script>
 </head>
 <body>
 
@@ -171,5 +174,31 @@
 
 <script src="/shared/nav.js"></script>
 <script src="/shared/components.js"></script>
+<script>
+// M3 Authentik Proxy session bootstrap — fetch /me.json puis init UserMenu DS
+// Le header est déjà rendu par buildHeader() (appelé par nav.js DOMContentLoaded).
+// buildHeader sans cfg.user a injecté le slot #ds-user-menu vide.
+// Ce script l'hydrate avec les données Authentik (headers injectés par l'outpost).
+(function() {
+    var slot = document.getElementById('ds-user-menu');
+    if (!slot) return;
+    fetch('/me.json', { credentials: 'same-origin' })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .catch(function() { return null; })
+        .then(function(me) {
+            if (!me || (!me.name && !me.username)) return;
+            // Fallback gracieux : si /me.json absent ou vide, slot reste vide (pas d'avatar)
+            slot.dataset.displayName = me.name || me.username || '';
+            slot.dataset.email = me.email || '';
+            slot.dataset.authentikUserUrl = 'https://auth.msyx.fr/if/user/';
+            slot.dataset.logoutUrl = '/auth/logout';
+            if (typeof window.__initUserMenu === 'function') {
+                window.__initUserMenu(slot);
+            } else if (typeof initUserMenu === 'function') {
+                initUserMenu(slot);
+            }
+        });
+}());
+</script>
 </body>
 </html>
