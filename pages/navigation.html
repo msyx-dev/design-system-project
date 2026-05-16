@@ -703,6 +703,47 @@ initUserMenu(document.getElementById('my-user-menu'), {
 &lt;/script&gt;</code></pre>
         <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted);">La déconnexion soumet un formulaire POST vers <code class="code-inline">logoutUrl</code> — compatible <code class="code-inline">@msyx-dev/auth-node</code> v0.3.0. Keyboard : Flèches haut/bas dans le menu, Escape pour fermer, Tab pour quitter.</p>
     </div>
+
+    <div class="demo-box" style="margin-top:var(--space-lg);">
+        <span class="demo-label">Intégration M3 statique (Provider Proxy + Caddy)</span>
+        <p>Pour un site statique pur (HTML/CSS/JS sans runtime — pattern <code class="code-inline">deploy_mode=static-proxy</code>), <code class="code-inline">&lt;UserMenu&gt;</code> ne peut pas lire la session via un middleware Node. La session est exposée par l'outpost Authentik via des headers HTTP (<code class="code-inline">X-Authentik-*</code>), réémis par Caddy sur <code class="code-inline">/me.json</code>. Le bootstrap se fait côté client après le rendu du header, via l'event <code class="code-inline">msyx:header:ready</code> (pattern event-driven validé sur design-system pour éviter la race condition slot DOM vs script init — cf. <em>pattern-m3-static-proxy</em> §6).</p>
+
+        <p style="margin-top:0.75rem;"><strong>1. Slot DOM placeholder</strong> (à insérer dans le header) :</p>
+        <pre class="code-block"><code>&lt;div class="user-menu" id="ds-user-menu"&gt;&lt;/div&gt;</code></pre>
+
+        <p style="margin-top:0.75rem;"><strong>2. Bootstrap event-driven</strong> (à inclure dans chaque page consommatrice) :</p>
+        <pre class="code-block"><code>&lt;script&gt;
+// Attendre le rendu du header DS avant de fetch + init UserMenu
+document.addEventListener('msyx:header:ready', function () {
+    fetch('/me.json', { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; })
+        .then(function (me) {
+            var slot = document.getElementById('ds-user-menu');
+            if (!slot || !me) return;
+            slot.dataset.displayName = me.name || me.username || '';
+            slot.dataset.email = me.email || '';
+            slot.dataset.authentikUserUrl = 'https://auth.msyx.fr/if/user/';
+            slot.dataset.logoutUrl = '/auth/logout';
+            if (typeof initUserMenu === 'function') initUserMenu(slot);
+        });
+});
+&lt;/script&gt;</code></pre>
+
+        <p style="margin-top:0.75rem;"><strong>3. Côté Caddy</strong> (<code class="code-inline">Caddyfile.container</code>) — handles requis :</p>
+        <pre class="code-block"><code># /me.json — relaye les headers Authentik injectés par l'outpost edge
+handle /me.json {
+    header Content-Type "application/json"
+    respond `{"name":"{http.request.header.X-Authentik-Name}","email":"{http.request.header.X-Authentik-Email}","username":"{http.request.header.X-Authentik-Username}","groups":"{http.request.header.X-Authentik-Groups}","uid":"{http.request.header.X-Authentik-Uid}"}` 200
+}
+
+# /auth/logout — redirection 303 vers le sign_out natif de l'outpost
+handle /auth/logout {
+    redir * /outpost.goauthentik.io/sign_out 303
+}</code></pre>
+
+        <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted);"><strong>Référence complète</strong> : <code class="code-inline">~/.claude/projects/-home-deployer/memory/pattern-m3-static-proxy.md</code> — détaille l'archi Authentik Provider Proxy <code class="code-inline">forward_single</code>, les 5 handles canoniques du <code class="code-inline">Caddyfile.container</code>, et les 3 pièges critiques résolus (X-Forwarded-Proto, @public bypass, handle outpost dédié).</p>
+    </div>
 </section>
 
 </body>
