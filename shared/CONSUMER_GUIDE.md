@@ -296,6 +296,37 @@ Pour eviter le flash de theme au chargement, ajouter ce script inline dans `<hea
 </script>
 ```
 
+## Utilities
+
+Classes utilitaires disponibles dans `utilities.css` pour les cas courants.
+
+### `.icon-svg` (v2.59.0, #282)
+
+Utility pour SVG inline dans conteneur flex. Empêche l'écrasement du SVG par le parent flex (`flex-shrink:0`). Sans width/height par défaut — passer les attributs HTML `width` et `height` au `<svg>` directement.
+
+Exemple :
+```html
+<button class="btn btn-primary">
+  <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24">...</svg>
+  <span>Ajouter</span>
+</button>
+```
+
+Cas d'usage typiques : bouton avec icône + texte, cellule de tableau avec icône de statut, badge avec pictogramme. Combinable avec `.icon` (sprite Lucide) :
+
+```html
+<button class="btn-primary" aria-label="Télécharger">
+  <svg class="icon icon-svg" aria-hidden="true" width="16" height="16">
+    <use href="/shared/icons/sprite.svg#i-download"/>
+  </svg>
+  Télécharger
+</button>
+```
+
+> Note : `.icon-svg` ne définit pas de taille — toujours spécifier `width` et `height` sur le `<svg>` pour éviter le layout shift.
+
+---
+
 ## Mapping aksy DS-EXCEPTION → DS msyx.fr (v2.27.0+)
 
 Les variantes destructives suivantes utilisees en aksy sont couvertes par le DS standard :
