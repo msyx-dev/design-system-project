@@ -1,4 +1,4 @@
-/* @ds-version: 2.58.0 */
+/* @ds-version: 2.59.0 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -279,4 +279,13 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+/* ===== SVG inline ===== */
+/* Utility — SVG inline non-shrinkable dans flex container */
+/* Cf. design-system-project#282 — pattern universel consumers AKSY/aksyva/etc. */
+.icon-svg {
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
 }
