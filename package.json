@@ -3,6 +3,9 @@
   "version": "2.59.0",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "generate-registry": "node bin/generate-registry.js",
     "test:syntax": "node tests/regression/nav-js-syntax.test.js",
