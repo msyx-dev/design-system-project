@@ -1,5 +1,18 @@
 # Releases
 
+## v2.57.2 — 2026-05-19
+
+**Composant React Button — package @msyx-dev/react** (#304, Epic #301)
+
+### Added
+- `@msyx-dev/react` : composant `<Button>` (variants primary/secondary/ghost/danger, sizes sm/md/lg, loading/disabled/icons/fullWidth, forwardRef, ARIA complet).
+- peer-dep React étendu à `>=18 <20` pour compatibilité consumers Next.js 15.
+- Tests unitaires Vitest 26/26 (variants, loading, disabled, icons, forwardRef, a11y).
+- README `packages/react/` : contrat CSS séparé (consumer doit importer `@msyx-dev/design-system/dist/style.css`).
+
+### Fixed
+- `.btn-loading::after` : spinner thème-aware via `currentColor` — corrige le rendu cassé sur btn-secondary/ghost (était `var(--text-on-accent)` non contrastant sur fond transparent).
+
 ## v2.57.1 — 2026-05-16
 
 **Prep migration M3 — endpoints /health.json + /version.json** (#293, claude-config#109)
@@ -59,7 +72,7 @@
 - **#286 — Harness VR/a11y testait `index.html` au lieu des 9 pages**. Le flag
   `-s` (`--single`) de `serve` forçait un fallback SPA vers `index.html` pour
   toute route `/pages/*.html` ; et `serve` v14 s'est avéré instable sous la
-  charge concurrente de Playwright. Les 108 baselines VR et le rapport a11y
+  sollicitation concurrente de Playwright. Les 108 baselines VR et le rapport a11y
   « 0 violation » étaient des faux. Corrections : passage du serveur statique
   de test à `http-server` (`serve` + `serve.json` retirés) dans les 2 configs
   Playwright, `reuseExistingServer: false` (plus de réutilisation d'un serveur

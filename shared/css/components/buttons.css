@@ -74,8 +74,10 @@
 }
 .btn-outline-danger { background: transparent; border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); color: var(--danger-light); }
 .btn-outline-danger:hover { background: color-mix(in srgb, var(--danger) 8%, transparent); border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
+/* Spinner thème-aware (#304) : currentColor hérite la couleur du texte du variant,
+   garantit le contraste sur tous les fonds (primary/secondary/ghost/danger). */
 .btn-loading { pointer-events: none; opacity: 0.7; }
-.btn-loading::after { content: ''; width: 14px; height: 14px; border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent); border-top-color: var(--text-on-accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
+.btn-loading::after { content: ''; width: 14px; height: 14px; border: 2px solid color-mix(in srgb, currentColor 30%, transparent); border-top-color: currentColor; border-radius: 50%; animation: spin 0.6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .btn-primary:focus-visible, .btn-secondary:focus-visible, .btn-ghost:focus-visible,
 .btn-icon:focus-visible, .btn-icon--danger:focus-visible, .btn-danger:focus-visible, .btn-success:focus-visible,
