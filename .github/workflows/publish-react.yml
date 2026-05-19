@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write
 
 jobs:
   publish:
@@ -55,6 +56,6 @@ jobs:
           fi
 
       - name: Publish to GitHub Packages
-        run: pnpm publish --no-git-checks --no-scripts
+        run: pnpm publish --no-git-checks --no-scripts --access restricted
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
