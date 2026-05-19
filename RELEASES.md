@@ -72,7 +72,7 @@
 - **#286 — Harness VR/a11y testait `index.html` au lieu des 9 pages**. Le flag
   `-s` (`--single`) de `serve` forçait un fallback SPA vers `index.html` pour
   toute route `/pages/*.html` ; et `serve` v14 s'est avéré instable sous la
-  charge concurrente de Playwright. Les 108 baselines VR et le rapport a11y
+  sollicitation concurrente de Playwright. Les 108 baselines VR et le rapport a11y
   « 0 violation » étaient des faux. Corrections : passage du serveur statique
   de test à `http-server` (`serve` + `serve.json` retirés) dans les 2 configs
   Playwright, `reuseExistingServer: false` (plus de réutilisation d'un serveur
