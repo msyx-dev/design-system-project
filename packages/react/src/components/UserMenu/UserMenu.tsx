@@ -75,9 +75,8 @@ export function UserMenu({
 
     switch (e.key) {
       case "Escape":
+        // Géré par le handler global (useEffect) — ne pas doubler setIsOpen/focus
         e.preventDefault();
-        setIsOpen(false);
-        triggerRef.current?.focus();
         break;
       case "ArrowDown":
         e.preventDefault();
@@ -157,6 +156,7 @@ export function UserMenu({
           role="menuitem"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Mon compte (ouvre un nouvel onglet)"
         >
           <svg
             aria-hidden="true"
