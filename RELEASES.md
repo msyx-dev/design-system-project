@@ -1,5 +1,30 @@
 # Releases
 
+## v2.57.4 — 2026-05-19
+
+**Composant React LoginScreen — package @msyx-dev/react** (#306, Epic #301)
+
+### Added
+- `@msyx-dev/react` : composant `<LoginScreen>` (3 variants : `internal-only`, `public-multi-providers`, `internal-with-fallback`).
+- API présentationnelle : `onAuthentikClick`, `providers?: Array<{id, label?, onClick}>`, `showFallbackForm` + `onFallbackSubmit({login, password})`, `logo?: ReactNode`, `appName?`, `subtitle?`.
+- `<ProviderIcons>` SVG inline : Authentik, Google, Apple, Microsoft, GitHub (couleurs marque tierce conservées — exception §1 DS-PRINCIPLES).
+- A11y : `aria-label` fallback automatique sur boutons providers, `label/htmlFor` associés via `useId()` SSR-safe, `autoComplete="current-password"`, `type="button"` explicite sur bouton Authentik, `.login-logo` `aria-hidden="true"`.
+- Tests Vitest 31/31 (variants, callbacks, a11y baseline, password autocomplete, displayName).
+- Export `LoginScreen`, `LoginScreenProps`, `LoginScreenVariant`, `LoginScreenProvider` depuis `src/index.ts`.
+
+## v2.57.3 — 2026-05-19
+
+**Composant React UserMenu — package @msyx-dev/react** (#305, Epic #301)
+
+### Added
+- `@msyx-dev/react` : composant `<UserMenu>` (avatar + dropdown utilisateur + lien "Mon compte" + form POST logout).
+- Props plates : `displayName`, `email`, `avatarUrl?`, `authentikUserUrl`, `logoutUrl`. Support controlled optionnel via `open`/`onOpenChange`.
+- A11y WAI-ARIA 1.2 : `aria-haspopup="menu"`, `aria-expanded`, `role="menu"/menuitem/separator`, focus return trigger après Escape, Tab quitte le menu, ArrowUp/Down/Home/End navigation avec wrap.
+- `useId()` React 18+ pour menuId/triggerId SSR-safe.
+- Cleanup `useEffect` correct (pas de memory leak StrictMode Next.js).
+- Tests Vitest 39/39 (render, keyboard nav, click-outside, focus return, ARIA states, controlled mode).
+- Export `UserMenu`, `UserMenuProps` depuis `src/index.ts`.
+
 ## v2.57.2 — 2026-05-19
 
 **Composant React Button — package @msyx-dev/react** (#304, Epic #301)
