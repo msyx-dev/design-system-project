@@ -1,0 +1,61 @@
+name: Publish @msyx-dev/react
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/react
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.30.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@msyx-dev'
+          cache: 'pnpm'
+          cache-dependency-path: packages/react/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Verify tag matches package version
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          GIT_TAG="${GITHUB_REF#refs/tags/}"
+          echo "Tag: $GIT_TAG | package.json: v$PKG_VERSION"
+          if [ "v$PKG_VERSION" != "$GIT_TAG" ]; then
+            echo "::error::Tag $GIT_TAG ne correspond pas à package.json v$PKG_VERSION"
+            echo "Fix : bump version packages/react/package.json, commit, re-tag."
+            exit 1
+          fi
+
+      - name: Publish to GitHub Packages
+        run: pnpm publish --no-git-checks --no-scripts --access restricted
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

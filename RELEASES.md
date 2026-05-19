@@ -1,5 +1,14 @@
 # Releases
 
+## v2.57.5 — 2026-05-19
+
+**CI publish @msyx-dev/react — workflow GitHub Actions** (#307, Epic #301)
+
+### Added
+- `.github/workflows/publish-react.yml` : publish auto `@msyx-dev/react` sur GitHub Packages quand un tag `v*` est poussé (steps : checkout → setup-pnpm → setup-node → install --frozen-lockfile → build → test Vitest → guard tag↔version → publish --access restricted).
+- `packages/react/PUBLISHING.md` : procédure release (bump version → commit → tag → push), garde-fou tag↔version, instructions consumer `.npmrc`.
+- Exception `.gitignore` pour committer `packages/react/pnpm-lock.yaml` (CI --frozen-lockfile).
+
 ## v2.57.4 — 2026-05-19
 
 **Composant React LoginScreen — package @msyx-dev/react** (#306, Epic #301)
