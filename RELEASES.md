@@ -1,5 +1,17 @@
 # Releases
 
+## v2.57.3 — 2026-05-19
+
+**Composant React LoginScreen — package @msyx-dev/react** (#306, Epic #301)
+
+### Added
+- `@msyx-dev/react` : composant `<LoginScreen>` (3 variants : `internal-only`, `public-multi-providers`, `internal-with-fallback`).
+- API présentationnelle : `onAuthentikClick`, `providers?: Array<{id, label?, onClick}>`, `showFallbackForm` + `onFallbackSubmit({login, password})`, `logo?: ReactNode`, `appName?`, `subtitle?`.
+- `<ProviderIcons>` SVG inline : Authentik, Google, Apple, Microsoft, GitHub (couleurs marque tierce conservées — exception §1 DS-PRINCIPLES).
+- A11y : `aria-label` fallback automatique sur boutons providers, `label/htmlFor` associés via `useId()` SSR-safe, `autoComplete="current-password"`, `type="button"` explicite sur bouton Authentik, `.login-logo` `aria-hidden="true"`.
+- Tests Vitest 31/31 (variants, callbacks, a11y baseline, password autocomplete, displayName).
+- Export `LoginScreen`, `LoginScreenProps`, `LoginScreenVariant`, `LoginScreenProvider` depuis `src/index.ts`.
+
 ## v2.57.2 — 2026-05-19
 
 **Composant React Button — package @msyx-dev/react** (#304, Epic #301)
