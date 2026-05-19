@@ -276,4 +276,43 @@ describe("LoginScreen — a11y", () => {
     });
     expect(btn).toHaveAttribute("type", "button");
   });
+
+  it("password input has type=password and autocomplete=current-password", () => {
+    render(<LoginScreen showFallbackForm />);
+    const passwordInput = screen.getByLabelText(/mot de passe/i);
+    expect(passwordInput).toHaveAttribute("type", "password");
+    expect(passwordInput).toHaveAttribute("autocomplete", "current-password");
+  });
+
+  it("auto aria-label on provider button matches default label exactly", () => {
+    const { container } = render(
+      <LoginScreen
+        variant="public-multi-providers"
+        providers={[{ id: "microsoft", onClick: vi.fn() }]}
+      />,
+    );
+    const btn = container.querySelector(".login-provider-btn--microsoft");
+    expect(btn?.getAttribute("aria-label")).toBe("Microsoft");
+  });
+});
+
+// --- variant internal-with-fallback sans showFallbackForm ---
+
+describe("LoginScreen — variant internal-with-fallback sans fallback form", () => {
+  it("renders only Authentik button when showFallbackForm is false", () => {
+    const { container } = render(
+      <LoginScreen variant="internal-with-fallback" showFallbackForm={false} />,
+    );
+    expect(container.querySelector(".login-form")).toBeNull();
+    expect(container.querySelector(".login-divider")).toBeNull();
+    expect(container.querySelector(".login-authentik-btn")).not.toBeNull();
+  });
+});
+
+// --- Exports types ---
+
+describe("LoginScreen — exports", () => {
+  it("LoginScreen has a displayName", () => {
+    expect(LoginScreen.displayName).toBe("LoginScreen");
+  });
 });
