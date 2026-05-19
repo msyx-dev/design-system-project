@@ -365,3 +365,46 @@ describe("UserMenu — POST form logout", () => {
     expect(link).toHaveAttribute("href", "https://auth.msyx.fr/if/user/");
   });
 });
+
+// --- useId stability ---
+
+describe("UserMenu — useId stability", () => {
+  it("aria-controls and menu id match and remain stable across re-renders", () => {
+    const { rerender } = render(<UserMenu {...defaultProps} />);
+    const trigger = screen.getByRole("button", { name: /menu utilisateur/i });
+    const ariaControls = trigger.getAttribute("aria-controls");
+    const menuEl = document.getElementById(ariaControls!);
+    expect(menuEl).not.toBeNull();
+    expect(menuEl!.getAttribute("id")).toBe(ariaControls);
+
+    // Re-render avec prop différente — ids doivent rester stables
+    rerender(<UserMenu {...defaultProps} displayName="Alice Martin" />);
+    const triggerAfter = screen.getByRole("button", {
+      name: /menu utilisateur/i,
+    });
+    expect(triggerAfter.getAttribute("aria-controls")).toBe(ariaControls);
+  });
+});
+
+// --- Avatar img alt ---
+
+describe("UserMenu — avatar img semantics", () => {
+  it("avatar img has alt='' (decorative, role presentation)", () => {
+    const { container } = render(
+      <UserMenu {...defaultProps} avatarUrl="https://example.com/avatar.png" />,
+    );
+    const imgs = container.querySelectorAll("img");
+    expect(imgs.length).toBeGreaterThanOrEqual(1);
+    imgs.forEach((img) => {
+      expect(img).toHaveAttribute("alt", "");
+    });
+  });
+
+  it("shows initials in both trigger and dropdown header when no avatarUrl", () => {
+    render(<UserMenu {...defaultProps} displayName="Sophie Bernard" />);
+    const triggerAvatar = document.querySelector(".user-menu-avatar");
+    const dropdownAvatar = document.querySelector(".user-menu-dropdown-avatar");
+    expect(triggerAvatar?.textContent).toContain("SB");
+    expect(dropdownAvatar?.textContent).toContain("SB");
+  });
+});
