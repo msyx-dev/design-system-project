@@ -164,6 +164,16 @@ describe("Button — fullWidth", () => {
   });
 });
 
+describe("Button — className merge", () => {
+  it("preserves custom className alongside variant class", () => {
+    render(<Button className="mt-4 custom">Click</Button>);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass("btn-primary");
+    expect(btn).toHaveClass("mt-4");
+    expect(btn).toHaveClass("custom");
+  });
+});
+
 describe("Button — a11y", () => {
   it("aria-busy is false by default", () => {
     render(<Button>Click</Button>);
