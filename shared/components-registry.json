@@ -1,7 +1,7 @@
 {
-  "version": "2.59.0",
+  "version": "2.60.0",
   "generated": {
-    "at": "2026-05-17T21:27:36.304Z",
+    "at": "2026-05-20T00:00:00.000Z",
     "by": "bin/generate-registry.js v1.0"
   },
   "components": [
@@ -1946,10 +1946,28 @@
         ".text-xl",
         ".text-xs",
         ".truncate",
-        ".uppercase"
+        ".uppercase",
+        ".page-title",
+        ".section-title",
+        ".grid-auto-fit-sm",
+        ".grid-auto-fit-md",
+        ".grid-auto-fit-lg"
       ],
       "jsInit": null,
       "generated": true
+    },
+    {
+      "name": "theme-toggle",
+      "page": "fondation",
+      "cssClasses": [
+        ".theme-toggle",
+        ".theme-toggle-track",
+        ".theme-toggle-thumb"
+      ],
+      "jsInit": null,
+      "reactComponent": "ThemeToggle",
+      "reactPackage": "@msyx-dev/react",
+      "example": "<button class=\"theme-toggle\" role=\"switch\" aria-checked=\"false\" aria-label=\"Passer en mode clair\">\n  <span class=\"theme-toggle-track\">\n    <span class=\"theme-toggle-thumb\"></span>\n  </span>\n</button>"
     }
   ]
 }

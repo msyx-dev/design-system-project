@@ -1,4 +1,4 @@
-/* @ds-version: 2.59.0 */
+/* @ds-version: 2.60.0 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -288,4 +288,46 @@
     flex-shrink: 0;
     display: inline-block;
     vertical-align: middle;
+}
+
+/* ===== Typographie sémantique — v2.60.0 (#319) ===== */
+/* .page-title : titre principal d'une page (équivalent h1 applicatif) */
+.page-title {
+    font-family: var(--font-display);
+    font-size: var(--type-31);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+/* .section-title : titre de section dans une page (équivalent h2/h3 applicatif) */
+.section-title {
+    font-family: var(--font-display);
+    font-size: var(--type-20);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-snug);
+    color: var(--text);
+}
+
+/* ===== Grilles responsive auto-fit — v2.60.0 (#319) ===== */
+/* sm : cartes étroites (tags, badges, mini-cards) */
+.grid-auto-fit-sm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--space-md);
+}
+
+/* md : cartes standard (cards contenu, widgets) */
+.grid-auto-fit-md {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-md);
+}
+
+/* lg : grandes cartes (tableaux de bord, features) */
+.grid-auto-fit-lg {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-lg);
 }
