@@ -1,4 +1,4 @@
-/* @ds-version: 2.59.0 */
+/* @ds-version: 2.60.0 */
 /* components.css — Barrel. Pour un sous-ensemble : components-core.css ou modules à la carte.
    Tree-shaking : shared/CONSUMER_GUIDE.md#tree-shaking */
 @import url('./components/_base.css');
@@ -29,3 +29,4 @@
 @import url('./components/notifications.css');
 @import url('./components/motion.css');
 @import url('./components/access-denied.css');
+@import url('./components/theme-toggle.css');
