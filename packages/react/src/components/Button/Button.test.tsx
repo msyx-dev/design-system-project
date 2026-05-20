@@ -24,6 +24,11 @@ describe("Button — variants", () => {
     expect(screen.getByRole("button")).toHaveClass("btn-danger");
   });
 
+  it("renders with variant warning", () => {
+    render(<Button variant="warning">Click</Button>);
+    expect(screen.getByRole("button")).toHaveClass("btn-warning");
+  });
+
   it("uses primary as default variant", () => {
     render(<Button>Click</Button>);
     expect(screen.getByRole("button")).toHaveClass("btn-primary");
