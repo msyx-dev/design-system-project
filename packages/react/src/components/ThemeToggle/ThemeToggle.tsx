@@ -34,6 +34,8 @@ export function ThemeToggle({
   onToggle,
   label,
   className,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onClick: _onClick,
   ...rest
 }: ThemeToggleProps) {
   const isDark = mode === "dark";
