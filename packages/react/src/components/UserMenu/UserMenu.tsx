@@ -18,7 +18,9 @@ export interface UserMenuProps {
   onOpenChange?: (open: boolean) => void;
   // Badge de rôle dans l'en-tête du dropdown (ex: "Admin", <Badge>…</Badge>)
   roleBadge?: ReactNode;
-  // Items custom injectés dans une section dédiée du dropdown (ex: toggle de thème)
+  // Items custom injectés dans une section dédiée du dropdown (ex: toggle de thème).
+  // Note : un clic sur un item custom ne ferme PAS automatiquement le menu — le consumer
+  // doit appeler onOpenChange(false) ou gérer la fermeture lui-même si nécessaire.
   extraItems?: ReactNode;
 }
 
@@ -166,7 +168,7 @@ export function UserMenu({
 
         <div className="user-menu-divider" role="separator"></div>
 
-        {extraItems && (
+        {extraItems != null && extraItems !== false && (
           <>
             {extraItems}
             <div className="user-menu-divider" role="separator"></div>
