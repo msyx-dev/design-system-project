@@ -55,7 +55,19 @@ jobs:
             exit 1
           fi
 
+      - name: Compute dist-tag
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if echo "$PKG_VERSION" | grep -q '-'; then
+            PRERELEASE_SUFFIX="${PKG_VERSION#*-}"
+            DIST_TAG="${PRERELEASE_SUFFIX%%.*}"
+          else
+            DIST_TAG="latest"
+          fi
+          echo "dist-tag: $DIST_TAG"
+          echo "DIST_TAG=$DIST_TAG" >> "$GITHUB_ENV"
+
       - name: Publish to GitHub Packages
-        run: pnpm publish --no-git-checks --ignore-scripts --access restricted
+        run: pnpm publish --no-git-checks --ignore-scripts --access restricted --tag "$DIST_TAG"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
