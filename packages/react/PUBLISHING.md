@@ -1,6 +1,6 @@
 # Publier @msyx-dev/react
 
-Ce package est publié automatiquement sur **GitHub Packages** (registry privé org `msyx-dev`) via le workflow `.github/workflows/publish-react.yml` quand un tag semver est poussé.
+Ce package est publié automatiquement sur **GitHub Packages** (registry privé org `msyx-dev`) via le workflow `.github/workflows/publish-react.yml` quand un tag `react-v*` est poussé.
 
 ## Procédure
 
@@ -18,15 +18,15 @@ Ce package est publié automatiquement sur **GitHub Packages** (registry privé 
 
 3. Tagger et pousser :
    ```bash
-   git tag -a v3.0.0-alpha.1 -m "Release @msyx-dev/react v3.0.0-alpha.1"
-   git push origin v3.0.0-alpha.1
+   git tag -a react-v3.0.0-alpha.1 -m "Release @msyx-dev/react v3.0.0-alpha.1"
+   git push origin react-v3.0.0-alpha.1
    ```
 
 4. Le workflow `Publish @msyx-dev/react` se déclenche, lance install + build + tests + vérif tag/version + publish.
 
 ## Garde-fou tag ↔ version
 
-Le workflow refuse de publier si le tag (`vX.Y.Z`) ne correspond pas à `package.json.version`. Bump → commit → tag toujours dans cet ordre.
+Le workflow refuse de publier si le tag (`react-vX.Y.Z`) ne correspond pas à `package.json.version`. Bump → commit → tag toujours dans cet ordre.
 
 ## Installer dans un consumer
 
