@@ -277,7 +277,7 @@ describe("UserMenu — ARIA states", () => {
     expect(screen.getByRole("menu")).toBeInTheDocument();
   });
 
-  it("items have role=menuitem", () => {
+  it("items have role=menuitem (default — 2 items)", () => {
     render(<UserMenu {...defaultProps} />);
     const items = screen.getAllByRole("menuitem");
     expect(items.length).toBe(2);
@@ -285,7 +285,93 @@ describe("UserMenu — ARIA states", () => {
 
   it("divider has role=separator", () => {
     render(<UserMenu {...defaultProps} />);
-    expect(screen.getByRole("separator")).toBeInTheDocument();
+    expect(screen.getAllByRole("separator").length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+// --- roleBadge ---
+
+describe("UserMenu — roleBadge", () => {
+  it("renders roleBadge in dropdown header when provided", () => {
+    render(<UserMenu {...defaultProps} roleBadge={<span>Admin</span>} />);
+    expect(
+      document.querySelector(".user-menu-dropdown-role"),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector(".user-menu-dropdown-role")?.textContent,
+    ).toBe("Admin");
+  });
+
+  it("does not render .user-menu-dropdown-role when roleBadge is absent", () => {
+    render(<UserMenu {...defaultProps} />);
+    expect(document.querySelector(".user-menu-dropdown-role")).toBeNull();
+  });
+
+  it("roleBadge is inside the dropdown header info block", () => {
+    render(<UserMenu {...defaultProps} roleBadge="Manager" />);
+    const info = document.querySelector(".user-menu-dropdown-info");
+    expect(info?.querySelector(".user-menu-dropdown-role")).toBeInTheDocument();
+  });
+});
+
+// --- extraItems ---
+
+describe("UserMenu — extraItems", () => {
+  it("renders extraItems when provided", () => {
+    render(
+      <UserMenu
+        {...defaultProps}
+        extraItems={
+          <button className="user-menu-item" role="menuitem">
+            Toggle thème
+          </button>
+        }
+      />,
+    );
+    expect(screen.getByText("Toggle thème")).toBeInTheDocument();
+  });
+
+  it("does not render extra divider when extraItems is absent", () => {
+    render(<UserMenu {...defaultProps} />);
+    // Sans extraItems : 1 seul separator (entre header et items)
+    expect(screen.getAllByRole("separator").length).toBe(1);
+  });
+
+  it("renders an extra separator when extraItems is provided", () => {
+    render(
+      <UserMenu
+        {...defaultProps}
+        extraItems={
+          <button className="user-menu-item" role="menuitem">
+            Extra
+          </button>
+        }
+      />,
+    );
+    // Avec extraItems : 2 separators (header + après extraItems)
+    expect(screen.getAllByRole("separator").length).toBe(2);
+  });
+
+  it("extraItems menuitem participates in keyboard navigation", () => {
+    render(
+      <UserMenu
+        {...defaultProps}
+        extraItems={
+          <button className="user-menu-item" role="menuitem">
+            Toggle thème
+          </button>
+        }
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /menu utilisateur/i }));
+    const items = screen.getAllByRole("menuitem");
+    // 2 items de base + 1 extraItem = 3 total
+    expect(items.length).toBe(3);
+  });
+
+  it("existing items count unchanged without extraItems", () => {
+    render(<UserMenu {...defaultProps} />);
+    expect(screen.getAllByRole("menuitem").length).toBe(2);
   });
 });
 

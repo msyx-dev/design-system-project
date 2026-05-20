@@ -1,4 +1,11 @@
-import { useState, useRef, useEffect, useId } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useId,
+  type ReactNode,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 
 export interface UserMenuProps {
   displayName: string;
@@ -9,6 +16,10 @@ export interface UserMenuProps {
   // Controlled (optionnels)
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  // Badge de rôle dans l'en-tête du dropdown (ex: "Admin", <Badge>…</Badge>)
+  roleBadge?: ReactNode;
+  // Items custom injectés dans une section dédiée du dropdown (ex: toggle de thème)
+  extraItems?: ReactNode;
 }
 
 function getInitials(name: string): string {
@@ -26,6 +37,8 @@ export function UserMenu({
   logoutUrl,
   open,
   onOpenChange,
+  roleBadge,
+  extraItems,
 }: UserMenuProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isOpen = open !== undefined ? open : internalOpen;
@@ -55,7 +68,7 @@ export function UserMenu({
 
   // Escape global ferme + focus retour trigger
   useEffect(() => {
-    function handleKeydown(e: KeyboardEvent) {
+    function handleKeydown(e: globalThis.KeyboardEvent) {
       if (e.key === "Escape" && isOpen) {
         setIsOpen(false);
         triggerRef.current?.focus();
@@ -66,7 +79,7 @@ export function UserMenu({
   }, [isOpen]);
 
   // Navigation clavier dans le menu
-  function handleMenuKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+  function handleMenuKeyDown(e: ReactKeyboardEvent<HTMLDivElement>) {
     const menu = e.currentTarget;
     const items = Array.from(
       menu.querySelectorAll<HTMLElement>('[role="menuitem"]'),
@@ -145,10 +158,20 @@ export function UserMenu({
           <div className="user-menu-dropdown-info">
             <span className="user-menu-dropdown-name">{displayName}</span>
             <span className="user-menu-dropdown-email">{email}</span>
+            {roleBadge && (
+              <span className="user-menu-dropdown-role">{roleBadge}</span>
+            )}
           </div>
         </div>
 
         <div className="user-menu-divider" role="separator"></div>
+
+        {extraItems && (
+          <>
+            {extraItems}
+            <div className="user-menu-divider" role="separator"></div>
+          </>
+        )}
 
         <a
           href={authentikUserUrl}
