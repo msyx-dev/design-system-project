@@ -3,7 +3,7 @@ name: Publish @msyx-dev/react
 on:
   push:
     tags:
-      - 'v*'
+      - 'react-v*'
 
 permissions:
   contents: read
@@ -19,17 +19,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10.30.3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
           registry-url: 'https://npm.pkg.github.com'
           scope: '@msyx-dev'
           cache: 'pnpm'
@@ -48,10 +48,10 @@ jobs:
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
           GIT_TAG="${GITHUB_REF#refs/tags/}"
-          echo "Tag: $GIT_TAG | package.json: v$PKG_VERSION"
-          if [ "v$PKG_VERSION" != "$GIT_TAG" ]; then
-            echo "::error::Tag $GIT_TAG ne correspond pas à package.json v$PKG_VERSION"
-            echo "Fix : bump version packages/react/package.json, commit, re-tag."
+          echo "Tag: $GIT_TAG | package.json: react-v$PKG_VERSION"
+          if [ "react-v$PKG_VERSION" != "$GIT_TAG" ]; then
+            echo "::error::Tag $GIT_TAG ne correspond pas à package.json react-v$PKG_VERSION"
+            echo "Fix : bump version packages/react/package.json, commit, re-tag avec react-vX.Y.Z."
             exit 1
           fi
 
