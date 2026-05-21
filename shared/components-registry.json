@@ -1,5 +1,5 @@
 {
-  "version": "2.61.0",
+  "version": "2.62.0",
   "generated": {
     "at": "2026-05-20T00:00:00.000Z",
     "by": "bin/generate-registry.js v1.0"
@@ -1105,17 +1105,20 @@
     },
     {
       "name": "a11y",
-      "category": "component",
+      "category": "a11y",
       "source_file": "shared/css/components/_a11y.css",
       "cssClasses": [
         ".btn-",
         ".cal-day",
         ".hub-card",
         ".modal-close",
-        ".sr-only"
+        ".sr-only",
+        ".skip-to-content"
       ],
       "jsInit": null,
-      "generated": true
+      "version": "2.62.0",
+      "description": "Composants accessibilité WCAG AA. .sr-only : texte lecteurs d'écran uniquement. .skip-to-content : skip link WCAG 2.4.1 Bypass Blocks — premier enfant de <body>, visible au focus clavier uniquement. Focus-visible style, tokens DS (--accent, --text-on-accent, --space-2, --radius-sm).",
+      "example": "<a href=\"#main-content\" class=\"skip-to-content\">Aller au contenu principal</a>"
     },
     {
       "name": "base",

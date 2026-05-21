@@ -1,4 +1,4 @@
-/* @ds-version: 2.40.2 */
+/* @ds-version: 2.62.0 */
 /* _a11y.css — extracted from components.css v2.35.0 */
 
 /* ===== ACCESSIBILITY — focus-visible global ===== */
@@ -44,6 +44,29 @@ a[aria-disabled="true"] {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+/* ===== SKIP LINK — WCAG 2.4.1 Bypass Blocks ===== */
+/* Premier enfant de <body> — visible uniquement au focus clavier */
+.skip-to-content {
+    position: absolute;
+    top: var(--space-2, 0.75rem);
+    left: var(--space-2, 0.75rem);
+    z-index: 9999;
+    padding: var(--space-2, 0.75rem) var(--space-md, 1rem);
+    background: var(--accent);
+    color: var(--text-on-accent, #fff);
+    border-radius: var(--radius-sm, 8px);
+    text-decoration: none;
+    font-weight: 600;
+    transform: translateY(-200%);
+    transition: transform 120ms ease-out;
+}
+
+.skip-to-content:focus-visible {
+    transform: translateY(0);
+    outline: 2px solid var(--accent-light, var(--accent));
+    outline-offset: 2px;
 }
 
 /* ===== ACCESSIBILITY — prefers-reduced-motion ===== */
