@@ -8,7 +8,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-PATTERNS='\bcoherente\b|\bthemes [a-z]|\bdeploye\b|\blivre\b|\brequete\b|\bparametre\b|\bdonnee\b|\bidentifie\b|\bcharge\b|\brecupere\b|\bentree\b'
+# Note : \bcharge\b retiré — nom commun français légitime (faux positifs sur RELEASES.md, réf #300)
+PATTERNS='\bcoherente\b|\bthemes [a-z]|\bdeploye\b|\blivre\b|\brequete\b|\bparametre\b|\bdonnee\b|\bidentifie\b|\brecupere\b|\bentree\b'
 
 # Files to scan (whitelist explicite)
 FILES=(
