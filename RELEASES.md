@@ -1,5 +1,22 @@
 # Releases
 
+## v2.62.0 — 2026-05-21
+
+**Composant a11y `.skip-to-content` (WCAG 2.4.1)** (#281)
+
+### Added
+- `shared/css/components/_a11y.css` : classes `.skip-to-content` + `:focus-visible` — skip link visible au focus clavier, généralisable à tous les consumers (remplace les implémentations locales type AKSY).
+- `shared/components-registry.json` : entrée `.skip-to-content` (catégorie a11y).
+- `shared/CONSUMER_GUIDE.md` : section « Accessibilité — Skip link WCAG 2.4.1 ».
+
+### Fixed
+- `shared/check-diacritics.sh` : retrait du faux positif `\bcharge\b` (« charge » est un nom commun français légitime) qui bloquait la CI `lint` (#300).
+
+### Changed
+- 4 workflows CI restants (`ci`, `a11y`, `perf`, `visual`) migrés Node 24 / `checkout@v5` / `setup-node@v5` avant EOL Node 20 du 2026-06-02 (#317).
+
+> Note : RELEASES.md présente un trou v2.58–v2.61 (versions livrées Phases A/B non consignées) — cf. issue #314 (refonte RELEASES.md monorepo, décision en attente).
+
 ## v2.57.5 — 2026-05-19
 
 **CI publish @msyx-dev/react — workflow GitHub Actions** (#307, Epic #301)
