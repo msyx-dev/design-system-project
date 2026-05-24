@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 256" role="img" aria-label="ACSSI">
+  <title>ACSSI — variante light mode</title>
+  <desc>Wordmark ACSSI — mark marine sur fond or, optimisé pour interfaces claires</desc>
+  <!-- Fond or uniforme -->
+  <rect x="0" y="0" width="720" height="256" rx="48" ry="48" fill="#e0cd1e"/>
+  <!-- Mark A marine (inversé) -->
+  <g transform="translate(28, 28) scale(0.78125)">
+    <path d="M128 50 L70 200 L98 200 L112 162 L144 162 L158 200 L186 200 L128 50 Z M122 138 L134 138 L128 110 L122 138 Z" fill="#00345f"/>
+  </g>
+  <!-- Wordmark ACSSI marine -->
+  <text x="240" y="172" font-family="Space Grotesk, system-ui, sans-serif" font-size="120" font-weight="700" letter-spacing="-2" fill="#00345f">ACSSI</text>
+</svg>

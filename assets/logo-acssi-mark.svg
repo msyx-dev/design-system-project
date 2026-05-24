@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="ACSSI mark">
+  <title>ACSSI</title>
+  <desc>Pictogramme ACSSI — initiale A or sur fond marine</desc>
+  <defs>
+    <linearGradient id="acssi-grad-marine" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00345f"/>
+      <stop offset="100%" stop-color="#00243f"/>
+    </linearGradient>
+  </defs>
+  <!-- Fond marine carré arrondi -->
+  <rect x="0" y="0" width="256" height="256" rx="48" ry="48" fill="url(#acssi-grad-marine)"/>
+  <!-- Lettre A or stylisée (Space Grotesk-like géométrique) -->
+  <path d="M128 50 L70 200 L98 200 L112 162 L144 162 L158 200 L186 200 L128 50 Z M122 138 L134 138 L128 110 L122 138 Z" fill="#e0cd1e"/>
+</svg>
