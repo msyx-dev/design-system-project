@@ -23,6 +23,10 @@ jobs:
         run: |
           chmod +x tests/test-check-diacritics.sh
           ./tests/test-check-diacritics.sh
+      - name: Run CSS comments script tests (anti-regression #275)
+        run: |
+          chmod +x tests/test-check-css-comments.sh
+          ./tests/test-check-css-comments.sh
   perf-budget:
     runs-on: ubuntu-latest
     steps:

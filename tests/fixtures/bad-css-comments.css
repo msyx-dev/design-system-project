@@ -1,0 +1,14 @@
+/* fixture bad-css-comments.css — utilisé par test-check-css-comments.sh */
+/* Ce fichier contient intentionnellement des commentaires mal fermés (regression #275) */
+
+:root {
+  --primary: #0a0f1e;
+  /* Section couleurs * /
+  --accent: #3b82f6;
+  /* Fin section * /
+}
+
+[data-theme="acssi"] {
+  /* Ce bloc serait masqué en production à cause du commentaire mal fermé * /
+  --accent: #10b981;
+}
