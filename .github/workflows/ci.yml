@@ -15,6 +15,10 @@ jobs:
         run: |
           chmod +x shared/check-diacritics.sh
           ./shared/check-diacritics.sh
+      - name: Check CSS comments (anti-regression #275)
+        run: |
+          chmod +x shared/check-css-comments.sh
+          ./shared/check-css-comments.sh
       - name: Run lint script tests
         run: |
           chmod +x tests/test-check-diacritics.sh
