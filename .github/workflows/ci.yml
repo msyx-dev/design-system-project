@@ -15,10 +15,18 @@ jobs:
         run: |
           chmod +x shared/check-diacritics.sh
           ./shared/check-diacritics.sh
+      - name: Check CSS comments (anti-regression #275)
+        run: |
+          chmod +x shared/check-css-comments.sh
+          ./shared/check-css-comments.sh
       - name: Run lint script tests
         run: |
           chmod +x tests/test-check-diacritics.sh
           ./tests/test-check-diacritics.sh
+      - name: Run CSS comments script tests (anti-regression #275)
+        run: |
+          chmod +x tests/test-check-css-comments.sh
+          ./tests/test-check-css-comments.sh
   perf-budget:
     runs-on: ubuntu-latest
     steps:
