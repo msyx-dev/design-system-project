@@ -1180,6 +1180,25 @@
       "generated": true
     },
     {
+      "name": "brand-acssi",
+      "category": "asset",
+      "page": "fondation",
+      "assets": [
+        "/assets/logo-acssi.svg",
+        "/assets/logo-acssi-mark.svg",
+        "/assets/logo-acssi-dark.svg",
+        "/assets/logo-acssi-light.svg"
+      ],
+      "charte": {
+        "marine": "#00345f",
+        "or": "#e0cd1e",
+        "marine_dark": "#00243f"
+      },
+      "description": "Brand assets ACSSI (theme=acssi) — wordmark, mark, variantes dark/light. Consumer : <img src=\"/assets/logo-acssi-mark.svg\"> pour favicon/login, /assets/logo-acssi-dark.svg pour header dark mode.",
+      "example": "<img src=\"/assets/logo-acssi-mark.svg\" alt=\"ACSSI\" width=\"64\" height=\"64\">",
+      "jsInit": null
+    },
+    {
       "name": "data",
       "category": "component",
       "source_file": "shared/css/components/data.css",
