@@ -1971,6 +1971,23 @@
       "reactComponent": "ThemeToggle",
       "reactPackage": "@msyx-dev/react",
       "example": "<button class=\"theme-toggle\" role=\"switch\" aria-checked=\"false\" aria-label=\"Passer en mode clair\">\n  <span class=\"theme-toggle-track\">\n    <span class=\"theme-toggle-thumb\"></span>\n  </span>\n</button>"
+    },
+    {
+      "name": "page-header",
+      "page": null,
+      "cssClasses": [
+        ".section-header",
+        ".section-header-breadcrumb",
+        ".section-header-row",
+        ".section-header-text",
+        ".section-header-actions",
+        ".overline",
+        ".lead"
+      ],
+      "jsInit": null,
+      "reactComponent": "PageHeader",
+      "reactPackage": "@msyx-dev/react",
+      "example": "<section class=\"section-header\">\n  <nav class=\"section-header-breadcrumb\" aria-label=\"Fil d'ariane\">\n    <a href=\"/\">Accueil</a>\n  </nav>\n  <div class=\"section-header-row\">\n    <div class=\"section-header-text\">\n      <span class=\"overline\">ACCUEIL</span>\n      <h1>Aksyva</h1>\n      <p class=\"lead\">Suite d'outils de pilotage</p>\n    </div>\n    <div class=\"section-header-actions\">\n      <button class=\"btn-primary\">Action</button>\n    </div>\n  </div>\n</section>"
     }
   ]
 }

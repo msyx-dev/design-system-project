@@ -1,0 +1,99 @@
+/* @ds-version: 2.63.0 */
+/* section-header.css — Pattern PageHeader : overline / title / lead / actions / breadcrumb
+   Utilisé par le composant React <PageHeader> (@msyx-dev/react) et directement en HTML.
+   Les classes .section-header, .overline, .lead existaient dans layout.css (scoped .main).
+   Ce module les expose en standalone sans scope .main pour les consumers React. */
+
+/* ===== SECTION HEADER ===== */
+.section-header {
+    margin-bottom: var(--space-2xl);
+}
+
+/* Breadcrumb row — affiché seulement si présent */
+.section-header-breadcrumb {
+    margin-bottom: var(--space-md);
+}
+
+/* Row : texte (haut) + actions (bas en mobile, droite en desktop) */
+.section-header-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* Zone texte */
+.section-header-text {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Overline — label catégorie au-dessus du titre */
+.section-header .overline {
+    font-size: 0.75rem;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    display: block;
+    position: relative;
+    padding-bottom: calc(var(--space-sm) + 2px);
+}
+
+/* Gradient underline signature spatiale msyx */
+.section-header .overline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 32px;
+    height: 2px;
+    background: var(--gradient-1);
+    border-radius: 2px;
+}
+
+/* Titre (h1/h2/h3) */
+.section-header h1,
+.section-header h2,
+.section-header h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-sm);
+    margin-top: 0;
+}
+
+/* Lead — sous-titre descriptif */
+.section-header .lead {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 600px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Zone actions — slot boutons */
+.section-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+/* ===== RESPONSIVE — Desktop (mobile-first) ===== */
+@media (min-width: 768px) {
+    .section-header-row {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-xl);
+    }
+
+    .section-header-actions {
+        width: auto;
+        justify-content: flex-end;
+    }
+}

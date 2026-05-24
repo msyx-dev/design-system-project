@@ -1,5 +1,5 @@
 // @msyx-dev/react — Design System msyx.fr (React)
-// v3.0.0-alpha.4 — ThemeToggle ajouté dans #319
+// v3.0.0-alpha.6 — PageHeader ajouté dans #276
 export { Button } from "./components/Button/Button";
 export type { ButtonProps } from "./components/Button/Button";
 export { UserMenu } from "./components/UserMenu/UserMenu";
@@ -12,3 +12,8 @@ export type {
 } from "./components/LoginScreen/LoginScreen";
 export { ThemeToggle } from "./components/ThemeToggle/ThemeToggle";
 export type { ThemeToggleProps } from "./components/ThemeToggle/ThemeToggle";
+export { PageHeader } from "./components/PageHeader/PageHeader";
+export type {
+  PageHeaderProps,
+  PageHeaderHeadingLevel,
+} from "./components/PageHeader/PageHeader";
