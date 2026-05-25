@@ -1,7 +1,7 @@
 {
-  "version": "2.62.0",
+  "version": "2.64.1",
   "generated": {
-    "at": "2026-05-20T00:00:00.000Z",
+    "at": "2026-05-25T18:19:13.216Z",
     "by": "bin/generate-registry.js v1.0"
   },
   "components": [
@@ -1451,7 +1451,8 @@
         ".popover-confirm-actions",
         ".popover-confirm-desc",
         ".popover-confirm-title",
-        ".popover-confirm-wrap"
+        ".popover-confirm-wrap",
+        ".modal-title"
       ],
       "jsInit": null,
       "generated": true
@@ -1648,14 +1649,9 @@
         ".theme-card-head",
         ".theme-token-dot",
         ".theme-token-dot--bordered",
-        ".typo-body",
         ".typo-display",
-        ".typo-h1",
-        ".typo-h2",
-        ".typo-h3",
         ".typo-h4",
         ".typo-mono",
-        ".typo-overline",
         ".typo-small",
         ".typo-xs"
       ],
@@ -1822,6 +1818,9 @@
         ".grid-2",
         ".grid-3",
         ".grid-4",
+        ".grid-auto-fit-lg",
+        ".grid-auto-fit-md",
+        ".grid-auto-fit-sm",
         ".hidden",
         ".icon-svg",
         ".inline-flex",
@@ -1891,6 +1890,7 @@
         ".p-sm",
         ".p-xl",
         ".p-xs",
+        ".page-title",
         ".pb-2xl",
         ".pb-3xl",
         ".pb-lg",
@@ -1940,6 +1940,7 @@
         ".rounded-md",
         ".rounded-sm",
         ".rounded-xs",
+        ".section-title",
         ".shadow",
         ".shadow-lg",
         ".shadow-none",
@@ -1968,12 +1969,13 @@
         ".text-xl",
         ".text-xs",
         ".truncate",
-        ".uppercase",
-        ".page-title",
-        ".section-title",
-        ".grid-auto-fit-sm",
-        ".grid-auto-fit-md",
-        ".grid-auto-fit-lg"
+        ".typo-",
+        ".typo-body",
+        ".typo-h1",
+        ".typo-h2",
+        ".typo-h3",
+        ".typo-overline",
+        ".uppercase"
       ],
       "jsInit": null,
       "generated": true

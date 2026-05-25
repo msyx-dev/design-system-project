@@ -1,4 +1,4 @@
-/* @ds-version: 2.64.0 */
+/* @ds-version: 2.64.1 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -309,6 +309,17 @@
     line-height: var(--lh-snug);
     color: var(--text);
 }
+
+/* ===== Typographie sémantique .typo-* — v2.64.1 (#273) ===== */
+/* Deplacees depuis components/theming.css pour distribution complete
+   (visibles en mode `sync.sh --components=core` et pour les consumers
+    qui n'importent que ds-utilities.css sans ds-components.css).
+   Definitions identiques a celles historiquement dans theming.css. */
+.typo-h1 { font-family: var(--font-display); font-size: var(--type-39); font-weight: var(--fw-bold); letter-spacing: -0.02em; }
+.typo-h2 { font-family: var(--font-display); font-size: var(--type-31); font-weight: var(--fw-bold); }
+.typo-h3 { font-family: var(--font-display); font-size: var(--type-20); font-weight: var(--fw-semibold); }
+.typo-body { font-family: var(--font-sans); font-size: var(--type-16); color: var(--text-muted); line-height: var(--lh-relaxed); }
+.typo-overline { font-size: var(--type-12); text-transform: uppercase; letter-spacing: 0.15em; font-weight: var(--fw-semibold); color: var(--accent-light); }
 
 /* ===== Grilles responsive auto-fit — v2.60.0 (#319) ===== */
 /* sm : cartes étroites (tags, badges, mini-cards) */
