@@ -1,7 +1,7 @@
 {
-  "version": "2.64.1",
+  "version": "2.64.2",
   "generated": {
-    "at": "2026-05-25T18:21:29.202Z",
+    "at": "2026-05-25T18:38:52.919Z",
     "by": "bin/generate-registry.js v1.0"
   },
   "components": [
@@ -76,7 +76,12 @@
         ".achievement-progress-label",
         ".chip-icon-slot",
         ".locked",
-        ".notif-dot"
+        ".notif-dot",
+        ".chip-accent",
+        ".chip-danger",
+        ".chip-sm",
+        ".chip-success",
+        ".chip-warning"
       ],
       "jsInit": null,
       "example": "<span class=\"badge badge-primary\">Nouveau</span>\n<span class=\"badge badge-success\">Actif</span>\n<span class=\"badge badge-warning\">En attente</span>\n<span class=\"badge badge-danger\">Erreur</span>\n<span class=\"badge badge-info\">Info</span>\n<span class=\"tag\">Next.js</span>\n<span class=\"tag\">TypeScript</span>\n\n<!-- Badge compact sidebar/nav -->\n<span class=\"badge badge-primary badge-nav\">12</span>"
@@ -1625,7 +1630,14 @@
         ".roadmap-quarter-title",
         ".sprint-burndown",
         ".sprint-burndown-title",
-        ".sprint-header-info"
+        ".sprint-header-info",
+        ".kanban-card-chips",
+        ".kanban-column-name",
+        ".kanban-columns",
+        ".kanban-content",
+        ".kanban-meta",
+        ".kanban-page",
+        ".kanban-topbar"
       ],
       "jsInit": null,
       "generated": true

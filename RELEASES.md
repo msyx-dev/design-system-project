@@ -1,5 +1,22 @@
 # Releases
 
+## v2.64.2 — 2026-05-25
+
+**Promotion des modificateurs chips (taille + couleur) et du layout Kanban-page dans le DS distribue** (#274)
+
+### Added
+- `shared/css/components/badges.css` : 5 modificateurs chips — `.chip-sm` (taille compacte), `.chip-accent`, `.chip-warning`, `.chip-success`, `.chip-danger` (variantes semantiques alignees sur le pattern `--{token} 12% bg / 25% border / -light text`).
+- `shared/css/components/templates.css` : 7 classes layout Kanban-page — `.kanban-page`, `.kanban-topbar`, `.kanban-content`, `.kanban-meta`, `.kanban-columns` (grid 4 cols responsive), `.kanban-column-name`, `.kanban-card-chips` + breakpoint mobile-first 768px (1 colonne sous 768px).
+- `shared/components-registry.json` : entrees `chips` et `templates` enrichies automatiquement par `bin/generate-registry.js`.
+
+### Changed
+- `canonical-pages/dashboard-kanban.html` : refacto du `<style>` inline — suppression des 9 definitions desormais distribuees, conservation uniquement des 5 classes demo-specifiques (`.kanban-topbar-title`, `.kanban-page-title`, `.kanban-card-assignees`, `.kanban-add-col`).
+- `@ds-version` bumpe a `2.64.2` dans 7 fichiers (tokens, utilities, components, layout, nav.js, badges, templates) + `package.json`.
+
+### Fixed
+- #274 : `aksy` (#500 Vue Backlog Kanban) peut retirer sa DS-EXCEPTION sur `.chip-sm` / `.chip-{variant}` et utiliser le DS canonique (PR suiveuse cote aksy hors scope de cette release).
+- Coherence : le champ `example` du composant `chips` dans le registry (qui referencait `chip-accent`, `chip-warning`, `chip-success` orphelins depuis plusieurs versions) est desormais aligne avec les selecteurs CSS distribues.
+
 ## v2.64.1 — 2026-05-25
 
 **Distribution complète des classes typo + création `.modal-title`** (#273)
