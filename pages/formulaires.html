@@ -19,9 +19,9 @@
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
             <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Nom du projet</label><input class="input" type="text" placeholder="mon-projet"><span class="input-hint">Lettres minuscules, chiffres et tirets.</span></div>
-            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Email (erreur)</label><input class="input input-error" type="email" value="invalid@"><span class="input-error-msg">Format d'email invalide.</span></div>
-            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Domaine (valide)</label><input class="input input-success" type="text" value="design-system.msyx.fr"></div>
-            <div class="input-group"><label class="input-label">Desactive</label><input class="input input-disabled" type="text" value="Non modifiable" disabled></div>
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label" for="form-email-error">Email (erreur)</label><input class="input input-error" id="form-email-error" type="email" value="invalid@"><span class="input-error-msg">Format d'email invalide.</span></div>
+            <div class="input-group" style="margin-bottom:1rem;"><label class="input-label" for="form-domain-success">Domaine (valide)</label><input class="input input-success" id="form-domain-success" type="text" value="design-system.msyx.fr"></div>
+            <div class="input-group"><label class="input-label" for="form-input-disabled">Desactive</label><input class="input input-disabled" id="form-input-disabled" type="text" value="Non modifiable" disabled></div>
         </div>
         <div class="demo-box">
             <div class="input-group" style="margin-bottom:1rem;"><label class="input-label">Avec icone</label><div class="input-with-icon"><span class="input-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-search"/></svg></span><input class="input" type="text" placeholder="Rechercher..."></div></div>
@@ -38,9 +38,9 @@
         <div class="demo-box">
             <span class="demo-label">Toggles</span>
             <div style="display:flex;flex-direction:column;gap:1rem;">
-                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Mode sombre</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
-                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Notifications</span><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
-                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Auto-deploy</span><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Mode sombre</span><label class="toggle"><input type="checkbox" checked aria-label="Mode sombre"><span class="toggle-slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Notifications</span><label class="toggle"><input type="checkbox" aria-label="Notifications"><span class="toggle-slider"></span></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.88rem;">Auto-deploy</span><label class="toggle"><input type="checkbox" checked aria-label="Auto-deploy"><span class="toggle-slider"></span></label></div>
             </div>
         </div>
         <div class="demo-box">

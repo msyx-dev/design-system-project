@@ -17,7 +17,7 @@
 <section id="kanban">
     <div class="section-header"><span class="overline">Templates</span><h2>Kanban Board</h2><p>Vue projet en colonnes avec drag &amp; drop natif HTML5.</p></div>
     <div class="demo-box">
-        <div class="kanban-board">
+        <div class="kanban-board" tabindex="0">
             <div class="kanban-column" data-status="backlog">
                 <div class="kanban-column-header"><span class="kanban-column-title">Backlog</span><span class="kanban-count">3</span></div>
                 <div class="kanban-card" draggable="true"><div class="kanban-card-title">Configurer auth gate</div><div class="kanban-card-desc">Mettre en place forward_auth Caddy + cookie HMAC</div><div class="kanban-card-footer"><span class="tag">infra</span><div style="display:flex;align-items:center;gap:0.5rem;"><span class="badge badge-danger" style="font-size:0.65rem;padding:0.1rem 0.4rem;">Haute</span><div class="avatar avatar-xs avatar-gradient">MS</div></div></div></div>
@@ -45,7 +45,7 @@
 <section id="roadmap">
     <div class="section-header"><span class="overline">Templates</span><h2>Roadmap</h2><p>Timeline horizontale scrollable par trimestre.</p></div>
     <div class="demo-box">
-        <div class="roadmap-container">
+        <div class="roadmap-container" tabindex="0">
             <div class="roadmap-track">
                 <div class="roadmap-quarter">
                     <div class="roadmap-quarter-title">Q1 2026</div>
@@ -200,14 +200,14 @@
                             <div class="settings-row-label">Nom d'affichage</div>
                             <div class="settings-row-desc">Visible par les autres membres</div>
                         </div>
-                        <div class="settings-row-control"><input class="settings-row-input" type="text" value="Mike"></div>
+                        <div class="settings-row-control"><input class="settings-row-input" type="text" value="Mike" aria-label="Nom d'affichage"></div>
                     </div>
                     <div class="settings-row">
                         <div class="settings-row-info">
                             <div class="settings-row-label">Email</div>
                             <div class="settings-row-desc">Pour les notifications et la connexion</div>
                         </div>
-                        <div class="settings-row-control"><input class="settings-row-input" type="email" value="mike@msyx.fr"></div>
+                        <div class="settings-row-control"><input class="settings-row-input" type="email" value="mike@msyx.fr" aria-label="Email"></div>
                     </div>
                     <div class="settings-row">
                         <div class="settings-row-info"><div class="settings-row-label">Langue</div></div>
@@ -225,21 +225,21 @@
                             <div class="settings-row-label">Notifications email</div>
                             <div class="settings-row-desc">Recevez les alertes par email</div>
                         </div>
-                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" checked aria-label="Notifications email"><span class="toggle-slider"></span></label></div>
                     </div>
                     <div class="settings-row">
                         <div class="settings-row-info">
                             <div class="settings-row-label">Notifications push</div>
                             <div class="settings-row-desc">Alertes dans le navigateur</div>
                         </div>
-                        <div class="settings-row-control"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" aria-label="Notifications push"><span class="toggle-slider"></span></label></div>
                     </div>
                     <div class="settings-row">
                         <div class="settings-row-info">
                             <div class="settings-row-label">Resume hebdomadaire</div>
                             <div class="settings-row-desc">Rapport envoye chaque lundi</div>
                         </div>
-                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" checked aria-label="Resume hebdomadaire"><span class="toggle-slider"></span></label></div>
                     </div>
                 </div>
                 <div class="settings-section">
@@ -257,7 +257,7 @@
                             <div class="settings-row-label">Reduire les animations</div>
                             <div class="settings-row-desc">Accessibilite : moins de mouvement</div>
                         </div>
-                        <div class="settings-row-control"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                        <div class="settings-row-control"><label class="toggle"><input type="checkbox" aria-label="Reduire les animations"><span class="toggle-slider"></span></label></div>
                     </div>
                 </div>
                 <div class="settings-section settings-danger">
