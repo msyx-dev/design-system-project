@@ -15,22 +15,7 @@
   </script>
   <link rel="stylesheet" href="../shared/styles.css">
   <style>
-    .kanban-page {
-      min-height: 100vh;
-      background: var(--primary);
-      display: flex;
-      flex-direction: column;
-    }
-    .kanban-topbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
-      padding: var(--space-md) var(--space-xl);
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-      flex-wrap: wrap;
-    }
+    /* Classes démo-spécifiques uniquement — les classes layout et chips sont dans le DS distribué (v2.64.2 #274) */
     .kanban-topbar-title {
       font-family: var(--font-display);
       font-size: 1.125rem;
@@ -38,43 +23,12 @@
       color: var(--text);
       margin-right: auto;
     }
-    .kanban-content {
-      flex: 1;
-      padding: var(--space-xl);
-      overflow-x: auto;
-    }
-    .kanban-meta {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-      flex-wrap: wrap;
-    }
     .kanban-page-title {
       font-family: var(--font-display);
       font-size: 1.5rem;
       font-weight: var(--fw-bold);
       color: var(--text);
       margin: 0 auto 0 0;
-    }
-    .kanban-columns {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(260px, 1fr));
-      gap: var(--space-md);
-      min-width: 0;
-    }
-    .kanban-column-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--space-md);
-    }
-    .kanban-column-name {
-      font-weight: var(--fw-semibold);
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
     .kanban-card-assignees {
       display: flex;
@@ -86,18 +40,6 @@
       height: 24px;
       font-size: 0.6rem;
       border: 2px solid var(--surface-solid);
-    }
-    .kanban-card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: var(--space-sm);
-    }
-    .kanban-card-chips {
-      display: flex;
-      gap: var(--space-xs);
-      flex-wrap: wrap;
-      margin-top: var(--space-sm);
     }
     .kanban-add-col {
       background: none;
@@ -114,11 +56,6 @@
     .kanban-add-col:hover {
       border-color: var(--accent);
       color: var(--accent);
-    }
-    @media (max-width: 768px) {
-      .kanban-columns {
-        grid-template-columns: minmax(260px, 1fr);
-      }
     }
   </style>
 </head>

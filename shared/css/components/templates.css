@@ -1,4 +1,4 @@
-/* @ds-version: 2.64.0 */
+/* @ds-version: 2.64.2 */
 /* templates.css — extracted from components.css v2.35.0 */
 
 /* ===== TEMPLATES ===== */
@@ -15,6 +15,19 @@
 .kanban-card-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
 .kanban-card-footer { display: flex; justify-content: space-between; align-items: center; }
 .kanban-column.drag-over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 3%, transparent); }
+
+/* ===== KANBAN PAGE LAYOUT (v2.64.2 #274) — promotion classes canonical-pages/dashboard-kanban.html ===== */
+.kanban-page { min-height: 100vh; background: var(--primary); display: flex; flex-direction: column; }
+.kanban-topbar { background: var(--surface); border-bottom: 1px solid var(--border-color); backdrop-filter: blur(12px); padding: var(--space-md) var(--space-xl); display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap; }
+.kanban-content { flex: 1; padding: var(--space-xl); overflow-x: auto; }
+.kanban-meta { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-lg); flex-wrap: wrap; }
+.kanban-columns { display: grid; grid-template-columns: minmax(260px, 1fr); gap: var(--space-md); min-width: 0; }
+.kanban-column-name { font-weight: var(--fw-semibold); font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.kanban-card-chips { display: flex; gap: var(--space-xs); flex-wrap: wrap; margin-top: var(--space-sm); }
+
+@media (min-width: 768px) {
+  .kanban-columns { grid-template-columns: repeat(4, minmax(260px, 1fr)); }
+}
 
 /* Roadmap */
 .roadmap-container { overflow-x: auto; position: relative; padding-bottom: 1rem; }
