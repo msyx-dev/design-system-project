@@ -82,55 +82,6 @@
 ### Changed
 - 4 workflows CI restants (`ci`, `a11y`, `perf`, `visual`) migrés Node 24 / `checkout@v5` / `setup-node@v5` avant EOL Node 20 du 2026-06-02 (#317).
 
-> Note : RELEASES.md présente un trou v2.58–v2.61 (versions livrées Phases A/B non consignées) — cf. issue #314 (refonte RELEASES.md monorepo, décision en attente).
-
-## v2.57.5 — 2026-05-19
-
-**CI publish @msyx-dev/react — workflow GitHub Actions** (#307, Epic #301)
-
-### Added
-- `.github/workflows/publish-react.yml` : publish auto `@msyx-dev/react` sur GitHub Packages quand un tag `v*` est poussé (steps : checkout → setup-pnpm → setup-node → install --frozen-lockfile → build → test Vitest → guard tag↔version → publish --access restricted).
-- `packages/react/PUBLISHING.md` : procédure release (bump version → commit → tag → push), garde-fou tag↔version, instructions consumer `.npmrc`.
-- Exception `.gitignore` pour committer `packages/react/pnpm-lock.yaml` (CI --frozen-lockfile).
-
-## v2.57.4 — 2026-05-19
-
-**Composant React LoginScreen — package @msyx-dev/react** (#306, Epic #301)
-
-### Added
-- `@msyx-dev/react` : composant `<LoginScreen>` (3 variants : `internal-only`, `public-multi-providers`, `internal-with-fallback`).
-- API présentationnelle : `onAuthentikClick`, `providers?: Array<{id, label?, onClick}>`, `showFallbackForm` + `onFallbackSubmit({login, password})`, `logo?: ReactNode`, `appName?`, `subtitle?`.
-- `<ProviderIcons>` SVG inline : Authentik, Google, Apple, Microsoft, GitHub (couleurs marque tierce conservées — exception §1 DS-PRINCIPLES).
-- A11y : `aria-label` fallback automatique sur boutons providers, `label/htmlFor` associés via `useId()` SSR-safe, `autoComplete="current-password"`, `type="button"` explicite sur bouton Authentik, `.login-logo` `aria-hidden="true"`.
-- Tests Vitest 31/31 (variants, callbacks, a11y baseline, password autocomplete, displayName).
-- Export `LoginScreen`, `LoginScreenProps`, `LoginScreenVariant`, `LoginScreenProvider` depuis `src/index.ts`.
-
-## v2.57.3 — 2026-05-19
-
-**Composant React UserMenu — package @msyx-dev/react** (#305, Epic #301)
-
-### Added
-- `@msyx-dev/react` : composant `<UserMenu>` (avatar + dropdown utilisateur + lien "Mon compte" + form POST logout).
-- Props plates : `displayName`, `email`, `avatarUrl?`, `authentikUserUrl`, `logoutUrl`. Support controlled optionnel via `open`/`onOpenChange`.
-- A11y WAI-ARIA 1.2 : `aria-haspopup="menu"`, `aria-expanded`, `role="menu"/menuitem/separator`, focus return trigger après Escape, Tab quitte le menu, ArrowUp/Down/Home/End navigation avec wrap.
-- `useId()` React 18+ pour menuId/triggerId SSR-safe.
-- Cleanup `useEffect` correct (pas de memory leak StrictMode Next.js).
-- Tests Vitest 39/39 (render, keyboard nav, click-outside, focus return, ARIA states, controlled mode).
-- Export `UserMenu`, `UserMenuProps` depuis `src/index.ts`.
-
-## v2.57.2 — 2026-05-19
-
-**Composant React Button — package @msyx-dev/react** (#304, Epic #301)
-
-### Added
-- `@msyx-dev/react` : composant `<Button>` (variants primary/secondary/ghost/danger, sizes sm/md/lg, loading/disabled/icons/fullWidth, forwardRef, ARIA complet).
-- peer-dep React étendu à `>=18 <20` pour compatibilité consumers Next.js 15.
-- Tests unitaires Vitest 26/26 (variants, loading, disabled, icons, forwardRef, a11y).
-- README `packages/react/` : contrat CSS séparé (consumer doit importer `@msyx-dev/design-system/dist/style.css`).
-
-### Fixed
-- `.btn-loading::after` : spinner thème-aware via `currentColor` — corrige le rendu cassé sur btn-secondary/ghost (était `var(--text-on-accent)` non contrastant sur fond transparent).
-
 ## v2.57.1 — 2026-05-16
 
 **Prep migration M3 — endpoints /health.json + /version.json** (#293, claude-config#109)
@@ -145,6 +96,8 @@
 ### Notes
 - Caddyfile **non touché** en Phase 1 — Phase 2 du runbook M3 ajoutera `handle /health.json` + `handle /version.json` avant le rewrite `* /site.html`.
 - Migration M3 design-system : pattern Authentik Provider Proxy mode `forward_single` (vs OIDC code-side impossible pour statique pur). Provider créés via blueprint `authentik#17`.
+
+> **Note historique (refacto #314, 2026-05-25)** : les versions v2.57.2, v2.57.3, v2.57.4 et v2.57.5 étaient consacrées au package npm `@msyx-dev/react` (Button, UserMenu, LoginScreen, CI publish). Suite à la convention « RELEASES.md par package », ces entrées ont été déplacées dans `packages/react/RELEASES.md`. La numérotation racine saute donc de v2.57.1 à v2.57.0.
 
 ## v2.57.0 — 2026-05-14
 

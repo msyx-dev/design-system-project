@@ -72,6 +72,28 @@ shared/
   components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll, command palette, matrice risque)
 ```
 
+## Convention RELEASES.md par package (monorepo)
+
+Le repo distribue **deux artefacts indépendants** :
+1. **DS CSS statique** (`shared/css/*`, tokens, registry, `sync.sh`) — servi par Caddy via `design-system.msyx.fr`.
+2. **`@msyx-dev/react`** (workspace `packages/react/`) — package npm publié sur GitHub Packages.
+
+**Chaque artefact a son propre `RELEASES.md`** :
+
+| Artefact | Fichier RELEASES | Versioning | Publish |
+|---|---|---|---|
+| DS CSS | `RELEASES.md` (racine) | SemVer aligné `package.json` racine (`msyx-design-system`) | Push commit sur `main` → Caddy sert le repo |
+| `@msyx-dev/react` | `packages/react/RELEASES.md` | SemVer aligné `packages/react/package.json` (`3.x-alpha` en cours) | Tag `react-v*` → workflow `publish-react.yml` → GitHub Packages |
+
+**Règles d'écriture** :
+- **PR touchant uniquement `shared/css/**`, `shared/*.js`, `index.html`, `pages/**`, `site.html`** → entrée dans `RELEASES.md` racine, bump `package.json` racine.
+- **PR touchant uniquement `packages/react/**`** → entrée dans `packages/react/RELEASES.md`, bump `packages/react/package.json`. **Aucun bump DS racine**.
+- **PR touchant les deux** (cas rare) → 2 entrées (1 dans chaque RELEASES) avec mention croisée.
+
+**Anti-pattern** : ne JAMAIS ajouter d'entrée `@msyx-dev/react` (composants React, versions `3.x-alpha`) dans le `RELEASES.md` racine. Inversement : ne JAMAIS ajouter d'entrée DS CSS (tokens, modules CSS, sync.sh) dans `packages/react/RELEASES.md`.
+
+Cf. issue #314 (convention décidée 2026-05-25, option A).
+
 ## Conventions
 - Chaque page importe `/shared/styles.css` + `/shared/nav.js` + `/shared/components.js`
 - Variables CSS dans `:root` de `shared/styles.css` — ne pas dupliquer

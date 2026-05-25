@@ -66,3 +66,7 @@ const ref = useRef<HTMLButtonElement>(null);
 | `fullWidth` | `boolean`                                     | `false`     | Étend le bouton à 100% de la largeur       |
 
 Le composant accepte également tous les attributs natifs `<button>` via `ButtonHTMLAttributes<HTMLButtonElement>`.
+
+## Historique des releases
+
+Voir [`RELEASES.md`](./RELEASES.md).
