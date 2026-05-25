@@ -4,25 +4,27 @@ Ce package est publié automatiquement sur **GitHub Packages** (registry privé 
 
 ## Procédure
 
-1. Bump version dans `packages/react/package.json` (suivre semver) :
+1. Mettre à jour `packages/react/RELEASES.md` (entrée pour la nouvelle version).
+
+2. Bump version dans `packages/react/package.json` (suivre semver) :
    - Alpha : `3.0.0-alpha.0` → `3.0.0-alpha.1`
    - Release : `3.0.0-alpha.X` → `3.0.0`
    - Patch : `3.0.0` → `3.0.1`
 
-2. Commit le bump :
+3. Commit le bump :
    ```bash
    git add packages/react/package.json
    git commit -m "chore(react): bump v3.0.0-alpha.1"
    git push origin main
    ```
 
-3. Tagger et pousser :
+4. Tagger et pousser :
    ```bash
    git tag -a react-v3.0.0-alpha.1 -m "Release @msyx-dev/react v3.0.0-alpha.1"
    git push origin react-v3.0.0-alpha.1
    ```
 
-4. Le workflow `Publish @msyx-dev/react` se déclenche, lance install + build + tests + vérif tag/version + publish.
+5. Le workflow `Publish @msyx-dev/react` se déclenche, lance install + build + tests + vérif tag/version + publish.
 
 ## Garde-fou tag ↔ version
 
