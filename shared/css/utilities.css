@@ -310,7 +310,7 @@
     color: var(--text);
 }
 
-/* ===== Typographie sémantique .typo-* — v2.64.1 (#273) ===== */
+/* ===== Typographie sémantique (classes typo-h1/h2/h3/body/overline) — v2.64.1 (#273) ===== */
 /* Deplacees depuis components/theming.css pour distribution complete
    (visibles en mode `sync.sh --components=core` et pour les consumers
     qui n'importent que ds-utilities.css sans ds-components.css).

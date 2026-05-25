@@ -1,7 +1,7 @@
 {
   "version": "2.64.1",
   "generated": {
-    "at": "2026-05-25T18:19:13.216Z",
+    "at": "2026-05-25T18:21:29.202Z",
     "by": "bin/generate-registry.js v1.0"
   },
   "components": [
@@ -1969,7 +1969,6 @@
         ".text-xl",
         ".text-xs",
         ".truncate",
-        ".typo-",
         ".typo-body",
         ".typo-h1",
         ".typo-h2",
