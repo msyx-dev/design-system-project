@@ -1,5 +1,21 @@
 # Releases
 
+## v2.64.1 — 2026-05-25
+
+**Distribution complète des classes typo + création `.modal-title`** (#273)
+
+### Changed
+- `shared/css/components/theming.css` : les classes `.typo-h1`, `.typo-h2`, `.typo-h3`, `.typo-body`, `.typo-overline` ont été **déplacées vers `shared/css/utilities.css`**. Définitions strictement identiques (mêmes tokens, mêmes propriétés) — aucun changement visuel. Motivation : les rendre disponibles aux consumers en mode `sync.sh --components=core` (le barrel core n'inclut pas `theming.css`) et aux consumers qui n'importent que `ds-utilities.css` sans `ds-components.css`. Cf. AKSY #501.
+- `shared/css/components/theming.css` : conservent leur place `.typo-display`, `.typo-h4`, `.typo-small`, `.typo-xs`, `.typo-mono` (non listées dans #273, valeurs littérales hors échelle modulaire pour certaines).
+
+### Added
+- `shared/css/components/modals.css` : nouvelle classe `.modal-title` — équivalent sémantique `.typo-h3` + `color: var(--text)` + marge-bottom rythmée (`var(--space-xs)`), pour titrer modales et dialogs sans imposer un tag HTML spécifique (compatible WAI APG `aria-labelledby`).
+- `shared/components-registry.json` : entrées `.typo-h1/h2/h3/body/overline` migrées sous component `utilities` ; nouvelle entrée `.modal-title` sous component `modals`.
+
+### Notes consumers
+- AKSY (#501) peut retirer ses overrides DS-EXCEPTION pour `.typo-*` et `.modal-title` après bump du consumer vers v2.64.1.
+- Aucune action requise pour les consumers qui importent déjà `ds-utilities.css` + `ds-components.css` en mode default — le rendu visuel est strictement identique.
+
 ## v2.64.0 — 2026-05-25
 
 **Refacto tokens hardcodes : 77 occurrences remplacees par var() dans shared/css/components/ + lint CI bloquant** (#279)
