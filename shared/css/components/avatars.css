@@ -1,8 +1,8 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* avatars.css — extracted from components.css v2.35.0 */
 
 /* ===== AVATAR ===== */
-.avatar { border-radius: 50%; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-family: 'Space Grotesk', sans-serif; color: var(--text-on-accent); flex-shrink: 0; }
+.avatar { border-radius: 50%; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-family: var(--font-display); color: var(--text-on-accent); flex-shrink: 0; }
 .avatar-xs { width: var(--avatar-size-xs); height: var(--avatar-size-xs); font-size: 0.55rem; }
 .avatar-sm { width: var(--avatar-size-sm); height: var(--avatar-size-sm); font-size: 0.7rem; }
 .avatar-md { width: var(--avatar-size-md); height: var(--avatar-size-md); font-size: 0.85rem; }

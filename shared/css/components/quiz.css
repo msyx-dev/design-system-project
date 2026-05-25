@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* quiz.css — extracted from components.css v2.35.0 */
 
 /* ===== QUIZ / POLL ===== */
@@ -107,7 +107,7 @@
 .quiz-score {
     font-size: 2rem;
     font-weight: 700;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-display);
     color: var(--accent);
 }
 .quiz-poll-results {

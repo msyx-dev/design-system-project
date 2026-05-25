@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* badges.css — extracted from components.css v2.35.0 */
 
 /* ===== BADGES & TAGS ===== */
@@ -40,7 +40,7 @@
 .chip-input-field::placeholder { color: var(--text-dim); }
 
 /* ===== KBD ===== */
-kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 0.4rem; background: var(--surface-solid); border: 1px solid var(--border-color); border-bottom-width: 2px; border-radius: 5px; font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--text-muted); }
+kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 0.4rem; background: var(--surface-solid); border: 1px solid var(--border-color); border-bottom-width: 2px; border-radius: 5px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
 
 /* ===== NOTIFICATION DOT ===== */
 .notif-dot { position: relative; }
@@ -97,9 +97,9 @@ kbd { display: inline-flex; align-items: center; justify-content: center; min-wi
     0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
     50%       { box-shadow: 0 0 20px 4px color-mix(in srgb, var(--accent) 30%, transparent); }
 }
-.achievement--bronze { border-color: #cd7f32; }
-.achievement--silver { border-color: #c0c0c0; }
-.achievement--gold   { border-color: #ffd700; }
+.achievement--bronze { border-color: var(--achievement-bronze); }
+.achievement--silver { border-color: var(--achievement-silver); }
+.achievement--gold   { border-color: var(--achievement-gold); }
 .achievement-progress {
     margin-top: 1.5rem;
     text-align: center;

@@ -1,5 +1,39 @@
 # Releases
 
+## v2.64.0 — 2026-05-25
+
+**Refacto tokens hardcodes : 77 occurrences remplacees par var() dans shared/css/components/ + lint CI bloquant** (#279)
+
+### Changed
+- 17 fichiers `shared/css/components/*.css` : remplacement de 52 font-family literals (`'Space Grotesk'`, `'Fira Code'`, `'Inter'`) par les tokens canoniques `var(--font-display)`, `var(--font-sans)`, `var(--font-mono)`.
+- `shared/css/components/buttons.css` : 3 `rgba(255,255,255,X)` glassmorphism remplacees par tokens `--overlay-white-*`.
+- `shared/css/components/media.css` : 8 `rgba(0,0,0,X)` + 1 `rgba(255,255,255,0.45)` + `color: #fff` remplacees par tokens `--overlay-black-*` et `--overlay-text`.
+- `shared/css/components/modals.css` : 2 `rgba(0,0,0,X)` remplacees par `--overlay-black-60` + `--overlay-black-50`.
+- `shared/css/components/data.css` : `rgba(255,255,255,0.1)` stripes et `color: #1a1a1a` remplacees par `--overlay-black-stripes` et `--btn-on-warning`.
+- `shared/css/components/badges.css` : `#cd7f32`, `#c0c0c0`, `#ffd700` remplacees par tokens `--achievement-bronze/silver/gold`.
+- `shared/css/components/forms.css` : `background: #ffffff` (knob ACSSI) → `--overlay-text`; 2 `rgba()` providers → `rgba(var(--brand-google-rgb), 0.5)` et `rgba(var(--brand-microsoft-rgb), 0.5)`.
+- `shared/css/components/overlays.css` : `background: #fff` action-menu light → `--surface-solid`.
+- `shared/css/components/interactive.css` : `background: #fff` → `--surface-solid`.
+- `shared/css/components/navigation.css` : `rgba(0,0,0,0.35)` box-shadow → `--overlay-black-35`.
+- `@ds-version` bumpe a `2.64.0` dans 22 fichiers (19 composants + utilities + components + layout + nav.js).
+
+### Added
+- `shared/css/tokens.css` : 18 nouveaux tokens non-thematiques (`--overlay-white-*`, `--overlay-black-*`, `--overlay-black-stripes`, `--achievement-bronze/silver/gold`, `--brand-google[-rgb]`, `--brand-microsoft[-rgb]`) — cf. DS-PRINCIPLES §1 exception couleurs de marque tierces.
+- `shared/check-hardcoded-tokens.sh` : script lint bloquant (exit 1 si findings > 0). 3 checks : font-family literals, hex hardcodes, rgba numeriques. Whitelist : fallbacks `var(--token, #xxx)` + commentaires.
+- `tests/test-check-hardcoded-tokens.sh` : 3 tests (Run A repo propre = exit 0, Run B fixture contient patterns interdits, Run C script detecte fixture sale = exit 1).
+- `tests/fixtures/bad-hardcoded-tokens.css` : fixture avec font-family literal + hex actif + rgba pour Run B/C.
+- `.github/workflows/ci.yml` : 2 nouvelles etapes dans le job `lint` — `Check hardcoded tokens` + `Run hardcoded tokens script tests` (bloquantes).
+
+### Fixed
+- #279 : dette technique 77 occurrences de valeurs hardcodees eliminee de `shared/css/components/`.
+- Regression future prevenue par CI lint bloquant sur tout nouveau token hardcode.
+
+## v2.63.0 — 2026-05-25
+
+**Ajout assets marque ACSSI (wordmark, mark, dark, light)** (#280)
+
+> Note : version pre-allouee sprint S17 — contenu dans le commit #331.
+
 ## v2.62.0 — 2026-05-21
 
 **Composant a11y `.skip-to-content` (WCAG 2.4.1)** (#281)

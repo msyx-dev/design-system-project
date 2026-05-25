@@ -1,9 +1,9 @@
-/* @ds-version: 2.61.0 */
+/* @ds-version: 2.64.0 */
 /* buttons.css — extracted from components.css v2.35.0 */
 
 /* ===== BUTTONS ===== */
 .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gradient-1); color: var(--text-on-accent); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; transition: transform var(--duration-slow) var(--ease-standard), box-shadow var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); border: none; cursor: pointer; position: relative; overflow: hidden; font-family: var(--font-sans); }
-.btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent); opacity: 0; transition: opacity var(--duration-slow); }
+.btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--overlay-white-15), transparent); opacity: 0; transition: opacity var(--duration-slow); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 35%, transparent); }
 .btn-primary:hover::before { opacity: 1; }
 .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--text); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; border: 1px solid var(--border-color); transition: transform var(--duration-slow) var(--ease-standard), border-color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); cursor: pointer; font-family: var(--font-sans); }
@@ -31,7 +31,7 @@
     transition: transform var(--duration-slow) var(--ease-standard),
                 box-shadow var(--duration-slow) var(--ease-standard),
                 background-color var(--duration-slow) var(--ease-standard);
-    border: 1px solid rgba(255, 255, 255, 0.06); /* (#266) adoucit le contour sur fonds sombres */
+    border: 1px solid var(--overlay-white-06); /* (#266) adoucit le contour sur fonds sombres */
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -41,7 +41,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    background: linear-gradient(135deg, var(--overlay-white-15), transparent);
     opacity: 0;
     transition: opacity var(--duration-slow);
 }

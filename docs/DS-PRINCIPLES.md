@@ -51,8 +51,14 @@ Ce document liste les règles concrètes à respecter pour garder un DS sain. Il
 - Caractères Unicode pour icons textuels dans composants legacy (à migrer vers sprite)
 
 ### Garde-fou
-- Script `audit-ds-compliance/scripts/scan-hardcoded-tokens.sh` détecte les hex/rgb/px hardcodés.
-- À intégrer en CI pre-merge sur le repo DS.
+- **Script CI bloquant** : `shared/check-hardcoded-tokens.sh` detecte les font-family literals, hex hardcodes, et rgba numeriques dans `shared/css/components/`. Integre dans `.github/workflows/ci.yml` job `lint` (anti-regression #279). Exit 1 si findings > 0.
+- Script tiers (consumer) : `audit-ds-compliance/scripts/scan-hardcoded-tokens.sh` detecte les hex/rgb/px hardcodes dans les projets consommateurs.
+
+### Exceptions documentees §1 (couleurs de marque — voir DS-PRINCIPLES commentaires inline dans tokens.css)
+Trois categories de valeurs hardcodees **legitimement tokenisees** sans lien au theme :
+1. **`--login-authentik-accent`** (`#fd4b2d`) — couleur de marque Authentik, non-thematique.
+2. **`--achievement-bronze/silver/gold`** (`#cd7f32`, `#c0c0c0`, `#ffd700`) — couleurs metaux universelles Achievement badges (non-thematiques par essence).
+3. **`--brand-google[-rgb]`** (`#4285f4`) + **`--brand-microsoft[-rgb]`** (`#0078d4`) — couleurs de marque Google/Microsoft pour les boutons providers OAuth login-screen.
 
 ---
 

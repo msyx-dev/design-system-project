@@ -1,9 +1,9 @@
-/* @ds-version: 2.58.0 */
+/* @ds-version: 2.64.0 */
 /* navigation.css — extracted from components.css v2.35.0 */
 
 /* ===== TABS ===== */
 .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-color); margin-bottom: var(--space-lg); }
-.tab { padding: var(--space-2) var(--space-lg); font-size: 0.85rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.3s var(--ease-standard), border-bottom-color 0.3s var(--ease-standard); background: none; border-top: none; border-left: none; border-right: none; font-family: 'Inter', sans-serif; }
+.tab { padding: var(--space-2) var(--space-lg); font-size: 0.85rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.3s var(--ease-standard), border-bottom-color 0.3s var(--ease-standard); background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font-sans); }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent-light); border-bottom-color: var(--accent); }
 
@@ -17,7 +17,7 @@
 /* ===== STEPPER ===== */
 .stepper { display: flex; align-items: center; gap: 0; }
 .step { display: flex; align-items: center; gap: 0.5rem; }
-.step-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; transition: background-color 0.3s var(--ease-standard), color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard); }
+.step-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; font-family: var(--font-display); transition: background-color 0.3s var(--ease-standard), color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard); }
 .step-dot.completed { background: var(--accent); color: var(--text-on-accent); }
 .step-dot.active { background: var(--accent); color: var(--text-on-accent); box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 40%, transparent); }
 .step-dot.pending { background: var(--surface-light); color: var(--text-muted); }
@@ -81,7 +81,7 @@
     color: var(--text-muted);
     cursor: pointer;
     padding: 0.4rem 0.2rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     transition: color 0.2s;
     position: relative;
     border-radius: var(--radius-sm);
@@ -199,7 +199,7 @@
     flex-shrink: 0;
 }
 .rail-logo {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: 1rem;
     background: var(--gradient-1);
@@ -361,7 +361,7 @@
     color: var(--text-on-accent);
     font-size: 0.75rem;
     font-weight: 700;
-    font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+    font-family: var(--font-display);
     overflow: hidden;
     flex-shrink: 0;
     transition: box-shadow 0.2s;
@@ -398,7 +398,7 @@
     background: var(--surface-solid, #1e293b);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 32px var(--overlay-black-35);
     z-index: 300;
     overflow: hidden;
     opacity: 0;
@@ -430,7 +430,7 @@
     color: var(--text-on-accent);
     font-size: 1.1rem;
     font-weight: 700;
-    font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+    font-family: var(--font-display);
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -445,7 +445,7 @@
     min-width: 0;
 }
 .user-menu-dropdown-name {
-    font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+    font-family: var(--font-display);
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--text);
@@ -481,7 +481,7 @@
     color: var(--text-muted);
     font-size: 0.85rem;
     font-weight: 500;
-    font-family: var(--font-body, 'Inter', sans-serif);
+    font-family: var(--font-sans);
     text-decoration: none;
     cursor: pointer;
     background: none;

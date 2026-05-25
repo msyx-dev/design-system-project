@@ -1,11 +1,11 @@
-/* @ds-version: 2.56.0 */
+/* @ds-version: 2.64.0 */
 /* brand.css — Identité visuelle design-system
    Wordmark header + Mark DS login/splash.
    Séparé de signature.css (qui gère le gradient underline section-header). */
 
 /* ===== BRAND MARK "DS" (login, splash, forme courte) ===== */
 .brand-mark-ds {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: 72px;
     line-height: 1;
@@ -33,7 +33,7 @@
 
 /* ===== BRAND WORDMARK (header principal) ===== */
 .brand-wordmark {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: var(--font-display);
     font-weight: 600;
     font-size: 18px;
     line-height: 1;
@@ -73,7 +73,7 @@
 }
 
 .brand-card h3 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: var(--font-display);
     font-weight: 600;
     font-size: 1rem;
     color: var(--text);

@@ -1,26 +1,26 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* data.css — extracted from components.css v2.35.0 */
 
 /* ===== PROGRESS ===== */
 .progress-bar { width: 100%; height: 8px; background: var(--surface-light); border-radius: 8px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 8px; transition: width 1.5s ease; }
-.progress-bar-striped .progress-fill { background-image: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%); background-size: 1rem 1rem; animation: stripes 1s linear infinite; }
+.progress-bar-striped .progress-fill { background-image: linear-gradient(45deg, var(--overlay-black-stripes) 25%, transparent 25%, transparent 50%, var(--overlay-black-stripes) 50%, var(--overlay-black-stripes) 75%, transparent 75%); background-size: 1rem 1rem; animation: stripes 1s linear infinite; }
 @keyframes stripes { to { background-position: 1rem 0; } }
 .progress-ring { display: inline-flex; align-items: center; justify-content: center; position: relative; }
 .progress-ring svg { transform: rotate(-90deg); }
 .progress-ring circle { fill: none; stroke-width: 4; }
 .progress-ring .bg { stroke: var(--surface-light); }
 .progress-ring .fill { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
-.progress-ring .value { position: absolute; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; }
+.progress-ring .value { position: absolute; font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
 
 /* ===== STATS ===== */
-.stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700; background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-value { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
 
 /* ===== CHARTS ===== */
 .chart-wrap { position: relative; }
 .chart-wrap svg { display: block; overflow: visible; width: 100%; height: auto; }
-.chart-axis-label { fill: var(--text-muted); font-size: 10px; font-family: 'Inter', sans-serif; }
+.chart-axis-label { fill: var(--text-muted); font-size: 10px; font-family: var(--font-sans); }
 .chart-grid-line { stroke: var(--border-color); stroke-width: 0.5; stroke-dasharray: 4 4; }
 .chart-bar { transition: filter 0.2s; cursor: pointer; }
 .chart-bar:hover { filter: brightness(1.3); }
@@ -93,7 +93,7 @@
 .gauge-track { fill: none; stroke: var(--border-color); stroke-width: 12; stroke-linecap: round; }
 .gauge-fill { fill: none; stroke: var(--accent); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); }
 .gauge-value {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: 1.25rem;
     fill: var(--text);
@@ -109,7 +109,7 @@
 .counter {
     display: inline-flex;
     align-items: baseline;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-display);
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--text);
@@ -253,7 +253,7 @@
     box-shadow: 0 0 0 3px var(--accent);
 }
 .risk-dot[data-level="low"] { background: var(--success); }
-.risk-dot[data-level="medium"] { background: var(--warning); color: #1a1a1a; }
+.risk-dot[data-level="medium"] { background: var(--warning); color: var(--btn-on-warning); }
 .risk-dot[data-level="high"] { background: var(--danger); }
 .risk-dot[data-level="critical"] {
     background: linear-gradient(135deg, var(--danger), var(--danger-dark));
