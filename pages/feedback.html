@@ -287,7 +287,7 @@
                         <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
                     </div>
                     <div class="drawer-body">
-                        <div class="input-group mb-md"><label class="input-label">Nom</label><input class="input" type="text" value="design-system"></div>
+                        <div class="input-group mb-md"><label class="input-label" for="wz-recap-name">Nom</label><input class="input" type="text" value="design-system" id="wz-recap-name"></div>
                         <div class="input-group mb-md"><label class="input-label" for="wz-type-2">Type</label><select class="input" id="wz-type-2"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
                         <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Description du projet..."></textarea></div>
                     </div>
@@ -405,7 +405,7 @@
                         <h3>Information</h3>
                         <button class="bottom-sheet-close" data-bs-close="bs-panel-1" aria-label="Fermer">&times;</button>
                     </div>
-                    <div class="bottom-sheet-content">
+                    <div class="bottom-sheet-content" tabindex="0">
                         <p style="color:var(--text-muted);line-height:1.7;">Ce bottom sheet presente une information simple. Il peut etre ferme par swipe vers le bas, clic sur le fond ou bouton de fermeture.</p>
                         <div style="margin-top:var(--space-lg);padding:var(--space-md);background:var(--surface);border-radius:var(--radius-card);border:1px solid var(--border-color);">
                             <p class="typo-small" style="color:var(--accent-light);">&#9432; Tip : swipez vers le bas pour fermer</p>
@@ -461,7 +461,7 @@
                         <h3>Nouvelle tache</h3>
                         <button class="bottom-sheet-close" data-bs-close="bs-panel-3" aria-label="Fermer">&times;</button>
                     </div>
-                    <div class="bottom-sheet-content">
+                    <div class="bottom-sheet-content" tabindex="0">
                         <div class="flex-col-gap">
                             <div>
                                 <label class="input-label">Titre</label>

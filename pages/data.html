@@ -385,7 +385,7 @@
             <table class="data-grid" id="data-grid-main">
                 <thead>
                     <tr class="data-grid-header-row">
-                        <th><input type="checkbox" class="data-grid-select-all" title="Tout selectionner" style="accent-color:var(--accent);"></th>
+                        <th><input type="checkbox" class="data-grid-select-all" aria-label="Tout selectionner" style="accent-color:var(--accent);"></th>
                         <th class="data-grid-sortable" data-col="0">Composant <span class="data-grid-sort-icon">↕</span></th>
                         <th class="data-grid-sortable" data-col="1">Categorie <span class="data-grid-sort-icon">↕</span></th>
                         <th class="data-grid-sortable" data-col="2">Statut <span class="data-grid-sort-icon">↕</span></th>
@@ -395,10 +395,10 @@
                     </tr>
                     <tr class="data-grid-filter-row">
                         <th></th>
-                        <th><input class="data-grid-filter" data-col="0" placeholder="Filtrer…" type="text"></th>
-                        <th><input class="data-grid-filter" data-col="1" placeholder="Filtrer…" type="text"></th>
-                        <th><input class="data-grid-filter" data-col="2" placeholder="Filtrer…" type="text"></th>
-                        <th><input class="data-grid-filter" data-col="3" placeholder="Filtrer…" type="text"></th>
+                        <th><input class="data-grid-filter" data-col="0" placeholder="Filtrer…" type="text" aria-label="Filtrer par composant"></th>
+                        <th><input class="data-grid-filter" data-col="1" placeholder="Filtrer…" type="text" aria-label="Filtrer par categorie"></th>
+                        <th><input class="data-grid-filter" data-col="2" placeholder="Filtrer…" type="text" aria-label="Filtrer par statut"></th>
+                        <th><input class="data-grid-filter" data-col="3" placeholder="Filtrer…" type="text" aria-label="Filtrer par sprint"></th>
                         <th></th>
                         <th></th>
                     </tr>

@@ -928,8 +928,9 @@ function initDataGrids() {
             tbody.innerHTML = '';
             data.forEach(function(row) {
                 var tr = document.createElement('tr');
+                var cbLabel = 'Selectionner ' + String(row.composant).replace(/"/g, '&quot;');
                 tr.innerHTML =
-                    '<td><input type="checkbox" style="accent-color:var(--accent);cursor:pointer;"></td>' +
+                    '<td><input type="checkbox" aria-label="' + cbLabel + '" style="accent-color:var(--accent);cursor:pointer;"></td>' +
                     '<td style="font-weight:500;">' + row.composant + '</td>' +
                     '<td>' + row.categorie + '</td>' +
                     '<td>' + getStatutBadge(row.statut) + '</td>' +

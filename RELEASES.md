@@ -1,5 +1,24 @@
 # Releases
 
+## v2.64.5 — 2026-05-26
+
+**Fix a11y Lot 3 : labels forms + scrollable-region (~300 nœuds résolus)** (#340, Epic #337 clôture)
+
+### Fixed
+- `pages/formulaires.html` : 3× `for/id` sur labels existants (.input-error/.input-success/.input-disabled) + 3× `aria-label` sur toggle inputs (Mode sombre, Notifications, Auto-deploy).
+- `pages/templates.html` : 2× `aria-label` sur settings-row-input (Nom d'affichage, Email) + 4× `aria-label` sur toggle inputs settings (Notifications email/push, Resume hebdomadaire, Reduire animations) + 2× `tabindex="0"` sur `.kanban-board` et `.roadmap-container` (accès clavier WCAG 2.1.1).
+- `pages/feedback.html` : 1× `for/id` sur input recap wizard (Nom) + 2× `tabindex="0"` sur `.bottom-sheet-content` (bs-panel-1 info, bs-panel-3 formulaire).
+- `pages/data.html` : 1× `aria-label` sur `.data-grid-select-all` (remplace `title` ignoré par axe) + 4× `aria-label` sur `.data-grid-filter` (Filtrer par composant/categorie/statut/sprint).
+- `shared/components.js` `initDataGrids.renderRows()` : ajout `aria-label="Selectionner {composant}"` dynamique sur checkboxes générées (24 nœuds runs résolus).
+
+### Changed
+- `docs/DS-PRINCIPLES.md` §3.1 : capitalisation guideline **Label vs aria-label** — règle de décision par zone (6 cas typiques + 2 anti-patterns).
+- `@ds-version` bumpé à `2.64.5` dans 5 fichiers (tokens, utilities, components, layout, nav.js) + `const VERSION` synchrone dans nav.js + `package.json` + `shared/components-registry.json`.
+
+### Notes consumers
+- Aucune action requise — fixes purement ARIA + tabindex, aucun changement visuel ni cassure CSS/JS API.
+- Clôture **Epic #337** (Dette a11y WCAG AA) : 141 → cible < 10 violations restantes (vérification post-merge via re-run `pnpm run test:a11y`).
+
 ## v2.64.4 — 2026-05-25
 
 **Fix a11y Lot 2 : color-contrast tokens (~1900 nœuds résolus)** (#339, Epic #337)

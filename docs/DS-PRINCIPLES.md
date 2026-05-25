@@ -144,6 +144,23 @@ Conventions localStorage **obligatoires** : `msyx-theme` (palette) + `msyx-mode`
 <button onclick="...">Cliquer</button>  <!-- button natif, focusable, keyboard -->
 ```
 
+### 3.1 — Label vs aria-label : règle de décision (capitalisation Lot 3 a11y — #340)
+
+| Cas | Pattern recommandé | Exemple |
+|---|---|---|
+| Input avec label visible adjacent dans `.input-group` | **`<label for="…">` + `id` sur input** | `<label class="input-label" for="email">Email</label><input id="email" type="email">` |
+| Checkbox/Radio avec texte court inline | **Wrapper natif `<label><input>texte</label>`** | `<label class="checkbox"><input type="checkbox"> Next.js</label>` |
+| Toggle (input + slider décoratif, texte externe) | **`aria-label` sur l'input** | `<label class="toggle"><input type="checkbox" aria-label="Mode sombre"><span class="toggle-slider"></span></label>` |
+| Settings-row (label = `<div>`, layout flex strict) | **`aria-label` sur l'input** (le `<div>` reste label visuel) | `<div class="settings-row-label">Email</div>...<input aria-label="Email">` |
+| Tableau dense — checkbox sélection ligne | **`aria-label` dynamique** "Sélectionner {nom-ligne}" | `<input type="checkbox" aria-label="Selectionner Buttons">` |
+| Input filtre avec placeholder visuel uniquement | **`aria-label`** (le placeholder ne compte pas WCAG) | `<input placeholder="Filtrer…" aria-label="Filtrer par composant">` |
+
+**Anti-pattern** : `title="…"` sur input — axe-core ne le considère pas comme accessible name fiable (extension navigateur, pas screen-reader). Préférer `aria-label`.
+
+**Anti-pattern** : `placeholder="…"` comme unique label — disparaît au focus, contraste insuffisant, pas annoncé par les SR. Toujours combiner avec `<label>` ou `aria-label`.
+
+**Référence** : décision capitalisée dans Lot 3 a11y (#340, v2.64.5). Audit baseline : `docs/audit-a11y-2026-05-15.md`.
+
 ### Garde-fou
 - Audit `@axe-core/playwright` sur 54 pages × 6 themes (cf `docs/audit-a11y-*.md`)
 - Objectif : 0 violation WCAG A/AA/AA21 (atteint depuis v2.52.0)
