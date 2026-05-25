@@ -127,7 +127,7 @@
                 <div class="modal-content">
                     <h3>Nouveau projet</h3>
                     <div class="input-group mb-md"><label class="input-label">Nom</label><input class="input" type="text" placeholder="mon-projet"></div>
-                    <div class="input-group mb-lg"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                    <div class="input-group mb-lg"><label class="input-label" for="wz-type-1">Type</label><select class="input" id="wz-type-1"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
                     <div class="modal-actions"><button class="btn-ghost btn-sm">Annuler</button><button class="btn-primary btn-sm">Creer &rarr;</button></div>
                 </div>
             </div>
@@ -288,7 +288,7 @@
                     </div>
                     <div class="drawer-body">
                         <div class="input-group mb-md"><label class="input-label">Nom</label><input class="input" type="text" value="design-system"></div>
-                        <div class="input-group mb-md"><label class="input-label">Type</label><select class="input"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                        <div class="input-group mb-md"><label class="input-label" for="wz-type-2">Type</label><select class="input" id="wz-type-2"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
                         <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Description du projet..."></textarea></div>
                     </div>
                     <div class="drawer-footer">
@@ -468,8 +468,8 @@
                                 <input class="input" type="text" placeholder="Nom de la tache...">
                             </div>
                             <div>
-                                <label class="input-label">Priorite</label>
-                                <select class="input">
+                                <label class="input-label" for="task-priority-demo">Priorite</label>
+                                <select class="input" id="task-priority-demo">
                                     <option>P1 — Critique</option>
                                     <option>P2 — Haute</option>
                                     <option>P3 — Normale</option>
@@ -857,7 +857,7 @@
                     </div>
                 </div>
                 <div class="popover-wrap">
-                    <button class="btn-icon" onclick="this.nextElementSibling.classList.toggle('open')"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></button>
+                    <button class="btn-icon" aria-label="Plus d'infos" onclick="this.nextElementSibling.classList.toggle('open')"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></button>
                     <div class="popover">
                         <h4>Aide contextuelle</h4>
                         <p>Cliquez sur les icones d'aide pour afficher des informations supplementaires.</p>

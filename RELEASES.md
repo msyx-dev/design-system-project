@@ -1,5 +1,22 @@
 # Releases
 
+## v2.64.3 — 2026-05-25
+
+**Fix a11y Lot 1 : 4 règles WCAG AA quick wins (~210 nœuds résolus)** (#338, Epic #337)
+
+### Fixed
+- `pages/feedback.html` : ajout `aria-label="Plus d'infos"` sur `.btn-icon` popover (1× `button-name`).
+- `pages/composants.html`, `pages/formulaires.html`, `pages/templates.html`, `pages/feedback.html` : 6 sélects sans accessible-name → `aria-label` ou wrapper `<label for>` (fix les 42 nœuds `select-name`).
+- `shared/components.js` `initRating` : ajout `aria-checked="true|false"` sync sur stars `role="radio"` du rating interactif (fix `aria-required-attr` — 60 nœuds).
+- `pages/motion.html` (6× `.motion-stage`), `pages/composants.html` (1× `.rating--readonly`), `shared/components.js` `buildPieChart` (15 path SVG) : ajout `role="img"` pour légitimer `aria-label` (fix `aria-prohibited-attr` — 102 nœuds).
+
+### Changed
+- `@ds-version` bumpé à `2.64.3` dans 5 fichiers (tokens, utilities, components, layout, nav.js) + `package.json` + `shared/components-registry.json`.
+
+### Notes consumers
+- Aucune action requise — fixes purement ARIA, aucun changement visuel ni cassure CSS/JS API.
+- Cf. Epic #337 pour le contexte WCAG AA (audit `docs/audit-a11y-2026-05-15.md`).
+
 ## v2.64.2 — 2026-05-25
 
 **Promotion des modificateurs chips (taille + couleur) et du layout Kanban-page dans le DS distribue** (#274)

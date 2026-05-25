@@ -1188,6 +1188,10 @@ function initRating() {
                 } else {
                     if (n <= currentValue) star.classList.add('active');
                 }
+                // a11y: sync aria-checked on interactive rating stars (role=radio)
+                if (star.getAttribute('role') === 'radio') {
+                    star.setAttribute('aria-checked', n === currentValue ? 'true' : 'false');
+                }
             });
         }
 
@@ -1204,6 +1208,7 @@ function initRating() {
                 });
                 star.setAttribute('aria-label', 'Note ' + n + ' sur 5');
                 star.setAttribute('role', 'radio');
+                star.setAttribute('aria-checked', 'false'); // a11y: init required for role=radio
             });
             widget.setAttribute('role', 'radiogroup');
             widget.setAttribute('aria-label', 'Notation');
@@ -2078,6 +2083,7 @@ function initPieCharts() {
             path.setAttribute('d', describeArcPath(cx, cy, r, currentAngle, endAngle));
             path.setAttribute('fill', color);
             path.classList.add('pie-segment');
+            path.setAttribute('role', 'img'); // a11y: legitimise aria-label on SVG path (aria-prohibited-attr fix)
             path.setAttribute('aria-label', `${labels[i]}: ${val}`);
             path.style.opacity = '0';
             svg.appendChild(path);
