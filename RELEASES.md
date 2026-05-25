@@ -1,5 +1,29 @@
 # Releases
 
+## v2.64.4 — 2026-05-25
+
+**Fix a11y Lot 2 : color-contrast tokens (~1900 nœuds résolus)** (#339, Epic #337)
+
+### Fixed
+- `shared/css/tokens.css` : recalibrage 4 chaînes de tokens en violation WCAG AA `color-contrast` (rapport `docs/audit-a11y-2026-05-15.md`).
+  - **Fix A** — `--code-comment` MSYX dark : `#475569` (2.52, KO) → `#94a3b8` (7.45, AA) sur `#0a0f1e`. MSYX light : `#94a3b8` (2.45, KO) → `#475569` (7.24, AA) sur `#f8fafc`. (~600 nœuds `.code-block .cm`).
+  - **Fix B** — `--accent-light` en `[data-mode="light"]` MSYX : `#60a5fa` (2.43, KO) → `#2563eb` (5.17, AA) sur `#f8fafc`. Nhood light : `#008837` (4.38, LARGE-only) → `#006e2c` (4.50, AA). (~900 nœuds : overline, tag, badge-primary, chip-filter.active, sidebar-link.active, etc.).
+  - **Fix C** — Tokens sémantiques light en `[data-mode="light"]` MSYX (badges/alertes sur fond clair) : `--success-light` `#4ade80` (1.52) → `#15803d` (5.64, AA) ; `--warning-light` `#fbbf24` (1.44) → `#c2410c` (4.72, AA) ; `--danger-light` `#f87171` (2.36) → `#dc2626` (5.91, AA) ; `--info-light` `#22d3ee` (1.56) → `#0369a1` (4.87, AA). (~250 nœuds `.badge-{variant}`, `.alert-{variant}`).
+  - **Fix E** — `--text-dim` Nhood light : `#5a8a68` (3.81, LARGE-only) → `#4a7a58` (4.51, AA) sur `#f9fafb`. (~30 nœuds `.header-version`, `.cal-day.other-month`).
+- `themes/acssi.json` + `themes/nhood.json` : recalibrage `--code-comment` (Fix A) — ACSSI dark `#5a7a96` → `#a8bdd2` (6.57, AA) ; ACSSI light `#5a7a90` → `#4a6a84` (5.15, AA) ; Nhood dark `#4a7a56` → `#7daa8a` (6.84, AA) ; Nhood light `#5a7a90` → `#4a6a80` (5.46, AA). `shared/css/themes.css` régénéré via `node shared/build-themes.js` (AC6).
+- `shared/css/components/navigation.css` : `.bottom-nav-item.active` passe de `var(--accent)` à `var(--accent-light)` — Fix D, améliore contraste sur surface sombre (~120 nœuds).
+- `pages/formulaires.html` : retrait de l'attribut `style="color:var(--accent);"` sur le lien "Se connecter" du formulaire d'inscription — inherit couleur standard DS conforme (5 nœuds).
+
+### Changed
+- `@ds-version` bumpé à `2.64.4` dans 5 fichiers (tokens, utilities, components, layout, nav.js) + `package.json` + `shared/components-registry.json`.
+- Baselines VR : option B (régénération différée via CI post-merge) — la régénération locale via Playwright n'est pas exécutée dans le worktree (option A dépriorisée pour budget temps). Les diffs attendus sont textes secondaires plus foncés/saturés en light (overline, code-comment, badges, header-version).
+
+### Notes consumers
+- **Action recommandée** : bumper le consumer vers v2.64.4. Aucune cassure d'API CSS/JS.
+- **Drift visuel MSYX light** : `--accent-light` passe de bleu clair `#60a5fa` à bleu foncé `#2563eb` — overline, tags, sidebar-link.active et badge-primary sont visiblement plus sombres/saturés. Pour restaurer l'ancien teint : surcharger `--accent-light: #60a5fa;` sous `[data-mode="light"]` dans le consumer (non recommandé).
+- **Drift visuel badges light** : les couleurs de texte `badge-success/warning/danger/info` passent de tons clairs (verts/oranges/rouges pastels) à tons foncés (conformes WCAG AA). Aucune cassure layout.
+- Cf. Epic #337 et `docs/audit-a11y-2026-05-15.md` pour contexte WCAG AA.
+
 ## v2.64.3 — 2026-05-25
 
 **Fix a11y Lot 1 : 4 règles WCAG AA quick wins (~210 nœuds résolus)** (#338, Epic #337)

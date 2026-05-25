@@ -90,7 +90,7 @@
     color: var(--text);
 }
 .bottom-nav-item.active {
-    color: var(--accent);
+    color: var(--accent-light);  /* Fix D — meilleur contraste sur surface sombre (était --accent) */
     transform: scale(1.05);
     transition: color 0.2s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
 }
