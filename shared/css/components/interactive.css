@@ -1,8 +1,8 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* interactive.css — extracted from components.css v2.35.0 */
 
 /* ===== CODE ===== */
-.code-block { background: var(--primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem 1.5rem; font-family: 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.8; overflow-x: auto; overflow-wrap: anywhere; min-width: 0; color: var(--text-muted); }
+.code-block { background: var(--primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem 1.5rem; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.8; overflow-x: auto; overflow-wrap: anywhere; min-width: 0; color: var(--text-muted); }
 .code-block .kw { color: var(--code-keyword); }
 .code-block .str { color: var(--code-string); }
 .code-block .cm { color: var(--code-comment); font-style: italic; }
@@ -128,7 +128,7 @@
     gap: var(--space-sm);
     font-size: 0.9rem;
     font-weight: 600;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     letter-spacing: 0.01em;
     white-space: nowrap;
 }
@@ -262,7 +262,7 @@
     color: var(--text-muted);
     font-size: 0.85rem;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     border-radius: 50px;
     cursor: pointer;
     white-space: nowrap;
@@ -385,7 +385,7 @@
     opacity: 0.7;
 }
 [data-mode="light"] .editable-input {
-    background: #fff;
+    background: var(--surface-solid);
     border-color: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 

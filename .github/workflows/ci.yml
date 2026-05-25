@@ -27,6 +27,14 @@ jobs:
         run: |
           chmod +x tests/test-check-css-comments.sh
           ./tests/test-check-css-comments.sh
+      - name: Check hardcoded tokens (anti-regression #279)
+        run: |
+          chmod +x shared/check-hardcoded-tokens.sh
+          ./shared/check-hardcoded-tokens.sh
+      - name: Run hardcoded tokens script tests (anti-regression #279)
+        run: |
+          chmod +x tests/test-check-hardcoded-tokens.sh
+          ./tests/test-check-hardcoded-tokens.sh
   perf-budget:
     runs-on: ubuntu-latest
     steps:

@@ -1,4 +1,4 @@
-/* @ds-version: 2.63.0 */
+/* @ds-version: 2.64.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -41,6 +41,26 @@
     --login-provider-border: var(--border-color);
     --login-authentik-accent: #fd4b2d;          /* couleur de marque Authentik — exception §1 DS-PRINCIPLES */
     --login-authentik-accent-rgb: 253, 75, 45;
+    /* Brand colors providers OAuth — exception §1 DS-PRINCIPLES (couleurs de marque tierces) — issue #279 */
+    --brand-google: #4285f4;
+    --brand-google-rgb: 66, 133, 244;
+    --brand-microsoft: #0078d4;
+    --brand-microsoft-rgb: 0, 120, 212;
+    /* Achievement badge colors — couleurs metaux universelles, non-thematiques — issue #279 */
+    --achievement-bronze: #cd7f32;
+    --achievement-silver: #c0c0c0;
+    --achievement-gold: #ffd700;
+    /* Overlay tokens — non-thematiques (toujours noir/blanc independamment du theme) — issue #279 */
+    --overlay-white-06: rgba(255,255,255,0.06);
+    --overlay-white-15: rgba(255,255,255,0.15);
+    --overlay-white-45: rgba(255,255,255,0.45);
+    --overlay-black-35: rgba(0,0,0,0.35);
+    --overlay-black-40: rgba(0,0,0,0.40);
+    --overlay-black-50: rgba(0,0,0,0.50);
+    --overlay-black-55: rgba(0,0,0,0.55);
+    --overlay-black-60: rgba(0,0,0,0.60);
+    --overlay-black-92: rgba(0,0,0,0.92);
+    --overlay-black-stripes: rgba(255,255,255,0.10);
     --shadow: 0 4px 30px rgba(0,0,0,0.3);
     --shadow-lg: 0 20px 60px rgba(0,0,0,0.4);
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);

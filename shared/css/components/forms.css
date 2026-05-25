@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* forms.css — extracted from components.css v2.35.0 */
 
 /* ===== INPUTS ===== */
@@ -28,7 +28,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
 /* ACSSI dark : knob du toggle forcé blanc — text-on-accent est marine en ACSSI dark (token thème-aware)
    mais le knob est décoratif (forme, pas texte) et doit rester blanc sur surface-light foncé */
-[data-theme="acssi"] .toggle-slider::before { background: #ffffff; }
+[data-theme="acssi"] .toggle-slider::before { background: var(--overlay-text); }
 .checkbox { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.88rem; }
 .checkbox input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 .radio { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.88rem; }
@@ -36,7 +36,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 
 /* ===== DROPDOWN ===== */
 .dropdown { position: relative; width: 100%; }
-.dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-md); border-radius: 10px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; cursor: pointer; transition: border-color 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: 'Inter', sans-serif; width: 100%; }
+.dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-md); border-radius: 10px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; cursor: pointer; transition: border-color 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: var(--font-sans); width: 100%; }
 .dropdown-trigger:hover { border-color: var(--border-hover); }
 .dropdown-trigger.open { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
 .dropdown-trigger .arrow { transition: transform 0.2s; color: var(--text-dim); font-size: 0.8rem; }
@@ -44,7 +44,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.3rem; max-height: 220px; overflow-y: auto; z-index: 50; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); box-shadow: var(--shadow-lg); }
 .dropdown-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .dropdown-search { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.3rem; }
-.dropdown-search input { width: 100%; padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: 'Inter', sans-serif; }
+.dropdown-search input { width: 100%; padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: var(--font-sans); }
 .dropdown-search input:focus-visible { border-color: var(--accent); }
 .dropdown-option { padding: 0.5rem 0.7rem; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; transition: background-color 0.15s var(--ease-standard), color 0.15s var(--ease-standard); display: flex; align-items: center; gap: 0.5rem; }
 .dropdown-option:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--text); }
@@ -75,11 +75,11 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 /* ===== SLIDER / RANGE ===== */
 .slider-group { display: flex; flex-direction: column; gap: 0.6rem; }
 .slider-header { display: flex; justify-content: space-between; align-items: center; }
-.slider-value-display { font-size: 0.85rem; font-weight: 600; color: var(--accent); font-family: 'Fira Code', monospace; min-width: 2.5ch; text-align: right; }
+.slider-value-display { font-size: 0.85rem; font-weight: 600; color: var(--accent); font-family: var(--font-mono); min-width: 2.5ch; text-align: right; }
 .slider-row { display: flex; gap: 0.8rem; align-items: center; }
-.slider-value { width: 68px !important; text-align: center; padding: 0.4rem 0.5rem !important; font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+.slider-value { width: 68px !important; text-align: center; padding: 0.4rem 0.5rem !important; font-family: var(--font-mono); font-size: 0.85rem; }
 .slider-value-wrap { display: flex; align-items: center; gap: 0.3rem; }
-.slider-unit { font-size: 0.8rem; color: var(--text-muted); font-family: 'Fira Code', monospace; }
+.slider-unit { font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono); }
 
 /* Range track styling */
 .slider-track {
@@ -188,7 +188,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     border: none;
     color: var(--text);
     font-size: 0.95rem;
-    font-family: 'Fira Code', monospace;
+    font-family: var(--font-mono);
     font-weight: 500;
     padding: 0 0.25rem;
     outline: none;
@@ -292,7 +292,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     height: 3.5rem;
     text-align: center;
     font-size: 1.2rem;
-    font-family: 'Fira Code', monospace;
+    font-family: var(--font-mono);
     font-weight: 600;
     color: var(--text);
     background: var(--surface-light);
@@ -353,7 +353,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
     color: var(--accent-light);
     font-size: 0.8rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     white-space: nowrap;
     transition: opacity 0.15s, transform 0.15s;
 }
@@ -387,7 +387,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     outline: none;
     color: var(--text);
     font-size: 0.85rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     padding: 0.1rem 0;
 }
 .tag-input-field::placeholder { color: var(--text-dim); }
@@ -481,9 +481,9 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .login-authentik-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
 /* Modifiers par provider — purement visuels (icône portée par le <svg> inline, cf §2.4) */
-.login-provider-btn--google:hover    { border-color: rgba(66, 133, 244, 0.5); }
+.login-provider-btn--google:hover    { border-color: rgba(var(--brand-google-rgb), 0.5); }
 .login-provider-btn--apple:hover     { border-color: var(--border-hover); }
-.login-provider-btn--microsoft:hover { border-color: rgba(0, 120, 212, 0.5); }
+.login-provider-btn--microsoft:hover { border-color: rgba(var(--brand-microsoft-rgb), 0.5); }
 .login-provider-btn--github:hover    { border-color: var(--border-hover); }
 
 /* --- Variants de LoginScreen --- */

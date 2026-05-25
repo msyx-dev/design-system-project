@@ -1,4 +1,4 @@
-/* @ds-version: 2.36.0 */
+/* @ds-version: 2.64.0 */
 /* templates.css — extracted from components.css v2.35.0 */
 
 /* ===== TEMPLATES ===== */
@@ -22,7 +22,7 @@
 .roadmap-track { display: flex; gap: 0; min-width: 900px; }
 .roadmap-quarter { flex: 1; padding: var(--space-lg); border-left: 2px solid var(--border-color); position: relative; }
 .roadmap-quarter:first-child { border-left: none; }
-.roadmap-quarter-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: var(--space-md); color: var(--text); }
+.roadmap-quarter-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: var(--space-md); color: var(--text); }
 .roadmap-milestone { margin-bottom: var(--space-md); padding: 0.8rem; background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
 .roadmap-milestone.completed { border-left: 3px solid var(--success); }
 .roadmap-milestone.in-progress { border-left: 3px solid var(--accent); }
@@ -36,7 +36,7 @@
 
 /* Backlog */
 .backlog-filters { display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg); flex-wrap: wrap; }
-.backlog-filters .btn-filter { padding: 0.4rem 0.9rem; font-size: 0.78rem; border-radius: var(--radius-md); background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: color 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); }
+.backlog-filters .btn-filter { padding: 0.4rem 0.9rem; font-size: 0.78rem; border-radius: var(--radius-md); background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer; font-family: var(--font-sans); font-weight: 500; transition: color 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); }
 .backlog-filters .btn-filter:hover { color: var(--text); border-color: var(--border-hover); }
 .backlog-filters .btn-filter.active { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-light); border-color: var(--accent); }
 .backlog-item { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md) var(--space-5); border-bottom: 1px solid var(--border-color); transition: background-color 0.2s var(--ease-standard); }
@@ -54,7 +54,7 @@
 
 /* Sprint */
 .sprint-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-xl); padding: var(--space-lg); background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); }
-.sprint-header-info h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.3rem; }
+.sprint-header-info h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.3rem; }
 .sprint-header-info p { font-size: 0.78rem; color: var(--text-muted); }
 .sprint-stats { display: flex; gap: var(--space-xl); }
 .sprint-board { display: flex; gap: var(--space-md); overflow-x: auto; padding-bottom: var(--space-md); }
@@ -66,7 +66,7 @@
 /* Calendar */
 .cal-wrap { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 1.2rem; backdrop-filter: blur(20px); }
 .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-md); }
-.cal-header h4 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); }
+.cal-header h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text); }
 .cal-nav { display: flex; gap: 0.3rem; }
 .cal-nav button { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text-muted); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s; }
 .cal-nav button:hover { border-color: var(--border-hover); color: var(--text); }

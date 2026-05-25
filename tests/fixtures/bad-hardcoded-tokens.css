@@ -1,0 +1,8 @@
+/* Fixture sale pour test-check-hardcoded-tokens.sh — anti-regression #279 */
+/* NE PAS utiliser dans shared/css/components/ — test uniquement */
+.bad-font { font-family: 'Space Grotesk', sans-serif; }
+.bad-hex { color: #ff0000; background: #fff; }
+.bad-rgba { background: rgba(255, 0, 0, 0.5); }
+/* Patterns legaux (ne doivent PAS etre detectes) */
+.ok-fallback { color: var(--text-on-accent, #fff); }
+.ok-comment { /* ref: #249, date: 2026-05-25 */ }
