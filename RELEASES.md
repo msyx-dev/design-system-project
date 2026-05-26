@@ -1,5 +1,39 @@
 # Releases
 
+## v2.64.6 — 2026-05-27
+
+**Fix a11y Sub-A : color-contrast résiduel (~458 nœuds résorbés)** (#345, Epic #344 Sprint 36)
+
+### Fixed
+- `shared/css/tokens.css` : recalibrage des tokens `color-contrast` résiduels non couverts par Lot 2 S35 (#339 v2.64.4) — 14 fixes ciblés selon spec :
+  - **F1 `--text-dim` msyx-dark** sur surface card — recalibré pour WCAG AA `.theme-card--future`, `.cal-day.other-month`.
+  - **F2-F3 `--code-string` / `--code-number` light mode** — chaîne syntax highlighting tokens recalibrée pour `.str:nth-child(*)` (~111 nœuds msyx-light).
+  - **F4-F7 `--success-light` / `--warning-light` / `--danger-light` / `--info-light` ACSSI+Nhood light** — recalibrage cascade au-delà de Fix C Lot 2 (#339, MSYX) pour atteindre AA dans les 3 thèmes light × badges/alertes.
+  - **F8 `--deco-cyan` light** — token décoratif recalibré pour avatars colorés sur fond clair.
+- `shared/css/components/access-denied.css` : `.access-denied-code` passe `--danger` → `--danger-light` (large-only justifié).
+- `shared/css/components/forms.css` : `.input-error-msg` / `.login-error` passent `--danger` → `--danger-light`.
+- `shared/css/components/interactive.css` : `.dtree-choice` passe `--accent` → `--accent-light` (lisibilité hover).
+- `shared/css/components/templates.css` : `.fab-extended` recalibré (cible WCAG 1.4.11 large text 3:1).
+- `shared/css/components/theming.css`, `tracker.css` : `.theme-card--future`, `.cal-day.other-month` — retrait opacity excessive qui cassait le contraste.
+- `pages/composants.html`, `pages/feedback.html`, `pages/fondation.html`, `pages/templates.html` : retrait styles inline `style="color:var(--accent)"` + remplacement hex avatars custom par tokens `--deco-violet`/`--deco-cyan`.
+- `themes/acssi.json` + `themes/nhood.json` : recalibrage des 4 tokens `--*-light` ACSSI+Nhood (Fix F4-F7). `shared/css/themes.css` régénéré via `node shared/build-themes.js`.
+
+### Changed
+- `@ds-version` bumpé à `2.64.6` dans 5 fichiers (tokens, utilities, components, layout, nav.js) + `const VERSION` synchrone dans nav.js + `package.json` + `shared/components-registry.json`.
+- `docs/audit-a11y-2026-05-26.md` régénéré post-fix.
+
+### Bilan a11y (rapport post-#345 vs post-S35)
+| Métrique | Post-S35 (2026-05-25) | Post-#345 (2026-05-26) | Δ |
+|---|---|---|---|
+| Violations totales | 78 | 75 | -3 |
+| Nœuds HTML impactés | 1003 | **545** | **-46%** |
+| color-contrast nœuds | 871 | 413 | -53% |
+
+### Notes consumers
+- Bumps tokens `--*-light` ACSSI/Nhood : badges/alertes light text plus foncés et plus saturés. Aucune cassure layout. Aligne ACSSI/Nhood sur le pattern MSYX déjà appliqué en v2.64.4.
+- Drift visuel modéré sur `--deco-cyan` light (avatars colorés). Vérifier consumer si custom theming des `.deco-*` tokens.
+- Cf. Epic #344 (Sprint 36 cleanup résiduel — 4 sub-issues restantes B/C/D/E pour atteindre <10 violations).
+
 ## v2.64.5 — 2026-05-26
 
 **Fix a11y Lot 3 : labels forms + scrollable-region (~300 nœuds résolus)** (#340, Epic #337 clôture)

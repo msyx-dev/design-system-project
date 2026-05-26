@@ -84,8 +84,12 @@ html { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3
   gap: var(--space-sm);
 }
 .theme-card--future {
-  opacity: 0.6;
   border-style: dashed;
+  background: color-mix(in srgb, var(--surface-solid) 60%, transparent); /* Fix 2 — remplace opacity: 0.6 qui dégradait contraste */
+}
+.theme-card--future .typo-small,
+.theme-card--future .typo-xs {
+  color: var(--text-muted); /* Fix 2 — fg explicite AA cross-theme */
 }
 
 /* Pastilles de couleur pour la liste "Variables themables" — v2.54.7 (#249) */

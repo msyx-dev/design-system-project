@@ -76,7 +76,7 @@
     font-family: var(--font-mono);
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--danger);
+    color: var(--danger-light); /* Fix 9 — 5.18:1 sur surface-solid WCAG AA (était --danger = 3.89 KO) */
     letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-bottom: var(--space-sm);

@@ -110,6 +110,7 @@
       "--sidebar-link-active-bg": "rgba(var(--accent-rgb), 0.08)",
       "--sidebar-link-hover-bg": "rgba(var(--accent-rgb), 0.05)",
       "--success": "#15803d",
+      "--success-light": "#15803d",
       "--success-rgb": "21, 128, 61",
       "--surface": "rgba(255, 255, 255, 0.85)",
       "--surface-light": "#e6f5eb",
@@ -118,7 +119,12 @@
       "--text-dim": "#4a7a58",
       "--text-muted": "#3d6b4a",
       "--warning": "#c2410c",
-      "--warning-rgb": "194, 65, 12"
+      "--warning-light": "#c2410c",
+      "--warning-rgb": "194, 65, 12",
+      "--danger-light": "#dc2626",
+      "--info-light": "#0369a1",
+      "--deco-cyan": "#0e7490",
+      "--deco-cyan-rgb": "14, 116, 144"
     }
   }
 }

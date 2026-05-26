@@ -147,7 +147,7 @@
       "--status-warn-fg": "#c2410c",
       "--success": "#15803d",
       "--success-dark": "#15803d",
-      "--success-light": "#22c55e",
+      "--success-light": "#15803d",
       "--success-rgb": "21, 128, 61",
       "--surface": "rgba(255, 255, 255, 0.85)",
       "--surface-light": "#dce4ec",
@@ -160,8 +160,10 @@
       "--violet-rgb": "var(--deco-violet-rgb)",
       "--warning": "#c2410c",
       "--warning-dark": "#c2410c",
-      "--warning-light": "#f97316",
-      "--warning-rgb": "194, 65, 12"
+      "--warning-light": "#c2410c",
+      "--warning-rgb": "194, 65, 12",
+      "--danger-light": "#dc2626",
+      "--info-light": "#0369a1"
     }
   }
 }
