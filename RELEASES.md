@@ -1,5 +1,19 @@
 # Releases
 
+## v2.64.8 — 2026-05-27
+
+**Fix a11y Sub-C : aria-required-children critical (6 nœuds résorbés)** (#347, Epic #344 Sprint 36)
+
+### Fixed
+- `shared/components.js` `initUserMenu()` : restructuration de l'arbre ARIA du `.user-menu-dropdown[role="menu"]` pour respecter la règle WAI-ARIA `aria-required-children`.
+  - Ajout `role="presentation" aria-hidden="true"` sur `.user-menu-dropdown-header` — `role="presentation"` neutralise le rôle structurel du wrapper ; `aria-hidden="true"` empêche axe-core de traverser le sous-arbre (img avatar avec `alt` non-vide = `role="img"` implicite, non autorisé comme owned child de `role="menu"`).
+  - Sortie du `<button role="menuitem">Déconnexion</button>` hors du `<form class="user-menu-logout-form">` via attribut HTML5 `form="user-menu-logout-form"` — le form reste fonctionnel (POST) avec `role="presentation"`, mais ne masque plus le menuitem comme un faux-enfant du `role="menu"`.
+  - Impact : `menu` expose désormais 2 enfants `menuitem` directs (Mon compte + Déconnexion) + 1 `separator` autorisé. 6 nœuds critical résorbés sur les 6 runs audités (page navigation, 6 combos thème/mode).
+- Pas de régression VR (CSS stylé par classes, pas par rôles ARIA).
+- Pas de régression fonctionnelle (navigation clavier intacte, submit logout préservé).
+
+---
+
 ## v2.64.7 — 2026-05-27
 
 **Fix a11y Sub-B : scrollable-region-focusable résiduel (12 nœuds résorbés)** (#346, Epic #344 Sprint 36)
