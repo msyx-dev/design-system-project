@@ -1,5 +1,15 @@
 # Releases
 
+## v2.64.7 — 2026-05-27
+
+**Fix a11y Sub-B : scrollable-region-focusable résiduel (12 nœuds résorbés)** (#346, Epic #344 Sprint 36)
+
+### Fixed
+- `pages/feedback.html` : ajout `tabindex="0"` sur `#bs-panel-2 > .bottom-sheet-content` (cohérence avec bs-panel-1 et bs-panel-3 de la même page — 6 nœuds).
+- `shared/components.js` `initCopyButtons()` : ajout automatique `tabindex="0"` sur tous les `.code-block` traités (6 nœuds sur `navigation.html`, prévention régression sur autres pages utilisant `.code-block`). Garde `!block.hasAttribute('tabindex')` — idempotent.
+
+---
+
 ## v2.64.6 — 2026-05-27
 
 **Fix a11y Sub-A : color-contrast résiduel (~458 nœuds résorbés)** (#345, Epic #344 Sprint 36)
