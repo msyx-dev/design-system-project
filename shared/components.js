@@ -730,6 +730,10 @@ function initCopyButtons() {
     document.querySelectorAll('.code-block').forEach(function(block) {
         if (block.dataset.copyBound) return;
         block.dataset.copyBound = 'true';
+        // A11y : rendre le bloc scrollable focusable au clavier
+        if (!block.hasAttribute('tabindex')) {
+            block.setAttribute('tabindex', '0');
+        }
         // Si déjà dans un code-block-wrap, le bouton inline est déjà dans le HTML
         var parent = block.parentNode;
         if (parent.classList.contains('code-block-wrap')) return;
