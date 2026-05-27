@@ -4048,11 +4048,13 @@ function initUserMenu(rootOrSelector, options) {
         roots = Array.from(document.querySelectorAll('.user-menu[data-display-name]'));
     }
 
-    roots.forEach(function(root) {
+    roots.forEach(function(root, idx) {
         if (root.dataset.bound) return;
         root.dataset.bound = '1';
 
         var opts = options || {};
+        // Identifiant unique pour le form logout (évite collision si plusieurs instances)
+        var formId = (root.id ? root.id + '-' : 'user-menu-') + 'logout-form-' + idx;
         var displayName = opts.displayName || root.dataset.displayName || 'Utilisateur';
         var email = opts.email || root.dataset.email || '';
         var avatarUrl = opts.avatarUrl !== undefined ? opts.avatarUrl : (root.dataset.avatarUrl || '');
@@ -4096,8 +4098,8 @@ function initUserMenu(rootOrSelector, options) {
                     '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
                     'Mon compte' +
                 '</a>' +
-                '<form id="user-menu-logout-form" class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '" role="presentation"></form>' +
-                '<button type="submit" form="user-menu-logout-form" class="user-menu-item user-menu-item--danger" role="menuitem">' +
+                '<form id="' + formId + '" class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '" role="presentation"></form>' +
+                '<button type="submit" form="' + formId + '" class="user-menu-item user-menu-item--danger" role="menuitem">' +
                     '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
                     'D&eacute;connexion' +
                 '</button>' +
