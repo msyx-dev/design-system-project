@@ -363,16 +363,16 @@
             <span class="demo-label">Date picker input</span>
             <div style="display:flex;flex-direction:column;gap:1rem;">
                 <div>
-                    <label style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Date de debut</label>
+                    <label for="form-date-debut" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Date de debut</label>
                     <div class="date-input-wrap">
-                        <input class="input" type="text" value="08/03/2026" style="padding-right:2.5rem;" disabled>
+                        <input id="form-date-debut" class="input" type="text" value="08/03/2026" style="padding-right:2.5rem;" disabled>
                         <span class="date-icon">&#128197;</span>
                     </div>
                 </div>
                 <div>
-                    <label style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Date de fin</label>
+                    <label for="form-date-fin" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Date de fin</label>
                     <div class="date-input-wrap">
-                        <input class="input" type="text" value="15/03/2026" style="padding-right:2.5rem;" disabled>
+                        <input id="form-date-fin" class="input" type="text" value="15/03/2026" style="padding-right:2.5rem;" disabled>
                         <span class="date-icon">&#128197;</span>
                     </div>
                 </div>
@@ -545,19 +545,19 @@
     <div class="demo-box">
       <div class="slider-group">
         <div class="slider-header">
-          <label class="input-label">Opacité</label>
+          <label class="input-label" for="slider-opacity">Opacité</label>
           <span class="slider-value-display">75</span>
         </div>
-        <input class="slider-track" type="range" min="0" max="100" value="75">
+        <input id="slider-opacity" class="slider-track" type="range" min="0" max="100" value="75">
       </div>
     </div>
     <div class="demo-box">
       <div class="slider-group">
         <div class="slider-header">
-          <label class="input-label">Volume</label>
+          <label class="input-label" for="slider-volume">Volume</label>
           <span class="slider-value-display">50</span>
         </div>
-        <input class="slider-track" type="range" min="0" max="100" value="50">
+        <input id="slider-volume" class="slider-track" type="range" min="0" max="100" value="50">
       </div>
     </div>
   </div>
@@ -566,20 +566,20 @@
   <div class="demo-grid demo-grid-2">
     <div class="demo-box">
       <div class="slider-group slider-dual">
-        <label class="input-label">Taille de police</label>
+        <label class="input-label" for="slider-fontsize">Taille de police</label>
         <div class="slider-row">
-          <input class="slider-track" type="range" min="8" max="72" value="16">
-          <input class="slider-value input" type="number" min="8" max="72" value="16">
+          <input id="slider-fontsize" class="slider-track" type="range" min="8" max="72" value="16">
+          <input class="slider-value input" type="number" min="8" max="72" value="16" aria-label="Taille de police (valeur numérique)">
         </div>
       </div>
     </div>
     <div class="demo-box">
       <div class="slider-group slider-dual">
-        <label class="input-label">Border radius</label>
+        <label class="input-label" for="slider-radius">Border radius</label>
         <div class="slider-row">
-          <input class="slider-track" type="range" min="0" max="32" value="8">
+          <input id="slider-radius" class="slider-track" type="range" min="0" max="32" value="8">
           <div class="slider-value-wrap">
-            <input class="slider-value input" type="number" min="0" max="32" value="8">
+            <input class="slider-value input" type="number" min="0" max="32" value="8" aria-label="Border radius (valeur numérique en px)">
             <span class="slider-unit">px</span>
           </div>
         </div>
@@ -592,10 +592,10 @@
     <div class="demo-box">
       <div class="slider-group slider-disabled">
         <div class="slider-header">
-          <label class="input-label">Désactivé</label>
+          <label class="input-label" for="slider-disabled">Désactivé</label>
           <span class="slider-value-display">30</span>
         </div>
-        <input class="slider-track" type="range" min="0" max="100" value="30" disabled>
+        <input id="slider-disabled" class="slider-track" type="range" min="0" max="100" value="30" disabled>
       </div>
     </div>
   </div>
