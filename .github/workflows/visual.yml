@@ -7,7 +7,7 @@ on:
 jobs:
   visual:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # +15 min : 6x plus de captures (18 → 108)
+    timeout-minutes: 45  # 120 baselines (multi-section × 6 themes/modes × 2 viewports) — bump S36 #345 (30→45)
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -16,6 +16,14 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run visual tests

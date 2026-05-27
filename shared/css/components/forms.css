@@ -10,7 +10,7 @@
 .input::placeholder { color: var(--text-dim); }
 .input-hint { font-size: 0.75rem; color: var(--text-dim); }
 .input-error { border-color: var(--danger) !important; }
-.input-error-msg { font-size: 0.75rem; color: var(--danger); }
+.input-error-msg { font-size: 0.75rem; color: var(--danger-light, var(--danger)); } /* Fix 6 — danger-light plus contrasté sur surfaces */
 .input-success { border-color: var(--success) !important; }
 .input-disabled { opacity: 0.5; pointer-events: none; }
 textarea.input { min-height: 90px; resize: vertical; }
@@ -438,7 +438,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .login-form input::placeholder { color: var(--text-muted); }
 .login-submit { padding: 0.7rem; border-radius: var(--radius-sm); border: none; background: var(--gradient-1); color: var(--text-on-accent); font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); margin-top: 0.3rem; transition: opacity 0.2s; }
 .login-submit:hover { opacity: 0.85; }
-.login-error { color: var(--danger); font-size: 0.8rem; margin-top: 0.8rem; }
+.login-error { color: var(--danger-light, var(--danger)); font-size: 0.8rem; margin-top: 0.8rem; } /* Fix 6 — danger-light plus contrasté sur surfaces */
 .login-divider { display: flex; align-items: center; gap: 0.8rem; margin: var(--space-md) 0; color: var(--text-dim); font-size: 0.78rem; }
 .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
 

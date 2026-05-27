@@ -178,7 +178,7 @@
 .dtree-choice {
     padding: 0.5rem 1.2rem;
     border: 1px solid var(--accent);
-    color: var(--accent);
+    color: var(--accent-light); /* Fix 11 — 8.81:1 nhood-dark WCAG AA (était --accent = 3.92 KO) */
     background: transparent;
     border-radius: var(--radius-sm);
     cursor: pointer;

@@ -1,4 +1,4 @@
-/* @ds-version: 2.64.5 */
+/* @ds-version: 2.64.6 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -19,9 +19,9 @@
     --surface-light: #334155;
     --text: #f1f5f9;
     --text-muted: #94a3b8;
-    --text-dim: #7c8db5;
+    --text-dim: #94a3b8;   /* Fix 7 — 7.45:1 sur #0a0f1e, 5.71:1 sur #1e293b WCAG AA (était #7c8db5 = 4.41 KO) */
     /* Chevron SVG theme-aware pour select.input — couleur miroir de --text-dim */
-    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237c8db5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
     --gradient-2: linear-gradient(135deg, #06b6d4, #3b82f6);
     --gradient-3: linear-gradient(135deg, #8b5cf6, #ec4899);
@@ -267,10 +267,10 @@
     --danger-rgb: 220, 38, 38;
     --info-rgb: 3, 105, 161;
     --code-keyword: #7c3aed;
-    --code-string: #16a34a;
+    --code-string: #15803d;    /* Fix 3 — 5.02:1 sur #fff WCAG AA (était #16a34a = 3.30 LARGE-only) */
     --code-comment: #475569;   /* Fix A — 7.24:1 sur #f8fafc WCAG AA (était #94a3b8 = 2.45 KO) */
     --code-function: #2563eb;
-    --code-number: #d97706;
+    --code-number: #b45309;    /* Fix 3 — 5.02:1 sur #fff WCAG AA (était #d97706 = 3.19 LARGE-only) */
     --accent-light: #2563eb;   /* Fix B — 5.17:1 sur #f8fafc WCAG AA (était #60a5fa = 2.43 KO) */
     --accent-glow: rgba(var(--accent-rgb), 0.08);
     /* Fix C — semantic-light assombris pour WCAG AA texte normal sur fond clair */
@@ -278,6 +278,9 @@
     --warning-light: #c2410c;  /* 4.72:1 sur #fff (était #fbbf24 = 1.44 KO) */
     --danger-light: #dc2626;   /* 5.91:1 sur #fff (était #f87171 = 2.36 KO) */
     --info-light: #0369a1;     /* 4.87:1 sur #fff (était #22d3ee = 1.56 KO) */
+    /* Fix 13.1 — deco-cyan darken pour AA avatar fg sur fond clair */
+    --deco-cyan: #0e7490;      /* 5.49:1 sur #fff WCAG AA (était #06b6d4 = 2.55 KO) */
+    --deco-cyan-rgb: 14, 116, 144;
     /* Bouton sémantique — light mode (#266) */
     --btn-on-danger: #ffffff;       /* AA — 5.91:1 sur #dc2626 */
     --btn-on-success: #ffffff;      /* AA — 4.85:1 sur #15803d */
@@ -477,11 +480,11 @@
     --danger-rgb: 220, 38, 38;
     --info-rgb: 3, 105, 161;
 
-    /* Semantic light */
-    --success-light: #22c55e;
-    --warning-light: #f97316;
-    --danger-light: #ef4444;
-    --info-light: #0ea5e9;
+    /* Semantic light — Fix 4 — assombris pour WCAG AA sur fond clair */
+    --success-light: #15803d;  /* 5.02:1 sur #fff (était #22c55e = 2.28 KO) */
+    --warning-light: #c2410c;  /* 5.18:1 sur #fff (était #f97316 = 2.80 KO) */
+    --danger-light: #dc2626;   /* 4.83:1 sur #fff (était #ef4444 = 3.76 LARGE) */
+    --info-light: #0369a1;     /* 5.93:1 sur #fff (était #0ea5e9 = 2.77 KO) */
 
     /* Semantic dark */
     --success-dark: #15803d;
