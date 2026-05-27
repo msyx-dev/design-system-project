@@ -4084,7 +4084,7 @@ function initUserMenu(rootOrSelector, options) {
                 '<svg class="user-menu-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>' +
             '</button>' +
             '<div class="user-menu-dropdown" role="menu" aria-label="Menu utilisateur">' +
-                '<div class="user-menu-dropdown-header">' +
+                '<div class="user-menu-dropdown-header" role="presentation" aria-hidden="true">' +
                     '<span class="user-menu-dropdown-avatar">' + avatarContent(48) + '</span>' +
                     '<div class="user-menu-dropdown-info">' +
                         '<span class="user-menu-dropdown-name">' + escapeHTML(displayName) + '</span>' +
@@ -4096,12 +4096,11 @@ function initUserMenu(rootOrSelector, options) {
                     '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
                     'Mon compte' +
                 '</a>' +
-                '<form class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '">' +
-                    '<button type="submit" class="user-menu-item user-menu-item--danger" role="menuitem">' +
-                        '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
-                        'D&eacute;connexion' +
-                    '</button>' +
-                '</form>' +
+                '<form id="user-menu-logout-form" class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '" role="presentation"></form>' +
+                '<button type="submit" form="user-menu-logout-form" class="user-menu-item user-menu-item--danger" role="menuitem">' +
+                    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
+                    'D&eacute;connexion' +
+                '</button>' +
             '</div>';
 
         var trigger = root.querySelector('.user-menu-trigger');
