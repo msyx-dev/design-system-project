@@ -1,5 +1,45 @@
 # Releases
 
+## [2.65.0] — 2026-05-27 — CLÔTURE EPIC #344 ✦ WCAG AA atteint
+
+### Résumé Epic — De 143 violations à 0 `aria-prohibited-attr`
+
+Cette version marque la **clôture de l'Epic #344** (Sprint 36 a11y résiduel cleanup) et la finalisation du chantier WCAG AA ouvert en Sprint 33.
+
+**Bilan cumulé Epic #337 + #344 (8 PRs, Sprints 33–36)** :
+
+| Métrique | Départ (pré-#337) | Arrivée (v2.65.0) | Gain |
+|---|---|---|---|
+| Violations totales | ~143 | **17** (color-contrast démo) | **-88%** |
+| `aria-prohibited-attr` | 60 | **0** | **-100%** ✅ |
+| `label` critical | 54 | **0** | **-100%** ✅ |
+| `aria-required-children` critical | 6 | **0** | **-100%** ✅ |
+| `scrollable-region` | 12 | **0** | **-100%** ✅ |
+| `color-contrast` nœuds | 871 | ~413 | -53% |
+
+Les 17 violations résiduelles sont des cas `color-contrast` sur tokens démo showcase (badges en mode light, tokens décoratifs `--deco-*`) — documentés, non bloquants, hors périmètre des composants distribués en production.
+
+### Fixed
+
+- **`shared/components.js` `buildDonutChart()`** : ajout `role="img"` sur les `<circle>` SVG avant `aria-label` — miroir exact du fix `buildPieChart()` appliqué en Lot 1 (#338 v2.62.0).
+  - Cause : `aria-label` est interdit sur `<circle>` SVG sans rôle explicite (règle WAI-ARIA `aria-prohibited-attr`).
+  - Impact : 60 nœuds `aria-prohibited-attr` serious sur 6 runs (page `data`, 6 combos thème/mode) → **0**.
+  - Cohérence : `buildPieChart()` et `buildDonutChart()` ont désormais le même pattern a11y.
+
+### Changed
+
+- `@ds-version` bumpé à `2.65.0` dans 5 fichiers + `const VERSION` + `package.json` + `shared/components-registry.json`.
+- `docs/audit-a11y-2026-05-27-post-349.md` : rapport post-fix avec bilan Epic complet.
+
+### Refs
+
+- Issue #349 (Sub-E Sprint 36 — `aria-prohibited-attr` résiduel, clôture Epic #344)
+- Epic parent #344 (Sprint 36 a11y résiduel)
+- Epic ancêtre #337 (Sprint 33–35 chantier WCAG AA)
+- Spec figée : https://github.com/msyx-dev/design-system-project/issues/349#issuecomment-4550618918
+
+---
+
 ## [2.64.9] — 2026-05-27
 
 ### Changed
