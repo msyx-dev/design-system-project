@@ -1,5 +1,18 @@
 # Releases
 
+## [2.64.9] — 2026-05-27
+
+### Changed
+- **a11y** — Sub-D Sprint 36 : 9 inputs de `pages/formulaires.html` (date pickers + sliders range + number inputs jumelés) reçoivent désormais une étiquette accessible (Option A `<label for>`/`id` × 7, Option B `aria-label` × 2) conformément à `docs/DS-PRINCIPLES.md` §3.1.
+- Résout 54 nœuds critical `label` (6 runs × 9 nœuds) — règle WCAG SC 3.3.2 « Labels or Instructions ».
+
+### Refs
+- Issue #348 — Sprint 36 a11y résiduel cleanup
+- Epic parent #344
+- Convention §3.1 figée par Lot 3 #340 (v2.64.5)
+
+---
+
 ## v2.64.8 — 2026-05-27
 
 **Fix a11y Sub-C : aria-required-children critical (6 nœuds résorbés)** (#347, Epic #344 Sprint 36)
