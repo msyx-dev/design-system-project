@@ -2153,6 +2153,7 @@ function initPieCharts() {
             circle.setAttribute('stroke-dasharray', `${dashLen} ${circumference}`);
             circle.setAttribute('stroke-dashoffset', dashOffset);
             circle.classList.add('pie-donut-segment');
+            circle.setAttribute('role', 'img'); // a11y: legitimise aria-label on SVG circle (aria-prohibited-attr fix)
             circle.setAttribute('aria-label', `${labels[i]}: ${val}`);
             circle.style.opacity = '0';
             // rotate from top : transform-origin at center
