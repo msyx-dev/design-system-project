@@ -1,5 +1,11 @@
 # Releases
 
+## [2.65.1] — 2026-05-29 — Fix CSS barrel
+
+### Fixed
+- Barrel CSS `components.css` : `@import url(...)` → forme string (`@import "..."`) — compatibilité consumers (#358, PR #359).
+- Bump synchrone `@ds-version` complété sur `shared/nav.js` (oublié lors du bump initial 2.65.1).
+
 ## [2.65.0] — 2026-05-27 — CLÔTURE EPIC #344 ✦ WCAG AA atteint
 
 ### Résumé Epic — De 143 violations à 0 `aria-prohibited-attr`
