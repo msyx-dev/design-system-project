@@ -22,3 +22,6 @@ playwright-report-a11y/
 
 # Lighthouse CI run artifacts (rapports locaux — baseline versionnee dans lhci-baseline.json)
 .lighthouseci/
+
+# Page d'accès orpheline vestige pré-static-proxy (jamais versionnée)
+auth-static/
