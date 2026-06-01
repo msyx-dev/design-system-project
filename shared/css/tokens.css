@@ -1,4 +1,4 @@
-/* @ds-version: 2.65.1 */
+/* @ds-version: 2.65.2 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -17,6 +17,8 @@
     --surface-alt: rgba(255, 255, 255, 0.15);
     --surface-solid: #1e293b;
     --surface-light: #334155;
+    --surface-2: var(--surface-alt);       /* alias surface secondaire (#582 — était fantôme) */
+    --skeleton-base: var(--surface-light);  /* base loaders skeleton (#582 — était fantôme) */
     --text: #f1f5f9;
     --text-muted: #94a3b8;
     --text-dim: #94a3b8;   /* Fix 7 — 7.45:1 sur #0a0f1e, 5.71:1 sur #1e293b WCAG AA (était #7c8db5 = 4.41 KO) */

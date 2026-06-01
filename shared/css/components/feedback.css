@@ -8,6 +8,7 @@
 .skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; }
 .skeleton-btn { height: 36px; width: 100px; border-radius: 10px; }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@keyframes skeleton-shimmer { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.85; } } /* #582 — était absent */
 
 /* ===== DIVIDER ===== */
 .divider { height: 1px; background: var(--border-color); margin: var(--space-xl) 0; border: none; }

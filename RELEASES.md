@@ -1,5 +1,9 @@
 # Releases
 
+## 2.65.2 — 2026-06-01 — Tokens fantômes corrigés (#582)
+- Définit `--surface-2` (alias `--surface-alt`) et `--skeleton-base` (alias `--surface-light`) — référencés par `pricing.css`/`modals.css`/`feedback.css` mais jamais définis → fantômes dans tous les consumers.
+- Ajoute `@keyframes skeleton-shimmer` (absent) — `.skeleton-cell/-label/-field` étaient figés.
+
 ## [2.65.1] — 2026-05-29 — Fix CSS barrel
 
 ### Fixed
