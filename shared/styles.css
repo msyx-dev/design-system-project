@@ -4,19 +4,4 @@
 @import url('css/utilities.css');
 @import url('css/layout.css');
 @import url('css/components.css');
-
-/* ===== BASE RESET ===== */
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-/* Accessible focus */
-:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
-:focus:not(:focus-visible) {
-    outline: none;
-}
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: var(--primary); color: var(--text); line-height: 1.6; overflow-x: hidden; }
-body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: var(--texture-grain-opacity); background-image: var(--texture-grain); }
+@import url('css/base.css');

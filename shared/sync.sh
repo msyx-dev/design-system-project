@@ -42,6 +42,7 @@ fi
 cp "$DS_DIR/tokens.css" "$TARGET/ds-tokens.css"
 cp "$DS_DIR/utilities.css" "$TARGET/ds-utilities.css"
 cp "$DS_DIR/layout.css" "$TARGET/ds-layout.css"
+cp "$DS_DIR/base.css" "$TARGET/ds-base.css"
 
 # Nouveau v2.36 : copier le dossier components/ pour que les @import du barrel résolvent
 # Les @import url('./components/...') dans ds-components.css résolvent vers <TARGET>/components/
@@ -103,6 +104,7 @@ fi
 VERSION=$(grep -oP '@ds-version:\s*\K[\d.]+' "$DS_DIR/tokens.css" || echo "unknown")
 echo "Design System v${VERSION} synchronisé vers $TARGET"
 echo "   -> ds-tokens.css       (variables CSS + thèmes)"
+echo "   -> ds-base.css         (socle : reset, body, texture grain)"
 echo "   -> ds-utilities.css    (classes utilitaires)"
 echo "   -> ds-layout.css       (header, sidebar, main)$(${NO_SHOWCASE} && echo ' [showcase stripped]' || true)"
 echo "   -> ds-components.css   (${COMPONENTS_MODE})"
