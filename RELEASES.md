@@ -1,5 +1,17 @@
 # Releases
 
+## 2.66.0 — 2026-06-03 — Socle global distribué aux consumers (base.css) — acssi-core#592
+
+### Added
+- `shared/css/base.css` : socle global (reset, focus accessible, `html`, `body`, `body::after` texture grain) extrait de `styles.css`, **désormais distribué aux consumers** via `sync.sh` (→ `ds-base.css`).
+
+### Fixed
+- Le socle (`body` enrichi + overlay texture grain `--texture-grain`) n'était jamais synchronisé vers les consumers : `styles.css` le contenait inline mais `sync.sh` ne copiait que tokens/utilities/layout/components. Les consumers recréaient un `body` appauvri (rendu « plat », sans texture). acssi-core#592.
+- `body` du socle : `font-family: 'Inter'` (literal) → `var(--font-sans)` (tokens-first, compatible next/font des consumers).
+
+### Changed
+- `styles.css` : bloc « BASE RESET » inline extrait vers `css/base.css` puis ré-importé (showcase inchangé, source unique du socle).
+
 ## 2.65.2 — 2026-06-01 — Tokens fantômes corrigés (#582)
 - Définit `--surface-2` (alias `--surface-alt`) et `--skeleton-base` (alias `--surface-light`) — référencés par `pricing.css`/`modals.css`/`feedback.css` mais jamais définis → fantômes dans tous les consumers.
 - Ajoute `@keyframes skeleton-shimmer` (absent) — `.skeleton-cell/-label/-field` étaient figés.
