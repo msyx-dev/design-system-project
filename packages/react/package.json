@@ -62,6 +62,7 @@
   "engines": {
     "node": ">=20"
   },
+  "packageManager": "pnpm@9.15.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/msyx-dev/design-system-project.git",
