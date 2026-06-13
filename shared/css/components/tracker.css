@@ -188,11 +188,11 @@
 }
 .dtree-choice:hover {
     background: var(--accent);
-    color: var(--text-on-accent, #fff);
+    color: var(--text-on-accent);
 }
 .dtree-choice.selected {
     background: var(--accent);
-    color: var(--text-on-accent, #fff);
+    color: var(--text-on-accent);
 }
 .dtree-connector {
     width: 2px;

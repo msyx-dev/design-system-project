@@ -162,7 +162,7 @@
     border: 0;
     padding: 6px;
     cursor: pointer;
-    border-radius: var(--radius-pill, 999px);
+    border-radius: var(--radius-full);
     transition: opacity var(--duration-base) var(--ease-standard);
     font-family: inherit;
     min-width: 44px;
@@ -210,7 +210,7 @@
 }
 .mode-switch.is-dark .mode-switch-thumb {
     transform: translateX(24px);
-    background: var(--text-on-accent, #fff);
+    background: var(--text-on-accent);
 }
 
 /* Icones soleil (gauche) + lune (droite) */
@@ -231,7 +231,7 @@
 .mode-switch:not(.is-dark) .mode-switch-icon--sun  { opacity: 0; }
 .mode-switch:not(.is-dark) .mode-switch-icon--moon { opacity: 0.6; color: var(--text-muted); }
 /* Etat dark (ON) : soleil discret à gauche, lune masquée (thumb dessus) */
-.mode-switch.is-dark .mode-switch-icon--sun  { opacity: 0.7; color: var(--text-on-accent, #fff); }
+.mode-switch.is-dark .mode-switch-icon--sun  { opacity: 0.7; color: var(--text-on-accent); }
 .mode-switch.is-dark .mode-switch-icon--moon { opacity: 0; }
 
 [data-theme="acssi"][data-mode="light"] .sidebar {
@@ -291,7 +291,7 @@
     min-width: 16px;
     height: 16px;
     padding: 0 4px;
-    background: var(--danger, #ef4444);
+    background: var(--danger);
     color: var(--text-on-accent);
     font-size: 0.62rem;
     font-weight: 700;
@@ -300,7 +300,7 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    border: 2px solid var(--primary, #0a0f1e);
+    border: 2px solid var(--primary);
     pointer-events: none;
 }
 .header-notification-badge.hidden { display: none; }
@@ -322,7 +322,7 @@
     font-weight: 700;
     cursor: pointer;
     transition: box-shadow 0.2s var(--ease-standard);
-    font-family: var(--font-sans, 'Space Grotesk', sans-serif);
+    font-family: var(--font-sans);
     overflow: hidden;
 }
 .header-avatar-trigger:hover {
@@ -348,7 +348,7 @@
     top: calc(100% + 8px);
     right: 0;
     min-width: 180px;
-    background: var(--surface-solid, #1e293b);
+    background: var(--surface-solid);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: 0 8px 32px var(--overlay-black-35);
@@ -401,11 +401,11 @@
     background: color-mix(in srgb, var(--accent) 7%, transparent);
 }
 .header-dropdown-item.danger {
-    color: var(--danger-light, #fca5a5);
+    color: var(--danger-light);
 }
 .header-dropdown-item.danger:hover {
-    background: rgba(var(--danger-rgb, 239,68,68), 0.09);
-    color: var(--danger-light, #fca5a5);
+    background: rgba(var(--danger-rgb), 0.09);
+    color: var(--danger-light);
 }
 .header-dropdown-divider {
     height: 1px;
@@ -420,7 +420,7 @@
     right: 0;
     width: 300px;
     max-height: 380px;
-    background: var(--surface-solid, #1e293b);
+    background: var(--surface-solid);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: 0 8px 32px var(--overlay-black-35);

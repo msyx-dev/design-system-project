@@ -395,7 +395,7 @@
     top: calc(100% + 6px);
     right: 0;
     min-width: 220px;
-    background: var(--surface-solid, #1e293b);
+    background: var(--surface-solid);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: 0 8px 32px var(--overlay-black-35);
@@ -527,12 +527,12 @@
     display: contents;
 }
 .user-menu-item--danger {
-    color: var(--danger-light, #fca5a5);
+    color: var(--danger-light);
 }
 .user-menu-item--danger:hover,
 .user-menu-item--danger:focus-visible {
-    background: rgba(var(--danger-rgb, 239, 68, 68), 0.09);
-    color: var(--danger-light, #fca5a5);
+    background: rgba(var(--danger-rgb), 0.09);
+    color: var(--danger-light);
 }
 
 /* Responsive : sur mobile le dropdown prend plus de largeur */
