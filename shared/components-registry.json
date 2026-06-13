@@ -1,8 +1,8 @@
 {
-  "version": "2.67.0",
+  "version": "2.67.1",
   "generated": {
-    "at": "2026-06-13T15:48:45.245Z",
-    "by": "bin/generate-registry.js v1.0"
+    "at": "2026-06-13T19:16:35.940Z",
+    "by": "bin/generate-registry.js v1.1"
   },
   "components": [
     {
@@ -314,12 +314,12 @@
       "cssClasses": [
         ".skeleton",
         ".skeleton-text",
-        ".skeleton-circle",
-        ".skeleton-btn",
-        ".skeleton-card"
+        ".skeleton-title",
+        ".skeleton-avatar",
+        ".skeleton-btn"
       ],
       "jsInit": null,
-      "example": "<div class=\"skeleton skeleton-card\"></div>\n\n<div>\n  <div class=\"skeleton skeleton-text\" style=\"width:60%\"></div>\n  <div class=\"skeleton skeleton-text\" style=\"width:90%\"></div>\n  <div class=\"skeleton skeleton-text\" style=\"width:75%\"></div>\n</div>\n\n<div style=\"display:flex;gap:1rem;align-items:center;\">\n  <div class=\"skeleton skeleton-circle\"></div>\n  <div class=\"skeleton skeleton-btn\"></div>\n</div>"
+      "example": "<div style=\"display:flex;gap:1rem;align-items:center;\">\n  <div class=\"skeleton skeleton-avatar\"></div>\n  <div class=\"flex-1\">\n    <div class=\"skeleton skeleton-title\"></div>\n    <div class=\"skeleton skeleton-text\" style=\"width:90%\"></div>\n  </div>\n</div>"
     },
     {
       "name": "code",
@@ -327,12 +327,15 @@
       "page": "divers",
       "cssClasses": [
         ".code-block",
-        ".code-header",
-        ".code-lang",
-        ".code-body"
+        ".kw",
+        ".str",
+        ".cm",
+        ".fn",
+        ".num",
+        ".code-inline"
       ],
       "jsInit": "initCopyButtons",
-      "example": "<div class=\"code-block\">\n  <div class=\"code-header\">\n    <span class=\"code-lang\">css</span>\n    <button class=\"copy-btn\" data-copy-target=\"code-exemple\" aria-label=\"Copier\">Copier</button>\n  </div>\n  <pre class=\"code-body\" id=\"code-exemple\"><code>var(--accent)</code></pre>\n</div>"
+      "example": "<div class=\"code-block\"><span class=\"cm\">/* Theme tokens */</span><br><span class=\"kw\">:root</span> {<br>&nbsp;&nbsp;<span class=\"fn\">--accent</span>: <span class=\"str\">#3b82f6</span>;<br>}</div>"
     },
     {
       "name": "code-inline",
@@ -383,11 +386,13 @@
       "kind": "component",
       "page": "navigation",
       "cssClasses": [
-        ".breadcrumb",
-        ".breadcrumb-item"
+        ".breadcrumbs",
+        ".bc-sep",
+        ".bc-home",
+        ".bc-ellipsis"
       ],
       "jsInit": null,
-      "example": "<nav class=\"breadcrumb\" aria-label=\"Fil d'Ariane\">\n  <a class=\"breadcrumb-item\" href=\"/\">Accueil</a>\n  <a class=\"breadcrumb-item\" href=\"/projets\">Projets</a>\n  <span class=\"breadcrumb-item\" aria-current=\"page\">Design System</span>\n</nav>"
+      "example": "<nav class=\"breadcrumbs\" aria-label=\"Fil d'Ariane\">\n  <ol>\n    <li><a href=\"#\">Accueil</a></li>\n    <li><span class=\"bc-sep\" aria-hidden=\"true\">/</span></li>\n    <li><a href=\"#\">Projets</a></li>\n    <li><span class=\"bc-sep\" aria-hidden=\"true\">/</span></li>\n    <li><span aria-current=\"page\">Design System</span></li>\n  </ol>\n</nav>"
     },
     {
       "name": "timeline",
@@ -407,13 +412,13 @@
       "kind": "component",
       "page": "divers",
       "cssClasses": [
-        ".accordion",
         ".accordion-item",
         ".accordion-header",
+        ".accordion-arrow",
         ".accordion-body"
       ],
       "jsInit": "initComponents",
-      "example": "<div class=\"accordion\">\n  <div class=\"accordion-item\">\n    <button class=\"accordion-header\" aria-expanded=\"false\">Section 1</button>\n    <div class=\"accordion-body\">Contenu de la section 1.</div>\n  </div>\n  <div class=\"accordion-item\">\n    <button class=\"accordion-header\" aria-expanded=\"true\">Section 2</button>\n    <div class=\"accordion-body\">Contenu de la section 2 (ouvert par défaut).</div>\n  </div>\n</div>"
+      "example": "<div class=\"accordion-item open\">\n  <div class=\"accordion-header\">Section 1 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 1.</div>\n</div>\n<div class=\"accordion-item\">\n  <div class=\"accordion-header\">Section 2 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 2.</div>\n</div>"
     },
     {
       "name": "stepper",
@@ -423,10 +428,11 @@
         ".stepper",
         ".step",
         ".step-dot",
-        ".step-label"
+        ".step-label",
+        ".step-line"
       ],
       "jsInit": null,
-      "example": "<div class=\"stepper\" aria-label=\"Étapes de configuration\">\n  <div class=\"step step-done\">\n    <div class=\"step-dot\">&#10003;</div>\n    <span class=\"step-label\">Compte</span>\n  </div>\n  <div class=\"step step-active\">\n    <div class=\"step-dot\">2</div>\n    <span class=\"step-label\">Profil</span>\n  </div>\n  <div class=\"step\">\n    <div class=\"step-dot\">3</div>\n    <span class=\"step-label\">Confirmation</span>\n  </div>\n</div>"
+      "example": "<div class=\"stepper\" aria-label=\"Étapes\">\n  <div class=\"step\"><div class=\"step-dot completed\">&#10003;</div><span class=\"step-label\">Compte</span></div>\n  <div class=\"step-line completed\"></div>\n  <div class=\"step\"><div class=\"step-dot active\">2</div><span class=\"step-label\">Profil</span></div>\n  <div class=\"step-line\"></div>\n  <div class=\"step\"><div class=\"step-dot pending\">3</div><span class=\"step-label\">Fin</span></div>\n</div>"
     },
     {
       "name": "dropdown",
@@ -572,7 +578,7 @@
         ".empty-state-icon"
       ],
       "jsInit": null,
-      "example": "<div class=\"empty-state\">\n  <div class=\"empty-state-icon\" aria-hidden=\"true\">&#128203;</div>\n  <h2 class=\"empty-state-title\">Aucun projet pour l'instant</h2>\n  <p class=\"empty-state-description\">Commencez par créer votre premier projet.</p>\n  <button class=\"btn-primary\" type=\"button\">&#43; Créer un projet</button>\n</div>"
+      "example": "<div class=\"empty-state\">\n  <div class=\"empty-state-icon\" aria-hidden=\"true\">&#128203;</div>\n  <h3>Aucun projet pour l'instant</h3>\n  <p>Commencez par créer votre premier projet.</p>\n  <button class=\"btn btn-primary\" type=\"button\">Créer un projet</button>\n</div>"
     },
     {
       "name": "pagination",
@@ -691,13 +697,13 @@
       "page": "formulaires",
       "cssClasses": [
         ".tag-input-wrap",
-        ".tag-input-tag",
-        ".tag-input-remove",
+        ".tag-item",
+        ".tag-close",
         ".tag-input-field",
         ".tag-input-hint"
       ],
       "jsInit": "initTagInputs",
-      "example": "<div class=\"tag-input-wrap\" data-tag-input-id=\"ti-exemple\">\n  <span class=\"tag-input-tag\">Next.js <button class=\"tag-input-remove\" aria-label=\"Supprimer Next.js\">&#10005;</button></span>\n  <span class=\"tag-input-tag\">TypeScript <button class=\"tag-input-remove\" aria-label=\"Supprimer TypeScript\">&#10005;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Nouveau tag\">\n</div>\n<span class=\"tag-input-hint\">Appuyez sur Entrée pour valider.</span>"
+      "example": "<div class=\"tag-input-wrap\">\n  <span class=\"tag-item\">Design <button class=\"tag-close\" aria-label=\"Supprimer Design\">&times;</button></span>\n  <span class=\"tag-item\">Frontend <button class=\"tag-close\" aria-label=\"Supprimer Frontend\">&times;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>\n<span class=\"tag-input-hint\">Enter ou virgule pour ajouter</span>"
     },
     {
       "name": "comparison-table",
@@ -878,7 +884,7 @@
         ".filter-bar-actions"
       ],
       "jsInit": null,
-      "example": "<div class=\"filter-bar\">\n  <div class=\"filter-bar-search\">\n    <input class=\"input\" type=\"search\" placeholder=\"Filtrer...\" aria-label=\"Filtrer les résultats\">\n  </div>\n  <div class=\"filter-bar-actions\">\n    <button class=\"filter-btn active\" data-filter=\"all\" type=\"button\">Tous</button>\n    <button class=\"filter-btn\" data-filter=\"active\" type=\"button\">Actifs</button>\n    <button class=\"filter-btn\" data-filter=\"archived\" type=\"button\">Archivés</button>\n  </div>\n</div>"
+      "example": "<div class=\"filter-bar\">\n  <select class=\"input\" aria-label=\"Statut\"><option>Statut — Tous</option></select>\n  <input type=\"search\" class=\"input filter-bar-search\" placeholder=\"Rechercher…\" aria-label=\"Recherche\">\n  <div class=\"filter-bar-actions\">\n    <button class=\"btn btn-ghost btn-sm\" type=\"button\">Réinitialiser</button>\n    <button class=\"btn btn-secondary btn-sm\" type=\"button\">Exporter</button>\n  </div>\n</div>"
     },
     {
       "name": "login-screen",
@@ -1209,7 +1215,8 @@
       "category": "component",
       "source_file": "shared/css/components/_base.css",
       "cssClasses": [
-        ".sidebar-link"
+        ".sidebar-link",
+        ".breadcrumb"
       ],
       "jsInit": null,
       "generated": true

@@ -1,5 +1,14 @@
 # Releases
 
+## 2.67.1 — 2026-06-13 — Correctif classes fantômes registre + validateur CI (#516)
+
+### Fixed
+- **Registre `components-registry.json`** : 9 entrées `kind:component` corrigées — classes `cssClasses` et snippets `example` alignés sur le CSS réel (`shared/css/components/*.css`) et les démos (`pages/*.html`). Composants corrigés : `code` (→ `.code-block`+`.kw/.str/.cm/.fn/.num`), `tag-input` (→ `.tag-item/.tag-close`), `breadcrumb` (→ `.breadcrumbs`+`.bc-sep`), `skeleton` (→ `.skeleton-avatar/.skeleton-title`), `accordion` (conteneur `.accordion` retiré), `stepper` (états sur `.step-dot.active/.completed/.pending`), `empty-state` (`h3`/`p` nus, pas de `-title/-description`), `filter-bar` (→ `.btn.btn-*` DS), `comments` (`.like-count` conservé — héritage intentionnel).
+
+### Changed
+- **`bin/generate-registry.js` v1.0 → v1.1** : validation anti-fantôme des `kind:component` ajoutée. Une classe est fantôme si absente du CSS **et** absente de la démo de la page **et** hors whitelist → `process.exit(1)` avant écriture. Flag `--check` disponible (valide sans écrire, utilisé dans le CI). Anti-faux-positifs : sélecteurs composés (`main .section-header .overline`) et classes démo-seules (`.like-count`) correctement tolérés.
+- **CI `lint`** : nouveau step `Registry phantom-class validation (#516)` → `node bin/generate-registry.js --check` sans `continue-on-error`. Bloque le merge si un composant hand-written introduit une classe fantôme.
+
 ## 2.67.0 — 2026-06-13 — Remédiation dette audit adversarial 2026-06-13
 
 > Issues M#37 (Distribution sync.sh), M#38 (Garde-fous CI), M#39 (Migration thèmes v2.39). Cf. `docs/audit-2026-06-13.md`.

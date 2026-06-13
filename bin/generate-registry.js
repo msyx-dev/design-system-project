@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
  * generate-registry.js — Générateur auto du components-registry.json
- * Design System msyx.fr — bin/generate-registry.js v1.0
+ * Design System msyx.fr — bin/generate-registry.js v1.1
  *
- * Usage : node bin/generate-registry.js
+ * Usage : node bin/generate-registry.js [--check] [--skip-validate]
+ *   --check           Valide le registre sans écrire (mode CI recommandé)
+ *   --skip-validate   Saute la validation fantôme (développement uniquement)
  *
  * Scanne tous les .css dans shared/css/**\/*.css, extrait les sélecteurs
  * .classname et produit shared/components-registry.json enrichi.
@@ -218,11 +220,119 @@ for (const [gn, info] of groupMap.entries()) {
 
 // ─── Mise à jour version et metadata ──────────────────────────────────────────
 
+// ─── Validation des kind:component (#516) ─────────────────────────────────────
+
+/**
+ * Extrait toutes les classes CSS citées dans un snippet HTML (attributs class="...").
+ * @param {string} html
+ * @returns {Set<string>} classes avec le point (ex. '.btn-primary')
+ */
+function extractClassesFromHtml(html) {
+  const set = new Set();
+  if (!html) return set;
+  const RE = /class="([^"]*)"/g;
+  let m;
+  while ((m = RE.exec(html)) !== null) {
+    for (const c of m[1].split(/\s+/).filter(Boolean)) set.add('.' + c);
+  }
+  return set;
+}
+
+// Cache des classes de démonstration par page
+const pageClassesCache = new Map();
+
+/**
+ * Charge et retourne toutes les classes CSS présentes dans le markup HTML d'une page démo.
+ * @param {string} pageName  ex. "feedback" → pages/feedback.html
+ * @returns {Set<string>}
+ */
+function loadPageClasses(pageName) {
+  if (!pageName) return new Set();
+  if (pageClassesCache.has(pageName)) return pageClassesCache.get(pageName);
+  const pagePath = path.join(ROOT, 'pages', pageName + '.html');
+  let set = new Set();
+  if (fs.existsSync(pagePath)) {
+    const content = fs.readFileSync(pagePath, 'utf8');
+    set = extractClassesFromHtml(content);
+  }
+  pageClassesCache.set(pageName, set);
+  return set;
+}
+
+// Set complet de toutes les classes CSS réelles (construit à partir du scan)
+// Note : on reconstruit ici depuis groupMap (toutes les classes vues dans TOUS les fichiers CSS)
+const allCssClasses = new Set();
+for (const [, info] of groupMap.entries()) {
+  for (const cls of info.classes) allCssClasses.add(cls);
+}
+
+// Validation : détecter les classes fantômes dans les kind:component
+// Une classe est fantôme si absente du CSS ET absente de la démo de la page ET hors whitelist.
+// La whitelist est intentionnellement vide : utilities.css/layout.css sont déjà dans allCssClasses.
+const WHITELIST = new Set([
+  // Ajoutez ici uniquement les faux positifs confirmés après un run de validation
+]);
+
+const phantoms = [];
+
+/**
+ * Extrait les classes atomiques d'une entrée cssClasses.
+ * Un item peut être :
+ *   - une classe simple : ".btn-primary" → [".btn-primary"]
+ *   - un sélecteur composé : ".main .section-header .overline" → [".main",".section-header",".overline"]
+ * Les sélecteurs composés sont légitimes (CSS réel) → on valide chaque token séparément.
+ * @param {string[]} cssClasses
+ * @returns {Set<string>}
+ */
+function expandCssClasses(cssClasses) {
+  const set = new Set();
+  if (!cssClasses) return set;
+  for (const entry of cssClasses) {
+    // Séparer sur les espaces pour gérer les sélecteurs composés
+    for (const token of entry.split(/\s+/).filter(Boolean)) {
+      // Conserver uniquement les tokens qui démarrent par un point
+      if (token.startsWith('.')) set.add(token);
+    }
+  }
+  return set;
+}
+
+if (!process.argv.includes('--skip-validate')) {
+  for (const comp of newComponents) {
+    if (comp.kind !== 'component') continue;   // valider uniquement les hand-written
+    const pageClasses = loadPageClasses(comp.page);
+    const cited = new Set([
+      ...expandCssClasses(comp.cssClasses),
+      ...extractClassesFromHtml(comp.example),
+    ]);
+    for (const cls of cited) {
+      const inCss  = allCssClasses.has(cls);
+      const inDemo = pageClasses.has(cls);
+      const inWl   = WHITELIST.has(cls);
+      if (!inCss && !inDemo && !inWl) {
+        phantoms.push({ component: comp.name, class: cls });
+      }
+    }
+  }
+
+  if (phantoms.length > 0) {
+    console.error('');
+    console.error('❌ Classes CSS fantômes détectées dans des kind:component :');
+    for (const p of phantoms) console.error(`   - ${p.component} → ${p.class}`);
+    console.error('');
+    console.error('Corrigez ces entrées dans shared/components-registry.json avant de continuer.');
+    console.error('(Correction rapide : lire le CSS réel dans shared/css/components/*.css + la démo dans pages/*.html)');
+    process.exit(1);
+  }
+}
+
+// ─── Construction du nouveau registry ─────────────────────────────────────────
+
 const newRegistry = {
   version: existingRegistry.version || '2.59.0',
   generated: {
     at: new Date().toISOString(),
-    by: 'bin/generate-registry.js v1.0',
+    by: 'bin/generate-registry.js v1.1',
   },
   components: newComponents,
 };
@@ -242,6 +352,23 @@ function stripTimestamp(json) {
 
 const isIdempotent = stripTimestamp(newJson) === stripTimestamp(previousJson);
 
+// ─── Mode --check (CI) ────────────────────────────────────────────────────────
+// En mode --check, on valide sans écrire (idéal pour le step CI).
+
+if (process.argv.includes('--check')) {
+  console.log('=== generate-registry.js v1.1 — Design System msyx.fr (mode --check) ===');
+  console.log(`Version  : ${newRegistry.version}`);
+  console.log(`Total composants  : ${newRegistry.components.length}`);
+  console.log('Validation fantômes : OK (0 classe fantôme)');
+  if (isIdempotent) {
+    console.log('Idempotence       : OK (registre à jour)');
+  } else {
+    console.warn('⚠ Registre non à jour — lancez `npm run generate-registry` en local pour synchroniser.');
+  }
+  console.log('OK (--check)');
+  process.exit(0);
+}
+
 // ─── Écriture ─────────────────────────────────────────────────────────────────
 
 fs.writeFileSync(REGISTRY_PATH, newJson, 'utf8');
@@ -251,7 +378,7 @@ fs.writeFileSync(REGISTRY_PATH, newJson, 'utf8');
 const totalComponents = newComponents.length;
 const totalClasses = newComponents.reduce((acc, c) => acc + (c.cssClasses || []).length, 0);
 
-console.log('=== generate-registry.js v1.0 — Design System msyx.fr ===');
+console.log('=== generate-registry.js v1.1 — Design System msyx.fr ===');
 console.log(`Registry : ${REGISTRY_PATH}`);
 console.log(`Version  : ${newRegistry.version}`);
 console.log(`Total composants  : ${totalComponents}`);
