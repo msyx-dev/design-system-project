@@ -58,7 +58,7 @@ jobs:
           chmod +x shared/check-components.sh
           ./shared/check-components.sh shared/css
         continue-on-error: true
-      - name: Registry phantom-class validation (#516)
+      - name: Registry validation — phantoms (#516) + React parity (#523)
         run: node bin/generate-registry.js --check
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
   # 136 tests valides localement via vitest (npm). Le chemin exact

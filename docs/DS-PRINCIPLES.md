@@ -383,11 +383,48 @@ Avant de merger un nouveau composant, valider TOUS les points :
 ### Registre
 - [ ] Entrée dans `shared/components-registry.json` :
   - `name`, `page`, `cssClasses` (toutes les classes principales), `jsInit` (ou null), `example`
+  - `react` : statut de portage React — `ported` (wrapper `@msyx-dev/react` existe) / `pending` (portable, pas encore porté) / `n-a` (non portable : token, layout, primitive). **Défaut auto = `pending` pour tout `kind:component`** ; à passer `ported` uniquement avec le wrapper React dans le mapping `REACT_TO_REGISTRY` de `bin/generate-registry.js`.
 - [ ] `version` global du registry mis à jour
 
 ### Tests visuels (Visual Regression)
 - [ ] Nouvelle baseline VR générée pour la page concernée
 - [ ] Tests sur les 5 combos theme/mode (où applicable)
+
+---
+
+## Section 8.1 — Parité React (gouvernance anti-dérive)
+
+Le DS distribue deux artefacts : CSS statique (78 composants) et `@msyx-dev/react`
+(5 composants au 2026-06-13). L'écart s'est creusé en silence faute de mesure (#523).
+
+### Donnée, pas découverte
+
+Chaque entrée du registre porte un champ `react` : `ported` / `pending` / `n-a`.
+L'écart global (N ported / M portables) est imprimé par `generate-registry.js`
+et dans les logs CI à chaque run — jamais silencieux.
+
+### Check CI (autonome, greffé sur le validateur #516)
+
+`node bin/generate-registry.js --check` (step lint bloquant) valide :
+- **(a)** toute classe émise par un composant `packages/react/` existe dans le CSS du DS
+  (aurait attrapé `btn-icon-left` du 1er jour — voir incident #374-376) ;
+- **(b)** un composant `react: ported` qui dérive (classe React absente du CSS, ou
+  marquage incohérent) → echec CI.
+
+### Politique : « gap tracé », PAS lockstep — jusqu'à présent
+
+Tant qu'**aucun consumer React n'a shipé en production** :
+- nouveau composant → marqué `react: pending` (suivi auto, pas de wrapper obligatoire) ;
+- le portage React se fait **en lot sur surface gelée** (M#41), pas composant par composant.
+
+### Bascule en LOCKSTEP — dès qu'une app React ship
+
+Au premier consumer React en prod, la politique bascule :
+- **tout nouveau composant DS DOIT inclure son wrapper React dans la MÊME PR** (`react: ported`) ;
+- mettre à jour cette section (date + nom de l'app déclencheuse) ;
+- ajouter le composant au mapping `REACT_TO_REGISTRY` de `bin/generate-registry.js`.
+
+Cette bascule est une décision explicite tracée ici (pas automatique).
 
 ---
 

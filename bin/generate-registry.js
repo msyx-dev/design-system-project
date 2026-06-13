@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * generate-registry.js — Générateur auto du components-registry.json
- * Design System msyx.fr — bin/generate-registry.js v1.1
+ * Design System msyx.fr — bin/generate-registry.js v1.2
  *
  * Usage : node bin/generate-registry.js [--check] [--skip-validate]
  *   --check           Valide le registre sans écrire (mode CI recommandé)
@@ -326,13 +326,178 @@ if (!process.argv.includes('--skip-validate')) {
   }
 }
 
+// ─── Normalisation du champ react (#523) ─────────────────────────────────────
+// Règle : kind:module → n-a forcé ; kind:component sans react → pending ;
+// valeur existante ported/pending/n-a préservée (merge).
+// NOTE : la normalisation s'effectue AVANT la validation parité (bloc ci-dessous).
+const VALID_REACT_VALUES = new Set(['ported', 'pending', 'n-a']);
+
+for (const comp of newComponents) {
+  if (comp.kind === 'module') {
+    comp.react = 'n-a';
+  } else if (comp.kind === 'component') {
+    if (!VALID_REACT_VALUES.has(comp.react)) {
+      comp.react = 'pending';
+    }
+  }
+}
+
+// ─── Parité React (#523) ──────────────────────────────────────────────────────
+
+const REACT_SRC_ROOT = path.join(ROOT, 'packages', 'react', 'src', 'components');
+
+// Table de mapping : composant React (dir) → nom d'entrée registre.
+// Source de vérité unique du lien React↔registre (robuste vs inférence).
+// Mise à jour requise à chaque nouveau portage React.
+const REACT_TO_REGISTRY = {
+  Button:      'buttons',
+  PageHeader:  'page-header',
+  ThemeToggle: 'theme-toggle',
+  UserMenu:    'user-menu',
+  LoginScreen: 'login-screen',
+};
+
+// Expansions des variants dynamiques (unions TS fermées).
+// Mise à jour requise quand un nouveau variant est ajouté côté React.
+// Un variant non listé → la classe dynamique n'est PAS vérifiée
+// (sous-détection assumée — jamais de faux positif).
+const REACT_VARIANT_EXPANSIONS = {
+  // Button
+  'btn-${variant}':              ['primary', 'secondary', 'ghost', 'danger', 'warning'],
+  'btn-${size}':                 ['sm', 'lg'],   // md exclu (pas de classe CSS)
+  // LoginScreen
+  'login-card--${variant}':      ['internal-only', 'public-multi-providers', 'internal-with-fallback'],
+  'login-provider-btn--${p.id}': ['google', 'apple', 'microsoft', 'github'],
+};
+
+// Whitelist : classes mono-mot légitimes émises par React (filtres kebab les ignoreraient).
+// Compléter si un nouveau composant React émet des classes mono-mot.
+const REACT_KNOWN_SINGLE = new Set(['overline', 'lead', 'subtitle', 'open']);
+
+/**
+ * Extrait les classes CSS émises par un fichier .tsx (parsing statique).
+ * Stratégie ciblée : on cherche uniquement les valeurs de className=
+ *   - className="literal classes"
+ *   - className={`template ${expr} classes`}
+ *   - className={["cls1","cls2",...].filter(...).join(" ")} (tableaux de littéraux)
+ * Puis on expanse les segments dynamiques connus via REACT_VARIANT_EXPANSIONS.
+ * @param {string} tsx   contenu du fichier .tsx
+ * @returns {Set<string>} classes avec le point (ex. '.btn-primary')
+ */
+function extractReactClasses(tsx) {
+  const set = new Set();
+
+  /**
+   * Traite une valeur brute de className (littérale ou template) :
+   * extrait les tokens kebab ou mono-mots whitelist, et expanse les segments dynamiques connus.
+   */
+  function processClassValue(raw) {
+    // a) tokens littéraux kebab ou mono-mots whitelist
+    for (const tok of raw.split(/[\s${}()`]+/).filter(Boolean)) {
+      // Ignorer les tokens qui ressemblent à du JS (contiennent [, ", etc.)
+      if (tok.includes('"') || tok.includes('[') || tok.includes('.')) continue;
+      if (REACT_KNOWN_SINGLE.has(tok)) {
+        set.add('.' + tok);
+      } else if (/^[a-z][a-z0-9-]*$/.test(tok) && tok.includes('-') && !tok.endsWith('-')) {
+        // Filtre : un token se terminant par '-' ou '--' est un préfixe partiel
+        // (ex. "login-card--" avant le ${variant}) → pas une classe valide.
+        set.add('.' + tok);
+      }
+    }
+    // b) variants dynamiques `prefix-${expr}` → expansion via table
+    const DYN_RE = /([a-z][a-z0-9-]*-)\$\{([^}]+)\}/g;
+    let d;
+    while ((d = DYN_RE.exec(raw)) !== null) {
+      const key = d[1] + '${' + d[2].trim() + '}';
+      const values = REACT_VARIANT_EXPANSIONS[key];
+      if (values) {
+        for (const v of values) set.add('.' + d[1] + v);
+      }
+    }
+  }
+
+  // 1. className="literal string"
+  const LITERAL_RE = /className="([^"]*)"/g;
+  let m;
+  while ((m = LITERAL_RE.exec(tsx)) !== null) {
+    processClassValue(m[1]);
+  }
+
+  // 2. className={`template string`}  (backtick à l'intérieur de className={...})
+  const TEMPLATE_RE = /className=\{`([^`]*)`\}/g;
+  while ((m = TEMPLATE_RE.exec(tsx)) !== null) {
+    processClassValue(m[1]);
+  }
+
+  // 3. className={[...].filter(...).join(...)} — tableaux de littéraux de chaînes
+  //    On extrait tous les "string literals" entre crochets qui suivent className={
+  const ARRAY_RE = /className=\{\[([^\]]*)\]/g;
+  while ((m = ARRAY_RE.exec(tsx)) !== null) {
+    const arrayContent = m[1];
+    const STR_INSIDE_RE = /"([^"]+)"|'([^']+)'|`([^`]+)`/g;
+    let s;
+    while ((s = STR_INSIDE_RE.exec(arrayContent)) !== null) {
+      processClassValue(s[1] ?? s[2] ?? s[3] ?? '');
+    }
+  }
+
+  return set;
+}
+
+const reactPhantoms = [];   // classe React absente du CSS réel
+const reactDrift   = [];    // composant ported dont le marquage est incohérent
+
+if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) {
+  // (a) + (b) : vérifier chaque composant React mappé
+  for (const [dir, regName] of Object.entries(REACT_TO_REGISTRY)) {
+    const compDir = path.join(REACT_SRC_ROOT, dir);
+    if (!fs.existsSync(compDir)) continue;
+
+    // Concat de tous les .tsx du composant (hors *.test.tsx)
+    const tsxFiles = fs.readdirSync(compDir)
+      .filter(f => f.endsWith('.tsx') && !f.endsWith('.test.tsx'));
+    const emitted = new Set();
+    for (const f of tsxFiles) {
+      for (const c of extractReactClasses(fs.readFileSync(path.join(compDir, f), 'utf8'))) {
+        emitted.add(c);
+      }
+    }
+
+    // (a) chaque classe émise doit exister dans le CSS réel
+    for (const cls of emitted) {
+      if (!allCssClasses.has(cls)) {
+        reactPhantoms.push({ component: dir, registry: regName, class: cls });
+      }
+    }
+
+    // (b) cohérence du marquage : l'entrée registre doit être react:ported
+    const entry = newComponents.find(c => c.name === regName);
+    if (!entry) {
+      reactDrift.push({ component: dir, registry: regName,
+        reason: 'entrée registre introuvable' });
+    } else if (entry.react !== 'ported') {
+      reactDrift.push({ component: dir, registry: regName,
+        reason: `react="${entry.react}" — attendu "ported"` });
+    }
+  }
+
+  // (b) réciproque : une entrée react:ported SANS composant React mappé → erreur
+  const portedNames = new Set(Object.values(REACT_TO_REGISTRY));
+  for (const comp of newComponents) {
+    if (comp.react === 'ported' && !portedNames.has(comp.name)) {
+      reactDrift.push({ component: '(registre)', registry: comp.name,
+        reason: 'react="ported" mais aucun composant React dans REACT_TO_REGISTRY' });
+    }
+  }
+}
+
 // ─── Construction du nouveau registry ─────────────────────────────────────────
 
 const newRegistry = {
   version: existingRegistry.version || '2.59.0',
   generated: {
     at: new Date().toISOString(),
-    by: 'bin/generate-registry.js v1.1',
+    by: 'bin/generate-registry.js v1.2',
   },
   components: newComponents,
 };
@@ -352,14 +517,34 @@ function stripTimestamp(json) {
 
 const isIdempotent = stripTimestamp(newJson) === stripTimestamp(previousJson);
 
+// ─── Écart global parité React (toujours affiché) ────────────────────────────
+const reactCounts = { ported: 0, pending: 0, 'n-a': 0 };
+for (const comp of newComponents) {
+  if (comp.react && reactCounts[comp.react] !== undefined) reactCounts[comp.react]++;
+}
+const reactPortable = reactCounts.ported + reactCounts.pending;
+const reactParityLine = `Parité React : ${reactCounts.ported} ported / ${reactPortable} portables `
+  + `(${reactCounts.pending} pending, ${reactCounts['n-a']} n-a)`;
+
 // ─── Mode --check (CI) ────────────────────────────────────────────────────────
 // En mode --check, on valide sans écrire (idéal pour le step CI).
 
 if (process.argv.includes('--check')) {
-  console.log('=== generate-registry.js v1.1 — Design System msyx.fr (mode --check) ===');
+  console.log('=== generate-registry.js v1.2 — Design System msyx.fr (mode --check) ===');
   console.log(`Version  : ${newRegistry.version}`);
   console.log(`Total composants  : ${newRegistry.components.length}`);
   console.log('Validation fantômes : OK (0 classe fantôme)');
+  console.log(reactParityLine);
+  if (reactPhantoms.length > 0 || reactDrift.length > 0) {
+    console.error('\n❌ Parité React (#523) :');
+    for (const p of reactPhantoms)
+      console.error(`   [classe absente du CSS] ${p.component} (${p.registry}) → ${p.class}`);
+    for (const d of reactDrift)
+      console.error(`   [marquage incohérent]   ${d.component} (${d.registry}) → ${d.reason}`);
+    console.error('\nCorrigez : aligner la classe React sur le CSS du DS, ou le champ react du registre.');
+    process.exit(1);
+  }
+  console.log('Parité React       : OK (0 dérive)');
   if (isIdempotent) {
     console.log('Idempotence       : OK (registre à jour)');
   } else {
@@ -373,16 +558,28 @@ if (process.argv.includes('--check')) {
 
 fs.writeFileSync(REGISTRY_PATH, newJson, 'utf8');
 
+// ─── Rapport React (dérive signalée même hors --check) ───────────────────────
+if (reactPhantoms.length > 0 || reactDrift.length > 0) {
+  console.error('\n❌ Parité React (#523) :');
+  for (const p of reactPhantoms)
+    console.error(`   [classe absente du CSS] ${p.component} (${p.registry}) → ${p.class}`);
+  for (const d of reactDrift)
+    console.error(`   [marquage incohérent]   ${d.component} (${d.registry}) → ${d.reason}`);
+  console.error('\nCorrigez : aligner la classe React sur le CSS du DS, ou le champ react du registre.');
+  process.exit(1);
+}
+
 // ─── Rapport ──────────────────────────────────────────────────────────────────
 
 const totalComponents = newComponents.length;
 const totalClasses = newComponents.reduce((acc, c) => acc + (c.cssClasses || []).length, 0);
 
-console.log('=== generate-registry.js v1.1 — Design System msyx.fr ===');
+console.log('=== generate-registry.js v1.2 — Design System msyx.fr ===');
 console.log(`Registry : ${REGISTRY_PATH}`);
 console.log(`Version  : ${newRegistry.version}`);
 console.log(`Total composants  : ${totalComponents}`);
 console.log(`Total classes CSS : ${totalClasses}`);
+console.log(reactParityLine);
 if (addedGroups > 0 || addedClasses > 0) {
   console.log(`Nouveaux groupes  : +${addedGroups}`);
   console.log(`Nouvelles classes : +${addedClasses}`);

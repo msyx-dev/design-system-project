@@ -118,7 +118,8 @@ Depuis v2.32.0, le DS expose des artefacts destines aux agents IA (Claude Code e
 - **`SKILL.md`** : manifest user-invocable (frontmatter YAML `user-invocable: true`). Regle tokens, voix, glass/solid, pattern absorption issue, pré-allocation versions.
 - **`prompts.md`** : 12 phrases-types full-diacritics pour inclure dans les prompts agents.
 - **`canonical-pages/`** : 6 pages HTML autonomes (tokens-only, anti-FOUC, multi-theme) que les agents copient comme reference d'usage plutôt que d'inventer.
-- **`shared/components-registry.json`** : champ `example` (string HTML) sur chaque composant — copy-paste ready.
+- **`shared/components-registry.json`** : champ `example` (string HTML) sur chaque composant — copy-paste ready. Champ `react` (`ported`/`pending`/`n-a`) par composant (v2.68.0 #523) — rend l'écart CSS↔React auditable. 5 composants `ported` : `buttons`, `page-header`, `theme-toggle`, `user-menu`, `login-screen`.
+- **`bin/generate-registry.js`** v1.2 : normalisation du champ `react` (règle de défaut : `kind:module` → `n-a`, `kind:component` sans valeur → `pending`) + bloc parité React (#523) : valide que toute classe émise par `packages/react/` existe dans le CSS du DS (a) et que le marquage `react:ported` est cohérent (b). Écart global affiché dans les logs CI à chaque run. Greffé sur le validateur fantôme #516 — un seul step CI bloquant.
 
 Ces fichiers ne sont pas des demos publiques (pas de lien depuis site.html) : ils sont des references pour les agents, pas pour les utilisateurs finaux.
 
