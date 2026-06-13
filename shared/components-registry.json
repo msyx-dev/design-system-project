@@ -209,7 +209,7 @@
     },
     {
       "name": "alert",
-      "page": "composants",
+      "page": "feedback",
       "cssClasses": [
         ".alert",
         ".alert-icon",
@@ -272,7 +272,7 @@
     },
     {
       "name": "modal",
-      "page": "composants",
+      "page": "feedback",
       "cssClasses": [
         ".modal-preview",
         ".modal-overlay",
@@ -470,7 +470,7 @@
     },
     {
       "name": "popover",
-      "page": "composants",
+      "page": "feedback",
       "cssClasses": [
         ".popover-wrap",
         ".popover"
