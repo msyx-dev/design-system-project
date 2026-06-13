@@ -30,6 +30,7 @@
       "--deco-cyan": "#38bdf8",
       "--deco-cyan-rgb": "56, 189, 248",
       "--deco-pink": "#f97316",
+      "--deco-pink-rgb": "249, 115, 22",
       "--deco-violet": "#005a9e",
       "--deco-violet-rgb": "0, 90, 158",
       "--gradient-1": "linear-gradient(135deg, #e0cd1e, #b8a51a)",

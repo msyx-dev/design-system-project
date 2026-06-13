@@ -250,9 +250,9 @@
 
 /* ===== Card icon variants ===== */
 .card-icon--accent  { background: var(--accent-glow); }
-.card-icon--deco-violet  { background: rgba(139, 92, 246, 0.12); }
-.card-icon--deco-cyan    { background: rgba(6, 182, 212, 0.12); }
-.card-icon--deco-pink    { background: rgba(236, 72, 153, 0.12); }
+.card-icon--deco-violet  { background: rgba(var(--deco-violet-rgb), 0.12); }
+.card-icon--deco-cyan    { background: rgba(var(--deco-cyan-rgb), 0.12); }
+.card-icon--deco-pink    { background: rgba(var(--deco-pink-rgb), 0.12); }
 
 /* ===== Accessibilité ===== */
 .not-sr-only {

@@ -96,6 +96,7 @@
     --deco-cyan: #06b6d4;
     --deco-cyan-rgb: 6, 182, 212;
     --deco-pink: #ec4899;
+    --deco-pink-rgb: 236, 72, 153;
     --text-muted-rgb: 148, 163, 184;
 
     /* Semantic light (badges/alerts text) */
@@ -103,6 +104,20 @@
     --warning-light: #fbbf24;
     --danger-light: #f87171;
     --info-light: #22d3ee;
+
+    /* Status tokens (warn/error/info/success — fg/bg/border) — #391 */
+    --status-warn-fg: var(--warning-light);
+    --status-warn-bg: color-mix(in srgb, var(--warning) 12%, transparent);
+    --status-warn-border: color-mix(in srgb, var(--warning) 30%, transparent);
+    --status-error-fg: var(--danger-light);
+    --status-error-bg: color-mix(in srgb, var(--danger) 12%, transparent);
+    --status-error-border: color-mix(in srgb, var(--danger) 30%, transparent);
+    --status-info-fg: var(--info-light);
+    --status-info-bg: color-mix(in srgb, var(--info) 12%, transparent);
+    --status-info-border: color-mix(in srgb, var(--info) 30%, transparent);
+    --status-success-fg: var(--success-light);
+    --status-success-bg: color-mix(in srgb, var(--success) 12%, transparent);
+    --status-success-border: color-mix(in srgb, var(--success) 30%, transparent);
 
     /* Semantic dark (gradient stops) */
     --success-dark: #16a34a;
@@ -280,6 +295,11 @@
     --warning-light: #c2410c;  /* 4.72:1 sur #fff (était #fbbf24 = 1.44 KO) */
     --danger-light: #dc2626;   /* 5.91:1 sur #fff (était #f87171 = 2.36 KO) */
     --info-light: #0369a1;     /* 4.87:1 sur #fff (était #22d3ee = 1.56 KO) */
+    /* Status tokens — light mode : fg = base semantique assombrie (AA), bg/border heritent des semantiques light via color-mix — #391 */
+    --status-warn-fg: var(--warning);
+    --status-error-fg: var(--danger);
+    --status-info-fg: var(--info);
+    --status-success-fg: var(--success);
     /* Fix 13.1 — deco-cyan darken pour AA avatar fg sur fond clair */
     --deco-cyan: #0e7490;      /* 5.49:1 sur #fff WCAG AA (était #06b6d4 = 2.55 KO) */
     --deco-cyan-rgb: 14, 116, 144;

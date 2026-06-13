@@ -14,7 +14,7 @@
       "--chart-3": "#06b6d4",
       "--chart-4": "#ec4899",
       "--chart-5": "#22c55e",
-      "--code-comment": "#475569",
+      "--code-comment": "#94a3b8",
       "--code-function": "#60a5fa",
       "--code-keyword": "#c084fc",
       "--code-number": "#fbbf24",
@@ -45,7 +45,7 @@
       "--surface-light": "#334155",
       "--text": "#f1f5f9",
       "--text-muted": "#94a3b8",
-      "--text-dim": "#7c8db5",
+      "--text-dim": "#94a3b8",
       "--text-muted-rgb": "148, 163, 184",
       "--text-on-accent": "#ffffff"
     },
