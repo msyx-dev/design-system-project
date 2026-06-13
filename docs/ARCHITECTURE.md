@@ -4,24 +4,28 @@
 
 Design system statique (HTML/CSS/JS pur) servi par Caddy file_server.
 Aucun framework, aucun build, aucune dependance externe (sauf Google Fonts).
-**69 composants UI** (registre shared/components-registry.json, refactor S25 #219 — components-registry resync), repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (52 glyphes post-cleanup S25) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → 26 modules + barrel + tree-shake depuis v2.36.0. + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 120 baselines (3 thèmes × 2 modes × 10 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0. + Focus restore WAI APG sur modales (helper prive `attachFocusRestore` dans components.js, WCAG 2.4.3) depuis v2.41.0. + Brand identity (mark vectorisé officiel, signature spatiale, texture-grain token) depuis v2.42.0 (mark vectorisé depuis v2.43.0 #209). + Refactor nav.js prévention #206 (extract VERSION + template literals) depuis v2.43.1. + **Audit Phase 1 entièrement remédié S25** : chevron theme-aware via `--chevron-select` (v2.44.0), transitions ciblées + will-change cards (v2.45.0), tokenisation `--space-*` avec 2 nouveaux tokens (v2.46.0), restructure composants × pages (v2.47.0).
-Version courante : **v2.65.0** (S36 — clôture Epic #344 a11y cleanup résiduel : aria-prohibited-attr donut chart #349, label residual #348 critical, aria-required-children user-menu #347 critical, scrollable-region #346, color-contrast résiduel #345 — **bilan global Epic #337+#344 : 141 → 17 violations / -88%, critical 60 → 0 / -100%**). + v2.64.9 (S36 — label résiduel sliders/date pickers, 54 nœuds critical). + v2.64.8 (S36 — aria-required-children user-menu, 6 nœuds critical). + v2.64.7 (S36 — scrollable-region résiduel, 12 nœuds). + v2.64.6 (S36 — color-contrast résiduel, 14 fixes ciblés, 458 nœuds résorbés). + v2.64.5 (S35 — a11y WCAG AA Lots 1+2+3 : ARIA quick wins #338, color-contrast tokens #339, labels+scrollable-region #340, 141→78 violations / -45%, 60→12 critical / -80%, Epic #337 clos). + v2.64.4 (S35 — color-contrast 4 chaînes tokens recalibrées, ~1900 nœuds résolus). + v2.64.3 (S35 — ARIA quick wins, button-name/select-name/aria-required-attr/aria-prohibited-attr, ~210 nœuds). + v2.56.1 (#286 — fix harness VR/a11y, capture par section, baselines régénérées 1032). + v2.56.0 (S32 — brand identity, wordmark DS, mode-switch iOS). + v2.55.0 (S32 — mode toggle switch iOS-style). + v2.54.11 (S32 — polish boutons theme-aware). + v2.53.0 (S30 — Lighthouse CI baseline 1 page × MSYX dark, #240). + v2.52.0 (S30 — axe-core a11y dry-run infrastructure, #242). + v2.51.0 (S30 — perf budget gzip + CI warn-only, #239). + v2.50.0 (S29 — .code-inline refactor tokens canoniques). + v2.49.0 (S28 — promotions DS : .card-link, .badge-nav, .toast-message depuis consumers S27). + v2.48.0 (S26 — reliquat audit Phase 1 : tokenisation icon/avatar sizes, 8 nouveaux tokens `--avatar-size-*` + `--card-icon-*`, P-04 à P-08 fermés).
-last_reviewed: 2026-05-27
+**69 composants UI** (registre shared/components-registry.json, refactor S25 #219 — components-registry resync), repartis sur 9 pages thematiques, 3 themes, mode dark/light. + resets natifs globaux (a, :focus-visible) depuis v2.31.0. + ergonomie agent (SKILL.md, canonical-pages/, prompts.md) depuis v2.32.0. + sprite SVG Lucide self-hosted (52 glyphes post-cleanup S25) + tokens icon + classe `.icon` + fallback `@supports not (backdrop-filter)` depuis v2.33.0. + Motion reference page (durations/easings/6 patterns canoniques) depuis v2.35.0. + Split components.css → modules + barrel + tree-shake depuis v2.36.0 (30 modules CSS aujourd'hui). + Type modular scale ratio 1.25 (8 tokens `--type-*`) + section Pairing canonique depuis v2.37.0. + Visual regression matrice complète 120 baselines (3 thèmes × 2 modes × 10 pages × 2 viewports) depuis v2.38.0. + Theme generator JSON → CSS (themes/*.json + build-themes.js + scaffold-theme.sh) depuis v2.39.0. + Focus restore WAI APG sur modales (helper prive `attachFocusRestore` dans components.js, WCAG 2.4.3) depuis v2.41.0. + Brand identity (mark vectorisé officiel, signature spatiale, texture-grain token) depuis v2.42.0 (mark vectorisé depuis v2.43.0 #209). + Refactor nav.js prévention #206 (extract VERSION + template literals) depuis v2.43.1. + **Audit Phase 1 entièrement remédié S25** : chevron theme-aware via `--chevron-select` (v2.44.0), transitions ciblées + will-change cards (v2.45.0), tokenisation `--space-*` avec 2 nouveaux tokens (v2.46.0), restructure composants × pages (v2.47.0).
+Version courante : **v2.66.0**. + v2.65.0 (S36 — clôture Epic #344 a11y cleanup résiduel : aria-prohibited-attr donut chart #349, label residual #348 critical, aria-required-children user-menu #347 critical, scrollable-region #346, color-contrast résiduel #345 — **bilan global Epic #337+#344 : 141 → 17 violations / -88%, critical 60 → 0 / -100%**). + v2.64.9 (S36 — label résiduel sliders/date pickers, 54 nœuds critical). + v2.64.8 (S36 — aria-required-children user-menu, 6 nœuds critical). + v2.64.7 (S36 — scrollable-region résiduel, 12 nœuds). + v2.64.6 (S36 — color-contrast résiduel, 14 fixes ciblés, 458 nœuds résorbés). + v2.64.5 (S35 — a11y WCAG AA Lots 1+2+3 : ARIA quick wins #338, color-contrast tokens #339, labels+scrollable-region #340, 141→78 violations / -45%, 60→12 critical / -80%, Epic #337 clos). + v2.64.4 (S35 — color-contrast 4 chaînes tokens recalibrées, ~1900 nœuds résolus). + v2.64.3 (S35 — ARIA quick wins, button-name/select-name/aria-required-attr/aria-prohibited-attr, ~210 nœuds). + v2.56.1 (#286 — fix harness VR/a11y, capture par section, baselines régénérées 1032). + v2.56.0 (S32 — brand identity, wordmark DS, mode-switch iOS). + v2.55.0 (S32 — mode toggle switch iOS-style). + v2.54.11 (S32 — polish boutons theme-aware). + v2.53.0 (S30 — Lighthouse CI baseline 1 page × MSYX dark, #240). + v2.52.0 (S30 — axe-core a11y dry-run infrastructure, #242). + v2.51.0 (S30 — perf budget gzip + CI warn-only, #239). + v2.50.0 (S29 — .code-inline refactor tokens canoniques). + v2.49.0 (S28 — promotions DS : .card-link, .badge-nav, .toast-message depuis consumers S27). + v2.48.0 (S26 — reliquat audit Phase 1 : tokenisation icon/avatar sizes, 8 nouveaux tokens `--avatar-size-*` + `--card-icon-*`, P-04 à P-08 fermés).
+last_reviewed: 2026-06-13
 
 ## Structure
 
 ```
-assets/                 # Brand assets SVG (v2.42.0)
-  logo-msyx.svg         #   PRIMARY lockup mark+wordmark (200×60)
-  logo-msyx-mark.svg    #   Mark seule (60×60) — blob organique + M espace négatif + gradient turquoise→bleu→violet
-  logo-msyx-dark.svg    #   Variante fond sombre (wordmark #f1f5f9)
-  logo-msyx-light.svg   #   Variante fond clair (gradient saturé + wordmark #0a0f1e)
-  explorations/
+assets/                 # Brand assets SVG (v2.43.0)
+  logo-msyx.svg         #   PRIMARY mark seul vectorisé depuis le source officiel MSYX (viewBox 1475×1562, quasi-carré). Gradient vertical turquoise→vert→bleu→violet. PAS de wordmark texte, PAS de lockup
+  logo-msyx-mark.svg    #   Mark alias (identique à logo-msyx.svg)
+  logo-msyx-dark.svg    #   Variante fond sombre (gradients saturés)
+  logo-msyx-light.svg   #   Variante fond clair (gradients assombris pour contraste WCAG AA)
+  logo-acssi*.svg       #   Marks ACSSI (mark/dark/light/lockup)
+  sources/
+    logoMSYX.png        #   Source de référence officiel msyx.fr (mark only, 1475×1562 PNG)
+  explorations/         #   Historique conception S23 (NE PAS SUPPRIMER)
     wordmark-monogram-a.svg  #   Exploration A — sommets aigus
     wordmark-monogram-b.svg  #   Exploration B — sommets arrondis
 index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 9 categories
 pages/
+  getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
   fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration), texture grain (v2.42.0)
   motion.html           # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce) + boutons Replay + prefers-reduced-motion
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
@@ -32,16 +36,21 @@ pages/
   feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed, before/after) + Interaction (accordion, command palette, context menu, copy button, decision tree)
 shared/
-  styles.css            # Agregateur CSS — imports tokens + utilities + layout + components + base reset
+  styles.css            # Agregateur CSS — 7 @import : fonts + tokens + themes + utilities + layout + components + base
   css/
+    fonts.css           # @font-face self-hosted (Space Grotesk, Inter, Fira Code — woff2, font-display swap)
     tokens.css          # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood)
+    themes.css          # AUTOGÉNÉRÉ depuis themes/*.json par `node shared/build-themes.js` — blocs [data-theme] acssi/nhood (NE PAS éditer à la main)
+    base.css            # Socle global (reset, focus accessible, body, texture grain) — synchronisé vers consumers en ds-base.css
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css      # Barrel pur (v2.36.0) — 25 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
+    components.css      # Barrel pur (v2.36.0) — 30 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
     components-core.css # Barrel essentiel (v2.36.0) — 7 modules (~42 KB) : _base+buttons+cards+forms+alerts+badges+_a11y. Pour consumers légers.
-    components/         # 25 modules CSS par affinité fonctionnelle (v2.36.0) :
+    components/         # 30 modules CSS par affinité fonctionnelle (v2.60.0) :
       _base.css         #   Reset natif (a, :focus-visible global) — v2.31.0
       signature.css     #   Brand signature spatiale — gradient underline 2px sous .section-header .overline (v2.42.0)
+      brand.css         #   Brand identity — wordmark + mark DS (v2.56.0)
+      section-header.css#   .section-header + .overline (titres de section)
       buttons.css       #   .btn-primary, .btn-secondary, .btn-ghost, .btn-icon, .btn-icon--danger (v2.27.0)
       cards.css         #   .card, hero sections, hub, lazy sections, .card-link (a11y wrapper v2.49.0)
       badges.css        #   .badge, .badge-nav (compact sidebar/nav v2.49.0), .chip, .kbd, .notification-dot, .achievement-badge
@@ -66,6 +75,8 @@ shared/
       pricing.css       #   PRICING TABLE, SETTINGS PANEL, COMMENTS/THREAD, AUTH FLOWS, UPGRADE PROMPT
       notifications.css #   NOTIFICATION CENTER
       motion.css        #   MOTION REFERENCE PAGE (durations, easings, 6 patterns — v2.35.0)
+      access-denied.css #   ACCESS DENIED / 403 page (v2.58.0)
+      theme-toggle.css  #   Theme toggle / mode switch UI (v2.60.0)
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
   check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides
@@ -76,6 +87,8 @@ shared/
   CONSUMER_GUIDE.md          # Guide d'integration + règle d'or + scripts de vérification
   nav.js                     # Header, sidebar, scroll spy, SPA navigation, LazyLoader
   components.js              # 30+ composants JS interactifs (voir section dediee)
+  build-themes.js            # Générateur themes/*.json → shared/css/themes.css (v2.39.0)
+  scaffold-theme.sh          # Scaffold d'un nouveau theme JSON
 docs/
   ARCHITECTURE.md       # Ce fichier
   retros/               # Retrospectives de sprint + velocity.json
@@ -91,6 +104,11 @@ shared/icons/           # Sprite SVG Lucide self-hosted (v2.33.0)
   empty-state.html      # 3 variantes : aucun resultat, pas de donnees, erreur chargement
   error-404.html        # Erreur 404 : code large, card centree, 2 CTA
   billing.html          # Facturation : 3 plans tarifaires, abonnement actuel, historique
+themes/                 # Sources JSON des themes (v2.39.0) — msyx.json, acssi.json, nhood.json
+                        #   → compilées en shared/css/themes.css par `node shared/build-themes.js`
+packages/
+  react/                # Workspace npm @msyx-dev/react (3.x-alpha) — composants React, publié sur GitHub Packages
+                        #   RELEASES.md + package.json propres (artefact indépendant du DS CSS, cf. CLAUDE.md « Convention RELEASES.md »)
 ```
 
 ## Agent ergonomics (v2.32.0)
@@ -312,25 +330,25 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 - CSP : `script-src 'self' 'unsafe-inline'` (requis pour anti-FOUC)
 - Deploy : git push → visible immediatement (pas de build)
 
-## Brand identity (depuis v2.42.0)
+## Brand identity (depuis v2.42.0, mark officiel v2.43.0 #209)
 
-### Wordmark SVG
+### Mark SVG officiel
 
-Le logo msyx est un SVG vectoriel généré sans outil éditeur graphique. Il capture l'esprit du logo historique (PNG `/tmp/sprint-23-context/reference-logo-msyx.png`) :
+Le logo msyx est le **mark seul** vectorisé depuis le source officiel MSYX (`msyx.fr/media/logo/logoMSYX.png`, mark only, PNG 1475×1562 conservé en `assets/sources/logoMSYX.png`). **Pas de wordmark texte, pas de lockup** — toujours utiliser le fichier SVG (jamais de texte CSS gradient ni de réinterprétation des paths).
 
-- **Blob organique** : forme arrondie irrégulière (plectre/bec de guitare), chemin cubique
-- **M en espace négatif** : double sommet (vagues/montagnes), créé via `fill-rule="evenodd"` sur le même `path` complexe
-- **Gradient vertical** : `#10b981` (turquoise) → `#3b82f6` (bleu) → `#8b5cf6` (violet)
-- **Wordmark texte** : "msyx" en `currentColor` (adaptation thème automatique) — Space Grotesk 700
+- **Gradient vertical** : turquoise → vert → bleu → violet (stops `#3eb89d` → `#4ab695` → `#3a6cb8` → `#5b3eaa`)
+- **ViewBox** : `0 0 1475 1562` (ratio quasi-carré, fidèle au source)
+- **Adaptation thème** : variantes dark/light dédiées (gradients saturés / assombris pour contraste WCAG AA)
 
 Fichiers dans `assets/` :
-- `logo-msyx.svg` (200×60) — lockup PRIMARY pour headers
-- `logo-msyx-mark.svg` (60×60) — mark seule, favicon-ready
-- `logo-msyx-dark.svg` (200×60) — variante fond sombre explicite
-- `logo-msyx-light.svg` (200×60) — variante fond clair (gradient saturé)
-- `explorations/wordmark-monogram-{a,b}.svg` — historique de conception
+- `logo-msyx.svg` — PRIMARY, mark seul vectorisé (viewBox 1475×1562)
+- `logo-msyx-mark.svg` — alias identique à `logo-msyx.svg`
+- `logo-msyx-dark.svg` — variante fond sombre (gradients saturés)
+- `logo-msyx-light.svg` — variante fond clair (gradients assombris, contraste WCAG AA)
+- `sources/logoMSYX.png` — source officiel de référence (NE PAS SUPPRIMER)
+- `explorations/wordmark-monogram-{a,b}.svg` — historique de conception S23 (NE PAS SUPPRIMER)
 
-Contraintes respectées : ≤ 1 path complexe par variante, pas de garbage éditeur, `role="img"` + `<title>`, viewBox normalisé.
+Contraintes respectées : `role="img"` + `<title>`, viewBox normalisé.
 
 ### Signature spatiale
 
@@ -338,22 +356,26 @@ Module `signature.css` (importé dans `components.css` après `_base.css`). Grad
 
 ### Token texture grain
 
-`--texture-grain` + `--texture-grain-opacity: 0.015` dans `tokens.css`. Formalise `--noise-texture` (#12). `body::after` dans `styles.css` utilise ces tokens. Documenté dans `pages/fondation.html#texture`.
+`--texture-grain` + `--texture-grain-opacity: 0.015` dans `tokens.css`. Formalise `--noise-texture` (#12). `body::after` (dans `shared/css/base.css`) utilise ces tokens. Documenté dans `pages/fondation.html#texture`.
 
 ## Process ajout composant
 
-Pour ajouter un nouveau composant au DS, suivre la checklist dans `CLAUDE.md` section "Process ajout composant".
+> **Source unique de vérité** : la checklist détaillée vit dans `CLAUDE.md` section « Process ajout composant ». Ce bloc liste les fichiers réellement touchés — il doit rester cohérent avec `CLAUDE.md` et `docs/DS-PRINCIPLES.md`.
+
+**Emplacement CSS canonique** : le CSS d'un composant va dans son propre module `shared/css/components/<name>.css`, importé dans le barrel `shared/css/components.css` à la bonne place dans l'ordre cascade. **Ne JAMAIS écrire de CSS de composant dans `shared/styles.css`** (qui n'est qu'un agrégateur de 7 `@import`) ni dans un fichier monolithique.
 
 Fichiers modifies pour chaque composant :
-1. `pages/{categorie}.html` — section HTML + demo
-2. `shared/styles.css` — section CSS dediee
-3. `shared/components.js` — fonction init* (si interactif)
-4. `site.html` — compteur hero
-5. `shared/css/tokens.css` + `shared/css/utilities.css` — bump @ds-version
-6. `shared/nav.js` — bump header-version
+1. `pages/{categorie}.html` — section HTML + demo (≥ 2-3 variantes)
+2. `shared/css/components/<name>.css` — module CSS dédié + `@import` ajouté dans le barrel `shared/css/components.css`
+3. `shared/components.js` — fonction `init*` exportée via `window.__initX` (si interactif), pattern `dataset.bound`
+4. `site.html` — compteur hero (+ hub cards si applicable)
+5. **Bump `@ds-version` synchrone sur 5 fichiers** : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/nav.js` (`const VERSION`)
+6. `shared/components-registry.json` — entrée composant + champ `version` aligné sur le bump
 7. `docs/ARCHITECTURE.md` — structure + composants JS
 8. `CLAUDE.md` — description page + conventions
-9. `RELEASES.md` — changelog
+9. `RELEASES.md` (racine) — changelog Added/Changed (artefact DS CSS ; **jamais** une entrée `@msyx-dev/react` ici)
+
+**Qualité** : tester les **6 combos** thème/mode (MSYX, ACSSI, Nhood × dark + light), mobile-first (`@media (min-width: …)`), a11y baseline (aria-label icon-only, `:focus-visible`, contraste 4.5:1, target 44px mobile), anti-FOUC.
 
 ## Convention a11y — zéro `color: white` hardcodé (v2.30.1, #165)
 
