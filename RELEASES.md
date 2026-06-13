@@ -1,5 +1,11 @@
 # Releases
 
+## 2.69.1 — 2026-06-14 — Fix overflow grilles `.demo-grid-*` : `minmax(0, 1fr)` (#529)
+
+### Fixed
+- **Overflow page `formulaires.html` (et toutes pages showcase)** : les pistes des grilles `.demo-grid-2/3/4/5` utilisaient `1fr` = `minmax(auto, 1fr)` dont le plancher `auto` = max-content d'un `.demo-box` contenant `.login-preview` (~441px) causait un débordement horizontal de +399px à 1280px et +90px à 375px. Remplacé par `minmax(0, 1fr)` dans les 4 déclarations `grid-template-columns` (base L127-130, media 1024 L552, media 768 L563, @container demo-grid L622). Ajout de `min-width: 0` sur `.demo-box` (renforcement défensif). (`shared/css/layout.css`, #529)
+- **`.login-preview` — ceinture+bretelles** : ajout de `width: 100%; max-width: 100%` pour garantir la non-fuite si réutilisé hors grille. (`shared/css/components/forms.css`, #529)
+
 ## 2.69.0 — 2026-06-13 — Sidebar nav.js dynamique : 6 liens morts et 38 sections orphelines corrigés (#509)
 
 ### Fixed

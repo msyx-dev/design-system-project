@@ -1,4 +1,4 @@
-/* @ds-version: 2.69.0 */
+/* @ds-version: 2.69.1 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -122,12 +122,15 @@
 .main .subgroup-header .subgroup-desc { color: var(--text-muted); font-size: 0.875rem; margin: 0; line-height: 1.5; }
 .main .subsection:last-child { margin-bottom: 0; }
 .main .demo-label { font-size: 0.72rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: var(--space-md); display: block; }
-.main .demo-box { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); }
+.main .demo-box { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); min-width: 0; }
 .main .demo-grid { display: grid; gap: var(--space-lg); }
-.main .demo-grid-2 { grid-template-columns: repeat(2, 1fr); }
-.main .demo-grid-3 { grid-template-columns: repeat(3, 1fr); }
-.main .demo-grid-4 { grid-template-columns: repeat(4, 1fr); }
-.main .demo-grid-5 { grid-template-columns: repeat(5, 1fr); }
+/* minmax(0, 1fr) : autorise les pistes à descendre sous leur max-content
+   (sinon un enfant non-réductible — .login-preview/.demo-box — fait déborder
+   la grille). Fix #529. */
+.main .demo-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.main .demo-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.main .demo-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.main .demo-grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .main .demo-row { display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center; }
 .gradient-text { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 /* @strip:showcase-end */
@@ -549,7 +552,7 @@ html.theme-transitioning * {
 /* ===== RESPONSIVE — Layout ===== */
 /* @strip:showcase-start */
 @media (max-width: 1024px) {
-    .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: repeat(2, 1fr); }
+    .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 /* @strip:showcase-end */
 @media (max-width: 768px) {
@@ -560,7 +563,7 @@ html.theme-transitioning * {
     .main { margin-inline-start: 0; }
     /* @strip:showcase-start */
     .main section { padding: 3rem 1.5rem; }
-    .main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: 1fr; }
+    .main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: minmax(0, 1fr); }
     /* @strip:showcase-end */
 
     /* Sidebar overlay — mobile only */
@@ -624,7 +627,7 @@ html.theme-transitioning * {
     .main .demo-grid-3,
     .main .demo-grid-4,
     .main .demo-grid-5 {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 /* @strip:showcase-end */
