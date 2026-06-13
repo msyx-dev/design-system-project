@@ -1,12 +1,13 @@
 {
   "version": "2.66.1",
   "generated": {
-    "at": "2026-05-27T00:51:07.462Z",
+    "at": "2026-06-13T15:48:45.245Z",
     "by": "bin/generate-registry.js v1.0"
   },
   "components": [
     {
       "name": "buttons",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".btn-primary",
@@ -21,13 +22,16 @@
         ".btn-success",
         ".btn-warning",
         ".btn-outline-danger",
-        ".btn-loading"
+        ".btn-loading",
+        ".btn-icon-left",
+        ".btn-icon-right"
       ],
       "jsInit": null,
       "example": "<button class=\"btn-primary\">Action principale</button>\n<button class=\"btn-secondary\">Action secondaire</button>\n<button class=\"btn-ghost\">Action tertiaire</button>\n<button class=\"btn-primary btn-danger\">Supprimer</button>\n<button class=\"btn-primary btn-sm\">Petit</button>\n<button class=\"btn-primary btn-loading\">Chargement...</button>\n<button class=\"btn-icon\" aria-label=\"Menu\">&#9776;</button>"
     },
     {
       "name": "cards",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".card",
@@ -58,6 +62,7 @@
     },
     {
       "name": "badges",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".badge",
@@ -88,6 +93,7 @@
     },
     {
       "name": "chips",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".chip",
@@ -103,6 +109,7 @@
     },
     {
       "name": "inputs",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".input",
@@ -124,6 +131,7 @@
     },
     {
       "name": "progress",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".progress-bar",
@@ -136,6 +144,7 @@
     },
     {
       "name": "stats",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".stat-value",
@@ -146,6 +155,7 @@
     },
     {
       "name": "avatar",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".avatar",
@@ -163,6 +173,7 @@
     },
     {
       "name": "table",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".table-wrap"
@@ -172,6 +183,7 @@
     },
     {
       "name": "data-grid",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".data-grid-wrap",
@@ -192,6 +204,7 @@
     },
     {
       "name": "tree-view",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".tree",
@@ -209,6 +222,7 @@
     },
     {
       "name": "alert",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".alert",
@@ -223,6 +237,7 @@
     },
     {
       "name": "toast",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".toast",
@@ -239,6 +254,7 @@
     },
     {
       "name": "zone-banner",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".zone-banner",
@@ -252,6 +268,7 @@
     },
     {
       "name": "tooltip",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".tooltip-wrap",
@@ -262,16 +279,18 @@
     },
     {
       "name": "tabs",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".tabs",
         ".tab"
       ],
-      "jsInit": "initTabs",
+      "jsInit": "initComponents",
       "example": "<div class=\"tabs\" role=\"tablist\">\n  <button class=\"tab active\" role=\"tab\" aria-selected=\"true\" data-tab=\"tab-1\">Aperçu</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-2\">Détails</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-3\">Historique</button>\n</div>\n<div id=\"tab-1\" role=\"tabpanel\">Contenu de l'aperçu</div>\n<div id=\"tab-2\" role=\"tabpanel\" hidden>Contenu des détails</div>"
     },
     {
       "name": "modal",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".modal-preview",
@@ -290,6 +309,7 @@
     },
     {
       "name": "skeleton",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".skeleton",
@@ -303,6 +323,7 @@
     },
     {
       "name": "code",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".code-block",
@@ -315,6 +336,7 @@
     },
     {
       "name": "code-inline",
+      "kind": "component",
       "page": "divers",
       "section": "code",
       "module": "shared/css/components/interactive.css",
@@ -326,6 +348,7 @@
     },
     {
       "name": "copy-button",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".copy-btn"
@@ -335,6 +358,7 @@
     },
     {
       "name": "divider",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".divider",
@@ -345,6 +369,7 @@
     },
     {
       "name": "rating",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".rating",
@@ -355,6 +380,7 @@
     },
     {
       "name": "breadcrumb",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".breadcrumb",
@@ -365,6 +391,7 @@
     },
     {
       "name": "timeline",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".timeline",
@@ -377,6 +404,7 @@
     },
     {
       "name": "accordion",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".accordion",
@@ -384,11 +412,12 @@
         ".accordion-header",
         ".accordion-body"
       ],
-      "jsInit": "initAccordion",
+      "jsInit": "initComponents",
       "example": "<div class=\"accordion\">\n  <div class=\"accordion-item\">\n    <button class=\"accordion-header\" aria-expanded=\"false\">Section 1</button>\n    <div class=\"accordion-body\">Contenu de la section 1.</div>\n  </div>\n  <div class=\"accordion-item\">\n    <button class=\"accordion-header\" aria-expanded=\"true\">Section 2</button>\n    <div class=\"accordion-body\">Contenu de la section 2 (ouvert par défaut).</div>\n  </div>\n</div>"
     },
     {
       "name": "stepper",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".stepper",
@@ -401,6 +430,7 @@
     },
     {
       "name": "dropdown",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".dropdown",
@@ -411,11 +441,12 @@
         ".dropdown-tags",
         ".dropdown-tag"
       ],
-      "jsInit": "initDropdowns",
+      "jsInit": "initComponents",
       "example": "<div class=\"dropdown\" data-dropdown-id=\"dd-exemple\">\n  <button class=\"dropdown-trigger btn-secondary\" type=\"button\">Sélectionner...</button>\n  <div class=\"dropdown-menu\">\n    <div class=\"dropdown-search\"><input type=\"text\" placeholder=\"Filtrer...\"></div>\n    <div class=\"dropdown-option\" data-value=\"opt1\">Option 1</div>\n    <div class=\"dropdown-option\" data-value=\"opt2\">Option 2</div>\n    <div class=\"dropdown-option\" data-value=\"opt3\">Option 3</div>\n  </div>\n</div>"
     },
     {
       "name": "file-upload",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".file-upload",
@@ -430,6 +461,7 @@
     },
     {
       "name": "slider",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".slider-group",
@@ -444,6 +476,7 @@
     },
     {
       "name": "number-input",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".number-input-wrap",
@@ -455,6 +488,7 @@
     },
     {
       "name": "search-input",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".search-input-wrap",
@@ -470,6 +504,7 @@
     },
     {
       "name": "popover",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".popover-wrap",
@@ -480,6 +515,7 @@
     },
     {
       "name": "command-palette",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".cmd-overlay",
@@ -497,6 +533,7 @@
     },
     {
       "name": "drawer",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".drawer-preview",
@@ -512,6 +549,7 @@
     },
     {
       "name": "bottom-sheet",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".bottom-sheet",
@@ -527,6 +565,7 @@
     },
     {
       "name": "empty-state",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".empty-state",
@@ -537,6 +576,7 @@
     },
     {
       "name": "pagination",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".pagination",
@@ -549,6 +589,7 @@
     },
     {
       "name": "spinner",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".spinner",
@@ -564,6 +605,7 @@
     },
     {
       "name": "carousel",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".carousel",
@@ -578,6 +620,7 @@
     },
     {
       "name": "lightbox",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".lightbox-gallery",
@@ -589,6 +632,7 @@
     },
     {
       "name": "bottom-nav",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".bottom-nav",
@@ -602,6 +646,7 @@
     },
     {
       "name": "fab",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".fab",
@@ -619,6 +664,7 @@
     },
     {
       "name": "segmented-control",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".segmented",
@@ -630,6 +676,7 @@
     },
     {
       "name": "otp-input",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".otp-group",
@@ -640,6 +687,7 @@
     },
     {
       "name": "tag-input",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".tag-input-wrap",
@@ -653,6 +701,7 @@
     },
     {
       "name": "comparison-table",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".comparison-table",
@@ -665,6 +714,7 @@
     },
     {
       "name": "counter",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".counter",
@@ -673,11 +723,12 @@
         ".counter-suffix",
         ".counter-label"
       ],
-      "jsInit": "initCounters",
+      "jsInit": "initAnimatedCounters",
       "example": "<div class=\"counter\" data-counter-target=\"2847\" data-counter-duration=\"1200\">\n  <span class=\"counter-prefix\">+</span>\n  <span class=\"counter-value\">0</span>\n  <span class=\"counter-suffix\"> utilisateurs</span>\n  <div class=\"counter-label\">Inscrits ce mois</div>\n</div>"
     },
     {
       "name": "context-menu",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".context-menu",
@@ -689,6 +740,7 @@
     },
     {
       "name": "progress-tracker",
+      "kind": "component",
       "page": "data",
       "cssClasses": [
         ".progress-tracker",
@@ -702,17 +754,19 @@
     },
     {
       "name": "sortable-list",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".sortable-list",
         ".sortable-item",
         ".sortable-handle"
       ],
-      "jsInit": "initSortableList",
+      "jsInit": "initSortableLists",
       "example": "<ul class=\"sortable-list\" data-sortable-id=\"sort-exemple\">\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 1\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 2\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 3\n  </li>\n</ul>"
     },
     {
       "name": "video-embed",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".video-embed",
@@ -725,6 +779,7 @@
     },
     {
       "name": "quiz-poll",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".quiz",
@@ -740,6 +795,7 @@
     },
     {
       "name": "before-after",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".before-after",
@@ -753,6 +809,7 @@
     },
     {
       "name": "achievement-badge",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".achievement",
@@ -769,6 +826,7 @@
     },
     {
       "name": "decision-tree",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".dtree",
@@ -782,6 +840,7 @@
     },
     {
       "name": "sidebar-link-disabled",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".sidebar-link-disabled"
@@ -791,6 +850,7 @@
     },
     {
       "name": "sidebar-sublinks",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".sidebar-sublinks"
@@ -800,6 +860,7 @@
     },
     {
       "name": "avatar-img",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".avatar-img"
@@ -809,6 +870,7 @@
     },
     {
       "name": "filter-bar",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".filter-bar",
@@ -820,6 +882,7 @@
     },
     {
       "name": "login-screen",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".login-preview",
@@ -849,6 +912,7 @@
     },
     {
       "name": "reset-natif",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [],
       "jsInit": null,
@@ -857,6 +921,7 @@
     },
     {
       "name": "icon",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".icon",
@@ -869,6 +934,7 @@
     },
     {
       "name": "brand-logo-svg",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".header-logo",
@@ -880,6 +946,7 @@
     },
     {
       "name": "brand-signature",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".main .section-header .overline"
@@ -890,6 +957,7 @@
     },
     {
       "name": "texture-grain",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [],
       "jsInit": null,
@@ -898,6 +966,7 @@
     },
     {
       "name": "motion-replay",
+      "kind": "component",
       "page": "motion",
       "cssClasses": [
         ".motion-pattern",
@@ -918,6 +987,7 @@
     },
     {
       "name": "action-menu",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".action-menu-wrap",
@@ -927,11 +997,12 @@
         ".action-menu-divider",
         ".action-menu-icon"
       ],
-      "jsInit": "initActionMenus",
+      "jsInit": "initActionMenu",
       "example": "<div class=\"action-menu-wrap\">\n  <button class=\"action-menu-trigger\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-label=\"Actions\">&#8942;</button>\n  <div class=\"action-menu\" role=\"menu\">\n    <button class=\"action-menu-item\" role=\"menuitem\">Éditer</button>\n    <button class=\"action-menu-item danger\" role=\"menuitem\">Supprimer</button>\n  </div>\n</div>"
     },
     {
       "name": "pricing",
+      "kind": "component",
       "page": "templates",
       "cssClasses": [
         ".pricing-section",
@@ -997,6 +1068,7 @@
     },
     {
       "name": "comments",
+      "kind": "component",
       "page": "feedback",
       "cssClasses": [
         ".comment",
@@ -1018,6 +1090,7 @@
     },
     {
       "name": "theme-switcher",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".theme-switcher",
@@ -1034,6 +1107,7 @@
     },
     {
       "name": "brand-wordmark",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".brand-wordmark"
@@ -1045,6 +1119,7 @@
     },
     {
       "name": "brand-mark-ds",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".brand-mark-ds",
@@ -1058,6 +1133,7 @@
     },
     {
       "name": "user-menu",
+      "kind": "component",
       "page": "navigation",
       "cssClasses": [
         ".user-menu",
@@ -1082,6 +1158,7 @@
     },
     {
       "name": "access-denied",
+      "kind": "component",
       "page": "feedback",
       "section": "access-denied",
       "standalone": "/access-denied.html",
@@ -1110,6 +1187,7 @@
     },
     {
       "name": "a11y",
+      "kind": "module",
       "category": "a11y",
       "source_file": "shared/css/components/_a11y.css",
       "cssClasses": [
@@ -1127,6 +1205,7 @@
     },
     {
       "name": "base",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/_base.css",
       "cssClasses": [
@@ -1137,6 +1216,7 @@
     },
     {
       "name": "responsive",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/_responsive.css",
       "cssClasses": [
@@ -1159,6 +1239,7 @@
     },
     {
       "name": "alerts",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/alerts.css",
       "cssClasses": [
@@ -1173,6 +1254,7 @@
     },
     {
       "name": "brand",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/brand.css",
       "cssClasses": [
@@ -1186,6 +1268,7 @@
     },
     {
       "name": "brand-acssi",
+      "kind": "component",
       "category": "asset",
       "page": "fondation",
       "assets": [
@@ -1205,6 +1288,7 @@
     },
     {
       "name": "data",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/data.css",
       "cssClasses": [
@@ -1270,6 +1354,7 @@
     },
     {
       "name": "feedback",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/feedback.css",
       "cssClasses": [
@@ -1297,6 +1382,7 @@
     },
     {
       "name": "forms",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/forms.css",
       "cssClasses": [
@@ -1323,13 +1409,15 @@
         ".tag-input-wrap--disabled",
         ".tag-input-wrap--error",
         ".tag-item",
-        ".tag-item--removing"
+        ".tag-item--removing",
+        ".login-authentik-icon"
       ],
       "jsInit": null,
       "generated": true
     },
     {
       "name": "interactive",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/interactive.css",
       "cssClasses": [
@@ -1372,6 +1460,7 @@
     },
     {
       "name": "lists",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/lists.css",
       "cssClasses": [
@@ -1404,6 +1493,7 @@
     },
     {
       "name": "media",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/media.css",
       "cssClasses": [
@@ -1433,6 +1523,7 @@
     },
     {
       "name": "modals",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/modals.css",
       "cssClasses": [
@@ -1464,6 +1555,7 @@
     },
     {
       "name": "motion",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/motion.css",
       "cssClasses": [
@@ -1488,6 +1580,7 @@
     },
     {
       "name": "navigation",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/navigation.css",
       "cssClasses": [
@@ -1515,13 +1608,15 @@
         ".rail-toggle",
         ".rail-tooltip",
         ".sep",
-        ".step-line"
+        ".step-line",
+        ".user-menu-dropdown-role"
       ],
       "jsInit": null,
       "generated": true
     },
     {
       "name": "notifications",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/notifications.css",
       "cssClasses": [
@@ -1547,6 +1642,7 @@
     },
     {
       "name": "overlays",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/overlays.css",
       "cssClasses": [
@@ -1560,6 +1656,7 @@
     },
     {
       "name": "quiz",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/quiz.css",
       "cssClasses": [
@@ -1578,6 +1675,7 @@
     },
     {
       "name": "signature",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/signature.css",
       "cssClasses": [
@@ -1589,6 +1687,7 @@
     },
     {
       "name": "templates",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/templates.css",
       "cssClasses": [
@@ -1644,6 +1743,7 @@
     },
     {
       "name": "theming",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/theming.css",
       "cssClasses": [
@@ -1672,6 +1772,7 @@
     },
     {
       "name": "tracker",
+      "kind": "module",
       "category": "component",
       "source_file": "shared/css/components/tracker.css",
       "cssClasses": [
@@ -1707,6 +1808,7 @@
     },
     {
       "name": "layout",
+      "kind": "module",
       "category": "layout",
       "source_file": "shared/css/layout.css",
       "cssClasses": [
@@ -1774,6 +1876,7 @@
     },
     {
       "name": "utilities",
+      "kind": "module",
       "category": "utility",
       "source_file": "shared/css/utilities.css",
       "cssClasses": [
@@ -1993,6 +2096,7 @@
     },
     {
       "name": "theme-toggle",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".theme-toggle",
@@ -2006,6 +2110,7 @@
     },
     {
       "name": "page-header",
+      "kind": "component",
       "page": null,
       "cssClasses": [
         ".section-header",
