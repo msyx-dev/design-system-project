@@ -11,7 +11,7 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const THEMES_DIR = path.join(ROOT, 'themes');
 const OUT = path.join(__dirname, 'css', 'themes.css');
-const VERSION = '2.39.0';
+const VERSION = '2.66.1';
 
 /**
  * Render a CSS block with alphabetically sorted properties.
