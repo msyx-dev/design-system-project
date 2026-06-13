@@ -68,7 +68,7 @@ shared/
   icons/
     sprite.svg             # Sprite SVG Lucide self-hosted (v2.33.0) — 50 glyphes, ~21 KB
     build-sprite.sh        # Build reproductible (lucide-static + svgo)
-  nav.js            # Header, sidebar, scroll spy, SPA navigation, LazyLoader
+  nav.js            # Header, sidebar générée dynamiquement depuis le DOM (NAV_PAGES manifeste + scan section[id], v2.69.0 #509), scroll spy, SPA navigation, LazyLoader
   components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll, command palette, matrice risque)
 ```
 

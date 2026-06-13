@@ -90,7 +90,7 @@ de `design-system.msyx.fr`**, `sync.sh` distribue aussi les fichiers JS et
 l'agregateur CSS, prefixes `ds-` comme les CSS :
 
 - `ds-styles.css` — agregateur CSS (importe tous les modules `ds-*.css`)
-- `ds-nav.js` — header, sidebar, scroll-spy, navigation SPA, LazyLoader
+- `ds-nav.js` — header, sidebar, scroll-spy, navigation SPA, LazyLoader. La sidebar est **générée dynamiquement** depuis vos `.main > section[id]` (v2.69.0) : si vos sections portent un `.section-header h2`, elles apparaissent automatiquement dans la navigation. Aucune ancre à maintenir. Si aucune section n'est trouvée → sidebar vide propre (pas de crash).
 - `ds-components.js` — composants interactifs (toasts, modals, tabs, sliders...)
 
 Integration dans une page consumer :

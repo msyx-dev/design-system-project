@@ -15,9 +15,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **CI `lint`** : step `Registry phantom-class validation (#516)` → `node bin/generate-registry.js --check` (sans `continue-on-error`) — bloque le merge si un composant hand-written introduit une classe fantôme (#516, PR #524).
 
 ### Fixed
+- **Sidebar nav.js — 6 liens morts** (`composants#theme-switcher/tooltip/fab/action-menu`, `navigation#segmented-control/pagination`) : mauvais rangement page↔composant corrigé mécaniquement par la génération dynamique depuis le DOM réel. (#509)
+- **Sidebar nav.js — 38 sections orphelines** : 38 des 108 `<section id>` absentes de la navigation apparaissent désormais automatiquement. (#509)
 - **Registre** : 9 entrées `kind:component` corrigées — classes `cssClasses`/`example` fantômes alignées sur le CSS réel et la démo (`code`, `tag-input`, `breadcrumb`, `skeleton`, `accordion`, `stepper`, `empty-state`, `filter-bar`) (#516, PR #524).
 
 ### Changed
+- **`shared/nav.js` — sidebar dynamique** : tableau `NAV_SECTIONS` (~80 ancres) remplacé par manifeste `NAV_PAGES` (11 pages) + scan DOM runtime (`extractSections`, `resolvePageSections`, `buildSidebar` async, `renderEmptySidebar`). Non-breaking consumers. (#509)
 - **`bin/generate-registry.js` v1.2** : normalisation du champ `react` + check parité React (a)+(b)+réciproque ; écart global dans les deux rapports (écriture et `--check`) (#523).
 - **CI step lint renommé** : « Registry validation — phantoms (#516) + React parity (#523) » — même commande, périmètre documenté élargi (#523).
 

@@ -53,3 +53,18 @@ Le workflow `.github/workflows/visual.yml` s'execute sur chaque PR vers `main`. 
 - **Total** : 108 baselines (3 themes x 2 modes x 9 pages x 2 viewports)
 
 Filet utilise pour valider la byte-identite du CSS lors des refontes theme generator (#190) ou de toute modification de tokens.
+
+## Profil d'auth
+
+Profil : **P0** — application statique publique (accès sans authentification en production).
+Préprod (`design-system-project.miklaw.fr`) : protégée par forward_auth Authentik UC2 (groupe `preprod-testers`).
+
+Variables d'environnement : aucune (application statique pure, servie par Caddy `file_server`).
+
+Volumes / persistance : aucun volume requis. Le contenu est le repo git lui-même.
+
+Endpoints de santé :
+- `/health` → répondu par Caddy (`respond 200`) ou via `health.json` statique
+- `/version` → via `version.json` statique (généré à chaque deploy)
+
+Backup : le code source est sur git (`msyx-dev/design-system-project`). Aucune donnée applicative à sauvegarder.
