@@ -1,5 +1,25 @@
 # Releases
 
+## 2.67.0 — 2026-06-13 — Remédiation dette audit adversarial 2026-06-13
+
+> Issues M#37 (Distribution sync.sh), M#38 (Garde-fous CI), M#39 (Migration thèmes v2.39). Cf. `docs/audit-2026-06-13.md`.
+
+### Added
+- **Garde-fous CI** : `check-versions.sh` (cohérence des 8 marqueurs de version) + step CI `verify-versions` (#377) ; job CI `react` (vitest) (#378) ; `check-counters.sh` (hero/meta/footer vs registre).
+- **Distribution `sync.sh`** : distribue désormais `themes.css`, `fonts.css` + `fonts/` (woff2), `icons/sprite.svg`, `brand.css` (mode core), `_responsive.css` (mode sélectif), et le Niveau C `nav.js`/`components.js`/`styles.css` (#367-373, #372).
+- **Tokens** : `--status-{warn,error,info,success}-{fg,bg,border}` définis pour MSYX et Nhood (étaient ACSSI-only) (#391) ; `--deco-pink-rgb` (#394). Classes DS `.btn-icon-left/right`, `.user-menu-dropdown-role`, `.login-authentik-icon` (parité React) (#376).
+
+### Fixed
+- **a11y** : `.user-menu-dropdown` fermé n'est plus focusable (`visibility:hidden`) ; mapping `aria-checked` du mode-switch canonisé (true = dark) (#382).
+- **Migration thèmes v2.39 finalisée** : blocs `[data-theme]` legacy supprimés de `tokens.css`, `themes.css` source unique, `--chevron-select` + tokens nhood-light portés en `themes/*.json` (#386-389) ; 0 token perdu (vérifié).
+- `check-sync.sh` : `--check-overrides` (no-op) + DRIFT permanent corrigés (#373) ; `check-hardcoded-tokens.sh` élargi (utilities/layout + couleurs nommées) + violations corrigées (#379).
+- **Registre** : `jsInit` erronés, pointeurs `page` (alert/modal/popover → feedback), séparation modules/composants (#381, #385) ; compteurs `site.html` resync (#380).
+- `.card-icon--deco-*` : RGB MSYX en dur → `var(--deco-*-rgb)` theme-aware (#394) ; `themes/msyx.json` valeurs a11y-KO corrigées (#390).
+
+### Changed
+- **Docs** : `ARCHITECTURE.md` à jour ; process source unique (emplacement CSS, 5 fichiers, 6 combos) ; règle px recalibrée dans `DS-PRINCIPLES.md` (#383, #384, #393).
+- Collision `.theme-toggle` / `.mode-switch` documentée : `.mode-switch` canonique (#392).
+
 ## 2.66.0 — 2026-06-03 — Socle global distribué aux consumers (base.css) — acssi-core#592
 
 ### Added
