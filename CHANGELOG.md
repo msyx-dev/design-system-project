@@ -8,6 +8,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.69.1] — 2026-06-14
+
+### Fixed
+- **Overflow grilles `.demo-grid-*`** : `1fr` → `minmax(0, 1fr)` dans les 4 déclarations `grid-template-columns` (base, media 1024, media 768, @container) — le plancher `auto` = max-content (~441px) causait un débordement +399px à 1280px, +90px à 375px. Ajout `min-width: 0` sur `.demo-box`. (`shared/css/layout.css`, #529)
+- **`.login-preview`** : ajout `width: 100%; max-width: 100%` défensif. (`shared/css/components/forms.css`, #529)
+
 ## [2.69.0] — 2026-06-13
 
 ### Fixed

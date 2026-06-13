@@ -424,7 +424,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 /* ===== LOGIN FORM / LOGINSCREEN ===== */
 /* Pattern d'authentification msyx. Card glassmorphism + orbes + gradient submit.        */
 /* LoginScreen (v2.57.0, #285) : bouton Authentik primary + slots providers + 3 variants. */
-.login-preview { background: var(--primary); border-radius: var(--radius-card); padding: var(--space-xl); min-height: 360px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.login-preview { background: var(--primary); border-radius: var(--radius-card); padding: var(--space-xl); min-height: 360px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; width: 100%; max-width: 100%; }
 .login-preview .orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.15; pointer-events: none; }
 .login-preview .orb-1 { width: 300px; height: 300px; background: var(--accent); top: -80px; right: -60px; }
 .login-preview .orb-2 { width: 250px; height: 250px; background: var(--deco-violet); bottom: -60px; left: -60px; }
