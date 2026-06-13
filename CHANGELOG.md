@@ -8,6 +8,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- **CI `lint`** : step `Registry phantom-class validation (#516)` → `node bin/generate-registry.js --check` (sans `continue-on-error`) — bloque le merge si un composant hand-written introduit une classe fantôme (#516, PR #524).
+
+### Fixed
+- **Registre** : 9 entrées `kind:component` corrigées — classes `cssClasses`/`example` fantômes alignées sur le CSS réel et la démo (`code`, `tag-input`, `breadcrumb`, `skeleton`, `accordion`, `stepper`, `empty-state`, `filter-bar`) (#516, PR #524).
+
 ## [2.66.0] — 2026-06-03
 
 ### Added
