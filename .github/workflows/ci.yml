@@ -60,6 +60,12 @@ jobs:
         continue-on-error: true
       - name: Registry validation — phantoms (#516) + React parity (#523)
         run: node bin/generate-registry.js --check
+      - name: Install deps + Playwright browser (nav-sections check)
+        run: |
+          npm ci --prefer-offline 2>/dev/null || npm install --ignore-scripts
+          npx playwright install chromium --with-deps
+      - name: Nav sections manifest validation (#528)
+        run: node bin/generate-nav-sections.js --check
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
   # 136 tests valides localement via vitest (npm). Le chemin exact
   # corepack + pnpm install --frozen-lockfile sur Node 24 n'a PAS pu

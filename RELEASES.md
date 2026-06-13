@@ -1,5 +1,19 @@
 # Releases
 
+## 2.70.0 — 2026-06-14 — Sidebar : manifeste de sections généré au BUILD, ZÉRO fetch runtime (#528)
+
+### Fixed
+- **Sidebar — sous-sections absentes sur préprod auth-gated** : `resolvePageSections()` résolvait les pages non-courantes via `fetch(p.path)` + DOMParser au runtime. Sur `design-system.miklaw.fr`, Authentik forward_auth répond HTTP 302 sur toute ressource → le fetch retombait sur la page login → 0 `.main > section[id]` trouvé → sous-liens absents. Fix : le manifeste `NAV_SECTIONS_MANIFEST` est généré au build par `bin/generate-nav-sections.js` (Playwright, sélecteur `.main > section[id]` exact direct-child) et inliné dans `shared/nav.js` entre marqueurs `AUTO-GENERATED`. Plus aucun `fetch` dans `resolvePageSections()` — immunisé auth-gate, cache navigateur, CSP, redirect cross-origin. (#528)
+- **Sidebar — doublon « Getting Started »** : `getting-started` émettait 2 liens identiques (lien parent `page.label` + section `#overview` dont le `<h2>` vaut « Getting Started »). Règle : le lien parent est supprimé si la 1ère section porte le même label. Résultat : 95 → **94 liens** sidebar, 0 doublon. (#528)
+
+### Changed
+- **`bin/generate-nav-sections.js`** (nouveau, v1.0) : script de build dédié — scanne `.main > section[id]` (enfants directs, Playwright) + label `(.section-header h2)||h2||id` sur les 10 pages non-flat de `NAV_PAGES`. Produit `const NAV_SECTIONS_MANIFEST = {...}` et l'inline dans `shared/nav.js` entre marqueurs `AUTO-GENERATED NAV SECTIONS START/END`. Mode `--check` (CI bloquant) : régénère en mémoire et compare à l'inliné → exit 1 si divergence (le manifeste ne peut plus dériver). (#528)
+- **`shared/nav.js` — `resolvePageSections()`** : suppression du `Promise.all`/fetch/DOMParser cross-page. Page courante : scan DOM live `extractSections(document)` (inchangé). Autres pages : lecture `NAV_SECTIONS_MANIFEST[p.path]` (fallback `[]` si absent, compatible consumers sans build). (#528)
+- **CI `.github/workflows/ci.yml`** : step `Nav sections manifest validation (#528)` ajouté dans job `lint` (non `continue-on-error`). Précédé d'un `npm ci + npx playwright install chromium`. (#528)
+- **`package.json`** : script `generate-nav-sections` ajouté (`node bin/generate-nav-sections.js`). (#528)
+- **`docs/ARCHITECTURE.md`** : section Sidebar mise à jour (manifeste build, ZÉRO fetch, anti-dérive CI, 94 liens). (#528)
+- **`CLAUDE.md`** : description nav.js mise à jour (manifeste inliné). (#528)
+
 ## 2.69.1 — 2026-06-14 — Fix overflow grilles `.demo-grid-*` : `minmax(0, 1fr)` (#529)
 
 ### Fixed
