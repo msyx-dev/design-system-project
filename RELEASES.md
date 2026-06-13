@@ -1,5 +1,16 @@
 # Releases
 
+## 2.69.0 — 2026-06-13 — Sidebar nav.js dynamique : 6 liens morts et 38 sections orphelines corrigés (#509)
+
+### Fixed
+- **Sidebar nav.js — 6 liens morts** : les ancres `composants#theme-switcher`, `composants#tooltip`, `composants#fab`, `composants#action-menu`, `navigation#segmented-control`, `navigation#pagination` ne correspondaient à aucune section sur la page ciblée (mauvais rangement page↔composant). La génération dynamique depuis le DOM réel corrige mécaniquement ces erreurs : chaque lien est forcément sur la bonne page. (#509)
+- **Sidebar nav.js — 38 sections orphelines** : 38 des 108 sections existantes (`.main > section[id]`) étaient absentes de la navigation. Elles apparaissent désormais automatiquement. (#509)
+
+### Changed
+- **`shared/nav.js` — génération dynamique de la sidebar** (v2.69.0) : suppression du tableau `NAV_SECTIONS` hardcodé (~80 entrées) remplacé par un manifeste minimal `NAV_PAGES` (11 entrées, pages uniquement, zéro ancre) + scan DOM runtime. Nouvelles fonctions : `extractSections(doc)` (scan `.main > section[id]` + label `.section-header h2`), `resolvePageSections()` (page courante direct + fetch cross-page parallélisé pour le hub `site.html`), `buildSidebar()` async (chaîné `.finally()` avant `initScrollSpy`/`initLazyLoader`), `renderEmptySidebar()` (fallback consumer no-op). Non-breaking : consumer sans `.section-header h2` reçoit une sidebar vide propre, jamais un crash. (#509)
+- **`docs/ARCHITECTURE.md`** : section Sidebar mise à jour (description génération dynamique, nouvelles fonctions). (#509)
+- **`shared/CONSUMER_GUIDE.md`** : note comportement `ds-nav.js` sidebar dynamique pour les consumers Niveau C. (#509)
+
 ## 2.68.0 — 2026-06-13 — Parité React : champ registre + check CI + politique anti-dérive (#523)
 
 ### Added

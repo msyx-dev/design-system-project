@@ -177,7 +177,10 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 ### Sidebar
 - Position fixed, sous le header (`top: var(--header-h)`)
-- Contenu : liens de navigation uniquement (sections des pages)
+- **Générée dynamiquement** depuis le DOM au chargement (v2.69.0 #509) : manifeste `NAV_PAGES` (liste des pages sans ancre) + scan `extractSections()` (`.main > section[id]`) + fetch cross-page pour le hub. Divergence ancre/section impossible par construction.
+- Contenu : liens de navigation vers toutes les `<section id>` réelles de chaque page — 108 sections sur 10 pages
+- `buildSidebar()` async, chaîné `.finally()` avant `initScrollSpy()` / `initLazyLoader()` pour garantir que `handleInitialHash` voit les liens générés
+- Fallback consumer : 0 section résolue → `renderEmptySidebar()` (no-op gracieux, jamais de crash)
 - Scroll-spy : highlight automatique de la section visible, auto-scroll sidebar
 - `.sidebar-link-disabled` / `[aria-disabled="true"]` : variante disabled (opacity 0.4, pointer-events none)
 - `.sidebar-sublinks` : container sous-navigation indentee (padding-left, font-size reduit)

@@ -1,104 +1,23 @@
-/* @ds-version 2.68.0 */
-const VERSION = '2.68.0';
+/* @ds-version 2.69.0 */
+const VERSION = '2.69.0';
 
-const NAV_SECTIONS = [
-    { title: null, links: [
-        { label: 'Hub', icon: '&#9670;', href: '/site.html' },
-        { label: 'Getting Started', icon: '&#9654;', href: '/pages/getting-started.html' }
-    ]},
-    { title: 'Fondation', links: [
-        { label: 'Couleurs', icon: '&#127912;', href: '/pages/fondation.html#colors' },
-        { label: 'Typographie', icon: 'Aa', href: '/pages/fondation.html#typography' },
-        { label: 'Spacing', icon: '&#9638;', href: '/pages/fondation.html#spacing' },
-        { label: 'Tokens CSS', icon: '{}', href: '/pages/fondation.html#tokens' },
-        { label: 'Theming', icon: '&#9775;', href: '/pages/fondation.html#theming' },
-        { label: 'Utilitaires', icon: '&#9638;', href: '/pages/fondation.html#utilities' },
-        { label: 'Brand identity', icon: '&#9670;', href: '/pages/fondation.html#brand' },
-        { label: 'Texture', icon: '&#9617;', href: '/pages/fondation.html#texture' },
-        { label: 'Motion', icon: '&#9889;', href: '/pages/motion.html#durations' }
-    ]},
-    { title: 'Composants', links: [
-        { label: 'Boutons', icon: '&#9654;', href: '/pages/composants.html#buttons' },
-        { label: 'Cards', icon: '&#9744;', href: '/pages/composants.html#cards' },
-        { label: 'Badges & Tags', icon: '&#9679;', href: '/pages/composants.html#badges' },
-        { label: 'Chips', icon: '&#10005;', href: '/pages/composants.html#chips' },
-        { label: 'Divider', icon: '&#9135;', href: '/pages/composants.html#dividers' },
-        { label: 'Rating', icon: '&#9733;', href: '/pages/composants.html#rating' },
-        { label: 'Avatars', icon: '&#9786;', href: '/pages/composants.html#avatars' },
-        { label: 'Theme Switcher', icon: '&#9775;', href: '/pages/composants.html#theme-switcher' },
-        { label: 'Tooltip/Popover', icon: '&#128172;', href: '/pages/composants.html#tooltip' },
-        { label: 'FAB', icon: '&#43;', href: '/pages/composants.html#fab' },
-        { label: 'Action Menu', icon: '&#8942;', href: '/pages/composants.html#action-menu' }
-    ]},
-    { title: 'Formulaires', links: [
-        { label: 'Inputs', icon: '&#9998;', href: '/pages/formulaires.html#inputs' },
-        { label: 'Controls', icon: '&#9881;', href: '/pages/formulaires.html#controls' },
-        { label: 'Login / Auth', icon: '&#128274;', href: '/pages/formulaires.html#login' },
-        { label: 'Calendrier', icon: '&#128197;', href: '/pages/formulaires.html#calendar' },
-        { label: 'Dropdown', icon: '&#9662;', href: '/pages/formulaires.html#dropdown' },
-        { label: 'File Upload', icon: '&#128206;', href: '/pages/formulaires.html#file-upload' },
-        { label: 'Slider / Range', icon: '&#8942;', href: '/pages/formulaires.html#slider' },
-        { label: 'Search Input', icon: '&#128269;', href: '/pages/formulaires.html#search-input' },
-        { label: 'Number Input', icon: '&#177;', href: '/pages/formulaires.html#number-input' },
-        { label: 'OTP Input', icon: '&#9872;', href: '/pages/formulaires.html#otp-input' },
-        { label: 'Tag Input', icon: '&#127991;', href: '/pages/formulaires.html#tag-input' },
-        { label: 'Wizard', icon: '&#8594;', href: '/pages/formulaires.html#wizard' },
-        { label: 'Inline Edit', icon: '&#9998;', href: '/pages/formulaires.html#inline-edit' }
-    ]},
-    { title: 'Navigation', links: [
-        { label: 'Header User', icon: '&#128100;', href: '/pages/navigation.html#header-user' },
-        { label: 'Tabs & Nav', icon: '&#9776;', href: '/pages/navigation.html#nav-components' },
-        { label: 'Breadcrumbs', icon: '&#8250;', href: '/pages/navigation.html#breadcrumbs' },
-        { label: 'Stepper', icon: '&#8594;', href: '/pages/navigation.html#stepper' },
-        { label: 'Segmented', icon: '&#9632;', href: '/pages/navigation.html#segmented-control' },
-        { label: 'Pagination', icon: '&#8230;', href: '/pages/navigation.html#pagination' },
-        { label: 'Bottom Nav', icon: '&#9635;', href: '/pages/navigation.html#bottom-nav' },
-        { label: 'Sidebar Rail', icon: '&#9646;', href: '/pages/navigation.html#sidebar-rail' },
-        { label: 'User Menu', icon: '&#128100;', href: '/pages/navigation.html#user-menu' }
-    ]},
-    { title: 'Data', links: [
-        { label: 'Stats', icon: '#', href: '/pages/data.html#stats' },
-        { label: 'Progress', icon: '&#9632;', href: '/pages/data.html#progress' },
-        { label: 'Tables', icon: '&#9638;', href: '/pages/data.html#tables' },
-        { label: 'Data Grid', icon: '&#9639;', href: '/pages/data.html#data-grid' },
-        { label: 'Charts', icon: '&#9636;', href: '/pages/data.html#charts' },
-        { label: 'Pie & Donut', icon: '&#9685;', href: '/pages/data.html#pie-donut' },
-        { label: 'Tree View', icon: '&#9656;', href: '/pages/data.html#tree-view' },
-        { label: 'Gauge', icon: '&#9685;', href: '/pages/data.html#gauge' },
-        { label: 'Listes', icon: '&#9776;', href: '/pages/data.html#lists' },
-        { label: 'Matrice Risque', icon: '&#9888;', href: '/pages/data.html#risk-matrix' }
-    ]},
-    { title: 'Feedback', links: [
-        { label: 'Alertes', icon: '&#9888;', href: '/pages/feedback.html#alerts' },
-        { label: 'Toasts', icon: '&#9993;', href: '/pages/feedback.html#toasts' },
-        { label: 'Modals', icon: '&#9634;', href: '/pages/feedback.html#modals' },
-        { label: 'Skeleton', icon: '&#9604;', href: '/pages/feedback.html#skeleton' },
-        { label: 'Drawer', icon: '&#9646;', href: '/pages/feedback.html#drawer' },
-        { label: 'Zone Banner', icon: '&#9646;', href: '/pages/feedback.html#zone-banner' },
-        { label: 'Empty States', icon: '&#9744;', href: '/pages/feedback.html#empty-states' },
-        { label: 'Bottom Sheet', icon: '&#9650;', href: '/pages/feedback.html#bottom-sheet' },
-        { label: 'Spinners', icon: '&#10227;', href: '/pages/feedback.html#spinners' }
-    ]},
-    { title: 'Avancé', links: [
-        { label: 'Timeline', icon: '&#8942;', href: '/pages/divers.html#timeline' },
-        { label: 'Accordion', icon: '&#9660;', href: '/pages/divers.html#accordion' },
-        { label: 'Code', icon: '&lt;/&gt;', href: '/pages/divers.html#code' },
-        { label: 'Copy Button', icon: '&#128203;', href: '/pages/divers.html#copy-button' },
-        { label: 'Carousel', icon: '&#9654;', href: '/pages/divers.html#carousel' },
-        { label: 'Lightbox', icon: '&#128247;', href: '/pages/divers.html#lightbox' },
-        { label: 'Context Menu', icon: '&#9776;', href: '/pages/divers.html#context-menu' },
-        { label: 'Cmd Palette', icon: '&#8984;', href: '/pages/divers.html#command-palette' },
-        { label: 'Video Embed', icon: '&#127909;', href: '/pages/divers.html#video-embed' },
-        { label: 'Decision Tree', icon: '&#9656;', href: '/pages/divers.html#decision-tree' },
-        { label: 'Before/After', icon: '&#8596;', href: '/pages/divers.html#before-after' }
-    ]},
-    { title: 'Templates', links: [
-        { label: 'Kanban', icon: '&#8862;', href: '/pages/templates.html#kanban' },
-        { label: 'Roadmap', icon: '&#9656;', href: '/pages/templates.html#roadmap' },
-        { label: 'Backlog', icon: '&#9776;', href: '/pages/templates.html#backlog' },
-        { label: 'Sprint Board', icon: '&#10227;', href: '/pages/templates.html#sprint' }
-    ]}
+// Manifeste des pages showcase — SEULE liste maintenue à la main.
+// Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
+// Avantage : divergence impossible par construction (ancre morte = impossible).
+const NAV_PAGES = [
+    { title: null,          path: '/site.html',                  label: 'Hub',             icon: '&#9670;', flat: true },
+    { title: null,          path: '/pages/getting-started.html', label: 'Getting Started', icon: '&#9654;' },
+    { title: 'Fondation',   path: '/pages/fondation.html',       icon: '&#127912;' },
+    { title: 'Fondation',   path: '/pages/motion.html',          icon: '&#9889;' },
+    { title: 'Composants',  path: '/pages/composants.html',      icon: '&#9654;' },
+    { title: 'Formulaires', path: '/pages/formulaires.html',     icon: '&#9998;' },
+    { title: 'Navigation',  path: '/pages/navigation.html',      icon: '&#9776;' },
+    { title: 'Data',        path: '/pages/data.html',            icon: '#' },
+    { title: 'Feedback',    path: '/pages/feedback.html',        icon: '&#9888;' },
+    { title: 'Avancé',      path: '/pages/divers.html',          icon: '&#8942;' },
+    { title: 'Templates',   path: '/pages/templates.html',       icon: '&#8862;' }
 ];
+
 
 // Current scroll spy observer (so we can disconnect on page swap)
 let scrollSpyObserver = null;
@@ -373,23 +292,126 @@ function updateNotificationCount(count) {
     }
 }
 
-function buildSidebar() {
-    const sidebar = document.getElementById('sidebar');
+// ===== SIDEBAR DYNAMIQUE — génération depuis le DOM (#509) =====
+// Les sections sont scannées depuis .main > section[id] à chaque page.
+// Le manifeste NAV_PAGES liste les pages (sans aucune ancre) — ne peut plus diverger.
+
+/**
+ * Extrait [{id, label}] des sections showcase d'un Document (page courante OU fetchée).
+ * Sélecteur : enfants DIRECTS de .main (exclut les section imbriquées dans les démos).
+ */
+function extractSections(doc) {
+    var out = [];
+    doc.querySelectorAll('.main > section[id]').forEach(function(sec) {
+        var h2 = sec.querySelector('.section-header h2') || sec.querySelector('h2');
+        var label = (h2 ? h2.textContent : '').trim() || sec.id;
+        out.push({ id: sec.id, label: label });
+    });
+    return out;
+}
+
+/**
+ * Résout les sections de chaque page du manifeste NAV_PAGES.
+ * (a) Page courante : scan DOM direct (immédiat, 0 fetch).
+ * (b) Autres pages + hub : fetch + DOMParser (parallélisé via Promise.all).
+ * Retourne Map<path, [{id,label}]>.
+ */
+async function resolvePageSections() {
+    var result = {};
+    NAV_PAGES.forEach(function(p) { result[p.path] = []; });
+
+    // (a) Page courante : scan DOM déjà rendu (rapide, 0 réseau).
+    //     Sur site.html, .main contient des placeholders vides → 0 section ici.
+    var localSecs = extractSections(document);
+    if (localSecs.length) {
+        var match = NAV_PAGES.find(function(p) {
+            return location.pathname.endsWith(p.path) && !p.flat;
+        });
+        if (match) result[match.path] = localSecs;
+    }
+
+    // (b) Autres pages : fetch + DOMParser (même mécanique que LazyLoader / navigateTo).
+    //     Indispensable pour le hub (toutes les pages) et la sidebar des autres pages
+    //     (afficher les sections des pages non-courantes).
+    var toFetch = NAV_PAGES.filter(function(p) {
+        return !p.flat && !result[p.path].length;
+    });
+    await Promise.all(toFetch.map(async function(p) {
+        try {
+            var resp = await fetch(p.path);
+            if (!resp.ok) return;
+            var doc = new DOMParser().parseFromString(await resp.text(), 'text/html');
+            result[p.path] = extractSections(doc);
+        } catch (e) { /* réseau KO → page sans sous-liens, sidebar reste fonctionnelle */ }
+    }));
+
+    return result;
+}
+
+/**
+ * Génère le HTML d'un lien sidebar.
+ */
+function linkHtml(href, icon, label) {
+    return '<a href="' + href + '" class="sidebar-link" data-href="' + href + '"><span class="icon">' + icon + '</span> ' + label + '</a>';
+}
+
+/**
+ * Fallback consumer : sidebar vide propre si aucune section n'est résolue.
+ * Ne crash jamais.
+ */
+function renderEmptySidebar(sidebar) {
+    sidebar.innerHTML = '<div class="sidebar-footer"><p>msyx.fr — 2026</p></div>';
+}
+
+/**
+ * Construit la sidebar depuis le DOM (asynchrone).
+ * Retourne une Promise pour permettre le chaînage (.finally()) dans DOMContentLoaded.
+ */
+async function buildSidebar() {
+    var sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
-    let html = '<div class="sidebar-filter-wrap"><input class="sidebar-filter" type="search" placeholder="Filtrer..." aria-label="Filtrer la navigation" autocomplete="off"></div>';
-    NAV_SECTIONS.forEach(section => {
-        if (section.title) html += `<div class="sidebar-section" data-section-title>${section.title}</div>`;
-        section.links.forEach(link => {
-            html += `<a href="${link.href}" class="sidebar-link" data-href="${link.href}"><span class="icon">${link.icon}</span> ${link.label}</a>`;
+
+    // 1. Résoudre les sections de chaque page du manifeste.
+    var pageSections = await resolvePageSections();
+
+    // 2. FALLBACK CONSUMER : si aucune page n'a pu être résolue → no-op gracieux.
+    var anyResolved = NAV_PAGES.some(function(p) {
+        return pageSections[p.path] && pageSections[p.path].length;
+    });
+    if (!anyResolved) { renderEmptySidebar(sidebar); return; }
+
+    // 3. Construire le HTML (filtre + groupes + liens + footer).
+    var html = '<div class="sidebar-filter-wrap"><input class="sidebar-filter" type="search" placeholder="Filtrer..." aria-label="Filtrer la navigation" autocomplete="off"></div>';
+    var lastTitle = undefined;
+    NAV_PAGES.forEach(function(page) {
+        // Titre de groupe (dédupliqué : 'Fondation' n'apparaît qu'une fois).
+        if (page.title && page.title !== lastTitle) {
+            html += '<div class="sidebar-section" data-section-title>' + page.title + '</div>';
+            lastTitle = page.title;
+        }
+        if (page.flat) {
+            // Hub et autres liens plats : lien direct, sans sous-sections.
+            html += linkHtml(page.path, page.icon, page.label);
+            return;
+        }
+        var secs = pageSections[page.path] || [];
+        if (page.label) {
+            // Lien parent (ex. getting-started) affiché avant ses sous-sections.
+            html += linkHtml(page.path, page.icon, page.label);
+        }
+        secs.forEach(function(s) {
+            html += linkHtml(page.path + '#' + s.id, page.icon, s.label);
         });
     });
     html += '<div class="sidebar-footer"><p>msyx.fr — 2026</p></div>';
     sidebar.innerHTML = html;
+
     updateActiveLink();
     bindSidebarClicks();
     bindSidebarFilter();
     buildSidebarOverlay();
 }
+
 
 function buildSidebarOverlay() {
     // Créer l'overlay s'il n'existe pas
@@ -843,7 +865,10 @@ window.__updateNotificationCount = function(count) { updateNotificationCount(cou
 
 document.addEventListener('DOMContentLoaded', function() {
     buildHeader();
-    buildSidebar();
-    initScrollSpy();
-    if (isSiteHub()) initLazyLoader();
+    // buildSidebar est async — chaîner pour garantir que handleInitialHash/scroll-spy
+    // voient les liens générés (handleInitialHash lit .sidebar-link[data-href]).
+    buildSidebar().finally(function() {
+        initScrollSpy();
+        if (isSiteHub()) initLazyLoader();
+    });
 });
