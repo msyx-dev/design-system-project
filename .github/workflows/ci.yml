@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
       - name: Check HTML files exist
         run: test -f index.html && test -f site.html
       - name: Check diacritics (user-facing copy)
@@ -43,6 +47,17 @@ jobs:
         run: |
           chmod +x tests/test-check-versions.sh
           ./tests/test-check-versions.sh
+      - name: nav.js syntax regression (#206, #378)
+        run: npm run test:syntax
+      # check-components.sh lint le registre / les consommateurs hors DS.
+      # Lance sur shared/css (CSS du DS) : 11 warnings de dette preexistante
+      # (classes modifier ex: .tooltip--left non enumerees dans le registre).
+      # continue-on-error tant que la dette n'est pas resorbee (cf. #378).
+      - name: check-components registry lint (#378, warn-only)
+        run: |
+          chmod +x shared/check-components.sh
+          ./shared/check-components.sh shared/css
+        continue-on-error: true
   perf-budget:
     runs-on: ubuntu-latest
     steps:
