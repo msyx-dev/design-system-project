@@ -95,9 +95,9 @@ if [ "$MISMATCH" -eq 1 ] || [ "$EXIT" -ne 0 ]; then
     printf '  %-48s %s\n' "${LABELS[$i]}" "$v"
   done
   echo ""
-  echo "Aligner les 7 sources sur une seule version (bump synchrone, cf. CLAUDE.md)."
+  echo "Aligner les 8 sources sur une seule version (bump synchrone, cf. CLAUDE.md)."
   exit 1
 fi
 
-echo "OK : 7 sources de version alignees sur $REF"
+echo "OK : 8 sources de version alignees sur $REF"
 exit 0

@@ -17,12 +17,12 @@ if bash shared/check-versions.sh > /dev/null 2>&1; then
   echo "  PASS"
   PASS=$((PASS+1))
 else
-  echo "  FAIL: les 7 sources de version ne sont pas alignees sur le repo reel"
+  echo "  FAIL: les 8 sources de version ne sont pas alignees sur le repo reel"
   bash shared/check-versions.sh || true
   FAIL=$((FAIL+1))
 fi
 
-# Helper : construit une copie minimale du repo (7 sources) dans un repertoire temp,
+# Helper : construit une copie minimale du repo (8 sources) dans un repertoire temp,
 # toutes alignees sur 9.9.9, puis applique une mutation passee en argument.
 build_fixture() {
   local dir="$1"
