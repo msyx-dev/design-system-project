@@ -338,10 +338,10 @@ function initChips() {
         const closeBtn = chip.querySelector('.chip-close');
         if (!closeBtn) return;
         closeBtn.addEventListener('click', () => {
-            chip.style.transition = 'opacity 0.18s, transform 0.18s';
+            chip.style.transition = 'opacity var(--duration-base), transform var(--duration-base)';
             chip.style.opacity = '0';
             chip.style.transform = 'scale(0.8)';
-            setTimeout(() => chip.remove(), 180);
+            setTimeout(() => chip.remove(), 200);
         });
     });
 
@@ -378,10 +378,10 @@ function initChips() {
             chip.dataset.chipBound = '1';
             chip.innerHTML = escapeHTML(trimmed) + ' <button class="chip-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
             chip.querySelector('.chip-close').addEventListener('click', () => {
-                chip.style.transition = 'opacity 0.18s, transform 0.18s';
+                chip.style.transition = 'opacity var(--duration-base), transform var(--duration-base)';
                 chip.style.opacity = '0';
                 chip.style.transform = 'scale(0.8)';
-                setTimeout(() => chip.remove(), 180);
+                setTimeout(() => chip.remove(), 200);
             });
             wrapper.insertBefore(chip, input);
         }
@@ -395,10 +395,10 @@ function initChips() {
                 const chips = wrapper.querySelectorAll('.chip-input-item');
                 if (chips.length > 0) {
                     const last = chips[chips.length - 1];
-                    last.style.transition = 'opacity 0.18s, transform 0.18s';
+                    last.style.transition = 'opacity var(--duration-base), transform var(--duration-base)';
                     last.style.opacity = '0';
                     last.style.transform = 'scale(0.8)';
-                    setTimeout(() => last.remove(), 180);
+                    setTimeout(() => last.remove(), 200);
                 }
             }
         });
@@ -830,6 +830,9 @@ function updateModeSwitch() {
     var config = THEME_CONFIG[currentTheme] || THEME_CONFIG.msyx;
     var bothModesAvailable = config.modes.length > 1;
     var isDark = currentMode === 'dark';
+    // a11y mapping canonique (#382) : aria-checked="true" === mode DARK actif.
+    // Convention DS partagée par .mode-switch (vanilla) ET .theme-toggle (wrapper React
+    // @msyx-dev/react) — NE PAS inverser. Le switch est "coché" quand le dark est ON.
     sw.setAttribute('aria-checked', isDark ? 'true' : 'false');
     sw.classList.toggle('is-dark', isDark);
     if (!bothModesAvailable) {
@@ -1850,7 +1853,7 @@ function initLightbox() {
 
         // Determiner le gradient de fond (pour les placeholders)
         var thumbEl = trigger.querySelector('[style]');
-        var bg = thumbEl ? thumbEl.style.background : 'linear-gradient(135deg,#3b82f6,#8b5cf6)';
+        var bg = thumbEl ? thumbEl.style.background : 'var(--gradient-1)';
         var label = trigger.getAttribute('aria-label') || '';
         var thumbText = trigger.querySelector('.lightbox-thumb-placeholder') ?
             trigger.querySelector('.lightbox-thumb-placeholder').textContent : '';
@@ -1870,7 +1873,7 @@ function initLightbox() {
             el = document.createElement('div');
             el.className = 'lightbox-img-placeholder';
             el.style.background = bg;
-            el.style.borderRadius = '12px';
+            el.style.borderRadius = 'var(--radius-md)';
             el.innerHTML = '<div style="font-size:1.4rem;font-weight:600;text-align:center;line-height:1.5;">' + thumbText + '</div>' +
                 '<div style="font-size:0.8rem;opacity:0.6;font-family:var(--font-mono,monospace);">Placeholder — pas de fichier image</div>';
             imgWrap.appendChild(el);

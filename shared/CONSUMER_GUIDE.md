@@ -82,6 +82,38 @@ Les classes utilitaires (`.text-muted`, `.bg-accent`, `.border-subtle`) evitent 
 @import url('ds-components.css');  /* composants sans le layout shell */
 ```
 
+### Niveau C — Shell complet (CSS + JS) (#372)
+
+Pour reproduire le shell DS complet (layout header/sidebar, scroll-spy, navigation
+SPA, composants interactifs : modals, toasts, sliders, kanban...) **sans dependre
+de `design-system.msyx.fr`**, `sync.sh` distribue aussi les fichiers JS et
+l'agregateur CSS, prefixes `ds-` comme les CSS :
+
+- `ds-styles.css` — agregateur CSS (importe tous les modules `ds-*.css`)
+- `ds-nav.js` — header, sidebar, scroll-spy, navigation SPA, LazyLoader
+- `ds-components.js` — composants interactifs (toasts, modals, tabs, sliders...)
+
+Integration dans une page consumer :
+
+```html
+<head>
+  <link rel="stylesheet" href="/styles/ds-styles.css">
+  <!-- ou les @import Option A/B/C ci-dessus -->
+</head>
+<body>
+  <header class="site-header" id="site-header"></header>
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main"><!-- contenu --></div>
+
+  <script src="/styles/ds-nav.js"></script>
+  <script src="/styles/ds-components.js"></script>
+</body>
+```
+
+> `ds-styles.css` reecrit ses `@import` vers les `ds-*.css` voisins (resolus dans
+> le meme dossier styles/). Les fichiers JS sont distribues **byte-identiques** a
+> la source DS — recopier a chaque sync ulterieur pour rester aligne sur la version.
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)
@@ -94,11 +126,10 @@ Les classes utilitaires (`.text-muted`, `.bg-accent`, `.border-subtle`) evitent 
 ./check-sync.sh /chemin/vers/projet/styles/
 ```
 
-Le script `sync.sh` copie les 4 fichiers avec le prefixe `ds-` :
-- `ds-tokens.css`
-- `ds-utilities.css`
-- `ds-layout.css`
-- `ds-components.css`
+Le script `sync.sh` copie les fichiers DS avec le prefixe `ds-` :
+- `ds-tokens.css`, `ds-themes.css`, `ds-base.css`, `ds-utilities.css`, `ds-layout.css`, `ds-components.css`
+- `ds-fonts.css` (+ `fonts/*.woff2`) et `icons/sprite.svg` (self-hosted)
+- **Niveau C (#372)** : `ds-styles.css` (agregateur), `ds-nav.js`, `ds-components.js` (shell JS)
 
 ### Sync automatique (tous les consommateurs)
 

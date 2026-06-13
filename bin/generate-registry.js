@@ -198,8 +198,11 @@ for (const [gn, info] of groupMap.entries()) {
     }
   } else {
     // Nouveau groupe : créer une entrée auto-générée
+    // kind="module" : entrée miroir d'un fichier CSS (source_file), distincte
+    // des composants curés à la main (kind="component"). Cf. #381.
     const entry = {
       name: gn,
+      kind: 'module',
       category: info.category,
       source_file: info.sourceFile,
       cssClasses: newClasses,

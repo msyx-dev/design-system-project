@@ -265,8 +265,8 @@
 .usage-meter-header { display: flex; justify-content: space-between; align-items: center; }
 .usage-meter-label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
 .usage-meter-value { font-size: 0.82rem; color: var(--text-muted); }
-.usage-meter-track { height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; }
-.usage-fill { height: 100%; width: 0; border-radius: 4px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1), background 0.3s; }
+.usage-meter-track { height: 8px; background: var(--border-color); border-radius: var(--radius-xs); overflow: hidden; }
+.usage-fill { height: 100%; width: 0; border-radius: var(--radius-xs); transition: width 0.6s cubic-bezier(0.4,0,0.2,1), background 0.3s; }
 .usage-fill--ok { background: var(--success); }
 .usage-fill--warn { background: var(--warning); }
 .usage-fill--danger { background: var(--danger); animation: usagePulse 1.5s ease-in-out infinite; }

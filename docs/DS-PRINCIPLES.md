@@ -44,14 +44,48 @@ Ce document liste les règles concrètes à respecter pour garder un DS sain. Il
 }
 ```
 
-### Exceptions tolérées
-- `border: 1px solid var(--border-color)` — `1px` ou `2px` sur border est OK
-- `outline: 2px solid var(--focus-ring)` — pareil pour outline
-- `0` (zero) sans unité — OK
-- Caractères Unicode pour icons textuels dans composants legacy (à migrer vers sprite)
+### Règle `px` recalibrée (#393)
+Tous les `px` ne se valent pas. La règle n'est PAS « zéro px » (ce serait 340 lignes à tokeniser sans gain) mais **« px là où un token existe »** :
+
+**✅ AUTORISÉS sans token** (valeurs structurelles ou hors échelle de design) :
+- **Dimensions structurelles** : `width` / `height` fixes d'un élément (`width: 56px` d'un switch track, `width: 40px` d'une icône, `width: 300px` d'un panel).
+- **Bordures / outlines fins** : `1px` ou `2px` sur `border` / `outline` (cf. `border: 1px solid var(--border-color)`).
+- **`0`** sans unité.
+- **Radius « pill »** : `50px`, `999px`, `9999px` (cercle/capsule — pas une valeur d'échelle), ou directement `var(--radius-full)`.
+
+**🔴 REQUIS en token** (valeurs qui appartiennent à une échelle de design) :
+- **Espacement** : tout `padding` / `margin` / `gap` → `var(--space-*)`.
+- **`font-size`** : pas de `px` brut — utiliser `rem` (le DS dimensionne la typo en `rem`, pas en `px`).
+- **`border-radius`** qui correspond à une valeur de l'échelle `--radius-*` :
+  `24px → var(--radius-lg)`, `16px → var(--radius-card)`, `12px → var(--radius-md)`, `8px → var(--radius-sm)`, `4px → var(--radius-xs)`.
+
+❌ **Don't** :
+```css
+.card {
+  padding: 16px;            /* espacement → token */
+  border-radius: 8px;       /* radius = valeur d'échelle (8 = --radius-sm) → token */
+  font-size: 14px;          /* font-size en px → utiliser rem */
+}
+```
+
+✅ **Do** :
+```css
+.card {
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;      /* typo en rem */
+  width: 320px;             /* dimension structurelle → px OK */
+  border: 1px solid var(--border-color); /* 1px border → px OK */
+  border-radius: 50px;      /* pill → px OK (hors échelle --radius-*) */
+}
+```
+
+### Autres exceptions tolérées
+- Caractères Unicode pour icons textuels dans composants legacy (à migrer vers sprite).
 
 ### Garde-fou
-- **Script CI bloquant** : `shared/check-hardcoded-tokens.sh` detecte les font-family literals, hex hardcodes, et rgba numeriques dans `shared/css/components/`. Integre dans `.github/workflows/ci.yml` job `lint` (anti-regression #279). Exit 1 si findings > 0.
+- **Script CI bloquant** : `shared/check-hardcoded-tokens.sh` detecte les font-family literals, hex hardcodes, rgba numeriques **et couleurs nommees (`white`/`black` hors `color-mix` structurel)**. Perimetre par defaut élargi (#379) à `shared/css/components/` **+ `utilities.css` + `layout.css`**. Integre dans `.github/workflows/ci.yml` job `lint` (anti-regression #279). Exit 1 si findings > 0.
+  - **Allowlist** : suffixer une ligne d'un commentaire `/* allow-hardcoded: <raison> */` exclut la valeur du scan (réservé aux cas légitimement non-tokenisables, ex. `rgba(15,23,42,0.08)` slate light-mode sans token noir dédié).
 - Script tiers (consumer) : `audit-ds-compliance/scripts/scan-hardcoded-tokens.sh` detecte les hex/rgb/px hardcodes dans les projets consommateurs.
 
 ### Exceptions documentees §1 (couleurs de marque — voir DS-PRINCIPLES commentaires inline dans tokens.css)

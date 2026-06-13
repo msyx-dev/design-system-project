@@ -4,6 +4,17 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## Unreleased (next alpha) — remédiation dette audit 2026-06-13
+
+### Fixed
+- Retiré l'export `./styles.css` (jamais généré par tsup) du `package.json` ; `sideEffects: false` (tree-shaking) (#374).
+- README : chemin d'import CSS corrigé (le CSS provient de la distribution DS CSS, pas d'un package npm), install GitHub Packages (`.npmrc` + token), props des 5 composants documentées (#375).
+
+### Added
+- Export des types `ButtonVariant`, `ButtonSize` depuis `src/index.ts` (#376).
+
+> Parité classes vérifiée : toutes les classes émises ont un équivalent CSS DS (classes manquantes ajoutées côté DS CSS en v2.67.0 racine). Pas de bump de version package ici — publish alpha à décider.
+
 ## v3.0.0-alpha.6 — 2026-05-24
 
 **Composant `<PageHeader>`** (#276, #330)
