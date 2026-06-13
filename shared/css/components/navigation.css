@@ -404,12 +404,16 @@
     opacity: 0;
     transform: translateY(-6px) scale(0.97);
     pointer-events: none;
-    transition: opacity 0.15s, transform 0.15s;
+    /* a11y (#382) : visibility:hidden retire l'état fermé du flux focusable
+       (opacity:0 + pointer-events:none ne suffisent pas — les items restent tabbables). */
+    visibility: hidden;
+    transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
 }
 .user-menu-dropdown.open {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: auto;
+    visibility: visible;
 }
 
 /* Dropdown header : avatar large 48px + displayName + email */
@@ -458,6 +462,17 @@
     font-size: 0.75rem;
     color: var(--text-muted);
     opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin-top: 0.1rem;
+}
+
+/* Badge de rôle sous le nom (#376) — émis par @msyx-dev/react UserMenu (roleBadge) */
+.user-menu-dropdown-role {
+    font-size: 0.7rem;
+    color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

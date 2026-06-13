@@ -479,6 +479,8 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .login-authentik-btn:hover { opacity: 0.9; box-shadow: 0 4px 16px rgba(var(--login-authentik-accent-rgb), 0.25); }
 .login-authentik-btn:focus-visible { outline: 2px solid var(--login-authentik-accent); outline-offset: 2px; }
 .login-authentik-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+/* Wrapper svg de l'icône Authentik (#376) — émis par @msyx-dev/react LoginScreen (AuthentikIcon) */
+.login-authentik-icon { width: 20px; height: 20px; flex-shrink: 0; }
 
 /* Modifiers par provider — purement visuels (icône portée par le <svg> inline, cf §2.4) */
 .login-provider-btn--google:hover    { border-color: rgba(var(--brand-google-rgb), 0.5); }

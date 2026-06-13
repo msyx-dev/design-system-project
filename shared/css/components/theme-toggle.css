@@ -5,7 +5,12 @@
                <span class="theme-toggle-thumb"></span>
              </span>
            </button>
-   Bascule via data-mode="light" sur <html> (convention DS). */
+   Bascule via data-mode="light" sur <html> (convention DS).
+
+   #392 — .theme-toggle = variante standalone destinée au wrapper React @msyx-dev/react ;
+   sémantique IDENTIQUE à .mode-switch (canonique, layout.css, iOS-style 44px) :
+   aria-checked="true" === mode DARK actif. Le thumb est à gauche en dark (état par défaut)
+   et glisse à droite via [data-mode="light"]. Ne pas diverger ni inverser. */
 
 /* ===== THEME-TOGGLE ===== */
 .theme-toggle {

@@ -830,6 +830,9 @@ function updateModeSwitch() {
     var config = THEME_CONFIG[currentTheme] || THEME_CONFIG.msyx;
     var bothModesAvailable = config.modes.length > 1;
     var isDark = currentMode === 'dark';
+    // a11y mapping canonique (#382) : aria-checked="true" === mode DARK actif.
+    // Convention DS partagée par .mode-switch (vanilla) ET .theme-toggle (wrapper React
+    // @msyx-dev/react) — NE PAS inverser. Le switch est "coché" quand le dark est ON.
     sw.setAttribute('aria-checked', isDark ? 'true' : 'false');
     sw.classList.toggle('is-dark', isDark);
     if (!bothModesAvailable) {
