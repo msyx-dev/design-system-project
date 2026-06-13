@@ -15,6 +15,8 @@ set -euo pipefail
 # base, components + fonts self-hosted (ds-fonts.css + fonts/*.woff2) + sprite SVG
 # (icons/sprite.svg). Le header @ds-version des barrels générés reflète la version
 # source réelle (lue dans tokens.css), jamais une valeur figée.
+# Le Niveau C (#372) — shell JS + agrégateur CSS (ds-nav.js, ds-components.js,
+# ds-styles.css) — est distribué par défaut comme les CSS.
 
 NO_SHOWCASE=false
 COMPONENTS_LIST=""
@@ -68,6 +70,21 @@ sed 's#\.\./fonts/#./fonts/#g' "$DS_DIR/fonts.css" > "$TARGET/ds-fonts.css"
 # <use href="icons/sprite.svg#i-{nom}"/> (relatif au dossier styles/).
 mkdir -p "$TARGET/icons"
 cp "$SHARED_DIR/icons/sprite.svg" "$TARGET/icons/sprite.svg"
+
+# ─── Niveau C : shell JS + agrégateur CSS (#372) ────────────────────────────
+# Distribue le shell complet (header, sidebar, scroll-spy, SPA, composants
+# interactifs) pour que les consumers reproduisent le Niveau C sans dépendre
+# de design-system.msyx.fr. Préfixe ds- cohérent avec les CSS.
+#   - ds-nav.js        : header, sidebar, scroll-spy, navigation SPA, LazyLoader
+#   - ds-components.js : composants interactifs (toasts, modals, sliders, ...)
+#   - ds-styles.css    : agrégateur @import des modules CSS
+# styles.css importe css/<mod>.css (relatif à shared/). Côté consumer les
+# modules sont distribués en ds-<mod>.css à la racine de TARGET, donc on
+# réécrit css/<mod>.css → ds-<mod>.css pour que les @import résolvent.
+cp "$SHARED_DIR/nav.js"        "$TARGET/ds-nav.js"
+cp "$SHARED_DIR/components.js" "$TARGET/ds-components.js"
+sed "s#url('css/\([a-z0-9_-]*\)\.css')#url('ds-\1.css')#g" \
+    "$SHARED_DIR/styles.css" > "$TARGET/ds-styles.css"
 
 # Nouveau v2.36 : copier le dossier components/ pour que les @import du barrel résolvent
 # Les @import url('./components/...') dans ds-components.css résolvent vers <TARGET>/components/
@@ -142,3 +159,6 @@ echo "   -> ds-fonts.css        (self-hosted woff2 + fonts/)"
 echo "   -> fonts/              (woff2 Space Grotesk / Inter / Fira Code)"
 echo "   -> icons/sprite.svg    (sprite Lucide self-hosted)"
 echo "   -> components/         (modules CSS resolus par les @import)"
+echo "   -> ds-nav.js           (Niveau C : header, sidebar, scroll-spy, SPA)"
+echo "   -> ds-components.js    (Niveau C : composants interactifs JS)"
+echo "   -> ds-styles.css       (Niveau C : agregateur @import des modules)"

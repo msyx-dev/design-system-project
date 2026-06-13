@@ -38,7 +38,7 @@
         <div class="demo-box">
             <p style="color:var(--text-muted);margin:0 0 0.75rem;">Depuis le repertoire <code style="color:var(--accent);background:rgba(var(--accent-rgb),0.1);padding:0.1em 0.4em;border-radius:4px;">shared/</code> du design system, lancer le script de sync :</p>
             <div class="code-block">./sync.sh /chemin/vers/votre-projet/src/styles/</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Cela copie 4 fichiers prefixes <code style="color:var(--accent);">ds-</code> dans votre dossier styles.</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Cela copie les fichiers prefixes <code style="color:var(--accent);">ds-</code> dans votre dossier styles : CSS (tokens, themes, utilities, layout, components), fonts + sprite self-hosted, et le shell JS du Niveau C (<code style="color:var(--accent);">ds-styles.css</code>, <code style="color:var(--accent);">ds-nav.js</code>, <code style="color:var(--accent);">ds-components.js</code>).</p>
         </div>
     </div>
 
@@ -63,18 +63,16 @@
     </div>
 
     <div class="subsection mt-md">
-        <span class="demo-label">Niveau C — CSS + JS (shell complet)</span>
+        <span class="demo-label">Niveau C — CSS + JS (shell complet, reproductible)</span>
         <div class="demo-box">
-            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Integration complete avec layout, composants interactifs (modals, toasts, sliders...) et header avec gestion utilisateur.</p>
-            <div class="code-block">&lt;!-- Dans &lt;head&gt; --&gt;
-@import url('./styles/ds-tokens.css');
-@import url('./styles/ds-utilities.css');
-@import url('./styles/ds-layout.css');
-@import url('./styles/ds-components.css');
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Integration complete avec layout, composants interactifs (modals, toasts, sliders...) et header avec gestion utilisateur. <code style="color:var(--accent);">sync.sh</code> distribue le shell JS (<code style="color:var(--accent);">ds-nav.js</code>, <code style="color:var(--accent);">ds-components.js</code>) et l'agregateur (<code style="color:var(--accent);">ds-styles.css</code>) — <strong>aucune dependance a design-system.msyx.fr</strong>.</p>
+            <div class="code-block">&lt;!-- Dans &lt;head&gt; : agregateur (importe tous les ds-*.css) --&gt;
+&lt;link rel="stylesheet" href="/styles/ds-styles.css"&gt;
 
-&lt;!-- En fin de &lt;body&gt; --&gt;
-&lt;script src="/shared/nav.js"&gt;&lt;/script&gt;
-&lt;script src="/shared/components.js"&gt;&lt;/script&gt;</div>
+&lt;!-- En fin de &lt;body&gt; : shell JS distribue --&gt;
+&lt;script src="/styles/ds-nav.js"&gt;&lt;/script&gt;
+&lt;script src="/styles/ds-components.js"&gt;&lt;/script&gt;</div>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">L'agregateur <code style="color:var(--accent);">ds-styles.css</code> reecrit ses <code style="color:var(--accent);">@import</code> vers les <code style="color:var(--accent);">ds-*.css</code> voisins du dossier styles. Les fichiers JS sont distribues byte-identiques a la source DS.</p>
         </div>
     </div>
 </section>
