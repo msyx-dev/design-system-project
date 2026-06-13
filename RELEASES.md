@@ -1,5 +1,19 @@
 # Releases
 
+## 2.68.0 — 2026-06-13 — Parité React : champ registre + check CI + politique anti-dérive (#523)
+
+### Added
+- **Registre — champ `react`** (`ported`/`pending`/`n-a`) par composant dans `shared/components-registry.json` : rend l'écart CSS↔React auditable et traçable. 5 composants `ported` (Button, PageHeader, ThemeToggle, UserMenu, LoginScreen), ~73 `pending`, 23 modules `n-a`. (#523)
+- **Check CI parité React** : `bin/generate-registry.js --check` valide que (a) toute classe émise par `packages/react/` existe dans le CSS du DS et (b) la cohérence du marquage `react: ported`. Écart global affiché dans les logs CI à chaque run (jamais silencieux). Autonome par rapport à #511 — greffé sur le validateur fantôme #516 (même step CI bloquant). (#523)
+- **`docs/DS-PRINCIPLES.md` Section 8.1** : politique « gap tracé, PAS lockstep » tant qu'aucun consumer React n'a shippé en production ; bascule lockstep explicite dès le premier consumer. (#523)
+
+### Changed
+- **`bin/generate-registry.js` v1.1 → v1.2** : normalisation du champ `react` (règle de défaut : `kind:module` → `n-a` forcé, `kind:component` sans valeur → `pending`) ; parsing statique des `.tsx` React (ciblé `className=` uniquement, zéro dépendance) ; bloc parité checks (a)+(b)+réciproque ; écart global dans les deux rapports (mode écriture et mode `--check`). (#523)
+- **CI `.github/workflows/ci.yml`** : step `lint` renommé « Registry validation — phantoms (#516) + React parity (#523) » — même commande, périmètre documenté élargi. (#523)
+- **`docs/DS-PRINCIPLES.md` Section 8 › Registre** : ligne `react` ajoutée à la checklist anti-dette. (#523)
+- **`CLAUDE.md`** : process ajout composant, étape Registre — déclarer le statut React. (#523)
+- **`docs/ARCHITECTURE.md`** : description du registre et de `bin/generate-registry.js` mise à jour (champ `react`, check parité). (#523)
+
 ## 2.67.1 — 2026-06-13 — Correctif classes fantômes registre + validateur CI (#516)
 
 ### Fixed
