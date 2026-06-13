@@ -58,6 +58,31 @@ jobs:
           chmod +x shared/check-components.sh
           ./shared/check-components.sh shared/css
         continue-on-error: true
+  # @msyx-dev/react (packages/react) — suite vitest (jsdom).
+  # 136 tests valides localement via vitest (npm). Le chemin exact
+  # corepack + pnpm install --frozen-lockfile sur Node 24 n'a PAS pu
+  # etre verifie localement (env local = Node 20, corepack resout pnpm
+  # vers une version requierant Node 22+). continue-on-error: true tant
+  # que le chemin CI n'est pas confirme vert (cf. #378).
+  react:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install deps (pnpm, frozen lockfile)
+        run: |
+          cd packages/react
+          pnpm install --frozen-lockfile
+      - name: Run react tests (vitest)
+        run: |
+          cd packages/react
+          pnpm test
+        continue-on-error: true
   perf-budget:
     runs-on: ubuntu-latest
     steps:
