@@ -58,7 +58,7 @@ jobs:
           chmod +x shared/check-components.sh
           ./shared/check-components.sh shared/css
         continue-on-error: true
-      - name: Registry validation — phantoms (#516) + React parity (#523)
+      - name: Registry validation — phantoms (#516) + React parity (#523) + frontière (#511)
         run: node bin/generate-registry.js --check
       # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
       - name: Nav sections manifest validation (#528)

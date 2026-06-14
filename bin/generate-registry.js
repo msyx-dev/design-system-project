@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 /**
  * generate-registry.js — Générateur auto du components-registry.json
- * Design System msyx.fr — bin/generate-registry.js v1.2
+ * Design System msyx.fr — bin/generate-registry.js v1.3
  *
- * Usage : node bin/generate-registry.js [--check] [--skip-validate]
- *   --check           Valide le registre sans écrire (mode CI recommandé)
- *   --skip-validate   Saute la validation fantôme (développement uniquement)
+ * Usage : node bin/generate-registry.js [--check] [--skip-validate] [--frontier-strict]
+ *   --check            Valide le registre sans écrire (mode CI recommandé)
+ *   --skip-validate    Saute la validation fantôme (développement uniquement)
+ *   --frontier-strict  Active le mode bloquant pour la frontière page↔registre (#511)
+ *                      (défaut : warn-only — bascule bloquante après #508 livré)
  *
  * Scanne tous les .css dans shared/css/**\/*.css, extrait les sélecteurs
  * .classname et produit shared/components-registry.json enrichi.
@@ -274,6 +276,45 @@ function extractClassesFromHtml(html) {
   while ((m = RE.exec(html)) !== null) {
     for (const c of m[1].split(/\s+/).filter(Boolean)) set.add('.' + c);
   }
+  return set;
+}
+
+// ─── Frontière page↔registre (#511) — constantes d'exemption ─────────────────
+// Cf. DS-PRINCIPLES §6.1 — source de vérité normative. Maintenir en cohérence.
+
+/**
+ * Modules transverses exemptés de la réciprocité section↔entrée registre.
+ * Convention : préfixe '_' (ex. _base, _a11y, _responsive) OU appartenance à cette liste.
+ * Ces entrées sont kind:module (pas kind:component) et sans champ page.
+ */
+const TRANSVERSE_MODULES = new Set([
+  'base', 'a11y', 'responsive', 'theming', 'section-header', 'signature',
+]);
+
+/**
+ * Pages de référence : leurs sections documentent des fondations (tokens, typographie…)
+ * et n'exigent PAS d'entrée kind:component. Exclues de la règle 1 de réciprocité.
+ */
+const REFERENCE_PAGES = new Set(['fondation', 'motion', 'getting-started']);
+
+/**
+ * Pages composant soumises à la réciprocité stricte section↔entrée registre.
+ */
+const COMPONENT_PAGES = new Set([
+  'composants', 'formulaires', 'data', 'feedback', 'navigation', 'divers', 'templates',
+]);
+
+/**
+ * Extrait les id des <section id="..."> d'un markup HTML.
+ * @param {string} html
+ * @returns {Set<string>} identifiants sans le '#'
+ */
+function extractSectionIds(html) {
+  const set = new Set();
+  if (!html) return set;
+  const RE = /<section\b[^>]*\bid="([^"]+)"/g;
+  let m;
+  while ((m = RE.exec(html)) !== null) set.add(m[1]);
   return set;
 }
 
@@ -552,7 +593,7 @@ const newRegistry = {
   version: existingRegistry.version || '2.59.0',
   generated: {
     at: new Date().toISOString(),
-    by: 'bin/generate-registry.js v1.2',
+    by: 'bin/generate-registry.js v1.3',
   },
   components: newComponents,
 };
@@ -606,11 +647,56 @@ const reactPortable = reactCounts.ported + reactCounts.pending;
 const reactParityLine = `Parité React : ${reactCounts.ported} ported / ${reactPortable} portables `
   + `(${reactCounts.pending} pending, ${reactCounts['n-a']} n-a)`;
 
+// ─── Frontière page↔registre (#511) ──────────────────────────────────────────
+// Vérifie la réciprocité : toute <section id> d'une page composant ↔ une entrée
+// kind:component dans le registre. Deux directions :
+//   (1) section sans entrée → "section-sans-entree"
+//   (2) entrée sans section → "entree-orpheline"
+// Warn-only par défaut ; bloquant avec --frontier-strict (après #508 livré).
+// Exemptions : TRANSVERSE_MODULES + REFERENCE_PAGES. Cf. DS-PRINCIPLES §6.1.
+
+const frontierErrors = [];
+
+if (!process.argv.includes('--skip-validate')) {
+  // Index registre : page → Set(entry.name) pour les kind:component avec page
+  const regByPage = new Map();
+  for (const c of newComponents) {
+    if (c.kind !== 'component' || !c.page) continue;
+    if (!regByPage.has(c.page)) regByPage.set(c.page, new Set());
+    regByPage.get(c.page).add(c.name);
+  }
+
+  for (const page of COMPONENT_PAGES) {
+    const pagePath = path.join(ROOT, 'pages', page + '.html');
+    const html = fs.existsSync(pagePath) ? fs.readFileSync(pagePath, 'utf8') : '';
+    const sectionIds = extractSectionIds(html);
+    const entries = regByPage.get(page) || new Set();
+
+    // (1) section sans entrée registre (hors transverses)
+    for (const id of sectionIds) {
+      if (!entries.has(id) && !TRANSVERSE_MODULES.has(id)) {
+        frontierErrors.push({ type: 'section-sans-entree', page, id });
+      }
+    }
+    // (2) entrée registre sans section correspondante (entrée orpheline/fantôme)
+    for (const name of entries) {
+      if (!sectionIds.has(name)) {
+        frontierErrors.push({ type: 'entree-orpheline', page, name });
+      }
+    }
+  }
+}
+
+const frontierStrict = process.argv.includes('--frontier-strict');
+const frontierLine = frontierErrors.length === 0
+  ? 'Frontière page↔registre : OK (0 violation)'
+  : `Frontière page↔registre : ⚠ ${frontierErrors.length} violation(s) (warn-only — bascule bloquante après #508)`;
+
 // ─── Mode --check (CI) ────────────────────────────────────────────────────────
 // En mode --check, on valide sans écrire (idéal pour le step CI).
 
 if (process.argv.includes('--check')) {
-  console.log('=== generate-registry.js v1.2 — Design System msyx.fr (mode --check) ===');
+  console.log('=== generate-registry.js v1.3 — Design System msyx.fr (mode --check) ===');
   console.log(`Version  : ${newRegistry.version}`);
   console.log(`Total composants  : ${newRegistry.components.length}`);
   console.log('Validation fantômes : OK (0 classe fantôme)');
@@ -637,6 +723,24 @@ if (process.argv.includes('--check')) {
     console.log('Idempotence       : OK (registre à jour)');
   } else {
     console.warn('⚠ Registre non à jour — lancez `npm run generate-registry` en local pour synchroniser.');
+  }
+  // Frontière page↔registre (#511)
+  console.log(frontierLine);
+  if (frontierErrors.length > 0) {
+    console.error('\n⚠ Frontière page↔registre (#511) — violations détectées :');
+    for (const e of frontierErrors) {
+      if (e.type === 'section-sans-entree')
+        console.error(`   [section sans entrée]  ${e.page}.html #${e.id} → ajouter une entrée kind:component dans le registre`);
+      else
+        console.error(`   [entrée orpheline]     ${e.page} → "${e.name}" sans <section id="${e.name}"> dans la page`);
+    }
+    console.error('\nCorrection : aligner sections et registre, ou utiliser sectionId (si name diverge de id), ou exempter (module transverse).');
+    console.error('Bascule bloquante : --frontier-strict (activer après #508 livré). Cf. DS-PRINCIPLES §6.1.');
+    if (frontierStrict) {
+      console.error('\n❌ Mode --frontier-strict actif : violations bloquantes.');
+      process.exit(1);
+    }
+    // warn-only : on continue sans exit(1)
   }
   console.log('OK (--check)');
   process.exit(0);
