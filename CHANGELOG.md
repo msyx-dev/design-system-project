@@ -8,8 +8,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.71.2] — 2026-06-14
+
+### Fixed
+- **15 sections orphelines réintégrées dans `.main`** (`fondation` 6, `formulaires` 6, `navigation` 3) — cause racine des « libellés absents » de la sidebar : des `<section id>` réelles étaient placées **hors** du conteneur `.main` (HTML déséquilibré : `</div>` parasites sur fondation/formulaires ; sections après la fermeture de `.main` sur navigation) → invisibles dans la nav verticale ET rendues en pleine largeur par-dessus la sidebar. Rééquilibrage des `<div>` → sections dans la colonne de contenu + +15 liens sidebar. (#538)
+- Sections réintégrées : `utilities`, `brand`, `iconographie`, `performance-glass`, `texture`, `svg-theme-aware` (fondation) ; `otp-input`, `tag-input`, `quiz`, `wizard`, `inline-edit`, `filter-bar` (formulaires) ; `sidebar-rail`, `action-menu`, `user-menu` (navigation). (#538)
+
 ### Changed
-- **`entrypoint.sh`** : bump `VERSION` 2.69.0 → 2.71.1 — cohérence `/version.json` préprod après redeploy suite passe audit nocturne (4 fixes mergés v2.69.1→v2.71.1). Pas de bump DS (entrypoint uniquement).
+- **`bin/generate-nav-sections.js`** : `EXPECTED_COUNTS` mis à jour (fondation 7→13, formulaires 9→15, navigation 5→8 ; total 93→108) + garde-fou conservé. (#538)
+- **`entrypoint.sh`** : bump `VERSION` 2.69.0 → 2.71.2 — cohérence `/version.json` préprod après redeploy.
 
 ## [2.71.1] — 2026-06-14
 
