@@ -3912,6 +3912,33 @@ function initAuthFlows() {
 }
 window.__initAuthFlows = initAuthFlows;
 
+// ===== PASSWORD TOGGLE =====
+function initPasswordToggle() {
+    document.querySelectorAll('[data-password-toggle]').forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        // Résolution input cible : aria-controls prioritaire, sinon input du wrapper .password-field
+        var input = null;
+        var controls = btn.getAttribute('aria-controls');
+        if (controls) input = document.getElementById(controls);
+        if (!input) {
+            var field = btn.closest('.password-field');
+            if (field) input = field.querySelector('input');
+        }
+        if (!input) return;
+        btn.addEventListener('click', function() {
+            var revealed = input.type === 'text';
+            // Basculer
+            input.type = revealed ? 'password' : 'text';
+            var nowRevealed = !revealed;
+            btn.setAttribute('aria-pressed', nowRevealed ? 'true' : 'false');
+            btn.setAttribute('aria-label', nowRevealed ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+            // L'échange d'icône est piloté par CSS via [aria-pressed="true"] (pas de manip DOM des <svg>)
+        });
+    });
+}
+window.__initPasswordToggle = initPasswordToggle;
+
 // ===== USAGE METER =====
 function initUsageMeter() {
     var obs = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries) {
@@ -4205,6 +4232,7 @@ function reinitAll() {
     initAutoSave();
     initComments();
     initAuthFlows();
+    initPasswordToggle();
     initUsageMeter();
     initConfirmPopover();
     initMotionReplay();

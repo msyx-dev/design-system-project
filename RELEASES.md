@@ -1,5 +1,15 @@
 # Releases
 
+## 2.72.0 — 2026-06-14 — Password input avec révélation (toggle œil) — `initPasswordToggle()` (#435)
+
+### Added
+- **Password toggle** : nouveau composant `.password-field` + `.password-toggle` dans `shared/css/components/forms.css` — wrapper position relative, bouton icon-only absolute right, cible tactile 44px mobile, `:focus-visible`, échange d'icône eye↔eye-off piloté en CSS via `[aria-pressed="true"]` (0 manipulation DOM icônes). Tokens-first strict, mobile-first, 5 combos thème/mode couverts. (#435)
+- **`initPasswordToggle()`** dans `shared/components.js` — bascule `input.type` password↔text, `aria-pressed` + `aria-label` dynamique ("Afficher…"/"Masquer…"), résolution input via `aria-controls` ou `.password-field` parent, anti-double-bind `dataset.bound`, appelé dans `reinitAll()`. (#435)
+- **`i-eye-off`** ajouté à `shared/icons/sprite.svg` (path Lucide stable) + `shared/icons/build-sprite.sh` (liste `ICONS` — `eye-off` après `eye`, compteur System 6→7). (#435)
+- **Section `#password-toggle`** dans `pages/formulaires.html` : 3 variantes (vide, rempli, + `.login-strength` composition). (#435)
+- **Registre** `shared/components-registry.json` : entrée `password-toggle` (page=formulaires, cssClasses, jsInit=initPasswordToggle, react=pending). (#435)
+- **Compteurs** `site.html` : hero 77→78 composants, footer 77→78, meta description 77→78, hub card Formulaires 15→16 sections. (#435)
+
 ## 2.71.1 — 2026-06-14 — Fix overflow horizontal 5 pages : `html{overflow-x:clip}` + confinements composants (#530)
 
 ### Fixed

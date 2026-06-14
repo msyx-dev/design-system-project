@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- **Password toggle** : composant `.password-field` + `.password-toggle` + `initPasswordToggle()` — toggle show/hide sur input[type=password], icône `i-eye-off` ajoutée au sprite, 3 variantes dans `formulaires.html` (vide, rempli, + `.login-strength`). (#435)
+
 ### Changed
 - **`entrypoint.sh`** : bump `VERSION` 2.69.0 → 2.71.1 — cohérence `/version.json` préprod après redeploy suite passe audit nocturne (4 fixes mergés v2.69.1→v2.71.1). Pas de bump DS (entrypoint uniquement).
 
