@@ -1,5 +1,19 @@
 # Releases
 
+## 2.73.0 — 2026-06-14 — Header par défaut consumers : cloche hors auth, switcher thème opt-in (#542)
+
+### Changed
+- **`buildHeader` (`shared/nav.js`)** : cloche notifications extraite du bloc `if (authEnabled)` — rendue par défaut, indépendante de l'auth, masquable uniquement via `MSYX_HEADER.notifications.enabled: false`. Anti-double-cloche : `notifBellHtml` construit une seule fois, le profil ne la re-rend plus. (#542)
+- **Switcher thème (`#theme-select`)** : conditionnel derrière `MSYX_HEADER.themeSwitcher` (défaut `false`) — absent chez les consumers mono-thème, opt-in pour la vitrine DS. (#542)
+- **Profil (avatar/dropdown)** : inchangé, reste derrière `MSYX_HEADER.auth`. (#542)
+- **FIX FOUC #251 (`initThemeSwitcher` dans `shared/components.js`)** : `updateModeSwitch()` déplacé avant le guard `if (!select) return` — les boutons dark/light se synchronisent correctement même quand `themeSwitcher: false` (switcher absent). (#542)
+- **`initHeaderNotifications()`** : appelée dès que la cloche est rendue (plus seulement dans le bloc auth). (#542)
+- **9 pages DS** (`site.html` + 8 `pages/*.html`) : `themeSwitcher: true` ajouté au `MSYX_HEADER` inline — vitrine conserve son switcher après le changement de défaut. (#542)
+- **`shared/css/components-core.css`** : `navigation.css` ajouté au barrel core (tabs/breadcrumb/stepper/bottom-nav) ; commentaire corrigé (5→9 modules). (#542)
+- **`shared/sync.sh`** : `cp navigation.css` ajouté au bloc `--components=core` — résout le `@import` du barrel core chez le consumer. (#542)
+- **`shared/CONSUMER_GUIDE.md`** : section Header réécrite — tableau des éléments par défaut, `themeSwitcher: true` documenté, phrase « sans auth » corrigée, note layout.css/navigation.css. (#542)
+- **`pages/getting-started.html`, `pages/navigation.html`** : phrase « sans MSYX_HEADER → theme switcher uniquement » corrigée en « logo + toggle dark/light + cloche notifications ». (#542)
+
 ## 2.72.0 — 2026-06-14 — Password input avec révélation (toggle œil) — `initPasswordToggle()` (#435)
 
 ### Added

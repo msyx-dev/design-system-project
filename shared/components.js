@@ -779,14 +779,16 @@ var THEME_LABELS = { msyx: 'MSYX', acssi: 'ACSSI', nhood: 'Nhood' };
 var MODE_LABELS  = { dark: 'Dark', light: 'Light' };
 
 function initThemeSwitcher() {
+    // FIX #251 — recalcule l'etat des boutons dark/light apres lecture du
+    // data-theme initial. Couvre la race anti-FOUC ou initModeSwitcher peut
+    // avoir tourne avant que data-theme ne soit pose sur <html>.
+    // Appele AVANT le guard !select : dark/light doit etre synchro meme quand
+    // le switcher theme est absent (themeSwitcher:false chez un consumer).
+    if (typeof updateModeSwitch === 'function') updateModeSwitch();
     var select = document.getElementById('theme-select');
     if (!select) return;
     var current = document.documentElement.getAttribute('data-theme') || 'msyx';
     select.value = current;
-    // FIX #251 — recalcule l'etat des boutons dark/light apres lecture du
-    // data-theme initial. Couvre la race anti-FOUC ou initModeSwitcher peut
-    // avoir tourne avant que data-theme ne soit pose sur <html>.
-    if (typeof updateModeSwitch === 'function') updateModeSwitch();
     if (select.dataset.bound) return;
     select.dataset.bound = '1';
     select.addEventListener('change', function() {

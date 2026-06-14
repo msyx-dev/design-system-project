@@ -7,7 +7,7 @@
     <meta name="description" content="Guide d'installation et de premier pas avec le design system msyx.design.">
     <link rel="stylesheet" href="/shared/styles.css">
     <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
-    <script>window.MSYX_HEADER={auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
+    <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
 </head>
 <body>
     <header class="site-header" id="site-header"></header>
@@ -191,7 +191,7 @@ window.MSYX_HEADER = {
 };
 &lt;/script&gt;
 &lt;script src="/shared/nav.js"&gt;&lt;/script&gt;</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Sans <code style="color:var(--accent);">window.MSYX_HEADER</code> ou avec <code style="color:var(--accent);">auth: false</code> : header logo + theme switcher uniquement.</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Sans <code style="color:var(--accent);">window.MSYX_HEADER</code> ou avec <code style="color:var(--accent);">auth: false</code> : logo + toggle dark/light + cloche notifications. Le switcher theme est opt-in (<code style="color:var(--accent);">themeSwitcher: true</code>) ; le profil necessite <code style="color:var(--accent);">auth: true</code>.</p>
         </div>
     </div>
 </section>

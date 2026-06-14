@@ -1,6 +1,8 @@
-/* @ds-version: 2.56.0 */
-/* components-core.css — Barrel essentiel : 5 modules pour consumers légers.
-   Couvre ~80% des cas d'usage simples (auth gate, landing).
+/* @ds-version: 2.73.0 */
+/* components-core.css — Barrel essentiel : 9 modules pour consumers légers.
+   Couvre ~80% des cas d'usage simples (auth gate, landing, header+nav).
+   Note : le CSS du header (cloche, profil, dropdown, mode-switch) vit dans layout.css
+   (socle toujours distribué par sync.sh) — navigation.css ajoute tabs/breadcrumb/stepper/bottom-nav.
    Pour le DS complet, importer components.css. */
 @import "./components/_base.css";
 @import "./components/brand.css";
@@ -9,4 +11,5 @@
 @import "./components/forms.css";
 @import "./components/alerts.css";
 @import "./components/badges.css";
+@import "./components/navigation.css";
 @import "./components/_a11y.css";

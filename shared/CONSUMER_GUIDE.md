@@ -239,7 +239,18 @@ Les variables se mettent a jour automatiquement — aucun changement CSS necessa
 
 ## Header avec utilisateur connecte
 
-Le header integre nativement la gestion de l'utilisateur connecte (avatar + dropdown), les notifications (cloche + panel popover) et les transitions douces de theme.
+Le header DS fournit les elements suivants par defaut (v2.73.0) :
+
+| Element | Comportement par defaut | Opt-in / masquage |
+|---------|------------------------|-------------------|
+| Toggle dark/light (`.mode-switch`) | **Toujours present** | — |
+| Cloche notifications | **Present par defaut** (independant de l'auth) | `notifications: { enabled: false }` pour masquer |
+| Profil (avatar/dropdown) | Absent par defaut | `auth: true` pour activer |
+| Switcher theme (dropdown MSYX/ACSSI/Nhood) | **Absent par defaut** (consumer mono-theme) | `themeSwitcher: true` pour activer |
+
+Le theme est fixe via l'attribut `data-theme` sur `<html>` — un consumer mono-theme n'a pas besoin du switcher.
+La cloche est independante de l'auth : un consumer sans session peut afficher des alertes systeme.
+Note : l'icone cloche utilise `/shared/icons/sprite.svg#i-bell` (chemin absolu). Adapter si le sprite est ailleurs chez le consumer.
 
 ### Configuration via window.MSYX_HEADER
 
@@ -248,14 +259,15 @@ Definir cet objet **avant** le chargement de `nav.js` :
 ```html
 <script>
 window.MSYX_HEADER = {
-  auth: true,                    // false = header sans zone user
+  themeSwitcher: false,          // true = dropdown MSYX/ACSSI/Nhood (defaut false, opt-in vitrine/multi-theme)
+  auth: true,                    // false = pas de profil (defaut false)
   user: {
     name: 'Mike',
     initials: 'M',               // utilise si pas d'avatar
     avatar: '/img/avatar.png'    // URL image (optionnel)
   },
   notifications: {
-    enabled: true,
+    enabled: true,               // false = masque la cloche (defaut true)
     count: 3,                    // badge initial
     items: [                     // liste affichee dans le panel (optionnel)
       {
@@ -278,14 +290,32 @@ window.MSYX_HEADER = {
 <script src="/shared/nav.js"></script>
 ```
 
-### Sans auth
+### Sans auth (defaut consumer)
 
 ```javascript
-window.MSYX_HEADER = { auth: false };
+window.MSYX_HEADER = {};
 // ou simplement ne pas definir window.MSYX_HEADER
 ```
 
-Le header affiche alors uniquement le logo + theme switcher.
+Le header affiche : logo + toggle dark/light + cloche notifications. Pas de switcher theme ni de profil.
+
+### Consumer mono-theme (cas standard)
+
+```html
+<!-- Theme fixe via attribut HTML — pas de switcher -->
+<html data-theme="acssi">
+<script>window.MSYX_HEADER = { auth: true, user: { name: 'Mike', initials: 'M' } };</script>
+```
+
+Le theme est immediatement actif via `data-theme`, sans JavaScript ni dropdown.
+
+### Vitrine / multi-theme
+
+```javascript
+window.MSYX_HEADER = { themeSwitcher: true, auth: true, ... };
+```
+
+Active le dropdown MSYX/ACSSI/Nhood. Recommande uniquement pour les pages de documentation ou les apps multi-tenant.
 
 ### Mises a jour dynamiques
 
@@ -462,12 +492,13 @@ Depuis v2.36, le DS expose 3 niveaux d'intégration :
 ```
 Copie `ds-components.css` (barrel complet, ~175 KB d'overhead initial, ~25 KB après gzip).
 
-### Niveau 2 — Core (consumers légers : auth gate, landing)
-Couvre ~80% des cas courants (boutons, cards, forms, alerts, badges).
+### Niveau 2 — Core (consumers légers : auth gate, landing, header+nav)
+Couvre ~80% des cas courants (boutons, cards, forms, alerts, badges, tabs/breadcrumb/bottom-nav).
 ```bash
 ./sync.sh --components=core /path/to/target/styles/
 ```
-Copie `components-core.css` (~42 KB) vers `ds-components.css` + 7 modules dans `components/`.
+Copie `components-core.css` (~42 KB) vers `ds-components.css` + 9 modules dans `components/`.
+Note : le CSS du header (cloche, profil, dropdown, mode-switch) vit dans `layout.css` (socle toujours distribue) — `navigation.css` ajoute tabs/breadcrumb/stepper/bottom-nav.
 
 ### Niveau 3 — Sélection custom (avancé)
 ```bash
