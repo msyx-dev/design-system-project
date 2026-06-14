@@ -60,10 +60,7 @@ jobs:
         continue-on-error: true
       - name: Registry validation — phantoms (#516) + React parity (#523)
         run: node bin/generate-registry.js --check
-      - name: Install deps + Playwright browser (nav-sections check)
-        run: |
-          npm ci --prefer-offline 2>/dev/null || npm install --ignore-scripts
-          npx playwright install chromium --with-deps
+      # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
       - name: Nav sections manifest validation (#528)
         run: node bin/generate-nav-sections.js --check
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
