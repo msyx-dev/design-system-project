@@ -2,7 +2,8 @@
 /* navigation.css — extracted from components.css v2.35.0 */
 
 /* ===== TABS ===== */
-.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-color); margin-bottom: var(--space-lg); }
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-color); margin-bottom: var(--space-lg); max-width: 100%; overflow-x: auto; scrollbar-width: none; /* #530 */ }
+.tabs::-webkit-scrollbar { display: none; }
 .tab { padding: var(--space-2) var(--space-lg); font-size: 0.85rem; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.3s var(--ease-standard), border-bottom-color 0.3s var(--ease-standard); background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font-sans); }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent-light); border-bottom-color: var(--accent); }
@@ -15,7 +16,8 @@
 .breadcrumb .current { color: var(--text); font-weight: 500; }
 
 /* ===== STEPPER ===== */
-.stepper { display: flex; align-items: center; gap: 0; }
+.stepper { display: flex; align-items: center; gap: 0; max-width: 100%; overflow-x: auto; scrollbar-width: none; /* #530 */ }
+.stepper::-webkit-scrollbar { display: none; }
 .step { display: flex; align-items: center; gap: 0.5rem; }
 .step-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; font-family: var(--font-display); transition: background-color 0.3s var(--ease-standard), color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard); }
 .step-dot.completed { background: var(--accent); color: var(--text-on-accent); }

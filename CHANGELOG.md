@@ -8,6 +8,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.71.1] — 2026-06-14
+
+### Fixed
+- **Overflow horizontal — 5 pages restantes** : `html{overflow-x:clip}` dans `base.css` (filet page, neutralise `.copy-tooltip`, popovers header, `.drawer-panel` absolute/transform) + confinements UX sur `pre > code.typo-mono` (scroll interne), `.segmented` (pill scrollable), `.stepper` et `.tabs` (scroll mobile). 0 overflow sur 11 pages × 4 viewports. (#530)
+
 ## [2.71.0] — 2026-06-14
 
 ### Added
