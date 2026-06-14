@@ -1,7 +1,7 @@
 {
   "version": "2.73.0",
   "generated": {
-    "at": "2026-06-14T17:59:59.476Z",
+    "at": "2026-06-14T18:25:33.368Z",
     "by": "bin/generate-registry.js v1.2"
   },
   "components": [
@@ -1347,17 +1347,6 @@
         ".login-strength-fill",
         ".login-strength-label",
         ".login-success-msg",
-        ".settings-danger",
-        ".settings-panel",
-        ".settings-row",
-        ".settings-row-control",
-        ".settings-row-desc",
-        ".settings-row-info",
-        ".settings-row-input",
-        ".settings-row-label",
-        ".settings-row-select",
-        ".settings-section",
-        ".settings-section-title",
         ".upgrade-banner",
         ".upgrade-banner--danger",
         ".upgrade-banner--warning",
@@ -1365,17 +1354,7 @@
         ".upgrade-banner-body",
         ".upgrade-banner-desc",
         ".upgrade-banner-icon",
-        ".upgrade-banner-title",
-        ".usage-fill",
-        ".usage-fill--danger",
-        ".usage-fill--ok",
-        ".usage-fill--warn",
-        ".usage-meter",
-        ".usage-meter-header",
-        ".usage-meter-hint",
-        ".usage-meter-label",
-        ".usage-meter-track",
-        ".usage-meter-value"
+        ".upgrade-banner-title"
       ],
       "jsInit": "initPricing",
       "example": "<div class=\"pricing-grid\">\n  <div class=\"pricing-card\">\n    <div class=\"pricing-plan\">Free</div>\n    <div class=\"pricing-price\"><span class=\"pricing-price-currency\">&euro;</span><span class=\"pricing-price-amount\" data-price-monthly=\"0\" data-price-yearly=\"0\">0</span><span class=\"pricing-price-period\">/ mois</span></div>\n    <ul class=\"pricing-features\"><li class=\"pricing-feature\">Feature A</li></ul>\n    <div class=\"pricing-cta\"><button class=\"btn-secondary\" style=\"width:100%;\">Commencer</button></div>\n  </div>\n</div>",
@@ -1529,6 +1508,253 @@
         "shared/css/components/access-denied.css",
         "shared/css/components/cards.css",
         "shared/css/components/forms.css"
+      ]
+    },
+    {
+      "name": "kanban",
+      "kind": "component",
+      "page": "templates",
+      "cssClasses": [
+        ".kanban-board",
+        ".kanban-card",
+        ".kanban-card-chips",
+        ".kanban-card-desc",
+        ".kanban-card-footer",
+        ".kanban-card-title",
+        ".kanban-column",
+        ".kanban-column-header",
+        ".kanban-column-name",
+        ".kanban-column-title",
+        ".kanban-columns",
+        ".kanban-content",
+        ".kanban-count",
+        ".kanban-meta",
+        ".kanban-page",
+        ".kanban-topbar"
+      ],
+      "jsInit": "initComponents",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/templates.css",
+        "shared/css/components/_responsive.css"
+      ]
+    },
+    {
+      "name": "roadmap",
+      "kind": "component",
+      "page": "templates",
+      "cssClasses": [
+        ".roadmap-container",
+        ".roadmap-milestone",
+        ".roadmap-milestone-desc",
+        ".roadmap-milestone-dot",
+        ".roadmap-milestone-title",
+        ".roadmap-quarter",
+        ".roadmap-quarter-title",
+        ".roadmap-track"
+      ],
+      "jsInit": null,
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/templates.css",
+        "shared/css/components/_responsive.css"
+      ]
+    },
+    {
+      "name": "backlog",
+      "kind": "component",
+      "page": "templates",
+      "cssClasses": [
+        ".backlog-content",
+        ".backlog-desc",
+        ".backlog-filters",
+        ".backlog-item",
+        ".backlog-points",
+        ".backlog-priority",
+        ".backlog-title"
+      ],
+      "jsInit": "initComponents",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/templates.css",
+        "shared/css/components/_responsive.css"
+      ]
+    },
+    {
+      "name": "sprint",
+      "kind": "component",
+      "page": "templates",
+      "cssClasses": [
+        ".sprint-board",
+        ".sprint-burndown",
+        ".sprint-burndown-title",
+        ".sprint-header",
+        ".sprint-header-info",
+        ".sprint-stats"
+      ],
+      "jsInit": null,
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/templates.css",
+        "shared/css/components/_responsive.css"
+      ]
+    },
+    {
+      "name": "settings-panel",
+      "kind": "component",
+      "page": "templates",
+      "cssClasses": [
+        ".settings-danger",
+        ".settings-panel",
+        ".settings-row",
+        ".settings-row-control",
+        ".settings-row-desc",
+        ".settings-row-info",
+        ".settings-row-input",
+        ".settings-row-label",
+        ".settings-row-select",
+        ".settings-section",
+        ".settings-section-title"
+      ],
+      "jsInit": null,
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/pricing.css"
+      ]
+    },
+    {
+      "name": "charts",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".chart-animated",
+        ".chart-area-animated",
+        ".chart-axis-label",
+        ".chart-bar",
+        ".chart-donut-slice",
+        ".chart-grid-line",
+        ".chart-legend",
+        ".chart-legend-dot",
+        ".chart-legend-item",
+        ".chart-line-animated",
+        ".chart-point",
+        ".chart-tooltip",
+        ".chart-visible",
+        ".chart-wrap"
+      ],
+      "jsInit": "initComponents",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/data.css",
+        "shared/css/components/_responsive.css"
+      ]
+    },
+    {
+      "name": "gauge",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".gauge",
+        ".gauge--mini",
+        ".gauge-fill",
+        ".gauge-group",
+        ".gauge-label",
+        ".gauge-track",
+        ".gauge-value"
+      ],
+      "jsInit": "initGauges",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/data.css"
+      ]
+    },
+    {
+      "name": "activity-feed",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".activity-avatar",
+        ".activity-avatar-wrap",
+        ".activity-body",
+        ".activity-feed",
+        ".activity-filter-chip",
+        ".activity-filters",
+        ".activity-item",
+        ".activity-load-more",
+        ".activity-meta",
+        ".activity-tag",
+        ".activity-target",
+        ".activity-text",
+        ".activity-time",
+        ".activity-type-icon"
+      ],
+      "jsInit": "initActivityFeed",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/lists.css"
+      ]
+    },
+    {
+      "name": "risk-matrix",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".risk-axis-x",
+        ".risk-axis-y",
+        ".risk-cell",
+        ".risk-cell-label",
+        ".risk-col-label",
+        ".risk-dot",
+        ".risk-dot-overflow",
+        ".risk-grid",
+        ".risk-matrix",
+        ".risk-matrix-compact",
+        ".risk-matrix-inner",
+        ".risk-matrix-wrap",
+        ".risk-row-label",
+        ".risk-tooltip",
+        ".risk-tooltip-badge",
+        ".risk-tooltip-hint",
+        ".risk-tooltip-owner",
+        ".risk-tooltip-row",
+        ".risk-tooltip-title"
+      ],
+      "jsInit": "initRiskMatrix",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/data.css"
+      ]
+    },
+    {
+      "name": "usage-meter",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".usage-fill",
+        ".usage-fill--danger",
+        ".usage-fill--ok",
+        ".usage-fill--warn",
+        ".usage-meter",
+        ".usage-meter-header",
+        ".usage-meter-hint",
+        ".usage-meter-label",
+        ".usage-meter-track",
+        ".usage-meter-value"
+      ],
+      "jsInit": "initUsageMeter",
+      "version": "2.73.0",
+      "react": "pending",
+      "module": [
+        "shared/css/components/pricing.css"
       ]
     },
     {

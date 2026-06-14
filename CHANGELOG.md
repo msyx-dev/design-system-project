@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- **Registre — 10 entrées composants** : ajout des `kind:component` manquants (templates : kanban, roadmap, backlog, sprint, settings-panel ; data : charts, gauge, activity-feed, risk-matrix, usage-meter) ; `module[]` auto-dérivé ; correctif curatif `.settings-*`/`.usage-*` retirés de l'entrée `pricing` ; compteurs hero 78→88. (#508)
+
 ### Changed
 - **`entrypoint.sh`** : bump `VERSION` 2.72.0 → 2.73.0 — cohérence `/version.json` préprod après #542 (header par défaut). Pas de bump DS (entrypoint uniquement).
 
