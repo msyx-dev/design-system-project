@@ -26,6 +26,8 @@
 .typo-small { font-family: var(--font-sans); font-size: var(--type-14); color: var(--text-muted); }
 .typo-xs { font-family: var(--font-sans); font-size: var(--type-12); color: var(--text-dim); }
 .typo-mono { font-family: var(--font-mono); font-size: var(--type-14); color: var(--accent-light); }
+/* Confinement overflow : un <pre><code class="typo-mono"> ne doit jamais étendre la page (#530) */
+pre > code.typo-mono { display: block; max-width: 100%; overflow-x: auto; white-space: pre; }
 
 /* ===== FOOTER ===== */
 footer { padding: var(--space-xl) var(--space-2xl); text-align: center; }

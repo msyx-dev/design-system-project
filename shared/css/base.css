@@ -15,7 +15,7 @@
     outline: none;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; /* #530 : filet page — clip ≠ hidden, préserve header fixe + sticky */ }
 
 body {
     font-family: var(--font-sans);

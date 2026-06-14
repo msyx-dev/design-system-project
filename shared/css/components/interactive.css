@@ -234,7 +234,11 @@
     padding: 3px;
     gap: 0;
     border: 1px solid var(--border-color);
+    max-width: 100%;       /* #530 : ne dépasse jamais le conteneur */
+    overflow-x: auto;      /* #530 : scroll interne si trop d'items <375 (ex. segmented--lg) */
+    scrollbar-width: none; /* masque la scrollbar (esthétique pill) */
 }
+.segmented::-webkit-scrollbar { display: none; }
 .segmented-indicator {
     position: absolute;
     top: 3px;

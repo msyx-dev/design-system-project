@@ -1,5 +1,15 @@
 # Releases
 
+## 2.71.1 — 2026-06-14 — Fix overflow horizontal 5 pages : `html{overflow-x:clip}` + confinements composants (#530)
+
+### Fixed
+- **`html { overflow-x: clip }`** dans `shared/css/base.css` — filet page qui neutralise les fuites d'éléments `position:absolute`/`transform` hors-écran (`.copy-tooltip`, `.header-notif-panel`/`.header-dropdown`, `.drawer-panel`) que `body{overflow-x:hidden}` ne rognait pas (propagation body→viewport). `clip` préserve `position:fixed`/`sticky` (header fixe + scroll vertical intacts). (#530)
+- **`pre > code.typo-mono`** : `display:block; max-width:100%; overflow-x:auto` dans `shared/css/components/theming.css` — scroll interne du bloc de code au lieu d'étendre la page (page motion, mobile). (#530)
+- **`.segmented`** : `max-width:100%; overflow-x:auto; scrollbar-width:none` dans `shared/css/components/interactive.css` — scroll interne du segmented control pill (`.segmented--lg` ≥338px ne tenait pas en <375px). (#530)
+- **`.stepper`** : `max-width:100%; overflow-x:auto; scrollbar-width:none` dans `shared/css/components/navigation.css` — scroll interne du stepper horizontal (page navigation). (#530)
+- **`.tabs`** : `max-width:100%; overflow-x:auto; scrollbar-width:none` dans `shared/css/components/navigation.css` — scrollable tabs mobile (pattern standard). (#530)
+- **Résultat sweep** : 0 overflow sur 11 pages × 4 viewports (320/375/768/1280) — toutes les pages passent `documentElement.scrollWidth ≤ innerWidth + 2`. (#530)
+
 ## 2.71.0 — 2026-06-14 — Taxonomie dataviz : réordonnancement data.html en 5 familles + `.stat-value--sm` (#515)
 
 ### Added
