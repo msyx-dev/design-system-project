@@ -8,6 +8,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.71.0] — 2026-06-14
+
+### Added
+- **`.stat-value--sm`** : variante `font-size: 1.5rem` dans `data.css` — ferme la dette A8 inline `templates.html`. (#515)
+
+### Changed
+- **`data.html`** : 15 sections réordonnées en 5 familles (Graphiques · Indicateurs chiffrés · Jauges & progression · Tabulaire · Listes & flux). Notes « quand utiliser » ajoutées (stats/counters et famille Meter). Non-breaking. (#515)
+- **`templates.html`** : 3× `style="font-size:1.5rem"` remplacés par `.stat-value--sm`. (#515)
+
 ## [2.70.0] — 2026-06-14
 
 ### Fixed

@@ -63,6 +63,26 @@ const freezeJsAnimations = async (page: import("@playwright/test").Page) => {
         document
           .querySelectorAll<HTMLElement>(".carousel[data-autoplay]")
           .forEach((c) => c.removeAttribute("data-autoplay"));
+        // Animated counters (.counter[data-target]) : la valeur affichée
+        // dépend de la frame de capture (animation JS 0→cible, non figée par
+        // animations:"disabled" qui ne touche que CSS/WAAPI). On pré-règle la
+        // valeur FINALE + data-counted='true' AVANT initAnimatedCounters :
+        // son observer voit counted=true → skip → baseline déterministe
+        // (chiffres finaux, représentatifs). Anti-flaky VR #515.
+        document
+          .querySelectorAll<HTMLElement>(".counter[data-target]")
+          .forEach((c) => {
+            const target = parseFloat(c.dataset.target || "0");
+            const decimals = parseInt(c.dataset.decimals || "0", 10);
+            const valueEl = c.querySelector<HTMLElement>(".counter-value");
+            if (valueEl) {
+              valueEl.textContent =
+                decimals > 0
+                  ? target.toFixed(decimals)
+                  : Math.floor(target).toString();
+            }
+            c.dataset.counted = "true";
+          });
       },
       { once: true },
     );

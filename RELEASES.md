@@ -1,5 +1,18 @@
 # Releases
 
+## 2.71.0 — 2026-06-14 — Taxonomie dataviz : réordonnancement data.html en 5 familles + `.stat-value--sm` (#515)
+
+### Added
+- **`.stat-value--sm`** : variante de taille `font-size: 1.5rem` dans `shared/css/components/data.css` — ferme la dette A8 (remplace 3 styles inline `style="font-size:1.5rem"` dans `pages/templates.html`). (#515)
+
+### Changed
+- **`pages/data.html` — réordonnancement 15 sections en 5 familles** : Graphiques (`charts`, `pie-donut`) · Indicateurs chiffrés (`stats`, `animated-counters`) · Jauges & progression (`progress`, `progress-tracker`, `gauge`, `usage-meter`) · Tabulaire (`tables`, `comparison`, `data-grid`) · Listes & flux (`tree-view`, `lists`, `activity-feed`, `risk-matrix`). Markup interne de chaque section inchangé (non-breaking). (#515)
+- **Notes « quand utiliser »** ajoutées dans `data.html` : (a) frontière `stats` / `animated-counters` (KPI statique vs animé) ; (b) famille Meter — 4 idiomes distincts (`progress-bar` / `progress-tracker` / `gauge` / `usage-meter`). (#515)
+- **Sidebar « Data »** : réordonnée automatiquement via manifeste build (`bin/generate-nav-sections.js` relancé). (#515)
+- **`pages/templates.html`** : 3× `style="font-size:1.5rem"` remplacés par `.stat-value--sm` (sprint board). (#515)
+- **`docs/ARCHITECTURE.md`** : ligne `data.html` mise à jour (5 familles, ordre). (#515)
+- **`CLAUDE.md`** : description `data.html` mise à jour. (#515)
+
 ## 2.70.0 — 2026-06-14 — Sidebar : manifeste de sections généré au BUILD, ZÉRO fetch runtime (#528)
 
 ### Fixed

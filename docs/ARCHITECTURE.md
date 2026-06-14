@@ -31,7 +31,7 @@ pages/
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
-  data.html             # Tables, data grid, stats, charts, pie/donut, KPI, tree view, gauge, animated counters, comparison table, progress tracker
+  data.html             # 15 sections en 5 familles (v2.71.0) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats, animated-counters) · Jauges & progression (progress, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html        # Kanban, roadmap, backlog, sprint board
   feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed, before/after) + Interaction (accordion, command palette, context menu, copy button, decision tree)
