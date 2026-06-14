@@ -100,14 +100,15 @@ elif [ "$COMPONENTS_LIST" = "core" ]; then
     sed "s#@ds-version:[[:space:]]*[0-9.]\+#@ds-version: ${DS_VERSION}#" \
         "$DS_DIR/components-core.css" > "$TARGET/ds-components.css"
     # Modules importés par components-core.css (brand inclus : sinon @import 404)
-    cp "$DS_DIR/components/_base.css"   "$TARGET/components/"
-    cp "$DS_DIR/components/brand.css"   "$TARGET/components/"
-    cp "$DS_DIR/components/buttons.css" "$TARGET/components/"
-    cp "$DS_DIR/components/cards.css"   "$TARGET/components/"
-    cp "$DS_DIR/components/forms.css"   "$TARGET/components/"
-    cp "$DS_DIR/components/alerts.css"  "$TARGET/components/"
-    cp "$DS_DIR/components/badges.css"  "$TARGET/components/"
-    cp "$DS_DIR/components/_a11y.css"   "$TARGET/components/"
+    cp "$DS_DIR/components/_base.css"      "$TARGET/components/"
+    cp "$DS_DIR/components/brand.css"      "$TARGET/components/"
+    cp "$DS_DIR/components/buttons.css"    "$TARGET/components/"
+    cp "$DS_DIR/components/cards.css"      "$TARGET/components/"
+    cp "$DS_DIR/components/forms.css"      "$TARGET/components/"
+    cp "$DS_DIR/components/alerts.css"     "$TARGET/components/"
+    cp "$DS_DIR/components/badges.css"     "$TARGET/components/"
+    cp "$DS_DIR/components/navigation.css" "$TARGET/components/"  # tabs/breadcrumb/stepper/bottom-nav (layout.css gère le header)
+    cp "$DS_DIR/components/_a11y.css"      "$TARGET/components/"
     COMPONENTS_MODE="core (modules essentiels)"
 else
     # Mode sélectif : modules listés + transverses obligatoires

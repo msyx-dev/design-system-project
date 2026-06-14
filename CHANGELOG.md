@@ -8,8 +8,14 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.73.0] — 2026-06-14
+
 ### Changed
-- **`entrypoint.sh`** : bump `VERSION` 2.71.2 → 2.72.0 — cohérence `/version.json` préprod après livraison #435 (password-toggle). Pas de bump DS (entrypoint uniquement).
+- **Header DS — cloche hors auth** : `notifBellHtml` extrait du bloc `if (authEnabled)` — cloche rendue par défaut (masquable via `notifications.enabled:false`), profil reste derrière `auth:true`, switcher thème derrière `themeSwitcher` (défaut `false`). (#542)
+- **FIX FOUC #251** : `updateModeSwitch()` déplacé avant le guard `if (!select) return` dans `initThemeSwitcher` — synchro dark/light garantie même sans switcher thème. (#542)
+- **`components-core.css`** : `navigation.css` ajouté au barrel core (tabs/breadcrumb/stepper/bottom-nav) + `cp` correspondant dans `sync.sh --components=core`. (#542)
+- **9 pages DS** : `themeSwitcher:true` dans le `MSYX_HEADER` inline pour conserver le switcher après le changement de défaut. (#542)
+- **`CONSUMER_GUIDE.md`** : section Header refaite — tableau éléments/défauts, `themeSwitcher` documenté, exemples consumer mono-thème et vitrine. (#542)
 
 ## [2.72.0] — 2026-06-14
 

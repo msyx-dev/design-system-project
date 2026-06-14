@@ -1,5 +1,5 @@
-/* @ds-version 2.72.0 */
-const VERSION = '2.72.0';
+/* @ds-version 2.73.0 */
+const VERSION = '2.73.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -31,6 +31,8 @@ function buildHeader() {
     var authEnabled = !!cfg.auth;
     var user = cfg.user || {};
     var notifCfg = cfg.notifications || {};
+    var notifVisible = notifCfg.enabled !== false;           // défaut true — indépendant de l'auth
+    var themeSwitcherEnabled = !!cfg.themeSwitcher;          // défaut false — opt-in vitrine/multi-thème
     var menuItems = cfg.menu || [
         { label: 'Profil', icon: '&#128100;', href: '#' },
         { label: 'Preferences', icon: '&#9881;', href: '#' },
@@ -62,39 +64,47 @@ function buildHeader() {
         }
     });
 
-    // Zone user (seulement si auth activé)
+    // Cloche notifications : construite UNE SEULE FOIS, hors gate auth (v2.73.0)
+    // Masquée uniquement si MSYX_HEADER.notifications.enabled === false
+    var notifBellHtml = '';
+    if (notifVisible) {
+        var notifCount = notifCfg.count || 0;
+        var badgeHtml = (notifCount > 0)
+            ? `<span class="header-notification-badge" id="header-notif-badge">${notifCount > 99 ? '99+' : notifCount}</span>`
+            : '<span class="header-notification-badge hidden" id="header-notif-badge"></span>';
+        notifBellHtml = `<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>${badgeHtml}</button><div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications"><div class="header-notif-panel-header"><span>Notifications</span><button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button></div><div class="header-notif-list" id="header-notif-list"><div class="header-notif-empty">Aucune notification</div></div></div>`;
+    }
+
+    // Profil (avatar/dropdown) : reste derrière auth — NE re-rend PAS la cloche (anti-double-cloche)
     // Stratégie back-compat M3 (v2.58.0) :
     //   - Si cfg.user présent → legacy dropdown (consumers existants back-compat)
     //   - Si cfg.user absent + authEnabled → slot UserMenu DS standard (M3 Authentik Proxy)
-    //   - Si authEnabled false → pas de zone user
-    var userZoneHtml = '';
+    //   - Si authEnabled false → pas de profil
+    var profileHtml = '';
     if (authEnabled) {
-        var notifCount = notifCfg.count || 0;
-        var notifVisible = notifCfg.enabled !== false;
-        var badgeHtml = '';
-        if (notifCount > 0) {
-            badgeHtml = `<span class="header-notification-badge" id="header-notif-badge">${notifCount > 99 ? '99+' : notifCount}</span>`;
-        } else {
-            badgeHtml = '<span class="header-notification-badge hidden" id="header-notif-badge"></span>';
-        }
-
-        var notifBellHtml = '';
-        if (notifVisible) {
-            notifBellHtml = `<button class="header-notification" id="header-notif-btn" aria-label="Notifications" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>${badgeHtml}</button><div class="header-notif-panel" id="header-notif-panel" role="dialog" aria-label="Centre de notifications"><div class="header-notif-panel-header"><span>Notifications</span><button class="header-notif-mark-read" id="header-notif-mark-all">Tout lire</button></div><div class="header-notif-list" id="header-notif-list"><div class="header-notif-empty">Aucune notification</div></div></div>`;
-        }
-
         if (cfg.user && (cfg.user.name || cfg.user.initials || cfg.user.avatar)) {
             // Mode legacy : MSYX_HEADER.user défini → dropdown legacy (back-compat consumers existants)
-            userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div></div>`;
+            profileHtml = `<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div>`;
         } else {
             // Mode M3 : pas de cfg.user → slot UserMenu DS standard
             // L'init script (auth-init inline dans site.html) fetch /me.json depuis Authentik Proxy
             // et appelle initUserMenu() sur ce slot une fois les données disponibles.
-            userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}<div class="user-menu" id="ds-user-menu"></div></div>`;
+            profileHtml = `<div class="user-menu" id="ds-user-menu"></div>`;
         }
     }
 
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo" aria-label="design-system — Accueil"><img src="/assets/sources/logoMSYX.png" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img"><span class="brand-wordmark">design-system</span></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls"><div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div><div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+    // Zone user : rendue si cloche OU profil présent (évite un wrapper vide orphelin)
+    var userZoneHtml = '';
+    if (notifBellHtml || profileHtml) {
+        userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}${profileHtml}</div>`;
+    }
+
+    // Switcher thème : derrière flag themeSwitcher (défaut false — opt-in vitrine/multi-thème)
+    var themeSwitcherHtml = themeSwitcherEnabled
+        ? `<div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div>`
+        : '';
+
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo" aria-label="design-system — Accueil"><img src="/assets/sources/logoMSYX.png" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img"><span class="brand-wordmark">design-system</span></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
@@ -108,19 +118,19 @@ function buildHeader() {
     }
     // FIX #251 — ordre garanti : initModeSwitcher AVANT initThemeSwitcher.
     // initModeSwitcher pose les listeners + lit data-theme/data-mode actuel ;
-    // initThemeSwitcher rappelle updateModeButtons() apres pour re-synchroniser
+    // initThemeSwitcher rappelle updateModeSwitch() apres pour re-synchroniser
     // l'etat disabled des boutons dark/light si l'attribut data-theme a ete
-    // pose tardivement (race anti-FOUC).
+    // pose tardivement (race anti-FOUC). updateModeSwitch() est desormais appele
+    // avant le guard !select dans initThemeSwitcher — synchro garantie meme
+    // quand themeSwitcher:false (switcher absent).
     if (typeof initModeSwitcher === 'function') initModeSwitcher();
     if (typeof initThemeSwitcher === 'function') initThemeSwitcher();
-    if (authEnabled) {
-        if (cfg.user && (cfg.user.name || cfg.user.initials || cfg.user.avatar)) {
-            // Legacy : init dropdown avatar
-            initHeaderUser();
-        }
-        // Notifications : présentes quel que soit le mode (legacy ou M3)
-        if ((cfg.notifications || {}).enabled !== false) initHeaderNotifications();
+    if (authEnabled && cfg.user && (cfg.user.name || cfg.user.initials || cfg.user.avatar)) {
+        // Legacy : init dropdown avatar
+        initHeaderUser();
     }
+    // Notifications : dès que la cloche est rendue, indépendamment de l'auth (v2.73.0)
+    if (notifVisible) initHeaderNotifications();
     // M3 : notifie les consumers que le header DOM est rendu (slot #ds-user-menu disponible)
     document.dispatchEvent(new CustomEvent('msyx:header:ready', { bubbles: true }));
 }
