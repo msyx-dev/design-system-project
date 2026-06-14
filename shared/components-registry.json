@@ -1,5 +1,5 @@
 {
-  "version": "2.71.2",
+  "version": "2.72.0",
   "generated": {
     "at": "2026-06-13T20:10:14.086Z",
     "by": "bin/generate-registry.js v1.2"
@@ -944,6 +944,20 @@
       ],
       "jsInit": null,
       "example": "<div class=\"filter-bar\">\n  <select class=\"input\" aria-label=\"Statut\"><option>Statut — Tous</option></select>\n  <input type=\"search\" class=\"input filter-bar-search\" placeholder=\"Rechercher…\" aria-label=\"Recherche\">\n  <div class=\"filter-bar-actions\">\n    <button class=\"btn btn-ghost btn-sm\" type=\"button\">Réinitialiser</button>\n    <button class=\"btn btn-secondary btn-sm\" type=\"button\">Exporter</button>\n  </div>\n</div>",
+      "react": "pending"
+    },
+    {
+      "name": "password-toggle",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".password-field",
+        ".password-toggle",
+        ".password-toggle-on",
+        ".password-toggle-off"
+      ],
+      "jsInit": "initPasswordToggle",
+      "example": "<div class=\"password-field\">\n  <input class=\"input\" id=\"pwd\" type=\"password\">\n  <button type=\"button\" class=\"password-toggle\" data-password-toggle aria-pressed=\"false\" aria-label=\"Afficher le mot de passe\" aria-controls=\"pwd\">\n    <svg class=\"icon password-toggle-on\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-eye\"/></svg>\n    <svg class=\"icon password-toggle-off\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-eye-off\"/></svg>\n  </button>\n</div>",
       "react": "pending"
     },
     {

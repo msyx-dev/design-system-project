@@ -55,7 +55,7 @@ shared/
       cards.css         #   .card, hero sections, hub, lazy sections, .card-link (a11y wrapper v2.49.0)
       badges.css        #   .badge, .badge-nav (compact sidebar/nav v2.49.0), .chip, .kbd, .notification-dot, .achievement-badge
       theming.css       #   COLORS (+ .color-grid--compact v2.54.7), TYPOGRAPHY, FOOTER, THEMING, BACKDROP-FILTER FALLBACK, THEME PREVIEW CARDS (.theme-card v2.54.7)
-      forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR, LOGIN / LOGINSCREEN (3 variants Authentik, slots providers, v2.57.0)
+      forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR, PASSWORD TOGGLE, LOGIN / LOGINSCREEN (3 variants Authentik, slots providers, v2.57.0)
       data.css          #   PROGRESS, STATS, CHARTS, PIE, GAUGE, ANIMATED COUNTERS, RISK MATRIX
       avatars.css       #   .avatar, .avatar-img, .avatar-initials
       tables.css        #   TABLE, DATA GRID, COMPARISON TABLE
@@ -315,6 +315,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Decision Tree** (`initDecisionTree()`) : arbre de decision interactif step-by-step, clic sur `.dtree-choice` revele le noeud suivant (data-next), connecteurs `.dtree-connector` animes, bouton reset, variante resultat `.dtree-node--result` en couleur success, anti-double-bind dataset.bound
 - **Risk Matrix** (`initRiskMatrix()`) : grille CSS Grid NxN (3/4/5) probabilite x impact, cellules colorees par niveau de risque (score = prob * impact), points interactifs data-prob/data-impact, tooltip riche hover/focus, modal detail via `__openModal(bodyHTML)`, gestion collisions avec stack et overflow badge, IntersectionObserver animation apparition + fallback visibilité immédiate pour SPA, pattern dataset.bound
 - **Usage Meter** (`initUsageMeter()`) : barres de progression avec fill animé, IntersectionObserver + fallback visibilité immédiate pour SPA, pattern dataset.bound
+- **Password Toggle** (`initPasswordToggle()`) : toggle révélation show/hide sur input[type=password], bascule type + aria-pressed + aria-label dynamique, échange d'icône eye↔eye-off piloté en CSS via [aria-pressed], résolution input via aria-controls ou .password-field parent, anti-double-bind dataset.bound
 
 ### Sprint 20 (Motion reference page — v2.35.0)
 - **Motion Replay** (`initMotionReplay()`) : bouton « Replay » par pattern — retire les classes d'animation, force un reflow (`void offsetWidth`), les réajoute. Pattern `dataset.bound` anti-double-bind.
