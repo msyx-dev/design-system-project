@@ -384,6 +384,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 - [ ] Entrée dans `shared/components-registry.json` :
   - `name`, `page`, `cssClasses` (toutes les classes principales), `jsInit` (ou null), `example`
   - `react` : statut de portage React — `ported` (wrapper `@msyx-dev/react` existe) / `pending` (portable, pas encore porté) / `n-a` (non portable : token, layout, primitive). **Défaut auto = `pending` pour tout `kind:component`** ; à passer `ported` uniquement avec le wrapper React dans le mapping `REACT_TO_REGISTRY` de `bin/generate-registry.js`.
+  - `module` : **NE PAS SAISIR À LA MAIN** — champ `string[]` auto-dérivé par `generate-registry.js` à partir de `cssClasses` (voir Section 8.2 — Pont module[] ci-dessous).
 - [ ] `version` global du registry mis à jour
 
 ### Tests visuels (Visual Regression)
@@ -425,6 +426,51 @@ Au premier consumer React en prod, la politique bascule :
 - ajouter le composant au mapping `REACT_TO_REGISTRY` de `bin/generate-registry.js`.
 
 Cette bascule est une décision explicite tracée ici (pas automatique).
+
+---
+
+## Section 8.2 — Pont page↔module : champ `module[]` (#506)
+
+### Rôle
+
+Le champ `module` (ajouté v2.73.0) ferme le triplet **composant → page → module(s) CSS** en indiquant pour chaque `kind:component` dans quel(s) fichier(s) CSS vivent ses classes. Il rend le registre auditable mécaniquement (question : « le composant X est stylé par quel fichier ? » a désormais une réponse directe).
+
+### Contrat figé (consommé en aval par #508)
+
+| Propriété | Valeur |
+|---|---|
+| **Type** | `string[]` (tableau) — jamais une string nue |
+| **Format des items** | chemin repo complet `shared/css/components/X.css` (cohérent avec `source_file`) |
+| **Portée** | `kind:component` UNIQUEMENT — les `kind:module` gardent `source_file`, ne reçoivent pas `module` |
+| **Dédoublonnage** | items uniques |
+| **Tri** | modules propres (sans `_`) d'abord par ordre alphabétique, transverses (`_a11y`, `_responsive`, `_base`…) en fin — tri stable, requis pour l'idempotence |
+| **Absence légitime** | champ **omis** si 0 classe résoluble (voir exemptions) |
+
+### Source de vérité unique : auto-dérivation
+
+`module[]` est **exclusivement calculé par `bin/generate-registry.js`** à partir de `cssClasses`, via la map inverse classe→fichiers (`classToFiles`). **Ne JAMAIS saisir ou modifier `module` à la main** — la prochaine régénération écraserait la saisie.
+
+### Exemptions (3 entrées légitimement sans `module`)
+
+| name | page | cause |
+|---|---|---|
+| `reset-natif` | composants | `cssClasses: []` (sélecteurs natifs/pseudo) |
+| `texture-grain` | fondation | `cssClasses: []` (pseudo-élément `body::after`) |
+| `brand-acssi` | fondation | `cssClasses: null` |
+
+Ces 3 entrées sont whitelistées dans `MODULE_EXEMPT` et ne font PAS échouer le check d'intégrité.
+
+### Check CI (greffé sur `--check`)
+
+`node bin/generate-registry.js --check` valide le pont module[] :
+- tout `kind:component` hors exemptions DOIT avoir `module` non vide ;
+- tout item de `module[]` DOIT correspondre à un fichier réellement scanné par le générateur.
+
+Erreur → `process.exit(1)` avec liste des composants orphelins.
+
+### Règle pratique (ajout composant)
+
+Lors de l'ajout d'un composant (Section 8 checklist) : renseigner `cssClasses` correctement, puis lancer `npm run generate-registry`. Le champ `module[]` se calcule automatiquement — aucune action supplémentaire.
 
 ---
 

@@ -164,6 +164,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
 8. **Registre** : mettre a jour `shared/components-registry.json`
    - Ajouter une entree avec `name`, `page`, `cssClasses` (classes principales), `jsInit` (ou null)
    - Déclarer le statut React : `react: "pending"` (défaut auto — laisser vide, le générateur le matérialise) ou `react: "ported"` si un wrapper `@msyx-dev/react` est créé dans la MEME PR (ajouter au mapping `REACT_TO_REGISTRY` dans `bin/generate-registry.js`). Voir politique `docs/DS-PRINCIPLES.md` Section 8.1.
+   - **`module[]` : NE PAS saisir à la main** — auto-dérivé par `generate-registry.js` depuis `cssClasses`. Lancer `npm run generate-registry` après toute modif de `cssClasses`. Voir politique `docs/DS-PRINCIPLES.md` Section 8.2.
    - Maintenir la version `"version"` en coherence avec le bump de `@ds-version`
 
 ## Deploy
