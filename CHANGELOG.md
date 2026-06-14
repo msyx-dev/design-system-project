@@ -8,9 +8,17 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.74.0] — 2026-06-14
+
+> Sprint #43 — Cohérence taxonomie & navigation (axe registre & doc). Pont page↔module, registre complété, règle frontière. Aucune modification CSS de rendu (bump synchrone des 8 sources pour cohérence `check-versions`).
+
 ### Added
+- **Registre — champ `module[]` (pont page↔module)** : `bin/generate-registry.js` dérive automatiquement `module[]` (string[], chemins repo) pour chaque `kind:component` via la map inverse classe→fichier ; 76 entrées peuplées (3 exemptées : `reset-natif`, `texture-grain`, `brand-acssi`), `code-inline` normalisé string→array. Contrôle d'intégrité ajouté au mode `--check` (résolubilité + cohérence fichiers réels + idempotence). Politique documentée dans `docs/DS-PRINCIPLES.md` §8.2. (#506)
 - **Registre — 10 entrées composants** : ajout des `kind:component` manquants (templates : kanban, roadmap, backlog, sprint, settings-panel ; data : charts, gauge, activity-feed, risk-matrix, usage-meter) ; `module[]` auto-dérivé ; correctif curatif `.settings-*`/`.usage-*` retirés de l'entrée `pricing` ; compteurs hero 78→88. (#508)
 - **Règle frontière page↔registre** : nouvelle Section 6.1 dans `docs/DS-PRINCIPLES.md` — invariant triplet `<section id>` ↔ entrée registre `kind:component` ↔ `module[]`, exemptions transverses (`_base`, `_a11y`, `_responsive`, `theming`, `section-header`, `signature`) et pages de référence (`fondation`, `motion`, `getting-started`), anti-patterns ❌/✅. Garde-fou CI : `generate-registry.js --check` étendu avec contrôle frontière bidirectionnel (section sans entrée + entrée orpheline), warn-only par défaut, `--frontier-strict` opt-in après #508. (#511)
+
+### Fixed
+- **Doc core preset** : `CONSUMER_GUIDE.md` reflète les 9 modules réels du preset core (`navigation` inclus depuis v2.73.0, `modals` exclu), poids gzip recalculés (~14,5 KB core / ~37 KB barrel complet), liste « Modules disponibles » complétée (+`access-denied`, `brand`, `section-header`, `signature`, `theme-toggle`). Compteur modules corrigé dans `CLAUDE.md`. (#507)
 
 ### Changed
 - **`entrypoint.sh`** : bump `VERSION` 2.72.0 → 2.73.0 — cohérence `/version.json` préprod après #542 (header par défaut). Pas de bump DS (entrypoint uniquement).
