@@ -490,14 +490,14 @@ Depuis v2.36, le DS expose 3 niveaux d'intégration :
 ```bash
 ./sync.sh /path/to/target/styles/
 ```
-Copie `ds-components.css` (barrel complet, ~175 KB d'overhead initial, ~25 KB après gzip).
+Copie `ds-components.css` (barrel complet, ~211 KB d'overhead initial, ~37 KB après gzip).
 
 ### Niveau 2 — Core (consumers légers : auth gate, landing, header+nav)
-Couvre ~80% des cas courants (boutons, cards, forms, alerts, badges, tabs/breadcrumb/bottom-nav).
+Couvre ~80% des cas courants (boutons, cards, forms, alerts, badges, brand, tabs/breadcrumb/bottom-nav). Sans modals/overlays/data — pour ceux-ci, mode complet ou sélection custom.
 ```bash
 ./sync.sh --components=core /path/to/target/styles/
 ```
-Copie `components-core.css` (~42 KB) vers `ds-components.css` + 9 modules dans `components/`.
+Copie `components-core.css` (~14,5 KB gzip) vers `ds-components.css` + 9 modules dans `components/` (`_base, brand, buttons, cards, forms, alerts, badges, navigation, _a11y`).
 Note : le CSS du header (cloche, profil, dropdown, mode-switch) vit dans `layout.css` (socle toujours distribue) — `navigation.css` ajoute tabs/breadcrumb/stepper/bottom-nav.
 
 ### Niveau 3 — Sélection custom (avancé)
@@ -507,9 +507,10 @@ Note : le CSS du header (cloche, profil, dropdown, mode-switch) vit dans `layout
 Copie un barrel généré à la volée + uniquement les modules listés dans `components/`.
 
 ### Modules disponibles
-`buttons`, `cards`, `badges`, `alerts`, `forms`, `navigation`, `tables`, `modals`, `overlays`,
-`data`, `lists`, `feedback`, `media`, `interactive`, `avatars`, `theming`, `templates`,
-`tracker`, `pricing`, `notifications`, `quiz`, `motion`.
+`access-denied`, `alerts`, `avatars`, `badges`, `brand`, `buttons`, `cards`, `data`, `feedback`,
+`forms`, `interactive`, `lists`, `media`, `modals`, `motion`, `navigation`, `notifications`,
+`overlays`, `pricing`, `quiz`, `section-header`, `signature`, `tables`, `templates`, `theme-toggle`,
+`theming`, `tracker`.
 
 Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `_a11y` (focus-visible global), `_responsive`.
 
@@ -559,9 +560,9 @@ Modules tries par poids decroissant.
 | `signature` | 360 B | Gradient underline overline |
 
 **Total modules non-transverses** : ~41 KB gzip (ensemble complet)
-**Core preset (7 modules)** : buttons + cards + badges + alerts + forms + navigation + modals ≈ 14 KB gzip
+**Core preset (9 modules)** : _base + brand + buttons + cards + badges + alerts + forms + navigation + _a11y ≈ 14,5 KB gzip (modals NON inclus)
 
-Pour un projet minimal (auth gate, landing page) : `--components=core` suffit (~14 KB vs ~41 KB en plein).
+Pour un projet minimal (auth gate, landing page) : `--components=core` suffit (~14,5 KB vs ~37 KB en plein).
 
 ---
 
