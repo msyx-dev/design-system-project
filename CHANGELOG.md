@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Changed
+- **`entrypoint.sh`** : bump `VERSION` 2.69.0 → 2.71.1 — cohérence `/version.json` préprod après redeploy suite passe audit nocturne (4 fixes mergés v2.69.1→v2.71.1). Pas de bump DS (entrypoint uniquement).
+
 ## [2.71.1] — 2026-06-14
 
 ### Fixed
