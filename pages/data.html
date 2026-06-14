@@ -14,61 +14,6 @@
     <aside class="sidebar" id="sidebar"></aside>
     <div class="main">
 
-<!-- STATS -->
-<section id="stats">
-    <div class="section-header"><span class="overline">Data</span><h2>Statistiques</h2><p>Indicateurs chiffres avec gradient et labels.</p></div>
-    <div class="demo-grid demo-grid-5">
-        <div class="demo-box text-center"><div class="stat-value">99.9%</div><div class="stat-label">Uptime</div></div>
-        <div class="demo-box text-center"><div class="stat-value">1.2k</div><div class="stat-label">Deploys</div></div>
-        <div class="demo-box text-center"><div class="stat-value">&lt;50ms</div><div class="stat-label">Latence P95</div></div>
-        <div class="demo-box text-center"><div class="stat-value">24/7</div><div class="stat-label">Monitoring</div></div>
-        <div class="demo-box text-center"><div class="stat-value">4</div><div class="stat-label">Projets live</div></div>
-    </div>
-</section>
-
-<!-- PROGRESS -->
-<section id="progress">
-    <div class="section-header"><span class="overline">Data</span><h2>Progress</h2><p>Barres lineaires, circulaires et animees.</p></div>
-    <div class="demo-grid demo-grid-2">
-        <div class="demo-box">
-            <span class="demo-label">Barres de progression</span>
-            <div class="demo-flex-col">
-                <div><div class="flex-between-sm"><span class="typo-small">Build</span><span class="typo-small">92%</span></div><div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--gradient-1);"></div></div></div>
-                <div><div class="flex-between-sm"><span class="typo-small">Tests</span><span class="typo-small">78%</span></div><div class="progress-bar"><div class="progress-fill" style="width:78%;background:var(--gradient-2);"></div></div></div>
-                <div><div class="flex-between-sm"><span class="typo-small">Coverage</span><span class="typo-small">45%</span></div><div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--gradient-3);"></div></div></div>
-                <div><div class="flex-between-sm"><span class="typo-small">Upload (animated)</span><span class="typo-small">65%</span></div><div class="progress-bar progress-bar-striped"><div class="progress-fill" style="width:65%;background:var(--gradient-1);"></div></div></div>
-            </div>
-        </div>
-        <div class="demo-box">
-            <span class="demo-label">Indicateurs circulaires</span>
-            <div class="demo-flex-center" style="padding-top:0.5rem;">
-                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-1"><title id="ring-title-1">Indicateur circulaire Build — 92%</title><desc>Progression du build a 92 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="17"></circle></svg><span class="value">92%</span></div>
-                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-2"><title id="ring-title-2">Indicateur circulaire Tests — 60%</title><desc>Progression des tests a 60 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke: var(--deco-violet);"></circle></svg><span class="value">60%</span></div>
-                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-3"><title id="ring-title-3">Indicateur circulaire Coverage — 30%</title><desc>Progression de la couverture a 30 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke: var(--deco-cyan);"></circle></svg><span class="value">30%</span></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- TABLES -->
-<section id="tables">
-    <div class="section-header"><span class="overline">Data</span><h2>Tables</h2><p>Affichage de donnees tabulaires avec hover et badges inline.</p></div>
-    <div class="demo-box">
-        <div class="table-wrap">
-            <table>
-                <thead><tr><th>Projet</th><th>Type</th><th>Status</th><th>Domaine</th><th>Uptime</th><th>Deploy</th></tr></thead>
-                <tbody>
-                    <tr><td class="fw-600">os-landingperso</td><td><span class="tag">oneshot</span></td><td><span class="badge badge-success badge-xs">En ligne</span></td><td class="typo-mono text-sm-rg">os-landingperso.msyx.fr</td><td>99.9%</td><td class="typo-xs">il y a 2h</td></tr>
-                    <tr><td class="fw-600">design-system</td><td><span class="tag">projet</span></td><td><span class="badge badge-success badge-xs">En ligne</span></td><td class="typo-mono text-sm-rg">design-system.msyx.fr</td><td>100%</td><td class="typo-xs">maintenant</td></tr>
-                    <tr><td class="fw-600">poc-dashboard</td><td><span class="tag">poc</span></td><td><span class="badge badge-primary badge-xs">Dev</span></td><td class="typo-mono text-sm-rg">poc-dashboard.msyx.fr</td><td>98.5%</td><td class="typo-xs">il y a 1j</td></tr>
-                    <tr><td class="fw-600">auth-service</td><td><span class="tag">projet</span></td><td><span class="badge badge-danger badge-xs">Erreur</span></td><td class="typo-mono text-sm-rg">auth.msyx.fr</td><td>87.2%</td><td class="typo-xs">il y a 3j</td></tr>
-                    <tr><td class="fw-600">api-gateway</td><td><span class="tag">projet</span></td><td><span class="badge badge-warning badge-xs">Maintenance</span></td><td class="typo-mono text-sm-rg">api.msyx.fr</td><td>95.1%</td><td class="typo-xs">il y a 5h</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
 <!-- CHARTS -->
 <section id="charts">
     <div class="section-header"><span class="overline">Data</span><h2>Charts</h2><p>Graphiques SVG purs, zero dependance. Copier-coller ready.</p></div>
@@ -321,6 +266,7 @@
     </div>
 </section>
 
+
 <!-- PIE & DONUT CHARTS -->
 <section id="pie-donut">
     <div class="section-header"><span class="overline">Data</span><h2>Pie &amp; Donut Charts</h2><p>Graphiques circulaires pour representer des repartitions et proportions.</p></div>
@@ -370,6 +316,362 @@
         </div>
     </div>
 </section>
+
+
+<!-- STATS -->
+<section id="stats">
+    <div class="section-header"><span class="overline">Data</span><h2>Statistiques</h2><p>Indicateurs chiffres avec gradient et labels.</p></div>
+    <p class="demo-note">Statistiques = carte KPI statique (nombre gradient). Animated Counters = même carte avec animation 0→cible au scroll. Choisir l'animée pour les hero/landing, la statique pour les dashboards denses.</p>
+    <div class="demo-grid demo-grid-5">
+        <div class="demo-box text-center"><div class="stat-value">99.9%</div><div class="stat-label">Uptime</div></div>
+        <div class="demo-box text-center"><div class="stat-value">1.2k</div><div class="stat-label">Deploys</div></div>
+        <div class="demo-box text-center"><div class="stat-value">&lt;50ms</div><div class="stat-label">Latence P95</div></div>
+        <div class="demo-box text-center"><div class="stat-value">24/7</div><div class="stat-label">Monitoring</div></div>
+        <div class="demo-box text-center"><div class="stat-value">4</div><div class="stat-label">Projets live</div></div>
+    </div>
+</section>
+
+
+<!-- ANIMATED COUNTERS -->
+<section id="animated-counters">
+    <div class="section-header"><span class="overline">Data</span><h2>Animated Counters</h2><p>Compteurs animes de 0 a la valeur cible au scroll. Pour KPI, stats d engagement, chiffres cles.</p></div>
+
+    <div class="demo-grid demo-grid-4">
+        <div class="demo-box text-center">
+            <div class="counter" data-target="1247" data-suffix="">
+                <span class="counter-value">0</span>
+            </div>
+            <div class="counter-label">Utilisateurs actifs</div>
+        </div>
+        <div class="demo-box text-center">
+            <div class="counter" data-target="98.5" data-suffix="%" data-decimals="1">
+                <span class="counter-value">0</span><span class="counter-suffix">%</span>
+            </div>
+            <div class="counter-label">Uptime</div>
+        </div>
+        <div class="demo-box text-center">
+            <div class="counter" data-target="42" data-prefix="+" data-suffix="k">
+                <span class="counter-prefix">+</span><span class="counter-value">0</span><span class="counter-suffix">k</span>
+            </div>
+            <div class="counter-label">Telechargements</div>
+        </div>
+        <div class="demo-box text-center">
+            <div class="counter" data-target="3.2" data-prefix="€" data-suffix="M" data-decimals="1">
+                <span class="counter-prefix">€</span><span class="counter-value">0</span><span class="counter-suffix">M</span>
+            </div>
+            <div class="counter-label">Revenue</div>
+        </div>
+    </div>
+</section>
+
+
+<!-- PROGRESS -->
+<section id="progress">
+    <div class="section-header"><span class="overline">Data</span><h2>Progress</h2><p>Barres lineaires, circulaires et animees.</p></div>
+    <p class="demo-note">Famille Meter — 4 idiomes : <code class="code-inline">.progress-bar</code> (linéaire neutre) · <code class="code-inline">.progress-tracker</code> (circulaire, étapes/multi-ring) · <code class="code-inline">.gauge</code> (semi-circulaire à seuils) · <code class="code-inline">.usage-meter</code> (linéaire quota ok/warn/danger). Linéaire neutre = progression d'une tâche ; quota = consommation vs limite ; gauge = mesure instantanée ; tracker = jalons.</p>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Barres de progression</span>
+            <div class="demo-flex-col">
+                <div><div class="flex-between-sm"><span class="typo-small">Build</span><span class="typo-small">92%</span></div><div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--gradient-1);"></div></div></div>
+                <div><div class="flex-between-sm"><span class="typo-small">Tests</span><span class="typo-small">78%</span></div><div class="progress-bar"><div class="progress-fill" style="width:78%;background:var(--gradient-2);"></div></div></div>
+                <div><div class="flex-between-sm"><span class="typo-small">Coverage</span><span class="typo-small">45%</span></div><div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--gradient-3);"></div></div></div>
+                <div><div class="flex-between-sm"><span class="typo-small">Upload (animated)</span><span class="typo-small">65%</span></div><div class="progress-bar progress-bar-striped"><div class="progress-fill" style="width:65%;background:var(--gradient-1);"></div></div></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Indicateurs circulaires</span>
+            <div class="demo-flex-center" style="padding-top:0.5rem;">
+                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-1"><title id="ring-title-1">Indicateur circulaire Build — 92%</title><desc>Progression du build a 92 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="17"></circle></svg><span class="value">92%</span></div>
+                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-2"><title id="ring-title-2">Indicateur circulaire Tests — 60%</title><desc>Progression des tests a 60 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="85" style="stroke: var(--deco-violet);"></circle></svg><span class="value">60%</span></div>
+                <div class="progress-ring"><svg width="80" height="80" role="img" aria-labelledby="ring-title-3"><title id="ring-title-3">Indicateur circulaire Coverage — 30%</title><desc>Progression de la couverture a 30 pourcent</desc><circle class="bg" cx="40" cy="40" r="34"></circle><circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="150" style="stroke: var(--deco-cyan);"></circle></svg><span class="value">30%</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- PROGRESS TRACKER -->
+<section id="progress-tracker">
+    <div class="section-header"><span class="overline">Data</span><h2>Progress Tracker</h2><p>Trackers circulaires SVG avec etapes, pourcentage et anneaux concentriques. Animation au scroll.</p></div>
+
+    <div class="demo-grid demo-grid-3">
+
+        <!-- Demo 1 : Ring avec 4 etapes -->
+        <div class="demo-box text-center">
+            <span class="demo-label">Ring avec etapes</span>
+            <div class="flex-justify-center-mt">
+                <div class="progress-tracker-step-wrapper">
+                    <div class="progress-tracker"
+                         data-progress="75"
+                         data-steps="4"
+                         data-current="3"
+                         aria-label="Progression : etape 3 sur 4 (75%)">
+                        <svg viewBox="0 0 160 160" role="img" aria-hidden="true">
+                            <title>Progress tracker — etape 3/4</title>
+                            <circle class="pt-track" cx="80" cy="80" r="62"/>
+                            <circle class="pt-fill" cx="80" cy="80" r="62"/>
+                        </svg>
+                        <div class="progress-tracker-center">
+                            <span class="progress-tracker-value">3/4</span>
+                            <span class="progress-tracker-label">Etapes</span>
+                        </div>
+                    </div>
+                    <div class="progress-tracker-step-label">Deploiement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 2 : Anneau simple avec pourcentage -->
+        <div class="demo-box text-center">
+            <span class="demo-label">Anneau — 75%</span>
+            <div class="flex-justify-center-mt">
+                <div class="progress-tracker-step-wrapper">
+                    <div class="progress-tracker"
+                         data-progress="75"
+                         aria-label="Progression 75%">
+                        <svg viewBox="0 0 160 160" role="img" aria-hidden="true">
+                            <title>Progress tracker — 75%</title>
+                            <circle class="pt-track" cx="80" cy="80" r="62"/>
+                            <circle class="pt-fill" cx="80" cy="80" r="62"/>
+                        </svg>
+                        <div class="progress-tracker-center">
+                            <span class="progress-tracker-value">75%</span>
+                            <span class="progress-tracker-label">Complet</span>
+                        </div>
+                    </div>
+                    <div class="progress-tracker-step-label">Sprint actuel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 3 : Multi-ring concentriques -->
+        <div class="demo-box text-center">
+            <span class="demo-label">Multi-ring concentriques</span>
+            <div style="display:flex;justify-content:center;align-items:center;margin-top:1rem;flex-wrap:wrap;gap:0.5rem;">
+                <div class="progress-tracker-multi"
+                     data-rings='[{"label":"Frontend","pct":82,"color":"var(--accent)"},{"label":"Backend","pct":55,"color":"var(--deco-violet)"},{"label":"Tests","pct":34,"color":"var(--deco-cyan)"}]'
+                     aria-label="Progression multi-modules">
+                    <svg viewBox="0 0 200 200" role="img" aria-hidden="true">
+                        <title>Progress tracker multi-ring</title>
+                        <!-- Rings drawn by JS -->
+                    </svg>
+                </div>
+                <div class="progress-tracker-multi-legend">
+                    <div class="progress-tracker-multi-legend-item">
+                        <span class="progress-tracker-multi-legend-dot" style="background:var(--accent);"></span>
+                        <span>Frontend</span>
+                        <span class="progress-tracker-multi-legend-pct">82%</span>
+                    </div>
+                    <div class="progress-tracker-multi-legend-item">
+                        <span class="progress-tracker-multi-legend-dot" style="background:var(--deco-violet);"></span>
+                        <span>Backend</span>
+                        <span class="progress-tracker-multi-legend-pct">55%</span>
+                    </div>
+                    <div class="progress-tracker-multi-legend-item">
+                        <span class="progress-tracker-multi-legend-dot" style="background:var(--deco-cyan);"></span>
+                        <span>Tests</span>
+                        <span class="progress-tracker-multi-legend-pct">34%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- GAUGE -->
+<section id="gauge">
+    <div class="section-header"><span class="overline">Data</span><h2>Gauge / Speedometer</h2><p>Jauges semi-circulaires SVG avec seuils colorés et animation à l'entrée dans le viewport.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box text-center">
+            <span class="demo-label">Simple (accent)</span>
+            <div class="flex-justify-center">
+                <div class="gauge" data-value="72" data-max="100" role="img" aria-label="Gauge simple — 72%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Performance — 72%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">72%</text>
+                    </svg>
+                    <span class="gauge-label">Performance</span>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box text-center">
+            <span class="demo-label">Seuils colorés</span>
+            <div class="flex-justify-center">
+                <div class="gauge" data-value="45" data-max="100" data-thresholds="30,70" role="img" aria-label="Gauge avec seuils — 45%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Charge CPU — 45%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">45%</text>
+                    </svg>
+                    <span class="gauge-label">Charge CPU</span>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box text-center">
+            <span class="demo-label">Mini gauges (seuils)</span>
+            <div class="gauge-group" style="padding-top:0.5rem;">
+                <div class="gauge gauge--mini" data-value="92" data-max="100" data-thresholds="30,70" role="img" aria-label="Uptime — 92%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Uptime — 92%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">92%</text>
+                    </svg>
+                    <span class="gauge-label">Uptime</span>
+                </div>
+                <div class="gauge gauge--mini" data-value="28" data-max="100" data-thresholds="30,70" role="img" aria-label="Erreurs — 28%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>Erreurs — 28%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">28%</text>
+                    </svg>
+                    <span class="gauge-label">Erreurs</span>
+                </div>
+                <div class="gauge gauge--mini" data-value="65" data-max="100" data-thresholds="30,70" role="img" aria-label="RAM — 65%">
+                    <svg viewBox="0 0 100 60" aria-hidden="true">
+                        <title>RAM — 65%</title>
+                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
+                        <text class="gauge-value" x="50" y="52">65%</text>
+                    </svg>
+                    <span class="gauge-label">RAM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- USAGE METER -->
+<section id="usage-meter">
+    <div class="section-header"><span class="overline">Data</span><h2>Usage Meter</h2><p>Barres de quota avec seuils colores (ok/warn/danger) et animation a l'apparition.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Seuils ok / warn / danger</span>
+            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div class="usage-meter" data-value="30">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">Stockage</span>
+                        <span class="usage-meter-value">300 Mo / 1 Go</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--ok"></div></div>
+                    <div class="usage-meter-hint">30% utilise &mdash; OK</div>
+                </div>
+                <div class="usage-meter" data-value="72">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">API calls</span>
+                        <span class="usage-meter-value">7 200 / 10 000</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--warn"></div></div>
+                    <div class="usage-meter-hint">72% utilise &mdash; Attention</div>
+                </div>
+                <div class="usage-meter" data-value="95">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">Membres actifs</span>
+                        <span class="usage-meter-value">19 / 20</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--danger"></div></div>
+                    <div class="usage-meter-hint">95% utilise &mdash; Critique</div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Groupe de metriques</span>
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+                <div class="usage-meter" data-value="45">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">Bande passante</span>
+                        <span class="usage-meter-value">45 Go / 100 Go</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--ok"></div></div>
+                </div>
+                <div class="usage-meter" data-value="60">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">CPU moyen</span>
+                        <span class="usage-meter-value">60%</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--warn"></div></div>
+                </div>
+                <div class="usage-meter" data-value="82">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">RAM</span>
+                        <span class="usage-meter-value">9.8 Go / 12 Go</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--warn"></div></div>
+                </div>
+                <div class="usage-meter" data-value="12">
+                    <div class="usage-meter-header">
+                        <span class="usage-meter-label">Disque</span>
+                        <span class="usage-meter-value">12 Go / 100 Go</span>
+                    </div>
+                    <div class="usage-meter-track"><div class="usage-fill usage-fill--ok"></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Structure : <code class="code-inline">.usage-meter[data-value="0-100"]</code> &gt; <code class="code-inline">.usage-meter-header</code> + <code class="code-inline">.usage-meter-track</code> &gt; <code class="code-inline">.usage-fill.usage-fill--ok/warn/danger</code>.</p>
+            <p class="demo-note">Seuils de couleur : choisir la classe fill manuellement selon la logique metier (ex. &lt;60 ok, 60-80 warn, &gt;80 danger).</p>
+            <p class="demo-note-last">JS : <code class="code-inline">initUsageMeter()</code> &mdash; animation de remplissage via IntersectionObserver a l'apparition.</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- TABLES -->
+<section id="tables">
+    <div class="section-header"><span class="overline">Data</span><h2>Tables</h2><p>Affichage de donnees tabulaires avec hover et badges inline.</p></div>
+    <div class="demo-box">
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Projet</th><th>Type</th><th>Status</th><th>Domaine</th><th>Uptime</th><th>Deploy</th></tr></thead>
+                <tbody>
+                    <tr><td class="fw-600">os-landingperso</td><td><span class="tag">oneshot</span></td><td><span class="badge badge-success badge-xs">En ligne</span></td><td class="typo-mono text-sm-rg">os-landingperso.msyx.fr</td><td>99.9%</td><td class="typo-xs">il y a 2h</td></tr>
+                    <tr><td class="fw-600">design-system</td><td><span class="tag">projet</span></td><td><span class="badge badge-success badge-xs">En ligne</span></td><td class="typo-mono text-sm-rg">design-system.msyx.fr</td><td>100%</td><td class="typo-xs">maintenant</td></tr>
+                    <tr><td class="fw-600">poc-dashboard</td><td><span class="tag">poc</span></td><td><span class="badge badge-primary badge-xs">Dev</span></td><td class="typo-mono text-sm-rg">poc-dashboard.msyx.fr</td><td>98.5%</td><td class="typo-xs">il y a 1j</td></tr>
+                    <tr><td class="fw-600">auth-service</td><td><span class="tag">projet</span></td><td><span class="badge badge-danger badge-xs">Erreur</span></td><td class="typo-mono text-sm-rg">auth.msyx.fr</td><td>87.2%</td><td class="typo-xs">il y a 3j</td></tr>
+                    <tr><td class="fw-600">api-gateway</td><td><span class="tag">projet</span></td><td><span class="badge badge-warning badge-xs">Maintenance</span></td><td class="typo-mono text-sm-rg">api.msyx.fr</td><td>95.1%</td><td class="typo-xs">il y a 5h</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<!-- COMPARISON TABLE -->
+<section id="comparison">
+    <div class="section-header"><span class="overline">Data</span><h2>Comparison Table</h2><p>Tableaux comparatifs cote-a-cote pour plans, features, criteres.</p></div>
+    <div class="demo-box">
+        <div class="table-wrap">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Basic</th>
+                    <th class="comparison-recommended"><span class="badge badge-primary text-2xs">Recommandé</span><br>Pro</th>
+                    <th>Enterprise</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Utilisateurs</td><td>1</td><td class="comparison-recommended">10</td><td>Illimité</td></tr>
+                <tr><td>Stockage</td><td>5 Go</td><td class="comparison-recommended">100 Go</td><td>1 To</td></tr>
+                <tr><td>Support prioritaire</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-yes">✓</td><td class="comparison-yes">✓</td></tr>
+                <tr><td>API access</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-no">✗</td><td class="comparison-yes">✓</td></tr>
+                <tr><td>SSO</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-no">✗</td><td class="comparison-yes">✓</td></tr>
+                <tr><td>Analytics avancés</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-yes">✓</td><td class="comparison-yes">✓</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</section>
+
 
 <!-- DATA GRID -->
 <section id="data-grid">
@@ -474,6 +776,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- TREE VIEW -->
 <section id="tree-view">
@@ -630,219 +933,6 @@
     </div>
 </section>
 
-<!-- GAUGE -->
-<section id="gauge">
-    <div class="section-header"><span class="overline">Data</span><h2>Gauge / Speedometer</h2><p>Jauges semi-circulaires SVG avec seuils colorés et animation à l'entrée dans le viewport.</p></div>
-    <div class="demo-grid demo-grid-3">
-        <div class="demo-box text-center">
-            <span class="demo-label">Simple (accent)</span>
-            <div class="flex-justify-center">
-                <div class="gauge" data-value="72" data-max="100" role="img" aria-label="Gauge simple — 72%">
-                    <svg viewBox="0 0 100 60" aria-hidden="true">
-                        <title>Performance — 72%</title>
-                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <text class="gauge-value" x="50" y="52">72%</text>
-                    </svg>
-                    <span class="gauge-label">Performance</span>
-                </div>
-            </div>
-        </div>
-        <div class="demo-box text-center">
-            <span class="demo-label">Seuils colorés</span>
-            <div class="flex-justify-center">
-                <div class="gauge" data-value="45" data-max="100" data-thresholds="30,70" role="img" aria-label="Gauge avec seuils — 45%">
-                    <svg viewBox="0 0 100 60" aria-hidden="true">
-                        <title>Charge CPU — 45%</title>
-                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <text class="gauge-value" x="50" y="52">45%</text>
-                    </svg>
-                    <span class="gauge-label">Charge CPU</span>
-                </div>
-            </div>
-        </div>
-        <div class="demo-box text-center">
-            <span class="demo-label">Mini gauges (seuils)</span>
-            <div class="gauge-group" style="padding-top:0.5rem;">
-                <div class="gauge gauge--mini" data-value="92" data-max="100" data-thresholds="30,70" role="img" aria-label="Uptime — 92%">
-                    <svg viewBox="0 0 100 60" aria-hidden="true">
-                        <title>Uptime — 92%</title>
-                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <text class="gauge-value" x="50" y="52">92%</text>
-                    </svg>
-                    <span class="gauge-label">Uptime</span>
-                </div>
-                <div class="gauge gauge--mini" data-value="28" data-max="100" data-thresholds="30,70" role="img" aria-label="Erreurs — 28%">
-                    <svg viewBox="0 0 100 60" aria-hidden="true">
-                        <title>Erreurs — 28%</title>
-                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <text class="gauge-value" x="50" y="52">28%</text>
-                    </svg>
-                    <span class="gauge-label">Erreurs</span>
-                </div>
-                <div class="gauge gauge--mini" data-value="65" data-max="100" data-thresholds="30,70" role="img" aria-label="RAM — 65%">
-                    <svg viewBox="0 0 100 60" aria-hidden="true">
-                        <title>RAM — 65%</title>
-                        <path class="gauge-track" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <path class="gauge-fill" d="M 10 55 A 40 40 0 0 1 90 55"/>
-                        <text class="gauge-value" x="50" y="52">65%</text>
-                    </svg>
-                    <span class="gauge-label">RAM</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- COMPARISON TABLE -->
-<section id="animated-counters">
-    <div class="section-header"><span class="overline">Data</span><h2>Animated Counters</h2><p>Compteurs animes de 0 a la valeur cible au scroll. Pour KPI, stats d engagement, chiffres cles.</p></div>
-
-    <div class="demo-grid demo-grid-4">
-        <div class="demo-box text-center">
-            <div class="counter" data-target="1247" data-suffix="">
-                <span class="counter-value">0</span>
-            </div>
-            <div class="counter-label">Utilisateurs actifs</div>
-        </div>
-        <div class="demo-box text-center">
-            <div class="counter" data-target="98.5" data-suffix="%" data-decimals="1">
-                <span class="counter-value">0</span><span class="counter-suffix">%</span>
-            </div>
-            <div class="counter-label">Uptime</div>
-        </div>
-        <div class="demo-box text-center">
-            <div class="counter" data-target="42" data-prefix="+" data-suffix="k">
-                <span class="counter-prefix">+</span><span class="counter-value">0</span><span class="counter-suffix">k</span>
-            </div>
-            <div class="counter-label">Telechargements</div>
-        </div>
-        <div class="demo-box text-center">
-            <div class="counter" data-target="3.2" data-prefix="€" data-suffix="M" data-decimals="1">
-                <span class="counter-prefix">€</span><span class="counter-value">0</span><span class="counter-suffix">M</span>
-            </div>
-            <div class="counter-label">Revenue</div>
-        </div>
-    </div>
-</section>
-
-<section id="comparison">
-    <div class="section-header"><span class="overline">Data</span><h2>Comparison Table</h2><p>Tableaux comparatifs cote-a-cote pour plans, features, criteres.</p></div>
-    <div class="demo-box">
-        <div class="table-wrap">
-        <table class="comparison-table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Basic</th>
-                    <th class="comparison-recommended"><span class="badge badge-primary text-2xs">Recommandé</span><br>Pro</th>
-                    <th>Enterprise</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>Utilisateurs</td><td>1</td><td class="comparison-recommended">10</td><td>Illimité</td></tr>
-                <tr><td>Stockage</td><td>5 Go</td><td class="comparison-recommended">100 Go</td><td>1 To</td></tr>
-                <tr><td>Support prioritaire</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-yes">✓</td><td class="comparison-yes">✓</td></tr>
-                <tr><td>API access</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-no">✗</td><td class="comparison-yes">✓</td></tr>
-                <tr><td>SSO</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-no">✗</td><td class="comparison-yes">✓</td></tr>
-                <tr><td>Analytics avancés</td><td class="comparison-no">✗</td><td class="comparison-recommended comparison-yes">✓</td><td class="comparison-yes">✓</td></tr>
-            </tbody>
-        </table>
-        </div>
-    </div>
-</section>
-
-<!-- PROGRESS TRACKER -->
-<section id="progress-tracker">
-    <div class="section-header"><span class="overline">Data</span><h2>Progress Tracker</h2><p>Trackers circulaires SVG avec etapes, pourcentage et anneaux concentriques. Animation au scroll.</p></div>
-
-    <div class="demo-grid demo-grid-3">
-
-        <!-- Demo 1 : Ring avec 4 etapes -->
-        <div class="demo-box text-center">
-            <span class="demo-label">Ring avec etapes</span>
-            <div class="flex-justify-center-mt">
-                <div class="progress-tracker-step-wrapper">
-                    <div class="progress-tracker"
-                         data-progress="75"
-                         data-steps="4"
-                         data-current="3"
-                         aria-label="Progression : etape 3 sur 4 (75%)">
-                        <svg viewBox="0 0 160 160" role="img" aria-hidden="true">
-                            <title>Progress tracker — etape 3/4</title>
-                            <circle class="pt-track" cx="80" cy="80" r="62"/>
-                            <circle class="pt-fill" cx="80" cy="80" r="62"/>
-                        </svg>
-                        <div class="progress-tracker-center">
-                            <span class="progress-tracker-value">3/4</span>
-                            <span class="progress-tracker-label">Etapes</span>
-                        </div>
-                    </div>
-                    <div class="progress-tracker-step-label">Deploiement</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Demo 2 : Anneau simple avec pourcentage -->
-        <div class="demo-box text-center">
-            <span class="demo-label">Anneau — 75%</span>
-            <div class="flex-justify-center-mt">
-                <div class="progress-tracker-step-wrapper">
-                    <div class="progress-tracker"
-                         data-progress="75"
-                         aria-label="Progression 75%">
-                        <svg viewBox="0 0 160 160" role="img" aria-hidden="true">
-                            <title>Progress tracker — 75%</title>
-                            <circle class="pt-track" cx="80" cy="80" r="62"/>
-                            <circle class="pt-fill" cx="80" cy="80" r="62"/>
-                        </svg>
-                        <div class="progress-tracker-center">
-                            <span class="progress-tracker-value">75%</span>
-                            <span class="progress-tracker-label">Complet</span>
-                        </div>
-                    </div>
-                    <div class="progress-tracker-step-label">Sprint actuel</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Demo 3 : Multi-ring concentriques -->
-        <div class="demo-box text-center">
-            <span class="demo-label">Multi-ring concentriques</span>
-            <div style="display:flex;justify-content:center;align-items:center;margin-top:1rem;flex-wrap:wrap;gap:0.5rem;">
-                <div class="progress-tracker-multi"
-                     data-rings='[{"label":"Frontend","pct":82,"color":"var(--accent)"},{"label":"Backend","pct":55,"color":"var(--deco-violet)"},{"label":"Tests","pct":34,"color":"var(--deco-cyan)"}]'
-                     aria-label="Progression multi-modules">
-                    <svg viewBox="0 0 200 200" role="img" aria-hidden="true">
-                        <title>Progress tracker multi-ring</title>
-                        <!-- Rings drawn by JS -->
-                    </svg>
-                </div>
-                <div class="progress-tracker-multi-legend">
-                    <div class="progress-tracker-multi-legend-item">
-                        <span class="progress-tracker-multi-legend-dot" style="background:var(--accent);"></span>
-                        <span>Frontend</span>
-                        <span class="progress-tracker-multi-legend-pct">82%</span>
-                    </div>
-                    <div class="progress-tracker-multi-legend-item">
-                        <span class="progress-tracker-multi-legend-dot" style="background:var(--deco-violet);"></span>
-                        <span>Backend</span>
-                        <span class="progress-tracker-multi-legend-pct">55%</span>
-                    </div>
-                    <div class="progress-tracker-multi-legend-item">
-                        <span class="progress-tracker-multi-legend-dot" style="background:var(--deco-cyan);"></span>
-                        <span>Tests</span>
-                        <span class="progress-tracker-multi-legend-pct">34%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</section>
 
 <!-- LISTS -->
 <section id="lists">
@@ -857,6 +947,7 @@
 </section>
 
 
+<!-- ACTIVITY FEED -->
 <section id="activity-feed">
     <div class="section-header"><span class="overline">Data</span><h2>Activity Feed</h2><p>Flux d&apos;activite avec avatar, verbe, cible, timestamp, chips de filtre et chargement progressif.</p></div>
     <div class="demo-grid demo-grid-1">
@@ -960,6 +1051,7 @@
     </div>
     </div>
 </section>
+
 
 <!-- RISK MATRIX -->
 <section id="risk-matrix">
@@ -1155,80 +1247,6 @@
     </div>
 </section>
 
-<!-- USAGE METER -->
-<section id="usage-meter">
-    <div class="section-header"><span class="overline">Data</span><h2>Usage Meter</h2><p>Barres de quota avec seuils colores (ok/warn/danger) et animation a l'apparition.</p></div>
-    <div class="demo-grid demo-grid-2">
-        <div class="demo-box">
-            <span class="demo-label">Seuils ok / warn / danger</span>
-            <div style="display:flex;flex-direction:column;gap:var(--space-md);">
-                <div class="usage-meter" data-value="30">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">Stockage</span>
-                        <span class="usage-meter-value">300 Mo / 1 Go</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--ok"></div></div>
-                    <div class="usage-meter-hint">30% utilise &mdash; OK</div>
-                </div>
-                <div class="usage-meter" data-value="72">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">API calls</span>
-                        <span class="usage-meter-value">7 200 / 10 000</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--warn"></div></div>
-                    <div class="usage-meter-hint">72% utilise &mdash; Attention</div>
-                </div>
-                <div class="usage-meter" data-value="95">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">Membres actifs</span>
-                        <span class="usage-meter-value">19 / 20</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--danger"></div></div>
-                    <div class="usage-meter-hint">95% utilise &mdash; Critique</div>
-                </div>
-            </div>
-        </div>
-        <div class="demo-box">
-            <span class="demo-label">Groupe de metriques</span>
-            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
-                <div class="usage-meter" data-value="45">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">Bande passante</span>
-                        <span class="usage-meter-value">45 Go / 100 Go</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--ok"></div></div>
-                </div>
-                <div class="usage-meter" data-value="60">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">CPU moyen</span>
-                        <span class="usage-meter-value">60%</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--warn"></div></div>
-                </div>
-                <div class="usage-meter" data-value="82">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">RAM</span>
-                        <span class="usage-meter-value">9.8 Go / 12 Go</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--warn"></div></div>
-                </div>
-                <div class="usage-meter" data-value="12">
-                    <div class="usage-meter-header">
-                        <span class="usage-meter-label">Disque</span>
-                        <span class="usage-meter-value">12 Go / 100 Go</span>
-                    </div>
-                    <div class="usage-meter-track"><div class="usage-fill usage-fill--ok"></div></div>
-                </div>
-            </div>
-        </div>
-        <div class="demo-box">
-            <span class="demo-label">Usage</span>
-            <p class="demo-note">Structure : <code class="code-inline">.usage-meter[data-value="0-100"]</code> &gt; <code class="code-inline">.usage-meter-header</code> + <code class="code-inline">.usage-meter-track</code> &gt; <code class="code-inline">.usage-fill.usage-fill--ok/warn/danger</code>.</p>
-            <p class="demo-note">Seuils de couleur : choisir la classe fill manuellement selon la logique metier (ex. &lt;60 ok, 60-80 warn, &gt;80 danger).</p>
-            <p class="demo-note-last">JS : <code class="code-inline">initUsageMeter()</code> &mdash; animation de remplissage via IntersectionObserver a l'apparition.</p>
-        </div>
-    </div>
-</section>
 
     </div>
     <script src="/shared/nav.js"></script>
