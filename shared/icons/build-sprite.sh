@@ -29,8 +29,8 @@ ICONS=(
   file folder image code terminal layout layers package
   # User/Communication (6)
   user users mail phone calendar clock
-  # System (6)
-  settings bell search eye lock palette
+  # System (7)
+  settings bell search eye eye-off lock palette
   # Brand/Misc (7)
   git-branch message-circle sun moon zap sparkles rocket
 )

@@ -1163,6 +1163,77 @@
     </div>
 </section>
 
+
+<section id="password-toggle" class="ds-section">
+    <div class="section-header">
+        <span class="overline">Formulaires</span>
+        <h2>Password avec révélation</h2>
+        <p>Champ mot de passe avec toggle œil (show/hide). Réduit les erreurs de saisie mobile. Combinable avec <code class="code-inline">.login-strength</code>.</p>
+    </div>
+
+    <div class="demo-grid demo-grid-2">
+        <!-- Variante 1 : vide -->
+        <div class="demo-box">
+            <span class="demo-label">Vide</span>
+            <div class="input-group">
+                <label class="input-label" for="pwd-empty">Mot de passe</label>
+                <div class="password-field">
+                    <input class="input" id="pwd-empty" type="password" placeholder="••••••••" data-password-field>
+                    <button type="button" class="password-toggle" data-password-toggle aria-pressed="false" aria-label="Afficher le mot de passe" aria-controls="pwd-empty">
+                        <svg class="icon password-toggle-on" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye"/></svg>
+                        <svg class="icon password-toggle-off" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye-off"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variante 2 : pré-rempli -->
+        <div class="demo-box">
+            <span class="demo-label">Rempli</span>
+            <div class="input-group">
+                <label class="input-label" for="pwd-filled">Mot de passe</label>
+                <div class="password-field">
+                    <input class="input" id="pwd-filled" type="password" value="Sup3rSecret!" data-password-field>
+                    <button type="button" class="password-toggle" data-password-toggle aria-pressed="false" aria-label="Afficher le mot de passe" aria-controls="pwd-filled">
+                        <svg class="icon password-toggle-on" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye"/></svg>
+                        <svg class="icon password-toggle-off" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye-off"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <!-- Variante 3 : + login-strength (composition) -->
+        <div class="demo-box">
+            <span class="demo-label">+ Force du mot de passe</span>
+            <div class="input-group" style="max-width:360px;">
+                <label class="input-label" for="pwd-strength">Nouveau mot de passe</label>
+                <div class="password-field">
+                    <input class="input" id="pwd-strength" type="password" placeholder="••••••••" data-password-field aria-describedby="pwd-strength-hint">
+                    <button type="button" class="password-toggle" data-password-toggle aria-pressed="false" aria-label="Afficher le mot de passe" aria-controls="pwd-strength">
+                        <svg class="icon password-toggle-on" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye"/></svg>
+                        <svg class="icon password-toggle-off" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye-off"/></svg>
+                    </button>
+                </div>
+                <div class="login-strength" data-strength-target="pwd-strength">
+                    <div class="login-strength-bar"><div class="login-strength-fill" data-level="0"></div></div>
+                    <div class="login-strength-label" id="pwd-strength-hint"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Wrapper <code class="code-inline">.password-field</code> (position relative) autour d'un <code class="code-inline">.input[type=password]</code> + bouton <code class="code-inline">.password-toggle[data-password-toggle]</code>. JS : <code class="code-inline">initPasswordToggle()</code> bascule <code class="code-inline">type</code>, l'icône et <code class="code-inline">aria-pressed</code>/<code class="code-inline">aria-label</code>.</p>
+            <p class="demo-note">Liaison input ↔ bouton : <code class="code-inline">aria-controls</code> pointe l'id de l'input (sinon le bouton cible le <code class="code-inline">.input[type=password]</code> du <code class="code-inline">.password-field</code> parent).</p>
+            <p class="demo-note-last">Combinable avec <code class="code-inline">.login-strength</code> (composant indépendant).</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
