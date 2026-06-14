@@ -311,6 +311,72 @@ Toute fonction `init*` doit être appelée dans le bloc `reinitAll()` de `compon
 
 ---
 
+## Section 6.1 — Frontière page ↔ entrée registre ↔ module (réciprocité)
+
+### Règle
+Le DS a trois axes que le registre relie en un triplet auditable :
+
+```
+<section id> (pages/*.html)  ↔  entrée registre (kind:component)  ↔  module[] (shared/css/components/*.css)
+```
+
+**Réciprocité (invariant) :**
+1. **Toute `<section id>` d'une page composant** (`composants`, `formulaires`, `data`, `feedback`, `navigation`, `divers`, `templates`) **DOIT avoir une entrée registre `kind:component`** dont le champ `page` pointe cette page.
+2. **Toute entrée registre `kind:component`** avec un `page` **DOIT correspondre à une `<section id>` réelle** de cette page (pas d'entrée fantôme orpheline).
+3. Le pont vers le CSS est porté par le champ `module[]` (cf. #506) : chaque entrée référence le(s) fichier(s) `shared/css/components/*.css` qui définit ses classes.
+
+### Exemptions transverses (ne participent PAS à la réciprocité)
+Sont exemptés de la règle 1↔2 :
+- **Modules transverses** (pas de section vitrine dédiée) :
+  `_base`, `_a11y`, `_responsive`, `theming`, `section-header`, `signature`.
+  Convention : préfixe `_` (`_base.css`) **OU** appartenance à la liste transverse en dur.
+  Dans le registre ils sont `kind:module` (jamais `kind:component`) et **sans** champ `page`.
+- **Pages de référence** (`fondation`, `motion`, `getting-started`) : leurs sections
+  (couleurs, typographie, tokens, durations, easings…) documentent des **fondations**, pas des
+  composants → elles **n'exigent pas** d'entrée `kind:component`. Ces pages sont hors périmètre
+  de la règle 1 (allowlist de pages).
+
+### Anti-patterns concrets
+
+❌ **Don't** — ajouter une `<section id="mon-widget">` dans `data.html` sans entrée registre :
+```html
+<!-- pages/data.html -->
+<section id="mon-widget"> ... </section>
+<!-- ...aucune entrée correspondante dans components-registry.json → orphelin -->
+```
+
+❌ **Don't** — laisser une entrée registre pointer une section supprimée :
+```json
+{ "name": "old-widget", "kind": "component", "page": "data", "cssClasses": [".old-widget"] }
+// alors que <section id="old-widget"> n'existe plus dans data.html → entrée fantôme
+```
+
+✅ **Do** — section ⇆ entrée ⇆ module alignés :
+```html
+<!-- pages/data.html -->
+<section id="usage-meter"> ... </section>
+```
+```json
+{
+  "name": "usage-meter", "kind": "component", "page": "data",
+  "cssClasses": [".usage-meter", ".usage-meter-bar"],
+  "module": ["shared/css/components/data.css"]
+}
+```
+
+✅ **Do** — un module transverse reste `kind:module` sans `page` (exempté) :
+```json
+{ "name": "section-header", "kind": "module", "cssClasses": [".section-header", ".overline"] }
+```
+
+### Garde-fou
+La réciprocité est vérifiée en CI par `node bin/generate-registry.js --check`
+(voir Section 10). Toute section composant sans entrée, ou toute entrée fantôme,
+est signalée en warn-only (phase 1) et deviendra bloquante via `--frontier-strict`
+après bascule explicite (dépendance #508 — bascule tracée dans ce document). (#511)
+
+---
+
 ## Section 7 — Versioning (@ds-version)
 
 ### Règle
@@ -528,6 +594,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 - Perf budget warn
 - A11y axe-core dry-run
 - Lighthouse CI warn
+- Frontière page↔registre (#511) : `generate-registry.js --check` vérifie la réciprocité section↔entrée + l'exemption transverse/référence (warn-only jusqu'à bascule #508, puis bloquant via `--frontier-strict`). Sidebar dead-link couvert séparément par `generate-nav-sections.js --check` (#528).
 
 ### Skills associés
 - `/audit-ds-compliance` — audit complet d'un consumer
