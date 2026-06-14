@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Changed
+- **`entrypoint.sh`** : bump `VERSION` 2.71.2 → 2.72.0 — cohérence `/version.json` préprod après livraison #435 (password-toggle). Pas de bump DS (entrypoint uniquement).
+
 ## [2.72.0] — 2026-06-14
 
 ### Added
