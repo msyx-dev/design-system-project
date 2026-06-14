@@ -166,6 +166,45 @@ for (const cssFile of cssFiles) {
   }
 }
 
+// ─── Map inverse classe→fichiers (#506) ───────────────────────────────────────
+// Construite en une passe depuis groupMap.
+// Map : classe (avec point, ex. '.card') → Set<chemin repo> (ex. Set{'shared/css/components/cards.css'})
+const classToFiles = new Map();
+for (const [, info] of groupMap.entries()) {
+  for (const cls of info.classes) {
+    if (!classToFiles.has(cls)) classToFiles.set(cls, new Set());
+    classToFiles.get(cls).add(info.sourceFile);
+  }
+}
+
+// Whitelist : kind:component légitimement sans module (aucune classe résoluble)
+// reset-natif / texture-grain  → cssClasses: []  (sélecteurs natifs/pseudo-éléments)
+// brand-acssi                  → cssClasses: null
+const MODULE_EXEMPT = new Set(['reset-natif', 'texture-grain', 'brand-acssi']);
+
+/**
+ * Déduit module[] (chemins repo des modules CSS) depuis les cssClasses d'un composant.
+ * Tri stable : modules propres (components/X.css sans '_') d'abord, transverses (_*) ensuite,
+ * puis tri alphabétique dans chaque groupe — requis pour l'idempotence (2e run = 0 diff).
+ * @param {Object} comp  entrée composant
+ * @param {Map}    classToFiles  map classe→Set<chemin>
+ * @returns {string[]} chemins repo dédoublonnés et triés ; [] si aucune classe résoluble
+ */
+function resolveModules(comp, classToFiles) {
+  const files = new Set();
+  for (const cls of expandCssClasses(comp.cssClasses)) {
+    const f = classToFiles.get(cls);
+    if (f) for (const p of f) files.add(p);
+  }
+  // Tri stable : fichiers sans '_' (modules propres) avant les transverses (_a11y, _responsive, _base…)
+  return Array.from(files).sort((a, b) => {
+    const aTransverse = /\/_[^/]+\.css$/.test(a);
+    const bTransverse = /\/_[^/]+\.css$/.test(b);
+    if (aTransverse !== bTransverse) return aTransverse ? 1 : -1;
+    return a.localeCompare(b);
+  });
+}
+
 // ─── Construction du nouveau registry ─────────────────────────────────────────
 
 // 1. Garder tous les composants existants tels quels (ils ont des metadata enrichies)
@@ -339,6 +378,22 @@ for (const comp of newComponents) {
     if (!VALID_REACT_VALUES.has(comp.react)) {
       comp.react = 'pending';
     }
+  }
+}
+
+// ─── Pont page↔module (#506) : peupler module[] sur les kind:component ───────
+// module[] est dérivé automatiquement depuis cssClasses via classToFiles.
+// Jamais de saisie manuelle : la régénération remplace tout module existant.
+let modulesPopulated = 0;
+for (const comp of newComponents) {
+  if (comp.kind !== 'component') { delete comp.module; continue; }
+  if (MODULE_EXEMPT.has(comp.name)) { delete comp.module; continue; }
+  const mods = resolveModules(comp, classToFiles);
+  if (mods.length > 0) {
+    comp.module = mods;
+    modulesPopulated++;
+  } else {
+    delete comp.module; // aucune classe résoluble → omettre (idempotent)
   }
 }
 
@@ -517,6 +572,31 @@ function stripTimestamp(json) {
 
 const isIdempotent = stripTimestamp(newJson) === stripTimestamp(previousJson);
 
+// ─── Validation pont module[] (#506) ─────────────────────────────────────────
+// Ensemble de tous les sourceFile connus (pour vérifier que les items de module[] existent)
+const knownSourceFiles = new Set();
+for (const [, info] of groupMap.entries()) knownSourceFiles.add(info.sourceFile);
+
+const moduleErrors = [];
+const kindComponentTotal = newComponents.filter(c => c.kind === 'component').length;
+const kindComponentExempted = MODULE_EXEMPT.size; // 3 entrées whitelistées
+let moduleValidPopulated = 0;
+for (const comp of newComponents) {
+  if (comp.kind !== 'component') continue;
+  const exempt = MODULE_EXEMPT.has(comp.name);
+  const mods = comp.module || [];
+  if (!exempt && mods.length === 0) {
+    moduleErrors.push(`${comp.name} → aucun module résolu (cssClasses orphelines ?)`);
+  }
+  if (!exempt && mods.length > 0) moduleValidPopulated++;
+  for (const m of mods) {
+    if (!knownSourceFiles.has(m)) {
+      moduleErrors.push(`${comp.name} → module inexistant dans le scan CSS : ${m}`);
+    }
+  }
+}
+const modulePontLine = `Pont module[]  : ${moduleValidPopulated} composants peuplés / ${kindComponentTotal} kind:component (${kindComponentExempted} exemptés : ${[...MODULE_EXEMPT].join(', ')})`;
+
 // ─── Écart global parité React (toujours affiché) ────────────────────────────
 const reactCounts = { ported: 0, pending: 0, 'n-a': 0 };
 for (const comp of newComponents) {
@@ -545,6 +625,14 @@ if (process.argv.includes('--check')) {
     process.exit(1);
   }
   console.log('Parité React       : OK (0 dérive)');
+  console.log(modulePontLine);
+  if (moduleErrors.length > 0) {
+    console.error('\n❌ Pont module[] (#506) — incohérences :');
+    for (const e of moduleErrors) console.error('   - ' + e);
+    console.error('\nCorrigez : régénérez le registre (`npm run generate-registry`) ou vérifiez les cssClasses de ces entrées.');
+    process.exit(1);
+  }
+  console.log('Pont module[]      : OK (0 incohérence)');
   if (isIdempotent) {
     console.log('Idempotence       : OK (registre à jour)');
   } else {
@@ -580,6 +668,7 @@ console.log(`Version  : ${newRegistry.version}`);
 console.log(`Total composants  : ${totalComponents}`);
 console.log(`Total classes CSS : ${totalClasses}`);
 console.log(reactParityLine);
+console.log(modulePontLine);
 if (addedGroups > 0 || addedClasses > 0) {
   console.log(`Nouveaux groupes  : +${addedGroups}`);
   console.log(`Nouvelles classes : +${addedClasses}`);
