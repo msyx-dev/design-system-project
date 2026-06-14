@@ -1,5 +1,21 @@
 # Releases
 
+## 2.71.2 — 2026-06-14 — Réintégration de 15 sections orphelines hors `.main` (sidebar + VR) (#538)
+
+### Fixed
+- **Cause racine des « libellés absents » de la sidebar.** 15 sections de composants RÉELS étaient placées **hors du conteneur `.main`** sur 3 pages → exclues du manifeste sidebar (#528 construit la nav depuis `.main > section[id]`) ET de la VR, et rendues en **pleine largeur (1280px, x=0) par-dessus la sidebar** au lieu de la colonne de contenu (1020px, x=260).
+  - **fondation** (balance `<div>` -1, 1 `</div>` parasite) : `utilities`, `brand`, `iconographie`, `performance-glass`, `texture`, `svg-theme-aware`.
+  - **formulaires** (balance `<div>` -3, 3 `</div>` parasites) : `otp-input`, `tag-input`, `quiz`, `wizard`, `inline-edit`, `filter-bar`.
+  - **navigation** (balance 0, sections placées après la fermeture de `.main`) : `sidebar-rail`, `action-menu`, `user-menu`.
+- **Fix** : rééquilibrage des `<div>` (suppression des `</div>` parasites sur fondation/formulaires ; déplacement de la fermeture `.main` après les 3 sections sur navigation). Vérifié au rendu réel : les 15 sections passent `parent=main`, `width=1020 / left=260`, présentes dans la sidebar, **0 overflow** sur les 3 pages. (#538)
+
+### Changed
+- **`bin/generate-nav-sections.js`** : `EXPECTED_COUNTS` recalibré (fondation 7→13, formulaires 9→15, navigation 5→8 ; total **93→108** sections) ; manifeste sidebar régénéré (+15 liens). (#538)
+- **`entrypoint.sh`** : `VERSION` 2.71.1 → 2.71.2 (cohérence `/version.json` préprod).
+
+### Note
+- Débloque **#435** (password-toggle, PR #537) : sa section vitrine atterrissait dans la zone cassée de formulaires — désormais intégrable proprement.
+
 ## 2.71.1 — 2026-06-14 — Fix overflow horizontal 5 pages : `html{overflow-x:clip}` + confinements composants (#530)
 
 ### Fixed
