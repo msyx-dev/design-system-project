@@ -1,5 +1,5 @@
-/* @ds-version 2.69.1 */
-const VERSION = '2.69.1';
+/* @ds-version 2.70.0 */
+const VERSION = '2.70.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -292,13 +292,15 @@ function updateNotificationCount(count) {
     }
 }
 
-// ===== SIDEBAR DYNAMIQUE — génération depuis le DOM (#509) =====
-// Les sections sont scannées depuis .main > section[id] à chaque page.
-// Le manifeste NAV_PAGES liste les pages (sans aucune ancre) — ne peut plus diverger.
+// ===== SIDEBAR DYNAMIQUE — manifeste build + scan DOM page courante (#528) =====
+// NAV_SECTIONS_MANIFEST : généré par bin/generate-nav-sections.js, inliné ici.
+// Élimine tous les fetch runtime (auth-gate / cache / CSP immunisés).
+// Page courante : scan DOM live (source de vérité instantanée, toujours 0 fetch).
 
 /**
- * Extrait [{id, label}] des sections showcase d'un Document (page courante OU fetchée).
- * Sélecteur : enfants DIRECTS de .main (exclut les section imbriquées dans les démos).
+ * Extrait [{id, label}] des sections showcase du Document courant.
+ * Sélecteur : enfants DIRECTS de .main (exclut les sections imbriquées dans les démos).
+ * Utilisé uniquement pour la page courante (DOM déjà rendu).
  */
 function extractSections(doc) {
     var out = [];
@@ -312,16 +314,33 @@ function extractSections(doc) {
 
 /**
  * Résout les sections de chaque page du manifeste NAV_PAGES.
- * (a) Page courante : scan DOM direct (immédiat, 0 fetch).
- * (b) Autres pages + hub : fetch + DOMParser (parallélisé via Promise.all).
- * Retourne Map<path, [{id,label}]>.
+ * (a) Page courante : scan DOM direct (immédiat, 0 réseau).
+ * (b) Autres pages : manifeste inliné NAV_SECTIONS_MANIFEST — ZÉRO fetch.
+ *     Si manifest absent (consumer sans build) → [] → fallback gracieux.
+ * Retourne Map<path, [{id,label}]>. Reste async pour compatibilité buildSidebar().
  */
+/* AUTO-GENERATED NAV SECTIONS START — ne pas éditer à la main (bin/generate-nav-sections.js) */
+const NAV_SECTIONS_MANIFEST = {
+  "/pages/getting-started.html": [{"id":"overview","label":"Getting Started"},{"id":"install","label":"Installation"},{"id":"first-steps","label":"Premiers pas"},{"id":"header-config","label":"Header avec utilisateur"},{"id":"tokens-usage","label":"Utiliser les tokens"},{"id":"anti-patterns","label":"Bonnes pratiques"}],
+  "/pages/fondation.html": [{"id":"colors","label":"Palette de couleurs"},{"id":"typography","label":"Typographie"},{"id":"spacing","label":"Spacing & Rayons"},{"id":"tokens","label":"Tokens CSS"},{"id":"theming","label":"Theming"},{"id":"theme-switcher","label":"Theme Switcher"},{"id":"consommation","label":"Consommation"}],
+  "/pages/motion.html": [{"id":"durations","label":"Durations"},{"id":"easings","label":"Easings"},{"id":"patterns","label":"Patterns canoniques"}],
+  "/pages/composants.html": [{"id":"buttons","label":"Boutons"},{"id":"cards","label":"Cards"},{"id":"badges","label":"Badges & Tags"},{"id":"chips","label":"Chips"},{"id":"dividers","label":"Divider / Separator"},{"id":"rating","label":"Rating / Etoiles"},{"id":"avatars","label":"Avatars"},{"id":"segmented-control","label":"Segmented Control"},{"id":"sortable-list","label":"Sortable List"},{"id":"achievements","label":"Achievement Badges"},{"id":"reset-natif","label":"Reset natif"},{"id":"disabled-global","label":"Disabled global"}],
+  "/pages/formulaires.html": [{"id":"inputs","label":"Inputs"},{"id":"controls","label":"Controls"},{"id":"login","label":"Login / Auth"},{"id":"calendar","label":"Calendrier"},{"id":"dropdown","label":"Dropdown / Select"},{"id":"file-upload","label":"File Upload"},{"id":"slider","label":"Slider / Range"},{"id":"search-input","label":"Search Input"},{"id":"number-input","label":"Number Input"}],
+  "/pages/navigation.html": [{"id":"header-user","label":"Header — Zone utilisateur"},{"id":"nav-components","label":"Navigation"},{"id":"breadcrumbs","label":"Breadcrumbs"},{"id":"stepper","label":"Stepper"},{"id":"bottom-nav","label":"Bottom Navigation"}],
+  "/pages/data.html": [{"id":"stats","label":"Statistiques"},{"id":"progress","label":"Progress"},{"id":"tables","label":"Tables"},{"id":"charts","label":"Charts"},{"id":"pie-donut","label":"Pie & Donut Charts"},{"id":"data-grid","label":"Data Grid"},{"id":"tree-view","label":"Tree View"},{"id":"gauge","label":"Gauge / Speedometer"},{"id":"animated-counters","label":"Animated Counters"},{"id":"comparison","label":"Comparison Table"},{"id":"progress-tracker","label":"Progress Tracker"},{"id":"lists","label":"Listes"},{"id":"activity-feed","label":"Activity Feed"},{"id":"risk-matrix","label":"Risk Matrix"},{"id":"usage-meter","label":"Usage Meter"}],
+  "/pages/feedback.html": [{"id":"alerts","label":"Alertes"},{"id":"status-tokens","label":"Tokens status (fg / bg / border)"},{"id":"toasts","label":"Toasts"},{"id":"modals","label":"Modals"},{"id":"skeleton","label":"Skeleton loading"},{"id":"drawer","label":"Drawer"},{"id":"zone-banner","label":"Zone Banner"},{"id":"empty-states","label":"Empty States"},{"id":"bottom-sheet","label":"Bottom Sheet"},{"id":"spinners","label":"Spinners / Loading"},{"id":"fab","label":"FAB — Floating Action Button"},{"id":"notification-center","label":"Notification Center"},{"id":"auto-save","label":"Auto-save Indicator"},{"id":"upgrade-prompt","label":"Upgrade Prompt"},{"id":"confirm-popover","label":"Confirm Popover"},{"id":"tooltip","label":"Tooltip & Popover"},{"id":"pagination","label":"Pagination"},{"id":"comments","label":"Comments / Thread"},{"id":"access-denied","label":"Access Denied — Page 403"}],
+  "/pages/divers.html": [{"id":"timeline","label":"Timeline"},{"id":"code","label":"Code blocks"},{"id":"carousel","label":"Carousel / Image Slider"},{"id":"lightbox","label":"Lightbox"},{"id":"video-embed","label":"Video Embed"},{"id":"accordion","label":"Accordion"},{"id":"command-palette","label":"Command Palette"},{"id":"context-menu","label":"Context Menu"},{"id":"copy-button","label":"Copy Button"},{"id":"decision-tree","label":"Decision Tree"},{"id":"before-after","label":"Before / After"}],
+  "/pages/templates.html": [{"id":"kanban","label":"Kanban Board"},{"id":"roadmap","label":"Roadmap"},{"id":"backlog","label":"Backlog"},{"id":"sprint","label":"Sprint Board"},{"id":"settings-panel","label":"Settings Panel"},{"id":"pricing","label":"Pricing Table"}]
+};
+/* AUTO-GENERATED NAV SECTIONS END */
+
 async function resolvePageSections() {
     var result = {};
     NAV_PAGES.forEach(function(p) { result[p.path] = []; });
 
-    // (a) Page courante : scan DOM déjà rendu (rapide, 0 réseau).
+    // (a) Page courante : scan DOM direct (immédiat, 0 réseau).
     //     Sur site.html, .main contient des placeholders vides → 0 section ici.
+    //     Source de vérité live : prime sur le manifeste pour la page courante.
     var localSecs = extractSections(document);
     if (localSecs.length) {
         var match = NAV_PAGES.find(function(p) {
@@ -330,20 +349,17 @@ async function resolvePageSections() {
         if (match) result[match.path] = localSecs;
     }
 
-    // (b) Autres pages : fetch + DOMParser (même mécanique que LazyLoader / navigateTo).
-    //     Indispensable pour le hub (toutes les pages) et la sidebar des autres pages
-    //     (afficher les sections des pages non-courantes).
-    var toFetch = NAV_PAGES.filter(function(p) {
-        return !p.flat && !result[p.path].length;
+    // (b) Autres pages : manifeste inliné — ZÉRO fetch, immunisé auth-gate/cache/CSP.
+    //     Si NAV_SECTIONS_MANIFEST est absent (consumer sans build), fallback → [].
+    NAV_PAGES.forEach(function(p) {
+        if (p.flat || result[p.path].length) return;
+        var manifestSecs = (typeof NAV_SECTIONS_MANIFEST !== 'undefined')
+            ? NAV_SECTIONS_MANIFEST[p.path]
+            : undefined;
+        if (manifestSecs && manifestSecs.length) {
+            result[p.path] = manifestSecs;
+        }
     });
-    await Promise.all(toFetch.map(async function(p) {
-        try {
-            var resp = await fetch(p.path);
-            if (!resp.ok) return;
-            var doc = new DOMParser().parseFromString(await resp.text(), 'text/html');
-            result[p.path] = extractSections(doc);
-        } catch (e) { /* réseau KO → page sans sous-liens, sidebar reste fonctionnelle */ }
-    }));
 
     return result;
 }
@@ -395,8 +411,13 @@ async function buildSidebar() {
             return;
         }
         var secs = pageSections[page.path] || [];
-        if (page.label) {
-            // Lien parent (ex. getting-started) affiché avant ses sous-sections.
+        // Dédup #528 : ne pas émettre le lien parent si la 1ère section porte le même label
+        // (ex. getting-started : page.label "Getting Started" == section #overview h2).
+        // La section #overview (ancre précise) prime sur le lien parent sans ancre.
+        var firstDup = secs.length > 0 && page.label
+            && secs[0].label.trim().toLowerCase() === page.label.trim().toLowerCase();
+        if (page.label && !firstDup) {
+            // Lien parent affiché uniquement si la 1ère section ne le duplique pas.
             html += linkHtml(page.path, page.icon, page.label);
         }
         secs.forEach(function(s) {

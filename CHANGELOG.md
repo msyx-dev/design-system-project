@@ -8,6 +8,16 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.70.0] — 2026-06-14
+
+### Fixed
+- **Sidebar — sous-sections absentes préprod auth-gated** : `resolvePageSections()` fetch runtime → HTTP 302 Authentik → 0 sections. Fix : manifeste `NAV_SECTIONS_MANIFEST` généré au build (`bin/generate-nav-sections.js`), inliné dans `shared/nav.js`, ZÉRO fetch runtime. Immunisé auth-gate, cache, CSP. (#528)
+- **Sidebar — doublon « Getting Started »** : lien parent `page.label` supprimé si la 1ère section porte le même label. 95 → **94 liens**, 0 doublon. (#528)
+
+### Changed
+- **`bin/generate-nav-sections.js`** (nouveau) : scanne `.main > section[id]` direct-child via Playwright, produit `NAV_SECTIONS_MANIFEST` inliné dans `nav.js`. Mode `--check` CI bloquant. (#528)
+- **CI** : step `Nav sections manifest validation (#528)` dans job `lint`. (#528)
+
 ## [2.69.1] — 2026-06-14
 
 ### Fixed
