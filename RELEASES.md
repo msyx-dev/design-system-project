@@ -1,5 +1,20 @@
 # Releases
 
+## 2.74.0 — 2026-06-14 — Sprint #43 Cohérence taxonomie & navigation : pont page↔module, registre complété, règle frontière (#506 #507 #508 #511)
+
+> Axe **registre & doc** du milestone #43 (Epic #505). Aucune modification CSS de rendu — bump synchrone des 8 sources de version pour cohérence `check-versions`. Lot churn-VR (#510/#512/#513/#514) reporté.
+
+### Added
+- **Pont page↔module — champ `module[]` (#506)** : `bin/generate-registry.js` dérive automatiquement `module[]` (`string[]`, chemins repo `shared/css/.../X.css`) pour chaque `kind:component`, via la map inverse classe→fichier. 76 entrées peuplées (3 exemptées sans classe résoluble : `reset-natif`, `texture-grain`, `brand-acssi`) ; `code-inline` normalisé `string`→`array`. Le mode `--check` gagne un contrôle d'intégrité (résolubilité du module + cohérence avec les fichiers réels de `shared/css/components/` + idempotence). Politique figée dans `docs/DS-PRINCIPLES.md` §8.2 — `module[]` JAMAIS saisi à la main. Rend le triplet composant→page→module auditable.
+- **Registre complété — 10 entrées composants (#508)** : ajout des `kind:component` curées à la main manquantes — templates (`kanban`, `roadmap`, `backlog`, `sprint`, `settings-panel`) et data (`charts`, `gauge`, `activity-feed`, `risk-matrix`, `usage-meter`). `module[]` auto-dérivé sur les nouvelles entrées. Correctif curatif : `.settings-*`/`.usage-*` retirés de l'entrée `pricing` (sur-revendication multi-composant). Compteurs hero `site.html` recâblés 78→88.
+- **Règle frontière page↔registre (#511)** : `docs/DS-PRINCIPLES.md` §6.1 — invariant de réciprocité `<section id>` ↔ entrée registre `kind:component` ↔ `module[]`, avec exemptions transverses (`_base`, `_a11y`, `_responsive`, `theming`, `section-header`, `signature`) et pages de référence (`fondation`, `motion`, `getting-started`), exemples ❌/✅. Garde-fou CI : `generate-registry.js --check` étendu d'un contrôle frontière bidirectionnel (section sans entrée + entrée orpheline), **warn-only par défaut**, `--frontier-strict` opt-in (49 violations name/id résiduelles documentées en dette).
+
+### Fixed
+- **Doc core preset (#507)** : `CONSUMER_GUIDE.md` reflète désormais les **9 modules réels** du preset core (`navigation` inclus depuis v2.73.0, `modals` toujours exclu) — la crainte d'origine « consumer croit avoir une nav absente » était caduque depuis #542. Poids gzip recalculés sur le CSS réel (~14,5 KB core / ~37 KB barrel complet, l'ancien « ~42 KB / ~25 KB » était faux dans les deux sens). Liste « Modules disponibles » complétée (+`access-denied`, `brand`, `section-header`, `signature`, `theme-toggle`). Compteur modules corrigé dans `CLAUDE.md`.
+
+### Changed
+- **Bump synchrone 8 sources** `2.73.0 → 2.74.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version top-level), `package.json`. Footer `site.html` aligné v2.74.0.
+
 ## 2.73.0 — 2026-06-14 — Header par défaut consumers : cloche hors auth, switcher thème opt-in (#542)
 
 ### Changed
