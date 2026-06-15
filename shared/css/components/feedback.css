@@ -78,3 +78,180 @@
     .skeleton-dashboard { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ===== FAB (Floating Action Button) ===== */
+.fab-demo-area {
+    position: relative;
+    height: 200px;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: var(--space-lg);
+    overflow: hidden;
+}
+
+/* FAB simple */
+.fab {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--text-on-accent);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 300;
+    box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.45), var(--shadow);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    flex-shrink: 0;
+    z-index: 1;
+}
+.fab:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 28px rgba(var(--accent-rgb), 0.55), var(--shadow);
+}
+.fab:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
+.fab:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 3px;
+}
+
+/* Mini FAB */
+.fab-mini {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 12px color-mix(in srgb, var(--accent) 40%, transparent), var(--shadow);
+}
+.fab-mini:hover {
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 50%, transparent), var(--shadow);
+}
+
+/* Variantes de couleur */
+.fab-success { background: var(--success); box-shadow: 0 4px 16px rgba(var(--success-rgb), 0.45), var(--shadow); }
+.fab-success:hover { box-shadow: 0 8px 28px rgba(var(--success-rgb), 0.55), var(--shadow); }
+.fab-danger  { background: var(--danger);  box-shadow: 0 4px 16px color-mix(in srgb, var(--danger) 45%, transparent), var(--shadow); }
+.fab-danger:hover  { box-shadow: 0 8px 28px color-mix(in srgb, var(--danger) 55%, transparent), var(--shadow); }
+
+/* FAB avec label étendu */
+.fab-extended {
+    width: auto;
+    border-radius: 28px;
+    padding: 0 var(--space-lg);
+    gap: var(--space-sm);
+    font-size: 1rem;      /* Fix 8 — 16px large text (WCAG 1.4.11 AA-Large justifié, bg=accent 3.68:1) */
+    font-weight: 700;     /* Fix 8 — bold large text AA-Large WCAG 1.4.11 UI control */
+    font-family: var(--font-sans);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+.fab-extended .fab-icon { font-size: 1.2rem; line-height: 1; flex-shrink: 0; }
+
+/* FAB menu radial */
+.fab-menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+}
+
+.fab-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    pointer-events: none;
+}
+
+.fab-action {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    opacity: 0;
+    transform: translateY(12px) scale(0.85);
+    transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+}
+
+.fab-menu.open .fab-actions {
+    pointer-events: auto;
+}
+.fab-menu.open .fab-action {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+/* Stagger délai sur les actions */
+.fab-menu.open .fab-action:nth-child(1) { transition-delay: 0.04s; }
+.fab-menu.open .fab-action:nth-child(2) { transition-delay: 0.08s; }
+.fab-menu.open .fab-action:nth-child(3) { transition-delay: 0.12s; }
+.fab-menu.open .fab-action:nth-child(4) { transition-delay: 0.16s; }
+
+/* Icône principale tourne quand ouvert */
+.fab-menu .fab-trigger .fab-icon-main {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.fab-menu.open .fab-trigger .fab-icon-main {
+    transform: rotate(45deg);
+}
+
+.fab-action-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-solid);
+    border: 1px solid var(--border-hover);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    flex-shrink: 0;
+}
+.fab-action-btn:hover {
+    background: var(--surface-light);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    transform: scale(1.1);
+}
+.fab-action-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.fab-action-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--surface-solid);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.6rem;
+    white-space: nowrap;
+    box-shadow: var(--shadow);
+    pointer-events: none;
+}
+
+/* ===== AUTO-SAVE INDICATOR ===== */
+.autosave { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; border-radius: var(--radius-md); font-size: 0.82rem; font-weight: 500; border: 1px solid var(--border-color); background: var(--surface); color: var(--text-muted); transition: color 0.25s var(--ease-standard), border-color 0.25s var(--ease-standard), background-color 0.25s var(--ease-standard); }
+.autosave-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex-shrink: 0; }
+.autosave--saving { color: var(--text); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.autosave--saving .autosave-icon { animation: spin 0.8s linear infinite; }
+.autosave--saved { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, transparent); background: color-mix(in srgb, var(--success) 6%, transparent); }
+.autosave--unsaved { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 40%, transparent); background: color-mix(in srgb, var(--warning) 6%, transparent); }
+.autosave--unsaved .autosave-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--warning); animation: pulse 1.4s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,7 +1,7 @@
 {
   "version": "2.74.0",
   "generated": {
-    "at": "2026-06-15T19:25:23.462Z",
+    "at": "2026-06-15T19:49:56.730Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -383,7 +383,7 @@
       "example": "<!-- Bouton déclencheur -->\n<button class=\"btn-primary\" onclick=\"openModal('modal-exemple')\">Ouvrir la modal</button>\n\n<!-- Structure modal -->\n<div class=\"modal-preview\" id=\"modal-exemple\">\n  <div class=\"modal-overlay\" onclick=\"closeModal('modal-exemple')\"></div>\n  <div class=\"modal-content\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-titre\">\n    <h2 id=\"modal-titre\">Titre de la modal</h2>\n    <p>Contenu de la modal.</p>\n    <div class=\"modal-actions\">\n      <button class=\"btn-ghost\" onclick=\"closeModal('modal-exemple')\">Annuler</button>\n      <button class=\"btn-primary\">Confirmer</button>\n    </div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/modals.css",
+        "shared/css/components/overlays.css",
         "shared/css/components/theming.css"
       ]
     },
@@ -659,7 +659,7 @@
       "example": "<div class=\"popover-wrap\">\n  <button class=\"btn-ghost\" aria-haspopup=\"true\">Plus d'infos</button>\n  <div class=\"popover\" role=\"tooltip\">\n    <strong>Détails</strong>\n    <p>Contenu enrichi avec du texte et éventuellement des liens.</p>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/modals.css"
+        "shared/css/components/overlays.css"
       ]
     },
     {
@@ -681,7 +681,7 @@
       "example": "<!-- Déclencher via Ctrl+K ou JS : openCommandPalette() -->\n<div class=\"cmd-overlay\" id=\"cmd-palette\" hidden>\n  <div class=\"cmd-palette\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Palette de commandes\">\n    <div class=\"cmd-input-wrap\">\n      <input class=\"cmd-input\" type=\"text\" placeholder=\"Rechercher une commande...\" aria-label=\"Recherche\">\n    </div>\n    <div class=\"cmd-results\" role=\"listbox\">\n      <div class=\"cmd-group-title\">Navigation</div>\n      <div class=\"cmd-item\" role=\"option\">Aller aux composants</div>\n      <div class=\"cmd-item\" role=\"option\">Aller à la fondation</div>\n    </div>\n    <div class=\"cmd-footer\">&#8593;&#8595; naviguer &nbsp; &#8629; sélectionner &nbsp; Echap fermer</div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/modals.css",
+        "shared/css/components/overlays.css",
         "shared/css/components/theming.css",
         "shared/css/components/_responsive.css"
       ]
@@ -703,7 +703,7 @@
       "example": "<div class=\"drawer-preview\" id=\"drawer-exemple\">\n  <div class=\"drawer-overlay\" onclick=\"this.closest('.drawer-preview').classList.remove('open')\"></div>\n  <div class=\"drawer-panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"drawer-titre\">\n    <div class=\"drawer-header\">\n      <h2 id=\"drawer-titre\">Titre du panneau</h2>\n      <button class=\"drawer-close\" aria-label=\"Fermer\">&#10005;</button>\n    </div>\n    <div class=\"drawer-body\">Contenu du drawer.</div>\n    <div class=\"drawer-footer\">\n      <button class=\"btn-ghost\">Annuler</button>\n      <button class=\"btn-primary\">Confirmer</button>\n    </div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/modals.css",
+        "shared/css/components/overlays.css",
         "shared/css/components/_responsive.css"
       ]
     },
@@ -724,7 +724,7 @@
       "example": "<div class=\"bottom-sheet\" id=\"bs-exemple\">\n  <div class=\"bottom-sheet-overlay\"></div>\n  <div class=\"bottom-sheet-handle-wrap\">\n    <div class=\"bottom-sheet-handle\"></div>\n  </div>\n  <div class=\"bottom-sheet-header\">\n    <span>Options</span>\n    <button class=\"bottom-sheet-close\" aria-label=\"Fermer\">&#10005;</button>\n  </div>\n  <div class=\"bottom-sheet-content\">Contenu de la feuille bas.</div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/modals.css"
+        "shared/css/components/overlays.css"
       ]
     },
     {
@@ -853,7 +853,7 @@
       "example": "<button class=\"fab\" aria-label=\"Créer\" data-fab-id=\"fab-exemple\">&#43;</button>\n\n<!-- FAB avec menu d'actions -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\" hidden>\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>",
       "react": "pending",
       "module": [
-        "shared/css/components/interactive.css"
+        "shared/css/components/feedback.css"
       ]
     },
     {
@@ -869,7 +869,7 @@
       "example": "<div class=\"segmented\" role=\"tablist\" data-segmented-id=\"seg-exemple\">\n  <div class=\"segmented-indicator\"></div>\n  <button class=\"segmented-item active\" role=\"tab\" aria-selected=\"true\">Semaine</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Mois</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Année</button>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/interactive.css"
+        "shared/css/components/navigation.css"
       ]
     },
     {
@@ -1229,9 +1229,9 @@
       "react": "pending",
       "module": [
         "shared/css/components/forms.css",
-        "shared/css/components/interactive.css",
         "shared/css/components/overlays.css",
-        "shared/css/layout.css"
+        "shared/css/layout.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -1386,7 +1386,7 @@
       "example": "<div class=\"comment\">\n  <div class=\"comment-avatar\">MS</div>\n  <div class=\"comment-body\">\n    <div class=\"comment-header\"><span class=\"comment-author\">Mike</span><span class=\"comment-date\">il y a 5 min</span></div>\n    <div class=\"comment-text\">Super implementation !</div>\n    <div class=\"comment-actions\">\n      <button class=\"comment-action-btn\" data-reply-trigger aria-label=\"Repondre\">&#8617; Repondre</button>\n      <button class=\"comment-action-btn\" data-like-trigger aria-label=\"J'aime\">&#9825; <span class=\"like-count\">0</span></button>\n    </div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/pricing.css"
+        "shared/css/components/forms.css"
       ]
     },
     {
@@ -1624,7 +1624,7 @@
       "version": "2.73.0",
       "react": "pending",
       "module": [
-        "shared/css/components/pricing.css"
+        "shared/css/components/forms.css"
       ]
     },
     {

@@ -1,5 +1,11 @@
 # Releases
 
+## [Unreleased]
+
+### Changed
+- **Éclatement `interactive.css` + `pricing.css` — déplacements vers modules existants (#512)** : FAB + AUTO-SAVE → `feedback.css` ; SEGMENTED CONTROL → `navigation.css` ; INLINE EDITING → `forms.css` ; SETTINGS PANEL + COMMENTS/THREAD (de `pricing.css`) → `forms.css` et `feedback.css` respectivement ; bloc ICON (`.icon`, `.icon--sm`, `.icon--lg`) → `_base.css` (primitif générique sprite). `interactive.css` devient le module « contenu riche/code » (CODE+COPY) ; `pricing.css` conserve PRICING TABLE + UPGRADE/USAGE. Les deux `@import` restent dans le barrel `components.css`. Zéro diff de rendu.
+- **Fusion `modals.css` → `overlays.css` — module unique « surfaces flottantes » (#513)** : tout le contenu de `modals.css` (MODAL, MODAL DIALOG, POPOVER, COMMAND PALETTE, DRAWER, BOTTOM SHEET, CONFIRM POPOVER + `@keyframes modalIn/fadeIn/fadeInScale`) absorbé dans `overlays.css`. `modals.css` réduit à un stub `@import "./overlays.css"` (compat consumer 1-2 versions). Ligne `@import "./components/modals.css"` retirée du barrel `components.css` (double-inclusion évitée). `@keyframes fadeIn` préservé dans `overlays.css` — consommé par `quiz.css`.
+
 ## 2.74.0 — 2026-06-14 — Sprint #43 Cohérence taxonomie & navigation : pont page↔module, registre complété, règle frontière (#506 #507 #508 #511)
 
 > Axe **registre & doc** du milestone #43 (Epic #505). Aucune modification CSS de rendu — bump synchrone des 8 sources de version pour cohérence `check-versions`. Lot churn-VR (#510/#512/#513/#514) reporté.
