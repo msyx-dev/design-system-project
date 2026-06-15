@@ -8,8 +8,14 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.75.0] — 2026-06-15
+
+> Lot churn-VR du milestone #43 (Epic #505) — réorganisation des modules CSS par destination sémantique, **zéro diff de rendu** (déplacements purs, cascade finale identique via le barrel). #514 (réorg pages vitrine) reporté (blocage régénération baselines VR, cf. issue).
+
 ### Changed
 - **login-screen — rapatriement CSS** : bloc AUTH FLOWS (`.login-step`, `.login-strength`, `.login-strength-bar`, `.login-strength-fill`, `.login-strength-label`, `.login-cgu`, `.login-success-msg`, `.login-back-link`) déplacé de `pricing.css` → `forms.css` (co-localisation login) ; registre réattribué `pricing`→`login-screen` ; `module[]` régénéré. Rendu inchangé. (#510)
+- **Éclatement `interactive.css` + `pricing.css` vers modules existants** : FAB + AUTO-SAVE → `feedback.css` ; SEGMENTED → `navigation.css` ; INLINE-EDIT + SETTINGS → `forms.css` ; COMMENTS → `feedback.css` ; ICON (`.icon`/`--sm`/`--lg`) → `_base.css` (primitif sprite). `interactive.css` conserve CODE+COPY ; `pricing.css` conserve PRICING/UPGRADE/USAGE. `module[]` auto-dérivé. (#512)
+- **Fusion `modals.css` → `overlays.css`** : module unique « surfaces flottantes » (modal/popover/command-palette/drawer/bottom-sheet/confirm-popover + tooltip/context-menu/action-menu). `modals.css` réduit à un stub `@import` (compat consumer 1-2 versions), import retiré du barrel (anti double-inclusion). `@keyframes fadeIn` préservé dans `overlays.css` (consommé par `quiz.css`). (#513)
 
 ## [2.74.0] — 2026-06-14
 

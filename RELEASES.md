@@ -1,10 +1,16 @@
 # Releases
 
-## [Unreleased]
+## 2.75.0 — 2026-06-15 — Lot churn-VR M#43 : réorganisation des modules CSS par destination (#510 #512 #513)
+
+> Lot « churn-VR » du milestone #43 (Epic #505) — refactors CSS purs (déplacements de classes entre modules, tous chargés par le barrel `components.css`), **zéro diff de rendu** (cascade finale identique, validé par la visual-regression à 0 diff sur #551 et #552). Bump synchrone des 8 sources. **#514** (rééquilibrage des pages vitrine + page `overlays.html`) **reporté** : code prêt (PR #553) mais régénération des baselines VR bloquée — cf. issue #514.
 
 ### Changed
-- **Éclatement `interactive.css` + `pricing.css` — déplacements vers modules existants (#512)** : FAB + AUTO-SAVE → `feedback.css` ; SEGMENTED CONTROL → `navigation.css` ; INLINE EDITING → `forms.css` ; SETTINGS PANEL + COMMENTS/THREAD (de `pricing.css`) → `forms.css` et `feedback.css` respectivement ; bloc ICON (`.icon`, `.icon--sm`, `.icon--lg`) → `_base.css` (primitif générique sprite). `interactive.css` devient le module « contenu riche/code » (CODE+COPY) ; `pricing.css` conserve PRICING TABLE + UPGRADE/USAGE. Les deux `@import` restent dans le barrel `components.css`. Zéro diff de rendu.
+- **login-screen — rapatriement CSS (#510)** : bloc AUTH FLOWS (`.login-step`, `.login-strength*`, `.login-cgu`, `.login-success-msg`, `.login-back-link`) déplacé de `pricing.css` → `forms.css` (co-localisation de tout le login-screen). Registre réattribué `pricing`→`login-screen`, `module[]` régénéré. Corrige un bug latent (un `sync --components=forms` livrait un login incomplet). Rendu inchangé.
+- **Éclatement `interactive.css` + `pricing.css` vers modules existants (#512)** : FAB + AUTO-SAVE → `feedback.css` ; SEGMENTED CONTROL → `navigation.css` ; INLINE EDITING → `forms.css` ; SETTINGS PANEL → `forms.css` ; COMMENTS/THREAD → `feedback.css` ; ICON (`.icon`, `.icon--sm`, `.icon--lg`) → `_base.css` (primitif générique sprite). `interactive.css` devient le module « contenu riche/code » (CODE+COPY) ; `pricing.css` conserve PRICING TABLE + UPGRADE/USAGE. Les deux `@import` restent dans le barrel. `module[]` auto-dérivé. Zéro diff de rendu.
 - **Fusion `modals.css` → `overlays.css` — module unique « surfaces flottantes » (#513)** : tout le contenu de `modals.css` (MODAL, MODAL DIALOG, POPOVER, COMMAND PALETTE, DRAWER, BOTTOM SHEET, CONFIRM POPOVER + `@keyframes modalIn/fadeIn/fadeInScale`) absorbé dans `overlays.css`. `modals.css` réduit à un stub `@import "./overlays.css"` (compat consumer 1-2 versions). Ligne `@import "./components/modals.css"` retirée du barrel `components.css` (double-inclusion évitée). `@keyframes fadeIn` préservé dans `overlays.css` — consommé par `quiz.css`.
+
+### Changed (versioning)
+- **Bump synchrone 8 sources** `2.74.0 → 2.75.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json`, `package.json`. Footer `site.html` + `entrypoint.sh` alignés.
 
 ## 2.74.0 — 2026-06-14 — Sprint #43 Cohérence taxonomie & navigation : pont page↔module, registre complété, règle frontière (#506 #507 #508 #511)
 
