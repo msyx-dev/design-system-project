@@ -545,3 +545,78 @@
     }
 }
 
+/* ===== SEGMENTED CONTROL ===== */
+.segmented {
+    display: inline-flex;
+    position: relative;
+    background: var(--surface-light);
+    border-radius: 50px;
+    padding: 3px;
+    gap: 0;
+    border: 1px solid var(--border-color);
+    max-width: 100%;       /* #530 : ne dépasse jamais le conteneur */
+    overflow-x: auto;      /* #530 : scroll interne si trop d'items <375 (ex. segmented--lg) */
+    scrollbar-width: none; /* masque la scrollbar (esthétique pill) */
+}
+.segmented::-webkit-scrollbar { display: none; }
+.segmented-indicator {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    height: calc(100% - 6px);
+    background: var(--accent);
+    border-radius: 50px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 0;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.segmented--subtle .segmented-indicator {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    box-shadow: none;
+}
+.segmented-item {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: var(--space-2) var(--space-md);
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    border-radius: 50px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s;
+    user-select: none;
+}
+.segmented-item:hover:not(.active) {
+    color: var(--text);
+}
+.segmented-item.active {
+    color: var(--text-on-accent);
+    font-weight: 600;
+}
+.segmented--subtle .segmented-item.active {
+    color: var(--accent-light);
+}
+.segmented-item svg {
+    flex-shrink: 0;
+}
+.segmented-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+/* Tailles */
+.segmented--sm .segmented-item {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.78rem;
+}
+.segmented--lg .segmented-item {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.92rem;
+}
