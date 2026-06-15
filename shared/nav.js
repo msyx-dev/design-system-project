@@ -8,12 +8,12 @@ const NAV_PAGES = [
     { title: null,          path: '/site.html',                  label: 'Hub',             icon: '&#9670;', flat: true },
     { title: null,          path: '/pages/getting-started.html', label: 'Getting Started', icon: '&#9654;' },
     { title: 'Fondation',   path: '/pages/fondation.html',       icon: '&#127912;' },
-    { title: 'Fondation',   path: '/pages/motion.html',          icon: '&#9889;' },
     { title: 'Composants',  path: '/pages/composants.html',      icon: '&#9654;' },
     { title: 'Formulaires', path: '/pages/formulaires.html',     icon: '&#9998;' },
     { title: 'Navigation',  path: '/pages/navigation.html',      icon: '&#9776;' },
     { title: 'Data',        path: '/pages/data.html',            icon: '#' },
     { title: 'Feedback',    path: '/pages/feedback.html',        icon: '&#9888;' },
+    { title: 'Overlays',    path: '/pages/overlays.html',        icon: '&#9645;' },
     { title: 'Avancé',      path: '/pages/divers.html',          icon: '&#8942;' },
     { title: 'Templates',   path: '/pages/templates.html',       icon: '&#8862;' }
 ];
@@ -332,13 +332,13 @@ function extractSections(doc) {
 /* AUTO-GENERATED NAV SECTIONS START — ne pas éditer à la main (bin/generate-nav-sections.js) */
 const NAV_SECTIONS_MANIFEST = {
   "/pages/getting-started.html": [{"id":"overview","label":"Getting Started"},{"id":"install","label":"Installation"},{"id":"first-steps","label":"Premiers pas"},{"id":"header-config","label":"Header avec utilisateur"},{"id":"tokens-usage","label":"Utiliser les tokens"},{"id":"anti-patterns","label":"Bonnes pratiques"}],
-  "/pages/fondation.html": [{"id":"colors","label":"Palette de couleurs"},{"id":"typography","label":"Typographie"},{"id":"spacing","label":"Spacing & Rayons"},{"id":"tokens","label":"Tokens CSS"},{"id":"theming","label":"Theming"},{"id":"theme-switcher","label":"Theme Switcher"},{"id":"consommation","label":"Consommation"},{"id":"utilities","label":"Classes utilitaires"},{"id":"brand","label":"Brand identity"},{"id":"iconographie","label":"Iconographie"},{"id":"performance-glass","label":"Performance & Glassmorphism"},{"id":"texture","label":"Texture grain"},{"id":"svg-theme-aware","label":"SVG theme-aware"}],
-  "/pages/motion.html": [{"id":"durations","label":"Durations"},{"id":"easings","label":"Easings"},{"id":"patterns","label":"Patterns canoniques"}],
+  "/pages/fondation.html": [{"id":"colors","label":"Palette de couleurs"},{"id":"typography","label":"Typographie"},{"id":"spacing","label":"Spacing & Rayons"},{"id":"tokens","label":"Tokens CSS"},{"id":"theming","label":"Theming"},{"id":"theme-switcher","label":"Theme Switcher"},{"id":"consommation","label":"Consommation"},{"id":"utilities","label":"Classes utilitaires"},{"id":"brand","label":"Brand identity"},{"id":"iconographie","label":"Iconographie"},{"id":"performance-glass","label":"Performance & Glassmorphism"},{"id":"texture","label":"Texture grain"},{"id":"svg-theme-aware","label":"SVG theme-aware"},{"id":"durations","label":"Durations"},{"id":"easings","label":"Easings"},{"id":"patterns","label":"Patterns canoniques"}],
   "/pages/composants.html": [{"id":"buttons","label":"Boutons"},{"id":"cards","label":"Cards"},{"id":"badges","label":"Badges & Tags"},{"id":"chips","label":"Chips"},{"id":"dividers","label":"Divider / Separator"},{"id":"rating","label":"Rating / Etoiles"},{"id":"avatars","label":"Avatars"},{"id":"segmented-control","label":"Segmented Control"},{"id":"sortable-list","label":"Sortable List"},{"id":"achievements","label":"Achievement Badges"},{"id":"reset-natif","label":"Reset natif"},{"id":"disabled-global","label":"Disabled global"}],
   "/pages/formulaires.html": [{"id":"inputs","label":"Inputs"},{"id":"controls","label":"Controls"},{"id":"login","label":"Login / Auth"},{"id":"calendar","label":"Calendrier"},{"id":"dropdown","label":"Dropdown / Select"},{"id":"file-upload","label":"File Upload"},{"id":"slider","label":"Slider / Range"},{"id":"search-input","label":"Search Input"},{"id":"number-input","label":"Number Input"},{"id":"otp-input","label":"OTP / Pin Input"},{"id":"tag-input","label":"Tag Input"},{"id":"quiz","label":"Quiz / Poll"},{"id":"wizard","label":"Wizard multi-step"},{"id":"inline-edit","label":"Inline Editing"},{"id":"filter-bar","label":"Filter Bar"},{"id":"password-toggle","label":"Password avec révélation"}],
   "/pages/navigation.html": [{"id":"header-user","label":"Header — Zone utilisateur"},{"id":"nav-components","label":"Navigation"},{"id":"breadcrumbs","label":"Breadcrumbs"},{"id":"stepper","label":"Stepper"},{"id":"bottom-nav","label":"Bottom Navigation"},{"id":"sidebar-rail","label":"Sidebar Rail"},{"id":"action-menu","label":"Action Menu"},{"id":"user-menu","label":"User Menu"}],
   "/pages/data.html": [{"id":"charts","label":"Charts"},{"id":"pie-donut","label":"Pie & Donut Charts"},{"id":"stats","label":"Statistiques"},{"id":"animated-counters","label":"Animated Counters"},{"id":"progress","label":"Progress"},{"id":"progress-tracker","label":"Progress Tracker"},{"id":"gauge","label":"Gauge / Speedometer"},{"id":"usage-meter","label":"Usage Meter"},{"id":"tables","label":"Tables"},{"id":"comparison","label":"Comparison Table"},{"id":"data-grid","label":"Data Grid"},{"id":"tree-view","label":"Tree View"},{"id":"lists","label":"Listes"},{"id":"activity-feed","label":"Activity Feed"},{"id":"risk-matrix","label":"Risk Matrix"}],
-  "/pages/feedback.html": [{"id":"alerts","label":"Alertes"},{"id":"status-tokens","label":"Tokens status (fg / bg / border)"},{"id":"toasts","label":"Toasts"},{"id":"modals","label":"Modals"},{"id":"skeleton","label":"Skeleton loading"},{"id":"drawer","label":"Drawer"},{"id":"zone-banner","label":"Zone Banner"},{"id":"empty-states","label":"Empty States"},{"id":"bottom-sheet","label":"Bottom Sheet"},{"id":"spinners","label":"Spinners / Loading"},{"id":"fab","label":"FAB — Floating Action Button"},{"id":"notification-center","label":"Notification Center"},{"id":"auto-save","label":"Auto-save Indicator"},{"id":"upgrade-prompt","label":"Upgrade Prompt"},{"id":"confirm-popover","label":"Confirm Popover"},{"id":"tooltip","label":"Tooltip & Popover"},{"id":"pagination","label":"Pagination"},{"id":"comments","label":"Comments / Thread"},{"id":"access-denied","label":"Access Denied — Page 403"}],
+  "/pages/feedback.html": [{"id":"alerts","label":"Alertes"},{"id":"status-tokens","label":"Tokens status (fg / bg / border)"},{"id":"toasts","label":"Toasts"},{"id":"skeleton","label":"Skeleton loading"},{"id":"zone-banner","label":"Zone Banner"},{"id":"empty-states","label":"Empty States"},{"id":"spinners","label":"Spinners / Loading"},{"id":"auto-save","label":"Auto-save Indicator"},{"id":"upgrade-prompt","label":"Upgrade Prompt"},{"id":"pagination","label":"Pagination"},{"id":"comments","label":"Comments / Thread"},{"id":"access-denied","label":"Access Denied — Page 403"}],
+  "/pages/overlays.html": [{"id":"modals","label":"Modals"},{"id":"drawer","label":"Drawer"},{"id":"bottom-sheet","label":"Bottom Sheet"},{"id":"fab","label":"FAB — Floating Action Button"},{"id":"notification-center","label":"Notification Center"},{"id":"confirm-popover","label":"Confirm Popover"},{"id":"tooltip","label":"Tooltip & Popover"}],
   "/pages/divers.html": [{"id":"timeline","label":"Timeline"},{"id":"code","label":"Code blocks"},{"id":"carousel","label":"Carousel / Image Slider"},{"id":"lightbox","label":"Lightbox"},{"id":"video-embed","label":"Video Embed"},{"id":"accordion","label":"Accordion"},{"id":"command-palette","label":"Command Palette"},{"id":"context-menu","label":"Context Menu"},{"id":"copy-button","label":"Copy Button"},{"id":"decision-tree","label":"Decision Tree"},{"id":"before-after","label":"Before / After"}],
   "/pages/templates.html": [{"id":"kanban","label":"Kanban Board"},{"id":"roadmap","label":"Roadmap"},{"id":"backlog","label":"Backlog"},{"id":"sprint","label":"Sprint Board"},{"id":"settings-panel","label":"Settings Panel"},{"id":"pricing","label":"Pricing Table"}]
 };
@@ -713,12 +713,12 @@ var lazyObserver = null;
 
 var PAGE_TO_LAZY = {
     '/pages/fondation.html': 'lazy-fondation',
-    '/pages/motion.html': 'lazy-motion',
     '/pages/composants.html': 'lazy-composants',
     '/pages/formulaires.html': 'lazy-formulaires',
     '/pages/navigation.html': 'lazy-navigation',
     '/pages/data.html': 'lazy-data',
     '/pages/feedback.html': 'lazy-feedback',
+    '/pages/overlays.html': 'lazy-overlays',
     '/pages/divers.html': 'lazy-divers',
     '/pages/templates.html': 'lazy-templates'
 };

@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 
 const PAGES = [
   { slug: "fondation", path: "/pages/fondation.html", title: "Fondation" },
-  { slug: "motion", path: "/pages/motion.html", title: "Motion" },
   { slug: "composants", path: "/pages/composants.html", title: "Composants" },
   { slug: "navigation", path: "/pages/navigation.html", title: "Navigation" },
   {
@@ -13,6 +12,7 @@ const PAGES = [
   { slug: "data", path: "/pages/data.html", title: "Data" },
   { slug: "templates", path: "/pages/templates.html", title: "Templates" },
   { slug: "feedback", path: "/pages/feedback.html", title: "Feedback" },
+  { slug: "overlays", path: "/pages/overlays.html", title: "Overlays" },
   // divers.html : le <title> du <head> est "Avancé — msyx.design" (et non "Divers")
   { slug: "divers", path: "/pages/divers.html", title: "Avancé" },
 ] as const;

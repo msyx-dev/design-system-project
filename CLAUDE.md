@@ -39,14 +39,14 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html    # Couleurs, typographie, espacements, ombres, theming (+ .theme-card / .color-grid--compact v2.54.7), theme switcher (v2.47.0), mode-switch iOS-style (v2.55.0), brand identity (wordmark + mark DS, v2.56.0), classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0)
-  motion.html       # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce)
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming (+ .theme-card / .color-grid--compact v2.54.7), theme switcher (v2.47.0), mode-switch iOS-style (v2.55.0), brand identity (wordmark + mark DS, v2.56.0), classes utilitaires, iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0) + Motion : durations, easings, 6 patterns canoniques (#514)
   composants.html   # Cards (+ card-link a11y v2.49.0), badges (+ badge-nav compact v2.49.0), boutons (+ polish sémantique theme-aware v2.54.11 : tokens fg dédiés --btn-on-*, shadow alpha --btn-shadow-alpha, border subtil), chips, dividers, rating, avatars, alertes, modals (+ focus restore WAI APG v2.41.0), toasts (+ toast-message v2.49.0), segmented control, achievement badges, popovers, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
   navigation.html   # Header user zone (avatar, dropdown, notifications), Tabs, breadcrumbs, stepper, bottom navigation, action-menu (v2.47.0)
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, login-screen (3 variants Authentik + slots providers, v2.57.0), calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar, password-toggle (show/hide œil, v2.72.0)
   data.html         # 15 sections en 5 familles (v2.71.0) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats + note quand-utiliser, animated-counters) · Jauges & progression/Meter (progress + note famille Meter, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid + col actions sticky-end) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
-  feedback.html     # Empty states, spinners, pagination (v2.47.0), tooltip (v2.47.0), drawer, zone banner, modals interactifs, bottom sheet, FAB, notification center, comments (v2.47.0), access-denied page 403 (v2.58.0)
+  feedback.html     # 12 sections états — alertes, tokens status, toasts, skeleton, zone banner, empty states, spinners, auto-save, upgrade prompt, pagination, comments, access-denied page 403 (v2.58.0) — #514
+  overlays.html     # 7 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514)
   divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed) + Interaction (accordion, command palette fonctionnelle, context menu, copy button)
 shared/
   styles.css        # Agregateur CSS — imports des 4 modules + base reset
