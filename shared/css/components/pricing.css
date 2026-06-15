@@ -234,24 +234,6 @@
     .comment-thread::before { left: 12px; }
 }
 
-/* ===== AUTH FLOWS ===== */
-.login-step { display: none; }
-.login-step.active { display: block; }
-.login-strength { margin-top: 0.4rem; }
-.login-strength-bar { height: 4px; border-radius: 2px; background: var(--border-color); overflow: hidden; }
-.login-strength-fill { height: 100%; width: 0; border-radius: 2px; transition: width 0.3s, background 0.3s; }
-.login-strength-fill[data-level="1"] { width: 25%; background: var(--danger); }
-.login-strength-fill[data-level="2"] { width: 50%; background: var(--warning); }
-.login-strength-fill[data-level="3"] { width: 75%; background: color-mix(in srgb, var(--success) 70%, var(--warning) 30%); }
-.login-strength-fill[data-level="4"] { width: 100%; background: var(--success); }
-.login-strength-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; }
-.login-cgu { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted); margin-top: var(--space-xs); }
-.login-cgu input[type="checkbox"] { margin-top: 0.15rem; accent-color: var(--accent); flex-shrink: 0; }
-.login-cgu a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
-.login-success-msg { text-align: center; padding: var(--space-md); color: var(--success); background: color-mix(in srgb, var(--success) 8%, transparent); border: 1px solid color-mix(in srgb, var(--success) 30%, transparent); border-radius: var(--radius-md); font-size: 0.9rem; display: none; }
-.login-success-msg.show { display: block; }
-.login-back-link { background: none; border: none; cursor: pointer; color: var(--accent); font-size: 0.82rem; text-decoration: underline; text-underline-offset: 2px; padding: 0; margin-top: var(--space-xs); display: inline-block; }
-
 /* ===== UPGRADE PROMPT + USAGE METER ===== */
 .upgrade-banner { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-md); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: var(--radius-lg); }
 .upgrade-banner-icon { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
