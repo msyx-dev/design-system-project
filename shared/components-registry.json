@@ -1,8 +1,8 @@
 {
   "version": "2.74.0",
   "generated": {
-    "at": "2026-06-14T18:25:33.368Z",
-    "by": "bin/generate-registry.js v1.2"
+    "at": "2026-06-15T19:25:23.462Z",
+    "by": "bin/generate-registry.js v1.3"
   },
   "components": [
     {
@@ -1182,7 +1182,15 @@
         ".login-provider-btn--github",
         ".login-authentik-btn",
         ".login-social-btn",
-        ".login-compact"
+        ".login-compact",
+        ".login-back-link",
+        ".login-cgu",
+        ".login-step",
+        ".login-strength",
+        ".login-strength-bar",
+        ".login-strength-fill",
+        ".login-strength-label",
+        ".login-success-msg"
       ],
       "jsInit": "initAuthFlows",
       "version": "2.57.0",
@@ -1339,14 +1347,6 @@
         ".pricing-feature--disabled",
         ".pricing-feature-icon",
         ".pricing-cta",
-        ".login-back-link",
-        ".login-cgu",
-        ".login-step",
-        ".login-strength",
-        ".login-strength-bar",
-        ".login-strength-fill",
-        ".login-strength-label",
-        ".login-success-msg",
         ".upgrade-banner",
         ".upgrade-banner--danger",
         ".upgrade-banner--warning",

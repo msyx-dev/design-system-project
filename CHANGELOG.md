@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Changed
+- **login-screen — rapatriement CSS** : bloc AUTH FLOWS (`.login-step`, `.login-strength`, `.login-strength-bar`, `.login-strength-fill`, `.login-strength-label`, `.login-cgu`, `.login-success-msg`, `.login-back-link`) déplacé de `pricing.css` → `forms.css` (co-localisation login) ; registre réattribué `pricing`→`login-screen` ; `module[]` régénéré. Rendu inchangé. (#510)
+
 ## [2.74.0] — 2026-06-14
 
 > Sprint #43 — Cohérence taxonomie & navigation (axe registre & doc). Pont page↔module, registre complété, règle frontière. Aucune modification CSS de rendu (bump synchrone des 8 sources pour cohérence `check-versions`).
