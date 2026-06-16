@@ -327,12 +327,12 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     align-items: center;
     gap: 0.4rem;
     padding: 0.45rem 0.7rem;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     background: var(--primary);
     min-height: 2.6rem;
     cursor: text;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color var(--duration-base), box-shadow var(--duration-base);
 }
 .tag-input-wrap:focus-within {
     border-color: var(--accent);

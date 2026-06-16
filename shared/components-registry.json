@@ -1,7 +1,7 @@
 {
   "version": "2.76.0",
   "generated": {
-    "at": "2026-06-16T12:52:56.387Z",
+    "at": "2026-06-16T13:37:57.224Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -122,7 +122,7 @@
         ".chip-input-field"
       ],
       "jsInit": "initChips",
-      "example": "<div class=\"chip-group\">\n  <span class=\"chip\">Feature</span>\n  <span class=\"chip chip-accent\">Sprint:18</span>\n  <span class=\"chip chip-warning\">3 SP</span>\n  <span class=\"chip chip-success\">Done</span>\n</div>\n\n<div class=\"chip-input-wrapper\" data-placeholder=\"Ajouter un tag...\">\n  <div class=\"chip-input-field\" contenteditable=\"true\"></div>\n</div>",
+      "example": "<div class=\"chip-group\">\n  <span class=\"chip\">Feature</span>\n  <span class=\"chip chip-accent\">Sprint:18</span>\n  <span class=\"chip chip-warning\">3 SP</span>\n  <span class=\"chip chip-success\">Done</span>\n</div>\n\n<!-- chip-input @deprecated : alias rétro-compat de tag-input (suppression v3). Utiliser tag-input. -->\n<div class=\"chip-input-wrapper\">\n  <span class=\"chip chip-input-item\">React <button class=\"chip-close\" aria-label=\"Supprimer React\">&times;</button></span>\n  <input class=\"chip-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/badges.css"
@@ -902,6 +902,7 @@
       "example": "<div class=\"tag-input-wrap\">\n  <span class=\"tag-item\">Design <button class=\"tag-close\" aria-label=\"Supprimer Design\">&times;</button></span>\n  <span class=\"tag-item\">Frontend <button class=\"tag-close\" aria-label=\"Supprimer Frontend\">&times;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>\n<span class=\"tag-input-hint\">Enter ou virgule pour ajouter</span>",
       "react": "pending",
       "module": [
+        "shared/css/components/badges.css",
         "shared/css/components/forms.css"
       ]
     },
