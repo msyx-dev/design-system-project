@@ -1,5 +1,15 @@
 # Releases
 
+## 2.76.0 — 2026-06-16 — Vitrine : split feedback→overlays + motion→fondation (#514) — milestone #43 soldé
+
+> Dernière issue du milestone #43 (Epic #505 **clos** : 12/12 sub-issues). Axe PAGE (vitrine HTML) — aucun CSS de rendu modifié, bump synchrone des 8 sources pour cohérence `check-versions`.
+
+### Changed
+- **Réorganisation des pages vitrine (#514)** : `pages/feedback.html` scindé (19→12 sections « états ») + nouvelle page **`pages/overlays.html`** (7 « surfaces flottantes » : modals, drawer, bottom-sheet, FAB, notification-center, confirm-popover, tooltip). `pages/motion.html` repliée dans `pages/fondation.html` (13→16 sections) puis supprimée. **9 pages vitrine** inchangé (−motion +overlays).
+- **Réalignements** : manifeste sidebar (`bin/generate-nav-sections.js`), registre (`page` des entrées déplacées), compteurs hero `site.html` + hub-cards + lazy-sections, specs `visual.spec.ts`/`a11y.spec.ts`/`modal-focus.spec.ts`. `docs/ARCHITECTURE.md` + `CLAUDE.md` à jour.
+- **Baselines VR** régénérées via **récolte des `actual` CI** (soft-assertions temporaires) — overlines déplacés + bordures `:last-of-type`. La régénération locale s'étant révélée non fiable, méthode capitalisée. Aucun diff de rendu fonctionnel.
+- **Bump synchrone 8 sources** `2.75.0 → 2.76.0` + footer + `entrypoint.sh`.
+
 ## 2.75.0 — 2026-06-15 — Lot churn-VR M#43 : réorganisation des modules CSS par destination (#510 #512 #513)
 
 > Lot « churn-VR » du milestone #43 (Epic #505) — refactors CSS purs (déplacements de classes entre modules, tous chargés par le barrel `components.css`), **zéro diff de rendu** (cascade finale identique, validé par la visual-regression à 0 diff sur #551 et #552). Bump synchrone des 8 sources. **#514** (rééquilibrage des pages vitrine + page `overlays.html`) **reporté** : code prêt (PR #553) mais régénération des baselines VR bloquée — cf. issue #514.
