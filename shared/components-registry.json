@@ -1,7 +1,7 @@
 {
   "version": "2.76.0",
   "generated": {
-    "at": "2026-06-16T13:37:57.224Z",
+    "at": "2026-06-16T23:55:28.064Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -550,7 +550,8 @@
       "example": "<div class=\"stepper\" aria-label=\"Étapes\">\n  <div class=\"step\"><div class=\"step-dot completed\">&#10003;</div><span class=\"step-label\">Compte</span></div>\n  <div class=\"step-line completed\"></div>\n  <div class=\"step\"><div class=\"step-dot active\">2</div><span class=\"step-label\">Profil</span></div>\n  <div class=\"step-line\"></div>\n  <div class=\"step\"><div class=\"step-dot pending\">3</div><span class=\"step-label\">Fin</span></div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/navigation.css"
+        "shared/css/components/navigation.css",
+        "shared/css/components/tracker.css"
       ]
     },
     {
