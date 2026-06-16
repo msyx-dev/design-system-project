@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Changed
+- **Bascule dark/light unifiée — M#44 (#518)** : `.mode-switch` (`layout.css`) élu **canonique unique**. `theme-toggle.css` réduit à des alias `@deprecated` (suppression réelle en v3, adoptent les dimensions canoniques iOS-style 56×32 / 24×24). Wrapper React `ThemeToggle` réécrit pour émettre le markup `.mode-switch` (icônes sun/moon, classe `.is-dark`) ; `aria-checked` aligné sur le vanilla (`true === DARK`, #382), test corrigé. Entrées registre `theme-toggle`/`theme-switcher` fusionnées, `REACT_TO_REGISTRY` remappé (check parité préservé). Non-breaking (alias rétro-compat CSS). (#518)
+
 ## [2.76.0] — 2026-06-16
 
 ### Changed
