@@ -8,7 +8,7 @@
 //  Tabs                         initComponents()             .tabs
 //  Accordion                    initComponents()             .accordion-header
 //  Kanban drag & drop           initComponents()             .kanban-board
-//  Chips (ajout/suppression)    initChips()                  .chips-input
+//  Chips (ajout/suppression)    initChips()                  .chip-group / .chip-input-wrapper (@deprecated → tag-input)
 //  Search inputs                initSearchInputs()           .search-input
 //  Range sliders                initSliders()                .slider-track
 //  Modals (open/close)          initModals()                 .modal-trigger, .modal
@@ -357,10 +357,12 @@ function initChips() {
         });
     });
 
-    // Chip input : saisie dynamique
+    // Chip input : saisie dynamique — @deprecated, alias rétro-compat de tag-input (suppression v3).
+    // Clé dataset distincte (chipInputBound) pour éviter tout double-bind si initTagInputs
+    // venait à être étendu au sélecteur .chip-input-wrapper.
     document.querySelectorAll('.chip-input-wrapper').forEach(wrapper => {
-        if (wrapper.dataset.bound) return;
-        wrapper.dataset.bound = '1';
+        if (wrapper.dataset.chipInputBound) return;
+        wrapper.dataset.chipInputBound = '1';
 
         const input = wrapper.querySelector('.chip-input-field');
         if (!input) return;
