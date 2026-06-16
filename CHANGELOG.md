@@ -8,6 +8,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.76.0] — 2026-06-16
+
+### Changed
+- **Réorganisation des pages vitrine (#514)** : `feedback.html` scindé (19→12 sections « états ») + nouvelle page **`overlays.html`** (7 surfaces flottantes : modals, drawer, bottom-sheet, FAB, notification-center, confirm-popover, tooltip) ; `motion.html` repliée dans `fondation.html` (13→16 sections, page supprimée). Manifeste sidebar (`generate-nav-sections.js`), registre (pointeurs `page`), compteurs hero et specs VR/a11y/modal-focus réalignés ; **9 pages** inchangé. Aucun CSS modifié. Baselines VR régénérées via récolte des `actual` CI (overlines `OVERLAYS`/`FONDATION` des sections déplacées). (#514)
+
 ## [2.75.0] — 2026-06-15
 
 > Lot churn-VR du milestone #43 (Epic #505) — réorganisation des modules CSS par destination sémantique, **zéro diff de rendu** (déplacements purs, cascade finale identique via le barrel). #514 (réorg pages vitrine) reporté (blocage régénération baselines VR, cf. issue).

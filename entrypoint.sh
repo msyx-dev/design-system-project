@@ -5,7 +5,7 @@
 # COOLIFY_RESOURCE_UUID/SOURCE_COMMIT).
 set -e
 
-VERSION="2.75.0"
+VERSION="2.76.0"
 BUILT_AT=$(cat /built_at 2>/dev/null || echo "unknown")
 SHA="${SOURCE_COMMIT:-unknown}"
 
