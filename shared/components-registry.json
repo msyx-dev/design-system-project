@@ -1,7 +1,7 @@
 {
   "version": "2.76.0",
   "generated": {
-    "at": "2026-06-15T20:19:40.846Z",
+    "at": "2026-06-16T12:52:56.387Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1404,8 +1404,10 @@
         ".mode-switch-icon"
       ],
       "jsInit": "initThemeSwitcher",
+      "reactComponent": "ThemeToggle",
+      "reactPackage": "@msyx-dev/react",
       "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>\n<div class=\"mode-toggle\">\n  <button id=\"mode-switch\" class=\"mode-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"Basculer mode clair/sombre\">\n    <span class=\"mode-switch-track\">\n      <svg class=\"mode-switch-icon mode-switch-icon--sun\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-sun\"></use></svg>\n      <svg class=\"mode-switch-icon mode-switch-icon--moon\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-moon\"></use></svg>\n      <span class=\"mode-switch-thumb\"></span>\n    </span>\n  </button>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/theme-toggle.css",
         "shared/css/layout.css",
@@ -2693,24 +2695,6 @@
       "react": "n-a"
     },
     {
-      "name": "theme-toggle",
-      "kind": "component",
-      "page": "fondation",
-      "cssClasses": [
-        ".theme-toggle",
-        ".theme-toggle-track",
-        ".theme-toggle-thumb"
-      ],
-      "jsInit": null,
-      "reactComponent": "ThemeToggle",
-      "reactPackage": "@msyx-dev/react",
-      "example": "<button class=\"theme-toggle\" role=\"switch\" aria-checked=\"false\" aria-label=\"Passer en mode clair\">\n  <span class=\"theme-toggle-track\">\n    <span class=\"theme-toggle-thumb\"></span>\n  </span>\n</button>",
-      "react": "ported",
-      "module": [
-        "shared/css/components/theme-toggle.css"
-      ]
-    },
-    {
       "name": "page-header",
       "kind": "component",
       "page": null,
@@ -2734,6 +2718,20 @@
         "shared/css/components/signature.css",
         "shared/css/layout.css"
       ]
+    },
+    {
+      "name": "theme-toggle",
+      "kind": "module",
+      "category": "component",
+      "source_file": "shared/css/components/theme-toggle.css",
+      "cssClasses": [
+        ".theme-toggle",
+        ".theme-toggle-thumb",
+        ".theme-toggle-track"
+      ],
+      "jsInit": null,
+      "generated": true,
+      "react": "n-a"
     }
   ]
 }
