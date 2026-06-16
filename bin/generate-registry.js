@@ -448,7 +448,7 @@ const REACT_SRC_ROOT = path.join(ROOT, 'packages', 'react', 'src', 'components')
 const REACT_TO_REGISTRY = {
   Button:      'buttons',
   PageHeader:  'page-header',
-  ThemeToggle: 'theme-toggle',
+  ThemeToggle: 'theme-switcher',  // #518 — ThemeToggle émet .mode-switch (canonique, layout.css)
   UserMenu:    'user-menu',
   LoginScreen: 'login-screen',
 };

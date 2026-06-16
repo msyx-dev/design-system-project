@@ -136,11 +136,15 @@ import { LoginScreen } from "@msyx-dev/react";
 
 ### `ThemeToggle`
 
-Bascule dark/light du DS. Composant **sans état interne** : le parent gère `mode` et `onToggle`. Émet `role="switch"` + `aria-checked`. La position du thumb est pilotée par CSS via `[data-mode="light"]` sur `<html>` — le consumer reste responsable de setter `data-mode`. Accepte les attributs natifs `<button>` (sauf `role`).
+Bascule dark/light du DS. Composant **sans état interne** : le parent gère `mode` et `onToggle`. Émet le markup canonique `.mode-switch` (layout.css, iOS-style 56×32) avec `role="switch"` + `aria-checked`. L'état dark est piloté par la classe `.is-dark` (prop `mode`) — plus par `[data-mode]`. Accepte les attributs natifs `<button>` (sauf `role`).
+
+**Sémantique a11y** : `aria-checked="true"` === mode **DARK** actif (#382).
+
+> ⚠️ **Dépendance sprite** : les icônes sun/moon sont rendues via `<use href="/shared/icons/sprite.svg#i-sun|#i-moon">`. Le consumer **doit servir** le sprite SVG du DS à `/shared/icons/sprite.svg` (fourni par la distribution DS CSS), sinon les icônes seront vides.
 
 | Prop       | Type                  | Défaut | Description                                            |
 |------------|-----------------------|--------|-------------------------------------------------------|
-| `mode`     | `"dark" \| "light"`   | requis | Mode courant (pilote thumb + `aria-checked`)          |
+| `mode`     | `"dark" \| "light"`   | requis | Mode courant (pilote `.is-dark`, thumb + `aria-checked`) |
 | `onToggle` | `() => void`          | requis | Callback au clic                                      |
 | `label`    | `string`              | auto   | Override du label accessible (auto-généré sinon)      |
 

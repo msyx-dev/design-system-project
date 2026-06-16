@@ -9,29 +9,38 @@ describe("ThemeToggle — rendu", () => {
     expect(btn).toBeInTheDocument();
   });
 
-  it("a la classe theme-toggle", () => {
+  it("a la classe mode-switch", () => {
     render(<ThemeToggle mode="dark" onToggle={() => {}} />);
-    expect(screen.getByRole("switch")).toHaveClass("theme-toggle");
+    expect(screen.getByRole("switch")).toHaveClass("mode-switch");
   });
 
-  it("rend le track et le thumb", () => {
+  it("ajoute is-dark en mode dark, l'omet en mode light", () => {
+    const { rerender } = render(<ThemeToggle mode="dark" onToggle={() => {}} />);
+    expect(screen.getByRole("switch")).toHaveClass("is-dark");
+    rerender(<ThemeToggle mode="light" onToggle={() => {}} />);
+    expect(screen.getByRole("switch")).not.toHaveClass("is-dark");
+  });
+
+  it("rend le track, le thumb et les 2 icônes", () => {
     const { container } = render(
       <ThemeToggle mode="dark" onToggle={() => {}} />,
     );
-    expect(container.querySelector(".theme-toggle-track")).toBeInTheDocument();
-    expect(container.querySelector(".theme-toggle-thumb")).toBeInTheDocument();
+    expect(container.querySelector(".mode-switch-track")).toBeInTheDocument();
+    expect(container.querySelector(".mode-switch-thumb")).toBeInTheDocument();
+    expect(container.querySelector(".mode-switch-icon--sun")).toBeInTheDocument();
+    expect(container.querySelector(".mode-switch-icon--moon")).toBeInTheDocument();
   });
 });
 
 describe("ThemeToggle — accessibilité", () => {
-  it("aria-checked=false en mode dark (light inactif)", () => {
+  it("aria-checked=true en mode dark (#382 — DARK actif)", () => {
     render(<ThemeToggle mode="dark" onToggle={() => {}} />);
-    expect(screen.getByRole("switch")).toHaveAttribute("aria-checked", "false");
+    expect(screen.getByRole("switch")).toHaveAttribute("aria-checked", "true");
   });
 
-  it("aria-checked=true en mode light (light actif)", () => {
+  it("aria-checked=false en mode light", () => {
     render(<ThemeToggle mode="light" onToggle={() => {}} />);
-    expect(screen.getByRole("switch")).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByRole("switch")).toHaveAttribute("aria-checked", "false");
   });
 
   it("label auto en mode dark", () => {
@@ -92,7 +101,7 @@ describe("ThemeToggle — className", () => {
       <ThemeToggle mode="dark" onToggle={() => {}} className="my-toggle" />,
     );
     const btn = screen.getByRole("switch");
-    expect(btn).toHaveClass("theme-toggle");
+    expect(btn).toHaveClass("mode-switch");
     expect(btn).toHaveClass("my-toggle");
   });
 });

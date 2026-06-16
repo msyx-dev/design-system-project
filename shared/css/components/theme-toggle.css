@@ -1,34 +1,37 @@
 /* @ds-version: 2.60.0 */
-/* theme-toggle.css — Composant bascule dark/light — v2.60.0 (#319)
-   Usage : <button class="theme-toggle" role="switch" aria-checked="true">
-             <span class="theme-toggle-track">
-               <span class="theme-toggle-thumb"></span>
-             </span>
-           </button>
-   Bascule via data-mode="light" sur <html> (convention DS).
+/* theme-toggle.css — ALIAS RÉTRO-COMPAT @deprecated (#518)
+ *
+ * .theme-toggle / -track / -thumb sont DÉPRÉCIÉS. Le canonique unique de la
+ * bascule dark/light est .mode-switch (layout.css, iOS-style 56×32).
+ *
+ * Migration : remplacer
+ *   <button class="theme-toggle">        →  <button class="mode-switch">
+ *   <span class="theme-toggle-track">    →  <span class="mode-switch-track"> (+ 2 svg sun/moon)
+ *   <span class="theme-toggle-thumb">    →  <span class="mode-switch-thumb">
+ * Sémantique a11y canonique : aria-checked="true" === mode DARK actif (#382).
+ *
+ * Ces alias héritent intégralement des styles .mode-switch (layout.css) — aucune
+ * valeur n'est redéfinie ici, ils adoptent les dimensions canoniques (56×32 / 24×24).
+ *
+ * ⛔ SUPPRESSION RÉELLE PRÉVUE EN v3 (breaking). Ne plus utiliser .theme-toggle*.
+ */
 
-   #392 — .theme-toggle = variante standalone destinée au wrapper React @msyx-dev/react ;
-   sémantique IDENTIQUE à .mode-switch (canonique, layout.css, iOS-style 44px) :
-   aria-checked="true" === mode DARK actif. Le thumb est à gauche en dark (état par défaut)
-   et glisse à droite via [data-mode="light"]. Ne pas diverger ni inverser. */
+/* ===== THEME-TOGGLE (alias de .mode-switch — @deprecated, suppression v3) ===== */
 
-/* ===== THEME-TOGGLE ===== */
+/* Conteneur button : applique le set canonique .mode-switch */
 .theme-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: var(--space-xs);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition: opacity var(--duration-base) var(--ease-standard);
+  font-family: inherit;
   min-width: 44px;
   min-height: 44px;
-  border-radius: var(--radius-full);
-  transition: background-color var(--duration-base) var(--ease-standard);
-}
-
-.theme-toggle:hover {
-  background: rgba(var(--accent-rgb), 0.08);
 }
 
 .theme-toggle:focus-visible {
@@ -36,39 +39,52 @@
   outline-offset: 2px;
 }
 
+.theme-toggle[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Track canonique 56×32 */
 .theme-toggle-track {
-  width: 36px;
-  height: 20px;
-  border-radius: var(--radius-full);
-  background: var(--surface-alt);
-  border: 1px solid var(--border-color);
   position: relative;
-  transition: background-color var(--duration-base) var(--ease-standard),
-              border-color var(--duration-base) var(--ease-standard);
+  display: inline-flex;
+  align-items: center;
+  width: 56px;
+  height: 32px;
+  background: var(--surface-solid, var(--surface));
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  transition: background-color var(--duration-slow) var(--ease-standard),
+              border-color var(--duration-slow) var(--ease-standard);
   flex-shrink: 0;
 }
 
-.theme-toggle:hover .theme-toggle-track {
-  border-color: var(--border-hover);
-}
-
-.theme-toggle-thumb {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
+.theme-toggle.is-dark .theme-toggle-track {
   background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Thumb canonique 24×24 */
+.theme-toggle-thumb {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform var(--duration-base) var(--ease-spring);
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: var(--text);
+  border-radius: 50%;
+  transition: transform var(--duration-slow) var(--ease-spring),
+              background-color var(--duration-slow) var(--ease-standard);
+  z-index: 1;
 }
 
-/* Mode clair : thumb glisse à droite */
-[data-mode="light"] .theme-toggle-thumb {
-  transform: translateX(16px);
+.theme-toggle.is-dark .theme-toggle-thumb {
+  transform: translateX(24px);
+  background: var(--text-on-accent);
 }
 
-/* Track légèrement plus claire en mode light */
-[data-mode="light"] .theme-toggle-track {
-  background: var(--surface-alt);
-}
+/* Compat legacy : consumers React qui pilotent encore via [data-mode] sur <html>
+ * (avant migration vers la classe .is-dark). À retirer en v3 avec le reste. */
+[data-mode="light"] .theme-toggle-thumb { transform: none; background: var(--text); }
+[data-mode="light"] .theme-toggle-track { background: var(--surface-solid, var(--surface)); border-color: var(--border-color); }
