@@ -52,27 +52,27 @@ const MARKER_END   = '/* AUTO-GENERATED NAV SECTIONS END */';
 const NAV_PAGES_PATHS = [
   '/pages/getting-started.html',
   '/pages/fondation.html',
-  '/pages/motion.html',
   '/pages/composants.html',
   '/pages/formulaires.html',
   '/pages/navigation.html',
   '/pages/data.html',
   '/pages/feedback.html',
+  '/pages/overlays.html',
   '/pages/divers.html',
   '/pages/templates.html',
 ];
 
-// Comptes cibles par page (rendu réel, 2026-06-13).
+// Comptes cibles par page (rendu réel, 2026-06-15).
 // Le --check échoue si un compte dévie (détecte un risque de sur/sous-comptage).
 const EXPECTED_COUNTS = {
   '/pages/getting-started.html': 6,
-  '/pages/fondation.html':       13,
-  '/pages/motion.html':          3,
+  '/pages/fondation.html':       16,
   '/pages/composants.html':      12,
   '/pages/formulaires.html':     16,
   '/pages/navigation.html':      8,
   '/pages/data.html':            15,
-  '/pages/feedback.html':        19,
+  '/pages/feedback.html':        12,
+  '/pages/overlays.html':        7,
   '/pages/divers.html':          11,
   '/pages/templates.html':       6,
 };

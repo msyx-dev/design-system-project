@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlays — msyx.design</title>
+    <meta name="description" content="Modals, drawer, bottom sheet, FAB, notification center, confirm popover et tooltip du design system msyx.fr.">
+    <link rel="stylesheet" href="/shared/styles.css">
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+    <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
+</head>
+<body>
+    <header class="site-header" id="site-header"></header>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+
+<section id="modals">
+    <div class="section-header"><span class="overline">Overlays</span><h2>Modals</h2><p>Dialogues de confirmation et formulaires modaux.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="modal-preview">
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <h3>Confirmer la suppression</h3>
+                    <p>Cette action est irreversible. Le projet et toutes ses donnees seront supprimes definitivement.</p>
+                    <div class="modal-actions"><button class="btn-secondary btn-sm">Annuler</button><button class="btn-primary btn-sm btn-danger">Supprimer</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-preview">
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <h3>Nouveau projet</h3>
+                    <div class="input-group mb-md"><label class="input-label">Nom</label><input class="input" type="text" placeholder="mon-projet"></div>
+                    <div class="input-group mb-lg"><label class="input-label" for="wz-type-1">Type</label><select class="input" id="wz-type-1"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                    <div class="modal-actions"><button class="btn-ghost btn-sm">Annuler</button><button class="btn-primary btn-sm">Creer &rarr;</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="margin-top:var(--space-xl);margin-bottom:var(--space-md);">Démos interactives</h3>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <h4>Confirmation</h4>
+            <button class="btn btn-primary" data-modal-trigger="modal-confirm">Ouvrir</button>
+        </div>
+        <div class="demo-box">
+            <h4>Information</h4>
+            <button class="btn btn-secondary" data-modal-trigger="modal-info">Ouvrir</button>
+        </div>
+        <div class="demo-box">
+            <h4>Formulaire</h4>
+            <button class="btn btn-primary" data-modal-trigger="modal-form">Ouvrir</button>
+        </div>
+    </div>
+
+    <dialog id="modal-confirm" class="modal-dialog" aria-labelledby="modal-confirm-title">
+        <div class="modal-header">
+            <h3 id="modal-confirm-title">Confirmer la suppression</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" data-modal-close>Annuler</button>
+            <button class="btn btn-danger" data-modal-close>Supprimer</button>
+        </div>
+    </dialog>
+
+    <dialog id="modal-info" class="modal-dialog" aria-labelledby="modal-info-title">
+        <div class="modal-header">
+            <h3 id="modal-info-title">Information</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Votre projet a été créé avec succès. Vous pouvez maintenant ajouter des membres à l'équipe et configurer les paramètres.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" data-modal-close>Compris</button>
+        </div>
+    </dialog>
+
+    <dialog id="modal-form" class="modal-dialog" aria-labelledby="modal-form-title">
+        <div class="modal-header">
+            <h3 id="modal-form-title">Nouveau projet</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="flex-col-gap">
+                <div>
+                    <label class="input-label">Nom du projet</label>
+                    <input class="input" type="text" placeholder="Mon projet...">
+                </div>
+                <div>
+                    <label class="input-label">Description</label>
+                    <textarea class="input" rows="3" placeholder="Description..."></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" data-modal-close>Annuler</button>
+            <button class="btn btn-primary" data-modal-close>Créer</button>
+        </div>
+    </dialog>
+</section>
+
+
+<section id="drawer">
+    <div class="section-header"><span class="overline">Overlays</span><h2>Drawer</h2><p>Panneau glissant depuis le cote pour les details ou formulaires.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Drawer droite</span>
+            <div class="drawer-preview" id="drawer-demo-1">
+                <div class="p-lg">
+                    <p class="typo-small mb-md">Contenu principal de la page</p>
+                    <button class="btn-primary btn-sm" onclick="document.querySelector('#drawer-demo-1 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-1 .drawer-panel').classList.add('open');">Ouvrir le drawer &rarr;</button>
+                </div>
+                <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
+                <div class="drawer-panel">
+                    <div class="drawer-header">
+                        <h3>Details du projet</h3>
+                        <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
+                    </div>
+                    <div class="drawer-body">
+                        <div class="input-group mb-md"><label class="input-label" for="wz-recap-name">Nom</label><input class="input" type="text" value="design-system" id="wz-recap-name"></div>
+                        <div class="input-group mb-md"><label class="input-label" for="wz-type-2">Type</label><select class="input" id="wz-type-2"><option>Oneshot</option><option>POC</option><option>Projet</option></select></div>
+                        <div class="input-group"><label class="input-label">Description</label><textarea class="input" placeholder="Description du projet..."></textarea></div>
+                    </div>
+                    <div class="drawer-footer">
+                        <button class="btn-ghost btn-sm" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-preview').querySelector('.drawer-panel').classList.remove('open');">Annuler</button>
+                        <button class="btn-primary btn-sm">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Drawer avec liste</span>
+            <div class="drawer-preview" id="drawer-demo-2">
+                <div class="p-lg">
+                    <p class="typo-small mb-md">Notifications et activites</p>
+                    <button class="btn-secondary btn-sm" onclick="document.querySelector('#drawer-demo-2 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-2 .drawer-panel').classList.add('open');">Voir les notifications</button>
+                </div>
+                <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
+                <div class="drawer-panel">
+                    <div class="drawer-header">
+                        <h3>Notifications</h3>
+                        <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
+                    </div>
+                    <div class="drawer-body" style="padding:0;">
+                        <div class="list">
+                            <div class="list-item"><span class="text-success-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span><div class="list-item-content"><div class="list-item-title">Deploy reussi</div><div class="list-item-desc">design-system.msyx.fr — il y a 5 min</div></div></div>
+                            <div class="list-item"><span class="text-warning-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
+                            <div class="list-item"><span class="text-info-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="bottom-sheet">
+    <div class="section-header"><span class="overline">Overlays</span><h2>Bottom Sheet</h2><p>Panneau slide-up depuis le bas, avec handle de drag et fermeture par swipe ou overlay. Mode demo conteneurise pour simuler le rendu mobile.</p></div>
+
+    <div class="demo-grid demo-grid-3">
+
+        <!-- Demo 1 : simple -->
+        <div class="demo-box">
+            <span class="demo-label">Simple</span>
+            <div class="bottom-sheet-demo-wrap" id="bs-demo-1">
+                <div class="bs-mock-screen">
+                    <p class="typo-small mb-md text-muted">Contenu de la page</p>
+                    <button class="btn btn-primary btn-sm bottom-sheet-trigger" data-target="bs-panel-1">Ouvrir le panneau</button>
+                </div>
+                <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-1"></div>
+                <div class="bottom-sheet" id="bs-panel-1" role="dialog" aria-modal="true" aria-label="Panneau d'information">
+                    <div class="bottom-sheet-handle-wrap" data-bs-handle="bs-panel-1">
+                        <div class="bottom-sheet-handle"></div>
+                    </div>
+                    <div class="bottom-sheet-header">
+                        <h3>Information</h3>
+                        <button class="bottom-sheet-close" data-bs-close="bs-panel-1" aria-label="Fermer">&times;</button>
+                    </div>
+                    <div class="bottom-sheet-content" tabindex="0">
+                        <p style="color:var(--text-muted);line-height:1.7;">Ce bottom sheet presente une information simple. Il peut etre ferme par swipe vers le bas, clic sur le fond ou bouton de fermeture.</p>
+                        <div style="margin-top:var(--space-lg);padding:var(--space-md);background:var(--surface);border-radius:var(--radius-card);border:1px solid var(--border-color);">
+                            <p class="typo-small" style="color:var(--accent-light);">&#9432; Tip : swipez vers le bas pour fermer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 2 : avec liste -->
+        <div class="demo-box">
+            <span class="demo-label">Avec liste</span>
+            <div class="bottom-sheet-demo-wrap" id="bs-demo-2">
+                <div class="bs-mock-screen">
+                    <p class="typo-small mb-md text-muted">Choisir une action</p>
+                    <button class="btn btn-secondary btn-sm bottom-sheet-trigger" data-target="bs-panel-2">Voir les options</button>
+                </div>
+                <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-2"></div>
+                <div class="bottom-sheet" id="bs-panel-2" role="dialog" aria-modal="true" aria-label="Menu d'actions">
+                    <div class="bottom-sheet-handle-wrap" data-bs-handle="bs-panel-2">
+                        <div class="bottom-sheet-handle"></div>
+                    </div>
+                    <div class="bottom-sheet-header">
+                        <h3>Actions du projet</h3>
+                        <button class="bottom-sheet-close" data-bs-close="bs-panel-2" aria-label="Fermer">&times;</button>
+                    </div>
+                    <div class="bottom-sheet-content" tabindex="0" style="padding:0;">
+                        <div class="list">
+                            <div class="list-item bs-list-action"><span style="color:var(--accent);font-size:1rem;"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span><div class="list-item-content"><div class="list-item-title">Dupliquer</div><div class="list-item-desc">Creer une copie du projet</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-success-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span><div class="list-item-content"><div class="list-item-title">Archiver</div><div class="list-item-desc">Deplacer en archive</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-warning-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-mail"/></svg></span><div class="list-item-content"><div class="list-item-title">Partager</div><div class="list-item-desc">Inviter des collaborateurs</div></div></div>
+                            <div class="list-item bs-list-action"><span class="text-danger-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-x"/></svg></span><div class="list-item-content"><div class="list-item-title">Supprimer</div><div class="list-item-desc">Action irreversible</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo 3 : avec formulaire -->
+        <div class="demo-box">
+            <span class="demo-label">Avec formulaire</span>
+            <div class="bottom-sheet-demo-wrap" id="bs-demo-3">
+                <div class="bs-mock-screen">
+                    <p class="typo-small mb-md text-muted">Saisie rapide</p>
+                    <button class="btn btn-primary btn-sm bottom-sheet-trigger" data-target="bs-panel-3">Ajouter une tache</button>
+                </div>
+                <div class="bottom-sheet-overlay" data-bs-overlay="bs-panel-3"></div>
+                <div class="bottom-sheet" id="bs-panel-3" role="dialog" aria-modal="true" aria-label="Formulaire d'ajout">
+                    <div class="bottom-sheet-handle-wrap" data-bs-handle="bs-panel-3">
+                        <div class="bottom-sheet-handle"></div>
+                    </div>
+                    <div class="bottom-sheet-header">
+                        <h3>Nouvelle tache</h3>
+                        <button class="bottom-sheet-close" data-bs-close="bs-panel-3" aria-label="Fermer">&times;</button>
+                    </div>
+                    <div class="bottom-sheet-content" tabindex="0">
+                        <div class="flex-col-gap">
+                            <div>
+                                <label class="input-label">Titre</label>
+                                <input class="input" type="text" placeholder="Nom de la tache...">
+                            </div>
+                            <div>
+                                <label class="input-label" for="task-priority-demo">Priorite</label>
+                                <select class="input" id="task-priority-demo">
+                                    <option>P1 — Critique</option>
+                                    <option>P2 — Haute</option>
+                                    <option>P3 — Normale</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="input-label">Description</label>
+                                <textarea class="input" rows="2" placeholder="Details..."></textarea>
+                            </div>
+                            <div class="flex-row gap-sm">
+                                <button class="btn btn-secondary btn-sm flex-1" data-bs-close="bs-panel-3">Annuler</button>
+                                <button class="btn btn-primary btn-sm flex-1">Ajouter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<section id="fab">
+    <div class="section-header"><span class="overline">Overlays</span><h2>FAB — Floating Action Button</h2><p>Bouton d'action flottant en position fixe bottom-right. 3 variantes : simple, mini, et menu radial expand.</p></div>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <span class="demo-label">FAB simple</span>
+            <div class="fab-demo-area">
+                <button class="fab" aria-label="Ajouter"><span>&#43;</span></button>
+            </div>
+            <p class="demo-hint-dim">Classe <code class="code-inline">.fab</code> — icone + hover scale + glow accent</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Mini FAB</span>
+            <div class="fab-demo-area" style="align-items:flex-end;justify-content:flex-end;gap:var(--space-sm);">
+                <button class="fab fab-mini fab-success" aria-label="Valider"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
+                <button class="fab fab-mini" aria-label="Editer"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></button>
+                <button class="fab fab-mini fab-danger" aria-label="Supprimer"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></button>
+            </div>
+            <p class="demo-hint-dim">Classe <code class="code-inline">.fab-mini</code> — 40px vs 56px standard</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">FAB extended</span>
+            <div class="fab-demo-area justify-center">
+                <button class="fab fab-extended" aria-label="Nouveau projet"><span class="fab-icon">&#43;</span> Nouveau projet</button>
+            </div>
+            <p class="demo-hint-dim">Classe <code class="code-inline">.fab-extended</code> — pill avec label texte</p>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-2 mt-xl">
+        <div class="demo-box">
+            <span class="demo-label">FAB menu radial (expand)</span>
+            <div class="fab-demo-area">
+                <div class="fab-menu" id="fab-menu-demo" aria-label="Menu actions">
+                    <div class="fab-actions" aria-live="polite">
+                        <div class="fab-action">
+                            <span class="fab-action-label">Partager</span>
+                            <button class="fab-action-btn" aria-label="Partager">&#8679;</button>
+                        </div>
+                        <div class="fab-action">
+                            <span class="fab-action-label">Modifier</span>
+                            <button class="fab-action-btn" aria-label="Modifier"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></button>
+                        </div>
+                        <div class="fab-action">
+                            <span class="fab-action-label">Supprimer</span>
+                            <button class="fab-action-btn" aria-label="Supprimer" style="color:var(--danger);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></button>
+                        </div>
+                    </div>
+                    <button class="fab fab-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Ouvrir les actions">
+                        <span class="fab-icon-main">&#43;</span>
+                    </button>
+                </div>
+            </div>
+            <p class="demo-hint-dim">Clic sur le FAB pour ouvrir/fermer — icone tourne 45deg, actions en stagger</p>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">FAB fixe en production : <code class="code-inline">.fab</code> avec <code class="code-inline">position: fixed; bottom: 1.5rem; right: 1.5rem;</code>.</p>
+            <p class="demo-note">Menu expand : <code class="code-inline">.fab-menu</code> + <code class="code-inline">.fab-trigger</code> + <code class="code-inline">.fab-actions</code>. JS : <code class="code-inline">initFAB()</code> gere le toggle <code class="code-inline">.open</code>.</p>
+            <p class="demo-note">Variantes couleur : <code class="code-inline">.fab-success</code>, <code class="code-inline">.fab-danger</code>.</p>
+            <p class="demo-note-last">Fermeture automatique au clic exterieur.</p>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="notification-center">
+    <div class="section-header"><span class="overline">Overlays</span><h2>Notification Center</h2><p>Cloche avec badge compteur, panel overlay, items avec dot non-lu et actions.</p></div>
+    <div class="demo-grid demo-grid-1">
+    <div class="demo-box">
+        <span class="demo-label">Avec notifications non-lues</span>
+        <div style="display:flex;gap:var(--space-lg);align-items:flex-start;flex-wrap:wrap;">
+            <div class="notif-center">
+                <button class="notif-trigger" aria-label="Notifications">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    <span class="notif-trigger-count">3</span>
+                </button>
+                <div class="notif-panel" role="dialog" aria-label="Centre de notifications">
+                    <div class="notif-panel-header">
+                        <span class="notif-panel-title">Notifications</span>
+                        <button class="notif-mark-all">Tout marquer lu</button>
+                    </div>
+                    <div class="notif-list">
+                        <div class="notif-item notif-item--unread">
+                            <div class="notif-avatar" style="background:var(--gradient-2);">MS</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Mickael</strong> a déployé le projet <em>design-system</em></div>
+                                <div class="notif-time">il y a 2 min</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
+                        </div>
+                        <div class="notif-item notif-item--unread">
+                            <div class="notif-avatar" style="background:var(--gradient-3);">CB</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Claude</strong> a termine l&apos;issue <em>#126 Composants SaaS</em></div>
+                                <div class="notif-time">il y a 15 min</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
+                        </div>
+                        <div class="notif-item notif-item--unread">
+                            <div class="notif-avatar" style="background:var(--gradient-4);">SY</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Systeme</strong> : backup quotidien <em>termine avec succes</em></div>
+                                <div class="notif-time">il y a 1 h</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
+                        </div>
+                        <div class="notif-item">
+                            <div class="notif-avatar">AB</div>
+                            <div class="notif-content">
+                                <div class="notif-text"><strong>Admin</strong> a modifie les permissions du role <em>deployer</em></div>
+                                <div class="notif-time">hier</div>
+                            </div>
+                            <button class="notif-read-btn" aria-label="Marquer comme lu" title="Marquer comme lu"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="demo-hint-dim">Cliquez sur la cloche pour ouvrir le panel &mdash; marquer individuellement ou tout lire d&apos;un coup.</p>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Structure : <code class="code-inline">.notif-center</code> &gt; <code class="code-inline">.notif-trigger</code> (avec <code class="code-inline">.notif-trigger-count</code>) + <code class="code-inline">.notif-panel</code>.</p>
+        <p class="demo-note">Items non-lus : <code class="code-inline">.notif-item--unread</code> &mdash; point bleu automatique via CSS <code class="code-inline">::before</code>.</p>
+        <p class="demo-note-last">JS : <code class="code-inline">initNotificationCenter()</code> &mdash; fermeture au clic exterieur et Echap.</p>
+    </div>
+    </div>
+</section>
+
+
+<section id="confirm-popover">
+    <div class="section-header"><span class="overline">Overlays</span><h2>Confirm Popover</h2><p>Popover de confirmation inline avec 4 positions. Fermeture clic exterieur et Echap.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Position top (defaut)</span>
+            <div style="display:flex;justify-content:center;padding:var(--space-2xl) 0 var(--space-lg);">
+                <div class="popover-confirm-wrap">
+                    <button class="btn-danger btn-sm" data-confirm-trigger>&#128465; Supprimer</button>
+                    <div class="popover-confirm popover-confirm--top" role="dialog" aria-label="Confirmer la suppression">
+                        <div class="popover-confirm-title">Confirmer la suppression ?</div>
+                        <div class="popover-confirm-desc">Cette action est irreversible. L'element sera definitivement supprime.</div>
+                        <div class="popover-confirm-actions">
+                            <button class="btn-ghost btn-xs" data-confirm-cancel>Annuler</button>
+                            <button class="btn-danger btn-xs" data-confirm-ok>Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Position bottom</span>
+            <div style="display:flex;justify-content:center;padding:var(--space-lg) 0 var(--space-2xl);">
+                <div class="popover-confirm-wrap">
+                    <button class="btn-outline-danger btn-sm" data-confirm-trigger>Reinitialiser</button>
+                    <div class="popover-confirm popover-confirm--bottom" role="dialog" aria-label="Confirmer la reinitialisation">
+                        <div class="popover-confirm-title">Reinitialiser les parametres ?</div>
+                        <div class="popover-confirm-desc">Les preferences seront remises aux valeurs par defaut.</div>
+                        <div class="popover-confirm-actions">
+                            <button class="btn-ghost btn-xs" data-confirm-cancel>Annuler</button>
+                            <button class="btn-warning btn-xs" data-confirm-ok>Reinitialiser</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Position right</span>
+            <div style="display:flex;justify-content:flex-start;align-items:center;padding:var(--space-lg) 0;min-height:120px;">
+                <div class="popover-confirm-wrap">
+                    <button class="btn-ghost btn-sm" data-confirm-trigger>&#128193; Archiver</button>
+                    <div class="popover-confirm popover-confirm--right" role="dialog" aria-label="Confirmer l'archivage">
+                        <div class="popover-confirm-title">Archiver cet element ?</div>
+                        <div class="popover-confirm-desc">Il ne sera plus visible dans la liste active.</div>
+                        <div class="popover-confirm-actions">
+                            <button class="btn-ghost btn-xs" data-confirm-cancel>Annuler</button>
+                            <button class="btn-primary btn-xs" data-confirm-ok>Archiver</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Usage</span>
+            <p class="demo-note">Structure : <code class="code-inline">.popover-confirm-wrap</code> &gt; <code class="code-inline">[data-confirm-trigger]</code> + <code class="code-inline">.popover-confirm.popover-confirm--top/bottom/left/right</code>.</p>
+            <p class="demo-note">Interne : <code class="code-inline">.popover-confirm-title</code> + <code class="code-inline">.popover-confirm-desc</code> + <code class="code-inline">.popover-confirm-actions</code> (<code class="code-inline">[data-confirm-cancel]</code> / <code class="code-inline">[data-confirm-ok]</code>).</p>
+            <p class="demo-note-last">JS : <code class="code-inline">initConfirmPopover()</code> &mdash; toggle au clic trigger, fermeture Echap + clic exterieur.</p>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="tooltip">
+    <div class="section-header"><span class="overline">Overlays</span><h2>Tooltip &amp; Popover</h2><p>Infobulles au hover et popovers riches au clic. 4 positions disponibles.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Tooltips — position top (defaut)</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-hover">Hover moi</button><span class="tooltip" id="tt-hover" role="tooltip">Info rapide</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-settings" aria-label="Parametres"><svg class="icon"><use href="/shared/icons/sprite.svg#i-settings"/></svg></button><span class="tooltip" id="tt-settings" role="tooltip">Parametres</span></div>
+                <div class="tooltip-wrap"><button class="btn-icon" aria-describedby="tt-notif" aria-label="Notifications"><svg class="icon"><use href="/shared/icons/sprite.svg#i-bell"/></svg></button><span class="tooltip" id="tt-notif" role="tooltip">Notifications</span></div>
+                <div class="tooltip-wrap"><span class="badge badge-primary" tabindex="0" aria-describedby="tt-beta">Beta</span><span class="tooltip" id="tt-beta" role="tooltip">Version beta publique</span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Tooltips — 4 positions</span>
+            <div class="demo-row" style="gap:2.5rem; justify-content:center; padding:1.5rem 0;">
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-top">Top</button><span class="tooltip" id="tt-top" role="tooltip">Position top</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-bottom">Bottom</button><span class="tooltip tooltip--bottom" id="tt-bottom" role="tooltip">Position bottom</span></div>
+                <div class="tooltip-wrap" style="margin-left:3.5rem;"><button class="btn-secondary btn-sm" aria-describedby="tt-left">Left</button><span class="tooltip tooltip--left" id="tt-left" role="tooltip">Position left</span></div>
+                <div class="tooltip-wrap"><button class="btn-secondary btn-sm" aria-describedby="tt-right">Right</button><span class="tooltip tooltip--right" id="tt-right" role="tooltip">Position right</span></div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers — position top (defaut)</span>
+            <div class="demo-row" style="gap:2rem;">
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Plus d'info</button>
+                    <div class="popover">
+                        <h4>Deploiement automatique</h4>
+                        <p>Chaque push sur main declenche un build Docker et un reload Caddy automatique.</p>
+                        <div style="margin-top:0.8rem;"><button class="btn-primary btn-xs">En savoir plus</button></div>
+                    </div>
+                </div>
+                <div class="popover-wrap">
+                    <button class="btn-icon" aria-label="Plus d'infos" onclick="this.nextElementSibling.classList.toggle('open')"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></button>
+                    <div class="popover">
+                        <h4>Aide contextuelle</h4>
+                        <p>Cliquez sur les icones d'aide pour afficher des informations supplementaires.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Popovers — 4 positions</span>
+            <div class="demo-row" style="gap:2rem; flex-wrap:wrap; padding:1.5rem 0;">
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Top</button>
+                    <div class="popover"><h4>Popover top</h4><p>Position par defaut, s'affiche au-dessus.</p></div>
+                </div>
+                <div class="popover-wrap">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Bottom</button>
+                    <div class="popover popover--bottom"><h4>Popover bottom</h4><p>S'affiche en-dessous du declencheur.</p></div>
+                </div>
+                <div class="popover-wrap" style="margin-top:1rem;">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Left</button>
+                    <div class="popover popover--left" style="min-width:160px;"><h4>Popover left</h4><p>S'affiche a gauche.</p></div>
+                </div>
+                <div class="popover-wrap" style="margin-top:1rem;">
+                    <button class="btn-secondary btn-sm" onclick="this.nextElementSibling.classList.toggle('open')">Right</button>
+                    <div class="popover popover--right" style="min-width:160px;"><h4>Popover right</h4><p>S'affiche a droite.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+</div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>

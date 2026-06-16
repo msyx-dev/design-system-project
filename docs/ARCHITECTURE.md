@@ -26,14 +26,14 @@ index.html              # Page login auth gate
 site.html               # Hub principal + lazy-loader des 9 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration), texture grain (v2.42.0)
-  motion.html           # Motion reference page (v2.35.0) — durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques (fade-in, slide-up, scale-in, stagger, skeleton-shimmer, success-bounce) + boutons Replay + prefers-reduced-motion
+  fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration), texture grain (v2.42.0) + Motion (durations, easings, 6 patterns — rapatrié depuis motion.html #514)
   composants.html       # Cards, badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html             # 15 sections en 5 familles (v2.71.0) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats, animated-counters) · Jauges & progression (progress, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html        # Kanban, roadmap, backlog, sprint board
-  feedback.html         # Empty states, spinners, tooltips, pagination, drawer, zone banner, modals interactifs, bottom sheet, FAB
+  feedback.html         # 12 sections états — alertes, toasts, skeleton, zone banner, empty states, spinners, auto-save, upgrade prompt, pagination, comments, access-denied (#514)
+  overlays.html         # 7 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514)
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed, before/after) + Interaction (accordion, command palette, context menu, copy button, decision tree)
 shared/
   styles.css            # Agregateur CSS — 7 @import : fonts + tokens + themes + utilities + layout + components + base

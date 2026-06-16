@@ -1,7 +1,7 @@
 {
   "version": "2.75.0",
   "generated": {
-    "at": "2026-06-15T19:49:56.730Z",
+    "at": "2026-06-15T20:19:40.846Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -334,7 +334,7 @@
     {
       "name": "tooltip",
       "kind": "component",
-      "page": "feedback",
+      "page": "overlays",
       "cssClasses": [
         ".tooltip-wrap",
         ".tooltip"
@@ -366,7 +366,7 @@
     {
       "name": "modal",
       "kind": "component",
-      "page": "feedback",
+      "page": "overlays",
       "cssClasses": [
         ".modal-preview",
         ".modal-overlay",
@@ -650,7 +650,7 @@
     {
       "name": "popover",
       "kind": "component",
-      "page": "feedback",
+      "page": "overlays",
       "cssClasses": [
         ".popover-wrap",
         ".popover"
@@ -689,7 +689,7 @@
     {
       "name": "drawer",
       "kind": "component",
-      "page": "feedback",
+      "page": "overlays",
       "cssClasses": [
         ".drawer-preview",
         ".drawer-overlay",
@@ -710,7 +710,7 @@
     {
       "name": "bottom-sheet",
       "kind": "component",
-      "page": "feedback",
+      "page": "overlays",
       "cssClasses": [
         ".bottom-sheet",
         ".bottom-sheet-overlay",
@@ -736,7 +736,7 @@
         ".empty-state-icon"
       ],
       "jsInit": null,
-      "example": "<div class=\"empty-state\">\n  <div class=\"empty-state-icon\" aria-hidden=\"true\">&#128203;</div>\n  <h3>Aucun projet pour l'instant</h3>\n  <p>Commencez par créer votre premier projet.</p>\n  <button class=\"btn btn-primary\" type=\"button\">Créer un projet</button>\n</div>",
+      "example": "<div class=\"empty-state\">\n  <div class=\"empty-state-icon\" aria-hidden=\"true\">&#128203;</div>\n  <h3>Aucun projet pour l'instant</h3>\n  <p>Commencez par créer votre premier projet.</p>\n  <button class=\"btn-primary\" type=\"button\">Créer un projet</button>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/feedback.css"
@@ -837,7 +837,7 @@
     {
       "name": "fab",
       "kind": "component",
-      "page": "feedback",
+      "page": "overlays",
       "cssClasses": [
         ".fab",
         ".fab-mini",
@@ -1281,7 +1281,7 @@
     {
       "name": "motion-replay",
       "kind": "component",
-      "page": "motion",
+      "page": "fondation",
       "cssClasses": [
         ".motion-pattern",
         ".motion-demo",
