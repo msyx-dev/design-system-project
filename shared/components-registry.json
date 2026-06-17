@@ -1,7 +1,7 @@
 {
   "version": "2.76.0",
   "generated": {
-    "at": "2026-06-17T00:33:55.927Z",
+    "at": "2026-06-18T18:43:01.863Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -603,7 +603,8 @@
       "example": "<div class=\"dropdown\" data-dropdown-id=\"dd-exemple\">\n  <button class=\"dropdown-trigger btn-secondary\" type=\"button\">Sélectionner...</button>\n  <div class=\"dropdown-menu\">\n    <div class=\"dropdown-search\"><input type=\"text\" placeholder=\"Filtrer...\"></div>\n    <div class=\"dropdown-option\" data-value=\"opt1\">Option 1</div>\n    <div class=\"dropdown-option\" data-value=\"opt2\">Option 2</div>\n    <div class=\"dropdown-option\" data-value=\"opt3\">Option 3</div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/forms.css"
+        "shared/css/components/forms.css",
+        "shared/css/components/menu.css"
       ]
     },
     {
@@ -987,6 +988,7 @@
       "example": "<!-- Zone déclenchant le menu contextuel au clic droit -->\n<div data-context-menu=\"ctx-exemple\" style=\"padding:2rem;border:1px dashed var(--border);border-radius:var(--radius-sm);\">\n  Clic droit pour ouvrir le menu\n</div>\n\n<!-- Définition du menu -->\n<div class=\"context-menu\" id=\"ctx-exemple\" hidden>\n  <button class=\"context-menu-item\">&#9998; Renommer</button>\n  <button class=\"context-menu-item\">&#128275; Partager</button>\n  <hr class=\"context-menu-divider\">\n  <button class=\"context-menu-item\" style=\"color:var(--danger);\">&#128465; Supprimer</button>\n</div>",
       "react": "pending",
       "module": [
+        "shared/css/components/menu.css",
         "shared/css/components/overlays.css"
       ]
     },
@@ -1353,6 +1355,7 @@
       "example": "<div class=\"action-menu-wrap\">\n  <button class=\"action-menu-trigger\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-label=\"Actions\">&#8942;</button>\n  <div class=\"action-menu\" role=\"menu\">\n    <button class=\"action-menu-item\" role=\"menuitem\">Éditer</button>\n    <button class=\"action-menu-item danger\" role=\"menuitem\">Supprimer</button>\n  </div>\n</div>",
       "react": "pending",
       "module": [
+        "shared/css/components/menu.css",
         "shared/css/components/overlays.css"
       ]
     },
@@ -1500,6 +1503,7 @@
       "example": "<div class=\"user-menu\" data-display-name=\"Mike\" data-email=\"mike@msyx.fr\" data-authentik-user-url=\"https://auth.msyx.fr/if/user/\" data-logout-url=\"/auth/logout\"></div>",
       "react": "ported",
       "module": [
+        "shared/css/components/menu.css",
         "shared/css/components/navigation.css"
       ]
     },
@@ -2021,7 +2025,8 @@
         ".tag-input-wrap--error",
         ".tag-item",
         ".tag-item--removing",
-        ".login-authentik-icon"
+        ".login-authentik-icon",
+        ".menu"
       ],
       "jsInit": null,
       "generated": true,
@@ -2268,7 +2273,8 @@
         ".context-arrow",
         ".context-hint-icon",
         ".context-submenu",
-        ".context-target"
+        ".context-target",
+        ".danger"
       ],
       "jsInit": null,
       "generated": true,
@@ -2755,6 +2761,20 @@
         ".theme-toggle",
         ".theme-toggle-thumb",
         ".theme-toggle-track"
+      ],
+      "jsInit": null,
+      "generated": true,
+      "react": "n-a"
+    },
+    {
+      "name": "menu",
+      "kind": "module",
+      "category": "component",
+      "source_file": "shared/css/components/menu.css",
+      "cssClasses": [
+        ".menu-divider",
+        ".menu-item",
+        ".menu-item--danger"
       ],
       "jsInit": null,
       "generated": true,

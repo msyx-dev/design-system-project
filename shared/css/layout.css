@@ -346,15 +346,11 @@
 }
 
 /* Dropdown menu */
+/* @deprecated v3 → .menu. Surface (bg/border/radius/shadow) héritée menu.css (#520). */
 .header-dropdown {
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-    min-width: 180px;
-    background: var(--surface-solid);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    box-shadow: 0 8px 32px var(--overlay-black-35);
     z-index: 200;
     overflow: hidden;
     opacity: 0;
@@ -377,22 +373,11 @@
     color: var(--text);
     display: block;
 }
+/* @deprecated v3 → .menu-item. Base/divider hérités menu.css ; spécificités header ci-dessous. */
 .header-dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
     color: var(--text-muted);
     font-size: 0.82rem;
     font-weight: 500;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    width: 100%;
-    text-align: start;
-    text-decoration: none;
-    transition: background 0.15s, color 0.15s;
-    font-family: inherit;
 }
 .header-dropdown-item:hover {
     background: color-mix(in srgb, var(--accent) 7%, transparent);
@@ -410,11 +395,7 @@
     background: rgba(var(--danger-rgb), 0.09);
     color: var(--danger-light);
 }
-.header-dropdown-divider {
-    height: 1px;
-    background: var(--border-color);
-    margin: var(--space-xs) 0;
-}
+/* .header-dropdown-divider → alias .menu-divider (menu.css, @deprecated v3) */
 
 /* Notification panel (popover) */
 .header-notif-panel {

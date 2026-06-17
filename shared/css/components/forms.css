@@ -41,7 +41,8 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .dropdown-trigger.open { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
 .dropdown-trigger .arrow { transition: transform 0.2s; color: var(--text-dim); font-size: 0.8rem; }
 .dropdown-trigger.open .arrow { transform: rotate(180deg); }
-.dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.3rem; max-height: 220px; overflow-y: auto; z-index: 50; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); box-shadow: var(--shadow-lg); }
+/* @deprecated v3 → .menu. Surface (bg/border/shadow) héritée menu.css (#520). */
+.dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; border-radius: var(--radius-md); padding: 0.3rem; max-height: 220px; overflow-y: auto; z-index: 50; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); }
 .dropdown-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .dropdown-search { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.3rem; }
 .dropdown-search input { width: 100%; padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: var(--font-sans); }
