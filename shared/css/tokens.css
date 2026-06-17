@@ -234,6 +234,10 @@
     --btn-on-warning: #1a0f00;      /* AAA — 11.7:1 sur #f59e0b (noir chaud sur ambre) */
     --btn-shadow-alpha: 35%;
 
+    /* Alert messaging — alphas surchargeables par modificateur (#519) */
+    --alert-bg-alpha: 8%;       /* fond par défaut (.alert variantes) */
+    --alert-border-alpha: 20%;  /* bordure par défaut (.alert variantes) */
+
     /* === Aliases legacy — deprecated, remove in v3 === */
     --border: var(--border-color); /* deprecated, remove in v3 */
     --radius: var(--radius-card); /* deprecated, remove in v3 */

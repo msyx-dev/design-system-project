@@ -2,13 +2,20 @@
 /* alerts.css — extracted from components.css v2.35.0 */
 /* Toast positioning + animation fix v2.54.8 (#255) */
 
-/* ===== ALERT ===== */
+/* ===== ALERT (primitive messaging canonique #519) ===== */
 .alert { padding: 0.9rem 1.2rem; border-radius: var(--radius-sm); display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.88rem; line-height: 1.5; }
 .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
-.alert-info { background: color-mix(in srgb, var(--info) 8%, transparent); border: 1px solid color-mix(in srgb, var(--info) 20%, transparent); color: var(--info-light); }
-.alert-success { background: color-mix(in srgb, var(--success) 8%, transparent); border: 1px solid color-mix(in srgb, var(--success) 20%, transparent); color: var(--success-light); }
-.alert-warning { background: color-mix(in srgb, var(--warning) 8%, transparent); border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent); color: var(--warning-light); }
-.alert-danger { background: color-mix(in srgb, var(--danger) 8%, transparent); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); color: var(--danger-light); }
+.alert-info    { background: color-mix(in srgb, var(--info)    var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--info)    var(--alert-border-alpha), transparent); color: var(--info-light); }
+.alert-success { background: color-mix(in srgb, var(--success) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); color: var(--success-light); }
+.alert-warning { background: color-mix(in srgb, var(--warning) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); color: var(--warning-light); }
+.alert-danger  { background: color-mix(in srgb, var(--danger)  var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); color: var(--danger-light); }
+
+/* Slots optionnels (réutilisés par .alert--kpi et .alert--cta) */
+.alert-title   { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+.alert-body    { flex: 1; min-width: 0; }
+.alert-desc    { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+.alert-value   { font-size: 1.8rem; font-weight: 700; font-family: var(--font-display); margin-bottom: var(--space-xs); }
+.alert-actions { display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap; align-items: center; }
 
 /* ===== TOAST ===== */
 .toast {
@@ -54,17 +61,72 @@
 /* ===== TOAST-MESSAGE (wrapper texte flex grow) ===== */
 .toast-message { flex: 1; }
 
-/* ===== ZONE BANNER ===== */
-.zone-banner { padding: var(--space-lg); border-radius: var(--radius-sm); border-left: 4px solid; }
+/* ===== ALERT --kpi (ex-zone-banner #519) — bandeau état métier value display ===== */
+/* Anatomie zone-banner : padding lg, border-left 4px, bg 10% / border 30%, pas de flex icône */
+.alert--kpi {
+    --alert-bg-alpha: 10%;
+    --alert-border-alpha: 30%;
+    display: block;                  /* override du flex .alert : layout vertical KPI */
+    padding: var(--space-lg);
+    border-radius: var(--radius-sm);
+    border: none;
+    border-left: 4px solid;
+}
+.alert--kpi .alert-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: inherit; margin-bottom: var(--space-xs); }
+.alert--kpi .alert-value { margin-bottom: var(--space-xs); }
+.alert--kpi .alert-desc  { font-size: 0.85rem; color: var(--text-muted); }
+/* Coloration border-left : .alert-{variant} fournit bg/border plein ; ici on reporte la teinte sur border-left-color */
+.alert--kpi.alert-info    { border-left-color: color-mix(in srgb, var(--info)    var(--alert-border-alpha), transparent); }
+.alert--kpi.alert-success { border-left-color: color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); }
+.alert--kpi.alert-warning { border-left-color: color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); }
+.alert--kpi.alert-danger  { border-left-color: color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); }
+.alert--kpi.alert-info    .alert-title, .alert--kpi.alert-info    .alert-value { color: var(--info-light); }
+.alert--kpi.alert-success .alert-title, .alert--kpi.alert-success .alert-value { color: var(--success-light); }
+.alert--kpi.alert-warning .alert-title, .alert--kpi.alert-warning .alert-value { color: var(--warning-light); }
+.alert--kpi.alert-danger  .alert-title, .alert--kpi.alert-danger  .alert-value { color: var(--danger-light); }
+
+/* ===== ALERT --cta (ex-upgrade-banner #519, migré depuis pricing.css) — alerte actionnable ===== */
+/* Anatomie upgrade-banner : flex icône lg, padding md, bg 8% / border 30%, radius-lg */
+.alert--cta {
+    --alert-border-alpha: 30%;       /* bg reste 8% (default) ; border passe à 30% */
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+}
+.alert--cta .alert-icon { font-size: 1.6rem; line-height: 1; margin-top: 0; }
+.alert--cta .alert-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+@media (max-width: 480px) {
+    .alert--cta { flex-direction: column; }
+}
+
+/* ===== ALIAS RÉTRO-COMPAT @deprecated (#519) — SUPPRESSION v3 ===== */
+
+/* --- zone-banner → .alert.alert--kpi --- */
+/* @deprecated v2.80.0 — utiliser .alert.alert--kpi + .alert-{variant}. Suppression v3. */
+.zone-banner { --alert-bg-alpha: 10%; --alert-border-alpha: 30%; display: block; padding: var(--space-lg); border-radius: var(--radius-sm); border: none; border-left: 4px solid; }
 .zone-banner .zone-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-xs); }
 .zone-banner .zone-value { font-size: 1.8rem; font-weight: 700; font-family: var(--font-display); margin-bottom: var(--space-xs); }
 .zone-banner .zone-desc { font-size: 0.85rem; color: var(--text-muted); }
-.zone-loss { background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
-.zone-loss .zone-title, .zone-loss .zone-value { color: var(--danger-light); }
-.zone-warning { background: color-mix(in srgb, var(--warning) 10%, transparent); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
+.zone-loss    { background: color-mix(in srgb, var(--danger)  var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); }
+.zone-loss    .zone-title, .zone-loss    .zone-value { color: var(--danger-light); }
+.zone-warning { background: color-mix(in srgb, var(--warning) var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); }
 .zone-warning .zone-title, .zone-warning .zone-value { color: var(--warning-light); }
-.zone-profit { background: color-mix(in srgb, var(--success) 10%, transparent); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
-.zone-profit .zone-title, .zone-profit .zone-value { color: var(--success-light); }
-.zone-info { background: color-mix(in srgb, var(--info) 10%, transparent); border-color: color-mix(in srgb, var(--info) 30%, transparent); }
-.zone-info .zone-title, .zone-info .zone-value { color: var(--info-light); }
+.zone-profit  { background: color-mix(in srgb, var(--success) var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); }
+.zone-profit  .zone-title, .zone-profit  .zone-value { color: var(--success-light); }
+.zone-info    { background: color-mix(in srgb, var(--info)    var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--info)    var(--alert-border-alpha), transparent); }
+.zone-info    .zone-title, .zone-info    .zone-value { color: var(--info-light); }
+
+/* --- upgrade-banner → .alert.alert--cta --- */
+/* @deprecated v2.80.0 — utiliser .alert.alert--cta + .alert-{variant}. Suppression v3. */
+.upgrade-banner { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-md); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: var(--radius-lg); }
+.upgrade-banner-icon    { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
+.upgrade-banner-body    { flex: 1; min-width: 0; }
+.upgrade-banner-title   { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+.upgrade-banner-desc    { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+.upgrade-banner-actions { display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap; align-items: center; }
+.upgrade-banner--warning { background: color-mix(in srgb, var(--warning) 8%, transparent); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
+.upgrade-banner--danger  { background: color-mix(in srgb, var(--danger)  8%, transparent); border-color: color-mix(in srgb, var(--danger)  30%, transparent); }
+@media (max-width: 480px) {
+    .upgrade-banner { flex-direction: column; }
+}
 
