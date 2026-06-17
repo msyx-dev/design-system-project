@@ -208,7 +208,13 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== WIZARD MULTI-STEP ===== */
+/* ===== WIZARD MULTI-STEP =====
+ * @deprecated v3 — Les sélecteurs .wizard-step / .wizard-step-dot / .wizard-step-label
+ * sont des ALIAS rétro-compat du primitif canonique .step* de navigation.css (#521, M#44).
+ * Migrer le HTML vers .stepper/.step/.step-dot/.step-line/.step-label. Suppression v3.
+ * Layout enveloppe (.wizard, .wizard-steps, .wizard-content, .wizard-panel,
+ * .wizard-actions, .wizard-step-indicator) conservé : non couvert par le primitif.
+ */
 .wizard {
     width: 100%;
 }
@@ -218,6 +224,36 @@
     margin-bottom: var(--space-xl);
     position: relative;
 }
+.wizard-content {
+    min-height: 120px;
+}
+.wizard-panel {
+    display: none;
+    animation: wizardFadeIn 0.25s ease;
+}
+.wizard-panel.active {
+    display: block;
+}
+@keyframes wizardFadeIn {
+    from { opacity: 0; transform: translateX(12px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+.wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-color);
+}
+.wizard-actions .wizard-step-indicator {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* --- ALIAS rétro-compat .wizard-step* → primitif stepper (@deprecated, suppression v3) ---
+ * Structure/nommage du primitif .step*, apparence wizard historique préservée
+ * (ring 4px + bordure 2px) pour garantir 0 régression VR sur formulaires.html. */
 .wizard-step {
     display: flex;
     flex-direction: column;
@@ -243,7 +279,7 @@
 .wizard-step-dot {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     background: var(--surface-solid);
     border: 2px solid var(--border-color);
     display: flex;
@@ -281,31 +317,5 @@
 }
 .wizard-step.completed .wizard-step-label {
     color: var(--text);
-}
-.wizard-content {
-    min-height: 120px;
-}
-.wizard-panel {
-    display: none;
-    animation: wizardFadeIn 0.25s ease;
-}
-.wizard-panel.active {
-    display: block;
-}
-@keyframes wizardFadeIn {
-    from { opacity: 0; transform: translateX(12px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-.wizard-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border-color);
-}
-.wizard-actions .wizard-step-indicator {
-    font-size: 0.8rem;
-    color: var(--text-muted);
 }
 
