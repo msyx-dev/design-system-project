@@ -1,5 +1,5 @@
 /* @ds-version: 2.73.0 */
-/* components-core.css — Barrel essentiel : 9 modules pour consumers légers.
+/* components-core.css — Barrel essentiel : 10 modules pour consumers légers.
    Couvre ~80% des cas d'usage simples (auth gate, landing, header+nav).
    Note : le CSS du header (cloche, profil, dropdown, mode-switch) vit dans layout.css
    (socle toujours distribué par sync.sh) — navigation.css ajoute tabs/breadcrumb/stepper/bottom-nav.
