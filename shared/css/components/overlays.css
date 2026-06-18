@@ -46,16 +46,13 @@
     opacity: 0.7;
 }
 
+/* @deprecated v3 → utiliser .menu. Surface héritée du primitif menu.css (#520). */
 .context-menu {
     position: fixed;
     display: none;
-    background: var(--surface-solid);
-    border: 1px solid var(--border-hover);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-lg);
+    border-color: var(--border-hover); /* override : border plus marquée que le primitif */
+    border-radius: var(--radius-sm);   /* override : radius compact context-menu */
     z-index: 1000;
-    min-width: 180px;
-    padding: 0.3rem 0;
     animation: contextMenuIn 0.12s ease;
 }
 .context-menu.show {
@@ -66,16 +63,12 @@
     to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* @deprecated v3 → .menu-item. Base héritée de menu.css ; ci-dessous spécificités context. */
 .context-menu-item {
-    display: flex;
-    align-items: center;
     gap: 0.65rem;
     padding: 0.5rem 0.85rem;
     font-size: 0.875rem;
-    color: var(--text);
-    cursor: pointer;
-    position: relative;
-    transition: background 0.12s;
+    position: relative; /* requis pour .context-submenu */
 }
 .context-menu-item:hover {
     background: color-mix(in srgb, var(--accent) 10%, transparent);
@@ -93,11 +86,7 @@
     font-size: 0.7rem;
 }
 
-.context-menu-divider {
-    height: 1px;
-    background: var(--border-color);
-    margin: 0.3rem 0;
-}
+/* .context-menu-divider → alias .menu-divider (menu.css, @deprecated v3) */
 
 /* Sous-menu */
 .context-menu-item .context-submenu {
@@ -149,16 +138,13 @@
     border-color: color-mix(in srgb, var(--accent) 30%, transparent);
     color: var(--text);
 }
+/* @deprecated v3 → .menu + classe-conteneur de positionnement. Surface héritée menu.css (#520). */
 .action-menu {
     position: absolute;
     top: calc(100% + 6px);
     right: 0;
-    min-width: 180px;
-    background: var(--surface-solid);
-    border: 1px solid var(--border-hover);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    padding: 0.4rem 0;
+    border-color: var(--border-hover); /* override border plus marquée */
+    padding: 0.4rem 0;                 /* override padding action-menu */
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px) scale(0.97);
@@ -171,46 +157,22 @@
     visibility: visible;
     transform: translateY(0) scale(1);
 }
+/* @deprecated v3 → .menu-item. Base héritée menu.css ; spécificités action ci-dessous. */
 .action-menu-item {
-    display: flex;
-    align-items: center;
     gap: 0.6rem;
     padding: 0.5rem 1rem;
     font-size: 0.88rem;
-    color: var(--text);
-    cursor: pointer;
-    transition: background 0.15s ease;
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    font-family: inherit;
 }
-.action-menu-item:hover {
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-    color: var(--text);
-}
-.action-menu-item.danger {
-    color: var(--danger);
-}
-.action-menu-item.danger:hover {
-    background: color-mix(in srgb, var(--danger) 10%, transparent);
-}
+/* hover / .danger / .danger:hover → couverts par .menu-item (menu.css) */
 .action-menu-item .action-menu-icon {
     width: 16px;
     text-align: center;
     font-size: 0.9rem;
     flex-shrink: 0;
 }
-.action-menu-divider {
-    height: 1px;
-    background: var(--border-color);
-    margin: 0.3rem 0;
-}
+/* .action-menu-divider → alias .menu-divider (menu.css, @deprecated v3) */
 [data-mode="light"] .action-menu {
-    background: var(--surface-solid);
     border-color: var(--overlay-black-stripes);
-    box-shadow: 0 8px 32px var(--overlay-black-stripes);
 }
 
 /* ===== MODAL ===== */

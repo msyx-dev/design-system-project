@@ -2,6 +2,7 @@
 /* components.css — Barrel. Pour un sous-ensemble : components-core.css ou modules à la carte.
    Tree-shaking : shared/CONSUMER_GUIDE.md#tree-shaking */
 @import "./components/_base.css";
+@import "./components/menu.css";
 @import "./components/signature.css";
 @import "./components/brand.css";
 @import "./components/cards.css";
