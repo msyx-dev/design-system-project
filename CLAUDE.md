@@ -45,7 +45,7 @@ pages/
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, login-screen (3 variants Authentik + slots providers, v2.57.0), calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar, password-toggle (show/hide œil, v2.72.0)
   data.html         # 15 sections en 5 familles (v2.71.0) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats + note quand-utiliser, animated-counters) · Jauges & progression/Meter (progress + note famille Meter, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid + col actions sticky-end) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
-  feedback.html     # 12 sections états — alertes, tokens status, toasts, skeleton, zone banner, empty states, spinners, auto-save, upgrade prompt, pagination, comments, access-denied page 403 (v2.58.0) — #514
+  feedback.html     # 12 sections états — alertes (.alert--kpi ex-zone-banner, .alert--cta ex-upgrade-prompt #519), tokens status, toasts, skeleton, empty states, spinners, auto-save, pagination, comments, access-denied page 403 (v2.58.0) — #514
   overlays.html     # 7 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514)
   divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed) + Interaction (accordion, command palette fonctionnelle, context menu, copy button)
 shared/

@@ -1,7 +1,7 @@
 {
   "version": "2.76.0",
   "generated": {
-    "at": "2026-06-16T23:55:28.064Z",
+    "at": "2026-06-17T00:33:55.927Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -282,13 +282,21 @@
         ".alert-info",
         ".alert-success",
         ".alert-warning",
-        ".alert-danger"
+        ".alert-danger",
+        ".alert--kpi",
+        ".alert--cta",
+        ".alert-title",
+        ".alert-body",
+        ".alert-desc",
+        ".alert-value",
+        ".alert-actions"
       ],
       "jsInit": null,
-      "example": "<div class=\"alert alert-info\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#128712;</span>\n  Mise à jour disponible pour votre projet.\n</div>\n\n<div class=\"alert alert-success\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#10003;</span>\n  Déploiement réussi.\n</div>\n\n<div class=\"alert alert-warning\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#9888;</span>\n  Certificat SSL expirant dans 7 jours.\n</div>",
+      "example": "<div class=\"alert alert-info\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#128712;</span>\n  Mise à jour disponible pour votre projet.\n</div>\n\n<div class=\"alert alert--kpi alert-danger\">\n  <div class=\"alert-title\">Zone de perte</div>\n  <div class=\"alert-value\">-2 340 €</div>\n  <div class=\"alert-desc\">Marge négative sur ce segment.</div>\n</div>\n\n<div class=\"alert alert--cta alert-info\" role=\"alert\">\n  <div class=\"alert-icon\" aria-hidden=\"true\">⚡</div>\n  <div class=\"alert-body\">\n    <div class=\"alert-title\">Passez au plan Pro</div>\n    <div class=\"alert-desc\">Débloquez les exports illimités.</div>\n    <div class=\"alert-actions\"><button class=\"btn-primary btn-sm\">Voir les plans</button></div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/alerts.css"
+        "shared/css/components/alerts.css",
+        "shared/css/components/pricing.css"
       ]
     },
     {
@@ -322,10 +330,34 @@
         ".zone-loss",
         ".zone-warning",
         ".zone-profit",
-        ".zone-info"
+        ".zone-info",
+        ".zone-title",
+        ".zone-value",
+        ".zone-desc"
       ],
       "jsInit": null,
-      "example": "<div class=\"zone-banner zone-profit\">Tous les systèmes opérationnels</div>\n<div class=\"zone-banner zone-warning\">Maintenance programmée demain à 2h</div>\n<div class=\"zone-banner zone-loss\">Incident en cours — dégradation partielle</div>",
+      "example": "<div class=\"alert alert--kpi alert-danger\">\n  <div class=\"alert-title\">Zone de perte</div>\n  <div class=\"alert-value\">-2 340 €</div>\n  <div class=\"alert-desc\">Marge négative.</div>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/alerts.css"
+      ]
+    },
+    {
+      "name": "upgrade-prompt",
+      "kind": "component",
+      "page": "feedback",
+      "cssClasses": [
+        ".upgrade-banner",
+        ".upgrade-banner--warning",
+        ".upgrade-banner--danger",
+        ".upgrade-banner-icon",
+        ".upgrade-banner-body",
+        ".upgrade-banner-title",
+        ".upgrade-banner-desc",
+        ".upgrade-banner-actions"
+      ],
+      "jsInit": null,
+      "example": "<div class=\"alert alert--cta alert-info\" role=\"alert\">\n  <div class=\"alert-icon\" aria-hidden=\"true\">⚡</div>\n  <div class=\"alert-body\">\n    <div class=\"alert-title\">Passez au plan Pro</div>\n    <div class=\"alert-desc\">Débloquez les exports illimités.</div>\n    <div class=\"alert-actions\"><button class=\"btn-primary btn-sm\">Voir les plans</button></div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/alerts.css"
@@ -1348,15 +1380,7 @@
         ".pricing-feature",
         ".pricing-feature--disabled",
         ".pricing-feature-icon",
-        ".pricing-cta",
-        ".upgrade-banner",
-        ".upgrade-banner--danger",
-        ".upgrade-banner--warning",
-        ".upgrade-banner-actions",
-        ".upgrade-banner-body",
-        ".upgrade-banner-desc",
-        ".upgrade-banner-icon",
-        ".upgrade-banner-title"
+        ".pricing-cta"
       ],
       "jsInit": "initPricing",
       "example": "<div class=\"pricing-grid\">\n  <div class=\"pricing-card\">\n    <div class=\"pricing-plan\">Free</div>\n    <div class=\"pricing-price\"><span class=\"pricing-price-currency\">&euro;</span><span class=\"pricing-price-amount\" data-price-monthly=\"0\" data-price-yearly=\"0\">0</span><span class=\"pricing-price-period\">/ mois</span></div>\n    <ul class=\"pricing-features\"><li class=\"pricing-feature\">Feature A</li></ul>\n    <div class=\"pricing-cta\"><button class=\"btn-secondary\" style=\"width:100%;\">Commencer</button></div>\n  </div>\n</div>",
@@ -1827,7 +1851,8 @@
         ".toast-exit",
         ".zone-desc",
         ".zone-title",
-        ".zone-value"
+        ".zone-value",
+        ".alert-"
       ],
       "jsInit": null,
       "generated": true,

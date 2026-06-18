@@ -174,28 +174,35 @@
 
 
 <section id="zone-banner">
-    <div class="section-header"><span class="overline">Feedback</span><h2>Zone Banner</h2><p>Bandeaux colores pour indiquer un etat metier (perte, attention, rentabilite, information).</p></div>
+    <div class="section-header"><span class="overline">Feedback</span><h2>Zone Banner — KPI</h2><p>Bandeaux colores pour indiquer un etat metier (perte, attention, rentabilite, information). API canonique : <code class="code-inline">.alert.alert--kpi</code>.</p></div>
     <div class="demo-grid demo-grid-2">
-        <div class="zone-banner zone-loss">
-            <div class="zone-title">Zone de perte</div>
-            <div class="zone-value">-2 340 €</div>
-            <div class="zone-desc">Marge negative sur ce segment. Action correctrice requise.</div>
+        <div class="alert alert--kpi alert-danger">
+            <div class="alert-title">Zone de perte</div>
+            <div class="alert-value">-2 340 €</div>
+            <div class="alert-desc">Marge negative sur ce segment. Action correctrice requise.</div>
         </div>
-        <div class="zone-banner zone-warning">
-            <div class="zone-title">Zone d'attention</div>
-            <div class="zone-value">+420 €</div>
-            <div class="zone-desc">Marge faible. Surveiller l'evolution sur les 30 prochains jours.</div>
+        <div class="alert alert--kpi alert-warning">
+            <div class="alert-title">Zone d'attention</div>
+            <div class="alert-value">+420 €</div>
+            <div class="alert-desc">Marge faible. Surveiller l'evolution sur les 30 prochains jours.</div>
         </div>
-        <div class="zone-banner zone-profit">
-            <div class="zone-title">Zone rentable</div>
-            <div class="zone-value">+8 750 €</div>
-            <div class="zone-desc">Segment performant. Marge nette : 34%. Objectif atteint.</div>
+        <div class="alert alert--kpi alert-success">
+            <div class="alert-title">Zone rentable</div>
+            <div class="alert-value">+8 750 €</div>
+            <div class="alert-desc">Segment performant. Marge nette : 34%. Objectif atteint.</div>
         </div>
-        <div class="zone-banner zone-info">
-            <div class="zone-title">Zone neutre</div>
-            <div class="zone-value">0 €</div>
-            <div class="zone-desc">Donnees insuffisantes pour evaluer ce segment ce mois-ci.</div>
+        <div class="alert alert--kpi alert-info">
+            <div class="alert-title">Zone neutre</div>
+            <div class="alert-value">0 €</div>
+            <div class="alert-desc">Donnees insuffisantes pour evaluer ce segment ce mois-ci.</div>
         </div>
+    </div>
+    <div class="demo-box" style="margin-top:var(--space-md);">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Canonique : <code class="code-inline">.alert.alert--kpi</code> + variante (<code class="code-inline">.alert-danger</code> / <code class="code-inline">.alert-warning</code> / <code class="code-inline">.alert-success</code> / <code class="code-inline">.alert-info</code>).</p>
+        <p class="demo-note">Slots : <code class="code-inline">.alert-title</code> (uppercase) + <code class="code-inline">.alert-value</code> + <code class="code-inline">.alert-desc</code>.</p>
+        <p class="demo-note">Mapping semantique : loss→danger, profit→success, warning→warning, info→info.</p>
+        <p class="demo-note-last"><strong>Déprécié</strong> : <code class="code-inline">.zone-banner</code> / <code class="code-inline">.zone-loss|warning|profit|info</code> / <code class="code-inline">.zone-title|value|desc</code> restent en alias retro-compat (suppression v3).</p>
     </div>
 </section>
 
@@ -323,16 +330,16 @@
 <!-- UPGRADE PROMPT -->
 
 <section id="upgrade-prompt">
-    <div class="section-header"><span class="overline">Feedback</span><h2>Upgrade Prompt</h2><p>Bannieres d'appel a l'action pour inciter a passer a un plan superieur.</p></div>
+    <div class="section-header"><span class="overline">Feedback</span><h2>Upgrade Prompt — Alerte CTA</h2><p>Bannieres d'appel a l'action pour inciter a passer a un plan superieur. API canonique : <code class="code-inline">.alert.alert--cta</code>.</p></div>
     <div class="demo-grid demo-grid-1">
         <div class="demo-box">
-            <span class="demo-label">Banner standard</span>
-            <div class="upgrade-banner">
-                <div class="upgrade-banner-icon"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-zap"/></svg></div>
-                <div class="upgrade-banner-body">
-                    <div class="upgrade-banner-title">Passez au plan Pro</div>
-                    <div class="upgrade-banner-desc">Debloquez les exports illimites, l'API avancee et le support prioritaire. Essai gratuit 14 jours, sans engagement.</div>
-                    <div class="upgrade-banner-actions">
+            <span class="demo-label">Banner standard (info)</span>
+            <div class="alert alert--cta alert-info" role="alert">
+                <div class="alert-icon" aria-hidden="true"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-zap"/></svg></div>
+                <div class="alert-body">
+                    <div class="alert-title">Passez au plan Pro</div>
+                    <div class="alert-desc">Debloquez les exports illimites, l'API avancee et le support prioritaire. Essai gratuit 14 jours, sans engagement.</div>
+                    <div class="alert-actions">
                         <button class="btn-primary btn-sm">Voir les plans</button>
                         <button class="btn-ghost btn-sm">Plus tard</button>
                     </div>
@@ -341,12 +348,12 @@
         </div>
         <div class="demo-box" style="margin-top:var(--space-md);">
             <span class="demo-label">Banner warning (limite atteinte)</span>
-            <div class="upgrade-banner upgrade-banner--warning">
-                <div class="upgrade-banner-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></div>
-                <div class="upgrade-banner-body">
-                    <div class="upgrade-banner-title">Limite de stockage presque atteinte</div>
-                    <div class="upgrade-banner-desc">Vous avez utilise 85% de votre stockage (850 Mo / 1 Go). Augmentez votre quota pour continuer.</div>
-                    <div class="upgrade-banner-actions">
+            <div class="alert alert--cta alert-warning" role="alert">
+                <div class="alert-icon" aria-hidden="true"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></div>
+                <div class="alert-body">
+                    <div class="alert-title">Limite de stockage presque atteinte</div>
+                    <div class="alert-desc">Vous avez utilise 85% de votre stockage (850 Mo / 1 Go). Augmentez votre quota pour continuer.</div>
+                    <div class="alert-actions">
                         <button class="btn-warning btn-sm">Augmenter le quota</button>
                     </div>
                 </div>
@@ -354,12 +361,12 @@
         </div>
         <div class="demo-box" style="margin-top:var(--space-md);">
             <span class="demo-label">Banner danger (critique)</span>
-            <div class="upgrade-banner upgrade-banner--danger">
-                <div class="upgrade-banner-icon">&#128683;</div>
-                <div class="upgrade-banner-body">
-                    <div class="upgrade-banner-title">Quota depasse — service suspendu</div>
-                    <div class="upgrade-banner-desc">Votre compte a depasse la limite autorisee. Mettez a jour votre abonnement pour reactiver le service.</div>
-                    <div class="upgrade-banner-actions">
+            <div class="alert alert--cta alert-danger" role="alert">
+                <div class="alert-icon" aria-hidden="true">&#128683;</div>
+                <div class="alert-body">
+                    <div class="alert-title">Quota depasse — service suspendu</div>
+                    <div class="alert-desc">Votre compte a depasse la limite autorisee. Mettez a jour votre abonnement pour reactiver le service.</div>
+                    <div class="alert-actions">
                         <button class="btn-danger btn-sm">Mettre a jour maintenant</button>
                     </div>
                 </div>
@@ -367,8 +374,10 @@
         </div>
         <div class="demo-box" style="margin-top:var(--space-md);">
             <span class="demo-label">Usage</span>
-            <p class="demo-note">Variantes : <code class="code-inline">.upgrade-banner</code> (defaut) / <code class="code-inline">.upgrade-banner--warning</code> / <code class="code-inline">.upgrade-banner--danger</code>.</p>
-            <p class="demo-note-last">Structure : <code class="code-inline">.upgrade-banner-icon</code> + <code class="code-inline">.upgrade-banner-body</code> (<code class="code-inline">-title</code>, <code class="code-inline">-desc</code>, <code class="code-inline">-actions</code>).</p>
+            <p class="demo-note">Canonique : <code class="code-inline">.alert.alert--cta</code> + variante (<code class="code-inline">.alert-info</code> defaut / <code class="code-inline">.alert-warning</code> / <code class="code-inline">.alert-danger</code>).</p>
+            <p class="demo-note">Slots : <code class="code-inline">.alert-icon</code> + <code class="code-inline">.alert-body</code> (<code class="code-inline">.alert-title</code>, <code class="code-inline">.alert-desc</code>, <code class="code-inline">.alert-actions</code>).</p>
+            <p class="demo-note">A11y : <code class="code-inline">role="alert"</code> sur le conteneur, <code class="code-inline">aria-hidden="true"</code> sur l'icone decorative.</p>
+            <p class="demo-note-last"><strong>Déprécié</strong> : <code class="code-inline">.upgrade-banner</code> / <code class="code-inline">.upgrade-banner--warning|--danger</code> / <code class="code-inline">.upgrade-banner-icon|body|title|desc|actions</code> restent en alias retro-compat (suppression v3).</p>
         </div>
     </div>
 </section>

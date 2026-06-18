@@ -32,7 +32,7 @@ pages/
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html             # 15 sections en 5 familles (v2.71.0) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats, animated-counters) · Jauges & progression (progress, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html        # Kanban, roadmap, backlog, sprint board
-  feedback.html         # 12 sections états — alertes, toasts, skeleton, zone banner, empty states, spinners, auto-save, upgrade prompt, pagination, comments, access-denied (#514)
+  feedback.html         # 12 sections états — alertes (.alert--kpi ex-zone-banner, .alert--cta ex-upgrade-prompt #519), toasts, skeleton, empty states, spinners, auto-save, pagination, comments, access-denied (#514)
   overlays.html         # 7 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514)
   divers.html           # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks, video embed, before/after) + Interaction (accordion, command palette, context menu, copy button, decision tree)
 shared/
@@ -60,7 +60,7 @@ shared/
       avatars.css       #   .avatar, .avatar-img, .avatar-initials
       tables.css        #   TABLE, DATA GRID, COMPARISON TABLE
       lists.css         #   TREE VIEW, LIST, TIMELINE, ACCORDION, SORTABLE LIST, ACTIVITY FEED
-      alerts.css        #   .alert, .toast (+ .toast-message flex-grow v2.49.0), .zone-banner
+      alerts.css        #   .alert (+ .alert--kpi ex-zone-banner, .alert--cta ex-upgrade-banner #519), .toast (+ .toast-message flex-grow v2.49.0) — alias @deprecated .zone-banner/.upgrade-banner (suppression v3)
       overlays.css      #   TOOLTIP, CONTEXT MENU, ACTION MENU
       navigation.css    #   TABS, BREADCRUMB, STEPPER, BOTTOM NAVIGATION, SIDEBAR RAIL
       modals.css        #   MODAL, MODAL DIALOG, POPOVER, COMMAND PALETTE, DRAWER, BOTTOM SHEET, CONFIRM POPOVER

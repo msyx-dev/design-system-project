@@ -188,15 +188,8 @@
     margin-top: var(--space-sm);
 }
 
-/* ===== UPGRADE PROMPT + USAGE METER ===== */
-.upgrade-banner { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-md); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: var(--radius-lg); }
-.upgrade-banner-icon { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
-.upgrade-banner-body { flex: 1; min-width: 0; }
-.upgrade-banner-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
-.upgrade-banner-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
-.upgrade-banner-actions { display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap; align-items: center; }
-.upgrade-banner--warning { background: color-mix(in srgb, var(--warning) 8%, transparent); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
-.upgrade-banner--danger { background: color-mix(in srgb, var(--danger) 8%, transparent); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+/* ===== USAGE METER ===== */
+/* upgrade-banner migré → alerts.css (.alert--cta) #519. usage-meter conservé ici (hors scope #519). */
 .usage-meter { display: flex; flex-direction: column; gap: 0.5rem; }
 .usage-meter-header { display: flex; justify-content: space-between; align-items: center; }
 .usage-meter-label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
@@ -208,6 +201,3 @@
 .usage-fill--danger { background: var(--danger); animation: usagePulse 1.5s ease-in-out infinite; }
 @keyframes usagePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
 .usage-meter-hint { font-size: 0.76rem; color: var(--text-muted); }
-@media (max-width: 480px) {
-    .upgrade-banner { flex-direction: column; }
-}
