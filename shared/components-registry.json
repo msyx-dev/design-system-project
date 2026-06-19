@@ -1,7 +1,7 @@
 {
   "version": "2.77.0",
   "generated": {
-    "at": "2026-06-19T19:12:05.338Z",
+    "at": "2026-06-19T19:21:52.370Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2784,6 +2784,7 @@
     },
     {
       "name": "calendar",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".cal-wrap",
@@ -2795,7 +2796,13 @@
       ],
       "jsInit": "initCalendar",
       "description": "Date-picker INLINE single/range (initCalendar) : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement calendar:change. Time-picker initTimePicker() 24h/12h (#436) mutualisant .number-input-wrap + .segmented, événement time:change. JS Date natif, zéro dépendance.",
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/templates.css",
+        "shared/css/components/theming.css",
+        "shared/css/components/_a11y.css",
+        "shared/css/components/_responsive.css"
+      ]
     }
   ]
 }
