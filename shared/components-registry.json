@@ -1,7 +1,7 @@
 {
   "version": "2.77.0",
   "generated": {
-    "at": "2026-06-19T19:21:52.370Z",
+    "at": "2026-06-19T20:41:48.947Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -791,7 +791,8 @@
       "example": "<nav class=\"pagination\" aria-label=\"Pagination\">\n  <button class=\"page-btn\" aria-label=\"Page précédente\">&#8592;</button>\n  <button class=\"page-btn active\" aria-current=\"page\">1</button>\n  <button class=\"page-btn\">2</button>\n  <button class=\"page-btn\">3</button>\n  <span class=\"page-ellipsis\">…</span>\n  <button class=\"page-btn\">10</button>\n  <button class=\"page-btn\" aria-label=\"Page suivante\">&#8594;</button>\n</nav>\n<p class=\"pagination-info\">1–20 de 200 résultats</p>",
       "react": "pending",
       "module": [
-        "shared/css/components/feedback.css"
+        "shared/css/components/feedback.css",
+        "shared/css/components/tables.css"
       ]
     },
     {
@@ -2755,6 +2756,26 @@
       ]
     },
     {
+      "name": "server-data-grid",
+      "kind": "pattern",
+      "page": "data",
+      "cssClasses": [
+        ".data-grid-wrap",
+        ".data-grid-pagination",
+        ".data-grid-server-info",
+        ".data-grid-live",
+        ".pagination",
+        ".page-btn",
+        ".page-ellipsis",
+        ".pagination-info",
+        ".skeleton-table-row",
+        ".skeleton-cell"
+      ],
+      "jsInit": "initServerDataGrid",
+      "react": "pending",
+      "notes": "Démo mockée — fetch simulé setTimeout 600ms, 26 lignes. Distinct du pattern data-grid client (initDataGrids). Opt-in data-server + data-page-size."
+    },
+    {
       "name": "theme-toggle",
       "kind": "module",
       "category": "component",
@@ -2803,6 +2824,18 @@
         "shared/css/components/_a11y.css",
         "shared/css/components/_responsive.css"
       ]
+    },
+    {
+      "name": "tables",
+      "kind": "module",
+      "category": "component",
+      "source_file": "shared/css/components/tables.css",
+      "cssClasses": [
+        ".data-grid-server-footer"
+      ],
+      "jsInit": null,
+      "generated": true,
+      "react": "n-a"
     }
   ]
 }

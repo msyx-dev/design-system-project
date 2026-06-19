@@ -43,6 +43,21 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .data-grid-body tr:hover td.data-grid-col-sticky-end { background: color-mix(in srgb, var(--accent) 3%, var(--surface-solid)); }
 .data-grid-body tr.selected td.data-grid-col-sticky-end { background: color-mix(in srgb, var(--accent) 7%, var(--surface-solid)); }
 
+/* ===== SERVER DATA-GRID — loading state ===== */
+.data-grid-wrap[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+/* Cible tactile pagination scopee server-driven — exception WCAG 2.5.5 (target 44px, pas de token --touch-target) */
+@media (min-width: 1px) {
+  .data-grid-pagination .page-btn {
+    min-width: 44px; /* exception: pas de token --touch-target dans ce DS */
+    height: 44px;
+  }
+}
+
 /* ===== COMPARISON TABLE ===== */
 .comparison-table {
     width: 100%;

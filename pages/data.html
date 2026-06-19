@@ -1248,6 +1248,44 @@
 </section>
 
 
+
+<section id="server-data-grid">
+    <div class="section-header">
+        <span class="overline">Data</span>
+        <h2>Table server-driven</h2>
+    </div>
+    <div class="alert alert-info" role="note" style="margin-bottom: var(--space-4);">
+        D&eacute;mo mock&eacute;e (fetch simul&eacute; setTimeout ~600ms) &mdash; aucun backend. Opt-in&nbsp;: <code class="code-inline">data-server</code> + <code class="code-inline">data-page-size</code>.
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo</span>
+        <div class="data-grid-wrap" id="server-grid-wrap">
+            <table class="data-grid" data-server data-page-size="8" id="server-grid-demo">
+                <thead>
+                    <tr>
+                        <th>Composant</th>
+                        <th>Cat&eacute;gorie</th>
+                        <th>Statut</th>
+                        <th>Sprint</th>
+                        <th>SP</th>
+                    </tr>
+                </thead>
+                <tbody class="data-grid-body"></tbody>
+            </table>
+            <div class="data-grid-footer">
+                <span class="pagination-info data-grid-server-info"></span>
+                <nav class="pagination data-grid-pagination" role="navigation" aria-label="Pagination"></nav>
+            </div>
+            <span class="sr-only data-grid-live" aria-live="polite" aria-atomic="true"></span>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Opt-in <code class="code-inline">data-server</code> sur <code class="code-inline">.data-grid</code>, <code class="code-inline">initServerDataGrid()</code> distinct, &eacute;v&eacute;nement CustomEvent <code class="code-inline">dg:page-change</code></p>
+    </div>
+</section>
+
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
