@@ -56,7 +56,7 @@ shared/
     layout.css      # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
     components.css       # Barrel pur (v2.36.0) — 31 @import vers components/ dans l'ordre cascade
     components-core.css  # Barrel essentiel (v2.36.0) — 10 modules essentiels pour consumers légers (menu.css requis par alias forms/navigation)
-    components/          # 31 modules CSS (v2.81.0, +menu.css #520) : _base, menu (primitif .menu/.menu-item/.menu-divider #520), signature (v2.42.0), brand (v2.56.0 — wordmark + mark DS), cards, buttons, badges, theming, forms, data,
+    components/          # 31 modules CSS (v2.77.0, +menu.css #520) : _base, menu (primitif .menu/.menu-item/.menu-divider #520), signature (v2.42.0), brand (v2.56.0 — wordmark + mark DS), cards, buttons, badges, theming, forms, data,
                          #   avatars, tables, lists, alerts, overlays, navigation, modals, feedback,
                          #   interactive, templates, media, _responsive, tracker, quiz, _a11y,
                          #   pricing, notifications, motion, access-denied, theme-toggle (v2.60.0), section-header

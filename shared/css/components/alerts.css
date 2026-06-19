@@ -102,7 +102,7 @@
 /* ===== ALIAS RÉTRO-COMPAT @deprecated (#519) — SUPPRESSION v3 ===== */
 
 /* --- zone-banner → .alert.alert--kpi --- */
-/* @deprecated v2.80.0 — utiliser .alert.alert--kpi + .alert-{variant}. Suppression v3. */
+/* @deprecated v2.77.0 — utiliser .alert.alert--kpi + .alert-{variant}. Suppression v3. */
 .zone-banner { --alert-bg-alpha: 10%; --alert-border-alpha: 30%; display: block; padding: var(--space-lg); border-radius: var(--radius-sm); border: none; border-left: 4px solid; }
 .zone-banner .zone-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-xs); }
 .zone-banner .zone-value { font-size: 1.8rem; font-weight: 700; font-family: var(--font-display); margin-bottom: var(--space-xs); }
@@ -117,7 +117,7 @@
 .zone-info    .zone-title, .zone-info    .zone-value { color: var(--info-light); }
 
 /* --- upgrade-banner → .alert.alert--cta --- */
-/* @deprecated v2.80.0 — utiliser .alert.alert--cta + .alert-{variant}. Suppression v3. */
+/* @deprecated v2.77.0 — utiliser .alert.alert--cta + .alert-{variant}. Suppression v3. */
 .upgrade-banner { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-md); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: var(--radius-lg); }
 .upgrade-banner-icon    { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
 .upgrade-banner-body    { flex: 1; min-width: 0; }

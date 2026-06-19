@@ -43,7 +43,7 @@
 .chip-filter:hover { border-color: var(--accent); color: var(--text); }
 .chip-filter.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent-light); }
 .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-/* ===== CHIP-INPUT — @deprecated v2.79.0, alias rétro-compat de tag-input (suppression v3) ===== */
+/* ===== CHIP-INPUT — @deprecated v2.77.0, alias rétro-compat de tag-input (suppression v3) ===== */
 /* Canonique : .tag-input-wrap / .tag-item / .tag-input-field (shared/css/components/forms.css). */
 /* Migrer vers tag-input. Ces alias restituent le rendu canonique sans modifier le HTML consumer. */
 .chip-input-wrapper { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; padding: 0.45rem 0.7rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); min-height: 2.6rem; cursor: text; transition: border-color var(--duration-base), box-shadow var(--duration-base); }

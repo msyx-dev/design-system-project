@@ -1,5 +1,19 @@
 # Releases
 
+## 2.77.0 — 2026-06-18 — Consolidation des doublons de composants (M#44, Epic #517)
+
+> Milestone #44 **soldé** (Epic #517 clos : 5/5 sub-issues). Cinq consolidations **non-breaking** : un canonique élu par famille, les variantes concurrentes réduites à des alias `@deprecated` (suppression réelle en **v3**), tokenisation au passage. Aucun consumer cassé (alias rétro-compat). Bump synchrone des 8 sources. Churn VR géré par soft-harvest CI (chips→tag-input, wizard→stepper, messaging) ; #520 = 0 diff de rendu (surfaces flottantes fermées par défaut, tokenisation value-preserving).
+
+### Changed
+- **Bascule dark/light unique (#518)** : `.mode-switch` (`layout.css`) élu canonique. `theme-toggle.css` réduit à des alias `@deprecated`. Wrapper React `ThemeToggle` réécrit pour émettre `.mode-switch` (icônes sun/moon, `.is-dark`), `aria-checked` aligné sur le vanilla (`true === DARK`, #382). Entrées registre fusionnées, `REACT_TO_REGISTRY` remappé. **Seule issue touchant `packages/react/`** (release du package React déléguée à M#41).
+- **Consolidation stepper 2→1 (#521)** : `.wizard-step*` (`tracker.css`) → alias `@deprecated` du primitif canonique `.step*` (`navigation.css`). `.pt-step--*` / `.progress-tracker-step-*` (tracker circulaire) **hors scope** (non-steppers). API `.step*` additive (consumer `acssi-core` préservé).
+- **Saisie jetons : tag-input canonique (#522)** : `.chip-input-*` (`badges.css`) → alias `@deprecated` de `tag-input` (`forms.css`). Tokenisation `.tag-input-wrap` (`border-radius` → `--radius-sm`, `transition` → `--duration-base`). `initChips` isolé (`dataset.chipInputBound`).
+- **Unification messaging (#519)** : `.alert` canonique + modificateurs `.alert--kpi` (ex-`.zone-banner`) et `.alert--cta` (ex-`.upgrade-banner`, alerte actionnable) + slots `.alert-title/-body/-actions`. Migration `upgrade-banner` hors `pricing.css`. Tokenisation alphas (`--alert-bg-alpha` / `--alert-border-alpha`).
+- **Primitif `.menu` (#520)** : nouveau module `menu.css` (`.menu` / `.menu-item` / `.menu-divider`, token `--shadow-menu`), importé dans `components.css` + `components-core.css`. Les 6 surfaces flottantes (`.context-menu`/`.action-menu`/`.dropdown-menu`/`.header-dropdown`/`.user-menu-dropdown` + `.cmd-item`) deviennent des alias `@deprecated` — markup HTML/JS/React inchangé. Positionnement/animation conservés par-conteneur (a11y #382).
+
+### Changed (versioning)
+- **Bump synchrone 8 sources** `2.76.0 → 2.77.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json`, `package.json`. Footer `site.html` + `entrypoint.sh` alignés. Versioning **Option B** (release consolidée par le parent, 0 bump par PR) reconduit ; pré-allocation 2.77–2.81 collapsée en un minor unique.
+
 ## 2.76.0 — 2026-06-16 — Vitrine : split feedback→overlays + motion→fondation (#514) — milestone #43 soldé
 
 > Dernière issue du milestone #43 (Epic #505 **clos** : 12/12 sub-issues). Axe PAGE (vitrine HTML) — aucun CSS de rendu modifié, bump synchrone des 8 sources pour cohérence `check-versions`.
