@@ -299,54 +299,6 @@
                 </div>
             </div>
         </div>
-
-    <h3>Time picker</h3>
-    <div class="demo-grid">
-      <!-- 24h -->
-      <div>
-        <p class="demo-label">Format 24h</p>
-        <div class="time-input-wrap" data-time data-format="24" data-target="#time-24-out">
-          <div class="number-input-wrap" data-time-part="hh">
-            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
-            <input type="number" min="0" max="23" value="9" aria-label="Heures">
-            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
-          </div>
-          <span class="time-sep">:</span>
-          <div class="number-input-wrap" data-time-part="mm">
-            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
-            <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
-            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
-          </div>
-        </div>
-        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
-          <input id="time-24-out" type="text" readonly placeholder="HH:MM">
-        </div>
-      </div>
-      <!-- 12h -->
-      <div>
-        <p class="demo-label">Format 12h</p>
-        <div class="time-input-wrap" data-time data-format="12" data-target="#time-12-out">
-          <div class="number-input-wrap" data-time-part="hh">
-            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
-            <input type="number" min="1" max="12" value="9" aria-label="Heures">
-            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
-          </div>
-          <span class="time-sep">:</span>
-          <div class="number-input-wrap" data-time-part="mm">
-            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
-            <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
-            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
-          </div>
-          <div class="segmented" role="group" aria-label="AM ou PM">
-            <button type="button" class="segmented-item active" data-ampm="AM">AM</button>
-            <button type="button" class="segmented-item" data-ampm="PM">PM</button>
-          </div>
-        </div>
-        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
-          <input id="time-12-out" type="text" readonly placeholder="HH:MM AM">
-        </div>
-      </div>
-    </div>
     </div>
     <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
         <div class="demo-box">
@@ -458,6 +410,53 @@
                 </div>
             </div>
         </div>
+    </div>
+    <h3>Time picker</h3>
+    <div class="demo-grid">
+      <!-- 24h -->
+      <div>
+        <p class="demo-label">Format 24h</p>
+        <div class="time-input-wrap" data-time data-format="24" data-target="#time-24-out">
+          <div class="number-input-wrap" data-time-part="hh">
+            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
+            <input type="number" min="0" max="23" value="9" aria-label="Heures">
+            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
+          </div>
+          <span class="time-sep">:</span>
+          <div class="number-input-wrap" data-time-part="mm">
+            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
+            <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
+            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
+          </div>
+        </div>
+        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
+          <input id="time-24-out" type="text" readonly placeholder="HH:MM">
+        </div>
+      </div>
+      <!-- 12h -->
+      <div>
+        <p class="demo-label">Format 12h</p>
+        <div class="time-input-wrap" data-time data-format="12" data-target="#time-12-out">
+          <div class="number-input-wrap" data-time-part="hh">
+            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
+            <input type="number" min="1" max="12" value="9" aria-label="Heures">
+            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
+          </div>
+          <span class="time-sep">:</span>
+          <div class="number-input-wrap" data-time-part="mm">
+            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
+            <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
+            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
+          </div>
+          <div class="segmented" role="group" aria-label="AM ou PM">
+            <button type="button" class="segmented-item active" data-ampm="AM">AM</button>
+            <button type="button" class="segmented-item" data-ampm="PM">PM</button>
+          </div>
+        </div>
+        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
+          <input id="time-12-out" type="text" readonly placeholder="HH:MM AM">
+        </div>
+      </div>
     </div>
 </section>
 
