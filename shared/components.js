@@ -1051,6 +1051,186 @@ function initDataGrids() {
 }
 window.__initDataGrids = initDataGrids;
 
+// ===== SERVER DATA-GRID — M#40 (#434) =====
+// 26 lignes de données fictives pour la démo mockée
+var MOCK_SERVER_ROWS = [
+    { composant: 'Button',          categorie: 'Action',     statut: 'Stable',      sprint: 'S01', sp: 2 },
+    { composant: 'Badge',           categorie: 'Indicateur', statut: 'Stable',      sprint: 'S02', sp: 1 },
+    { composant: 'Card',            categorie: 'Surface',    statut: 'Stable',      sprint: 'S03', sp: 3 },
+    { composant: 'Modal',           categorie: 'Overlay',    statut: 'Stable',      sprint: 'S04', sp: 5 },
+    { composant: 'Toast',           categorie: 'Feedback',   statut: 'Stable',      sprint: 'S04', sp: 3 },
+    { composant: 'DataGrid',        categorie: 'Data',       statut: 'Stable',      sprint: 'S06', sp: 8 },
+    { composant: 'Chip',            categorie: 'Input',      statut: 'Stable',      sprint: 'S06', sp: 2 },
+    { composant: 'Rating',          categorie: 'Input',      statut: 'Stable',      sprint: 'S07', sp: 3 },
+    { composant: 'Tabs',            categorie: 'Navigation', statut: 'Stable',      sprint: 'S07', sp: 4 },
+    { composant: 'Accordion',       categorie: 'Layout',     statut: 'Stable',      sprint: 'S08', sp: 3 },
+    { composant: 'Slider',          categorie: 'Input',      statut: 'Stable',      sprint: 'S09', sp: 5 },
+    { composant: 'NumberInput',     categorie: 'Input',      statut: 'Stable',      sprint: 'S10', sp: 2 },
+    { composant: 'OTPInput',        categorie: 'Input',      statut: 'Stable',      sprint: 'S11', sp: 4 },
+    { composant: 'TagInput',        categorie: 'Input',      statut: 'Stable',      sprint: 'S12', sp: 3 },
+    { composant: 'TreeView',        categorie: 'Data',       statut: 'Stable',      sprint: 'S13', sp: 5 },
+    { composant: 'BottomSheet',     categorie: 'Overlay',    statut: 'Stable',      sprint: 'S14', sp: 4 },
+    { composant: 'CommandPalette',  categorie: 'Navigation', statut: 'Stable',      sprint: 'S15', sp: 8 },
+    { composant: 'ContextMenu',     categorie: 'Overlay',    statut: 'Stable',      sprint: 'S15', sp: 3 },
+    { composant: 'RiskMatrix',      categorie: 'Data',       statut: 'Stable',      sprint: 'S16', sp: 8 },
+    { composant: 'UsageMeter',      categorie: 'Indicateur', statut: 'Stable',      sprint: 'S16', sp: 3 },
+    { composant: 'Alert--kpi',      categorie: 'Feedback',   statut: 'Nouveau',     sprint: 'S17', sp: 3 },
+    { composant: 'Alert--cta',      categorie: 'Feedback',   statut: 'Nouveau',     sprint: 'S17', sp: 2 },
+    { composant: 'Menu',            categorie: 'Surface',    statut: 'Nouveau',     sprint: 'S17', sp: 5 },
+    { composant: 'Stepper',         categorie: 'Navigation', statut: 'Consolidé',   sprint: 'S17', sp: 3 },
+    { composant: 'ModeSwitch',      categorie: 'Action',     statut: 'Consolidé',   sprint: 'S17', sp: 2 },
+    { composant: 'ServerDataGrid',  categorie: 'Data',       statut: 'En cours',    sprint: 'S18', sp: 5 }
+];
+
+function initServerDataGrid() {
+    document.querySelectorAll('.data-grid[data-server]').forEach(function(grid) {
+        if (grid.dataset.bound) return;
+        grid.dataset.bound = '1';
+
+        var wrap = grid.closest('.data-grid-wrap');
+        var bodyEl = grid.querySelector('.data-grid-body');
+        var pagerEl = wrap ? wrap.querySelector('.data-grid-pagination') : null;
+        var infoEl = wrap ? wrap.querySelector('.data-grid-server-info') : null;
+        var liveEl = wrap ? wrap.querySelector('.data-grid-live') : null;
+        if (!bodyEl) return;
+
+        var pageSize = parseInt(grid.dataset.pageSize, 10) || 8;
+        var state = { page: 1, pageSize: pageSize, total: MOCK_SERVER_ROWS.length, loading: false };
+
+        function setBusy(on) {
+            state.loading = on;
+            if (wrap) wrap.setAttribute('aria-busy', on ? 'true' : 'false');
+        }
+
+        function announce(msg) {
+            if (liveEl) {
+                liveEl.textContent = '';
+                // forcer un reflow pour déclencher l'annonce ARIA
+                void liveEl.offsetHeight;
+                liveEl.textContent = msg;
+            }
+        }
+
+        function renderSkeleton() {
+            var cols = grid.querySelectorAll('thead th').length || 5;
+            var rows = '';
+            for (var i = 0; i < state.pageSize; i++) {
+                rows += '<tr aria-hidden="true"><td colspan="' + cols + '">'
+                    + '<div class="skeleton-table-row"><div class="skeleton-cell"></div></div>'
+                    + '</td></tr>';
+            }
+            bodyEl.innerHTML = rows;
+        }
+
+        function fetchPage(page, cb) {
+            var start = (page - 1) * state.pageSize;
+            var slice = MOCK_SERVER_ROWS.slice(start, start + state.pageSize);
+            setTimeout(function() { cb(slice); }, 600);
+        }
+
+        function renderRows(rows) {
+            if (!rows.length) {
+                bodyEl.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Aucun résultat</td></tr>';
+                return;
+            }
+            bodyEl.innerHTML = rows.map(function(r) {
+                return '<tr>'
+                    + '<td>' + escapeHTML(r.composant) + '</td>'
+                    + '<td>' + escapeHTML(r.categorie) + '</td>'
+                    + '<td>' + escapeHTML(r.statut) + '</td>'
+                    + '<td>' + escapeHTML(r.sprint) + '</td>'
+                    + '<td>' + escapeHTML(String(r.sp)) + '</td>'
+                    + '</tr>';
+            }).join('');
+        }
+
+        function updateInfo() {
+            if (!infoEl) return;
+            var start = (state.page - 1) * state.pageSize + 1;
+            var end = Math.min(state.page * state.pageSize, state.total);
+            infoEl.textContent = start + '–' + end + ' sur ' + state.total;
+        }
+
+        function renderPager() {
+            if (!pagerEl) return;
+            var totalPages = Math.ceil(state.total / state.pageSize);
+            var cur = state.page;
+            var pages = [];
+
+            // Algorithme ellipsis : affiche max 7 boutons
+            if (totalPages <= 7) {
+                for (var i = 1; i <= totalPages; i++) pages.push(i);
+            } else if (cur <= 4) {
+                pages = [1, 2, 3, 4, 5, '...', totalPages];
+            } else if (cur >= totalPages - 3) {
+                pages = [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+            } else {
+                pages = [1, '...', cur - 1, cur, cur + 1, '...', totalPages];
+            }
+
+            var html = '<button class="page-btn" data-page="' + (cur - 1) + '" aria-label="Page précédente"'
+                + (cur === 1 ? ' disabled' : '') + '>&lsaquo;</button>';
+
+            pages.forEach(function(p) {
+                if (p === '...') {
+                    html += '<span class="page-ellipsis" aria-hidden="true">&hellip;</span>';
+                } else {
+                    var isCur = p === cur;
+                    html += '<button class="page-btn' + (isCur ? ' active' : '') + '"'
+                        + ' data-page="' + p + '"'
+                        + (isCur ? ' aria-current="page"' : '')
+                        + ' aria-label="Page ' + p + '"'
+                        + (isCur ? ' disabled' : '') + '>'
+                        + p + '</button>';
+                }
+            });
+
+            html += '<button class="page-btn" data-page="' + (cur + 1) + '" aria-label="Page suivante"'
+                + (cur === totalPages ? ' disabled' : '') + '>&rsaquo;</button>';
+
+            pagerEl.innerHTML = html;
+
+            // Délégation clic pager — dataset.bound dédié
+            if (!pagerEl.dataset.bound) {
+                pagerEl.dataset.bound = '1';
+                pagerEl.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.page-btn');
+                    if (!btn || btn.disabled || state.loading) return;
+                    var targetPage = parseInt(btn.dataset.page, 10);
+                    if (isNaN(targetPage)) return;
+                    goToPage(targetPage);
+                });
+            }
+        }
+
+        function goToPage(page) {
+            var totalPages = Math.ceil(state.total / state.pageSize);
+            page = Math.max(1, Math.min(page, totalPages));
+            if (page === state.page && state.page !== 1) return;
+            state.page = page;
+            setBusy(true);
+            renderSkeleton();
+
+            grid.dispatchEvent(new CustomEvent('dg:page-change', {
+                bubbles: true,
+                detail: { page: page, pageSize: state.pageSize, total: state.total }
+            }));
+
+            fetchPage(page, function(rows) {
+                renderRows(rows);
+                renderPager();
+                updateInfo();
+                setBusy(false);
+                announce('Page ' + page + ' chargée, ' + rows.length + ' lignes affichées.');
+            });
+        }
+
+        // Montage initial
+        goToPage(1);
+    });
+}
+window.__initServerDataGrid = initServerDataGrid;
+
 function initCarousel() {
     document.querySelectorAll('.carousel').forEach(function(carousel) {
         if (carousel.dataset.bound) return;
@@ -4233,6 +4413,7 @@ function reinitAll() {
     initActionMenu();
     initSidebarRail();
     initRiskMatrix();
+    initServerDataGrid();
     initAutoSave();
     initComments();
     initAuthFlows();
