@@ -4404,6 +4404,10 @@ window.__initUserMenu = initUserMenu;
 
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
+    // initServerDataGrid AVANT initComponents (qui appelle initDataGrids) :
+    // garantit que dataset.bound est posé par initServerDataGrid sur les grids [data-server]
+    // avant que initDataGrids ne les capture avec le sélecteur .data-grid non filtré.
+    initServerDataGrid();
     initComponents();
     initPricing();
     initNotificationCenter();
@@ -4413,7 +4417,6 @@ function reinitAll() {
     initActionMenu();
     initSidebarRail();
     initRiskMatrix();
-    initServerDataGrid();
     initAutoSave();
     initComments();
     initAuthFlows();
