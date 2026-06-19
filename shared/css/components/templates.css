@@ -114,3 +114,15 @@
 .cal-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
 .cal-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
+/* Cal — jours hors-mois non cliquables */
+.cal-day[aria-disabled="true"] { cursor: default; }
+.cal-day[aria-disabled="true"]:hover { background: transparent; }
+
+/* Cal — hit-area 44px touch target (a11y WCAG 2.5.5) */
+.cal-nav button { min-width: 44px; min-height: 44px; }
+
+/* ===== TIME PICKER ===== */
+.time-input-wrap { display: inline-flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+.time-input-wrap .time-sep { font-family: var(--font-display); font-weight: 600; color: var(--text-muted); padding: 0 0.2rem; }
+.time-input-wrap .number-input-wrap { width: auto; }
+

@@ -4222,8 +4222,379 @@ function initUserMenu(rootOrSelector, options) {
 }
 window.__initUserMenu = initUserMenu;
 
+
+function initCalendar() {
+  var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+  function fmtShort(d) {
+    var dd = String(d.getDate()).padStart(2,'0');
+    var mm = String(d.getMonth()+1).padStart(2,'0');
+    return dd+'/'+mm+'/'+d.getFullYear();
+  }
+
+  function fmtLong(d) {
+    var months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    return String(d.getDate()).padStart(2,'0')+' '+months[d.getMonth()];
+  }
+
+  function fmtLongFull(d) {
+    var months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    return String(d.getDate()).padStart(2,'0')+' '+months[d.getMonth()]+' '+d.getFullYear();
+  }
+
+  function sameDay(a, b) {
+    return a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  }
+
+  function isBetween(d, start, end) {
+    if (!start || !end) return false;
+    var t = d.getTime(), s = start.getTime(), e = end.getTime();
+    return t > s && t < e;
+  }
+
+  document.querySelectorAll('.cal-wrap[data-calendar]').forEach(function(wrap) {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+
+    var mode = wrap.dataset.calendar; // 'single' | 'range'
+    var targetSel = wrap.dataset.target;
+    var target = targetSel ? document.querySelector(targetSel) : null;
+    var rangeDisplay = wrap.querySelector('[data-cal-range-display]');
+    var rangeStartEl = rangeDisplay ? rangeDisplay.querySelector('[data-range-start]') : null;
+    var rangeEndEl = rangeDisplay ? rangeDisplay.querySelector('[data-range-end]') : null;
+    var h4 = wrap.querySelector('.cal-header h4');
+    var grid = wrap.querySelector('.cal-grid');
+    if (!grid) return;
+
+    // Parse data-cal-ref="YYYY-MM" ou fallback
+    var viewYear, viewMonth;
+    if (wrap.dataset.calRef) {
+      var parts = wrap.dataset.calRef.split('-');
+      viewYear = parseInt(parts[0], 10);
+      viewMonth = parseInt(parts[1], 10) - 1;
+    } else {
+      var now = new Date();
+      viewYear = now.getFullYear();
+      viewMonth = now.getMonth();
+    }
+
+    var selected = null;
+    var rangeStart = null, rangeEnd = null;
+    var focusedDate = null;
+
+    function render(y, m) {
+      viewYear = y; viewMonth = m;
+
+      if (h4) {
+        h4.textContent = MONTHS[m]+' '+y;
+      }
+
+      var today = new Date();
+      var firstDay = new Date(y, m, 1);
+      var offset = (firstDay.getDay() + 6) % 7; // lundi=0
+      var nbDays = new Date(y, m+1, 0).getDate();
+      var prevMonthDays = new Date(y, m, 0).getDate();
+
+      grid.innerHTML = '';
+
+      var row = null;
+      for (var cell = 0; cell < 42; cell++) {
+        if (cell % 7 === 0) {
+          row = document.createElement('div');
+          row.setAttribute('role','row');
+          grid.appendChild(row);
+        }
+
+        var dayNum = cell - offset + 1;
+        var dateObj, isOtherMonth;
+
+        if (cell < offset) {
+          // Mois précédent
+          var d = prevMonthDays - offset + cell + 1;
+          dateObj = new Date(y, m-1, d);
+          isOtherMonth = true;
+        } else if (dayNum <= nbDays) {
+          dateObj = new Date(y, m, dayNum);
+          isOtherMonth = false;
+        } else {
+          // Mois suivant
+          dateObj = new Date(y, m+1, dayNum - nbDays);
+          isOtherMonth = true;
+        }
+
+        var div = document.createElement('div');
+        div.setAttribute('role','gridcell');
+        div.className = 'cal-day';
+        div.textContent = dateObj.getDate();
+
+        var yyyy = dateObj.getFullYear();
+        var mm2 = String(dateObj.getMonth()+1).padStart(2,'0');
+        var dd2 = String(dateObj.getDate()).padStart(2,'0');
+        div.dataset.date = yyyy+'-'+mm2+'-'+dd2;
+
+        // aria-label complet
+        var mthNames = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        div.setAttribute('aria-label', String(dateObj.getDate())+' '+
+          mthNames[dateObj.getMonth()]+' '+dateObj.getFullYear());
+
+        if (isOtherMonth) {
+          div.classList.add('other-month');
+          div.setAttribute('aria-disabled','true');
+          div.setAttribute('tabindex','-1');
+        } else {
+          if (sameDay(dateObj, today)) {
+            div.classList.add('today');
+            div.setAttribute('aria-current','date');
+          }
+          if (mode === 'single' && sameDay(dateObj, selected)) {
+            div.classList.add('selected');
+            div.setAttribute('aria-selected','true');
+          }
+          if (mode === 'range') {
+            if (sameDay(dateObj, rangeStart)) {
+              div.classList.add('range-start','selected');
+              div.setAttribute('aria-selected','true');
+            } else if (sameDay(dateObj, rangeEnd)) {
+              div.classList.add('range-end','selected');
+              div.setAttribute('aria-selected','true');
+            } else if (rangeStart && rangeEnd && isBetween(dateObj, rangeStart, rangeEnd)) {
+              div.classList.add('range');
+            }
+          }
+          div.setAttribute('tabindex','-1');
+        }
+
+        row.appendChild(div);
+      }
+
+      // Roving tabindex : 1 seul tabindex=0
+      var focused = focusedDate ? grid.querySelector('[data-date="'+focusedDate+'"]') : null;
+      if (focused && focused.getAttribute('aria-disabled') !== 'true') {
+        focused.setAttribute('tabindex','0');
+      } else {
+        // Par défaut : today ou 1er du mois
+        var todayCell = grid.querySelector('.today');
+        var firstCell = grid.querySelector('.cal-day:not(.other-month)');
+        var defaultCell = todayCell || firstCell;
+        if (defaultCell) defaultCell.setAttribute('tabindex','0');
+      }
+    }
+
+    function selectDate(dateObj) {
+      if (mode === 'single') {
+        selected = dateObj;
+        if (target) target.value = fmtShort(dateObj);
+        wrap.dispatchEvent(new CustomEvent('calendar:change', { bubbles:true, detail:{ date: dateObj } }));
+      } else {
+        // range
+        if (!rangeStart || (rangeStart && rangeEnd)) {
+          // Reset — nouveau 1er clic
+          rangeStart = dateObj;
+          rangeEnd = null;
+        } else if (dateObj < rangeStart) {
+          // Clic avant start → réinitialise
+          rangeStart = dateObj;
+          rangeEnd = null;
+        } else {
+          rangeEnd = dateObj;
+          wrap.dispatchEvent(new CustomEvent('calendar:change', { bubbles:true, detail:{ start: rangeStart, end: rangeEnd } }));
+        }
+        // Mettre à jour display
+        if (rangeStartEl) rangeStartEl.textContent = rangeStart ? fmtLong(rangeStart) : '—';
+        if (rangeEndEl) rangeEndEl.textContent = rangeEnd ? fmtLongFull(rangeEnd) : '—';
+      }
+      render(viewYear, viewMonth);
+    }
+
+    // Clic
+    grid.addEventListener('click', function(e) {
+      var cell = e.target.closest('[data-date]');
+      if (!cell || cell.getAttribute('aria-disabled') === 'true') return;
+      var parts = cell.dataset.date.split('-').map(Number);
+      var dateObj = new Date(parts[0], parts[1]-1, parts[2]);
+      focusedDate = cell.dataset.date;
+      selectDate(dateObj);
+    });
+
+    // Clavier
+    grid.addEventListener('keydown', function(e) {
+      var current = grid.querySelector('[tabindex="0"]');
+      if (!current || !current.dataset.date) return;
+      var parts = current.dataset.date.split('-').map(Number);
+      var d = new Date(parts[0], parts[1]-1, parts[2]);
+      var handled = false;
+
+      if (e.key === 'ArrowLeft') { d.setDate(d.getDate()-1); handled=true; }
+      else if (e.key === 'ArrowRight') { d.setDate(d.getDate()+1); handled=true; }
+      else if (e.key === 'ArrowUp') { d.setDate(d.getDate()-7); handled=true; }
+      else if (e.key === 'ArrowDown') { d.setDate(d.getDate()+7); handled=true; }
+      else if (e.key === 'Home') {
+        // début semaine lundi
+        var day = d.getDay();
+        var diff = (day === 0) ? -6 : 1 - day;
+        d.setDate(d.getDate() + diff);
+        handled=true;
+      }
+      else if (e.key === 'End') {
+        var day2 = d.getDay();
+        d.setDate(d.getDate() + (day2 === 0 ? 0 : 7 - day2));
+        handled=true;
+      }
+      else if (e.key === 'PageUp') { d.setMonth(d.getMonth()-1); handled=true; }
+      else if (e.key === 'PageDown') { d.setMonth(d.getMonth()+1); handled=true; }
+      else if (e.key === 'Enter' || e.key === ' ') {
+        if (current.getAttribute('aria-disabled') !== 'true') {
+          focusedDate = current.dataset.date;
+          selectDate(new Date(parts[0], parts[1]-1, parts[2]));
+        }
+        e.preventDefault(); return;
+      }
+      else if (e.key === 'Escape') { return; } // no-op INLINE
+
+      if (handled) {
+        e.preventDefault();
+        var yy = d.getFullYear(), mmm = d.getMonth(), ddd = d.getDate();
+        var key = yy+'-'+String(mmm+1).padStart(2,'0')+'-'+String(ddd).padStart(2,'0');
+        focusedDate = key;
+        // Changer de mois si nécessaire
+        if (mmm !== viewMonth || yy !== viewYear) {
+          render(yy, mmm);
+        } else {
+          // Juste mettre à jour tabindex
+          grid.querySelectorAll('[data-date]').forEach(function(c){ c.setAttribute('tabindex','-1'); });
+          var target2 = grid.querySelector('[data-date="'+key+'"]');
+          if (target2) { target2.setAttribute('tabindex','0'); target2.focus(); }
+          return;
+        }
+        var target2 = grid.querySelector('[data-date="'+key+'"]');
+        if (target2) { target2.setAttribute('tabindex','0'); target2.focus(); }
+      }
+    });
+
+    // Boutons nav
+    var btnPrev = wrap.querySelector('.cal-prev');
+    var btnNext = wrap.querySelector('.cal-next');
+    if (btnPrev) {
+      btnPrev.addEventListener('click', function() {
+        var m = viewMonth - 1, y = viewYear;
+        if (m < 0) { m = 11; y--; }
+        focusedDate = null;
+        render(y, m);
+        btnPrev.focus();
+      });
+    }
+    if (btnNext) {
+      btnNext.addEventListener('click', function() {
+        var m = viewMonth + 1, y = viewYear;
+        if (m > 11) { m = 0; y++; }
+        focusedDate = null;
+        render(y, m);
+        btnNext.focus();
+      });
+    }
+
+    // Rendu initial
+    render(viewYear, viewMonth);
+  });
+}
+window.__initCalendar = initCalendar;
+
+function initTimePicker() {
+  document.querySelectorAll('.time-input-wrap[data-time]').forEach(function(wrap) {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+
+    var fmt = wrap.dataset.format || '24';
+    var targetSel = wrap.dataset.target;
+    var target = targetSel ? document.querySelector(targetSel) : null;
+    var period = 'AM';
+
+    function getPartValue(part) {
+      var partWrap = wrap.querySelector('[data-time-part="'+part+'"]');
+      if (!partWrap) return 0;
+      var inp = partWrap.querySelector('input[type="number"]');
+      return inp ? (parseInt(inp.value, 10) || 0) : 0;
+    }
+
+    function sync() {
+      var hh = String(getPartValue('hh')).padStart(2,'0');
+      var mm = String(getPartValue('mm')).padStart(2,'0');
+      if (target) {
+        target.value = fmt === '12' ? hh+':'+mm+' '+period : hh+':'+mm;
+      }
+      wrap.dispatchEvent(new CustomEvent('time:change', { bubbles:true, detail:{
+        hours: getPartValue('hh'),
+        minutes: getPartValue('mm'),
+        period: fmt === '12' ? period : null
+      }}));
+    }
+
+    // Gestion des boutons +/- pour chaque number-input-wrap
+    wrap.querySelectorAll('[data-time-part]').forEach(function(partWrap) {
+      if (partWrap.dataset.timeBound) return;
+      partWrap.dataset.timeBound = '1';
+
+      var inp = partWrap.querySelector('input[type="number"]');
+      var btnDec = partWrap.querySelector('.number-dec');
+      var btnInc = partWrap.querySelector('.number-inc');
+      if (!inp) return;
+
+      var min = parseInt(inp.min, 10);
+      var max = parseInt(inp.max, 10);
+      var step = parseInt(inp.step, 10) || 1;
+
+      function clamp(val) {
+        return Math.min(max, Math.max(min, val));
+      }
+
+      function setValue(val) {
+        inp.value = clamp(val);
+        if (btnDec) btnDec.disabled = inp.value <= min;
+        if (btnInc) btnInc.disabled = inp.value >= max;
+        sync();
+      }
+
+      if (btnDec) btnDec.addEventListener('click', function() {
+        setValue(parseInt(inp.value, 10) - step);
+      });
+      if (btnInc) btnInc.addEventListener('click', function() {
+        setValue(parseInt(inp.value, 10) + step);
+      });
+      inp.addEventListener('change', function() {
+        setValue(parseInt(inp.value, 10) || 0);
+      });
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowUp') { e.preventDefault(); setValue(parseInt(inp.value, 10) + step); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); setValue(parseInt(inp.value, 10) - step); }
+      });
+
+      // Init button state
+      var initVal = parseInt(inp.value, 10) || 0;
+      if (btnDec) btnDec.disabled = initVal <= min;
+      if (btnInc) btnInc.disabled = initVal >= max;
+    });
+
+    // Segmented AM/PM
+    wrap.querySelectorAll('[data-ampm]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        period = btn.dataset.ampm;
+        wrap.querySelectorAll('[data-ampm]').forEach(function(b){
+          b.classList.toggle('active', b.dataset.ampm === period);
+        });
+        sync();
+      });
+    });
+
+    // Sync initiale
+    sync();
+  });
+}
+window.__initTimePicker = initTimePicker;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
+    initCalendar();
+    initTimePicker();
     initComponents();
     initPricing();
     initNotificationCenter();

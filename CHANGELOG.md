@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- Calendrier interactif INLINE (#432) — `initCalendar()` : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement `calendar:change`. Time-picker `initTimePicker()` 24h/12h (#436) mutualisant `.number-input-wrap` + `.segmented`, événement `time:change`. JS Date natif, zéro dépendance.
+
 ### Fixed
 - **Header `/me.json` 404 sur la vitrine (#531)** : ajout d'un `me.json` de démo à la racine (servi par Caddy `file_server`) → le bootstrap session de `site.html` reçoit `200` au lieu de `404`, supprimant la seule erreur console du DS. Bonus : la zone utilisateur du header (avatar + dropdown) est désormais peuplée d'un user de démo (showcase). Le bootstrap gérait déjà le `null` gracieusement ; le 404 était un log réseau navigateur insuppressible par JS. Aucun impact consumer (`me.json` non distribué par `sync.sh` ; les consumers M3 exposent `/me.json` via le `handle` Caddy/Authentik qui prime). (#531)
 

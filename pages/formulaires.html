@@ -299,6 +299,54 @@
                 </div>
             </div>
         </div>
+
+    <h3>Time picker</h3>
+    <div class="demo-grid">
+      <!-- 24h -->
+      <div>
+        <p class="demo-label">Format 24h</p>
+        <div class="time-input-wrap" data-time data-format="24" data-target="#time-24-out">
+          <div class="number-input-wrap" data-time-part="hh">
+            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
+            <input type="number" min="0" max="23" value="9" aria-label="Heures">
+            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
+          </div>
+          <span class="time-sep">:</span>
+          <div class="number-input-wrap" data-time-part="mm">
+            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
+            <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
+            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
+          </div>
+        </div>
+        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
+          <input id="time-24-out" type="text" readonly placeholder="HH:MM">
+        </div>
+      </div>
+      <!-- 12h -->
+      <div>
+        <p class="demo-label">Format 12h</p>
+        <div class="time-input-wrap" data-time data-format="12" data-target="#time-12-out">
+          <div class="number-input-wrap" data-time-part="hh">
+            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
+            <input type="number" min="1" max="12" value="9" aria-label="Heures">
+            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
+          </div>
+          <span class="time-sep">:</span>
+          <div class="number-input-wrap" data-time-part="mm">
+            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
+            <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
+            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
+          </div>
+          <div class="segmented" role="group" aria-label="AM ou PM">
+            <button type="button" class="segmented-item active" data-ampm="AM">AM</button>
+            <button type="button" class="segmented-item" data-ampm="PM">PM</button>
+          </div>
+        </div>
+        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
+          <input id="time-12-out" type="text" readonly placeholder="HH:MM AM">
+        </div>
+      </div>
+    </div>
     </div>
     <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
         <div class="demo-box">
@@ -323,21 +371,15 @@
     <div class="demo-grid demo-grid-2">
         <div class="demo-box">
             <span class="demo-label">Calendrier mensuel</span>
-            <div class="cal-wrap">
+            <div class="cal-wrap" data-calendar="single" data-cal-ref="2026-03" data-target="#cal-single-out">
                 <div class="cal-header">
-                    <h4>Mars 2026</h4>
-                    <div class="cal-nav"><button aria-label="Mois precedent"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button><button aria-label="Mois suivant"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></button></div>
+                    <h4 aria-live="polite"></h4>
+                    <div class="cal-nav"><button type="button" class="cal-prev" aria-label="Mois precedent"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button><button type="button" class="cal-next" aria-label="Mois suivant"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></button></div>
                 </div>
                 <div class="cal-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
-                <div class="cal-grid">
-                    <div class="cal-day other-month">23</div><div class="cal-day other-month">24</div><div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day">1</div>
-                    <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day today">8</div>
-                    <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day selected">15</div>
-                    <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
-                    <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
-                    <div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day other-month">3</div><div class="cal-day other-month">4</div><div class="cal-day other-month">5</div>
-                </div>
+                <div class="cal-grid" role="grid"></div>
             </div>
+            <div class="date-input-wrap"><input id="cal-single-out" type="text" readonly placeholder="dd/mm/yyyy"></div>
         </div>
         <div class="demo-box">
             <span class="demo-label">Mini calendrier</span>
@@ -381,22 +423,15 @@
         </div>
         <div class="demo-box">
             <span class="demo-label">Selection de plage</span>
-            <div class="cal-wrap">
+            <div class="cal-wrap" data-calendar="range" data-cal-ref="2026-03">
                 <div class="cal-header">
-                    <h4>Mars 2026</h4>
-                    <div class="cal-nav"><button aria-label="Mois precedent"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button><button aria-label="Mois suivant"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></button></div>
+                    <h4 aria-live="polite"></h4>
+                    <div class="cal-nav"><button type="button" class="cal-prev" aria-label="Mois precedent"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button><button type="button" class="cal-next" aria-label="Mois suivant"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></button></div>
                 </div>
                 <div class="cal-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
-                <div class="cal-grid">
-                    <div class="cal-day other-month">23</div><div class="cal-day other-month">24</div><div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day">1</div>
-                    <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
-                    <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day range-start">12</div><div class="cal-day range">13</div><div class="cal-day range">14</div><div class="cal-day range">15</div>
-                    <div class="cal-day range">16</div><div class="cal-day range">17</div><div class="cal-day range-end">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
-                    <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
-                    <div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day other-month">1</div><div class="cal-day other-month">2</div><div class="cal-day other-month">3</div><div class="cal-day other-month">4</div><div class="cal-day other-month">5</div>
-                </div>
+                <div class="cal-grid" role="grid"></div>
             </div>
-            <div class="date-range-display" style="margin-top:0.8rem;">&#128197; 12 mars <span class="arrow">&rarr;</span> 18 mars 2026</div>
+            <div class="date-range-display" data-cal-range-display style="margin-top:0.8rem;"><span data-range-start>—</span> → <span data-range-end>—</span></div>
         </div>
     </div>
     <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
