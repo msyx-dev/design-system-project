@@ -1221,7 +1221,10 @@ function initServerDataGrid() {
                 renderPager();
                 updateInfo();
                 setBusy(false);
-                announce('Page ' + page + ' chargée, ' + rows.length + ' lignes affichées.');
+                var totalPages = Math.ceil(state.total / state.pageSize);
+                var start = (page - 1) * state.pageSize + 1;
+                var end = Math.min(page * state.pageSize, state.total);
+                announce('Page ' + page + ' sur ' + totalPages + ' — résultats ' + start + ' à ' + end + ' sur ' + state.total + '.');
             });
         }
 
