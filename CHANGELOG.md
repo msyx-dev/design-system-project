@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
+
 ### Fixed
 - **Header `/me.json` 404 sur la vitrine (#531)** : ajout d'un `me.json` de démo à la racine (servi par Caddy `file_server`) → le bootstrap session de `site.html` reçoit `200` au lieu de `404`, supprimant la seule erreur console du DS. Bonus : la zone utilisateur du header (avatar + dropdown) est désormais peuplée d'un user de démo (showcase). Le bootstrap gérait déjà le `null` gracieusement ; le 404 était un log réseau navigateur insuppressible par JS. Aucun impact consumer (`me.json` non distribué par `sync.sh` ; les consumers M3 exposent `/me.json` via le `handle` Caddy/Authentik qui prime). (#531)
 
