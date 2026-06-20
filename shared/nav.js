@@ -1,5 +1,5 @@
-/* @ds-version 2.77.0 */
-const VERSION = '2.77.0';
+/* @ds-version 2.78.0 */
+const VERSION = '2.78.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -33,6 +33,13 @@ function buildHeader() {
     var notifCfg = cfg.notifications || {};
     var notifVisible = notifCfg.enabled !== false;           // défaut true — indépendant de l'auth
     var themeSwitcherEnabled = !!cfg.themeSwitcher;          // défaut false — opt-in vitrine/multi-thème
+
+    // Brand configurable (#570) — défauts rétro-compatibles avec la vitrine DS
+    var brandCfg = cfg.brand || {};
+    var brandText = brandCfg.text || 'design-system';
+    var brandHref = brandCfg.href !== undefined ? brandCfg.href : '/site.html';
+    var brandLogoSrc = brandCfg.logoSrc || '/assets/sources/logoMSYX.png';
+
     var menuItems = cfg.menu || [
         { label: 'Profil', icon: '&#128100;', href: '#' },
         { label: 'Preferences', icon: '&#9881;', href: '#' },
@@ -104,7 +111,9 @@ function buildHeader() {
         ? `<div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div>`
         : '';
 
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="/site.html" class="header-logo" aria-label="design-system — Accueil"><img src="/assets/sources/logoMSYX.png" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img"><span class="brand-wordmark">design-system</span></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+    // Logo : image si logoSrc défini, sinon texte gradient fallback (#570)
+    var logoImgHtml = `<img src="${brandLogoSrc}" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="${brandHref}" class="header-logo" aria-label="${brandText} — Accueil">${logoImgHtml}<span class="brand-wordmark">${brandText}</span></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');

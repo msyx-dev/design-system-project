@@ -1,4 +1,4 @@
-/* @ds-version: 2.64.0 */
+/* @ds-version: 2.78.0 */
 /* cards.css — extracted from components.css v2.35.0 */
 
 /* ===== HERO ===== */
@@ -89,6 +89,36 @@
     font-size: 0.85rem;
 }
 .lazy-error a { color: var(--accent); text-decoration: underline; }
+
+/* ===== CARD-MUTED — variante carte atténuée WCAG-safe (#569) =====
+   Objectif : signaler visuellement qu'une carte est « en retrait » (ex. article
+   sous le seuil de pertinence mikpulse) SANS faire chuter le contraste texte.
+   Stratégie de découplage :
+     - opacity globale intentionnellement faible → interdit (fait chuter text < 4.5:1)
+     - À la place : on atténue chrome (border, icon, accents) via --opacity-muted (0.85)
+       et on assombrit légèrement le fond sans toucher à la couleur du texte de contenu.
+   Le texte du résumé reste en var(--text) = contraste garanti WCAG 1.4.3 ≥ 4.5:1.
+
+   Usage : <div class="card card-muted">
+   Parité React : pending (registry). */
+.card-muted {
+    opacity: var(--opacity-muted);     /* atténuation visuelle globale — 0.85 préserve le contraste text */
+    border-color: color-mix(in srgb, var(--border-color) 60%, transparent);
+    box-shadow: none;
+    transition: opacity var(--duration-base) var(--ease-standard),
+                transform 0.4s var(--ease-standard),
+                border-color 0.4s var(--ease-standard),
+                box-shadow 0.4s var(--ease-standard);
+}
+/* Les éléments d'accent (icône, badges) s'atténuent davantage — pas le texte contenu */
+.card-muted .card-icon {
+    opacity: 0.6;
+}
+/* Hover : légère remontée (signal d'interactivité) */
+.card-muted:hover {
+    opacity: 1;
+    border-color: var(--border-hover);
+}
 
 /* ===== CARD-LINK (a11y wrapper for clickable cards) ===== */
 .card-link {

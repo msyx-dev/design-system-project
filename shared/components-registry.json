@@ -1,7 +1,7 @@
 {
-  "version": "2.77.0",
+  "version": "2.78.0",
   "generated": {
-    "at": "2026-06-19T19:08:14.374Z",
+    "at": "2026-06-20T21:49:37.844Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -45,6 +45,7 @@
         ".card-compact",
         ".card-horizontal",
         ".card-link",
+        ".card-muted",
         ".hero-bg",
         ".hero-grid-bg",
         ".hero-inner",
@@ -866,7 +867,8 @@
       "example": "<nav class=\"bottom-nav\" aria-label=\"Navigation principale\">\n  <a class=\"bottom-nav-item active\" href=\"/\" aria-current=\"page\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#8962;</span>\n    <span class=\"bottom-nav-label\">Accueil</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/projets\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128193;</span>\n    <span class=\"bottom-nav-label\">Projets</span>\n    <span class=\"bottom-nav-badge\">3</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/profil\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128100;</span>\n    <span class=\"bottom-nav-label\">Profil</span>\n  </a>\n</nav>",
       "react": "pending",
       "module": [
-        "shared/css/components/navigation.css"
+        "shared/css/components/navigation.css",
+        "shared/css/utilities.css"
       ]
     },
     {
@@ -2812,6 +2814,30 @@
       "jsInit": null,
       "generated": true,
       "react": "n-a"
+    },
+    {
+      "name": "page-content",
+      "kind": "layout",
+      "page": "fondation",
+      "cssClasses": [
+        ".page-content",
+        ".main--no-rail"
+      ],
+      "jsInit": null,
+      "react": "pending",
+      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav."
+    },
+    {
+      "name": "hidden-mobile",
+      "kind": "utility",
+      "page": "fondation",
+      "cssClasses": [
+        ".hidden-mobile",
+        ".hidden-desktop"
+      ],
+      "jsInit": null,
+      "react": "n-a",
+      "description": "Utilitaires responsive de masquage, breakpoint 768px aligné sur .bottom-nav (#568)."
     }
   ]
 }

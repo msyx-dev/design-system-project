@@ -572,6 +572,66 @@
         </div>
     </div>
 
+    <!-- Masquage responsive (#568) -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Masquage responsive — .hidden-mobile / .hidden-desktop</span>
+        <div class="demo-box">
+            <p class="text-muted text-sm mb-md">Breakpoint : 768px (aligné sur <code>.bottom-nav</code>). Mobile-first. <strong>Redimensionner la fenêtre</strong> pour voir le masquage.</p>
+            <div class="demo-row">
+                <div style="background:var(--accent-glow);border:1px solid var(--accent);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-md);" class="text-xs text-accent hidden-mobile">
+                    <code>.hidden-mobile</code> — masqué &lt; 768px, visible ≥ 768px
+                </div>
+                <div style="background:color-mix(in srgb, var(--success) 12%, transparent);border:1px solid var(--success);border-radius:var(--radius-sm);padding:var(--space-xs) var(--space-md);" class="text-xs text-success hidden-desktop">
+                    <code>.hidden-desktop</code> — visible &lt; 768px, masqué ≥ 768px
+                </div>
+            </div>
+            <div class="token-list mt-md">
+                <div class="flex-center-gap"><code class="text-xs">.hidden-mobile</code><span class="text-muted text-xs">display:none &lt;768px ; revert ≥768px</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.hidden-desktop</code><span class="text-muted text-xs">display:none ≥768px ; revert &lt;768px</span></div>
+            </div>
+        </div>
+        <div class="demo-box mt-sm">
+            <span class="demo-label text-xs">Cas d'usage mikpulse — nav double masquée</span>
+            <pre class="code-block text-xs mt-sm">&lt;!-- Desktop : tabs visibles, bottom-nav cachée --&gt;
+&lt;nav class="tabs hidden-mobile"&gt;...&lt;/nav&gt;
+&lt;nav class="bottom-nav hidden-desktop"&gt;...&lt;/nav&gt;</pre>
+        </div>
+    </div>
+
+    <!-- Conteneur page-content (#567) -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Conteneur de page — .page-content + .main--no-rail</span>
+        <div class="demo-box">
+            <p class="text-muted text-sm mb-md">Pour les consumers <strong>sans sidebar</strong> (ex. mikpulse P0 public). Applique : max-width <code>var(--content-max)</code> = 72ch, centrage, padding-inline responsive, padding-bottom dégageant la bottom-nav mobile.</p>
+            <div class="token-list">
+                <div class="flex-center-gap"><code class="text-xs">.page-content</code><span class="text-muted text-xs">max-width:72ch · margin-inline:auto · padding-inline responsive · padding-bottom dégagé bottom-nav</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.main--no-rail</code><span class="text-muted text-xs">Variante .main sans sidebar : margin-inline-start:0 + --sidebar-w:0</span></div>
+            </div>
+        </div>
+        <div class="demo-box mt-sm">
+            <span class="demo-label text-xs">Migration consumer sans sidebar</span>
+            <pre class="code-block text-xs mt-sm">&lt;!-- Option A : layout DS avec variante no-rail (si header/sidebar DS) --&gt;
+&lt;div class="main main--no-rail"&gt;
+  &lt;div class="page-content"&gt;
+    &lt;!-- contenu --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Option B : consumer Next.js sans layout DS (ex. mikpulse) --&gt;
+&lt;main class="page-content"&gt;
+  &lt;!-- --sidebar-w:0 est garanti par l'absence de .main --&gt;
+  &lt;!-- padding-bottom dégagement bottom-nav inclus --&gt;
+&lt;/main&gt;</pre>
+        </div>
+        <div class="demo-box mt-sm">
+            <span class="demo-label text-xs">Tokens concernés</span>
+            <div class="token-list mt-sm">
+                <div class="flex-center-gap"><code class="text-xs">--content-max</code><span class="text-muted text-xs">72ch — mesure typo optimale pour lecture longue</span></div>
+                <div class="flex-center-gap"><code class="text-xs">--bottom-nav-h</code><span class="text-muted text-xs">60px — hauteur .bottom-nav fixe (pad-bottom mobile)</span></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Border-radius -->
     <div class="subsection mt-lg">
         <span class="demo-label">Border-radius</span>

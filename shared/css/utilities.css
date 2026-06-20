@@ -1,4 +1,4 @@
-/* @ds-version: 2.77.0 */
+/* @ds-version: 2.78.0 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -175,6 +175,25 @@
 .gap-y-xl  { row-gap: var(--space-xl); }
 .gap-y-2xl { row-gap: var(--space-2xl); }
 .gap-y-3xl { row-gap: var(--space-3xl); }
+
+/* ===== Responsive — masquage (#568) =====
+   Breakpoint 768px = breakpoint de .bottom-nav (navigation.css).
+   Mobile-first : .hidden-mobile masque < 768px (overridden par un display:* à min-width:768px).
+   Stratégie : on surcharge display:none au bon breakpoint.
+   Note : ces utilitaires ne portent pas de display par défaut pour éviter
+   les conflits avec les composants (table, flex, etc.). */
+
+/* Masqué sous 768px — visible ≥ 768px (ex. onglets desktop) */
+.hidden-mobile { display: none; }
+@media (min-width: 768px) {
+    .hidden-mobile { display: revert; }
+}
+
+/* Masqué à partir de 768px — visible < 768px (ex. bottom-nav) */
+.hidden-desktop { display: revert; }
+@media (min-width: 768px) {
+    .hidden-desktop { display: none; }
+}
 
 /* ===== Display / Flex / Grid ===== */
 .flex        { display: flex; }
