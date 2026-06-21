@@ -1,5 +1,18 @@
 # Releases
 
+## 2.78.0 — 2026-06-20 — Support consumers sans rail : .page-content, .hidden-mobile, .card-muted, header brand configurable (#567 #568 #569 #570)
+
+> Demande d'origine : refonte UI/UX mikpulse (consumer Next.js sans sidebar DS, P0 public). 4 livrables non-breaking, retro-compatibles — aucun consumer existant casse.
+
+### Added
+- **`.page-content` + `.main--no-rail` (layout.css — #567)** : conteneur de page pour consumers sans sidebar. `.page-content` : `max-width:var(--content-max)` (72ch), centrage `margin-inline:auto`, padding-inline responsive (md→xl→2xl), `padding-bottom` degageant la bottom-nav mobile fixe (`--bottom-nav-h`). `.main--no-rail` : variante `.main` annulant la marge inline-start et saturant `--sidebar-w:0` pour la compat composants. Tokens ajoutes : `--bottom-nav-h:60px`, `--content-max:72ch`.
+- **`.hidden-mobile` / `.hidden-desktop` (utilities.css — #568)** : utilitaires responsive de masquage, breakpoint 768px aligne sur `.bottom-nav`. Le masquage est scope a la plage concernee (`.hidden-mobile` : `@media (max-width:767.98px)` ; `.hidden-desktop` : `@media (min-width:768px)`) avec `display:none !important` — l'element retrouve son **display natif** hors plage (flex/grid/table preserves, pas de `revert` vers `block` qui casserait un `.tabs` flex). `!important` pour battre la specificite des composants (0,1,0). Exception assumee au mobile-first min-width : « masquer sur mobile » est semantiquement un concept max-width.
+- **`.card-muted` + `--opacity-muted` (cards.css + tokens.css — #569)** : variante carte attenuee WCAG-safe. Opacity globale `0.85` (token `--opacity-muted`) sur le chrome (fond, border, box-shadow) — le texte reste en `var(--text)`, contraste ≥ 4.5:1 garanti WCAG 1.4.3. `.card-muted .card-icon` : opacity 0.6. Hover : remontee `opacity:1` + `border-hover`. React : pending (registry).
+- **Brand header configurable — `window.MSYX_HEADER.brand` (nav.js — #570)** : clef `brand:{text,href,logoSrc}` dans la config header. Retro-compatible : defauts vitrine DS inchanges si `brand` absent (`text:'design-system'`, `href:'/site.html'`, `logoSrc:logoMSYX.png`). Permet aux consumers (ex. mikpulse) de personaliser logo + wordmark + lien sans forker `nav.js`.
+
+### Changed (versioning)
+- **Bump synchrone 5 sources** `2.77.0 → 2.78.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version + nouvelles entrees). Footer `site.html` a aligner au merge.
+
 ## 2.77.0 — 2026-06-18 — Consolidation des doublons de composants (M#44, Epic #517)
 
 > Milestone #44 **soldé** (Epic #517 clos : 5/5 sub-issues). Cinq consolidations **non-breaking** : un canonique élu par famille, les variantes concurrentes réduites à des alias `@deprecated` (suppression réelle en **v3**), tokenisation au passage. Aucun consumer cassé (alias rétro-compat). Bump synchrone des 8 sources. Churn VR géré par soft-harvest CI (chips→tag-input, wizard→stepper, messaging) ; #520 = 0 diff de rendu (surfaces flottantes fermées par défaut, tokenisation value-preserving).

@@ -1,4 +1,4 @@
-/* @ds-version: 2.77.0 */
+/* @ds-version: 2.78.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -107,6 +107,43 @@
 
 /* ===== MAIN ===== */
 .main { margin-inline-start: var(--sidebar-w); min-height: 100vh; padding-top: var(--header-h); }
+
+/* Variante sans sidebar (consumers sans rail — ex. mikpulse P0 public) (#567)
+   Usage : <div class="main main--no-rail"> ou poser --sidebar-w:0 sur le root.
+   Supprime la marge inline-start imposée par .main et sature le token pour
+   que tout composant qui lirait --sidebar-w obtienne 0 (rétro-compat). */
+.main--no-rail {
+    margin-inline-start: 0;
+    --sidebar-w: 0;
+}
+
+/* ===== PAGE CONTENT — conteneur de page consumer (#567) =====
+   Primitive de mise en page pour consumers sans sidebar DS.
+   Applique : mesure typo (72ch), centrage, gouttières responsives,
+   padding-bottom dégageant la bottom-nav mobile fixe.
+   Usage : <main class="page-content"> */
+.page-content {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+    padding-top: var(--header-h);
+    padding-bottom: calc(var(--bottom-nav-h) + var(--space-lg));
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .page-content {
+        padding-inline: var(--space-xl);
+        /* Sur desktop : bottom-nav masquée, dégagement réduit */
+        padding-bottom: var(--space-2xl);
+    }
+}
+
+@media (min-width: 1280px) {
+    .page-content {
+        padding-inline: var(--space-2xl);
+    }
+}
 /* @strip:showcase-start */
 /* ===== SHOWCASE — scoped sous .main pour ne pas polluer les consommateurs ===== */
 .main section { padding: var(--space-3xl) var(--space-2xl); border-bottom: 1px solid var(--border-color); }

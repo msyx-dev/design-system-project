@@ -115,8 +115,41 @@
         </div>
     </div>
     <div class="subsection mt-md">
+        <span class="demo-label">Card muted — variante attenuation (#569)</span>
+        <p class="typo-small mb-md">Pour signaler qu'une carte est « en retrait » (ex. article sous le seuil de pertinence mikpulse) sans faire chuter le contraste. <strong>Strategie :</strong> opacity globale 0.85 sur le chrome (fond, border, accents) — le texte reste en <code class="code-inline">var(--text)</code>, contraste WCAG AA &ge; 4.5:1 garanti. Hover restaure opacity:1.</p>
+        <div class="demo-grid demo-grid-2">
+            <div>
+                <p class="typo-small text-muted mb-sm" style="text-align:center;">Carte normale</p>
+                <div class="card">
+                    <div class="card-icon card-icon--accent"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-zap"/></svg></div>
+                    <h3>IA : LLM multi-modal</h3>
+                    <p>Nouveau modele GPT-5 capable d'analyser images, audio et video en une seule inference. Pertinence : 85/100.</p>
+                    <div class="demo-row mt-md"><span class="badge badge-success">Pertinent</span><span class="tag">IA</span><span class="tag">LLM</span></div>
+                </div>
+            </div>
+            <div>
+                <p class="typo-small text-muted mb-sm" style="text-align:center;">Carte muted (sous seuil)</p>
+                <div class="card card-muted">
+                    <div class="card-icon card-icon--deco-violet"><svg class="icon icon--lg"><use href="/shared/icons/sprite.svg#i-folder"/></svg></div>
+                    <h3>Homelab : mise a jour firmware</h3>
+                    <p>Mise a jour mineure du firmware routeur. Correctif securite standard. Pertinence : 28/100 — sous le seuil configure.</p>
+                    <div class="demo-row mt-md"><span class="badge badge-neutral">Deprioritise</span><span class="tag">Homelab</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box mt-md">
+            <span class="demo-label text-xs">Principe WCAG — contraste preserve (#569)</span>
+            <p class="typo-small text-muted mt-sm">L'opacity 0.85 s'applique au conteneur (chrome : fond, bordure, icone) mais <strong>pas au texte lui-meme</strong>. La couleur <code class="code-inline">var(--text)</code> reste a 100% d'opacite effective car CSS composite l'opacity du parent uniquement sur la surface rendue, preservant le ratio de contraste &ge; 4.5:1 requis par WCAG 1.4.3. Valider : DevTools &gt; Accessibility &gt; Contrast.</p>
+            <div class="token-list mt-sm">
+                <div class="flex-center-gap"><code class="text-xs">--opacity-muted</code><span class="text-muted text-xs">0.85 — token global (tokens.css)</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.card-muted .card-icon</code><span class="text-muted text-xs">opacity:0.6 — icone plus attenuee que le chrome</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.card-muted:hover</code><span class="text-muted text-xs">opacity:1 — remontee complete au survol</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-md">
         <span class="demo-label">Usage</span>
-        <p class="typo-small">Utiliser <code class="code-inline">card</code> pour les contenus richement structures (titre + description + actions). Utiliser <code class="code-inline">card-compact</code> pour les grilles de features ou les KPI courts. Utiliser <code class="code-inline">card-horizontal</code> pour les listes avec icone + texte sur une seule ligne. Utiliser <code class="code-inline">card-link</code> (wrapper <code class="code-inline">&lt;a&gt;</code>) pour rendre une card entierement cliquable avec focus-visible a11y. Ne pas imbriquer des cards — preferer une <code class="code-inline">demo-box</code> ou une <code class="code-inline">subsection</code> pour les conteneurs secondaires.</p>
+        <p class="typo-small">Utiliser <code class="code-inline">card</code> pour les contenus richement structures (titre + description + actions). Utiliser <code class="code-inline">card-compact</code> pour les grilles de features ou les KPI courts. Utiliser <code class="code-inline">card-horizontal</code> pour les listes avec icone + texte sur une seule ligne. Utiliser <code class="code-inline">card-link</code> (wrapper <code class="code-inline">&lt;a&gt;</code>) pour rendre une card entierement cliquable avec focus-visible a11y. Utiliser <code class="code-inline">card-muted</code> pour les cartes sous un seuil de pertinence — contraste WCAG AA garanti via opacity globale 0.85 sans toucher la couleur texte. Ne pas imbriquer des cards — preferer une <code class="code-inline">demo-box</code> ou une <code class="code-inline">subsection</code> pour les conteneurs secondaires.</p>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">HTML</span>
@@ -153,6 +186,16 @@
         &lt;p&gt;Description.&lt;/p&gt;
     &lt;/div&gt;
 &lt;/a&gt;
+
+&lt;!-- Card muted (en retrait — sous seuil pertinence) --&gt;
+&lt;div class="card card-muted"&gt;
+    &lt;div class="card-icon card-icon--deco-violet"&gt;&amp;#128193;&lt;/div&gt;
+    &lt;h3&gt;Titre&lt;/h3&gt;
+    &lt;p&gt;Article sous le seuil de pertinence. Contraste WCAG AA preserve.&lt;/p&gt;
+    &lt;div class="demo-row mt-md"&gt;
+        &lt;span class="badge badge-neutral"&gt;Deprioritise&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
 
 &lt;!-- Couleurs card-icon disponibles : --accent --deco-violet --deco-cyan --deco-pink --green --&gt;</div>
     </div>
