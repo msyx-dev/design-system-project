@@ -1,5 +1,24 @@
 # Releases
 
+## 2.79.0 — 2026-06-21 — Variante `.card-media` (vignette bleed) + token `--card-thumb-h` (#37, demandée par la refonte mikpulse)
+
+> Ajout non-breaking d'une variante de card orientée image-first. Corrige aussi le drift `package.json` racine (resté à 2.77.0 depuis v2.77 alors que le DS était à 2.78.0).
+
+### Added
+- **`.card-media` (cards.css)** : variante de `.card` à vignette pleine largeur (bleed). Surcharge `padding:0` + `overflow:hidden` pour que l'image respecte le `border-radius` de la carte. Hérite de tous les tokens de `.card` (fond, border, hover, transitions).
+- **`.card-thumb` (cards.css)** : conteneur de la vignette en tête de carte. `width:100%`, hauteur fixe via token dédié `--card-thumb-h`, image enfant en `object-fit:cover; display:block; width:100%; height:100%`. Compatible tout contenu de remplissage (fond gradient, image). Pas de `border-radius` sur l'image — la carte clippe via `overflow:hidden`.
+- **`.card-body` (cards.css)** : zone de contenu sous la vignette. `padding:var(--space-xl)` rétablit l'espacement retiré par `.card-media`. Accueille overline / titre / résumé / badges.
+- **`--card-thumb-h: 160px` (tokens.css)** : token dédié pour la hauteur de la vignette `.card-thumb`. Surcharger localement si besoin (`--card-thumb-h: 200px`).
+- **Compatibilité `.card-link`** : `.card-media` fonctionne à l'intérieur d'un wrapper `.card-link` (carte cliquable). Focus-visible et hover préservés.
+- **Compatibilité `.card-muted`** : `.card-media.card-muted` cumule sans casse — cascade orthogonale (padding vs opacity/border-color). Vignette `.card-thumb` atténuée à opacity 0.75 pour cohérence visuelle.
+- **Démo `pages/composants.html`** : nouvelle section `#card-media` avec démos de 3 variantes (normale, muted, cliquable), vignettes gradient token, code HTML commenté, note sur le token `--card-thumb-h`.
+
+### Fixed
+- **Drift `package.json` racine** : aligné de 2.77.0 → 2.79.0 (resté à 2.77.0 depuis le bump 2.77 sans correction postérieure). Aligne le champ `version` avec `@ds-version` dans les 5 fichiers CSS/JS.
+
+### Changed (versioning)
+- **Bump synchrone 5 sources** `2.78.0 → 2.79.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version + nouvelle entrée `card-media`), `package.json` racine.
+
 ## 2.78.0 — 2026-06-20 — Support consumers sans rail : .page-content, .hidden-mobile, .card-muted, header brand configurable (#567 #568 #569 #570)
 
 > Demande d'origine : refonte UI/UX mikpulse (consumer Next.js sans sidebar DS, P0 public). 4 livrables non-breaking, retro-compatibles — aucun consumer existant casse.

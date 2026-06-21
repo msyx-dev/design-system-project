@@ -201,6 +201,135 @@
     </div>
 </section>
 
+<section id="card-media">
+    <div class="section-header"><span class="overline">Composants</span><h2>Card Media</h2><p>Variante de card a vignette pleine largeur (bleed). Image en tete de carte sans padding — utile pour les flux d'articles, les listes editoriales ou tout contenu image-first. Demandee par la refonte mikpulse.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Card media — vignette image</span>
+        <p class="typo-small mb-md">La classe <code class="code-inline">card-media</code> supprime le padding de <code class="code-inline">card</code> et active <code class="code-inline">overflow:hidden</code> pour que la vignette respecte le <code class="code-inline">border-radius</code>. La zone de contenu sous la vignette est dans <code class="code-inline">card-body</code> qui retablit le padding.</p>
+        <div class="demo-grid demo-grid-3">
+            <div class="card card-media">
+                <div class="card-thumb" style="background: linear-gradient(135deg, var(--accent) 0%, var(--deco-violet) 100%); display:flex; align-items:center; justify-content:center;">
+                    <svg class="icon icon--lg" style="opacity:0.6; width:48px; height:48px;"><use href="/shared/icons/sprite.svg#i-image"/></svg>
+                </div>
+                <div class="card-body">
+                    <span class="overline">IA &middot; LLM</span>
+                    <h3>GPT-5 multi-modal</h3>
+                    <p>Nouveau modele capable d'analyser images, audio et video en une seule inference. Pertinence 87/100.</p>
+                    <div class="demo-row mt-md"><span class="badge badge-success">Pertinent</span><span class="tag">IA</span><span class="tag">LLM</span></div>
+                </div>
+            </div>
+            <div class="card card-media">
+                <div class="card-thumb" style="background: linear-gradient(135deg, var(--deco-cyan) 0%, var(--accent) 100%); display:flex; align-items:center; justify-content:center;">
+                    <svg class="icon icon--lg" style="opacity:0.6; width:48px; height:48px;"><use href="/shared/icons/sprite.svg#i-cpu"/></svg>
+                </div>
+                <div class="card-body">
+                    <span class="overline">Tech FR &middot; Apple</span>
+                    <h3>Apple Intelligence Europe</h3>
+                    <p>Lancement officiel d'Apple Intelligence dans l'UE avec localisation francaise. Pertinence 74/100.</p>
+                    <div class="demo-row mt-md"><span class="badge badge-success">Pertinent</span><span class="tag">Apple</span><span class="tag">IA</span></div>
+                </div>
+            </div>
+            <div class="card card-media card-muted">
+                <div class="card-thumb" style="background: linear-gradient(135deg, var(--deco-violet) 0%, var(--deco-pink) 100%); display:flex; align-items:center; justify-content:center;">
+                    <svg class="icon icon--lg" style="opacity:0.6; width:48px; height:48px;"><use href="/shared/icons/sprite.svg#i-server"/></svg>
+                </div>
+                <div class="card-body">
+                    <span class="overline">Homelab</span>
+                    <h3>Mise a jour firmware routeur</h3>
+                    <p>Correctif securite mineur. Pertinence 28/100 — sous le seuil configure.</p>
+                    <div class="demo-row mt-md"><span class="badge badge-neutral">Deprioritise</span><span class="tag">Homelab</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Card media cliquable (card-link)</span>
+        <p class="typo-small mb-md">Wrapper <code class="code-inline">card-link</code> compatible — focus-visible applique un outline sur la card, hover active l'effet de surelevation habituel.</p>
+        <div class="demo-grid demo-grid-2">
+            <a href="#" class="card-link" onclick="event.preventDefault();">
+                <div class="card card-media">
+                    <div class="card-thumb" style="background: linear-gradient(135deg, var(--accent) 0%, var(--deco-cyan) 100%); display:flex; align-items:center; justify-content:center;">
+                        <svg class="icon icon--lg" style="opacity:0.6; width:48px; height:48px;"><use href="/shared/icons/sprite.svg#i-rss"/></svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="overline">Tech FR</span>
+                        <h3>Article cliquable — lien source</h3>
+                        <p>Cliquer sur la carte entiere ouvre la source originale dans un nouvel onglet.</p>
+                        <div class="demo-row mt-md"><span class="badge badge-info">Source externe</span></div>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="card-link" onclick="event.preventDefault();">
+                <div class="card card-media card-muted">
+                    <div class="card-thumb" style="background: linear-gradient(135deg, var(--deco-violet) 0%, var(--accent) 100%); display:flex; align-items:center; justify-content:center;">
+                        <svg class="icon icon--lg" style="opacity:0.6; width:48px; height:48px;"><use href="/shared/icons/sprite.svg#i-rss"/></svg>
+                    </div>
+                    <div class="card-body">
+                        <span class="overline">Homelab</span>
+                        <h3>Article deprioritise cliquable</h3>
+                        <p>card-link + card-muted cumulees. L'attenuation visuelle est preservee au survol avant restauration complete.</p>
+                        <div class="demo-row mt-md"><span class="badge badge-neutral">Deprioritise</span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Token</span>
+        <div class="token-list mt-sm">
+            <div class="flex-center-gap"><code class="text-xs">--card-thumb-h</code><span class="text-muted text-xs">160px — hauteur fixe de la vignette .card-thumb (tokens.css v2.79.0)</span></div>
+        </div>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser <code class="code-inline">card card-media</code> pour les flux d'articles ou tout contenu ou l'image est l'element editorial principal. Placer la vignette dans <code class="code-inline">card-thumb</code> (image ou fond gradient), puis le texte dans <code class="code-inline">card-body</code>. Compatible <code class="code-inline">card-link</code> et <code class="code-inline">card-muted</code>. Personnaliser la hauteur de vignette via le token <code class="code-inline">--card-thumb-h</code> (defaut 160px).</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;!-- Card media — vignette image --&gt;
+&lt;div class="card card-media"&gt;
+  &lt;div class="card-thumb"&gt;
+    &lt;img src="/img/article.jpg" alt="Vignette article"&gt;
+  &lt;/div&gt;
+  &lt;div class="card-body"&gt;
+    &lt;span class="overline"&gt;IA &middot; LLM&lt;/span&gt;
+    &lt;h3&gt;Titre de l'article&lt;/h3&gt;
+    &lt;p&gt;Resume en quelques mots.&lt;/p&gt;
+    &lt;span class="badge badge-success"&gt;Pertinent&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Card media cliquable --&gt;
+&lt;a href="/article/slug" class="card-link"&gt;
+  &lt;div class="card card-media"&gt;
+    &lt;div class="card-thumb"&gt;
+      &lt;img src="/img/article.jpg" alt="Vignette article"&gt;
+    &lt;/div&gt;
+    &lt;div class="card-body"&gt;
+      &lt;span class="overline"&gt;Tech FR&lt;/span&gt;
+      &lt;h3&gt;Titre de l'article&lt;/h3&gt;
+      &lt;p&gt;Resume.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/a&gt;
+
+&lt;!-- Card media deprioritisee --&gt;
+&lt;div class="card card-media card-muted"&gt;
+  &lt;div class="card-thumb"&gt;
+    &lt;img src="/img/article.jpg" alt=""&gt;
+  &lt;/div&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h3&gt;Titre deprioritise&lt;/h3&gt;
+    &lt;p&gt;Sous le seuil de pertinence. Contraste WCAG AA preserve.&lt;/p&gt;
+    &lt;span class="badge badge-neutral"&gt;Deprioritise&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Token hauteur vignette (surcharge locale si besoin) --&gt;
+&lt;style&gt;:root { --card-thumb-h: 200px; }&lt;/style&gt;</div>
+    </div>
+</section>
+
 <section id="badges">
     <div class="section-header"><span class="overline">Composants</span><h2>Badges & Tags</h2><p>Indicateurs visuels pour statuts, categories et metadata.</p></div>
     <div class="demo-grid demo-grid-2">

@@ -1,7 +1,7 @@
 {
-  "version": "2.78.0",
+  "version": "2.79.0",
   "generated": {
-    "at": "2026-06-20T21:49:37.844Z",
+    "at": "2026-06-21T06:51:44.694Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -72,6 +72,22 @@
         "shared/css/components/theming.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css"
+      ]
+    },
+    {
+      "name": "card-media",
+      "kind": "component",
+      "page": "composants",
+      "cssClasses": [
+        ".card-media",
+        ".card-thumb",
+        ".card-body"
+      ],
+      "jsInit": null,
+      "example": "<div class=\"card card-media\">\n  <div class=\"card-thumb\">\n    <img src=\"/img/article.jpg\" alt=\"Vignette article\">\n  </div>\n  <div class=\"card-body\">\n    <span class=\"overline\">IA</span>\n    <h3>Titre de l'article</h3>\n    <p>Résumé du contenu en quelques mots.</p>\n    <span class=\"badge badge-success\">Pertinent</span>\n  </div>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/cards.css"
       ]
     },
     {
@@ -392,6 +408,7 @@
       "react": "pending",
       "module": [
         "shared/css/components/navigation.css",
+        "shared/css/utilities.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
       ]

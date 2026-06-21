@@ -1,4 +1,4 @@
-/* @ds-version: 2.78.0 */
+/* @ds-version: 2.79.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -227,6 +227,9 @@
     --card-icon-size: 3.25rem;       /* 52px */
     --card-icon-size-sm: 2.5rem;     /* 40px — responsive ≤768px */
     --card-icon-radius: 0.875rem;    /* 14px */
+
+    /* Card media — vignette pleine largeur (v2.79.0, demandée par refonte mikpulse #37) */
+    --card-thumb-h: 160px;           /* hauteur fixe de la vignette .card-thumb */
 
     /* === Texture grain (brand motif, v2.42.0) === */
     --texture-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
