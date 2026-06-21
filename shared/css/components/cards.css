@@ -1,4 +1,4 @@
-/* @ds-version: 2.78.0 */
+/* @ds-version: 2.79.0 */
 /* cards.css — extracted from components.css v2.35.0 */
 
 /* ===== HERO ===== */
@@ -133,5 +133,72 @@
 .card-link:focus-visible .card {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* ===== CARD-MEDIA — variante carte à vignette pleine largeur bleed (v2.79.0) =====
+   Demandée par la refonte mikpulse (carte image-first). La `.card` standard a
+   padding:var(--space-xl) qui empêche la vignette d'aller bord à bord.
+   Stratégie :
+     - `.card-media` : surcharge padding→0 + overflow:hidden (clip border-radius)
+     - `.card-thumb` : vignette en tête de carte, hauteur via token --card-thumb-h
+     - `.card-body`  : rétablit le padding retiré par .card-media, zone de contenu
+   Compatibilité :
+     - fonctionne dans un wrapper `.card-link` (cliquable) — focus via .card-link:focus-visible
+     - cumule avec `.card-muted` (opacité 0.85) sans casse — cascade: card-media précise le
+       padding, card-muted précise opacity/border-color, pas de conflit
+   Fallback vignette : `.card-thumb` peut contenir un <img> ou un bloc fond gradient —
+   le consumer est responsable de l'intérieur (pas de fond forcé ici).
+
+   Usage :
+     <div class="card card-media">
+       <div class="card-thumb">
+         <img src="..." alt="...">
+       </div>
+       <div class="card-body">
+         <span class="overline">Section</span>
+         <h3>Titre</h3>
+         <p>Résumé…</p>
+       </div>
+     </div>
+   Parité React : pending (registry). */
+
+/* Variante carte à vignette pleine largeur */
+.card-media {
+  padding: 0;
+  overflow: hidden; /* clip du border-radius sur la vignette */
+}
+
+/* Conteneur vignette — pleine largeur, hauteur fixe via token */
+.card-thumb {
+  width: 100%;
+  height: var(--card-thumb-h);
+  overflow: hidden;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Image ou contenu de remplissage dans la vignette */
+.card-thumb img,
+.card-thumb > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Zone de contenu sous la vignette — rétablit le padding de .card */
+.card-body {
+  padding: var(--space-xl);
+}
+
+/* Compatibilité card-link : focus-visible redirigé vers la card enfant */
+.card-link:focus-visible .card-media {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Compatibilité card-muted : l'atténuation s'applique sur le conteneur entier */
+.card-media.card-muted .card-thumb {
+  opacity: 0.75; /* vignette un peu plus atténuée que le chrome pour cohérence visuelle */
 }
 
