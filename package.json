@@ -1,6 +1,6 @@
 {
   "name": "msyx-design-system",
-  "version": "2.79.0",
+  "version": "2.80.0",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
   "workspaces": [
@@ -27,7 +27,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "lucide-static": "^1.14.0",
+    "lucide-static": "^1.21.0",
     "svgo": "^4.0.1"
   }
 }

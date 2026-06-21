@@ -1,5 +1,5 @@
 {
-  "version": "2.79.0",
+  "version": "2.80.0",
   "generated": {
     "at": "2026-06-21T06:51:44.694Z",
     "by": "bin/generate-registry.js v1.3"
@@ -2838,11 +2838,12 @@
       "page": "fondation",
       "cssClasses": [
         ".page-content",
-        ".main--no-rail"
+        ".main--no-rail",
+        ".content-grid"
       ],
       "jsInit": null,
       "react": "pending",
-      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav."
+      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53"
     },
     {
       "name": "hidden-mobile",

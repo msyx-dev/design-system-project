@@ -1,4 +1,4 @@
-/* @ds-version: 2.79.0 */
+/* @ds-version: 2.80.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -144,6 +144,33 @@
         padding-inline: var(--space-2xl);
     }
 }
+
+/* ===== CONTENT GRID — conteneur large pour fils de cartes (#53 mikpulse S6) =====
+   Distinct de .page-content (mesure typo 72ch, pour du TEXTE). Pour les fils de
+   cartes en grille (.grid-auto-fit-*), qui doivent occuper toute la largeur utile.
+   Usage : <main class="content-grid"><section class="grid-auto-fit-lg">…</section></main> */
+.content-grid {
+    max-width: var(--content-grid-max);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+    padding-top: var(--header-h);
+    padding-bottom: calc(var(--bottom-nav-h) + var(--space-lg));
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .content-grid {
+        padding-inline: var(--space-xl);
+        padding-bottom: var(--space-2xl);
+    }
+}
+
+@media (min-width: 1280px) {
+    .content-grid {
+        padding-inline: var(--space-2xl);
+    }
+}
+
 /* @strip:showcase-start */
 /* ===== SHOWCASE — scoped sous .main pour ne pas polluer les consommateurs ===== */
 .main section { padding: var(--space-3xl) var(--space-2xl); border-bottom: 1px solid var(--border-color); }
