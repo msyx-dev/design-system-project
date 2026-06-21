@@ -1,5 +1,20 @@
 # Releases
 
+## 2.80.0 — 2026-06-21 — Conteneur grille .content-grid + icônes thème (server, command) — refonte mikpulse S6 (#53 #55)
+
+> Ajout non-breaking : nouveau conteneur `.content-grid` distinct de `.page-content` pour les fils de cartes en grille, et deux icônes Lucide supplémentaires dans le sprite (server, command).
+
+### Added
+- **`.content-grid` (layout.css)** : conteneur large pour fil de cartes en grille — `max-width: var(--content-grid-max)`, `margin-inline: auto`, padding responsive (md → xl → 2xl), `padding-top: var(--header-h)`, `padding-bottom` dégageant la bottom-nav mobile. Distinct de `.page-content` (mesure typo 72ch) — usage : `<main class="content-grid"><section class="grid-auto-fit-lg">…</section></main>`.
+- **`--content-grid-max: 1200px` (tokens.css)** : token dédié pour la largeur max du conteneur grille. Surcharger localement si besoin.
+- **Icône `server` (sprite.svg)** : Lucide `server` — fallback vignette homelab dans mikpulse S6 (#55).
+- **Icône `command` (sprite.svg)** : Lucide `command` — fallback vignette apple/⌘ dans mikpulse S6 (#55).
+- **Registry** : `.content-grid` ajouté au tableau `cssClasses` de l'entrée `page-content` avec description étendue.
+
+### Changed (versioning)
+- **Bump synchrone 5 sources** `2.79.0 → 2.80.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+- **Sprite** : passage de 56 à 58 symboles (+ server, + command).
+
 ## 2.79.0 — 2026-06-21 — Variante `.card-media` (vignette bleed) + token `--card-thumb-h` (#37, demandée par la refonte mikpulse)
 
 > Ajout non-breaking d'une variante de card orientée image-first. Corrige aussi le drift `package.json` racine (resté à 2.77.0 depuis v2.77 alors que le DS était à 2.78.0).

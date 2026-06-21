@@ -1,4 +1,4 @@
-/* @ds-version: 2.79.0 */
+/* @ds-version: 2.80.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -79,6 +79,7 @@
     --header-h: 56px;
     --bottom-nav-h: 60px;  /* hauteur de .bottom-nav fixe (#567/#568) */
     --content-max: 72ch;   /* mesure typo optimale .page-content (#567) */
+    --content-grid-max: 1200px; /* largeur max d'un fil de cartes .content-grid (#53) */
     --opacity-muted: 0.85; /* opacité atténuation .card-muted — WCAG-safe (#569) */
     --sidebar-bg: rgba(10, 15, 30, 0.85);
     --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.04);
