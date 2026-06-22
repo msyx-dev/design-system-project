@@ -1,4 +1,4 @@
-/* @ds-version: 2.77.0 */
+/* @ds-version: 2.80.0 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -175,6 +175,28 @@
 .gap-y-xl  { row-gap: var(--space-xl); }
 .gap-y-2xl { row-gap: var(--space-2xl); }
 .gap-y-3xl { row-gap: var(--space-3xl); }
+
+/* ===== Responsive — masquage (#568) =====
+   Breakpoint 768px = breakpoint de .bottom-nav (navigation.css).
+   Objectif : masquer un élément sur UNE plage de largeur SANS imposer de display
+   au retour — donc sans casser le flex/grid/table natif du composant.
+   Piège évité : `display:revert` reviendrait au user-agent (block) et casserait
+   un `.tabs` flex à ≥768px. On scope donc le masquage à la plage concernée et on
+   ne déclare RIEN en dehors → l'élément retrouve son display natif.
+   `!important` : un utilitaire de masquage doit battre la spécificité du composant
+   (.tabs, .bottom-nav… ont la même spécificité 0,1,0).
+   Exception assumée au mobile-first min-width : « masquer sur mobile » est
+   sémantiquement un concept max-width. */
+
+/* Masqué < 768px ; ≥ 768px l'élément retrouve son display natif (flex, grid…) */
+@media (max-width: 767.98px) {
+    .hidden-mobile { display: none !important; }
+}
+
+/* Masqué ≥ 768px ; < 768px l'élément retrouve son display natif */
+@media (min-width: 768px) {
+    .hidden-desktop { display: none !important; }
+}
 
 /* ===== Display / Flex / Grid ===== */
 .flex        { display: flex; }

@@ -32,9 +32,12 @@ if (!versionConstant) {
 // 3. Presence des elements structurels attendus dans le header
 // Note: le logo reference logoMSYX.png depuis le hotfix #247 (v2.54.10)
 // Note: mode-toggle-btn remplace par mode-switch depuis v2.55.0 (#265)
+// Note: brand configurable depuis v2.78.0 (#570) — href et logoSrc sont maintenant
+//   des template literals dynamiques (brandHref, brandLogoSrc) avec defaults retro-compat.
+//   On verifie les defauts via les variables brandCfg plutot que les strings literales.
 const requiredPatterns = [
-  { pattern: /<a href="\/site\.html" class="header-logo"[^>]*>/, label: 'header-logo link' },
-  { pattern: /<img src="\/assets\/sources\/logoMSYX\.png"/, label: 'logoMSYX.png img' },
+  { pattern: /class="header-logo"/, label: 'header-logo link' },
+  { pattern: /var brandLogoSrc = brandCfg\.logoSrc \|\| '\/assets\/sources\/logoMSYX\.png'/, label: 'logoMSYX.png default (brand configurable #570)' },
   { pattern: /<span class="header-spacer">/, label: 'header-spacer' },
   { pattern: /<div class="theme-switcher">/, label: 'theme-switcher' },
   { pattern: /<div class="mode-toggle">/, label: 'mode-toggle' },

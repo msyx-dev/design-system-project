@@ -1,4 +1,4 @@
-/* @ds-version: 2.64.0 */
+/* @ds-version: 2.79.0 */
 /* cards.css — extracted from components.css v2.35.0 */
 
 /* ===== HERO ===== */
@@ -90,6 +90,36 @@
 }
 .lazy-error a { color: var(--accent); text-decoration: underline; }
 
+/* ===== CARD-MUTED — variante carte atténuée WCAG-safe (#569) =====
+   Objectif : signaler visuellement qu'une carte est « en retrait » (ex. article
+   sous le seuil de pertinence mikpulse) SANS faire chuter le contraste texte.
+   Stratégie de découplage :
+     - opacity globale intentionnellement faible → interdit (fait chuter text < 4.5:1)
+     - À la place : on atténue chrome (border, icon, accents) via --opacity-muted (0.85)
+       et on assombrit légèrement le fond sans toucher à la couleur du texte de contenu.
+   Le texte du résumé reste en var(--text) = contraste garanti WCAG 1.4.3 ≥ 4.5:1.
+
+   Usage : <div class="card card-muted">
+   Parité React : pending (registry). */
+.card-muted {
+    opacity: var(--opacity-muted);     /* atténuation visuelle globale — 0.85 préserve le contraste text */
+    border-color: color-mix(in srgb, var(--border-color) 60%, transparent);
+    box-shadow: none;
+    transition: opacity var(--duration-base) var(--ease-standard),
+                transform 0.4s var(--ease-standard),
+                border-color 0.4s var(--ease-standard),
+                box-shadow 0.4s var(--ease-standard);
+}
+/* Les éléments d'accent (icône, badges) s'atténuent davantage — pas le texte contenu */
+.card-muted .card-icon {
+    opacity: 0.6;
+}
+/* Hover : légère remontée (signal d'interactivité) */
+.card-muted:hover {
+    opacity: 1;
+    border-color: var(--border-hover);
+}
+
 /* ===== CARD-LINK (a11y wrapper for clickable cards) ===== */
 .card-link {
   display: block;
@@ -103,5 +133,72 @@
 .card-link:focus-visible .card {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* ===== CARD-MEDIA — variante carte à vignette pleine largeur bleed (v2.79.0) =====
+   Demandée par la refonte mikpulse (carte image-first). La `.card` standard a
+   padding:var(--space-xl) qui empêche la vignette d'aller bord à bord.
+   Stratégie :
+     - `.card-media` : surcharge padding→0 + overflow:hidden (clip border-radius)
+     - `.card-thumb` : vignette en tête de carte, hauteur via token --card-thumb-h
+     - `.card-body`  : rétablit le padding retiré par .card-media, zone de contenu
+   Compatibilité :
+     - fonctionne dans un wrapper `.card-link` (cliquable) — focus via .card-link:focus-visible
+     - cumule avec `.card-muted` (opacité 0.85) sans casse — cascade: card-media précise le
+       padding, card-muted précise opacity/border-color, pas de conflit
+   Fallback vignette : `.card-thumb` peut contenir un <img> ou un bloc fond gradient —
+   le consumer est responsable de l'intérieur (pas de fond forcé ici).
+
+   Usage :
+     <div class="card card-media">
+       <div class="card-thumb">
+         <img src="..." alt="...">
+       </div>
+       <div class="card-body">
+         <span class="overline">Section</span>
+         <h3>Titre</h3>
+         <p>Résumé…</p>
+       </div>
+     </div>
+   Parité React : pending (registry). */
+
+/* Variante carte à vignette pleine largeur */
+.card-media {
+  padding: 0;
+  overflow: hidden; /* clip du border-radius sur la vignette */
+}
+
+/* Conteneur vignette — pleine largeur, hauteur fixe via token */
+.card-thumb {
+  width: 100%;
+  height: var(--card-thumb-h);
+  overflow: hidden;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Image ou contenu de remplissage dans la vignette */
+.card-thumb img,
+.card-thumb > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Zone de contenu sous la vignette — rétablit le padding de .card */
+.card-body {
+  padding: var(--space-xl);
+}
+
+/* Compatibilité card-link : focus-visible redirigé vers la card enfant */
+.card-link:focus-visible .card-media {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Compatibilité card-muted : l'atténuation s'applique sur le conteneur entier */
+.card-media.card-muted .card-thumb {
+  opacity: 0.75; /* vignette un peu plus atténuée que le chrome pour cohérence visuelle */
 }
 

@@ -1,7 +1,7 @@
 {
-  "version": "2.77.0",
+  "version": "2.80.0",
   "generated": {
-    "at": "2026-06-19T20:41:48.947Z",
+    "at": "2026-06-22T18:35:09.524Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -45,6 +45,7 @@
         ".card-compact",
         ".card-horizontal",
         ".card-link",
+        ".card-muted",
         ".hero-bg",
         ".hero-grid-bg",
         ".hero-inner",
@@ -71,6 +72,22 @@
         "shared/css/components/theming.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css"
+      ]
+    },
+    {
+      "name": "card-media",
+      "kind": "component",
+      "page": "composants",
+      "cssClasses": [
+        ".card-media",
+        ".card-thumb",
+        ".card-body"
+      ],
+      "jsInit": null,
+      "example": "<div class=\"card card-media\">\n  <div class=\"card-thumb\">\n    <img src=\"/img/article.jpg\" alt=\"Vignette article\">\n  </div>\n  <div class=\"card-body\">\n    <span class=\"overline\">IA</span>\n    <h3>Titre de l'article</h3>\n    <p>Résumé du contenu en quelques mots.</p>\n    <span class=\"badge badge-success\">Pertinent</span>\n  </div>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/cards.css"
       ]
     },
     {
@@ -391,6 +408,7 @@
       "react": "pending",
       "module": [
         "shared/css/components/navigation.css",
+        "shared/css/utilities.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
       ]
@@ -867,7 +885,8 @@
       "example": "<nav class=\"bottom-nav\" aria-label=\"Navigation principale\">\n  <a class=\"bottom-nav-item active\" href=\"/\" aria-current=\"page\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#8962;</span>\n    <span class=\"bottom-nav-label\">Accueil</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/projets\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128193;</span>\n    <span class=\"bottom-nav-label\">Projets</span>\n    <span class=\"bottom-nav-badge\">3</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/profil\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128100;</span>\n    <span class=\"bottom-nav-label\">Profil</span>\n  </a>\n</nav>",
       "react": "pending",
       "module": [
-        "shared/css/components/navigation.css"
+        "shared/css/components/navigation.css",
+        "shared/css/utilities.css"
       ]
     },
     {
@@ -2503,7 +2522,8 @@
         ".subgroup-desc",
         ".subgroup-header",
         ".subgroup-title",
-        ".subsection"
+        ".subsection",
+        ".grid-auto-fit-"
       ],
       "jsInit": null,
       "generated": true,
@@ -2836,6 +2856,31 @@
       "jsInit": null,
       "generated": true,
       "react": "n-a"
+    },
+    {
+      "name": "page-content",
+      "kind": "layout",
+      "page": "fondation",
+      "cssClasses": [
+        ".page-content",
+        ".main--no-rail",
+        ".content-grid"
+      ],
+      "jsInit": null,
+      "react": "pending",
+      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53"
+    },
+    {
+      "name": "hidden-mobile",
+      "kind": "utility",
+      "page": "fondation",
+      "cssClasses": [
+        ".hidden-mobile",
+        ".hidden-desktop"
+      ],
+      "jsInit": null,
+      "react": "n-a",
+      "description": "Utilitaires responsive de masquage, breakpoint 768px aligné sur .bottom-nav (#568)."
     }
   ]
 }

@@ -1,5 +1,52 @@
 # Releases
 
+## 2.80.0 — 2026-06-21 — Conteneur grille .content-grid + icônes thème (server, command) — refonte mikpulse S6 (#53 #55)
+
+> Ajout non-breaking : nouveau conteneur `.content-grid` distinct de `.page-content` pour les fils de cartes en grille, et deux icônes Lucide supplémentaires dans le sprite (server, command).
+
+### Added
+- **`.content-grid` (layout.css)** : conteneur large pour fil de cartes en grille — `max-width: var(--content-grid-max)`, `margin-inline: auto`, padding responsive (md → xl → 2xl), `padding-top: var(--header-h)`, `padding-bottom` dégageant la bottom-nav mobile. Distinct de `.page-content` (mesure typo 72ch) — usage : `<main class="content-grid"><section class="grid-auto-fit-lg">…</section></main>`.
+- **`--content-grid-max: 1200px` (tokens.css)** : token dédié pour la largeur max du conteneur grille. Surcharger localement si besoin.
+- **Icône `server` (sprite.svg)** : Lucide `server` — fallback vignette homelab dans mikpulse S6 (#55).
+- **Icône `command` (sprite.svg)** : Lucide `command` — fallback vignette apple/⌘ dans mikpulse S6 (#55).
+- **Registry** : `.content-grid` ajouté au tableau `cssClasses` de l'entrée `page-content` avec description étendue.
+
+### Changed (versioning)
+- **Bump synchrone 5 sources** `2.79.0 → 2.80.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+- **Sprite** : passage de 56 à 58 symboles (+ server, + command).
+
+## 2.79.0 — 2026-06-21 — Variante `.card-media` (vignette bleed) + token `--card-thumb-h` (#37, demandée par la refonte mikpulse)
+
+> Ajout non-breaking d'une variante de card orientée image-first. Corrige aussi le drift `package.json` racine (resté à 2.77.0 depuis v2.77 alors que le DS était à 2.78.0).
+
+### Added
+- **`.card-media` (cards.css)** : variante de `.card` à vignette pleine largeur (bleed). Surcharge `padding:0` + `overflow:hidden` pour que l'image respecte le `border-radius` de la carte. Hérite de tous les tokens de `.card` (fond, border, hover, transitions).
+- **`.card-thumb` (cards.css)** : conteneur de la vignette en tête de carte. `width:100%`, hauteur fixe via token dédié `--card-thumb-h`, image enfant en `object-fit:cover; display:block; width:100%; height:100%`. Compatible tout contenu de remplissage (fond gradient, image). Pas de `border-radius` sur l'image — la carte clippe via `overflow:hidden`.
+- **`.card-body` (cards.css)** : zone de contenu sous la vignette. `padding:var(--space-xl)` rétablit l'espacement retiré par `.card-media`. Accueille overline / titre / résumé / badges.
+- **`--card-thumb-h: 160px` (tokens.css)** : token dédié pour la hauteur de la vignette `.card-thumb`. Surcharger localement si besoin (`--card-thumb-h: 200px`).
+- **Compatibilité `.card-link`** : `.card-media` fonctionne à l'intérieur d'un wrapper `.card-link` (carte cliquable). Focus-visible et hover préservés.
+- **Compatibilité `.card-muted`** : `.card-media.card-muted` cumule sans casse — cascade orthogonale (padding vs opacity/border-color). Vignette `.card-thumb` atténuée à opacity 0.75 pour cohérence visuelle.
+- **Démo `pages/composants.html`** : nouvelle section `#card-media` avec démos de 3 variantes (normale, muted, cliquable), vignettes gradient token, code HTML commenté, note sur le token `--card-thumb-h`.
+
+### Fixed
+- **Drift `package.json` racine** : aligné de 2.77.0 → 2.79.0 (resté à 2.77.0 depuis le bump 2.77 sans correction postérieure). Aligne le champ `version` avec `@ds-version` dans les 5 fichiers CSS/JS.
+
+### Changed (versioning)
+- **Bump synchrone 5 sources** `2.78.0 → 2.79.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version + nouvelle entrée `card-media`), `package.json` racine.
+
+## 2.78.0 — 2026-06-20 — Support consumers sans rail : .page-content, .hidden-mobile, .card-muted, header brand configurable (#567 #568 #569 #570)
+
+> Demande d'origine : refonte UI/UX mikpulse (consumer Next.js sans sidebar DS, P0 public). 4 livrables non-breaking, retro-compatibles — aucun consumer existant casse.
+
+### Added
+- **`.page-content` + `.main--no-rail` (layout.css — #567)** : conteneur de page pour consumers sans sidebar. `.page-content` : `max-width:var(--content-max)` (72ch), centrage `margin-inline:auto`, padding-inline responsive (md→xl→2xl), `padding-bottom` degageant la bottom-nav mobile fixe (`--bottom-nav-h`). `.main--no-rail` : variante `.main` annulant la marge inline-start et saturant `--sidebar-w:0` pour la compat composants. Tokens ajoutes : `--bottom-nav-h:60px`, `--content-max:72ch`.
+- **`.hidden-mobile` / `.hidden-desktop` (utilities.css — #568)** : utilitaires responsive de masquage, breakpoint 768px aligne sur `.bottom-nav`. Le masquage est scope a la plage concernee (`.hidden-mobile` : `@media (max-width:767.98px)` ; `.hidden-desktop` : `@media (min-width:768px)`) avec `display:none !important` — l'element retrouve son **display natif** hors plage (flex/grid/table preserves, pas de `revert` vers `block` qui casserait un `.tabs` flex). `!important` pour battre la specificite des composants (0,1,0). Exception assumee au mobile-first min-width : « masquer sur mobile » est semantiquement un concept max-width.
+- **`.card-muted` + `--opacity-muted` (cards.css + tokens.css — #569)** : variante carte attenuee WCAG-safe. Opacity globale `0.85` (token `--opacity-muted`) sur le chrome (fond, border, box-shadow) — le texte reste en `var(--text)`, contraste ≥ 4.5:1 garanti WCAG 1.4.3. `.card-muted .card-icon` : opacity 0.6. Hover : remontee `opacity:1` + `border-hover`. React : pending (registry).
+- **Brand header configurable — `window.MSYX_HEADER.brand` (nav.js — #570)** : clef `brand:{text,href,logoSrc}` dans la config header. Retro-compatible : defauts vitrine DS inchanges si `brand` absent (`text:'design-system'`, `href:'/site.html'`, `logoSrc:logoMSYX.png`). Permet aux consumers (ex. mikpulse) de personaliser logo + wordmark + lien sans forker `nav.js`.
+
+### Changed (versioning)
+- **Bump synchrone 5 sources** `2.77.0 → 2.78.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version + nouvelles entrees). Footer `site.html` a aligner au merge.
+
 ## 2.77.0 — 2026-06-18 — Consolidation des doublons de composants (M#44, Epic #517)
 
 > Milestone #44 **soldé** (Epic #517 clos : 5/5 sub-issues). Cinq consolidations **non-breaking** : un canonique élu par famille, les variantes concurrentes réduites à des alias `@deprecated` (suppression réelle en **v3**), tokenisation au passage. Aucun consumer cassé (alias rétro-compat). Bump synchrone des 8 sources. Churn VR géré par soft-harvest CI (chips→tag-input, wizard→stepper, messaging) ; #520 = 0 diff de rendu (surfaces flottantes fermées par défaut, tokenisation value-preserving).
