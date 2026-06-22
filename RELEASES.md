@@ -1,5 +1,16 @@
 # Releases
 
+## 2.81.0 — 2026-06-22 — Date-picker INLINE + time-picker (M#40 #432/#436)
+
+> Premier composant fonctionnel du milestone #40 « Composants manquants ». Le markup + CSS du calendrier existaient (statiques) ; cette release apporte le JS.
+
+### Added
+- **Date-picker INLINE fonctionnel (#432)** — `initCalendar()` : sélection simple + plage (1 calendrier, 2 clics), navigation de mois, génération dynamique des jours (JS `Date` natif, zéro dépendance), liaison à un `<input>`, événement `calendar:change`. A11y grille complète : `role=grid/row/gridcell`, `aria-selected`, `aria-current=date`, roving tabindex, navigation clavier (flèches/Home/End/PageUp-Down/Enter/Échap), `aria-live` sur le mois. Mois de référence figé (`data-cal-ref`) pour des baselines VR déterministes.
+- **Time-picker 24h/12h (#436, mergé dans #432)** — `initTimePicker()` mutualisant `.number-input-wrap` (HH/MM) + `.segmented` (AM/PM), événement `time:change`. Sous-section dans `#calendar`.
+
+### Changed
+- Bump synchrone des sources de version `2.80.0 → 2.81.0` (+ alignement `entrypoint.sh`/footer `site.html` qui étaient en retard depuis la refonte mikpulse).
+
 ## 2.80.0 — 2026-06-21 — Conteneur grille .content-grid + icônes thème (server, command) — refonte mikpulse S6 (#53 #55)
 
 > Ajout non-breaking : nouveau conteneur `.content-grid` distinct de `.page-content` pour les fils de cartes en grille, et deux icônes Lucide supplémentaires dans le sprite (server, command).
