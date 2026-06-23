@@ -67,7 +67,7 @@ const NAV_PAGES_PATHS = [
 const EXPECTED_COUNTS = {
   '/pages/getting-started.html': 6,
   '/pages/fondation.html':       16,
-  '/pages/composants.html':      12,
+  '/pages/composants.html':      13,
   '/pages/formulaires.html':     16,
   '/pages/navigation.html':      8,
   '/pages/data.html':            16,
@@ -76,7 +76,7 @@ const EXPECTED_COUNTS = {
   '/pages/divers.html':          11,
   '/pages/templates.html':       6,
 };
-const EXPECTED_TOTAL = 110;
+const EXPECTED_TOTAL = 111;
 
 // ─── Décodage des entités HTML ─────────────────────────────────────────────────
 
