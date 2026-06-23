@@ -9,6 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Added
+- Pattern de validation de formulaire a11y (`#form-validation`) : `initFormValidation()` traduit la validité HTML5 native en messages FR, pose `aria-invalid`/`aria-describedby`, région live polite au blur + résumé `.alert[role=alert]` focusable au submit. Opt-in via `<form data-validate>`. Réutilise `.input-error`/`.alert` (#519), 0 nouveau token. (#433)
 - Calendrier interactif INLINE (#432) — `initCalendar()` : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement `calendar:change`. Time-picker `initTimePicker()` 24h/12h (#436) mutualisant `.number-input-wrap` + `.segmented`, événement `time:change`. JS Date natif, zéro dépendance.
 - **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
 

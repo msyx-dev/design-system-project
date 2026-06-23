@@ -1269,6 +1269,59 @@
     </div>
 </section>
 
+
+<!-- FORM VALIDATION (#433) -->
+<section id="form-validation" class="ds-section">
+  <div class="section-header">
+    <span class="overline">Formulaires</span>
+    <h2>Validation a11y</h2>
+    <p class="section-desc">Pattern de validation accessible — <code>aria-invalid</code>, <code>aria-describedby</code>, région live, résumé d'erreurs focusable. API déclarative via <code>data-validate</code>.</p>
+  </div>
+
+  <!-- Démo 1 : multi-champs + summary -->
+  <div class="demo-box">
+    <h3 class="demo-title">Validation blur + résumé submit</h3>
+    <form class="ds-form" data-validate novalidate id="demo-fv-1">
+      <div class="input-group">
+        <label class="input-label" for="fv-name">Nom complet <span aria-hidden="true">*</span></label>
+        <span class="input-hint" id="fv-name-hint">Au moins 3 caractères</span>
+        <input class="input" type="text" id="fv-name" name="name" required minlength="3" aria-describedby="fv-name-hint" autocomplete="name">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="fv-email">Adresse e-mail <span aria-hidden="true">*</span></label>
+        <input class="input" type="email" id="fv-email" name="email" required autocomplete="email">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="fv-slug">Identifiant (slug) <span aria-hidden="true">*</span></label>
+        <span class="input-hint" id="fv-slug-hint">Lettres minuscules, chiffres et tirets uniquement</span>
+        <input class="input" type="text" id="fv-slug" name="slug" required pattern="[a-z0-9-]+" data-validate-msg-pattern="Lettres minuscules, chiffres et tirets uniquement" aria-describedby="fv-slug-hint" autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary">Valider</button>
+    </form>
+  </div>
+
+  <!-- Démo 2 : champ unique simple -->
+  <div class="demo-box">
+    <h3 class="demo-title">Champ requis simple</h3>
+    <form class="ds-form" data-validate novalidate id="demo-fv-2">
+      <div class="input-group">
+        <label class="input-label" for="fv-token">Jeton d'accès <span aria-hidden="true">*</span></label>
+        <input class="input" type="text" id="fv-token" name="token" required autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary">Soumettre</button>
+    </form>
+  </div>
+
+  <!-- Usage -->
+  <div class="demo-box">
+    <h3 class="demo-title">Usage</h3>
+    <div class="demo-note">
+      <p>Ajoutez <code>data-validate</code> et <code>novalidate</code> à tout <code>&lt;form&gt;</code>. Les contraintes HTML5 natives (<code>required</code>, <code>type</code>, <code>minlength</code>, <code>maxlength</code>, <code>pattern</code>) sont automatiquement traduites en messages FR. Pour personnaliser : <code>data-validate-msg-required</code>, <code>data-validate-msg-email</code>, <code>data-validate-msg-min</code>, <code>data-validate-msg-max</code>, <code>data-validate-msg-pattern</code>.</p>
+      <p>L'événement <code>ds:validation</code> est émis sur le formulaire avec <code>detail: {valid, errors}</code>.</p>
+    </div>
+  </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

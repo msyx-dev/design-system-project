@@ -1,7 +1,7 @@
 {
   "version": "2.81.0",
   "generated": {
-    "at": "2026-06-22T18:35:09.524Z",
+    "at": "2026-06-23T07:03:24.253Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -313,6 +313,7 @@
       "react": "pending",
       "module": [
         "shared/css/components/alerts.css",
+        "shared/css/components/forms.css",
         "shared/css/components/pricing.css"
       ]
     },
@@ -2881,6 +2882,19 @@
       "jsInit": null,
       "react": "n-a",
       "description": "Utilitaires responsive de masquage, breakpoint 768px aligné sur .bottom-nav (#568)."
+    },
+    {
+      "name": "form-validation",
+      "page": "formulaires",
+      "cssClasses": [
+        ".ds-form",
+        ".input-error",
+        ".input-error-msg",
+        ".input-success",
+        ".form-error-list"
+      ],
+      "jsInit": "initFormValidation",
+      "react": "pending"
     }
   ]
 }

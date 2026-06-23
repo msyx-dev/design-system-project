@@ -698,3 +698,44 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     .comment-thread { padding-left: var(--space-md); }
     .comment-thread::before { left: 12px; }
 }
+
+/* FORM VALIDATION (#433) */
+.input[aria-invalid="true"] {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent);
+}
+
+.input[aria-invalid="true"]:focus-visible {
+  outline-color: var(--danger);
+}
+
+.form-error-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-error-list a {
+  color: var(--danger-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.form-error-list a:focus-visible {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.ds-form .alert[role="alert"] {
+  margin-bottom: var(--space-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input[aria-invalid="true"] {
+    box-shadow: none;
+  }
+}
