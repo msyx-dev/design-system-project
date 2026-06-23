@@ -1317,7 +1317,7 @@
     <h3 class="demo-title">Usage</h3>
     <div class="demo-note">
       <p>Ajoutez <code>data-validate</code> et <code>novalidate</code> à tout <code>&lt;form&gt;</code>. Les contraintes HTML5 natives (<code>required</code>, <code>type</code>, <code>minlength</code>, <code>maxlength</code>, <code>pattern</code>) sont automatiquement traduites en messages FR. Pour personnaliser : <code>data-validate-msg-required</code>, <code>data-validate-msg-email</code>, <code>data-validate-msg-min</code>, <code>data-validate-msg-max</code>, <code>data-validate-msg-pattern</code>.</p>
-      <p>L'événement <code>ds:validation</code> est émis sur le formulaire avec <code>detail: {valid, errors}</code>.</p>
+      <p>L'événement <code>ds:validation</code> est émis sur le formulaire avec <code>detail: {valid, errors}</code>. <strong>Important :</strong> <code>initFormValidation()</code> pose un <code>e.preventDefault()</code> sur le submit — la soumission native (POST) est bloquée. Pour soumettre après validation réussie, écoutez <code>ds:validation</code> et vérifiez <code>detail.valid === true</code> avant d'appeler <code>form.submit()</code> ou votre handler fetch.</p>
     </div>
   </div>
 </section>

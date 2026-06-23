@@ -4283,7 +4283,7 @@ function initFormValidation() {
     const liveRegion = ensureLiveRegion(form);
 
     const fields = Array.from(form.querySelectorAll('input, textarea, select')).filter(
-      (f) => f.id && !f.disabled && f.type !== 'hidden' && f.type !== 'submit' && f.type !== 'button'
+      (f) => f.id && !f.disabled && f.type !== 'hidden' && f.type !== 'submit' && f.type !== 'button' && f.type !== 'radio' && f.type !== 'checkbox'
     );
 
     fields.forEach((field) => {

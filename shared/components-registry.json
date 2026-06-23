@@ -2890,7 +2890,6 @@
         ".ds-form",
         ".input-error",
         ".input-error-msg",
-        ".input-success",
         ".form-error-list"
       ],
       "jsInit": "initFormValidation",
