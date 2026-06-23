@@ -29,7 +29,7 @@ pages/
   fondation.html        # Couleurs, typographie, espacements, ombres, theming, consommation (guide integration), texture grain (v2.42.0) + Motion (durations, easings, 6 patterns — rapatrié depuis motion.html #514)
   composants.html       # Cards (+ .card-muted v2.78.0 #569), badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation, brand header configurable (window.MSYX_HEADER.brand — v2.78.0 #570)
-  formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier, slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
+  formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier interactif single/range INLINE + time-picker 24h/12h (#432/#436), slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
   data.html             # 16 sections en 5 familles (v2.71.0+) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats, animated-counters) · Jauges & progression (progress, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid, server-data-grid) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html        # Kanban, roadmap, backlog, sprint board
   feedback.html         # 12 sections états — alertes (.alert--kpi ex-zone-banner, .alert--cta ex-upgrade-prompt #519), toasts, skeleton, empty states, spinners, auto-save, pagination, comments, access-denied (#514)
@@ -278,7 +278,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Sliders** (`initSliders()`) : sync bidirectionnelle range-number, fill dynamique via `--slider-fill`
 - **Dropdowns** (`initDropdowns()`) : search, multi-select, option filtering
 - **Kanban** : drag & drop natif HTML5 (dragstart, dragover, drop)
-- **Calendrier** : navigation mois, selection date
+- **Calendrier** (`initCalendar()`) : date-picker INLINE single + range 2-bornes (1 calendrier, 2 clics), navigation mois/clavier (roving tabindex, role grid/row/gridcell, aria-live), événement `calendar:change`. Time-picker (`initTimePicker()`) 24h/12h, boutons +/- par partie hh/mm, segmented AM/PM, événement `time:change` (#432/#436)
 - **Theme/Mode switcher** : THEME_CONFIG, applyMode(), updateModeSwitch() (v2.55.0 — remplace updateModeButtons()), initModeSwitcher() sur switch unique #mode-switch (role="switch", aria-checked, kbd, tactile WCAG 2.5.5)
 
 ### Sprint 6 (6 composants)

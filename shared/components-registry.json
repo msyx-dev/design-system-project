@@ -1,7 +1,7 @@
 {
-  "version": "2.80.0",
+  "version": "2.81.0",
   "generated": {
-    "at": "2026-06-21T06:51:44.694Z",
+    "at": "2026-06-22T18:35:09.524Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -676,7 +676,8 @@
       "example": "<div class=\"number-input-wrap\">\n  <button class=\"number-input-btn\" data-action=\"decrement\" aria-label=\"Diminuer\">&#8722;</button>\n  <input class=\"number-input-field\" type=\"number\" value=\"1\" min=\"0\" max=\"99\" aria-label=\"Quantité\">\n  <button class=\"number-input-btn\" data-action=\"increment\" aria-label=\"Augmenter\">&#43;</button>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/forms.css"
+        "shared/css/components/forms.css",
+        "shared/css/components/templates.css"
       ]
     },
     {
@@ -2384,7 +2385,8 @@
         ".kanban-content",
         ".kanban-meta",
         ".kanban-page",
-        ".kanban-topbar"
+        ".kanban-topbar",
+        ".time-sep"
       ],
       "jsInit": null,
       "generated": true,
@@ -2520,7 +2522,8 @@
         ".subgroup-desc",
         ".subgroup-header",
         ".subgroup-title",
-        ".subsection"
+        ".subsection",
+        ".grid-auto-fit-"
       ],
       "jsInit": null,
       "generated": true,
@@ -2819,6 +2822,28 @@
       "jsInit": null,
       "generated": true,
       "react": "n-a"
+    },
+    {
+      "name": "calendar",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".cal-wrap",
+        ".cal-grid",
+        ".cal-day",
+        ".cal-nav",
+        ".cal-header",
+        ".time-input-wrap"
+      ],
+      "jsInit": "initCalendar",
+      "description": "Date-picker INLINE single/range (initCalendar) : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement calendar:change. Time-picker initTimePicker() 24h/12h (#436) mutualisant .number-input-wrap + .segmented, événement time:change. JS Date natif, zéro dépendance.",
+      "react": "pending",
+      "module": [
+        "shared/css/components/templates.css",
+        "shared/css/components/theming.css",
+        "shared/css/components/_a11y.css",
+        "shared/css/components/_responsive.css"
+      ]
     },
     {
       "name": "tables",
