@@ -42,11 +42,27 @@
     </div>
     <div class="subsection">
         <span class="demo-label">Groupe de boutons</span>
-        <div style="display:inline-flex;border-radius:10px;overflow:hidden;border:1px solid var(--border-color);"><button class="tab active" style="border:none;border-radius:0;padding:0.5rem 1.2rem;">Jour</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border-color);padding:0.5rem 1.2rem;">Semaine</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border-color);padding:0.5rem 1.2rem;">Mois</button><button class="tab" style="border:none;border-radius:0;border-left:1px solid var(--border-color);padding:0.5rem 1.2rem;">Annee</button></div>
+        <div class="demo-row">
+            <div class="btn-group" role="group" aria-label="Periode d'affichage">
+                <button class="btn-secondary">Jour</button>
+                <button class="btn-secondary">Semaine</button>
+                <button class="btn-secondary">Mois</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Actions document">
+                <button class="btn-primary">Enregistrer</button>
+                <button class="btn-primary">Publier</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Taille de texte">
+                <button class="btn-secondary btn-sm">S</button>
+                <button class="btn-secondary btn-sm">M</button>
+                <button class="btn-secondary btn-sm">L</button>
+            </div>
+        </div>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">Usage</span>
         <p class="typo-small">Utiliser <code class="code-inline">btn-primary</code> pour l'action principale d'une page ou d'un formulaire — un seul par section. Utiliser <code class="code-inline">btn-secondary</code> pour les actions secondaires et <code class="code-inline">btn-ghost</code> pour les actions tertiaires ou de navigation. Ne pas utiliser <code class="code-inline">btn-danger</code> pour des actions sans confirmation — preferer un modal de confirmation. Pour les actions icones seules, utiliser <code class="code-inline">btn-icon</code> avec un <code class="code-inline">aria-label</code> obligatoire.</p>
+        <p class="typo-small mt-sm"><strong>Groupe de boutons vs Segmented control :</strong> utiliser <code class="code-inline">.btn-group</code> (CSS-only, <code class="code-inline">role="group"</code>) pour accoler des actions distinctes (ex. Enregistrer / Publier) — chaque bouton conserve sa semantique et son style <code class="code-inline">.btn-*</code>. Utiliser <code class="code-inline">.segmented</code> + <code class="code-inline">initSegmentedControls()</code> pour un choix exclusif radio-like avec indicateur slide anime (ex. Vue Liste / Vue Grille).</p>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">HTML</span>
@@ -75,7 +91,16 @@
 &lt;button class="btn-icon" aria-label="Fermer"&gt;&amp;#10005;&lt;/button&gt;
 
 &lt;!-- Bouton icone destructif (aria-label obligatoire) --&gt;
-&lt;button class="btn-icon btn-icon--danger" aria-label="Supprimer"&gt;&amp;#128465;&lt;/button&gt;</div>
+&lt;button class="btn-icon btn-icon--danger" aria-label="Supprimer"&gt;&amp;#128465;&lt;/button&gt;
+
+&lt;!-- Groupe de boutons (actions distinctes, CSS-only) --&gt;
+&lt;div class="btn-group" role="group" aria-label="Periode d'affichage"&gt;
+  &lt;button class="btn-secondary"&gt;Jour&lt;/button&gt;
+  &lt;button class="btn-secondary"&gt;Semaine&lt;/button&gt;
+  &lt;button class="btn-secondary"&gt;Mois&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Pour un choix exclusif radio-like : utiliser .segmented + initSegmentedControls() --&gt;</div>
     </div>
 </section>
 

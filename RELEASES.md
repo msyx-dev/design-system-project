@@ -1,5 +1,19 @@
 # Releases
 
+## 2.83.0 — 2026-06-30 — Button group attaché `.btn-group` (M#40 Vague 2 #451)
+
+> Premier livrable de la Vague 2 du milestone #40. Composant CSS-only qui résorbe un hack inline (`.tab` détournés + styles hardcodés) dans la section #buttons.
+
+### Added
+- **Button group attaché `.btn-group` (#451)** — conteneur `display:inline-flex` qui accole des `.btn-*` existants : radius mitoyens via propriétés logiques (`border-start-start-radius` / `border-end-start-radius`, RTL-safe), bordure partagée sans double épaisseur (`margin-inline-start:-1px`), `z-index` au `:hover` / `:focus-visible` pour que l'outline focus reste au-dessus du voisin (WCAG 2.4.7). `role="group"` + `aria-label` requis. CSS-only (aucun `init*`), ajouté dans `buttons.css` (pas de nouveau module). Token `--radius-md`, zéro valeur hardcodée. Remplace le hack inline de la sous-section « Groupe de boutons » (`pages/composants.html`). Distinct de `.segmented` (choix exclusif radio-like, JS). Horizontal uniquement — pas de variante verticale ni d'état toggle (MVP arbitré).
+- **Registry** : entrée `btn-group` (page `composants`, `jsInit: null`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.82.0 → 2.83.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+
+### VR
+- Re-baseline ciblé de la page `composants` (section #buttons modifiée + cascade de décalage vertical des sections suivantes sur desktop) via soft-harvest des actuals CI. Aucune autre page affectée.
+
 ## 2.82.0 — 2026-06-30 — Pattern de validation de formulaire a11y (M#40 #433)
 
 > Deuxième livrable du milestone #40 « Composants manquants ». Pattern opt-in qui traduit la validité HTML5 native en feedback accessible, sans nouveau token ni nouvelle classe d'état (réutilise `.input-error` / `.alert` de #519).
