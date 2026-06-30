@@ -19,6 +19,7 @@
 @import "./components/navigation.css";
 @import "./components/feedback.css";
 @import "./components/interactive.css";
+@import "./components/prose.css";
 @import "./components/templates.css";
 @import "./components/media.css";
 @import "./components/_responsive.css";

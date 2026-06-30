@@ -44,9 +44,9 @@ shared/
     base.css            # Socle global (reset, focus accessible, body, texture grain) — synchronisé vers consumers en ds-base.css
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css      # Barrel pur (v2.36.0) — 31 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
+    components.css      # Barrel pur (v2.36.0) — 32 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
     components-core.css # Barrel essentiel (v2.36.0) — 10 modules pour consumers légers (menu.css ajouté v2.77.0 #520 — requis par les alias forms/navigation).
-    components/         # 31 modules CSS par affinité fonctionnelle (v2.77.0, +menu.css #520) :
+    components/         # 32 modules CSS par affinité fonctionnelle (v2.77.0, +menu.css #520, +prose.css #439) :
       _base.css         #   Reset natif (a, :focus-visible global) — v2.31.0
       menu.css          #   Primitif surface flottante mutualisée — .menu/.menu-item/.menu-divider, token --shadow-menu, alias @deprecated v3 (#520)
       signature.css     #   Brand signature spatiale — gradient underline 2px sous .section-header .overline (v2.42.0)
@@ -67,6 +67,7 @@ shared/
       modals.css        #   MODAL, MODAL DIALOG, POPOVER, COMMAND PALETTE, DRAWER, BOTTOM SHEET, CONFIRM POPOVER
       feedback.css      #   SKELETON, DIVIDER, RATING, EMPTY STATES, PAGINATION, SPINNERS, SKELETON PREFABS
       interactive.css   #   CODE (.code-block + .code-inline refactor v2.50.0), COPY BUTTON, FAB, SEGMENTED CONTROL, INLINE EDITING, AUTO-SAVE, ICON (.icon v2.33.0)
+      prose.css         #   PROSE — conteneur .prose scopé (:where()) pour HTML rendu depuis markdown (titres, listes, blockquote, code, hr ; tables/liens hérités DS) — CSS-only, 0 token — (#439)
       templates.css     #   TEMPLATES (kanban, sprint, roadmap, backlog)
       media.css         #   CAROUSEL, LIGHTBOX, VIDEO EMBED, BEFORE/AFTER SLIDER
       _responsive.css   #   @media composants

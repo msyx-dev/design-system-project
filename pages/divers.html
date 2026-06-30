@@ -548,6 +548,61 @@
     </div>
 </section>
 
+<!-- PROSE / RENDU MARKDOWN -->
+<section id="prose">
+    <div class="section-header"><span class="overline">Contenu riche</span><h2>Rendu Markdown / Prose</h2><p>Classe <code class="code-inline">.prose</code> : conteneur scopé qui stylise du HTML natif déjà rendu (sortie markdown). CSS-only, zéro JS.</p></div>
+    <div class="demo-box">
+        <span class="demo-label">Échantillon complet</span>
+        <div class="prose">
+            <h2>Design System msyx</h2>
+            <p>Le design system <strong>msyx.fr</strong> est la source de vérité pour tous les composants UI. Il couvre <em>typographie</em>, couleurs, espacements, et composants interactifs — tout via des <code>var(--token)</code> CSS.</p>
+
+            <h3>Principes clés</h3>
+            <ul>
+                <li>Tokens-first — aucune valeur hexadécimale codée en dur</li>
+                <li>Mobile-first — media queries <code>min-width</code> uniquement</li>
+                <li>A11y WCAG AA — contraste 4.5:1, cibles 44px, <code>aria-*</code> complets</li>
+            </ul>
+
+            <h3>Installation</h3>
+            <ol>
+                <li>Importer <code>styles.css</code> dans votre <code>&lt;head&gt;</code></li>
+                <li>Ajouter <code>nav.js</code> et <code>components.js</code> en fin de <code>&lt;body&gt;</code></li>
+                <li>Définir <code>data-theme</code> et <code>data-mode</code> sur <code>&lt;html&gt;</code></li>
+            </ol>
+
+            <blockquote>
+                <p>La règle d'or : si un composant est absent du DS, créez-le ici d'abord — jamais dans le projet consommateur.</p>
+            </blockquote>
+
+            <h3>Exemple de code</h3>
+<pre><code>/* Importer le design system */
+@import "/shared/styles.css";
+
+/* Utiliser la classe prose */
+&lt;div class="prose"&gt;
+    /* Le HTML rendu depuis markdown ici */
+&lt;/div&gt;</code></pre>
+
+            <hr>
+
+            <h3>Héritage des tables (tables.css)</h3>
+            <table>
+                <thead>
+                    <tr><th>Composant</th><th>Page</th><th>JS requis</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>.prose</td><td>divers</td><td>Non</td></tr>
+                    <tr><td>.card</td><td>composants</td><td>Non</td></tr>
+                    <tr><td>initCalendar</td><td>formulaires</td><td>Oui</td></tr>
+                </tbody>
+            </table>
+
+            <p>Les liens natifs héritent de <a href="#prose">_base.css</a> (couleur <code>var(--accent)</code>, underline, hover theme-aware).</p>
+        </div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
