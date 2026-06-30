@@ -1,0 +1,100 @@
+/* ===== PROSE / RENDU MARKDOWN (#439) ===== */
+/* Conteneur .prose — stylise du HTML natif déjà rendu (sortie markdown).
+   Scoping via :where() → spécificité 0,1,0 ; n'override jamais les classes DS.
+   Tables et liens héritent des règles bare de tables.css et _base.css. */
+
+/* Titres — échelle typographique en rem littéraux (aucun token --text-* n'existe) */
+.prose :where(h1) { font-size: 2rem;    font-family: var(--font-display); font-weight: var(--fw-bold);     line-height: var(--lh-tight);  margin-block: var(--space-2xl) var(--space-md); }
+.prose :where(h2) { font-size: 1.5rem;  font-family: var(--font-display); font-weight: var(--fw-semibold); line-height: var(--lh-tight);  margin-block: var(--space-xl)  var(--space-sm); }
+.prose :where(h3) { font-size: 1.25rem; font-family: var(--font-display); font-weight: var(--fw-semibold); line-height: var(--lh-snug);   margin-block: var(--space-lg)  var(--space-xs); }
+.prose :where(h4) { font-size: 1.1rem;  font-family: var(--font-display); font-weight: var(--fw-medium);   line-height: var(--lh-snug);   margin-block: var(--space-md)  var(--space-xs); }
+.prose :where(h5) { font-size: 1rem;    font-family: var(--font-display); font-weight: var(--fw-medium);   line-height: var(--lh-base);   margin-block: var(--space-md)  var(--space-xs); }
+.prose :where(h6) { font-size: 0.9rem;  font-family: var(--font-display); font-weight: var(--fw-medium);   line-height: var(--lh-base);   margin-block: var(--space-sm)  var(--space-xs); color: var(--text-muted); }
+
+/* Premier enfant : supprime margin-block-start */
+.prose :where(h1, h2, h3, h4, h5, h6):first-child { margin-block-start: 0; }
+
+/* Paragraphes */
+.prose :where(p) {
+    line-height: var(--lh-relaxed);
+    margin-block: 0 var(--space-md);
+}
+.prose :where(p):last-child { margin-block-end: 0; }
+
+/* Listes — rétablissement après reset _base.css */
+.prose :where(ul) {
+    list-style: disc;
+    padding-inline-start: 1.5rem;
+    margin-block: 0 var(--space-md);
+}
+.prose :where(ol) {
+    list-style: decimal;
+    padding-inline-start: 1.5rem;
+    margin-block: 0 var(--space-md);
+}
+.prose :where(li) {
+    margin-block: var(--space-xs);
+    line-height: var(--lh-relaxed);
+}
+/* Listes imbriquées */
+.prose :where(li > ul, li > ol) {
+    margin-block: var(--space-xs) 0;
+}
+
+/* Blockquote */
+.prose :where(blockquote) {
+    border-inline-start: 3px solid var(--accent);
+    padding-inline-start: var(--space-md);
+    margin-inline: 0;
+    margin-block: var(--space-md);
+    color: var(--text-muted);
+    font-style: italic;
+}
+.prose :where(blockquote p) { margin-block: 0; }
+
+/* Code inline (sans classe DS) */
+.prose :where(code) {
+    font-family: var(--font-mono);
+    background: var(--surface-solid);
+    padding: 0.1em 0.4em;
+    border-radius: var(--radius-xs);
+    font-size: 0.9em;
+    border: 1px solid var(--border-color);
+    color: var(--text);
+}
+
+/* Bloc pre */
+.prose :where(pre) {
+    font-family: var(--font-mono);
+    background: var(--surface-solid);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xs);
+    padding: var(--space-md) var(--space-lg);
+    overflow-x: auto;
+    overflow-wrap: anywhere;
+    margin-block: var(--space-md);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+}
+
+/* pre > code : neutralise le double-style */
+.prose :where(pre code) {
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+/* Séparateur horizontal */
+.prose :where(hr) {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin-block: var(--space-xl);
+}
+
+/* Emphase */
+.prose :where(strong) { font-weight: var(--fw-semibold); }
+.prose :where(em)     { font-style: italic; }

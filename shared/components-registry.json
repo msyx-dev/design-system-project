@@ -1,7 +1,7 @@
 {
-  "version": "2.84.0",
+  "version": "2.85.0",
   "generated": {
-    "at": "2026-06-30T12:04:56.953Z",
+    "at": "2026-06-30T12:59:56.837Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2914,6 +2914,15 @@
         ".split-button__menu"
       ],
       "jsInit": "initSplitButton",
+      "react": "pending"
+    },
+    {
+      "name": "prose",
+      "page": "divers",
+      "cssClasses": [
+        ".prose"
+      ],
+      "jsInit": null,
       "react": "pending"
     }
   ]

@@ -1,5 +1,20 @@
 # Releases
 
+## 2.85.0 — 2026-06-30 — Module `.prose` (rendu markdown / contenu riche) (M#40 Vague 2 #439)
+
+> Troisième livrable de la Vague 2 du milestone #40. Conteneur CSS-only stylisant du HTML markdown déjà rendu.
+
+### Added
+- **Module `.prose` (#439)** — nouveau module `shared/css/components/prose.css` (ajouté au barrel `components.css` après `interactive.css`). Conteneur `.prose` qui stylise du HTML natif issu d'un rendu markdown : `h1`–`h6` (échelle rem + `--font-display`), `p` (`--lh-relaxed`), `ul`/`ol`/`li` (list-style rétabli), `blockquote` (`border-inline-start` accent + `--text-muted` italique), `code`/`pre` (mono + `--surface-solid`), `hr`, `strong`/`em`. Scope via `:where(...)` (spécificité 0,1,0 — n'override jamais `.section-header`). **Tables héritées de `tables.css`** et **liens de `_base.css`** (zéro CSS dupliqué). CSS-only, zéro JS, zéro parser markdown, zéro nouveau token. Nouvelle section `#prose` en fin de `pages/divers.html`.
+- **Registry** : entrée `prose` (page `divers`, `jsInit: null`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.84.0 → 2.85.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `divers.html` 11 → 12, total 113 → 114 (nouvelle section `#prose`). Barrel `components.css` : 31 → 32 modules.
+
+### VR
+- Re-baseline ciblé page `divers` via soft-harvest des actuals CI : nouvelle section `#prose` (12) + `#before-after` (12, qui gagne une bordure-bas `:last-of-type`). Aucune autre page affectée.
+
 ## 2.84.0 — 2026-06-30 — Split button `.split-button` (M#40 Vague 2 #438)
 
 > Deuxième livrable de la Vague 2 du milestone #40. Composant composé : action primaire + caret menu attaché.
