@@ -44,10 +44,11 @@ shared/
     base.css            # Socle global (reset, focus accessible, body, texture grain) — synchronisé vers consumers en ds-base.css
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
     layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
-    components.css      # Barrel pur (v2.36.0) — 32 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
+    components.css      # Barrel pur (v2.36.0) — 33 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
     components-core.css # Barrel essentiel (v2.36.0) — 10 modules pour consumers légers (menu.css ajouté v2.77.0 #520 — requis par les alias forms/navigation).
-    components/         # 32 modules CSS par affinité fonctionnelle (v2.77.0, +menu.css #520, +prose.css #439) :
+    components/         # 33 modules CSS par affinité fonctionnelle (v2.77.0, +menu.css #520, +prose.css #439, +orb.css #357) :
       _base.css         #   Reset natif (a, :focus-visible global) — v2.31.0
+      orb.css           #   Primitif ambient background décoratif — .orb + modifs couleur/taille + .orb--float opt-in (#357)
       menu.css          #   Primitif surface flottante mutualisée — .menu/.menu-item/.menu-divider, token --shadow-menu, alias @deprecated v3 (#520)
       signature.css     #   Brand signature spatiale — gradient underline 2px sous .section-header .overline (v2.42.0)
       brand.css         #   Brand identity — wordmark + mark DS (v2.56.0)

@@ -9,6 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Added
+- Primitif .orb canonique (orb.css) : ambient background décoratif (position absolute, blur var(--orb-blur), opacity var(--orb-opacity), pointer-events none, will-change), modificateurs couleur (.orb--accent/--primary-light/--violet/--danger) + taille (.orb--sm/--md/--lg) + animation opt-in (.orb--float, @keyframes orbFloat). Refactor des 4 copies divergentes (hero/login/access-denied/index.html) vers le primitif, iso-visuel ; hex hardcodés d'index.html tokenisés ; aria-hidden harmonisé. (#357)
 - Module .prose (prose.css) : styles de rendu de contenu markdown/HTML riche (headings, listes, blockquote, code, hr ; tables et liens hérités du DS). CSS-only, scope :where() anti-collision. Section #prose (divers.html). (#439)
 - Split button (.split-button) : action primaire + caret menu attache, panneau bati sur le primitif .menu (#520), initSplitButton dedie (open/close, aria-haspopup/expanded sur le caret, nav clavier fleches/Home/End/Echap, fermeture outside-click+Escape). Section #split-button (fin de composants.html). (#438)
 - Button group attache (.btn-group) : conteneur CSS-only inline-flex qui accolle des .btn-* (radius mitoyens via proprietes logiques, bordure partagee, z-index focus), role=group + aria-label. Remplace un hack inline (.tab detournes). Distinct de .segmented (choix exclusif). (#451)
