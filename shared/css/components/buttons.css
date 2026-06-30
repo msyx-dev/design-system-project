@@ -109,3 +109,31 @@
     transition: transform 0.1s ease;
 }
 
+
+/* ===== BUTTON GROUP (#451) ===== */
+/* Conteneur CSS-only qui accolle des .btn-* horizontalement.
+   Pour un choix exclusif (radio-like), utiliser .segmented + initSegmentedControls. */
+.btn-group {
+    display: inline-flex;
+}
+.btn-group > * {
+    border-radius: 0;
+    position: relative; /* permet z-index sur focus/hover */
+}
+.btn-group > :first-child {
+    border-start-start-radius: var(--radius-md);
+    border-end-start-radius: var(--radius-md);
+}
+.btn-group > :last-child {
+    border-start-end-radius: var(--radius-md);
+    border-end-end-radius: var(--radius-md);
+}
+/* Bordure mitoyenne sans double epaisseur */
+.btn-group > :not(:first-child) {
+    margin-inline-start: -1px;
+}
+/* Focus/hover au-dessus du voisin — garantit que l'outline WCAG 2.4.7 n'est pas masque */
+.btn-group > :hover,
+.btn-group > :focus-visible {
+    z-index: 1;
+}
