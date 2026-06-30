@@ -1,0 +1,34 @@
+/* orb.css — Primitif ambient background decoratif (#357)
+   Usage : <div class="orb orb--accent orb--lg" aria-hidden="true"></div>
+   CSS-only. Animation opt-in via .orb--float. ZERO JS. */
+
+/* ===== ORB — BASE ===== */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+    filter: blur(var(--orb-blur, 60px));
+    opacity: var(--orb-opacity, 0.12);
+}
+
+/* ===== MODIFICATEURS COULEUR ===== */
+.orb--accent        { background: var(--accent); }
+.orb--primary-light { background: var(--primary-light); }
+.orb--violet        { background: var(--deco-violet); }
+.orb--danger        { background: var(--danger); }
+
+/* ===== MODIFICATEURS TAILLE ===== */
+.orb--sm { width: 250px; height: 250px; }
+.orb--md { width: 350px; height: 350px; }
+.orb--lg { width: 500px; height: 500px; }
+
+/* ===== ANIMATION OPT-IN ===== */
+/* 3/4 usages sont statiques — animation non activee par defaut. */
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(30px, -20px) scale(1.05); }
+    66%       { transform: translate(-20px, 15px) scale(0.95); }
+}
+.orb--float { animation: orbFloat 12s ease-in-out infinite; }
+/* prefers-reduced-motion global couvert par _a11y.css */

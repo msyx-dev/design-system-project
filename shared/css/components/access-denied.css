@@ -17,14 +17,6 @@
     overflow: hidden;
 }
 
-.access-denied-preview .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.12;
-    pointer-events: none;
-}
-
 .access-denied-preview .orb-1 {
     width: 320px;
     height: 320px;

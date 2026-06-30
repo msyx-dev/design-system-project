@@ -15,6 +15,7 @@
             --surface: rgba(30, 41, 59, 0.6);
             --text: #f1f5f9;
             --text-muted: #94a3b8;
+            --deco-violet: #8b5cf6;
             --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
             --border-color: rgba(59, 130, 246, 0.08);
             --radius-lg: 24px;
@@ -29,10 +30,10 @@
             overflow: hidden;
         }
         .orb {
-            position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none;
+            position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; will-change: transform;
         }
-        .orb-1 { width: 500px; height: 500px; background: #3b82f6; top: -150px; right: -100px; }
-        .orb-2 { width: 400px; height: 400px; background: #8b5cf6; bottom: -100px; left: -100px; }
+        .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; right: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: var(--deco-violet); bottom: -100px; left: -100px; }
         .card {
             background: var(--surface);
             border: 1px solid var(--border-color);
@@ -97,8 +98,8 @@
     <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);}());</script>
 </head>
 <body>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
     <div class="card">
         <div class="logo"><div class="brand-mark-ds" aria-label="Design System">DS</div></div>
         <h2>Accès restreint</h2>

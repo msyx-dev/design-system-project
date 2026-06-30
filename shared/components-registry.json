@@ -1,7 +1,7 @@
 {
   "version": "2.85.0",
   "generated": {
-    "at": "2026-06-30T12:59:56.837Z",
+    "at": "2026-06-30T15:08:38.612Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1550,7 +1550,6 @@
         ".access-denied-actions",
         ".access-denied-btn-primary",
         ".access-denied-btn-secondary",
-        ".orb",
         ".orb-1",
         ".orb-2"
       ],
@@ -2921,6 +2920,23 @@
       "page": "divers",
       "cssClasses": [
         ".prose"
+      ],
+      "jsInit": null,
+      "react": "pending"
+    },
+    {
+      "name": "orb",
+      "page": "fondation",
+      "cssClasses": [
+        ".orb",
+        ".orb--accent",
+        ".orb--primary-light",
+        ".orb--violet",
+        ".orb--danger",
+        ".orb--sm",
+        ".orb--md",
+        ".orb--lg",
+        ".orb--float"
       ],
       "jsInit": null,
       "react": "pending"
