@@ -1,5 +1,21 @@
 # Releases
 
+## 2.86.0 — 2026-06-30 — Primitif `.orb` canonique + refactor 4 usages (M#40 Vague 2 #357)
+
+> Dernier livrable de la Vague 2 du milestone #40. Extraction d'un primitif `.orb` et unification de 4 copies divergentes (dont une avec hex hardcodés).
+
+### Added
+- **Primitif `.orb` (#357)** — nouveau module `shared/css/components/orb.css` (barrel après `_base.css`, avant `cards.css`). Base canonique `.orb` (`position:absolute`, `border-radius:50%`, `pointer-events:none`, `will-change:transform`, `filter:blur(var(--orb-blur,60px))`, `opacity:var(--orb-opacity,0.12)`) + modificateurs couleur (`.orb--accent` / `.orb--primary-light` / `.orb--violet` / `.orb--danger`) + taille (`.orb--sm` 250px / `.orb--md` 350px / `.orb--lg` 500px) + animation **opt-in** (`.orb--float`, `@keyframes orbFloat` extrait de cards.css). Démo dans la section effets de `pages/fondation.html`.
+
+### Changed
+- **Refactor des 4 copies divergentes de `.orb` vers le primitif, ISO-VISUEL** : hero (`cards.css`, `--orb-opacity:1` pour préserver l'alpha color-mix + `.hero-bg .orb` conserve son animation), login (`forms.css`, `--orb-opacity:0.15`), access-denied (`access-denied.css`, défauts base). `index.html` (auth gate standalone) : **hex hardcodés `#3b82f6`/`#8b5cf6` tokenisés** en `var(--accent)`/`var(--deco-violet)`. `aria-hidden="true"` harmonisé sur tous les orbes (login/index/site). Registry : entrée canonique `orb` + nettoyage des classes `.orb*` absorbées dans `cards`/`access-denied`.
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.85.0 → 2.86.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`. Barrel `components.css` : 32 → 33 modules.
+
+### VR
+- Soft-harvest ciblé page `fondation` (la démo insérée dans la section effets décale verticalement les sections suivantes → cascade sub-pixel). **Login (`formulaires`) et access-denied (`feedback`) NON divergents → refactor confirmé pixel-identique sur les surfaces releasées.**
+
 ## 2.85.0 — 2026-06-30 — Module `.prose` (rendu markdown / contenu riche) (M#40 Vague 2 #439)
 
 > Troisième livrable de la Vague 2 du milestone #40. Conteneur CSS-only stylisant du HTML markdown déjà rendu.
