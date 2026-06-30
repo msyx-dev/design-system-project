@@ -1,7 +1,7 @@
 {
   "version": "2.83.0",
   "generated": {
-    "at": "2026-06-30T09:19:24.853Z",
+    "at": "2026-06-30T12:04:56.953Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2903,6 +2903,17 @@
         ".btn-group"
       ],
       "jsInit": null,
+      "react": "pending"
+    },
+    {
+      "name": "split-button",
+      "page": "composants",
+      "cssClasses": [
+        ".split-button",
+        ".split-button__caret",
+        ".split-button__menu"
+      ],
+      "jsInit": "initSplitButton",
       "react": "pending"
     }
   ]

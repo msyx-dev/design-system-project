@@ -110,6 +110,69 @@
 }
 
 
+/* ===== SPLIT BUTTON (#438) ===== */
+/* Wrapper independant (pas .btn-group) — enfant menu en position absolue
+   necessite un ancetre position:relative, incompatible avec :last-child de .btn-group */
+.split-button {
+    position: relative;
+    display: inline-flex;
+}
+
+/* Bouton d'action primaire (1er enfant) : radius droit supprime */
+.split-button > .btn-primary:first-child,
+.split-button > .btn-secondary:first-child {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+}
+
+/* Caret : radius gauche supprime, largeur reduite, bordure partagee */
+.split-button__caret {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    padding-inline: 0.75rem;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline-start: -1px;
+    position: relative;
+}
+
+/* Neutraliser le translateY lift au hover — evite le desalignement des boutons mitoyens */
+.split-button > .btn-primary:hover,
+.split-button > .btn-secondary:hover,
+.split-button__caret:hover {
+    transform: none;
+}
+
+/* Focus visible au-dessus du voisin (WCAG 2.4.7) */
+.split-button > *:focus-visible {
+    z-index: 1;
+}
+
+/* Panneau menu — positionnement absolu ancre au wrapper */
+.split-button__menu {
+    position: absolute;
+    top: calc(100% + var(--space-xs));
+    inset-inline-end: 0;
+    z-index: 100;
+    min-width: 200px;
+    /* Etats ferme/ouvert via .open — heritage surface (.menu) intact */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+        opacity var(--duration-fast) var(--ease-standard),
+        visibility var(--duration-fast) var(--ease-standard),
+        transform var(--duration-fast) var(--ease-standard);
+}
+.split-button__menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
 /* ===== BUTTON GROUP (#451) ===== */
 /* Conteneur CSS-only qui accolle des .btn-* horizontalement.
    Pour un choix exclusif (radio-like), utiliser .segmented + initSegmentedControls. */

@@ -901,6 +901,83 @@
     </div>
 </section>
 
+<section id="split-button">
+    <div class="section-header">
+        <span class="overline">Composants</span>
+        <h2>Split Button</h2>
+        <p>Action principale + caret menu contextuel attache. Le bouton primaire declenche l'action par defaut ; le caret ouvre un panneau d'alternatives bati sur le primitif <code class="code-inline">.menu</code>. Navigation clavier complete (fleches, Home/End, Echap). <code class="code-inline">initSplitButton()</code> dedie.</p>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Variante Primary</span>
+        <div class="demo-row">
+            <div class="split-button">
+                <button class="btn-primary" type="button">Enregistrer</button>
+                <button class="btn-primary split-button__caret" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Plus d'actions">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"></use></svg>
+                </button>
+                <div class="menu split-button__menu" role="menu">
+                    <button class="menu-item" role="menuitem" type="button">Enregistrer et fermer</button>
+                    <button class="menu-item" role="menuitem" type="button">Enregistrer comme brouillon</button>
+                    <div class="menu-divider" role="separator"></div>
+                    <button class="menu-item menu-item--danger" role="menuitem" type="button">Annuler les modifications</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Variante Secondary</span>
+        <div class="demo-row">
+            <div class="split-button">
+                <button class="btn-secondary" type="button">Exporter</button>
+                <button class="btn-secondary split-button__caret" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Plus d'options d'export">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"></use></svg>
+                </button>
+                <div class="menu split-button__menu" role="menu">
+                    <button class="menu-item" role="menuitem" type="button">Exporter en PDF</button>
+                    <button class="menu-item" role="menuitem" type="button">Exporter en CSV</button>
+                    <button class="menu-item" role="menuitem" type="button">Exporter en JSON</button>
+                    <div class="menu-divider" role="separator"></div>
+                    <button class="menu-item menu-item--danger" role="menuitem" type="button">Supprimer l'export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection">
+        <span class="demo-label">Etat desactive</span>
+        <div class="demo-row">
+            <div class="split-button">
+                <button class="btn-primary" type="button" disabled>Enregistrer</button>
+                <button class="btn-primary split-button__caret" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Plus d'actions" disabled>
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"></use></svg>
+                </button>
+                <div class="menu split-button__menu" role="menu">
+                    <button class="menu-item" role="menuitem" type="button">Enregistrer et fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser <code class="code-inline">.split-button</code> pour proposer une action principale evidente (bouton de gauche) avec des alternatives contextuelles (caret de droite). Le caret porte <code class="code-inline">aria-haspopup="menu"</code> + <code class="code-inline">aria-expanded</code> synchronise. Le panneau est bati sur le primitif <code class="code-inline">.menu</code> (#520). Ne pas confondre avec <code class="code-inline">.btn-group</code> (groupement d'actions distinctes, CSS-only, pas de menu).</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;div class="split-button"&gt;
+  &lt;button class="btn-primary" type="button"&gt;Enregistrer&lt;/button&gt;
+  &lt;button class="btn-primary split-button__caret" type="button"
+          aria-haspopup="menu" aria-expanded="false" aria-label="Plus d'actions"&gt;
+    &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="/shared/icons/sprite.svg#i-chevron-down"&gt;&lt;/use&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+  &lt;div class="menu split-button__menu" role="menu"&gt;
+    &lt;button class="menu-item" role="menuitem" type="button"&gt;Enregistrer et fermer&lt;/button&gt;
+    &lt;button class="menu-item" role="menuitem" type="button"&gt;Enregistrer comme brouillon&lt;/button&gt;
+    &lt;div class="menu-divider" role="separator"&gt;&lt;/div&gt;
+    &lt;button class="menu-item menu-item--danger" role="menuitem" type="button"&gt;Annuler les modifications&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

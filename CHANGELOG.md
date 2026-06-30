@@ -9,6 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Added
+- Split button (.split-button) : action primaire + caret menu attache, panneau bati sur le primitif .menu (#520), initSplitButton dedie (open/close, aria-haspopup/expanded sur le caret, nav clavier fleches/Home/End/Echap, fermeture outside-click+Escape). Section #split-button (fin de composants.html). (#438)
 - Button group attache (.btn-group) : conteneur CSS-only inline-flex qui accolle des .btn-* (radius mitoyens via proprietes logiques, bordure partagee, z-index focus), role=group + aria-label. Remplace un hack inline (.tab detournes). Distinct de .segmented (choix exclusif). (#451)
 - Pattern de validation de formulaire a11y (`#form-validation`) : `initFormValidation()` traduit la validité HTML5 native en messages FR, pose `aria-invalid`/`aria-describedby`, région live polite au blur + résumé `.alert[role=alert]` focusable au submit. Opt-in via `<form data-validate>`. Réutilise `.input-error`/`.alert` (#519), 0 nouveau token. (#433)
 - Calendrier interactif INLINE (#432) — `initCalendar()` : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement `calendar:change`. Time-picker `initTimePicker()` 24h/12h (#436) mutualisant `.number-input-wrap` + `.segmented`, événement `time:change`. JS Date natif, zéro dépendance.

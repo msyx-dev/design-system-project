@@ -52,6 +52,7 @@
 //  Usage meter                  initUsageMeter()             .usage-meter[data-value]
 //  Confirm Popover              initConfirmPopover()         .popover-confirm-wrap
 //  User Menu (M3 standalone)    initUserMenu()               .user-menu[data-display-name]
+//  Split Button                 initSplitButton()            .split-button
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -3691,6 +3692,111 @@ function initActionMenu() {
 }
 window.__initActionMenu = initActionMenu;
 
+// Split Button (#438)
+function initSplitButton() {
+    document.querySelectorAll('.split-button').forEach(function(wrapper) {
+        if (wrapper.dataset.bound) return;
+        wrapper.dataset.bound = '1';
+
+        var caret = wrapper.querySelector('.split-button__caret');
+        var menu = wrapper.querySelector('.split-button__menu');
+        if (!caret || !menu) return;
+
+        function isOpen() {
+            return menu.classList.contains('open');
+        }
+
+        function openMenu() {
+            // Ferme tous les autres split-button ouverts
+            document.querySelectorAll('.split-button__menu.open').forEach(function(m) {
+                m.classList.remove('open');
+            });
+            document.querySelectorAll('.split-button__caret[aria-expanded="true"]').forEach(function(c) {
+                c.setAttribute('aria-expanded', 'false');
+            });
+            menu.classList.add('open');
+            caret.setAttribute('aria-expanded', 'true');
+            // Focus premier item
+            var firstItem = menu.querySelector('.menu-item[role="menuitem"]:not([disabled])');
+            if (firstItem) firstItem.focus();
+        }
+
+        function closeMenu(restoreFocus) {
+            menu.classList.remove('open');
+            caret.setAttribute('aria-expanded', 'false');
+            if (restoreFocus) caret.focus();
+        }
+
+        // Clic sur le caret : toggle menu
+        caret.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isOpen()) {
+                closeMenu(false);
+            } else {
+                openMenu();
+            }
+        });
+
+        // Clic sur un item : ferme le menu
+        menu.querySelectorAll('.menu-item[role="menuitem"]').forEach(function(item) {
+            item.addEventListener('click', function() {
+                closeMenu(true);
+            });
+        });
+
+        // Navigation clavier dans le menu ouvert
+        menu.addEventListener('keydown', function(e) {
+            var items = Array.from(menu.querySelectorAll('.menu-item[role="menuitem"]:not([disabled])'));
+            if (!items.length) return;
+            var focused = document.activeElement;
+            var idx = items.indexOf(focused);
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    items[(idx + 1) % items.length].focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    items[(idx - 1 + items.length) % items.length].focus();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    items[0].focus();
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    items[items.length - 1].focus();
+                    break;
+                case 'Enter':
+                case ' ':
+                    if (focused && focused.classList.contains('menu-item')) {
+                        e.preventDefault();
+                        focused.click();
+                    }
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    closeMenu(true);
+                    break;
+            }
+        });
+
+        // Clavier sur le caret (ouvrir avec fleche bas)
+        caret.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (!isOpen()) openMenu();
+            }
+            if (e.key === 'Escape' && isOpen()) {
+                e.preventDefault();
+                closeMenu(true);
+            }
+        });
+    });
+}
+window.__initSplitButton = initSplitButton;
+
 // Sidebar Rail
 function initSidebarRail() {
     document.querySelectorAll('.rail-demo').forEach(function(demo) {
@@ -5004,22 +5110,29 @@ function reinitAll() {
     initMotionReplay();
     initMotionViewport();
     initUserMenu();
+    initSplitButton();
 }
 window.__initComponents = reinitAll;
 
-// Close dropdowns and action menus on outside click (once)
+// Close dropdowns, action menus and split-button menus on outside click (once)
 document.addEventListener('click', () => {
     document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     document.querySelectorAll('.dropdown-trigger.open').forEach(t => t.classList.remove('open'));
     document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
     document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+    // Split button menus
+    document.querySelectorAll('.split-button__menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.split-button__caret[aria-expanded="true"]').forEach(c => c.setAttribute('aria-expanded', 'false'));
 });
 
-// Close action menus on Escape
+// Close action menus and split-button menus on Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
         document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+        // Split button menus (focus restore géré localement dans initSplitButton)
+        document.querySelectorAll('.split-button__menu.open').forEach(m => m.classList.remove('open'));
+        document.querySelectorAll('.split-button__caret[aria-expanded="true"]').forEach(c => c.setAttribute('aria-expanded', 'false'));
     }
 });
 
