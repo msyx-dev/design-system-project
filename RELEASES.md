@@ -1,5 +1,18 @@
 # Releases
 
+## 2.82.0 — 2026-06-30 — Pattern de validation de formulaire a11y (M#40 #433)
+
+> Deuxième livrable du milestone #40 « Composants manquants ». Pattern opt-in qui traduit la validité HTML5 native en feedback accessible, sans nouveau token ni nouvelle classe d'état (réutilise `.input-error` / `.alert` de #519).
+
+### Added
+- **Validation de formulaire a11y (#433)** — `initFormValidation()` : opt-in via `<form data-validate>`. Traduit `input.validity` (HTML5 native) en messages d'erreur FR, pose `aria-invalid` + `aria-describedby` sur les champs invalides, expose une région live `aria-live="polite"` au `blur`, et un résumé `.alert[role="alert"]` focusable au `submit` (liste `.form-error-list` de liens vers les champs en erreur). Émet l'événement `ds:validation` (`detail: { valid, errors }`). Anti-double-bind `dataset.bound`. Nouvelle section `#form-validation` dans `pages/formulaires.html`.
+- **CSS additif `forms.css`** : styles `.input[aria-invalid="true"]` (bordure + halo `--danger`, variante `:focus-visible`), `.form-error-list` (liste de liens d'erreurs), `.ds-form .alert[role="alert"]`. Respecte `prefers-reduced-motion` (halo retiré). Zéro nouveau token.
+- **Registry** : entrée `form-validation` (page `formulaires`, `jsInit: initFormValidation`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.81.0 → 2.82.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `formulaires.html` 16 → 17, total 111 → 112 (nouvelle section `#form-validation`).
+
 ## 2.81.0 — 2026-06-22 — Date-picker INLINE + time-picker (M#40 #432/#436)
 
 > Premier composant fonctionnel du milestone #40 « Composants manquants ». Le markup + CSS du calendrier existaient (statiques) ; cette release apporte le JS.
