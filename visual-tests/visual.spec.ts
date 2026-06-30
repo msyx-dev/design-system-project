@@ -148,7 +148,7 @@ test.describe("Visual regression — full matrix (par section)", () => {
           await page.waitForTimeout(120);
         }
 
-        await expect(section).toHaveScreenshot(`${slug}__${sectionId}.png`, {
+        await expect.soft(section).toHaveScreenshot(`${slug}__${sectionId}.png`, {
           // Marge de temps pour les sections denses (le défaut 5s peut être
           // juste sur une section très haute) — pas un élargissement de
           // tolérance de diff, juste un budget de retry réaliste.
