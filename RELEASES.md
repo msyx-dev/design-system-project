@@ -1,5 +1,20 @@
 # Releases
 
+## 2.84.0 — 2026-06-30 — Split button `.split-button` (M#40 Vague 2 #438)
+
+> Deuxième livrable de la Vague 2 du milestone #40. Composant composé : action primaire + caret menu attaché.
+
+### Added
+- **Split button `.split-button` (#438)** — action primaire (bouton standard) + `.split-button__caret` attaché ouvrant un panneau `.split-button__menu` bâti sur le primitif `.menu` (#520). `initSplitButton()` dédié (`shared/components.js`, `dataset.bound`, appelé dans `reinitAll()`) : open/close, `aria-haspopup="menu"` + `aria-expanded` synchronisé sur le caret seul, navigation clavier (flèches ↑/↓, Home/End, Enter/Espace, Échap + focus restauré au caret), fermeture au clic extérieur et à Échap (handlers globaux étendus). Panneau `role="menu"` / items `role="menuitem"` / `role="separator"`. CSS dans `buttons.css` (wrapper indépendant, pas `.btn-group` — l'enfant menu en position absolue est incompatible avec le `:last-child` de `.btn-group`), `translateY` hover neutralisé dans le groupe. Tokens existants uniquement (`--radius-md`, `--shadow-menu`, `--space-xs`, durations/eases). Nouvelle section `#split-button` en fin de `pages/composants.html`.
+- **Registry** : entrée `split-button` (page `composants`, `jsInit: initSplitButton`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.83.0 → 2.84.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `composants.html` 13 → 14, total 112 → 113 (nouvelle section `#split-button`).
+
+### VR
+- Re-baseline ciblé page `composants` via soft-harvest des actuals CI : nouvelle section `#split-button` (12) + `#disabled-global` (12, qui gagne une bordure-bas `:last-of-type` en perdant son statut de dernière section). Aucune autre page affectée.
+
 ## 2.83.0 — 2026-06-30 — Button group attaché `.btn-group` (M#40 Vague 2 #451)
 
 > Premier livrable de la Vague 2 du milestone #40. Composant CSS-only qui résorbe un hack inline (`.tab` détournés + styles hardcodés) dans la section #buttons.
