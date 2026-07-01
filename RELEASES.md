@@ -1,5 +1,20 @@
 # Releases
 
+## 2.87.0 — 2026-06-30 — Color picker `.color-input` (M#40 Gap A #448)
+
+> Premier livrable des Gaps du milestone #40. Composant zéro-dépendance : wrapper autour du `<input type=color>` natif (picker visuel délégué au navigateur).
+
+### Added
+- **Color picker `.color-input` (#448)** — wrapper qui stylise un `<input type=color>` NATIF : reset du chrome navigateur (`appearance:none`, `::-webkit-color-swatch-wrapper`/`::-webkit-color-swatch`/`::-moz-color-swatch`), carré 44px, `border`/`border-radius` DS, focus-ring `.input`, état `.color-input--disabled`. Affichage hex `.color-input-value` (font-mono). Rangée optionnelle de presets réutilisant `.color-swatch[data-color]` (cliquables, `aria-pressed`). `initColorInput()` (composants.js, `dataset.bound`, dans `reinitAll()`) : sync input↔label hex↔preset actif, clic preset → `input.value` + `dispatchEvent('input')` natif. Aucun calcul colorimétrique, aucun picker HSL maison — délégué 100% au navigateur/OS. Section `#color-picker` en fin de `pages/formulaires.html`. CSS dans `forms.css` (pas de nouveau module).
+- **Registry** : entrée `color-input` (page `formulaires`, `jsInit: initColorInput`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.86.0 → 2.87.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `formulaires.html` 17 → 18, total 114 → 115 (nouvelle section `#color-picker`).
+
+### VR
+- Re-baseline ciblé page `formulaires` via soft-harvest : `#color-picker` (12, neuve) + `#form-validation` (12, gagne une bordure-bas `:last-of-type`). Aucune autre page affectée.
+
 ## 2.86.0 — 2026-06-30 — Primitif `.orb` canonique + refactor 4 usages (M#40 Vague 2 #357)
 
 > Dernier livrable de la Vague 2 du milestone #40. Extraction d'un primitif `.orb` et unification de 4 copies divergentes (dont une avec hex hardcodés).
