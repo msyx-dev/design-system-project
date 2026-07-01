@@ -1,7 +1,7 @@
 {
   "version": "2.92.0",
   "generated": {
-    "at": "2026-07-01T21:26:54.297Z",
+    "at": "2026-07-01T22:18:28.860Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3077,6 +3077,22 @@
       "react": "pending",
       "module": [
         "shared/css/components/heatmap-calendar.css"
+      ]
+    },
+    {
+      "name": "virtual-list",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".virtual-list",
+        ".virtual-list-viewport",
+        ".virtual-list-row",
+        ".virtual-spacer"
+      ],
+      "jsInit": "initVirtualList",
+      "react": "pending",
+      "module": [
+        "shared/css/components/virtual-list.css"
       ]
     }
   ]

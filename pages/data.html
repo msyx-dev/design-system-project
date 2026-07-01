@@ -1358,6 +1358,28 @@
     </div>
 </section>
 
+<section id="virtual-list">
+    <div class="section-header">
+        <span class="overline">Data</span>
+        <h2>Virtual list</h2>
+        <p>Liste fen&ecirc;tr&eacute;e (windowing) &mdash; seules les lignes visibles sont rendues dans le DOM, quel que soit le nombre total d&apos;&eacute;l&eacute;ments. Couche de pr&eacute;sentation pure&nbsp;: le consumer fournit les donn&eacute;es d&eacute;j&agrave; tri&eacute;es/filtr&eacute;es.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; 1000 lignes, DOM ~15 n&oelig;uds</span>
+        <div class="virtual-list" data-vlist-count="1000">
+            <div class="virtual-list-viewport"></div>
+        </div>
+        <p class="demo-note-last">1000&nbsp;lignes logiques, DOM ~15&nbsp;n&oelig;uds rendus (fen&ecirc;tre visible + overscan)&nbsp;; hauteur de ligne fixe.</p>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Structure&nbsp;: <code class="code-inline">.virtual-list</code> avec <code class="code-inline">data-vlist-count</code> (nombre total logique) contenant <code class="code-inline">.virtual-list-viewport</code> (hauteur fixe <code class="code-inline">--vlist-height</code>, scrollable). Le JS g&eacute;n&egrave;re un spacer haut, les lignes rendues (<code class="code-inline">.virtual-list-row</code>, hauteur fixe <code class="code-inline">--vlist-row-h</code>) et un spacer bas, pour pr&eacute;server la hauteur totale de la scrollbar.</p>
+        <p class="demo-note">Fen&ecirc;trage&nbsp;: au scroll (throttl&eacute; via <code class="code-inline">requestAnimationFrame</code>), calcule <code class="code-inline">first = floor(scrollTop / rowH) - overscan</code> et <code class="code-inline">visibleCount = ceil(viewportH / rowH) + 2&times;overscan</code> (overscan&nbsp;=&nbsp;5), clamp aux bornes. Ne re-rend que si la fen&ecirc;tre logique change.</p>
+        <p class="demo-note-last">JS&nbsp;: <code class="code-inline">initVirtualList()</code> &mdash; d&eacute;mo auto-g&eacute;n&eacute;r&eacute;e (liste d&eacute;terministe &laquo;&nbsp;&Eacute;l&eacute;ment&nbsp;#N&nbsp;&raquo;, pas de random). Point d&apos;extension consumer&nbsp;: <code class="code-inline">window.__vlistRenderRow(index)</code> pour brancher son propre tableau de donn&eacute;es + renderer. Zero fetch, zero tri/filtre (fournis par le consumer). <code class="code-inline">aria-rowcount</code> = total logique, <code class="code-inline">aria-rowindex</code> sur chaque ligne rendue (index logique 1-based), spacers <code class="code-inline">aria-hidden</code>.</p>
+        <div class="code-block"><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"virtual-list"</span> <span class="fn">data-vlist-count</span>=<span class="str">"1000"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"virtual-list-viewport"</span><span class="kw">&gt;&lt;/div&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">// Init (auto au chargement + reinitAll SPA)</span><br><span class="fn">initVirtualList</span>();</div>
+    </div>
+</section>
 
     </div>
     <script src="/shared/nav.js"></script>

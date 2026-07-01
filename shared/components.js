@@ -58,6 +58,7 @@
 //  Splitter / resizable panels  initSplitPane()              .split-pane
 //  JSON viewer (arbre repliable) initJsonViewer()             .json-viewer
 //  Heatmap calendrier           initHeatmapCalendar()        .heatmap-cal
+//  Virtual list (fenetree)      initVirtualList()            .virtual-list
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -6168,6 +6169,105 @@ function initHeatmapCalendar() {
 }
 window.__initHeatmapCalendar = initHeatmapCalendar;
 
+function initVirtualList() {
+    var OVERSCAN = 5;
+
+    document.querySelectorAll('.virtual-list').forEach(function(list) {
+        if (list.dataset.bound) return;
+        list.dataset.bound = '1';
+
+        var viewport = list.querySelector('.virtual-list-viewport');
+        if (!viewport) return;
+
+        // Source de donnees demo-friendly : liste deterministe generee depuis
+        // data-vlist-count (PAS de random -> rendu stable pour la VR).
+        // Point d'extension consumer : fournir un renderer custom via
+        // window.__vlistRenderRow(index) -> string HTML (fallback ci-dessous
+        // si absent). En production, remplacer par le tableau de donnees
+        // deja trie/filtre du consumer + son propre renderer.
+        var total = parseInt(list.dataset.vlistCount, 10) || 0;
+        var rowH = parseFloat(getComputedStyle(list).getPropertyValue('--vlist-row-h')) || 40;
+        var viewportH = parseFloat(getComputedStyle(list).getPropertyValue('--vlist-height')) || 400;
+
+        function renderRowContent(index) {
+            if (typeof window.__vlistRenderRow === 'function') {
+                return window.__vlistRenderRow(index);
+            }
+            return 'Élément #' + (index + 1);
+        }
+
+        viewport.setAttribute('role', 'list');
+        viewport.setAttribute('aria-rowcount', String(total));
+
+        var topSpacer = document.createElement('div');
+        topSpacer.className = 'virtual-spacer';
+        topSpacer.setAttribute('aria-hidden', 'true');
+
+        var rowsContainer = document.createElement('div');
+        rowsContainer.className = 'virtual-list-rows';
+
+        var bottomSpacer = document.createElement('div');
+        bottomSpacer.className = 'virtual-spacer';
+        bottomSpacer.setAttribute('aria-hidden', 'true');
+
+        viewport.innerHTML = '';
+        viewport.appendChild(topSpacer);
+        viewport.appendChild(rowsContainer);
+        viewport.appendChild(bottomSpacer);
+
+        var lastFirst = -1;
+        var lastVisibleCount = -1;
+
+        function render() {
+            var scrollTop = viewport.scrollTop;
+            var visibleCount = Math.ceil(viewportH / rowH) + 2 * OVERSCAN;
+
+            var first = Math.floor(scrollTop / rowH) - OVERSCAN;
+            if (first < 0) first = 0;
+
+            if (first + visibleCount > total) {
+                first = Math.max(0, total - visibleCount);
+            }
+            var count = Math.min(visibleCount, total - first);
+            if (count < 0) count = 0;
+
+            // Skip le re-render si la fenetre logique n'a pas change (perf).
+            if (first === lastFirst && count === lastVisibleCount) return;
+            lastFirst = first;
+            lastVisibleCount = count;
+
+            topSpacer.style.height = (first * rowH) + 'px';
+            bottomSpacer.style.height = (Math.max(0, total - first - count) * rowH) + 'px';
+
+            var frag = document.createDocumentFragment();
+            for (var i = first; i < first + count; i++) {
+                var row = document.createElement('div');
+                row.className = 'virtual-list-row';
+                row.setAttribute('role', 'listitem');
+                row.setAttribute('aria-rowindex', String(i + 1));
+                row.innerHTML = renderRowContent(i);
+                frag.appendChild(row);
+            }
+            rowsContainer.innerHTML = '';
+            rowsContainer.appendChild(frag);
+        }
+
+        var ticking = false;
+        viewport.addEventListener('scroll', function() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function() {
+                render();
+                ticking = false;
+            });
+        });
+
+        render();
+    });
+}
+window.__initVirtualList = initVirtualList;
+
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initCalendar();
@@ -6202,6 +6302,7 @@ function reinitAll() {
     initSplitPane();
     initJsonViewer();
     initHeatmapCalendar();
+    initVirtualList();
 }
 window.__initComponents = reinitAll;
 
