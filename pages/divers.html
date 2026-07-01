@@ -718,6 +718,57 @@
     </div>
 </section>
 
+<section id="diff-viewer">
+    <div class="section-header">
+        <span class="overline">Contenu riche</span>
+        <h2>Diff viewer</h2>
+        <p>Presentation d'un diff <strong>deja calcule</strong> par le consumer (comme <code class="code-inline">.code-block</code> stylise du code deja colore) — le DS ne calcule jamais l'algorithme de diff. Lignes typees ajout / suppression / contexte, gouttiere de numeros, prefixe <code class="code-inline">+</code>/<code class="code-inline">&minus;</code> pour porter le sens hors couleur. Modes unifie et cote-a-cote.</p>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Unifie</span>
+        <div class="diff" role="region" aria-label="Diff unifie theme.config">
+            <div class="diff-hunk-header">@@ -1,4 +1,5 @@ theme.config</div>
+            <div class="diff-line diff-line--ctx"><span class="diff-gutter">1</span><span class="diff-sign"> </span><span class="diff-code">{</span></div>
+            <div class="diff-line diff-line--ctx"><span class="diff-gutter">2</span><span class="diff-sign"> </span><span class="diff-code">  "theme": "msyx",</span></div>
+            <div class="diff-line diff-line--del"><span class="diff-gutter">3</span><span class="diff-sign">&minus;</span><span class="diff-code">  "mode": "dark",</span></div>
+            <div class="diff-line diff-line--add"><span class="diff-gutter">3</span><span class="diff-sign">+</span><span class="diff-code">  "mode": "light",</span></div>
+            <div class="diff-line diff-line--add"><span class="diff-gutter">4</span><span class="diff-sign">+</span><span class="diff-code">  "contrast": "AA",</span></div>
+            <div class="diff-line diff-line--ctx"><span class="diff-gutter">5</span><span class="diff-sign"> </span><span class="diff-code">}</span></div>
+        </div>
+    </div>
+    <div class="demo-box mt-md">
+        <span class="demo-label">Cote a cote</span>
+        <div class="diff diff--split" role="region" aria-label="Diff cote a cote">
+            <div class="diff-pane">
+                <div class="diff-line diff-line--ctx"><span class="diff-gutter">2</span><span class="diff-sign"> </span><span class="diff-code">  "theme": "msyx",</span></div>
+                <div class="diff-line diff-line--del"><span class="diff-gutter">3</span><span class="diff-sign">&minus;</span><span class="diff-code">  "mode": "dark",</span></div>
+                <div class="diff-line diff-line--ctx"><span class="diff-gutter">4</span><span class="diff-sign"> </span><span class="diff-code">}</span></div>
+            </div>
+            <div class="diff-pane">
+                <div class="diff-line diff-line--ctx"><span class="diff-gutter">2</span><span class="diff-sign"> </span><span class="diff-code">  "theme": "msyx",</span></div>
+                <div class="diff-line diff-line--add"><span class="diff-gutter">3</span><span class="diff-sign">+</span><span class="diff-code">  "mode": "light",</span></div>
+                <div class="diff-line diff-line--ctx"><span class="diff-gutter">4</span><span class="diff-sign"> </span><span class="diff-code">}</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-box mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block">&lt;div class="diff"&gt;
+  &lt;div class="diff-line diff-line--del"&gt;
+    &lt;span class="diff-gutter"&gt;3&lt;/span&gt;
+    &lt;span class="diff-sign"&gt;&amp;minus;&lt;/span&gt;
+    &lt;span class="diff-code"&gt;  "mode": "dark",&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="diff-line diff-line--add"&gt;
+    &lt;span class="diff-gutter"&gt;3&lt;/span&gt;
+    &lt;span class="diff-sign"&gt;+&lt;/span&gt;
+    &lt;span class="diff-code"&gt;  "mode": "light",&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- cote-a-cote : &lt;div class="diff diff--split"&gt; avec 2x .diff-pane --&gt;</div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

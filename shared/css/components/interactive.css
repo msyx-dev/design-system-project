@@ -56,3 +56,86 @@
     border: 4px solid transparent; border-top-color: var(--surface-solid);
 }
 .copy-btn.copy-btn--success .copy-tooltip { opacity: 1; }
+
+/* ===== DIFF VIEWER (#447) =====
+   Couche de presentation d'un diff DEJA CALCULE par le consumer.
+   Le DS ne calcule jamais l'algo de diff (comme .code-block pour la coloration syntaxique).
+   Structure unified attendue :
+   <div class="diff">
+     <div class="diff-line diff-line--ctx"><span class="diff-gutter">12</span><span class="diff-sign"> </span><span class="diff-code">...</span></div>
+     <div class="diff-line diff-line--del"><span class="diff-gutter">13</span><span class="diff-sign">-</span><span class="diff-code">...</span></div>
+     <div class="diff-line diff-line--add"><span class="diff-gutter">13</span><span class="diff-sign">+</span><span class="diff-code">...</span></div>
+   </div>
+   Mode side-by-side : .diff.diff--split contient 2x .diff-pane (chacune une pile de .diff-line). */
+.diff {
+    background: var(--surface-solid);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    overflow-wrap: normal;
+}
+.diff-line {
+    display: flex;
+    align-items: baseline;
+    padding: 0.15rem 0;
+    white-space: pre;
+}
+/* Le fond teinte s'applique a la gouttiere + au code, PAS au signe (#diff-sign
+   reste sur fond neutre --surface-solid) : a alpha 0.12 le rouge/vert sur fond
+   teinte tombe sous 4.5:1 en dark comme en light — cf. verif contraste #447. */
+.diff-line--add .diff-gutter, .diff-line--add .diff-code { background: rgba(var(--success-rgb), 0.12); }
+.diff-line--del .diff-gutter, .diff-line--del .diff-code { background: rgba(var(--danger-rgb), 0.12); }
+.diff-line--ctx .diff-gutter, .diff-line--ctx .diff-code { background: transparent; }
+.diff-gutter {
+    flex-shrink: 0;
+    width: 2.75rem;
+    padding-inline: var(--space-sm);
+    color: var(--text-muted);
+    text-align: right;
+    user-select: none;
+}
+.diff-sign {
+    flex-shrink: 0;
+    width: 1.25rem;
+    text-align: center;
+    user-select: none;
+    font-weight: 700;
+    background: transparent;
+}
+/* Tokens --status-*-fg : variantes AA-safe de --success/--danger dediees au texte
+   de statut (deja utilisees par .alert/.badge), verifiees ≥4.5:1 sur --surface-solid nu. */
+.diff-line--add .diff-sign { color: var(--status-success-fg); }
+.diff-line--del .diff-sign { color: var(--status-error-fg); }
+.diff-line--ctx .diff-sign { color: var(--text-muted); }
+.diff-code {
+    flex: 1;
+    white-space: pre;
+    padding-inline-end: var(--space-sm);
+}
+
+/* Separateur de hunk, ex: "@@ -12,6 +12,7 @@" */
+.diff-hunk-header {
+    padding: 0.3rem var(--space-sm);
+    color: var(--text-muted);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    font-size: 0.8rem;
+    user-select: none;
+}
+
+/* Mode side-by-side : 2 panneaux .diff-pane empiles en mobile, cote a cote dès tablette */
+.diff--split {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+.diff-pane + .diff-pane { border-top: 1px solid var(--border-color); }
+
+@media (min-width: 768px) {
+    .diff--split {
+        grid-template-columns: 1fr 1fr;
+    }
+    .diff-pane + .diff-pane { border-top: none; border-left: 1px solid var(--border-color); }
+}
