@@ -1,5 +1,5 @@
-/* @ds-version 2.93.0 */
-const VERSION = '2.93.0';
+/* @ds-version 2.94.0 */
+const VERSION = '2.94.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.

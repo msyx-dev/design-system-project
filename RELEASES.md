@@ -1,5 +1,20 @@
 # Releases
 
+## 2.94.0 — 2026-06-30 — Diff viewer `.diff` (M#40 Gap C #447)
+
+> Dernier composant du milestone #40. Présentation d'un diff DÉJÀ CALCULÉ par le consumer — couche de présentation pure (comme `.code-block` stylise du code déjà coloré), le DS ne calcule jamais l'algorithme de diff.
+
+### Added
+- **Diff viewer `.diff` (#447)** — bloc CSS dans `interactive.css` (pas de nouveau module ni `@import`). `.diff` (conteneur mono, hérite de `.code-block`), `.diff-line--add`/`--del`/`--ctx` (fonds `rgba(var(--success-rgb)/--danger-rgb, 0.12)` appliqués gouttière+code), `.diff-gutter` (n° de ligne), `.diff-sign` (préfixe `+`/`−`/espace — **sens porté hors couleur**, WCAG 1.4.1, via tokens AA `--status-success-fg`/`--status-error-fg`), `.diff-hunk-header` (`@@ … @@`), mode côte-à-côte `.diff--split` (grid 1 colonne → 2 colonnes ≥768px, `.diff-pane`). CSS-only (`jsInit: null`), tokens uniquement. Le consumer fournit le markup ligne-par-ligne typé. Section `#diff-viewer` en fin de `pages/divers.html`.
+- **Registry** : entrée `diff-viewer` (`kind:component`, page `divers`, `jsInit: null`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.93.0 → 2.94.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `divers.html` 14 → 15, total 121 → 122 (nouvelle section `#diff-viewer`).
+
+### VR
+- Re-baseline ciblé page `divers` via soft-harvest : `#diff-viewer` (12, neuve) + `#json-viewer` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.93.0 — 2026-06-30 — Virtualized list `.virtual-list` (M#40 Gap C #440)
 
 > Liste fenêtrée pour datasets client non-paginables (>1000 lignes). Couche de présentation zéro-dépendance — le consumer fournit les données déjà triées/filtrées.
