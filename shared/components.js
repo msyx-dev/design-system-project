@@ -57,6 +57,7 @@
 //  Mention @                    initMentionInput()           [data-mention-source]
 //  Splitter / resizable panels  initSplitPane()              .split-pane
 //  JSON viewer (arbre repliable) initJsonViewer()             .json-viewer
+//  Heatmap calendrier           initHeatmapCalendar()        .heatmap-cal
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -5916,6 +5917,257 @@ function initJsonViewer() {
 }
 window.__initJsonViewer = initJsonViewer;
 
+// ===== HEATMAP CALENDAR =====
+// Grille type "contributions" — cellules-source [data-date][data-value] fournies
+// par le consumer (comme .risk-item d'initRiskMatrix), retirées après lecture.
+// Binning value→level (0..4) trivial O(n) dérivé du max des valeurs.
+function initHeatmapCalendar() {
+    var DAY_LABELS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    var MONTH_LABELS = ['Janvier', 'F&eacute;vrier', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Ao&ucirc;t', 'Septembre', 'Octobre', 'Novembre', 'D&eacute;cembre'];
+
+    function escapeAttr(s) {
+        return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function parseDate(str) {
+        // Attendu YYYY-MM-DD — parse local (évite le décalage UTC de new Date(str))
+        var parts = String(str).split('-').map(Number);
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function fmtDate(d) {
+        var y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
+    }
+
+    function fmtLabel(d) {
+        return d.getDate() + ' ' + MONTH_LABELS[d.getMonth()] + ' ' + d.getFullYear();
+    }
+
+    // Lundi=0 .. Dimanche=6
+    function isoDow(d) {
+        var dow = d.getDay();
+        return dow === 0 ? 6 : dow - 1;
+    }
+
+    // Palier trivial : 4 seuils réguliers dérivés du max des valeurs > 0
+    function levelFor(value, max) {
+        if (!value || value <= 0) return 0;
+        if (max <= 0) return 0;
+        var ratio = value / max;
+        if (ratio <= 0.25) return 1;
+        if (ratio <= 0.5) return 2;
+        if (ratio <= 0.75) return 3;
+        return 4;
+    }
+
+    function createTooltip() {
+        var tt = document.createElement('div');
+        tt.className = 'heatmap-tooltip';
+        document.body.appendChild(tt);
+        return tt;
+    }
+
+    document.querySelectorAll('.heatmap-cal:not([data-bound])').forEach(function(cal) {
+        cal.dataset.bound = '1';
+
+        // ─── Collecte des cellules-source ──────────────────────────────
+        var entries = [];
+        var inlineItems = Array.from(cal.querySelectorAll('[data-date][data-value]'));
+        inlineItems.forEach(function(it) {
+            entries.push({ date: it.getAttribute('data-date'), value: parseFloat(it.getAttribute('data-value')) || 0 });
+        });
+        inlineItems.forEach(function(it) { it.remove(); });
+
+        if (!entries.length && cal.hasAttribute('data-cells')) {
+            try {
+                var parsed = JSON.parse(cal.getAttribute('data-cells'));
+                if (Array.isArray(parsed)) {
+                    parsed.forEach(function(p) {
+                        entries.push({ date: p.date, value: parseFloat(p.value) || 0 });
+                    });
+                }
+            } catch (e) { /* JSON invalide — grille vide */ }
+        }
+
+        if (!entries.length) return;
+
+        entries.sort(function(a, b) { return parseDate(a.date) - parseDate(b.date); });
+
+        var valueByDate = {};
+        var maxValue = 0;
+        entries.forEach(function(e) {
+            valueByDate[e.date] = e.value;
+            if (e.value > maxValue) maxValue = e.value;
+        });
+
+        var firstDate = parseDate(entries[0].date);
+        var lastDate = parseDate(entries[entries.length - 1].date);
+
+        // Aligne le début de grille sur le lundi de la semaine du firstDate
+        var gridStart = new Date(firstDate);
+        gridStart.setDate(gridStart.getDate() - isoDow(gridStart));
+
+        var totalDays = Math.round((lastDate - gridStart) / 86400000) + 1;
+        var totalWeeks = Math.ceil(totalDays / 7);
+
+        // ─── Construction DOM ──────────────────────────────────────────
+        var scroll = document.createElement('div');
+        scroll.className = 'heatmap-cal-scroll';
+
+        var inner = document.createElement('div');
+        inner.className = 'heatmap-cal-inner';
+
+        var body = document.createElement('div');
+        body.className = 'heatmap-body';
+
+        var dayLabelsCol = document.createElement('div');
+        dayLabelsCol.className = 'heatmap-day-labels';
+        for (var i = 0; i < 7; i++) {
+            var dl = document.createElement('span');
+            dl.className = 'heatmap-day-label';
+            dl.textContent = (i % 2 === 1) ? DAY_LABELS[i] : '';
+            dayLabelsCol.appendChild(dl);
+        }
+
+        var grid = document.createElement('div');
+        grid.className = 'heatmap-grid';
+        grid.setAttribute('role', 'group');
+        grid.setAttribute('aria-label', 'Calendrier heatmap');
+        grid.style.gridTemplateColumns = 'repeat(' + totalWeeks + ', 12px)';
+
+        var cellsByDate = {};
+        var lastCellRef = null;
+
+        for (var d = 0; d < totalDays; d++) {
+            var cur = new Date(gridStart);
+            cur.setDate(cur.getDate() + d);
+            var key = fmtDate(cur);
+            var week = Math.floor(d / 7) + 1;
+            var row = isoDow(cur) + 1;
+
+            var cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
+            cell.style.gridColumn = String(week);
+            cell.style.gridRow = String(row);
+            cell.dataset.date = key;
+
+            if (cur < firstDate || cur > lastDate) {
+                cell.setAttribute('aria-hidden', 'true');
+                cell.style.visibility = 'hidden';
+                cell.tabIndex = -1;
+            } else {
+                var value = valueByDate.hasOwnProperty(key) ? valueByDate[key] : 0;
+                var level = levelFor(value, maxValue);
+                cell.setAttribute('data-level', String(level));
+                cell.dataset.value = String(value);
+                cell.setAttribute('role', 'img');
+                cell.setAttribute('aria-label', fmtLabel(cur) + ' : ' + value);
+                cell.tabIndex = -1;
+                cellsByDate[key] = cell;
+                lastCellRef = cell;
+            }
+            grid.appendChild(cell);
+        }
+
+        // Roving tabindex : la dernière cellule valide reçoit le focus initial
+        if (lastCellRef) lastCellRef.tabIndex = 0;
+
+        body.appendChild(dayLabelsCol);
+        body.appendChild(grid);
+        inner.appendChild(body);
+
+        // Légende moins ↔ plus
+        var legend = document.createElement('div');
+        legend.className = 'heatmap-legend';
+        legend.innerHTML = '<span>Moins</span>';
+        var legendCells = document.createElement('span');
+        legendCells.className = 'heatmap-legend-cells';
+        for (var lvl = 0; lvl <= 4; lvl++) {
+            var lc = document.createElement('span');
+            lc.className = 'heatmap-cell';
+            lc.setAttribute('data-level', String(lvl));
+            lc.setAttribute('aria-hidden', 'true');
+            legendCells.appendChild(lc);
+        }
+        legend.appendChild(legendCells);
+        var moreLabel = document.createElement('span');
+        moreLabel.textContent = 'Plus';
+        legend.appendChild(moreLabel);
+        inner.appendChild(legend);
+
+        scroll.appendChild(inner);
+        cal.appendChild(scroll);
+
+        // ─── Tooltip hover + focus ──────────────────────────────────────
+        var tooltip = createTooltip();
+
+        function showTooltip(cell, e) {
+            var dateObj = parseDate(cell.dataset.date);
+            tooltip.innerHTML =
+                '<div class="heatmap-tooltip-title">' + escapeAttr(fmtLabel(dateObj)) + '</div>' +
+                '<div class="heatmap-tooltip-value">' + escapeAttr(cell.dataset.value) + '</div>';
+            tooltip.classList.add('visible');
+            positionTooltip(cell, e);
+        }
+
+        function positionTooltip(cell, e) {
+            var rect = cell.getBoundingClientRect();
+            var x = (e && e.clientX != null) ? e.clientX + 14 : rect.right + 8;
+            var y = (e && e.clientY != null) ? e.clientY - 10 : rect.top - 8;
+            var tw = tooltip.offsetWidth || 160, th = tooltip.offsetHeight || 48;
+            if (x + tw > window.innerWidth - 8) x = rect.left - tw - 8;
+            if (y + th > window.innerHeight - 8) y = rect.top - th - 8;
+            if (y < 8) y = rect.bottom + 8;
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('visible');
+        }
+
+        Object.keys(cellsByDate).forEach(function(key) {
+            var cell = cellsByDate[key];
+            cell.addEventListener('mouseenter', function(e) { showTooltip(cell, e); });
+            cell.addEventListener('mousemove', function(e) { positionTooltip(cell, e); });
+            cell.addEventListener('mouseleave', hideTooltip);
+            cell.addEventListener('focus', function(e) { showTooltip(cell, e); });
+            cell.addEventListener('blur', hideTooltip);
+        });
+
+        // ─── Navigation clavier (roving tabindex, flèches) ─────────────
+        grid.addEventListener('keydown', function(e) {
+            var current = grid.querySelector('[tabindex="0"]');
+            if (!current || !current.dataset.date) return;
+            var d2 = parseDate(current.dataset.date);
+            var handled = false;
+
+            if (e.key === 'ArrowLeft') { d2.setDate(d2.getDate() - 1); handled = true; }
+            else if (e.key === 'ArrowRight') { d2.setDate(d2.getDate() + 1); handled = true; }
+            else if (e.key === 'ArrowUp') { d2.setDate(d2.getDate() - 1); handled = true; }
+            else if (e.key === 'ArrowDown') { d2.setDate(d2.getDate() + 1); handled = true; }
+            else if (e.key === 'Home') { d2.setTime(firstDate.getTime()); handled = true; }
+            else if (e.key === 'End') { d2.setTime(lastDate.getTime()); handled = true; }
+
+            if (!handled) return;
+            e.preventDefault();
+
+            var nextKey = fmtDate(d2);
+            var nextCell = cellsByDate[nextKey];
+            if (!nextCell) return;
+
+            current.tabIndex = -1;
+            nextCell.tabIndex = 0;
+            nextCell.focus();
+        });
+
+        cal.dispatchEvent(new CustomEvent('heatmap:ready', { bubbles: true, detail: { count: entries.length, max: maxValue } }));
+    });
+}
+window.__initHeatmapCalendar = initHeatmapCalendar;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initCalendar();
@@ -5949,6 +6201,7 @@ function reinitAll() {
     initTransferList();
     initSplitPane();
     initJsonViewer();
+    initHeatmapCalendar();
 }
 window.__initComponents = reinitAll;
 
