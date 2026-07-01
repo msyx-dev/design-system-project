@@ -1,5 +1,20 @@
 # Releases
 
+## 2.93.0 — 2026-06-30 — Virtualized list `.virtual-list` (M#40 Gap C #440)
+
+> Liste fenêtrée pour datasets client non-paginables (>1000 lignes). Couche de présentation zéro-dépendance — le consumer fournit les données déjà triées/filtrées.
+
+### Added
+- **Virtualized list `.virtual-list` (#440)** — nouveau module `shared/css/components/virtual-list.css` (barrel) + tokens `--vlist-row-h` (40px) / `--vlist-height` (400px). `initVirtualList()` (composants.js, `dataset.bound`, `reinitAll()`) : viewport scrollable à hauteur fixe + 2 spacers (`aria-hidden`) dimensionnés au total logique, ne rend que les lignes visibles `[first, first+visibleCount)` (+overscan 5), recalcul sur `scroll`/`requestAnimationFrame` avec mémoïsation de la fenêtre. `aria-rowcount`/`aria-rowindex` reflètent le total LOGIQUE (pas le DOM). Données fournies par le consumer (`data-vlist-count` en démo, point d'extension `window.__vlistRenderRow`). **Hauteur de ligne fixe** (contrainte structurelle zéro-dépendance assumée). Section `#virtual-list` en fin de `pages/data.html`.
+- **Registry** : entrée `virtual-list` (`kind:component`, page `data`, `jsInit: initVirtualList`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.92.0 → 2.93.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`. Barrel `components.css` : +1 module.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `data.html` 17 → 18, total 120 → 121 (nouvelle section `#virtual-list`).
+
+### VR
+- Re-baseline ciblé page `data` via soft-harvest : `#virtual-list` (12, neuve) + `#heatmap-calendar` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.92.0 — 2026-06-30 — Heatmap calendrier `.heatmap-cal` (M#40 Gap C #442)
 
 > Visualisation d'activité type "contributions GitHub". Zéro-dépendance — grille CSS + coloration tokenisée + binning trivial.

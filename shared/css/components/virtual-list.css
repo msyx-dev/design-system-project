@@ -1,0 +1,38 @@
+/* ===== VIRTUAL LIST (#440) ===== */
+/* Liste fenetree (windowing) — couche de PRESENTATION uniquement, zero dependance.
+   Le consumer fournit les donnees deja triees/filtrees ; le JS ne fait que rendre
+   la fenetre visible (+overscan) et ajuster 2 spacers pour preserver la scrollbar.
+   Contrainte assumee : hauteur de ligne FIXE (--vlist-row-h). */
+
+.virtual-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-width: 100%;
+}
+
+.virtual-list-viewport {
+    height: var(--vlist-height);
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.virtual-list-row {
+    height: var(--vlist-row-h);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.virtual-list-row:hover {
+    background: color-mix(in srgb, var(--accent) 3%, transparent);
+}
+
+/* Spacers haut/bas — hauteur ajustee en style inline par le JS.
+   aria-hidden pose en JS. */
+.virtual-spacer {
+    width: 100%;
+}
