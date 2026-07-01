@@ -571,6 +571,35 @@
     </div>
 </section>
 
+<section id="mention">
+    <div class="section-header">
+        <span class="overline">Feedback</span>
+        <h2>Mention @</h2>
+        <p>Autocomplete inline declenchee par <code class="code-inline">@</code> dans un textarea — dropdown positionne au caret via mirror-div pur, aucune dependance ni fetch.</p>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Tapez @ pour mentionner…</span>
+        <div class="mention-input-wrap">
+            <textarea class="input" data-mention-source="Alice Martin,Bob Durand,Carla Nguyen,David Petit,Emma Rousseau" placeholder="Tapez @ pour mentionner…" rows="3"></textarea>
+            <ul class="mention-dropdown" role="listbox" aria-label="Suggestions de mention"></ul>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">HTML</span>
+        <pre class="code-block"><code>&lt;div class="mention-input-wrap"&gt;
+  &lt;textarea class="input" data-mention-source="Alice Martin,Bob Durand,Carla Nguyen" placeholder="Tapez @ pour mentionner…"&gt;&lt;/textarea&gt;
+  &lt;ul class="mention-dropdown" role="listbox" aria-label="Suggestions de mention"&gt;&lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Wrapper <code class="code-inline">.mention-input-wrap</code> (position relative, ancre le dropdown absolu) + <code class="code-inline">textarea[data-mention-source]</code> (liste CSV ou JSON fournie par le consumer) + <code class="code-inline">.mention-dropdown</code> (rempli dynamiquement par JS).</p>
+        <p class="demo-note">Detection du token <code class="code-inline">@mot</code> en debut de mot, positionnement du dropdown au caret via mirror-div (clone des styles calcules du textarea, zero dependance), filtre insensible a la casse, rendu des options en <code class="code-inline">.search-item</code> (reprise du look search-input).</p>
+        <p class="demo-note">Navigation clavier fleches/Entree/Echap + clic, <code class="code-inline">aria-activedescendant</code> synchronise sur l'option active. Insertion remplace <code class="code-inline">@query</code> par <code class="code-inline">@valeur </code> et repositionne le caret.</p>
+        <p class="demo-note-last">JS : <code class="code-inline">initMentionInput()</code>. Le DS ne fetch rien — la liste de mentionnables est entierement fournie par le consumer.</p>
+    </div>
+</section>
+
 </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

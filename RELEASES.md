@@ -1,5 +1,20 @@
 # Releases
 
+## 2.89.0 — 2026-06-30 — Mention @ `.mention-dropdown` (M#40 Gap A #441)
+
+> Autocomplete @ inline dans un textarea (mention d'utilisateurs). Zéro-dépendance, zéro fetch — la liste est fournie par le consumer.
+
+### Added
+- **Mention @ (#441)** — `initMentionInput()` (composants.js, `dataset.bound`, `reinitAll()`) : détecte le token `@` en début de mot dans un `<textarea data-mention-source>`, calcule la position pixel du caret via un helper `getCaretCoordinates` (mirror-div pur, styles clonés), ouvre un `.mention-dropdown` ancré au caret (surface héritant du look `.search-item`), navigation clavier (↑/↓/Enter/Échap) + **`aria-activedescendant`**, insertion de `@valeur ` avec repositionnement du caret. Combobox a11y (`role`/`aria-autocomplete`/`aria-expanded`/`aria-controls`). Liste des mentionnables via `data-mention-source` (CSV ou JSON) — aucun fetch. CSS `.mention-input-wrap`/`.mention-dropdown` dans `forms.css`. Section `#mention` en fin de `pages/feedback.html`.
+- **Registry** : entrée `mention` (page `feedback`, `jsInit: initMentionInput`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.88.0 → 2.89.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `feedback.html` 12 → 13, total 116 → 117 (nouvelle section `#mention`).
+
+### VR
+- Re-baseline ciblé page `feedback` via soft-harvest : `#mention` (12, neuve) + `#access-denied` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.88.0 — 2026-06-30 — Transfer list `.transfer-list` (M#40 Gap A #444)
 
 > Double liste disponibles↔assignés (affectation membres/rôles). Zéro-dépendance : déplacement de nœuds DOM, pas de virtualisation (gros volumes hors scope).

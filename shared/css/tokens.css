@@ -1,4 +1,4 @@
-/* @ds-version: 2.88.0 */
+/* @ds-version: 2.89.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */

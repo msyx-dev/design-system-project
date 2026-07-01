@@ -802,3 +802,26 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ===== MENTION @ (#441) ===== */
+.mention-input-wrap {
+  position: relative;
+}
+.mention-dropdown {
+  position: absolute;
+  display: none;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  max-height: 220px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  min-width: 200px;
+}
+.mention-dropdown.open {
+  display: block;
+}

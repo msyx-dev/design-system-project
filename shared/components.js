@@ -54,6 +54,7 @@
 //  User Menu (M3 standalone)    initUserMenu()               .user-menu[data-display-name]
 //  Split Button                 initSplitButton()            .split-button
 //  Transfer list                initTransferList()           .transfer-list
+//  Mention @                    initMentionInput()           [data-mention-source]
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -5285,6 +5286,231 @@ function initTransferList() {
 }
 window.__initTransferList = initTransferList;
 
+// ===== MENTION @ (#441) =====
+// Helper mirror-div pur : clone les styles calculés du textarea dans un div
+// fantôme hors-écran, insère la valeur jusqu'à `position` + un span marqueur,
+// puis lit offsetTop/offsetLeft du marqueur pour déduire la position du caret
+// à l'écran (relative au textarea). Aucune dépendance externe.
+function getCaretCoordinates(textarea, position) {
+    var div = document.createElement('div');
+    var style = div.style;
+    var computed = window.getComputedStyle(textarea);
+
+    style.position = 'absolute';
+    style.visibility = 'hidden';
+    style.top = '-9999px';
+    style.left = '-9999px';
+    style.whiteSpace = 'pre-wrap';
+    style.wordWrap = 'break-word';
+
+    var properties = [
+        'boxSizing', 'width', 'height', 'overflowX', 'overflowY',
+        'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+        'borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle',
+        'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+        'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch', 'fontSize',
+        'fontSizeAdjust', 'lineHeight', 'fontFamily',
+        'textAlign', 'textTransform', 'textIndent', 'textDecoration',
+        'letterSpacing', 'wordSpacing', 'tabSize'
+    ];
+    properties.forEach(function(prop) {
+        style[prop] = computed[prop];
+    });
+
+    document.body.appendChild(div);
+
+    var value = textarea.value;
+    var textBefore = value.substring(0, position);
+    var textAfter = value.substring(position);
+
+    div.textContent = textBefore;
+
+    var span = document.createElement('span');
+    // Toujours un caractère (même vide) pour garantir un rectangle mesurable.
+    span.textContent = textAfter.charAt(0) || '.';
+    div.appendChild(span);
+    div.appendChild(document.createTextNode(textAfter.substring(1)));
+
+    var coordinates = {
+        top: span.offsetTop - textarea.scrollTop,
+        left: span.offsetLeft - textarea.scrollLeft,
+        height: span.offsetHeight
+    };
+
+    document.body.removeChild(div);
+
+    return coordinates;
+}
+
+function initMentionInput() {
+    document.querySelectorAll('[data-mention-source]').forEach(function(textarea) {
+        if (textarea.dataset.bound) return;
+        textarea.dataset.bound = '1';
+
+        var wrap = textarea.closest('.mention-input-wrap') || textarea.parentElement;
+        var raw = textarea.getAttribute('data-mention-source') || '';
+        var mentionables = [];
+        try {
+            var parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) mentionables = parsed;
+        } catch (e) {
+            mentionables = raw.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+        }
+
+        var dropdown = wrap.querySelector('.mention-dropdown');
+        if (!dropdown) {
+            dropdown = document.createElement('ul');
+            dropdown.className = 'mention-dropdown';
+            dropdown.setAttribute('role', 'listbox');
+            dropdown.setAttribute('aria-label', 'Suggestions de mention');
+            if (!dropdown.id) dropdown.id = 'mention-dropdown-' + Math.random().toString(36).slice(2, 9);
+            wrap.appendChild(dropdown);
+        }
+        if (!dropdown.id) dropdown.id = 'mention-dropdown-' + Math.random().toString(36).slice(2, 9);
+
+        // A11y combobox pattern
+        textarea.setAttribute('role', 'combobox');
+        textarea.setAttribute('aria-autocomplete', 'list');
+        textarea.setAttribute('aria-haspopup', 'listbox');
+        textarea.setAttribute('aria-expanded', 'false');
+        textarea.setAttribute('aria-controls', dropdown.id);
+
+        var activeIndex = -1;
+        var currentMatch = null; // { start, end, query }
+
+        function highlightMatch(text, query) {
+            if (!query) return document.createTextNode(text);
+            var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            var span = document.createElement('span');
+            span.innerHTML = text.replace(regex, '<mark>$1</mark>');
+            return span;
+        }
+
+        function closeDropdown() {
+            dropdown.classList.remove('open');
+            textarea.setAttribute('aria-expanded', 'false');
+            textarea.removeAttribute('aria-activedescendant');
+            activeIndex = -1;
+            currentMatch = null;
+        }
+
+        function updateActive(index) {
+            var items = dropdown.querySelectorAll('.search-item');
+            items.forEach(function(item, i) {
+                var isActive = i === index;
+                item.classList.toggle('active', isActive);
+                item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                if (isActive) {
+                    textarea.setAttribute('aria-activedescendant', item.id);
+                    if (typeof item.scrollIntoView === 'function') {
+                        item.scrollIntoView({ block: 'nearest' });
+                    }
+                }
+            });
+            if (index < 0) textarea.removeAttribute('aria-activedescendant');
+        }
+
+        function insertMention(value) {
+            if (!currentMatch) return;
+            var text = textarea.value;
+            var before = text.substring(0, currentMatch.start);
+            var after = text.substring(currentMatch.end);
+            var insertion = '@' + value + ' ';
+            textarea.value = before + insertion + after;
+            var caretPos = before.length + insertion.length;
+            textarea.setSelectionRange(caretPos, caretPos);
+            closeDropdown();
+            textarea.focus();
+        }
+
+        function openDropdown(matches, query) {
+            dropdown.innerHTML = '';
+            activeIndex = -1;
+
+            if (matches.length === 0) {
+                var empty = document.createElement('li');
+                empty.className = 'search-no-result';
+                empty.textContent = 'Aucun résultat pour "' + query + '"';
+                dropdown.appendChild(empty);
+            } else {
+                matches.forEach(function(name, i) {
+                    var li = document.createElement('li');
+                    li.className = 'search-item';
+                    li.id = dropdown.id + '-option-' + i;
+                    li.setAttribute('role', 'option');
+                    li.setAttribute('aria-selected', 'false');
+                    li.appendChild(highlightMatch(name, query));
+                    li.addEventListener('mousedown', function(e) {
+                        e.preventDefault();
+                        insertMention(name);
+                    });
+                    dropdown.appendChild(li);
+                });
+            }
+
+            var coords = getCaretCoordinates(textarea, textarea.selectionStart);
+            dropdown.style.top = (coords.top + coords.height) + 'px';
+            dropdown.style.left = coords.left + 'px';
+
+            dropdown.classList.add('open');
+            textarea.setAttribute('aria-expanded', 'true');
+        }
+
+        function detectToken() {
+            var pos = textarea.selectionStart;
+            var textBefore = textarea.value.substring(0, pos);
+            var match = /(?:^|\s)@(\w*)$/.exec(textBefore);
+            if (!match) {
+                closeDropdown();
+                return;
+            }
+            var query = match[1];
+            var start = pos - query.length - 1; // inclut le @
+            currentMatch = { start: start, end: pos, query: query };
+            var filtered = mentionables.filter(function(name) {
+                return name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+            });
+            openDropdown(filtered, query);
+        }
+
+        textarea.addEventListener('input', detectToken);
+        textarea.addEventListener('keyup', function(e) {
+            if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].indexOf(e.key) !== -1) return;
+            detectToken();
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (!dropdown.classList.contains('open')) return;
+            var items = dropdown.querySelectorAll('.search-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (items.length === 0) return;
+                activeIndex = Math.min(activeIndex + 1, items.length - 1);
+                updateActive(activeIndex);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (items.length === 0) return;
+                activeIndex = Math.max(activeIndex - 1, 0);
+                updateActive(activeIndex);
+            } else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && items[activeIndex]) {
+                    e.preventDefault();
+                    var text = items[activeIndex].textContent;
+                    insertMention(text);
+                }
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                closeDropdown();
+            }
+        });
+
+        textarea.addEventListener('blur', function() {
+            setTimeout(closeDropdown, 150);
+        });
+    });
+}
+window.__initMentionInput = initMentionInput;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initCalendar();
@@ -5304,6 +5530,7 @@ function reinitAll() {
     initRiskMatrix();
     initAutoSave();
     initComments();
+    initMentionInput();
     initAuthFlows();
     initPasswordToggle();
     initColorInput();
