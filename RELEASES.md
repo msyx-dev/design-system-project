@@ -1,5 +1,20 @@
 # Releases
 
+## 2.88.0 — 2026-06-30 — Transfer list `.transfer-list` (M#40 Gap A #444)
+
+> Double liste disponibles↔assignés (affectation membres/rôles). Zéro-dépendance : déplacement de nœuds DOM, pas de virtualisation (gros volumes hors scope).
+
+### Added
+- **Transfer list `.transfer-list` (#444)** — nouveau module `shared/css/components/transfer-list.css` (barrel). 2 panneaux (`.transfer-panel` : header + `.transfer-count` + `.transfer-search` + `.transfer-body` scrollable) + colonne d'actions `.transfer-actions` (boutons `.btn-icon` →/←/⇒/⇐, `[data-transfer]`). `.transfer-option` sélectionnable (`.selected`, `.hidden` pour filtre, 44px). `initTransferList()` (composants.js, `dataset.bound`, `reinitAll()`) : sélection clic + clavier (Enter/Espace toggle, ↑/↓ navigation), transfert DOM des items sélectionnés entre panneaux, filtre substring par panneau, région `aria-live` d'annonce, `CustomEvent('transfer:change')`. Mobile-first (stack → 2 colonnes ≥600px). Section `#transfer-list` en fin de `pages/formulaires.html`.
+- **Registry** : entrée `transfer-list` (page `formulaires`, `jsInit: initTransferList`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.87.0 → 2.88.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`. Barrel `components.css` : +1 module.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `formulaires.html` 18 → 19, total 115 → 116 (nouvelle section `#transfer-list`).
+
+### VR
+- Re-baseline ciblé page `formulaires` via soft-harvest : `#transfer-list` (12, neuve) + `#color-picker` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.87.0 — 2026-06-30 — Color picker `.color-input` (M#40 Gap A #448)
 
 > Premier livrable des Gaps du milestone #40. Composant zéro-dépendance : wrapper autour du `<input type=color>` natif (picker visuel délégué au navigateur).
