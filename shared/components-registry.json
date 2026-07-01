@@ -1,7 +1,7 @@
 {
-  "version": "2.90.0",
+  "version": "2.91.0",
   "generated": {
-    "at": "2026-07-01T19:46:47.200Z",
+    "at": "2026-07-01T20:38:09.537Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3022,6 +3022,32 @@
         ".color-input--disabled"
       ],
       "jsInit": "initColorInput",
+      "react": "pending"
+    },
+    {
+      "name": "json-viewer",
+      "page": "divers",
+      "cssClasses": [
+        ".json-viewer",
+        ".json-node",
+        ".json-key",
+        ".json-boolean",
+        ".json-chevron",
+        ".json-children",
+        ".json-node--expandable",
+        ".json-node--leaf",
+        ".json-null",
+        ".json-number",
+        ".json-preview",
+        ".json-punct",
+        ".json-row",
+        ".json-string",
+        ".json-toggle",
+        ".json-toggle-spacer",
+        ".json-viewer-error",
+        ".json-viewer-toolbar"
+      ],
+      "jsInit": "initJsonViewer",
       "react": "pending"
     }
   ]

@@ -1,5 +1,20 @@
 # Releases
 
+## 2.91.0 — 2026-06-30 — JSON viewer `.json-viewer` (M#40 Gap B #446)
+
+> Arbre JSON repliable lecture seule pour écrans de debug/admin. Zéro-dépendance (JSON.parse + DOM natifs), analogue à `.prose` (structure/colore un résultat fourni).
+
+### Added
+- **JSON viewer `.json-viewer` (#446)** — nouveau module `shared/css/components/json-viewer.css` (barrel). `initJsonViewer()` (composants.js, `dataset.bound`, `reinitAll()`, distinct d'`initTreeView`) : lit un payload via `data-json` ou `<script type="application/json">` inline, `JSON.parse` (try/catch → message d'erreur, pas de crash), génère l'arbre DOM récursivement (`role="tree"/"treeitem"/"group"`, `aria-expanded`), colore par type via les tokens `--code-*` (`.json-key`/`.json-string`/`.json-number`/`.json-boolean`/`.json-null`/`.json-punct`), aperçu sur nœud replié (`.json-preview`), boutons tout déplier/replier, **navigation clavier WAI-ARIA Tree** (roving tabindex, ↑↓←→, Home/End, Enter/Espace). Lecture seule (viewer, pas éditeur) — pas de fetch, pas de virtualisation (méga-payloads hors scope). Section `#json-viewer` en fin de `pages/divers.html`.
+- **Registry** : entrée `json-viewer` (page `divers`, `jsInit: initJsonViewer`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.90.0 → 2.91.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`. Barrel `components.css` : +1 module.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `divers.html` 13 → 14, total 118 → 119 (nouvelle section `#json-viewer`).
+
+### VR
+- Re-baseline ciblé page `divers` via soft-harvest : `#json-viewer` (12, neuve) + `#splitter` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.90.0 — 2026-06-30 — Splitter / resizable panels `.split-pane` (M#40 Gap B #443)
 
 > Layout maître-détail redimensionnable. Zéro-dépendance — géométrie triviale (analogue du slider before-after).
