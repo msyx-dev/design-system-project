@@ -4232,6 +4232,36 @@ function initPasswordToggle() {
 }
 window.__initPasswordToggle = initPasswordToggle;
 
+// ===== COLOR INPUT (#448) =====
+function initColorInput() {
+    document.querySelectorAll('[data-color-input]').forEach(function(wrapper) {
+        if (wrapper.dataset.bound) return;
+        wrapper.dataset.bound = '1';
+        var input = wrapper.querySelector('input[type="color"]');
+        if (!input) return;
+        var valueLabel = wrapper.querySelector('.color-input-value');
+        var presets = wrapper.querySelectorAll('.color-swatch[data-color]');
+        function syncUI() {
+            var hex = input.value.toUpperCase();
+            if (valueLabel) valueLabel.textContent = hex;
+            presets.forEach(function(preset) {
+                var active = preset.dataset.color.toUpperCase() === hex;
+                preset.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+        }
+        input.addEventListener('input', syncUI);
+        input.addEventListener('change', syncUI);
+        presets.forEach(function(preset) {
+            preset.addEventListener('click', function() {
+                input.value = preset.dataset.color;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        });
+        syncUI();
+    });
+}
+window.__initColorInput = initColorInput;
+
 // FORM VALIDATION (#433)
 function initFormValidation() {
   const MESSAGES_FR = {
@@ -5104,6 +5134,7 @@ function reinitAll() {
     initComments();
     initAuthFlows();
     initPasswordToggle();
+    initColorInput();
     initFormValidation();
     initUsageMeter();
     initConfirmPopover();

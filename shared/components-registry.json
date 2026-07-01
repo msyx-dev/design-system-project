@@ -1,7 +1,7 @@
 {
   "version": "2.86.0",
   "generated": {
-    "at": "2026-06-30T15:08:38.612Z",
+    "at": "2026-07-01T17:20:10.482Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1213,6 +1213,22 @@
       ],
       "jsInit": "initPasswordToggle",
       "example": "<div class=\"password-field\">\n  <input class=\"input\" id=\"pwd\" type=\"password\">\n  <button type=\"button\" class=\"password-toggle\" data-password-toggle aria-pressed=\"false\" aria-label=\"Afficher le mot de passe\" aria-controls=\"pwd\">\n    <svg class=\"icon password-toggle-on\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-eye\"/></svg>\n    <svg class=\"icon password-toggle-off\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-eye-off\"/></svg>\n  </button>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/forms.css"
+      ]
+    },
+    {
+      "name": "color-picker",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".color-input",
+        ".color-input-value",
+        ".color-input--disabled"
+      ],
+      "jsInit": "initColorInput",
+      "example": "<div class=\"color-input\" data-color-input>\n  <input type=\"color\" id=\"color-basic\" value=\"#3b82f6\">\n  <span class=\"color-input-value\">#3B82F6</span>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/forms.css"
@@ -2939,6 +2955,17 @@
         ".orb--float"
       ],
       "jsInit": null,
+      "react": "pending"
+    },
+    {
+      "name": "color-input",
+      "page": "formulaires",
+      "cssClasses": [
+        ".color-input",
+        ".color-input-value",
+        ".color-input--disabled"
+      ],
+      "jsInit": "initColorInput",
       "react": "pending"
     }
   ]
