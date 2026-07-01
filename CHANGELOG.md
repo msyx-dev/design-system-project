@@ -9,6 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Added
+- Color picker (.color-input) : wrapper stylisant un `<input type=color>` natif (reset chrome navigateur ::-webkit/::-moz-color-swatch, focus-ring DS, carré 44px) + presets `.color-swatch[data-color]` cliquables (aria-pressed) + `initColorInput()` (sync input↔hex↔preset, dispatch event natif). Picker visuel délégué au navigateur — zéro dépendance, zéro calcul colorimétrique. Section #color-picker (formulaires.html). (#448)
 - Primitif .orb canonique (orb.css) : ambient background décoratif (position absolute, blur var(--orb-blur), opacity var(--orb-opacity), pointer-events none, will-change), modificateurs couleur (.orb--accent/--primary-light/--violet/--danger) + taille (.orb--sm/--md/--lg) + animation opt-in (.orb--float, @keyframes orbFloat). Refactor des 4 copies divergentes (hero/login/access-denied/index.html) vers le primitif, iso-visuel ; hex hardcodés d'index.html tokenisés ; aria-hidden harmonisé. (#357)
 - Module .prose (prose.css) : styles de rendu de contenu markdown/HTML riche (headings, listes, blockquote, code, hr ; tables et liens hérités du DS). CSS-only, scope :where() anti-collision. Section #prose (divers.html). (#439)
 - Split button (.split-button) : action primaire + caret menu attache, panneau bati sur le primitif .menu (#520), initSplitButton dedie (open/close, aria-haspopup/expanded sur le caret, nav clavier fleches/Home/End/Echap, fermeture outside-click+Escape). Section #split-button (fin de composants.html). (#438)

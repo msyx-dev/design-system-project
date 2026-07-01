@@ -1322,6 +1322,68 @@
   </div>
 </section>
 
+<section id="color-picker" class="ds-section">
+  <div class="section-header">
+    <span class="overline">Formulaires</span>
+    <h2>Color picker</h2>
+    <p class="section-desc">Wrapper stylisant un <code>&lt;input type="color"&gt;</code> natif — le picker visuel (roue HSL, écran de sélection) est délégué au navigateur/OS. Zéro dépendance, zéro calcul colorimétrique.</p>
+  </div>
+
+  <!-- Démo 1 : basique -->
+  <div class="demo-box">
+    <span class="demo-label">Basique</span>
+    <div class="input-group">
+      <label class="input-label" for="color-basic">Couleur d'accent</label>
+      <div class="color-input" data-color-input>
+        <input type="color" id="color-basic" value="#3b82f6">
+        <span class="color-input-value">#3B82F6</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Démo 2 : presets -->
+  <div class="demo-box">
+    <span class="demo-label">Avec presets</span>
+    <div class="input-group">
+      <label class="input-label" for="color-presets">Couleur du badge</label>
+      <div class="color-input" data-color-input>
+        <input type="color" id="color-presets" value="#22c55e">
+        <span class="color-input-value">#22C55E</span>
+      </div>
+      <div class="flex gap-xs mt-sm">
+        <button type="button" class="color-swatch" data-color="#22c55e" aria-pressed="true" aria-label="Vert" style="background:#22c55e;"></button>
+        <button type="button" class="color-swatch" data-color="#3b82f6" aria-pressed="false" aria-label="Bleu" style="background:#3b82f6;"></button>
+        <button type="button" class="color-swatch" data-color="#f59e0b" aria-pressed="false" aria-label="Orange" style="background:#f59e0b;"></button>
+        <button type="button" class="color-swatch" data-color="#ef4444" aria-pressed="false" aria-label="Rouge" style="background:#ef4444;"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Démo 3 : disabled -->
+  <div class="demo-box">
+    <span class="demo-label">Désactivé</span>
+    <div class="input-group">
+      <label class="input-label" for="color-disabled">Couleur (verrouillée)</label>
+      <div class="color-input color-input--disabled" data-color-input>
+        <input type="color" id="color-disabled" value="#8b5cf6" disabled>
+        <span class="color-input-value">#8B5CF6</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage -->
+  <div class="demo-box">
+    <span class="demo-label">HTML</span>
+    <div class="code-block">&lt;div class="color-input" data-color-input&gt;
+  &lt;input type="color" id="color-basic" value="#3b82f6"&gt;
+  &lt;span class="color-input-value"&gt;#3B82F6&lt;/span&gt;
+&lt;/div&gt;</div>
+    <p class="demo-note">Wrapper <code class="code-inline">.color-input</code> autour d'un <code class="code-inline">&lt;input type="color"&gt;</code> natif (reset du chrome navigateur, focus-ring DS, carré 44px). Le label <code class="code-inline">.color-input-value</code> affiche le hex courant.</p>
+    <p class="demo-note">Presets : boutons <code class="code-inline">.color-swatch</code> avec <code class="code-inline">data-color</code> + <code class="code-inline">aria-pressed</code>. <code class="code-inline">initColorInput()</code> synchronise input ↔ hex ↔ preset actif et émet l'événement natif <code class="code-inline">input</code> sur changement de preset.</p>
+    <p class="demo-note-last">État désactivé : <code class="code-inline">.color-input--disabled</code> + attribut <code class="code-inline">disabled</code> sur l'input.</p>
+  </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
