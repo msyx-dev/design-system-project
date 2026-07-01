@@ -1,7 +1,7 @@
 {
   "version": "2.88.0",
   "generated": {
-    "at": "2026-07-01T18:04:56.273Z",
+    "at": "2026-07-01T18:52:42.442Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1475,6 +1475,21 @@
       ],
       "jsInit": "initComments",
       "example": "<div class=\"comment\">\n  <div class=\"comment-avatar\">MS</div>\n  <div class=\"comment-body\">\n    <div class=\"comment-header\"><span class=\"comment-author\">Mike</span><span class=\"comment-date\">il y a 5 min</span></div>\n    <div class=\"comment-text\">Super implementation !</div>\n    <div class=\"comment-actions\">\n      <button class=\"comment-action-btn\" data-reply-trigger aria-label=\"Repondre\">&#8617; Repondre</button>\n      <button class=\"comment-action-btn\" data-like-trigger aria-label=\"J'aime\">&#9825; <span class=\"like-count\">0</span></button>\n    </div>\n  </div>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/forms.css"
+      ]
+    },
+    {
+      "name": "mention",
+      "kind": "component",
+      "page": "feedback",
+      "cssClasses": [
+        ".mention-input-wrap",
+        ".mention-dropdown"
+      ],
+      "jsInit": "initMentionInput",
+      "example": "<div class=\"mention-input-wrap\">\n  <textarea class=\"input\" data-mention-source=\"Alice Martin,Bob Durand,Carla Nguyen\" placeholder=\"Tapez @ pour mentionner…\"></textarea>\n  <ul class=\"mention-dropdown\" role=\"listbox\" aria-label=\"Suggestions de mention\"></ul>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/forms.css"
