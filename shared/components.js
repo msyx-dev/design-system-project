@@ -55,6 +55,7 @@
 //  Split Button                 initSplitButton()            .split-button
 //  Transfer list                initTransferList()           .transfer-list
 //  Mention @                    initMentionInput()           [data-mention-source]
+//  Splitter / resizable panels  initSplitPane()              .split-pane
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -5286,6 +5287,112 @@ function initTransferList() {
 }
 window.__initTransferList = initTransferList;
 
+// ===== SPLITTER / RESIZABLE PANELS (#443) =====
+function initSplitPane() {
+    document.querySelectorAll('.split-pane').forEach(function(pane) {
+        if (pane.dataset.bound) return;
+        pane.dataset.bound = '1';
+
+        var gutter = pane.querySelector('.split-gutter');
+        var panels = Array.from(pane.querySelectorAll('.split-panel'));
+        var firstPanel = panels[0];
+        if (!gutter || !firstPanel) return;
+
+        var vertical = pane.classList.contains('split-pane--vertical');
+        var min = parseFloat(gutter.dataset.splitMin || pane.dataset.splitMin || '15');
+        var max = parseFloat(gutter.dataset.splitMax || pane.dataset.splitMax || '85');
+        var persistKey = pane.dataset.splitPersistKey || null;
+
+        gutter.setAttribute('role', 'separator');
+        gutter.setAttribute('tabindex', '0');
+        gutter.setAttribute('aria-orientation', vertical ? 'horizontal' : 'vertical');
+        gutter.setAttribute('aria-valuemin', String(min));
+        gutter.setAttribute('aria-valuemax', String(max));
+
+        function clamp(ratio) {
+            return Math.min(max, Math.max(min, ratio));
+        }
+
+        function applyRatio(ratio, opts) {
+            var clamped = clamp(ratio);
+            firstPanel.style.flexBasis = clamped + '%';
+            gutter.setAttribute('aria-valuenow', String(Math.round(clamped)));
+            if (persistKey && (!opts || opts.persist !== false)) {
+                try {
+                    window.localStorage.setItem(persistKey, String(clamped));
+                } catch (err) { /* localStorage indisponible — ignore */ }
+            }
+            pane.dispatchEvent(new CustomEvent('split:resize', { detail: { ratio: clamped }, bubbles: true }));
+            return clamped;
+        }
+
+        function ratioFromPoint(clientX, clientY) {
+            var rect = pane.getBoundingClientRect();
+            return vertical
+                ? ((clientY - rect.top) / rect.height) * 100
+                : ((clientX - rect.left) / rect.width) * 100;
+        }
+
+        // Restauration persistance (avant tout drag)
+        var initialRatio = null;
+        if (persistKey) {
+            try {
+                var stored = window.localStorage.getItem(persistKey);
+                if (stored !== null) initialRatio = parseFloat(stored);
+            } catch (err) { /* localStorage indisponible — ignore */ }
+        }
+        applyRatio(initialRatio !== null && !isNaN(initialRatio) ? initialRatio : 50, { persist: false });
+
+        // Drag — Pointer Events (souris + tactile + stylet unifiés)
+        var dragging = false;
+
+        gutter.addEventListener('pointerdown', function(e) {
+            dragging = true;
+            gutter.setPointerCapture(e.pointerId);
+            pane.classList.add('split-pane--dragging');
+            e.preventDefault();
+        });
+
+        gutter.addEventListener('pointermove', function(e) {
+            if (!dragging) return;
+            applyRatio(ratioFromPoint(e.clientX, e.clientY));
+        });
+
+        function endDrag(e) {
+            if (!dragging) return;
+            dragging = false;
+            pane.classList.remove('split-pane--dragging');
+            try { gutter.releasePointerCapture(e.pointerId); } catch (err) { /* déjà relâché */ }
+        }
+
+        gutter.addEventListener('pointerup', endDrag);
+        gutter.addEventListener('pointercancel', endDrag);
+
+        // Clavier — flèches ajustent par pas, Home/End = bornes min/max
+        gutter.addEventListener('keydown', function(e) {
+            var step = 2;
+            var current = parseFloat(gutter.getAttribute('aria-valuenow') || '50');
+            var decreaseKey = vertical ? 'ArrowUp' : 'ArrowLeft';
+            var increaseKey = vertical ? 'ArrowDown' : 'ArrowRight';
+
+            if (e.key === decreaseKey) {
+                e.preventDefault();
+                applyRatio(current - step);
+            } else if (e.key === increaseKey) {
+                e.preventDefault();
+                applyRatio(current + step);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                applyRatio(min);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                applyRatio(max);
+            }
+        });
+    });
+}
+window.__initSplitPane = initSplitPane;
+
 // ===== MENTION @ (#441) =====
 // Helper mirror-div pur : clone les styles calculés du textarea dans un div
 // fantôme hors-écran, insère la valeur jusqu'à `position` + un span marqueur,
@@ -5542,6 +5649,7 @@ function reinitAll() {
     initUserMenu();
     initSplitButton();
     initTransferList();
+    initSplitPane();
 }
 window.__initComponents = reinitAll;
 

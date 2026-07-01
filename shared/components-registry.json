@@ -1,7 +1,7 @@
 {
-  "version": "2.89.0",
+  "version": "2.90.0",
   "generated": {
-    "at": "2026-07-01T18:52:42.442Z",
+    "at": "2026-07-01T19:46:47.200Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1102,6 +1102,24 @@
       "react": "pending",
       "module": [
         "shared/css/components/media.css"
+      ]
+    },
+    {
+      "name": "splitter",
+      "kind": "component",
+      "page": "divers",
+      "cssClasses": [
+        ".split-pane",
+        ".split-panel",
+        ".split-gutter",
+        ".split-pane--vertical",
+        ".split-panel--fluid"
+      ],
+      "jsInit": "initSplitPane",
+      "example": "<div class=\"split-pane\" data-split-persist-key=\"my-key\">\n  <div class=\"split-panel\" style=\"flex-basis:35%\">Liste</div>\n  <div class=\"split-gutter\" data-split-min=\"15\" data-split-max=\"85\"></div>\n  <div class=\"split-panel split-panel--fluid\">Détail</div>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/splitter.css"
       ]
     },
     {

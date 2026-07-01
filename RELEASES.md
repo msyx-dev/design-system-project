@@ -1,5 +1,20 @@
 # Releases
 
+## 2.90.0 — 2026-06-30 — Splitter / resizable panels `.split-pane` (M#40 Gap B #443)
+
+> Layout maître-détail redimensionnable. Zéro-dépendance — géométrie triviale (analogue du slider before-after).
+
+### Added
+- **Splitter `.split-pane` (#443)** — nouveau module `shared/css/components/splitter.css` (barrel après `media.css`). Conteneur flex `.split-pane` (+ variante `.split-pane--vertical`), `.split-panel` (`min-width:0`, overflow) / `.split-panel--fluid`, poignée `.split-gutter` (`cursor:col-resize`, `touch-action:none`, hit-area ≥44px via `::before`, grip `::after`, `:hover`/`:focus-visible`). `initSplitPane()` (composants.js, `dataset.bound`, `reinitAll()`) : drag Pointer Events (`setPointerCapture`, ratio `clientX/Y` vs `getBoundingClientRect`, clamp `data-split-min`/`max`), clavier `role="separator"` + `aria-valuenow`/`min`/`max` (flèches, Home/End), persistance `localStorage` optionnelle (`data-split-persist-key`), `CustomEvent('split:resize')`. Nouveaux tokens `--split-gutter-size`/`--split-gutter-hover`. Section `#splitter` en fin de `pages/divers.html`.
+- **Registry** : entrée `splitter` (page `divers`, `jsInit: initSplitPane`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.89.0 → 2.90.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`. Barrel `components.css` : +1 module.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `divers.html` 12 → 13, total 117 → 118 (nouvelle section `#splitter`).
+
+### VR
+- Re-baseline ciblé page `divers` via soft-harvest : `#splitter` (12, neuve) + `#prose` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.89.0 — 2026-06-30 — Mention @ `.mention-dropdown` (M#40 Gap A #441)
 
 > Autocomplete @ inline dans un textarea (mention d'utilisateurs). Zéro-dépendance, zéro fetch — la liste est fournie par le consumer.
