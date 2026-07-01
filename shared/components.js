@@ -53,6 +53,7 @@
 //  Confirm Popover              initConfirmPopover()         .popover-confirm-wrap
 //  User Menu (M3 standalone)    initUserMenu()               .user-menu[data-display-name]
 //  Split Button                 initSplitButton()            .split-button
+//  Transfer list                initTransferList()           .transfer-list
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -5113,6 +5114,177 @@ function initTimePicker() {
 }
 window.__initTimePicker = initTimePicker;
 
+// Transfer list (#444) — double liste avec transfert entre 2 panneaux
+function initTransferList() {
+    document.querySelectorAll('.transfer-list').forEach(function(list) {
+        if (list.dataset.bound) return;
+        list.dataset.bound = '1';
+
+        var panels = Array.from(list.querySelectorAll('.transfer-panel'));
+        var sourcePanel = panels[0];
+        var targetPanel = panels[1];
+        if (!sourcePanel || !targetPanel) return;
+
+        var sourceBody = sourcePanel.querySelector('.transfer-body');
+        var targetBody = targetPanel.querySelector('.transfer-body');
+        if (!sourceBody || !targetBody) return;
+
+        // Region aria-live dediee aux annonces de transfert
+        var liveRegion = list.querySelector('[data-transfer-live]');
+        if (!liveRegion) {
+            liveRegion = document.createElement('div');
+            liveRegion.className = 'sr-only';
+            liveRegion.setAttribute('aria-live', 'polite');
+            liveRegion.setAttribute('aria-atomic', 'true');
+            liveRegion.setAttribute('data-transfer-live', '');
+            list.appendChild(liveRegion);
+        }
+
+        function announce(msg) {
+            liveRegion.textContent = '';
+            void liveRegion.offsetHeight;
+            liveRegion.textContent = msg;
+        }
+
+        function panelName(panel) {
+            var title = panel.querySelector('.transfer-panel-title');
+            return title ? title.textContent.trim() : '';
+        }
+
+        function updateCount(panel, body) {
+            var countEl = panel.querySelector('.transfer-count');
+            if (!countEl) return;
+            var options = body.querySelectorAll('.transfer-option');
+            var selected = body.querySelectorAll('.transfer-option.selected').length;
+            countEl.textContent = selected + ' / ' + options.length;
+        }
+
+        function updateCounts() {
+            updateCount(sourcePanel, sourceBody);
+            updateCount(targetPanel, targetBody);
+        }
+
+        function visibleOptions(body) {
+            return Array.from(body.querySelectorAll('.transfer-option')).filter(function(opt) {
+                return !opt.classList.contains('hidden');
+            });
+        }
+
+        function toggleSelect(option) {
+            option.classList.toggle('selected');
+            option.setAttribute('aria-selected', option.classList.contains('selected') ? 'true' : 'false');
+            updateCounts();
+        }
+
+        function bindOption(option) {
+            if (option.dataset.transferOptionBound) return;
+            option.dataset.transferOptionBound = '1';
+            option.setAttribute('tabindex', '0');
+            option.setAttribute('role', 'option');
+            option.setAttribute('aria-selected', option.classList.contains('selected') ? 'true' : 'false');
+
+            option.addEventListener('click', function() {
+                toggleSelect(option);
+            });
+
+            option.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleSelect(option);
+                    return;
+                }
+                var body = option.closest('.transfer-body');
+                if (!body) return;
+                var opts = visibleOptions(body);
+                var idx = opts.indexOf(option);
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    var next = opts[idx + 1];
+                    if (next) next.focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    var prev = opts[idx - 1];
+                    if (prev) prev.focus();
+                }
+            });
+        }
+
+        function bindAllOptions() {
+            list.querySelectorAll('.transfer-option').forEach(bindOption);
+        }
+
+        function moveSelected(fromBody, toBody, fromPanel, toPanel) {
+            var selected = Array.from(fromBody.querySelectorAll('.transfer-option.selected'));
+            if (!selected.length) return;
+            selected.forEach(function(option) {
+                option.classList.remove('selected');
+                option.setAttribute('aria-selected', 'false');
+                option.classList.remove('hidden');
+                toBody.appendChild(option);
+            });
+            updateCounts();
+            announce(selected.length + ' élément(s) déplacé(s) vers ' + panelName(toPanel) + '.');
+            list.dispatchEvent(new CustomEvent('transfer:change', {
+                bubbles: true,
+                detail: { direction: fromPanel === sourcePanel ? 'right' : 'left', count: selected.length }
+            }));
+        }
+
+        function moveAll(fromBody, toBody, fromPanel, toPanel) {
+            var all = Array.from(fromBody.querySelectorAll('.transfer-option'));
+            if (!all.length) return;
+            all.forEach(function(option) {
+                option.classList.remove('selected');
+                option.setAttribute('aria-selected', 'false');
+                option.classList.remove('hidden');
+                toBody.appendChild(option);
+            });
+            updateCounts();
+            announce(all.length + ' élément(s) déplacé(s) vers ' + panelName(toPanel) + '.');
+            list.dispatchEvent(new CustomEvent('transfer:change', {
+                bubbles: true,
+                detail: { direction: fromPanel === sourcePanel ? 'all-right' : 'all-left', count: all.length }
+            }));
+        }
+
+        var btnRight = list.querySelector('[data-transfer="right"]');
+        var btnLeft = list.querySelector('[data-transfer="left"]');
+        var btnAllRight = list.querySelector('[data-transfer="all-right"]');
+        var btnAllLeft = list.querySelector('[data-transfer="all-left"]');
+
+        if (btnRight) btnRight.addEventListener('click', function() {
+            moveSelected(sourceBody, targetBody, sourcePanel, targetPanel);
+        });
+        if (btnLeft) btnLeft.addEventListener('click', function() {
+            moveSelected(targetBody, sourceBody, targetPanel, sourcePanel);
+        });
+        if (btnAllRight) btnAllRight.addEventListener('click', function() {
+            moveAll(sourceBody, targetBody, sourcePanel, targetPanel);
+        });
+        if (btnAllLeft) btnAllLeft.addEventListener('click', function() {
+            moveAll(targetBody, sourceBody, targetPanel, sourcePanel);
+        });
+
+        // Filtre par panneau (substring, insensible casse)
+        list.querySelectorAll('.transfer-search input').forEach(function(input) {
+            if (input.dataset.bound) return;
+            input.dataset.bound = '1';
+            var body = input.closest('.transfer-panel').querySelector('.transfer-body');
+            input.addEventListener('input', function() {
+                var query = input.value.trim().toLowerCase();
+                body.querySelectorAll('.transfer-option').forEach(function(option) {
+                    var text = option.textContent.trim().toLowerCase();
+                    option.classList.toggle('hidden', query.length > 0 && text.indexOf(query) === -1);
+                });
+            });
+        });
+
+        bindAllOptions();
+        updateCounts();
+    });
+}
+window.__initTransferList = initTransferList;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initCalendar();
@@ -5142,6 +5314,7 @@ function reinitAll() {
     initMotionViewport();
     initUserMenu();
     initSplitButton();
+    initTransferList();
 }
 window.__initComponents = reinitAll;
 

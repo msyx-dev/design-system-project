@@ -1384,6 +1384,93 @@
   </div>
 </section>
 
+<section id="transfer-list" class="ds-section">
+  <div class="section-header">
+    <span class="overline">Formulaires</span>
+    <h2>Transfer list</h2>
+    <p class="section-desc">Double liste avec transfert — panneau « Disponibles » ↔ panneau « Assignés » et colonne de boutons →/←/⇒/⇐. Sélection au clic ou au clavier, filtre par panneau, annonces <code>aria-live</code>. Zéro dépendance : déplacement de nœuds DOM.</p>
+  </div>
+
+  <!-- Démo : rôles disponibles → membres assignés -->
+  <div class="demo-box">
+    <span class="demo-label">Disponibles / Assignés</span>
+    <div class="transfer-list">
+      <div class="transfer-panel">
+        <div class="transfer-panel-header">
+          <span class="transfer-panel-title">Disponibles</span>
+          <span class="transfer-count">0 / 6</span>
+        </div>
+        <div class="transfer-search">
+          <input type="text" class="input" placeholder="Filtrer...">
+        </div>
+        <div class="transfer-body">
+          <div class="transfer-option">Alice Martin</div>
+          <div class="transfer-option">Bruno Faure</div>
+          <div class="transfer-option">Chloé Dubois</div>
+          <div class="transfer-option">David Nguyen</div>
+          <div class="transfer-option">Emma Petit</div>
+          <div class="transfer-option">Farid Lopez</div>
+        </div>
+      </div>
+
+      <div class="transfer-actions">
+        <button type="button" class="btn-icon" data-transfer="right" aria-label="Transférer la sélection à droite"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></button>
+        <button type="button" class="btn-icon" data-transfer="left" aria-label="Transférer la sélection à gauche"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button>
+        <button type="button" class="btn-icon" data-transfer="all-right" aria-label="Transférer tout à droite">»</button>
+        <button type="button" class="btn-icon" data-transfer="all-left" aria-label="Transférer tout à gauche">«</button>
+      </div>
+
+      <div class="transfer-panel">
+        <div class="transfer-panel-header">
+          <span class="transfer-panel-title">Assignés</span>
+          <span class="transfer-count">0 / 0</span>
+        </div>
+        <div class="transfer-search">
+          <input type="text" class="input" placeholder="Filtrer...">
+        </div>
+        <div class="transfer-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage -->
+  <div class="demo-box">
+    <span class="demo-label">HTML</span>
+    <div class="code-block">&lt;div class="transfer-list"&gt;
+  &lt;div class="transfer-panel"&gt;
+    &lt;div class="transfer-panel-header"&gt;
+      &lt;span class="transfer-panel-title"&gt;Disponibles&lt;/span&gt;
+      &lt;span class="transfer-count"&gt;0 / 6&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="transfer-search"&gt;&lt;input type="text" class="input" placeholder="Filtrer..."&gt;&lt;/div&gt;
+    &lt;div class="transfer-body"&gt;
+      &lt;div class="transfer-option"&gt;Alice Martin&lt;/div&gt;
+      ...
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="transfer-actions"&gt;
+    &lt;button data-transfer="right" aria-label="..."&gt;→&lt;/button&gt;
+    &lt;button data-transfer="left" aria-label="..."&gt;←&lt;/button&gt;
+    &lt;button data-transfer="all-right" aria-label="..."&gt;»&lt;/button&gt;
+    &lt;button data-transfer="all-left" aria-label="..."&gt;«&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="transfer-panel"&gt;
+    &lt;div class="transfer-panel-header"&gt;
+      &lt;span class="transfer-panel-title"&gt;Assignés&lt;/span&gt;
+      &lt;span class="transfer-count"&gt;0 / 0&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="transfer-search"&gt;&lt;input type="text" class="input" placeholder="Filtrer..."&gt;&lt;/div&gt;
+    &lt;div class="transfer-body"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+    <p class="demo-note">2 <code class="code-inline">.transfer-panel</code> (1er = source, 2e = cible) + colonne <code class="code-inline">.transfer-actions</code> avec 4 boutons <code class="code-inline">data-transfer="right|left|all-right|all-left"</code>. Chaque <code class="code-inline">.transfer-option</code> se sélectionne au clic ou au clavier (Enter/Espace, flèches ↑/↓ pour naviguer).</p>
+    <p class="demo-note">Le filtre <code class="code-inline">.transfer-search input</code> masque les options non-matchantes du panneau (substring, insensible à la casse) via la classe <code class="code-inline">.hidden</code>.</p>
+    <p class="demo-note-last"><code class="code-inline">initTransferList()</code> gère la sélection, le transfert (déplacement DOM), les compteurs <code class="code-inline">.transfer-count</code> et les annonces <code class="code-inline">aria-live</code>. Émet <code class="code-inline">transfer:change</code> (CustomEvent) sur chaque transfert.</p>
+  </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

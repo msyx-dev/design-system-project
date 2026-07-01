@@ -1,7 +1,7 @@
 {
   "version": "2.87.0",
   "generated": {
-    "at": "2026-07-01T17:20:10.482Z",
+    "at": "2026-07-01T18:04:56.273Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1232,6 +1232,29 @@
       "react": "pending",
       "module": [
         "shared/css/components/forms.css"
+      ]
+    },
+    {
+      "name": "transfer-list",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".transfer-list",
+        ".transfer-panel",
+        ".transfer-option",
+        ".transfer-actions",
+        ".transfer-body",
+        ".transfer-count",
+        ".transfer-empty",
+        ".transfer-panel-header",
+        ".transfer-panel-title",
+        ".transfer-search"
+      ],
+      "jsInit": "initTransferList",
+      "example": "<div class=\"transfer-list\">\n  <div class=\"transfer-panel\">\n    <div class=\"transfer-panel-header\">\n      <span class=\"transfer-panel-title\">Disponibles</span>\n      <span class=\"transfer-count\">0 / 6</span>\n    </div>\n    <div class=\"transfer-search\"><input type=\"text\" class=\"input\" placeholder=\"Filtrer...\"></div>\n    <div class=\"transfer-body\">\n      <div class=\"transfer-option\">Alice Martin</div>\n    </div>\n  </div>\n  <div class=\"transfer-actions\">\n    <button data-transfer=\"right\" aria-label=\"Transférer la sélection à droite\">→</button>\n    <button data-transfer=\"left\" aria-label=\"Transférer la sélection à gauche\">←</button>\n    <button data-transfer=\"all-right\" aria-label=\"Transférer tout à droite\">»</button>\n    <button data-transfer=\"all-left\" aria-label=\"Transférer tout à gauche\">«</button>\n  </div>\n  <div class=\"transfer-panel\">\n    <div class=\"transfer-panel-header\">\n      <span class=\"transfer-panel-title\">Assignés</span>\n      <span class=\"transfer-count\">0 / 0</span>\n    </div>\n    <div class=\"transfer-search\"><input type=\"text\" class=\"input\" placeholder=\"Filtrer...\"></div>\n    <div class=\"transfer-body\"></div>\n  </div>\n</div>",
+      "react": "pending",
+      "module": [
+        "shared/css/components/transfer-list.css"
       ]
     },
     {
