@@ -1,4 +1,4 @@
-/* @ds-version: 2.91.0 */
+/* @ds-version: 2.92.0 */
 /* components.css — Barrel. Pour un sous-ensemble : components-core.css ou modules à la carte.
    Tree-shaking : shared/CONSUMER_GUIDE.md#tree-shaking */
 @import "./components/_base.css";
@@ -12,6 +12,7 @@
 @import "./components/theming.css";
 @import "./components/forms.css";
 @import "./components/data.css";
+@import "./components/heatmap-calendar.css";
 @import "./components/avatars.css";
 @import "./components/tables.css";
 @import "./components/lists.css";

@@ -1,5 +1,20 @@
 # Releases
 
+## 2.92.0 — 2026-06-30 — Heatmap calendrier `.heatmap-cal` (M#40 Gap C #442)
+
+> Visualisation d'activité type "contributions GitHub". Zéro-dépendance — grille CSS + coloration tokenisée + binning trivial.
+
+### Added
+- **Heatmap calendrier `.heatmap-cal` (#442)** — nouveau module `shared/css/components/heatmap-calendar.css` (barrel). Grille CSS 7 jours × N semaines, échelle d'intensité monochrome 5 paliers (`data-level="0..4"` → `rgba(var(--accent-rgb), 0/0.18/0.4/0.65/0.9)`). `initHeatmapCalendar()` (composants.js, `dataset.bound`, `reinitAll()`) : lit une série `{date,value}` fournie par le consumer (cellules `[data-date][data-value]` inline), calcule le binning value→palier (max/quantile, O(n)), place chaque cellule (`grid-row`/`grid-column`), tooltip jour+valeur (survol + focus, pattern risk-matrix), légende moins↔plus, labels mois/jours, navigation clavier (roving tabindex). Zéro fetch, zéro agrégation métier, zéro dépendance. Section `#heatmap-calendar` en fin de `pages/data.html`.
+- **Registry** : entrée `heatmap-calendar` (`kind:component`, page `data`, `jsInit: initHeatmapCalendar`).
+
+### Changed (versioning)
+- **Bump synchrone des sources de version** `2.91.0 → 2.92.0` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine, `entrypoint.sh`, footer `site.html`. Barrel `components.css` : +1 module.
+- **`EXPECTED_COUNTS`** (`bin/generate-nav-sections.js`) : `data.html` 16 → 17, total 119 → 120 (nouvelle section `#heatmap-calendar`).
+
+### VR
+- Re-baseline ciblé page `data` via soft-harvest : `#heatmap-calendar` (12, neuve) + `#server-data-grid` (12, bordure `:last-of-type`). Aucune autre page affectée.
+
 ## 2.91.0 — 2026-06-30 — JSON viewer `.json-viewer` (M#40 Gap B #446)
 
 > Arbre JSON repliable lecture seule pour écrans de debug/admin. Zéro-dépendance (JSON.parse + DOM natifs), analogue à `.prose` (structure/colore un résultat fourni).

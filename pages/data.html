@@ -1285,6 +1285,79 @@
     </div>
 </section>
 
+<section id="heatmap-calendar">
+    <div class="section-header">
+        <span class="overline">Data</span>
+        <h2>Heatmap calendrier</h2>
+        <p>Grille type &laquo;&nbsp;contributions&nbsp;&raquo; &mdash; intensit&eacute; 5 paliers d&eacute;riv&eacute;e des valeurs, tooltip jour+valeur, navigation clavier.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; activit&eacute; sur ~2 mois</span>
+        <div class="heatmap-cal">
+            <div data-date="2026-05-01" data-value="0"></div>
+            <div data-date="2026-05-02" data-value="1"></div>
+            <div data-date="2026-05-04" data-value="3"></div>
+            <div data-date="2026-05-05" data-value="6"></div>
+            <div data-date="2026-05-06" data-value="2"></div>
+            <div data-date="2026-05-07" data-value="0"></div>
+            <div data-date="2026-05-08" data-value="4"></div>
+            <div data-date="2026-05-09" data-value="8"></div>
+            <div data-date="2026-05-11" data-value="1"></div>
+            <div data-date="2026-05-12" data-value="5"></div>
+            <div data-date="2026-05-13" data-value="9"></div>
+            <div data-date="2026-05-14" data-value="0"></div>
+            <div data-date="2026-05-15" data-value="2"></div>
+            <div data-date="2026-05-16" data-value="0"></div>
+            <div data-date="2026-05-18" data-value="7"></div>
+            <div data-date="2026-05-19" data-value="3"></div>
+            <div data-date="2026-05-20" data-value="1"></div>
+            <div data-date="2026-05-21" data-value="10"></div>
+            <div data-date="2026-05-22" data-value="4"></div>
+            <div data-date="2026-05-23" data-value="0"></div>
+            <div data-date="2026-05-25" data-value="6"></div>
+            <div data-date="2026-05-26" data-value="2"></div>
+            <div data-date="2026-05-27" data-value="0"></div>
+            <div data-date="2026-05-28" data-value="8"></div>
+            <div data-date="2026-05-29" data-value="5"></div>
+            <div data-date="2026-05-30" data-value="1"></div>
+            <div data-date="2026-06-01" data-value="0"></div>
+            <div data-date="2026-06-02" data-value="3"></div>
+            <div data-date="2026-06-03" data-value="7"></div>
+            <div data-date="2026-06-04" data-value="2"></div>
+            <div data-date="2026-06-05" data-value="0"></div>
+            <div data-date="2026-06-06" data-value="9"></div>
+            <div data-date="2026-06-08" data-value="4"></div>
+            <div data-date="2026-06-09" data-value="1"></div>
+            <div data-date="2026-06-10" data-value="6"></div>
+            <div data-date="2026-06-11" data-value="0"></div>
+            <div data-date="2026-06-12" data-value="2"></div>
+            <div data-date="2026-06-13" data-value="10"></div>
+            <div data-date="2026-06-15" data-value="3"></div>
+            <div data-date="2026-06-16" data-value="5"></div>
+            <div data-date="2026-06-17" data-value="0"></div>
+            <div data-date="2026-06-18" data-value="8"></div>
+            <div data-date="2026-06-19" data-value="1"></div>
+            <div data-date="2026-06-20" data-value="0"></div>
+            <div data-date="2026-06-22" data-value="4"></div>
+            <div data-date="2026-06-23" data-value="7"></div>
+            <div data-date="2026-06-24" data-value="2"></div>
+            <div data-date="2026-06-25" data-value="0"></div>
+            <div data-date="2026-06-26" data-value="9"></div>
+            <div data-date="2026-06-27" data-value="1"></div>
+            <div data-date="2026-06-29" data-value="3"></div>
+            <div data-date="2026-06-30" data-value="0"></div>
+        </div>
+    </div>
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Structure&nbsp;: <code class="code-inline">.heatmap-cal</code> contenant des cellules-source <code class="code-inline">[data-date][data-value]</code> (format <code class="code-inline">YYYY-MM-DD</code>), retir&eacute;es apr&egrave;s lecture par le JS. Alternative&nbsp;: attribut <code class="code-inline">data-cells</code> avec un JSON <code class="code-inline">[{"date":"2026-05-01","value":3}]</code>.</p>
+        <p class="demo-note">Intensit&eacute;&nbsp;: 5 paliers <code class="code-inline">data-level="0..4"</code> d&eacute;riv&eacute;s du max des valeurs (binning trivial par quartiles), rendus via <code class="code-inline">rgba(var(--accent-rgb), X)</code>.</p>
+        <p class="demo-note-last">JS&nbsp;: <code class="code-inline">initHeatmapCalendar()</code> &mdash; g&eacute;n&egrave;re la grille (7 lignes&nbsp;=&nbsp;jours, colonnes&nbsp;=&nbsp;semaines), tooltip hover/focus, navigation clavier (fl&egrave;ches, Home/End, roving tabindex).</p>
+        <div class="code-block"><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"heatmap-cal"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">data-date</span>=<span class="str">"2026-05-01"</span> <span class="fn">data-value</span>=<span class="str">"3"</span><span class="kw">&gt;&lt;/div&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">data-date</span>=<span class="str">"2026-05-02"</span> <span class="fn">data-value</span>=<span class="str">"8"</span><span class="kw">&gt;&lt;/div&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">// Init (auto au chargement + reinitAll SPA)</span><br><span class="fn">initHeatmapCalendar</span>();</div>
+    </div>
+</section>
+
 
     </div>
     <script src="/shared/nav.js"></script>
