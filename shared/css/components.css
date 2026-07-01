@@ -23,6 +23,7 @@
 @import "./components/prose.css";
 @import "./components/templates.css";
 @import "./components/media.css";
+@import "./components/splitter.css";
 @import "./components/_responsive.css";
 @import "./components/tracker.css";
 @import "./components/quiz.css";

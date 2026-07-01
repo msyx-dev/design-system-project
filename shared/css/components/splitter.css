@@ -1,0 +1,91 @@
+/* ===== SPLITTER / RESIZABLE PANELS (#443) ===== */
+/* Layout maitre-detail redimensionnable : panneaux flex + poignee draggable (Pointer Events).
+   CSS + JS pur, zero dependance. MVP = split horizontal (panneaux cote a cote) ;
+   variante --vertical (stack haut/bas) optionnelle via modificateur. */
+
+.split-pane {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.split-panel {
+    min-width: 0;   /* autorise le contenu a overflow/scroller sans forcer la largeur du panneau */
+    overflow: auto;
+}
+
+.split-panel--fluid {
+    flex: 1 1 auto;   /* absorbe l'espace restant, non pilote par le JS */
+}
+
+.split-gutter {
+    flex: 0 0 var(--split-gutter-size);
+    position: relative;
+    background: var(--border-color);
+    cursor: col-resize;
+    touch-action: none;
+    /* Hit-area tactile >= 44px sans agrandir la piste visuelle */
+    padding: 0;
+}
+
+.split-gutter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 44px;
+    transform: translateX(-50%);
+}
+
+.split-gutter::after {
+    /* grip visuel centre */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--text-dim) 60%, transparent);
+    transition: background-color var(--duration-base) var(--ease-standard);
+}
+
+.split-gutter:hover,
+.split-gutter:focus-visible {
+    background: var(--split-gutter-hover);
+}
+
+.split-gutter:hover::after,
+.split-gutter:focus-visible::after {
+    background: var(--text-on-accent);
+}
+
+.split-gutter:focus-visible {
+    outline: 2px solid var(--split-gutter-hover);
+    outline-offset: 2px;
+}
+
+/* Variante split vertical (panneaux empiles haut/bas) */
+.split-pane--vertical {
+    flex-direction: column;
+}
+
+.split-pane--vertical .split-gutter {
+    cursor: row-resize;
+}
+
+.split-pane--vertical .split-gutter::before {
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 44px;
+    transform: translateY(-50%);
+}
+
+.split-pane--vertical .split-gutter::after {
+    width: 24px;
+    height: 3px;
+}

@@ -603,6 +603,66 @@
     </div>
 </section>
 
+<!-- SPLITTER / RESIZABLE PANELS -->
+<section id="splitter">
+    <div class="section-header"><span class="overline">Interaction</span><h2>Splitter / Resizable panels</h2><p>Layout maitre-detail redimensionnable via une poignee draggable <code class="code-inline">.split-gutter</code> (Pointer Events). Clavier <code class="code-inline">role="separator"</code> + fleches, ratio min/max configurable, persistance optionnelle.</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Maitre-detail (horizontal)</span>
+            <div class="split-pane" style="height:240px;border:1px solid var(--border-color);border-radius:var(--radius-md);overflow:hidden;" data-split-persist-key="ds-demo-splitter">
+                <div class="split-panel" style="flex-basis:35%;background:var(--surface);padding:var(--space-sm);">
+                    <span class="demo-label">Liste</span>
+                    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.35rem;font-size:0.85rem;color:var(--text-muted);">
+                        <li>Element 1</li>
+                        <li>Element 2</li>
+                        <li>Element 3</li>
+                        <li>Element 4</li>
+                    </ul>
+                </div>
+                <div class="split-gutter" data-split-min="15" data-split-max="85"></div>
+                <div class="split-panel split-panel--fluid" style="background:var(--surface-alt, var(--surface));padding:var(--space-sm);">
+                    <span class="demo-label">Detail</span>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Contenu du panneau selectionne. Faites glisser la poignee (ou Tab + fleches) pour redimensionner ; le ratio est persiste en <code class="code-inline">localStorage</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Usage HTML</span>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"split-pane"</span> <span class="fn">data-split-persist-key</span>=<span class="str">"my-key"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"split-panel"</span> <span class="fn">style</span>=<span class="str">"flex-basis:35%"</span><span class="kw">&gt;</span>Liste<span class="kw">&lt;/div&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"split-gutter"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">data-split-min</span>=<span class="str">"15"</span> <span class="fn">data-split-max</span>=<span class="str">"85"</span><span class="kw">&gt;</span><span class="kw">&lt;/div&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"split-panel split-panel--fluid"</span><span class="kw">&gt;</span>Detail<span class="kw">&lt;/div&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">// Init (auto au chargement + reinitAll SPA)</span><br><span class="fn">initSplitPane</span>();<br><br><span class="cm">// Ecouter le resize</span><br>pane.<span class="fn">addEventListener</span>(<span class="str">'split:resize'</span>, e <span class="kw">=&gt;</span> {<br>&nbsp;&nbsp;<span class="fn">console</span>.<span class="fn">log</span>(e.detail.ratio);<br>});</div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Variante verticale (stack haut/bas)</span>
+            <div class="split-pane split-pane--vertical" style="height:240px;border:1px solid var(--border-color);border-radius:var(--radius-md);overflow:hidden;">
+                <div class="split-panel" style="flex-basis:40%;background:var(--surface);padding:var(--space-sm);">
+                    <span class="demo-label">Panneau haut</span>
+                </div>
+                <div class="split-gutter" data-split-min="20" data-split-max="80"></div>
+                <div class="split-panel split-panel--fluid" style="background:var(--surface-alt, var(--surface));padding:var(--space-sm);">
+                    <span class="demo-label">Panneau bas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Fonctionnalites</span>
+            <ul style="display:flex;flex-direction:column;gap:0.55rem;list-style:none;padding:0;margin:0;">
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Drag Pointer Events (souris + tactile unifies)</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Clavier <code class="code-inline">role="separator"</code> + fleches/Home/End</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Ratio min/max via <code class="code-inline">data-split-min</code>/<code class="code-inline">data-split-max</code></li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Persistance optionnelle via <code class="code-inline">localStorage</code></li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Variante <code class="code-inline">.split-pane--vertical</code> (stack haut/bas)</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Zero dependance — CSS + JS pur</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>

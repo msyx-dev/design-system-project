@@ -47,7 +47,7 @@ pages/
   templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
   feedback.html     # 13 sections états — alertes (.alert--kpi ex-zone-banner, .alert--cta ex-upgrade-prompt #519), tokens status, toasts, skeleton, empty states, spinners, auto-save, pagination, comments, access-denied page 403 (v2.58.0) — #514, + mention @ (.mention-dropdown, initMentionInput, dropdown positionné au caret via mirror-div, #441)
   overlays.html     # 7 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514)
-  divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed, + .prose rendu markdown v2.85.0 #439) + Interaction (accordion, command palette fonctionnelle, context menu, copy button)
+  divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed, + .prose rendu markdown v2.85.0 #439) + Interaction (accordion, command palette fonctionnelle, context menu, copy button) + splitter/resizable panels (.split-pane, initSplitPane v2.90.0 #443)
 shared/
   styles.css        # Agregateur CSS — imports des 4 modules + base reset
   css/
