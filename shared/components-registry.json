@@ -1,7 +1,7 @@
 {
   "version": "2.93.0",
   "generated": {
-    "at": "2026-07-01T22:18:28.860Z",
+    "at": "2026-07-01T23:06:23.307Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -314,6 +314,7 @@
       "module": [
         "shared/css/components/alerts.css",
         "shared/css/components/forms.css",
+        "shared/css/components/interactive.css",
         "shared/css/components/pricing.css"
       ]
     },
@@ -2165,7 +2166,12 @@
         ".segmented--lg",
         ".segmented--sm",
         ".segmented--subtle",
-        ".str"
+        ".str",
+        ".diff--split",
+        ".diff-code",
+        ".diff-hunk-header",
+        ".diff-line--ctx",
+        ".diff-pane"
       ],
       "jsInit": null,
       "generated": true,
@@ -3093,6 +3099,24 @@
       "react": "pending",
       "module": [
         "shared/css/components/virtual-list.css"
+      ]
+    },
+    {
+      "name": "diff-viewer",
+      "kind": "component",
+      "page": "divers",
+      "cssClasses": [
+        ".diff",
+        ".diff-line",
+        ".diff-line--add",
+        ".diff-line--del",
+        ".diff-gutter",
+        ".diff-sign"
+      ],
+      "jsInit": null,
+      "react": "pending",
+      "module": [
+        "shared/css/components/interactive.css"
       ]
     }
   ]
