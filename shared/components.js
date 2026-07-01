@@ -56,6 +56,7 @@
 //  Transfer list                initTransferList()           .transfer-list
 //  Mention @                    initMentionInput()           [data-mention-source]
 //  Splitter / resizable panels  initSplitPane()              .split-pane
+//  JSON viewer (arbre repliable) initJsonViewer()             .json-viewer
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -5618,6 +5619,303 @@ function initMentionInput() {
 }
 window.__initMentionInput = initMentionInput;
 
+// ===== JSON VIEWER (#446) =====
+// Arbre JSON repliable, lecture seule. Zéro dépendance (JSON.parse + DOM natifs).
+// Sélecteur : .json-viewer[data-json] OU .json-viewer contenant un
+// <script type="application/json">. Navigation clavier WAI-ARIA Tree Pattern
+// (roving tabindex) écrite from-scratch — distincte de initTreeView (statique, sans repli
+// clavier). Grands payloads / virtualisation : hors scope (cf. limite documentée ci-dessous).
+function initJsonViewer() {
+    document.querySelectorAll('.json-viewer').forEach(function(root) {
+        if (root.dataset.bound) return;
+        root.dataset.bound = '1';
+
+        var raw = root.dataset.json;
+        if (raw === undefined) {
+            var script = root.querySelector('script[type="application/json"]');
+            raw = script ? script.textContent : null;
+        }
+        if (raw === null || raw === undefined) return;
+
+        var data;
+        try {
+            data = JSON.parse(raw);
+        } catch (err) {
+            root.textContent = '';
+            var errorEl = document.createElement('p');
+            errorEl.className = 'json-viewer-error';
+            errorEl.textContent = 'JSON invalide : ' + err.message;
+            root.appendChild(errorEl);
+            return;
+        }
+
+        // Toolbar optionnelle "Tout déplier" / "Tout replier"
+        var toolbar = null;
+        if (root.dataset.jsonToolbar !== 'false') {
+            toolbar = document.createElement('div');
+            toolbar.className = 'json-viewer-toolbar';
+
+            var expandAllBtn = document.createElement('button');
+            expandAllBtn.type = 'button';
+            expandAllBtn.className = 'btn-ghost btn-sm';
+            expandAllBtn.textContent = 'Tout déplier';
+
+            var collapseAllBtn = document.createElement('button');
+            collapseAllBtn.type = 'button';
+            collapseAllBtn.className = 'btn-ghost btn-sm';
+            collapseAllBtn.textContent = 'Tout replier';
+
+            toolbar.appendChild(expandAllBtn);
+            toolbar.appendChild(collapseAllBtn);
+        }
+
+        root.textContent = '';
+        if (toolbar) root.appendChild(toolbar);
+
+        var tree = document.createElement('div');
+        tree.setAttribute('role', 'tree');
+        tree.className = 'json-tree';
+
+        var rootNode = buildNode('$', data, true);
+        tree.appendChild(rootNode);
+        root.appendChild(tree);
+
+        if (toolbar) {
+            expandAllBtn.addEventListener('click', function() {
+                tree.querySelectorAll('.json-node--expandable').forEach(function(n) { setOpen(n, true); });
+            });
+            collapseAllBtn.addEventListener('click', function() {
+                tree.querySelectorAll('.json-node--expandable').forEach(function(n) {
+                    if (n !== rootNode) setOpen(n, false);
+                });
+                setOpen(rootNode, true);
+            });
+        }
+
+        // ─── Générateur DOM récursif ────────────────────────────────────
+        // Construit un .json-node pour chaque valeur. Objets/arrays → nœuds
+        // repliables (role=treeitem + aria-expanded, enfants dans role=group).
+        // Primitives → feuilles typées (role=treeitem, sans aria-expanded).
+        function buildNode(key, value, isRoot) {
+            var type = valueType(value);
+            var isExpandable = (type === 'object' || type === 'array');
+            var node = document.createElement('div');
+            node.className = 'json-node' + (isExpandable ? ' json-node--expandable open' : ' json-node--leaf');
+            node.setAttribute('role', 'treeitem');
+            node.setAttribute('tabindex', '-1');
+            if (isExpandable) node.setAttribute('aria-expanded', 'true');
+
+            var row = document.createElement('div');
+            row.className = 'json-row';
+
+            if (isExpandable) {
+                var toggle = document.createElement('button');
+                toggle.type = 'button';
+                toggle.className = 'json-toggle';
+                toggle.setAttribute('aria-hidden', 'true');
+                toggle.tabIndex = -1;
+                toggle.innerHTML = '<svg class="json-chevron"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg>';
+                row.appendChild(toggle);
+            } else {
+                var spacer = document.createElement('span');
+                spacer.className = 'json-toggle-spacer';
+                spacer.setAttribute('aria-hidden', 'true');
+                row.appendChild(spacer);
+            }
+
+            if (!isRoot) {
+                var keyEl = document.createElement('span');
+                keyEl.className = 'json-key';
+                keyEl.textContent = '"' + key + '"';
+                row.appendChild(keyEl);
+
+                var colon = document.createElement('span');
+                colon.className = 'json-punct';
+                colon.textContent = ': ';
+                row.appendChild(colon);
+            }
+
+            if (isExpandable) {
+                var entries = type === 'array'
+                    ? value.map(function(v, i) { return [i, v]; })
+                    : Object.keys(value).map(function(k) { return [k, value[k]]; });
+
+                var openPunct = document.createElement('span');
+                openPunct.className = 'json-punct';
+                openPunct.textContent = type === 'array' ? '[' : '{';
+                row.appendChild(openPunct);
+
+                var preview = document.createElement('span');
+                preview.className = 'json-preview';
+                preview.textContent = '… ' + entries.length + (type === 'array'
+                    ? (entries.length === 1 ? ' élément' : ' éléments')
+                    : (entries.length === 1 ? ' clé' : ' clés'));
+                row.appendChild(preview);
+
+                var closePunctInline = document.createElement('span');
+                closePunctInline.className = 'json-punct';
+                closePunctInline.textContent = type === 'array' ? ']' : '}';
+                row.appendChild(closePunctInline);
+
+                node.appendChild(row);
+
+                var children = document.createElement('div');
+                children.className = 'json-children open';
+                children.setAttribute('role', 'group');
+
+                entries.forEach(function(entry, idx) {
+                    var childNode = buildNode(entry[0], entry[1], false);
+                    if (idx === entries.length - 1) childNode.classList.add('json-node--last');
+                    children.appendChild(childNode);
+                });
+
+                var closeLine = document.createElement('div');
+                closeLine.className = 'json-punct json-close-punct';
+                closeLine.textContent = type === 'array' ? ']' : '}';
+                children.appendChild(closeLine);
+
+                node.appendChild(children);
+            } else {
+                var valueEl = document.createElement('span');
+                if (type === 'string') {
+                    valueEl.className = 'json-string';
+                    valueEl.textContent = '"' + value + '"';
+                } else if (type === 'number') {
+                    valueEl.className = 'json-number';
+                    valueEl.textContent = String(value);
+                } else if (type === 'boolean') {
+                    valueEl.className = 'json-boolean';
+                    valueEl.textContent = String(value);
+                } else {
+                    valueEl.className = 'json-null';
+                    valueEl.textContent = 'null';
+                }
+                row.appendChild(valueEl);
+                node.appendChild(row);
+            }
+
+            return node;
+        }
+
+        function valueType(value) {
+            if (value === null) return 'null';
+            if (Array.isArray(value)) return 'array';
+            var t = typeof value;
+            if (t === 'object') return 'object';
+            return t; // string | number | boolean
+        }
+
+        function setOpen(node, open) {
+            node.classList.toggle('open', open);
+            node.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        // ─── Repli / expand ─────────────────────────────────────────────
+        // e.target.closest('.json-node--expandable') remonte au nœud expandable
+        // le plus proche ; on vérifie ensuite que la .json-row cliquée est bien
+        // la ligne DIRECTE de ce nœud (et non celle d'un enfant plus profond),
+        // sinon un clic sur un descendant toggle aussi son ancêtre par erreur.
+        tree.addEventListener('click', function(e) {
+            var node = e.target.closest('.json-node--expandable');
+            if (!node || !tree.contains(node)) return;
+            if (e.target.closest('.json-row') !== node.querySelector(':scope > .json-row')) return;
+            setOpen(node, !node.classList.contains('open'));
+            focusNode(node);
+        });
+
+        // ─── Navigation clavier WAI-ARIA Tree (roving tabindex) ────────
+        // ↓/↑ : item visible suivant/précédent · → : déplie ou descend au 1er enfant
+        // ← : replie ou remonte au parent · Home/End : premier/dernier visible
+        // Enter/Espace : toggle repli si expandable
+        function getAllNodes() {
+            return Array.prototype.slice.call(tree.querySelectorAll('.json-node'));
+        }
+
+        function isVisible(node) {
+            var current = node;
+            while (current && current !== tree) {
+                var parent = current.parentElement;
+                if (parent && parent.classList.contains('json-children') && !parent.classList.contains('open')) {
+                    return false;
+                }
+                current = parent;
+            }
+            return true;
+        }
+
+        function getVisibleNodes() {
+            return getAllNodes().filter(isVisible);
+        }
+
+        function focusNode(node) {
+            getAllNodes().forEach(function(n) { n.setAttribute('tabindex', '-1'); });
+            node.setAttribute('tabindex', '0');
+            node.focus();
+        }
+
+        function getParentNode(node) {
+            var group = node.parentElement;
+            if (!group || !group.classList.contains('json-children')) return null;
+            return group.closest('.json-node');
+        }
+
+        function getFirstChildNode(node) {
+            var group = node.querySelector(':scope > .json-children');
+            if (!group) return null;
+            return group.querySelector(':scope > .json-node');
+        }
+
+        tree.addEventListener('keydown', function(e) {
+            var current = e.target.closest('.json-node');
+            if (!current) return;
+            var visible = getVisibleNodes();
+            var idx = visible.indexOf(current);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (idx < visible.length - 1) focusNode(visible[idx + 1]);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (idx > 0) focusNode(visible[idx - 1]);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (current.classList.contains('json-node--expandable')) {
+                    if (!current.classList.contains('open')) {
+                        setOpen(current, true);
+                    } else {
+                        var firstChild = getFirstChildNode(current);
+                        if (firstChild) focusNode(firstChild);
+                    }
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (current.classList.contains('json-node--expandable') && current.classList.contains('open')) {
+                    setOpen(current, false);
+                } else {
+                    var parentNode = getParentNode(current);
+                    if (parentNode) focusNode(parentNode);
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                if (visible.length) focusNode(visible[0]);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                if (visible.length) focusNode(visible[visible.length - 1]);
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                if (current.classList.contains('json-node--expandable')) {
+                    e.preventDefault();
+                    setOpen(current, !current.classList.contains('open'));
+                }
+            }
+        });
+
+        // Roving tabindex initial : la racine reçoit le focus au Tab
+        var first = getVisibleNodes()[0];
+        if (first) first.setAttribute('tabindex', '0');
+    });
+}
+window.__initJsonViewer = initJsonViewer;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
     initCalendar();
@@ -5650,6 +5948,7 @@ function reinitAll() {
     initSplitButton();
     initTransferList();
     initSplitPane();
+    initJsonViewer();
 }
 window.__initComponents = reinitAll;
 

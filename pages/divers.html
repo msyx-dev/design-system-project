@@ -663,6 +663,61 @@
     </div>
 </section>
 
+<!-- JSON VIEWER -->
+<section id="json-viewer">
+    <div class="section-header"><span class="overline">Interaction</span><h2>JSON viewer</h2><p>Arbre JSON repliable en lecture seule, genere depuis <code class="code-inline">data-json</code> ou un <code class="code-inline">&lt;script type="application/json"&gt;</code>. Coloration par type via les tokens <code class="code-inline">--code-*</code>, navigation clavier WAI-ARIA Tree complete (roving tabindex).</p></div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Objet imbrique</span>
+            <div class="json-viewer">
+                <script type="application/json">
+{
+  "id": 4821,
+  "name": "Alice Martin",
+  "active": true,
+  "avatar": null,
+  "roles": ["admin", "editor", "viewer"],
+  "settings": {
+    "theme": "dark",
+    "notifications": {
+      "email": true,
+      "sms": false
+    },
+    "locale": "fr-FR"
+  }
+}
+                </script>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Usage HTML</span>
+            <div class="code-block-wrap">
+                <div class="code-block"><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"json-viewer"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;script</span> <span class="fn">type</span>=<span class="str">"application/json"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;{ <span class="str">"id"</span>: <span class="num">4821</span>, <span class="str">"name"</span>: <span class="str">"Alice Martin"</span> }<br>&nbsp;&nbsp;<span class="kw">&lt;/script&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">// Alternative : data-json (attribut inline)</span><br><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"json-viewer"</span> <span class="fn">data-json</span>=<span class="str">'{"id":1}'</span><span class="kw">&gt;&lt;/div&gt;</span><br><br><span class="cm">// Init (auto au chargement + reinitAll SPA)</span><br><span class="fn">initJsonViewer</span>();</div>
+            </div>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Fonctionnalites</span>
+            <ul style="display:flex;flex-direction:column;gap:0.55rem;list-style:none;padding:0;margin:0;">
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Generateur DOM recursif — objets/arrays repliables, primitives typees</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Nav clavier WAI-ARIA Tree — fleches/Home/End/Enter, roving tabindex</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Coloration par type via tokens <code class="code-inline">--code-*</code></li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Nœud replie → resume <code class="code-inline">.json-preview</code> ("N cles"/"N elements")</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> JSON invalide → message d'erreur, pas de crash (JSON.parse try/catch)</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Lecture seule, zero dependance — CSS + JS pur</li>
+            </ul>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Limite connue</span>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Pas de virtualisation : conçu pour des payloads de demonstration/debug (dizaines a centaines de nœuds). Pour des JSON tres volumineux, prevoir une pagination/troncature côte consumer avant injection.</p>
+        </div>
+
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/components.js"></script>
