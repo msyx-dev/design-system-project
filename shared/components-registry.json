@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-04T22:33:05.481Z",
+    "at": "2026-07-04T22:58:35.015Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -407,7 +407,7 @@
       ],
       "jsInit": "initComponents",
       "example": "<div class=\"tabs\" role=\"tablist\">\n  <button class=\"tab active\" role=\"tab\" aria-selected=\"true\" data-tab=\"tab-1\">Aperçu</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-2\">Détails</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-3\">Historique</button>\n</div>\n<div id=\"tab-1\" role=\"tabpanel\">Contenu de l'aperçu</div>\n<div id=\"tab-2\" role=\"tabpanel\" hidden>Contenu des détails</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/navigation.css",
         "shared/css/utilities.css",

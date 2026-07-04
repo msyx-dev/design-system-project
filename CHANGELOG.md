@@ -26,6 +26,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
 
 ### Changed
+- Registre : `tabs` passé `react:"ported"` (wrapper `@msyx-dev/react`, #455).
 - Registre : `modal` passé `react:"ported"` (wrapper `@msyx-dev/react`, #454).
 - Registre : `toast` passé `react:"ported"` (wrapper `@msyx-dev/react` livré, #453).
 - Registre : suppression du doublon `color-input` (2 entrées identiques pour le color picker natif ; l'entrée canonique `color-picker` — celle qui matche `<section id="color-picker">` et porte le champ `example` — est conservée). Seul doublon de signature du registre. `kind:component` **105 → 104**, total composants 134 → 133, compteurs `site.html` (hero/meta/footer) recâblés **105 → 104**. Parité React : **5 ported / 102 portables** (97 pending, 31 n-a). (#603)

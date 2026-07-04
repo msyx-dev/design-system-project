@@ -29,3 +29,5 @@ export type {
 } from "./components/Toast/Toast";
 export { Modal } from "./components/Modal/Modal";
 export type { ModalProps } from "./components/Modal/Modal";
+export { Tabs } from "./components/Tabs/Tabs";
+export type { TabsProps, TabItem } from "./components/Tabs/Tabs";
