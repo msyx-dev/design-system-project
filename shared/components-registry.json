@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-04T21:38:48.820Z",
+    "at": "2026-07-04T22:08:28.928Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -334,7 +334,7 @@
       ],
       "jsInit": "showToast",
       "example": "<!-- Déclencher via JS -->\n<script>\n  showToast('Enregistrement réussi', 'success');\n  showToast('Erreur de connexion', 'error');\n  showToast('Action en attente', 'warning');\n  showToast('Mise à jour disponible', 'info');\n</script>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
         "shared/css/components/_a11y.css"

@@ -6,6 +6,9 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## Unreleased (next alpha) — remédiation dette audit 2026-06-13
 
+### Added
+- `<ToastProvider>` + hook `useToast()` : toasts impératifs via context React, émet `.toast`/`.toast-{type}`/`.toast-message`/`.toast-close`, role/aria-live a11y par type, auto-dismiss + enter/exit. (#453)
+
 ### Fixed
 - Retiré l'export `./styles.css` (jamais généré par tsup) du `package.json` ; `sideEffects: false` (tree-shaking) (#374).
 - README : chemin d'import CSS corrigé (le CSS provient de la distribution DS CSS, pas d'un package npm), install GitHub Packages (`.npmrc` + token), props des 5 composants documentées (#375).
