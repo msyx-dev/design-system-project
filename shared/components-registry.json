@@ -1,7 +1,7 @@
 {
-  "version": "2.94.3",
+  "version": "2.94.4",
   "generated": {
-    "at": "2026-07-04T21:10:13.170Z",
+    "at": "2026-07-04T21:38:48.820Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3040,21 +3040,6 @@
         "shared/css/components/cards.css",
         "shared/css/components/forms.css",
         "shared/css/components/orb.css"
-      ]
-    },
-    {
-      "name": "color-input",
-      "kind": "component",
-      "page": "formulaires",
-      "cssClasses": [
-        ".color-input",
-        ".color-input-value",
-        ".color-input--disabled"
-      ],
-      "jsInit": "initColorInput",
-      "react": "pending",
-      "module": [
-        "shared/css/components/forms.css"
       ]
     },
     {
