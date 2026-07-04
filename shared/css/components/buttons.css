@@ -200,3 +200,7 @@
 .btn-group > :focus-visible {
     z-index: 1;
 }
+/* Neutraliser le lift translateY au hover — evite le desalignement des boutons mitoyens (#589) */
+.btn-group > :hover {
+    transform: none;
+}

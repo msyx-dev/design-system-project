@@ -30,6 +30,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ### Fixed
 - **Header `/me.json` 404 sur la vitrine (#531)** : ajout d'un `me.json` de démo à la racine (servi par Caddy `file_server`) → le bootstrap session de `site.html` reçoit `200` au lieu de `404`, supprimant la seule erreur console du DS. Bonus : la zone utilisateur du header (avatar + dropdown) est désormais peuplée d'un user de démo (showcase). Le bootstrap gérait déjà le `null` gracieusement ; le 404 était un log réseau navigateur insuppressible par JS. Aucun impact consumer (`me.json` non distribué par `sync.sh` ; les consumers M3 exposent `/me.json` via le `handle` Caddy/Authentik qui prime). (#531)
+- `.btn-group` : le lift `transform: translateY(-2px)` des boutons au survol désalignait verticalement les boutons mitoyens du groupe. Neutralisé via `.btn-group > :hover { transform: none }` (z-index de focus préservé), miroir du fix déjà en place sur `.split-button`. (#589)
 
 ## [2.77.0] — 2026-06-18 — Consolidation doublons composants (M#44, Epic #517)
 
