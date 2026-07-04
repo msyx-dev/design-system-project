@@ -1,5 +1,21 @@
 # Releases
 
+## 2.94.3 — 2026-07-04 — Registre `react:"n-a"` (4 CSS-only) — setup parité React M#41 (#601)
+
+> Hygiène registre en amont du sprint 1 M#41 (parité React, epic #396). Les 4 composants livrés en M#40 qui sont purement CSS (aucun `jsInit`) ne sont pas portables en wrapper React interactif — classés `react:"n-a"`, comme les autres modules présentationnels déjà en `n-a`. Métadonnée registre uniquement : aucun changement du CSS/JS servi.
+
+### Changed
+- **Reclassement `react:"n-a"` (#601)** — `btn-group`, `prose`, `orb`, `diff-viewer` passent `pending → n-a` dans `components-registry.json`, puis `npm run generate-registry` (préserve la valeur, re-dérive `module[]`, recompute la parité). Parité React : **5 ported / 103 portables** (98 pending, 31 n-a) — vs 5/107 (102 pending, 27 n-a) avant. `kind` inchangé (`component`), compteurs `site.html` intacts.
+
+### Changed (versioning)
+- **Bump synchrone des 8 sources de version** `2.94.2 → 2.94.3` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+
+### VR
+- Aucun impact VR : métadonnée JSON du registre uniquement, aucun rendu modifié.
+
+### Note
+- Le doublon `color-input`/`color-picker` (2 entrées identiques du registre) est **hors scope** de cette PR — traité séparément (il impacte `kind:component` et les compteurs `site.html`, contrairement à ce flip `react`).
+
 ## 2.94.2 — 2026-07-04 — Fix lift hover `.btn-group` (M#40 suivi #589)
 
 > Micro-fix visuel. Les boutons DS ont un lift `translateY(-2px)` au survol ; dans un `.btn-group` (boutons accolés), chaque bouton se soulevait individuellement → désalignement du groupe. Le même problème était déjà neutralisé sur `.split-button` mais pas sur `.btn-group`.

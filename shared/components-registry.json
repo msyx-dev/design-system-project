@@ -1,7 +1,7 @@
 {
-  "version": "2.94.2",
+  "version": "2.94.3",
   "generated": {
-    "at": "2026-07-04T18:51:04.271Z",
+    "at": "2026-07-04T21:10:13.170Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2986,7 +2986,7 @@
         ".btn-group"
       ],
       "jsInit": null,
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/buttons.css"
       ]
@@ -3014,7 +3014,7 @@
         ".prose"
       ],
       "jsInit": null,
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/prose.css"
       ]
@@ -3035,7 +3035,7 @@
         ".orb--float"
       ],
       "jsInit": null,
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/cards.css",
         "shared/css/components/forms.css",
@@ -3144,7 +3144,7 @@
         ".diff-sign"
       ],
       "jsInit": null,
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/interactive.css"
       ]
