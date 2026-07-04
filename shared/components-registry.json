@@ -1,7 +1,7 @@
 {
-  "version": "2.94.0",
+  "version": "2.94.1",
   "generated": {
-    "at": "2026-07-01T23:06:23.307Z",
+    "at": "2026-07-04T18:51:04.271Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2964,6 +2964,7 @@
     },
     {
       "name": "form-validation",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".ds-form",
@@ -2972,19 +2973,27 @@
         ".form-error-list"
       ],
       "jsInit": "initFormValidation",
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/forms.css"
+      ]
     },
     {
       "name": "btn-group",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".btn-group"
       ],
       "jsInit": null,
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/buttons.css"
+      ]
     },
     {
       "name": "split-button",
+      "kind": "component",
       "page": "composants",
       "cssClasses": [
         ".split-button",
@@ -2992,19 +3001,27 @@
         ".split-button__menu"
       ],
       "jsInit": "initSplitButton",
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/buttons.css"
+      ]
     },
     {
       "name": "prose",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".prose"
       ],
       "jsInit": null,
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/prose.css"
+      ]
     },
     {
       "name": "orb",
+      "kind": "component",
       "page": "fondation",
       "cssClasses": [
         ".orb",
@@ -3018,10 +3035,16 @@
         ".orb--float"
       ],
       "jsInit": null,
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/cards.css",
+        "shared/css/components/forms.css",
+        "shared/css/components/orb.css"
+      ]
     },
     {
       "name": "color-input",
+      "kind": "component",
       "page": "formulaires",
       "cssClasses": [
         ".color-input",
@@ -3029,10 +3052,14 @@
         ".color-input--disabled"
       ],
       "jsInit": "initColorInput",
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/forms.css"
+      ]
     },
     {
       "name": "json-viewer",
+      "kind": "component",
       "page": "divers",
       "cssClasses": [
         ".json-viewer",
@@ -3055,7 +3082,10 @@
         ".json-viewer-toolbar"
       ],
       "jsInit": "initJsonViewer",
-      "react": "pending"
+      "react": "pending",
+      "module": [
+        "shared/css/components/json-viewer.css"
+      ]
     },
     {
       "name": "heatmap-calendar",

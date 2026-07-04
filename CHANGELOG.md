@@ -25,6 +25,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - Calendrier interactif INLINE (#432) — `initCalendar()` : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement `calendar:change`. Time-picker `initTimePicker()` 24h/12h (#436) mutualisant `.number-input-wrap` + `.segmented`, événement `time:change`. JS Date natif, zéro dépendance.
 - **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
 
+### Changed
+- Registre : `kind:component` posé sur 7 entrées M#40 (`form-validation`, `btn-group`, `split-button`, `prose`, `orb`, `color-input`, `json-viewer`) — elles entrent désormais dans la validation phantom / pont `module[]` / frontière page↔registre. `kindComponentTotal` 98 → 105. Compteurs `site.html` (hero, meta, footer) recâblés sur ce total : 89/89/88 → 105 ; version meta rafraîchie v2.79.0 → v2.94.1. (#588)
+
 ### Fixed
 - **Header `/me.json` 404 sur la vitrine (#531)** : ajout d'un `me.json` de démo à la racine (servi par Caddy `file_server`) → le bootstrap session de `site.html` reçoit `200` au lieu de `404`, supprimant la seule erreur console du DS. Bonus : la zone utilisateur du header (avatar + dropdown) est désormais peuplée d'un user de démo (showcase). Le bootstrap gérait déjà le `null` gracieusement ; le 404 était un log réseau navigateur insuppressible par JS. Aucun impact consumer (`me.json` non distribué par `sync.sh` ; les consumers M3 exposent `/me.json` via le `handle` Caddy/Authentik qui prime). (#531)
 
