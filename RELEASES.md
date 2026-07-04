@@ -1,5 +1,18 @@
 # Releases
 
+## 2.94.2 — 2026-07-04 — Fix lift hover `.btn-group` (M#40 suivi #589)
+
+> Micro-fix visuel. Les boutons DS ont un lift `translateY(-2px)` au survol ; dans un `.btn-group` (boutons accolés), chaque bouton se soulevait individuellement → désalignement du groupe. Le même problème était déjà neutralisé sur `.split-button` mais pas sur `.btn-group`.
+
+### Fixed
+- **Lift hover `.btn-group` (#589)** — ajout de `.btn-group > :hover { transform: none; }` dans `buttons.css`, co-localisé avec la règle `z-index` existante (outline WCAG 2.4.7 préservé). Miroir du pattern `.split-button`. Aucune régression sur `.split-button`/`.segmented`.
+
+### Changed (versioning)
+- **Bump synchrone des 8 sources de version** `2.94.1 → 2.94.2` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+
+### VR
+- Aucun impact VR : la règle ne s'applique qu'à l'état `:hover`, non capturé par les baselines (screenshots état par défaut).
+
 ## 2.94.1 — 2026-07-04 — Registre `kind:component` (7 entrées M#40) + recâblage compteurs (M#40 suivi #588)
 
 > Correction d'inventaire post-M#40. Les 7 dernières entrées registry ajoutées en M#40 (`form-validation`, `btn-group`, `split-button`, `prose`, `orb`, `color-input`, `json-viewer`) n'avaient pas `kind:component` → invisibles à la validation phantom, au pont `module[]` et au comptage. Les compteurs `site.html` (censés suivre `kindComponentTotal`, cf. #508) avaient dérivé silencieusement.
