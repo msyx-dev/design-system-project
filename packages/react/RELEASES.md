@@ -7,6 +7,7 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 ## Unreleased (next alpha) — remédiation dette audit 2026-06-13
 
 ### Added
+- `<Modal>` : dialogue modal contrôlé porté sur `<dialog>` natif, émet `.modal-dialog`/`.modal-header`/`.modal-body`/`.modal-close`/`.modal-actions`. Synchronisation `open`↔`showModal()`/`close()` via `useEffect`, focus restore WAI-APG (WCAG 2.4.3) répliquant `attachFocusRestore` du DS (capture du trigger avant ouverture, restauration après fermeture), fermeture par ESC natif (`close` event), clic backdrop, ou bouton `.modal-close`. (#454)
 - `<ToastProvider>` + hook `useToast()` : toasts impératifs via context React, émet `.toast`/`.toast-{type}`/`.toast-message`/`.toast-close`, role/aria-live a11y par type, auto-dismiss + enter/exit. (#453)
 
 ### Fixed
