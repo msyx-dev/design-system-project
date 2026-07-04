@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-04T22:58:35.015Z",
+    "at": "2026-07-04T23:24:50.686Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1434,7 +1434,7 @@
       ],
       "jsInit": "initActionMenu",
       "example": "<div class=\"action-menu-wrap\">\n  <button class=\"action-menu-trigger\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-label=\"Actions\">&#8942;</button>\n  <div class=\"action-menu\" role=\"menu\">\n    <button class=\"action-menu-item\" role=\"menuitem\">Éditer</button>\n    <button class=\"action-menu-item danger\" role=\"menuitem\">Supprimer</button>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/menu.css",
         "shared/css/components/overlays.css"

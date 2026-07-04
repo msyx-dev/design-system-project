@@ -31,3 +31,8 @@ export { Modal } from "./components/Modal/Modal";
 export type { ModalProps } from "./components/Modal/Modal";
 export { Tabs } from "./components/Tabs/Tabs";
 export type { TabsProps, TabItem } from "./components/Tabs/Tabs";
+export { ActionMenu } from "./components/ActionMenu/ActionMenu";
+export type {
+  ActionMenuProps,
+  ActionMenuItem,
+} from "./components/ActionMenu/ActionMenu";
