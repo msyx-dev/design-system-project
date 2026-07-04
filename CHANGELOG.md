@@ -26,6 +26,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
 
 ### Changed
+- Registre : `react:"n-a"` posé sur les 4 composants M#40 **CSS-only** (`btn-group`, `prose`, `orb`, `diff-viewer`) — non portables en wrapper React interactif (aucun `jsInit`). `npm run generate-registry` recompute la parité : **5 ported / 103 portables** (98 pending, 31 n-a — vs 5/107 / 27 n-a avant). Setup du sprint 1 M#41 (parité React, epic #396). `kind` inchangé, compteurs `site.html` intacts, aucun impact CSS/JS servi. (#601)
 - Registre : `kind:component` posé sur 7 entrées M#40 (`form-validation`, `btn-group`, `split-button`, `prose`, `orb`, `color-input`, `json-viewer`) — elles entrent désormais dans la validation phantom / pont `module[]` / frontière page↔registre. `kindComponentTotal` 98 → 105. Compteurs `site.html` (hero, meta, footer) recâblés sur ce total : 89/89/88 → 105 ; version meta rafraîchie v2.79.0 → v2.94.1. (#588)
 
 ### Fixed
