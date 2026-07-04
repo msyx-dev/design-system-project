@@ -451,6 +451,7 @@ const REACT_TO_REGISTRY = {
   ThemeToggle: 'theme-switcher',  // #518 — ThemeToggle émet .mode-switch (canonique, layout.css)
   UserMenu:    'user-menu',
   LoginScreen: 'login-screen',
+  Toast:       'toast',
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
