@@ -455,6 +455,7 @@ const REACT_TO_REGISTRY = {
   Modal:       'modal',
   Tabs:        'tabs',
   ActionMenu:  'action-menu',
+  Input:       'inputs',
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

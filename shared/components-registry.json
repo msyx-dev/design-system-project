@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-04T23:24:50.686Z",
+    "at": "2026-07-04T23:52:59.699Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -166,7 +166,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"input-group\">\n  <label class=\"input-label\" for=\"example-input\">Nom du projet</label>\n  <input class=\"input\" id=\"example-input\" type=\"text\" placeholder=\"mon-projet\">\n  <span class=\"input-hint\">Lettres minuscules et tirets uniquement.</span>\n</div>\n\n<div class=\"input-group\">\n  <label class=\"input-label\" for=\"example-error\">Email (erreur)</label>\n  <input class=\"input input-error\" id=\"example-error\" type=\"email\" value=\"invalide@\">\n  <span class=\"input-error-msg\">Format d'e-mail invalide.</span>\n</div>\n\n<label class=\"toggle\">\n  <input type=\"checkbox\" checked>\n  <span class=\"toggle-slider\"></span>\n</label>\n\n<label class=\"checkbox\">\n  <input type=\"checkbox\" checked> Option activée\n</label>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/_a11y.css",
