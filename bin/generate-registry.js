@@ -452,6 +452,7 @@ const REACT_TO_REGISTRY = {
   UserMenu:    'user-menu',
   LoginScreen: 'login-screen',
   Toast:       'toast',
+  Modal:       'modal',
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
