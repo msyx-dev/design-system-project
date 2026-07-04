@@ -1,5 +1,19 @@
 # Releases
 
+## 2.94.4 — 2026-07-04 — Dédup registre `color-input`/`color-picker` (setup parité React M#41 #603)
+
+> Suite de l'hygiène registre en amont du sprint 1 M#41. `components-registry.json` avait **deux entrées identiques** pour le color picker natif (`color-input` + `color-picker`, mêmes classes `.color-input`, même `initColorInput`) — seul doublon de signature du registre. Il gonflait `kind:component` (+1) et double-comptait la parité React.
+
+### Changed
+- **Dédup `color-input` (#603)** — entrée `color-input` supprimée ; `color-picker` conservée (canonique : matche `<section id="color-picker">` de `formulaires.html`, le manifeste nav, et porte le champ `example`). `npm run generate-registry` : `kind:component` **105 → 104**, total composants **134 → 133**, `module[]` re-dérivé. Parité React : **5 ported / 102 portables** (97 pending, 31 n-a).
+- **Compteurs `site.html` recâblés `105 → 104`** (hero-stat, `<meta description>`, footer). Version affichée rafraîchie `v2.94.2 → v2.94.4`.
+
+### Changed (versioning)
+- **Bump synchrone des 8 sources de version** `2.94.3 → 2.94.4` : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+
+### VR
+- Aucun impact VR : `site.html` hors matrice VR + suppression d'une entrée JSON (aucun rendu de page modifié).
+
 ## 2.94.3 — 2026-07-04 — Registre `react:"n-a"` (4 CSS-only) — setup parité React M#41 (#601)
 
 > Hygiène registre en amont du sprint 1 M#41 (parité React, epic #396). Les 4 composants livrés en M#40 qui sont purement CSS (aucun `jsInit`) ne sont pas portables en wrapper React interactif — classés `react:"n-a"`, comme les autres modules présentationnels déjà en `n-a`. Métadonnée registre uniquement : aucun changement du CSS/JS servi.
