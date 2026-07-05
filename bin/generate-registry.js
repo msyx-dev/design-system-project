@@ -456,6 +456,7 @@ const REACT_TO_REGISTRY = {
   Tabs:        'tabs',
   ActionMenu:  'action-menu',
   Input:       'inputs',
+  SegmentedControl: 'segmented-control',
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
