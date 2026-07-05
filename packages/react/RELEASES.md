@@ -8,6 +8,13 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.8 — 2026-07-05 — Fix `<ActionMenu>` invisible (`.open` manquant)
+
+> Correctif d'un bug de rendu détecté en vérification post-alpha.7 : le panneau du menu était monté dans le DOM mais restait invisible.
+
+### Fixed
+- **`<ActionMenu>` — panneau invisible** : le wrapper montait `<div class="action-menu">` sans la classe d'état `.open`. Or le CSS DS (`overlays.css`) laisse `.action-menu` en `opacity:0`/`visibility:hidden` et ne le révèle qu'avec `.action-menu.open`. Résultat : le menu s'ouvrait (`aria-expanded="true"`) mais restait invisible à l'écran chez tout consumer. Le wrapper émet désormais `.action-menu.open` à l'ouverture. Garde anti-régression ajoutée au test (assertion `.open`).
+
 ## v3.0.0-alpha.7 — 2026-07-05 — Sprint 1 parité React (6 composants) + dette #518
 
 > Milestone #41 « Parité React » — sprint 1 : parité **5 → 11 composants portés** (`@msyx-dev/react`). Bundle la remédiation dette audit 2026-06-13 (#374/#375/#376) et la dette #518 (ThemeToggle réécrit, non publié depuis alpha.6).
