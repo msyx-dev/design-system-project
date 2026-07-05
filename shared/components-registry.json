@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-04T23:52:59.699Z",
+    "at": "2026-07-05T00:18:13.625Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -924,7 +924,7 @@
       ],
       "jsInit": "initSegmentedControls",
       "example": "<div class=\"segmented\" role=\"tablist\" data-segmented-id=\"seg-exemple\">\n  <div class=\"segmented-indicator\"></div>\n  <button class=\"segmented-item active\" role=\"tab\" aria-selected=\"true\">Semaine</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Mois</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Année</button>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/buttons.css",
         "shared/css/components/navigation.css"

@@ -46,3 +46,8 @@ export { Radio } from "./components/Input/Radio";
 export type { RadioProps } from "./components/Input/Radio";
 export { Toggle } from "./components/Input/Toggle";
 export type { ToggleProps } from "./components/Input/Toggle";
+export { SegmentedControl } from "./components/SegmentedControl/SegmentedControl";
+export type {
+  SegmentedControlProps,
+  SegmentedControlOption,
+} from "./components/SegmentedControl/SegmentedControl";
