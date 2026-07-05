@@ -4,7 +4,16 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
-## Unreleased (next alpha) — remédiation dette audit 2026-06-13
+## Unreleased (next alpha)
+
+_Rien pour l'instant._
+
+## v3.0.0-alpha.7 — 2026-07-05 — Sprint 1 parité React (6 composants) + dette #518
+
+> Milestone #41 « Parité React » — sprint 1 : parité **5 → 11 composants portés** (`@msyx-dev/react`). Bundle la remédiation dette audit 2026-06-13 (#374/#375/#376) et la dette #518 (ThemeToggle réécrit, non publié depuis alpha.6).
+
+### Changed
+- **`<ThemeToggle>` réécrit — émet `.mode-switch` (dette #518)** : bascule de l'ancienne API `.theme-toggle` vers le markup canonique `.mode-switch` (`layout.css`, iOS-style, `role="switch"`). Sémantique `aria-checked="true"` === mode **DARK** actif (#382). `REACT_TO_REGISTRY` remappé `ThemeToggle → theme-switcher`. ⚠️ **BREAKING (alpha)** : les consumers stylant `.theme-toggle` doivent basculer sur `.mode-switch` (fourni par la distribution DS CSS).
 
 ### Added
 - `<SegmentedControl>` : segmented control contrôlé (`value`/`onChange`), émet `.segmented`/`.segmented-item`/`.segmented-indicator` (+ `.segmented--sm`/`--lg`/`--subtle`), `role="radiogroup"/"radio"`, `aria-checked`, roving tabindex. Indicateur glissant mesuré via ref + `useLayoutEffect` (`transform: translateX(offsetLeft)` + `width: offsetWidth`, style inline de position uniquement), calqué sur `initSegmentedControls` (`shared/components.js`). Navigation clavier WAI-ARIA radiogroup ←/→/↑/↓ + Home/End, boucle, saute les options `disabled`. (#467)
@@ -21,7 +30,7 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 ### Added
 - Export des types `ButtonVariant`, `ButtonSize` depuis `src/index.ts` (#376).
 
-> Parité classes vérifiée : toutes les classes émises ont un équivalent CSS DS (classes manquantes ajoutées côté DS CSS en v2.67.0 racine). Pas de bump de version package ici — publish alpha à décider.
+> Parité classes vérifiée : toutes les classes émises ont un équivalent CSS DS (classes manquantes ajoutées côté DS CSS en v2.67.0 racine). Publié dans **v3.0.0-alpha.7**.
 
 ## v3.0.0-alpha.6 — 2026-05-24
 
