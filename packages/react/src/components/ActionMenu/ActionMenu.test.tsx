@@ -82,6 +82,9 @@ describe("ActionMenu — ouverture / fermeture", () => {
     const menu = document.querySelector(".action-menu");
     expect(menu).toBeInTheDocument();
     expect(menu).toHaveAttribute("role", "menu");
+    // Garde anti-régression : le CSS DS (overlays.css) laisse .action-menu en
+    // opacity:0/visibility:hidden — seul .action-menu.open est visible.
+    expect(menu).toHaveClass("open");
   });
 
   it("re-clic sur le trigger referme le menu (toggle)", async () => {

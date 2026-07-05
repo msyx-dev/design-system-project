@@ -206,7 +206,7 @@ export function ActionMenu({
         )}
       </button>
       {open && (
-        <div className="action-menu" role="menu">
+        <div className="action-menu open" role="menu">
           {items.map((item, index) => {
             if (isDivider(item)) {
               // eslint-disable-next-line react/no-array-index-key
