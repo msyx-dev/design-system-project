@@ -1,7 +1,7 @@
 {
-  "version": "2.94.4",
+  "version": "2.95.0",
   "generated": {
-    "at": "2026-07-07T20:51:23.104Z",
+    "at": "2026-07-07T21:46:47.862Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -567,7 +567,8 @@
       "example": "<div class=\"timeline\">\n  <div class=\"timeline-item\">\n    <div class=\"timeline-dot\"></div>\n    <div class=\"timeline-content\">\n      <strong>v2.32.0 — Agent ergonomics</strong>\n      <p>SKILL.md + canonical-pages + prompts.md</p>\n      <time>2026-05-05</time>\n    </div>\n  </div>\n  <div class=\"timeline-item\">\n    <div class=\"timeline-dot\"></div>\n    <div class=\"timeline-content\">\n      <strong>v2.31.0 — A11y reset natif</strong>\n      <p>Reset a + :focus-visible WCAG 1.4.3/2.4.7</p>\n      <time>2026-05-01</time>\n    </div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
-        "shared/css/components/lists.css"
+        "shared/css/components/lists.css",
+        "shared/css/components/version-notes.css"
       ]
     },
     {
@@ -3132,6 +3133,22 @@
       "react": "n-a",
       "module": [
         "shared/css/components/interactive.css"
+      ]
+    },
+    {
+      "name": "version-notes",
+      "kind": "component",
+      "page": "overlays",
+      "cssClasses": [
+        ".version-badge",
+        ".version-badge--new",
+        ".version-badge-dot",
+        ".version-notes"
+      ],
+      "jsInit": "initVersionNotes",
+      "react": "pending",
+      "module": [
+        "shared/css/components/version-notes.css"
       ]
     }
   ]
