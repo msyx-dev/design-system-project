@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-05T00:18:13.625Z",
+    "at": "2026-07-07T18:54:52.934Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -621,7 +621,7 @@
       ],
       "jsInit": "initComponents",
       "example": "<div class=\"dropdown\" data-dropdown-id=\"dd-exemple\">\n  <button class=\"dropdown-trigger btn-secondary\" type=\"button\">Sélectionner...</button>\n  <div class=\"dropdown-menu\">\n    <div class=\"dropdown-search\"><input type=\"text\" placeholder=\"Filtrer...\"></div>\n    <div class=\"dropdown-option\" data-value=\"opt1\">Option 1</div>\n    <div class=\"dropdown-option\" data-value=\"opt2\">Option 2</div>\n    <div class=\"dropdown-option\" data-value=\"opt3\">Option 3</div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/menu.css"

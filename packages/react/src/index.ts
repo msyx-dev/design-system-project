@@ -64,3 +64,10 @@ export type {
   ThemeName,
   ThemeMode,
 } from "./components/ThemeSwitcher/useTheme";
+export { Dropdown } from "./components/Dropdown/Dropdown";
+export type {
+  DropdownProps,
+  DropdownOption,
+  DropdownSingleProps,
+  DropdownMultiProps,
+} from "./components/Dropdown/Dropdown";

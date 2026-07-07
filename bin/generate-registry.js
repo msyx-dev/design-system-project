@@ -458,6 +458,7 @@ const REACT_TO_REGISTRY = {
   Input:       'inputs',
   SegmentedControl: 'segmented-control',
   ThemeSwitcher: 'theme-switcher',  // #452 — compose ThemeToggle, même entrée registre (deux dirs → 1 composant DS)
+  Dropdown:    'dropdown',  // #457 — dropdown custom div-based (≠ Select natif de Input/)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -475,7 +476,22 @@ const REACT_VARIANT_EXPANSIONS = {
 
 // Whitelist : classes mono-mot légitimes émises par React (filtres kebab les ignoreraient).
 // Compléter si un nouveau composant React émet des classes mono-mot.
-const REACT_KNOWN_SINGLE = new Set(['overline', 'lead', 'subtitle', 'open']);
+const REACT_KNOWN_SINGLE = new Set([
+  'overline', 'lead', 'subtitle', 'open',
+  'dropdown', 'arrow', 'check', 'selected', 'icon',  // #457 — Dropdown
+]);
+
+// Whitelist : classes CSS réelles (confirmées par lecture manuelle du CSS
+// source) mais non détectables par `extractClasses` (regex CSS-side) parce
+// qu'elles n'apparaissent QUE comme second token d'un sélecteur composé
+// adjacent sans séparateur (ex. `.dropdown-option.selected` — le `.selected`
+// n'est précédé d'aucun caractère de la classe séparateur `[\s,{>;+~(]`).
+// Ne JAMAIS ajouter ici une classe non vérifiée à la main dans le CSS —
+// documenter la référence exacte à chaque ajout (#457).
+const REACT_CSS_UNDETECTABLE = new Set([
+  '.selected',       // forms.css:53 .dropdown-option.selected (compound, non capturé)
+  '.dropdown-value', // formulaires.html / components.js — span JS-hook sans règle CSS dédiée (hérite .dropdown-trigger)
+]);
 
 /**
  * Extrait les classes CSS émises par un fichier .tsx (parsing statique).
@@ -567,8 +583,10 @@ if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) 
     }
 
     // (a) chaque classe émise doit exister dans le CSS réel
+    // (ou dans REACT_CSS_UNDETECTABLE — faux négatif connu du scanner CSS,
+    // classe réelle confirmée manuellement, cf. commentaire ci-dessus).
     for (const cls of emitted) {
-      if (!allCssClasses.has(cls)) {
+      if (!allCssClasses.has(cls) && !REACT_CSS_UNDETECTABLE.has(cls)) {
         reactPhantoms.push({ component: dir, registry: regName, class: cls });
       }
     }
