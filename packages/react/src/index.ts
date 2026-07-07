@@ -73,3 +73,18 @@ export type {
 } from "./components/Dropdown/Dropdown";
 export { Slider } from "./components/Slider/Slider";
 export type { SliderProps } from "./components/Slider/Slider";
+export { NumberInput } from "./components/NumberInput/NumberInput";
+export type { NumberInputProps } from "./components/NumberInput/NumberInput";
+export { SearchInput } from "./components/SearchInput/SearchInput";
+export type {
+  SearchInputProps,
+  SearchInputSuggestions,
+  SearchInputSuggestionObject,
+} from "./components/SearchInput/SearchInput";
+export { TagInput } from "./components/TagInput/TagInput";
+export type { TagInputProps } from "./components/TagInput/TagInput";
+export { FileUpload } from "./components/FileUpload/FileUpload";
+export type {
+  FileUploadProps,
+  FileUploadFileItem,
+} from "./components/FileUpload/FileUpload";

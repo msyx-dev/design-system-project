@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-07T19:26:48.127Z",
+    "at": "2026-07-07T20:51:23.104Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -641,7 +641,7 @@
       ],
       "jsInit": null,
       "example": "<label class=\"file-upload\">\n  <input type=\"file\" multiple hidden accept=\".png,.jpg,.pdf\">\n  <span class=\"file-upload-icon\" aria-hidden=\"true\">&#8679;</span>\n  <span class=\"file-upload-text\">Déposer des fichiers ou <u>parcourir</u></span>\n  <span class=\"file-upload-hint\">PNG, JPG, PDF — 10 Mo max</span>\n</label>\n\n<div class=\"file-list\">\n  <div class=\"file-item\">rapport.pdf <button aria-label=\"Supprimer rapport.pdf\">&#10005;</button></div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]
@@ -676,7 +676,7 @@
       ],
       "jsInit": "initNumberInputs",
       "example": "<div class=\"number-input-wrap\">\n  <button class=\"number-input-btn\" data-action=\"decrement\" aria-label=\"Diminuer\">&#8722;</button>\n  <input class=\"number-input-field\" type=\"number\" value=\"1\" min=\"0\" max=\"99\" aria-label=\"Quantité\">\n  <button class=\"number-input-btn\" data-action=\"increment\" aria-label=\"Augmenter\">&#43;</button>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/templates.css"
@@ -697,7 +697,7 @@
       ],
       "jsInit": "initSearchInputs",
       "example": "<div class=\"search-input-wrap\" data-search-id=\"search-exemple\">\n  <span class=\"search-icon\" aria-hidden=\"true\">&#128269;</span>\n  <input class=\"search-input\" type=\"search\" placeholder=\"Rechercher...\" aria-label=\"Recherche\">\n  <button class=\"search-clear\" aria-label=\"Effacer la recherche\" hidden>&#10005;</button>\n  <div class=\"search-suggestions\" hidden role=\"listbox\">\n    <div class=\"search-item\" role=\"option\">Résultat 1</div>\n    <div class=\"search-item\" role=\"option\">Résultat 2</div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]
@@ -958,7 +958,7 @@
       ],
       "jsInit": "initTagInputs",
       "example": "<div class=\"tag-input-wrap\">\n  <span class=\"tag-item\">Design <button class=\"tag-close\" aria-label=\"Supprimer Design\">&times;</button></span>\n  <span class=\"tag-item\">Frontend <button class=\"tag-close\" aria-label=\"Supprimer Frontend\">&times;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>\n<span class=\"tag-input-hint\">Enter ou virgule pour ajouter</span>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/badges.css",
         "shared/css/components/forms.css"
