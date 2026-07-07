@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-07T18:54:52.934Z",
+    "at": "2026-07-07T19:26:48.127Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -660,7 +660,7 @@
       ],
       "jsInit": "initSliders",
       "example": "<div class=\"slider-group\" data-slider-id=\"slider-exemple\">\n  <div class=\"slider-header\">\n    <label class=\"input-label\">Opacité</label>\n    <span class=\"slider-value-display\">75%</span>\n  </div>\n  <div class=\"slider-track\">\n    <input class=\"slider-value\" type=\"range\" min=\"0\" max=\"100\" value=\"75\" aria-label=\"Opacité\">\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]
