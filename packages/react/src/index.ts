@@ -51,3 +51,16 @@ export type {
   SegmentedControlProps,
   SegmentedControlOption,
 } from "./components/SegmentedControl/SegmentedControl";
+export { ThemeSwitcher } from "./components/ThemeSwitcher/ThemeSwitcher";
+export type { ThemeSwitcherProps } from "./components/ThemeSwitcher/ThemeSwitcher";
+export {
+  useTheme,
+  DEFAULT_THEME_CONFIG,
+} from "./components/ThemeSwitcher/useTheme";
+export type {
+  UseThemeReturn,
+  ThemeConfig,
+  ThemeModeConfig,
+  ThemeName,
+  ThemeMode,
+} from "./components/ThemeSwitcher/useTheme";

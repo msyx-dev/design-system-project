@@ -6,7 +6,8 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## Unreleased (next alpha)
 
-_Rien pour l'instant._
+### Added
+- `<ThemeSwitcher>` + hook `useTheme()` : port complet du sélecteur de palette + interrupteur de mode (pas seulement le visuel). `<ThemeSwitcher>` émet `.theme-switcher`/`.theme-switcher-label`/`.theme-switcher-select` et compose `<ThemeToggle>` (déjà porté) pour le `.mode-switch`, calqué sur le markup `fondation.html`/`shared/nav.js:111-116`. Le hook `useTheme(config?)` réplique le moteur runtime `applyThemeTransition`/`applyMode` (`shared/components.js:771-834`) : attributs `documentElement` `data-theme`/`data-mode` (retirés pour les défauts implicites `msyx`/`dark`), persistance `localStorage['msyx-theme'|'msyx-mode']`, réconciliation automatique du mode si le thème choisi ne le supporte pas, et support du mécanisme mono-mode (`modes: ['dark']` seul → toggle `disabled`/`aria-disabled`, dormant côté DS vanilla mais activable via un `config` custom, design IdP-agnostique). SSR-safe : aucun accès `window`/`document`/`localStorage` pendant le rendu, resynchronisation depuis `localStorage` dans un `useEffect` post-montage. `REACT_TO_REGISTRY` (`bin/generate-registry.js`) mappe `ThemeSwitcher → theme-switcher` (même entrée que `ThemeToggle` — deux dirs, un composant DS). (#452)
 
 ## v3.0.0-alpha.8 — 2026-07-05 — Fix `<ActionMenu>` invisible (`.open` manquant)
 
