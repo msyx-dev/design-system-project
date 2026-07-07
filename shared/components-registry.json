@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-07T19:26:48.127Z",
+    "at": "2026-07-07T19:55:05.205Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -676,7 +676,7 @@
       ],
       "jsInit": "initNumberInputs",
       "example": "<div class=\"number-input-wrap\">\n  <button class=\"number-input-btn\" data-action=\"decrement\" aria-label=\"Diminuer\">&#8722;</button>\n  <input class=\"number-input-field\" type=\"number\" value=\"1\" min=\"0\" max=\"99\" aria-label=\"Quantité\">\n  <button class=\"number-input-btn\" data-action=\"increment\" aria-label=\"Augmenter\">&#43;</button>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/templates.css"
