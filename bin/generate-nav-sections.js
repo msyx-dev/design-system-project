@@ -72,11 +72,11 @@ const EXPECTED_COUNTS = {
   '/pages/navigation.html':      8,
   '/pages/data.html':            18,
   '/pages/feedback.html':        13,
-  '/pages/overlays.html':        7,
+  '/pages/overlays.html':        8,
   '/pages/divers.html':          15,
   '/pages/templates.html':       6,
 };
-const EXPECTED_TOTAL = 122;
+const EXPECTED_TOTAL = 123;
 
 // ─── Décodage des entités HTML ─────────────────────────────────────────────────
 

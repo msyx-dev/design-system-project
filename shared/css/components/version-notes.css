@@ -1,0 +1,59 @@
+/* @ds-version: 2.95.0 */
+/* ===== VERSION NOTES (badge + pastille nouveau) ===== */
+/* Composant presentationnel strict (#445) : badge cliquable + pastille "nouveau"
+   pilotee par localStorage (initVersionNotes, shared/components.js) + reutilisation
+   pure des primitives dialog.modal-dialog et .timeline (aucun override). #614 */
+
+.version-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 44px;
+    padding: 0.35rem var(--space-md);
+    border-radius: var(--radius-full);
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease-standard),
+                background-color var(--duration-base) var(--ease-standard);
+}
+.version-badge:hover {
+    border-color: var(--border-hover);
+    background: var(--surface-light);
+}
+
+/* Pastille "nouveau" — cachee par defaut (anti-FOUC), revelee uniquement via .version-badge--new */
+.version-badge-dot {
+    display: none;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 50%, transparent);
+    flex-shrink: 0;
+}
+.version-badge--new .version-badge-dot {
+    display: block;
+}
+
+/* Modale — variante largeur pour accueillir la timeline (reutilisation pure dialog.modal-dialog) */
+dialog.modal-dialog.version-notes-dialog {
+    max-width: 440px;
+}
+
+/* Wrapper contenu (.modal-body) — reserve un scroll si beaucoup de notes */
+.version-notes {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    dialog.modal-dialog.version-notes-dialog {
+        max-width: 480px;
+    }
+}

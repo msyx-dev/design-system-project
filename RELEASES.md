@@ -1,5 +1,25 @@
 # Releases
 
+## 2.95.0 — 2026-07-07 — Composant Notes de version (badge + modale timeline) (#614)
+
+> Nouveau composant DS présentationnel strict (#445) : badge version cliquable + pastille « nouveau » pilotée par `localStorage` + modale de notes de version réutilisant purement les primitives existantes (`dialog.modal-dialog` + `.timeline`). Source pilote : extraction de la version bespoke de `cap-transfo` #330.
+
+### Added
+- **`.version-badge` / `.version-badge--new` / `.version-badge-dot` / `.version-notes`** (`shared/css/components/version-notes.css`) — badge pill `min-height:44px` (WCAG 2.5.5), pastille cachée par défaut (anti-FOUC) révélée uniquement par le modificateur `--new`, variante largeur `dialog.modal-dialog.version-notes-dialog` pour accueillir la timeline. Tokens-first strict, mobile-first. Importé dans le barrel `components.css` après `overlays.css` (non essentiel → absent de `components-core.css`).
+- **`initVersionNotes()`** (`shared/components.js`) : seule logique admise — lit `data-storage-key`/`data-latest-version`, compare à `localStorage.getItem(storageKey)` par **égalité de chaîne** (aucun comparateur semver, cf. #445), pose/retire `.version-badge--new` + enrichit/restaure l'`aria-label` dynamiquement. Au clic : persiste `localStorage.setItem`. L'ouverture de la `<dialog>` reste déléguée à `data-modal-trigger` + `initModals()` existant (2 listeners coexistants sur le même bouton, focus-restore WAI APG déjà fourni). `dataset.bound`, appelé dans `reinitAll()`.
+- Section démo `#version-notes` en fin d'`overlays.html` (2 variantes : badge avec nouveautés non vues / badge déjà vu) + modale timeline (3 `.timeline-item` d'exemple).
+- Registre : entrée `version-notes` (`kind:component`, `page:overlays`, `react:pending`), `module[]` auto-dérivé via `npm run generate-registry`.
+
+### Changed
+- Compteurs `site.html` : hero-stat, `<meta description>` et footer `104 → 105` composants. Hub-card Overlays `7 → 8 sections` (description enrichie).
+- Manifeste sidebar (`bin/generate-nav-sections.js`) : `EXPECTED_COUNTS['/pages/overlays.html'] 7 → 8`, `EXPECTED_TOTAL 122 → 123`.
+
+### Changed (versioning)
+- **Bump synchrone des 8 sources de version** `2.94.4 → 2.95.0` (minor — nouveau composant) : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+
+### VR
+- Nouvelle section `#version-notes` en fin d'`overlays.html` — baselines `overlays__version-notes.png` à harvester depuis les actuals CI (recette soft-harvest, hors scope de cette PR).
+
 ## 2.94.4 — 2026-07-04 — Dédup registre `color-input`/`color-picker` (setup parité React M#41 #603)
 
 > Suite de l'hygiène registre en amont du sprint 1 M#41. `components-registry.json` avait **deux entrées identiques** pour le color picker natif (`color-input` + `color-picker`, mêmes classes `.color-input`, même `initColorInput`) — seul doublon de signature du registre. Il gonflait `kind:component` (+1) et double-comptait la parité React.

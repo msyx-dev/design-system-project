@@ -59,6 +59,7 @@
 //  JSON viewer (arbre repliable) initJsonViewer()             .json-viewer
 //  Heatmap calendrier           initHeatmapCalendar()        .heatmap-cal
 //  Virtual list (fenetree)      initVirtualList()            .virtual-list
+//  Version notes (pastille)     initVersionNotes()           .version-badge[data-version-notes]
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -6267,6 +6268,44 @@ function initVirtualList() {
 }
 window.__initVirtualList = initVirtualList;
 
+// Version Notes — badge + pastille "nouveau" (localStorage, egalite de chaine)
+// Presentationnel strict (#445) : AUCUN rendu de donnees, AUCUN comparateur semver.
+// L'ouverture de la modale reste geree par data-modal-trigger + initModals() (#614).
+function initVersionNotes() {
+    document.querySelectorAll('.version-badge[data-version-notes]').forEach(function(badge) {
+        if (badge.dataset.bound) return;
+        badge.dataset.bound = '1';
+
+        var storageKey = badge.dataset.storageKey;
+        var latest = badge.dataset.latestVersion;
+        if (!storageKey || !latest) return;
+
+        var baseLabel = badge.getAttribute('aria-label') || '';
+
+        function applyState() {
+            var seen = localStorage.getItem(storageKey);
+            if (seen !== latest) {
+                badge.classList.add('version-badge--new');
+                if (baseLabel && baseLabel.indexOf('nouveaut') === -1) {
+                    badge.setAttribute('aria-label', baseLabel + ', nouveautés disponibles');
+                }
+            } else {
+                badge.classList.remove('version-badge--new');
+                badge.setAttribute('aria-label', baseLabel);
+            }
+        }
+
+        applyState();
+
+        badge.addEventListener('click', function() {
+            localStorage.setItem(storageKey, latest);
+            badge.classList.remove('version-badge--new');
+            badge.setAttribute('aria-label', baseLabel);
+        });
+    });
+}
+window.__initVersionNotes = initVersionNotes;
+
 
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
@@ -6303,6 +6342,7 @@ function reinitAll() {
     initJsonViewer();
     initHeatmapCalendar();
     initVirtualList();
+    initVersionNotes();
 }
 window.__initComponents = reinitAll;
 
