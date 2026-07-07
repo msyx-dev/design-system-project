@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-07T19:26:48.127Z",
+    "at": "2026-07-07T20:16:37.673Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -697,7 +697,7 @@
       ],
       "jsInit": "initSearchInputs",
       "example": "<div class=\"search-input-wrap\" data-search-id=\"search-exemple\">\n  <span class=\"search-icon\" aria-hidden=\"true\">&#128269;</span>\n  <input class=\"search-input\" type=\"search\" placeholder=\"Rechercher...\" aria-label=\"Recherche\">\n  <button class=\"search-clear\" aria-label=\"Effacer la recherche\" hidden>&#10005;</button>\n  <div class=\"search-suggestions\" hidden role=\"listbox\">\n    <div class=\"search-item\" role=\"option\">Résultat 1</div>\n    <div class=\"search-item\" role=\"option\">Résultat 2</div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]

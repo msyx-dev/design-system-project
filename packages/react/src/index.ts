@@ -73,3 +73,9 @@ export type {
 } from "./components/Dropdown/Dropdown";
 export { Slider } from "./components/Slider/Slider";
 export type { SliderProps } from "./components/Slider/Slider";
+export { SearchInput } from "./components/SearchInput/SearchInput";
+export type {
+  SearchInputProps,
+  SearchInputSuggestions,
+  SearchInputSuggestionObject,
+} from "./components/SearchInput/SearchInput";

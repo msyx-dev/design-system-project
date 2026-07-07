@@ -460,6 +460,7 @@ const REACT_TO_REGISTRY = {
   ThemeSwitcher: 'theme-switcher',  // #452 — compose ThemeToggle, même entrée registre (deux dirs → 1 composant DS)
   Dropdown:    'dropdown',  // #457 — dropdown custom div-based (≠ Select natif de Input/)
   Slider:      'slider',  // #463 — variante simple uniquement (dual non portée)
+  SearchInput: 'search-input',  // #465
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
