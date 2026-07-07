@@ -227,6 +227,30 @@ describe("FileUpload — .file-list / .file-item contrôlés", () => {
     expect((fills[0] as HTMLElement).style.width).toBe("100%");
   });
 
+  it("pose un background inline non vide sur .progress-fill (défaut DS var(--gradient-1))", () => {
+    render(<FileUpload onFiles={() => {}} files={files} />);
+    const fill = document.querySelector(".progress-fill") as HTMLElement;
+    expect(fill.style.background).toBeTruthy();
+    expect(fill.style.background).toBe("var(--gradient-1)");
+  });
+
+  it("respecte un color personnalisé sur .progress-fill si fourni", () => {
+    render(
+      <FileUpload
+        onFiles={() => {}}
+        files={[
+          {
+            name: "custom.pdf",
+            progress: 42,
+            color: "var(--success)",
+          },
+        ]}
+      />,
+    );
+    const fill = document.querySelector(".progress-fill") as HTMLElement;
+    expect(fill.style.background).toBe("var(--success)");
+  });
+
   it("n'affiche pas .file-item-size si size est absent", () => {
     render(
       <FileUpload onFiles={() => {}} files={[{ name: "sans-taille.txt" }]} />,

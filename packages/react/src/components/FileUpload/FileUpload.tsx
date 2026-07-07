@@ -15,6 +15,14 @@ export interface FileUploadFileItem {
   size?: string;
   /** Progression 0-100 — pose `.progress-bar > .progress-fill` (largeur %). Omis → pas de barre. */
   progress?: number;
+  /**
+   * Fond CSS inline de `.progress-fill` — le DS n'a AUCUN fond par défaut sur
+   * `.progress-fill` (`data.css:6`), le fond est TOUJOURS posé inline côté
+   * markup statique (cf. `pages/formulaires.html:537/543/549` :
+   * `style="width:65%;background:var(--gradient-1);"`). Sans valeur, la barre
+   * de progression est invisible. Omis → `var(--gradient-1)` (défaut DS).
+   */
+  color?: string;
 }
 
 export interface FileUploadProps {
@@ -217,7 +225,10 @@ export function FileUpload({
                 <div className="progress-bar">
                   <div
                     className="progress-fill"
-                    style={{ width: `${file.progress}%` }}
+                    style={{
+                      width: `${file.progress}%`,
+                      background: file.color ?? "var(--gradient-1)",
+                    }}
                   />
                 </div>
               )}
