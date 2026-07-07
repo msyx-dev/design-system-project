@@ -73,3 +73,5 @@ export type {
 } from "./components/Dropdown/Dropdown";
 export { Slider } from "./components/Slider/Slider";
 export type { SliderProps } from "./components/Slider/Slider";
+export { NumberInput } from "./components/NumberInput/NumberInput";
+export type { NumberInputProps } from "./components/NumberInput/NumberInput";
