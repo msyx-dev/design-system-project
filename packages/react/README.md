@@ -156,6 +156,33 @@ import { ThemeToggle } from "@msyx-dev/react";
 <ThemeToggle mode={mode} onToggle={() => setMode(m => m === "dark" ? "light" : "dark")} />
 ```
 
+### `ThemeSwitcher` + `useTheme()`
+
+Port complet du sélecteur de thème DS — pas seulement le visuel. `<ThemeSwitcher>` est **batteries-included** : il compose en interne le hook `useTheme()` (moteur runtime) et `<ThemeToggle>` (déjà documenté ci-dessus). Émet `.theme-switcher` / `.theme-switcher-label` / `.theme-switcher-select` + `.mode-switch` (via `ThemeToggle`), calqué sur `fondation.html` / `shared/nav.js`.
+
+`useTheme(config?)` réplique `applyThemeTransition` / `applyMode` (`shared/components.js`) : pose les attributs `document.documentElement` `data-theme` / `data-mode` (retirés pour les valeurs par défaut implicites `msyx` / `dark`), persiste `localStorage['msyx-theme']` / `localStorage['msyx-mode']`, et réconcilie automatiquement le mode si le thème choisi ne le supporte pas (mécanisme mono-mode, `modes: ['dark']` seul — dormant côté DS vanilla mais activable via un `config` custom, IdP-agnostique). **SSR-safe** : aucun accès `window`/`document`/`localStorage` pendant le rendu — l'état initial est `msyx`/`dark`, resynchronisé depuis `localStorage` dans un `useEffect` après montage (compatible Next.js).
+
+| Prop     | Type           | Défaut               | Description                                   |
+|----------|----------------|-----------------------|------------------------------------------------|
+| `config` | `ThemeConfig`  | `DEFAULT_THEME_CONFIG` | Thèmes disponibles (msyx/acssi/nhood par défaut) |
+| `label`  | `string`       | `"Thème"`             | Label du `<select>`                             |
+
+Le hook `useTheme(config?)` retourne `{ theme, mode, setTheme, setMode, toggleMode, availableModes, isModeLocked, config }`.
+
+Types exportés : `ThemeSwitcherProps`, `UseThemeReturn`, `ThemeConfig`, `ThemeModeConfig`, `ThemeName`, `ThemeMode`. Constante exportée : `DEFAULT_THEME_CONFIG`.
+
+```tsx
+import { ThemeSwitcher, useTheme } from "@msyx-dev/react";
+
+// Batteries-included
+<ThemeSwitcher label="Palette" />
+
+// Ou pilotage manuel via le hook (ex. pour un consumer avec son propre markup)
+const { theme, mode, setTheme, toggleMode, isModeLocked } = useTheme();
+```
+
+> ⚠️ Mêmes dépendances que `ThemeToggle` (sprite `/shared/icons/sprite.svg`). Recommandé : script anti-FOUC synchrone inline dans `<head>` lisant `msyx-theme`/`msyx-mode` avant le premier paint.
+
 ### `PageHeader`
 
 En-tête de page DS (`.section-header`) avec overline, titre, lead, breadcrumb et slot d'actions.

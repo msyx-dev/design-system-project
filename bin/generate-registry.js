@@ -457,6 +457,7 @@ const REACT_TO_REGISTRY = {
   ActionMenu:  'action-menu',
   Input:       'inputs',
   SegmentedControl: 'segmented-control',
+  ThemeSwitcher: 'theme-switcher',  // #452 — compose ThemeToggle, même entrée registre (deux dirs → 1 composant DS)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
