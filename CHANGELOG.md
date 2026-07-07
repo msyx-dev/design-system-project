@@ -27,6 +27,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ### Changed
 - Registre : `number-input` passé `react:"ported"` (#464).
+- Registre : `search-input` passé `react:"ported"` (#465).
 - Registre : `slider` passé `react:"ported"` (#463).
 - Registre : `dropdown` passé `react:"ported"` (#457).
 - Registre : `segmented-control` passé `react:"ported"` (wrapper `@msyx-dev/react`, #467).

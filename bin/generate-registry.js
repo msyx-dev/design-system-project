@@ -461,6 +461,7 @@ const REACT_TO_REGISTRY = {
   Dropdown:    'dropdown',  // #457 — dropdown custom div-based (≠ Select natif de Input/)
   Slider:      'slider',  // #463 — variante simple uniquement (dual non portée)
   NumberInput: 'number-input',  // #464
+  SearchInput: 'search-input',  // #465
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
