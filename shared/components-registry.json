@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-07T20:40:28.214Z",
+    "at": "2026-07-07T20:51:23.104Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -641,7 +641,7 @@
       ],
       "jsInit": null,
       "example": "<label class=\"file-upload\">\n  <input type=\"file\" multiple hidden accept=\".png,.jpg,.pdf\">\n  <span class=\"file-upload-icon\" aria-hidden=\"true\">&#8679;</span>\n  <span class=\"file-upload-text\">Déposer des fichiers ou <u>parcourir</u></span>\n  <span class=\"file-upload-hint\">PNG, JPG, PDF — 10 Mo max</span>\n</label>\n\n<div class=\"file-list\">\n  <div class=\"file-item\">rapport.pdf <button aria-label=\"Supprimer rapport.pdf\">&#10005;</button></div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]

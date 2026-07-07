@@ -83,3 +83,8 @@ export type {
 } from "./components/SearchInput/SearchInput";
 export { TagInput } from "./components/TagInput/TagInput";
 export type { TagInputProps } from "./components/TagInput/TagInput";
+export { FileUpload } from "./components/FileUpload/FileUpload";
+export type {
+  FileUploadProps,
+  FileUploadFileItem,
+} from "./components/FileUpload/FileUpload";
