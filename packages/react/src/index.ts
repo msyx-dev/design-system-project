@@ -71,3 +71,5 @@ export type {
   DropdownSingleProps,
   DropdownMultiProps,
 } from "./components/Dropdown/Dropdown";
+export { Slider } from "./components/Slider/Slider";
+export type { SliderProps } from "./components/Slider/Slider";

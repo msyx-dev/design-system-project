@@ -26,6 +26,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
 
 ### Changed
+- Registre : `slider` passé `react:"ported"` (#463).
 - Registre : `dropdown` passé `react:"ported"` (#457).
 - Registre : `segmented-control` passé `react:"ported"` (wrapper `@msyx-dev/react`, #467).
 - Registre : `inputs` passé `react:"ported"` (wrappers `@msyx-dev/react`, #458).
