@@ -357,7 +357,11 @@ export function Dropdown(props: DropdownProps) {
                 role="option"
                 aria-selected={selected}
                 aria-disabled={option.disabled || undefined}
-                tabIndex={-1}
+                // Pas de tabIndex sur les options disabled : un <div> sans
+                // tabindex n'est pas focusable au clic souris, ce qui évite
+                // qu'une option disabled cliquée reste focus-piégée (les
+                // flèches ↑/↓ n'ont d'effet que sur enabledFilteredOptions).
+                tabIndex={option.disabled ? undefined : -1}
                 onClick={() => handleSelect(option)}
                 onKeyDown={(event) => handleOptionKeyDown(event, option)}
               >
