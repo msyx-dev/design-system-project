@@ -1,7 +1,7 @@
 {
   "version": "2.94.4",
   "generated": {
-    "at": "2026-07-07T20:28:25.107Z",
+    "at": "2026-07-07T20:40:28.214Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -958,7 +958,7 @@
       ],
       "jsInit": "initTagInputs",
       "example": "<div class=\"tag-input-wrap\">\n  <span class=\"tag-item\">Design <button class=\"tag-close\" aria-label=\"Supprimer Design\">&times;</button></span>\n  <span class=\"tag-item\">Frontend <button class=\"tag-close\" aria-label=\"Supprimer Frontend\">&times;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>\n<span class=\"tag-input-hint\">Enter ou virgule pour ajouter</span>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/badges.css",
         "shared/css/components/forms.css"

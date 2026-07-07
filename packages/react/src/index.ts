@@ -81,3 +81,5 @@ export type {
   SearchInputSuggestions,
   SearchInputSuggestionObject,
 } from "./components/SearchInput/SearchInput";
+export { TagInput } from "./components/TagInput/TagInput";
+export type { TagInputProps } from "./components/TagInput/TagInput";
