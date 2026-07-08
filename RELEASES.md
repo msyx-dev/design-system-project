@@ -1,5 +1,15 @@
 # Releases
 
+## 2.95.1 — 2026-07-08 — Cleanup registre parité React : 7 reclassements `react:n-a` (Sprint 0)
+
+> Assainissement du dénominateur de parité React (M#41) avant le lot Overlays+Data. 7 entrées présentationnelles/utilitaires sans vocation à un wrapper React sont reclassées `react:"n-a"`. Aucun changement CSS/JS servi (métadonnées registre uniquement). Même recette que #602/#604.
+
+### Changed
+- **`react: "pending" → "n-a"`** sur 7 entrées registre : `reset-natif` (reset global `a`/`:focus-visible`), `texture-grain` (pseudo-élément `body::after`), `brand-acssi` (asset, `cssClasses:null`), `code-inline` (classe inline triviale, couverte par composition), `avatar-img` (variante d'`avatar`), `sidebar-link-disabled` / `sidebar-sublinks` (sous-primitives nav sans composant standalone). Parité : **79 → 72 pending**, **32 → 39 n-a** (dénominateur juste, 0 wrapper concerné).
+
+### Changed (versioning)
+- **Bump synchrone des 8 sources** `2.95.0 → 2.95.1` (patch — métadonnées registre, aucun impact CSS servi) : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+
 ## 2.95.0 — 2026-07-07 — Composant Notes de version (badge + modale timeline) (#614)
 
 > Nouveau composant DS présentationnel strict (#445) : badge version cliquable + pastille « nouveau » pilotée par `localStorage` + modale de notes de version réutilisant purement les primitives existantes (`dialog.modal-dialog` + `.timeline`). Source pilote : extraction de la version bespoke de `cap-transfo` #330.
