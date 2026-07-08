@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { Quiz, QuizQuestion } from "./Quiz";
 
@@ -245,7 +245,7 @@ describe("Quiz — fin de quiz / score / restart", () => {
     expect(document.querySelectorAll(".quiz-question.active")).toHaveLength(0);
   });
 
-  it("le bouton .quiz-restart réinitialise le quiz (première question, score, options) et appelle onRestart", () => {
+  it("le bouton « Recommencer » réinitialise le quiz (première question, score, options) et appelle onRestart", () => {
     const onRestart = vi.fn();
     render(<Quiz questions={questions} onRestart={onRestart} />);
 
@@ -264,7 +264,7 @@ describe("Quiz — fin de quiz / score / restart", () => {
 
     expect(document.querySelector(".quiz-result")).toHaveClass("show");
 
-    fireEvent.click(document.querySelector(".quiz-restart") as HTMLElement);
+    fireEvent.click(screen.getByRole("button", { name: "Recommencer" }));
 
     expect(onRestart).toHaveBeenCalledTimes(1);
     expect(document.querySelector(".quiz-result")).not.toHaveClass("show");

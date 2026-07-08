@@ -20,7 +20,7 @@ export interface QuizProps {
   questions: QuizQuestion[];
   /** Appelé une fois la dernière question répondue, avec le score final. */
   onComplete?: (score: number, total: number) => void;
-  /** Appelé quand l'utilisateur clique sur `.quiz-restart`. */
+  /** Appelé quand l'utilisateur clique sur le bouton « Recommencer ». */
   onRestart?: () => void;
   /** Texte de `.quiz-feedback.correct`. @default "Bonne réponse !" */
   feedbackCorrect?: string;
@@ -93,7 +93,7 @@ export function QuizOptionItem({
  * (`currentIndex`), le score et l'état de la question courante
  * (sélection/verrouillage) restent un état INTERNE — c'est un flux temporisé
  * (auto-advance), pas une liste pilotée par le parent comme `TagInput`.
- * Restart interne (bouton `.quiz-restart`) + `onRestart` optionnel.
+ * Restart interne (bouton « Recommencer », `.btn-primary`) + `onRestart` optionnel.
  *
  * Émet le markup canonique (une `.quiz-question` par question, une seule
  * `.active` à la fois) :
@@ -110,7 +110,7 @@ export function QuizOptionItem({
  *   </div>
  *   <div class="quiz-result show" role="region" aria-label="Résultat du quiz">
  *     <div class="quiz-score" aria-live="polite">2/3 — 67%</div>
- *     <button class="quiz-restart btn-primary" style="margin-top:1rem;">Recommencer</button>
+ *     <button class="btn-primary" style="margin-top:1rem;">Recommencer</button>
  *   </div>
  * </div>
  * ```
@@ -296,7 +296,7 @@ export function Quiz({
         </div>
         <button
           type="button"
-          className="quiz-restart btn-primary"
+          className="btn-primary"
           style={{ marginTop: "1rem" }}
           onClick={handleRestart}
         >

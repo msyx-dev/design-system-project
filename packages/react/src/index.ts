@@ -88,3 +88,29 @@ export type {
   FileUploadProps,
   FileUploadFileItem,
 } from "./components/FileUpload/FileUpload";
+
+// ─── Sprint 3 « Formulaires B » (v3.0.0-alpha.10) ───
+export { OTPInput } from "./components/OTPInput/OTPInput";
+export type { OTPInputProps } from "./components/OTPInput/OTPInput";
+export { Quiz } from "./components/Quiz/Quiz";
+export type { QuizProps, QuizQuestion, QuizOption } from "./components/Quiz/Quiz";
+export { Poll } from "./components/Quiz/Poll";
+export type { PollProps, PollQuestion, PollResult } from "./components/Quiz/Poll";
+export { PasswordInput } from "./components/PasswordInput/PasswordInput";
+export type { PasswordInputProps } from "./components/PasswordInput/PasswordInput";
+export { ColorInput } from "./components/ColorInput/ColorInput";
+export type { ColorInputProps, ColorInputPreset } from "./components/ColorInput/ColorInput";
+export { TransferList } from "./components/TransferList/TransferList";
+export type {
+  TransferListProps,
+  TransferListItem,
+  TransferDirection,
+} from "./components/TransferList/TransferList";
+export { useFormValidation, DEFAULT_FR_MESSAGES } from "./hooks/useFormValidation";
+export type {
+  UseFormValidationOptions,
+  UseFormValidationReturn,
+  FrMessages,
+  FormValidationError,
+  FieldProps,
+} from "./hooks/useFormValidation";
