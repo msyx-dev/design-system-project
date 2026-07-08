@@ -106,6 +106,8 @@ export type {
   TransferListItem,
   TransferDirection,
 } from "./components/TransferList/TransferList";
+export { FormErrorSummary } from "./components/FormValidation/FormErrorSummary";
+export type { FormErrorSummaryProps } from "./components/FormValidation/FormErrorSummary";
 export { useFormValidation, DEFAULT_FR_MESSAGES } from "./hooks/useFormValidation";
 export type {
   UseFormValidationOptions,

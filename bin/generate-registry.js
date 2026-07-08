@@ -469,7 +469,7 @@ const REACT_TO_REGISTRY = {
   PasswordInput: 'password-toggle',  // #627
   ColorInput:  'color-picker',  // #592
   TransferList: 'transfer-list',  // #593
-  useFormValidation: 'form-validation',  // #599 — hook (src/hooks/, pas de dir composant : scan skip, cohérence via check b-réciproque)
+  FormValidation: 'form-validation',  // #599 — dir components/FormValidation/ (FormErrorSummary) ; le hook useFormValidation vit dans src/hooks/
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
