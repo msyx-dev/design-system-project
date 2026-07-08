@@ -1,7 +1,7 @@
 {
-  "version": "2.95.0",
+  "version": "2.95.1",
   "generated": {
-    "at": "2026-07-08T10:02:28.267Z",
+    "at": "2026-07-08T16:32:23.386Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -490,7 +490,7 @@
       ],
       "jsInit": null,
       "example": "<p>Exécuter <code class=\"code-inline\">docker compose up -d</code> puis ouvrir <code class=\"code-inline\">/etc/caddy/Caddyfile</code>.</p>",
-      "react": "pending"
+      "react": "n-a"
     },
     {
       "name": "copy-button",
@@ -1172,7 +1172,7 @@
       ],
       "jsInit": null,
       "example": "<a href=\"#\" class=\"sidebar-link-disabled\" aria-disabled=\"true\" tabindex=\"-1\">Fonctionnalité à venir</a>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/layout.css"
       ]
@@ -1186,7 +1186,7 @@
       ],
       "jsInit": null,
       "example": "<nav>\n  <a href=\"#section-1\">Section 1</a>\n  <div class=\"sidebar-sublinks\">\n    <a href=\"#sub-1\">Sous-section 1.1</a>\n    <a href=\"#sub-2\">Sous-section 1.2</a>\n  </div>\n  <a href=\"#section-2\">Section 2</a>\n</nav>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/layout.css"
       ]
@@ -1200,7 +1200,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"avatar avatar-md\">\n  <img class=\"avatar-img\" src=\"photo.jpg\" alt=\"Alice Dupont\">\n</div>\n\n<div class=\"avatar avatar-lg avatar-status\">\n  <img class=\"avatar-img\" src=\"photo2.jpg\" alt=\"Bob Martin\">\n</div>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/avatars.css"
       ]
@@ -1330,7 +1330,7 @@
       "jsInit": null,
       "description": "Reset global a + :focus-visible — WCAG 1.4.3 (contraste liens >= 4.5:1) et WCAG 2.4.7 (focus visible >= 3:1, >= 2px). Consolide #166 + #167. cssClasses=[] : composant agissant sur sélecteurs natifs, aucune classe explicite à exposer.",
       "example": "<!-- Automatiquement appliqué via shared/styles.css (components.css section RESET NATIF) -->\n<!-- Les liens natifs utilisent var(--accent), hover souligne avec épaisseur 2px -->\n<!-- Le :focus-visible global applique outline 2px solid var(--accent) + offset 2px -->\n<a href=\"/exemple\">Lien natif avec couleur d'accent</a>\n<button>Bouton avec focus visible</button>",
-      "react": "pending"
+      "react": "n-a"
     },
     {
       "name": "icon",
@@ -1394,7 +1394,7 @@
       "jsInit": null,
       "description": "Token texture grain (v2.42.0). --texture-grain (URL SVG feTurbulence inline) + --texture-grain-opacity (0.015). Appliqué via body::after en fixed inset:0 z-index:9999 pointer-events:none. Absorbe ticket #12 (--noise-texture formalisé). Documenté dans fondation.html#texture.",
       "example": "/* tokens.css */\n--texture-grain: url(\"data:image/svg+xml,...\");\n--texture-grain-opacity: 0.015;\n\n/* styles.css */\nbody::after {\n  background-image: var(--texture-grain);\n  opacity: var(--texture-grain-opacity);\n}",
-      "react": "pending"
+      "react": "n-a"
     },
     {
       "name": "motion-replay",
@@ -1993,7 +1993,7 @@
       "description": "Brand assets ACSSI (theme=acssi) — wordmark, mark, variantes dark/light. Consumer : <img src=\"/assets/logo-acssi-mark.svg\"> pour favicon/login, /assets/logo-acssi-dark.svg pour header dark mode.",
       "example": "<img src=\"/assets/logo-acssi-mark.svg\" alt=\"ACSSI\" width=\"64\" height=\"64\">",
       "jsInit": null,
-      "react": "pending"
+      "react": "n-a"
     },
     {
       "name": "data",
