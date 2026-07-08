@@ -1,4 +1,5 @@
-import { act, renderHook } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, renderHook } from "@testing-library/react";
+import { createElement, type Ref } from "react";
 import { describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_FR_MESSAGES,
@@ -467,5 +468,84 @@ describe("useFormValidation — formProps", () => {
   it("expose noValidate=true (bloque la validation native du navigateur)", () => {
     const { result } = renderHook(() => useFormValidation());
     expect(result.current.formProps.noValidate).toBe(true);
+  });
+});
+
+
+describe("useFormValidation — focus du résumé au submit invalide (#599)", () => {
+  function TestForm() {
+    const fv = useFormValidation();
+    const summary =
+      fv.errors.length > 0
+        ? createElement(
+            "div",
+            {
+              ref: fv.summaryRef as Ref<HTMLDivElement>,
+              tabIndex: -1,
+              "data-testid": "summary",
+            },
+            `${fv.errors.length} erreur(s)`,
+          )
+        : null;
+    return createElement(
+      "form",
+      fv.formProps,
+      summary,
+      createElement("input", {
+        ...fv.getFieldProps("email"),
+        id: "email",
+        type: "email",
+        required: true,
+        defaultValue: "",
+      }),
+      createElement("button", { type: "submit" }, "Envoyer"),
+    );
+  }
+
+  it("le résumé conditionnel reçoit le focus APRÈS son montage post-commit (pas de focus synchrone sur un ref null)", () => {
+    const { container } = render(createElement(TestForm));
+    // Avant submit : le résumé n'existe pas encore.
+    expect(container.querySelector('[data-testid="summary"]')).toBeNull();
+
+    fireEvent.submit(container.querySelector("form") as HTMLFormElement);
+
+    const summary = container.querySelector('[data-testid="summary"]');
+    // Le résumé s'est monté (errors > 0) ET a reçu le focus via le useEffect
+    // post-commit — un focus synchrone dans handleSubmit aurait visé null.
+    expect(summary).not.toBeNull();
+    expect(document.activeElement).toBe(summary);
+    cleanup();
+  });
+});
+
+describe("useFormValidation — messages i18n dynamiques", () => {
+  it("capte la nouvelle valeur d'un message custom après changement de props (sans recréer les listeners)", () => {
+    const { result, rerender } = renderHook(
+      ({ msg }: { msg: string }) =>
+        useFormValidation({ messages: { valueMissing: msg } }),
+      { initialProps: { msg: "Requis-V1" } },
+    );
+    const email = makeInput("email", {
+      required: true,
+      value: "",
+    } as Partial<HTMLInputElement>);
+    const form = mountForm({ email });
+    act(() => {
+      (
+        result.current.getFieldProps("email").ref as (
+          n: HTMLInputElement | null,
+        ) => void
+      )(email);
+    });
+
+    // Le consumer change le message (ex. switch de langue) AVANT le blur.
+    rerender({ msg: "Requis-V2" });
+    act(() => {
+      result.current.getFieldProps("email").onBlur({} as never);
+    });
+
+    // La valeur À JOUR est utilisée (V2), pas celle figée au montage (V1).
+    expect(result.current.fieldErrors.email).toBe("Requis-V2");
+    form.remove();
   });
 });

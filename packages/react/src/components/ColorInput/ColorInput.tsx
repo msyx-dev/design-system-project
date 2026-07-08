@@ -108,12 +108,16 @@ export function ColorInput({
         {showValue && <span className="color-input-value">{upperValue}</span>}
       </div>
       {hasPresets && (
-        <div className="flex gap-xs mt-sm">
-          {presets!.map((preset) => {
+        <div
+          className={`flex gap-xs mt-sm${
+            disabled ? " color-input--disabled" : ""
+          }`}
+        >
+          {presets!.map((preset, index) => {
             const active = preset.color.toUpperCase() === upperValue;
             return (
               <button
-                key={preset.color}
+                key={`${preset.color}-${index}`}
                 type="button"
                 className="color-swatch"
                 data-color={preset.color}

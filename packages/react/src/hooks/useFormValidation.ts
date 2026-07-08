@@ -3,7 +3,7 @@ import type {
   FormEvent,
   RefObject,
 } from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /** Champ nativement validable (Constraint Validation API). */
 type ValidatableField =
@@ -173,6 +173,10 @@ export function useFormValidation(
   options?: UseFormValidationOptions,
 ): UseFormValidationReturn {
   const messages: FrMessages = { ...DEFAULT_FR_MESSAGES, ...options?.messages };
+  // messagesRef capte toujours les dernières valeurs (i18n dynamique) sans
+  // recréer les callbacks — comme onValidRef/onInvalidRef.
+  const messagesRef = useRef(messages);
+  messagesRef.current = messages;
 
   const onValidRef = useRef(options?.onValid);
   onValidRef.current = options?.onValid;
@@ -181,6 +185,10 @@ export function useFormValidation(
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<FormValidationError[]>([]);
+  // Jeton incrémenté à chaque submit invalide — déclenche le focus du résumé
+  // dans un useEffect POST-commit (le résumé conditionnel n'est monté qu'au
+  // re-render : un focus synchrone dans handleSubmit viserait un ref encore null).
+  const [submitFailToken, setSubmitFailToken] = useState(0);
 
   const fieldsRef = useRef<Map<string, ValidatableField>>(new Map());
   const fieldCleanupRef = useRef<Map<string, () => void>>(new Map());
@@ -243,17 +251,11 @@ export function useFormValidation(
         clearFieldError(name);
         return;
       }
-      const message = resolveMessage(field, messages);
+      const message = resolveMessage(field, messagesRef.current);
       setFieldErrors((prev) => ({ ...prev, [name]: message }));
       announce(liveRegionRef.current, message);
     },
-    // `messages` est recalculé à chaque rendu (merge défaut + overrides) —
-    // pas de useMemo ici volontairement : ce n'est pas la ref qui doit être
-    // stable (elle ne pilote aucun attach/detach DOM), seule `ref` (ci-dessus,
-    // via le cache par nom) doit l'être pour éviter un churn des listeners
-    // natifs à chaque changement d'état.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [clearFieldError, JSON.stringify(Object.keys(messages))],
+    [clearFieldError],
   );
 
   const formNodeRef = useRef<HTMLFormElement | null>(null);
@@ -272,7 +274,7 @@ export function useFormValidation(
     fieldsRef.current.forEach((field, name) => {
       if (field.disabled) return;
       if (field.validity.valid) return;
-      const message = resolveMessage(field, messages);
+      const message = resolveMessage(field, messagesRef.current);
       nextFieldErrors[name] = message;
       errorList.push({ id: field.id || name, message });
     });
@@ -280,8 +282,7 @@ export function useFormValidation(
     setFieldErrors(nextFieldErrors);
     setErrors(errorList);
     return { valid: errorList.length === 0, errors: errorList };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(Object.keys(messages))]);
+  }, []);
 
   const validate = useCallback(
     () => runValidationPass().valid,
@@ -303,7 +304,8 @@ export function useFormValidation(
         `${errorList.length} erreur${errorList.length > 1 ? "s" : ""} à corriger`,
       );
       onInvalidRef.current?.(errorList);
-      summaryRef.current?.focus();
+      // Focus différé au useEffect post-commit (résumé conditionnel monté).
+      setSubmitFailToken((t) => t + 1);
     },
     [runValidationPass],
   );
@@ -325,6 +327,13 @@ export function useFormValidation(
     },
     [fieldErrors, getFieldRefCallback, handleFieldBlur],
   );
+
+  // Focus du résumé APRÈS le commit du render invalide (le résumé
+  // `{errors.length > 0 && <div ref={summaryRef} tabIndex={-1}>}` du consumer
+  // n'existe dans le DOM qu'à ce moment — corrige le focus perdu #599).
+  useEffect(() => {
+    if (submitFailToken > 0) summaryRef.current?.focus();
+  }, [submitFailToken]);
 
   return {
     formProps: {

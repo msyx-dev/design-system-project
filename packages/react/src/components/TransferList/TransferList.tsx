@@ -115,6 +115,9 @@ export function TransferList({
 
   const assignedIdSet = useMemo(() => new Set(assigned), [assigned]);
 
+  // Divergence assumée vs vanilla (#593) : au retour vers « Disponibles », les
+  // items reprennent leur position d'origine dans `items` (ordre STABLE), là où
+  // initTransferList les appendChild en fin de liste. Choix volontaire (stable > FIFO).
   const availableItems = useMemo(
     () => items.filter((item) => !assignedIdSet.has(item.id)),
     [items, assignedIdSet],
