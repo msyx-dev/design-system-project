@@ -50,6 +50,17 @@ describe("Input", () => {
     expect(input).toHaveAttribute("aria-describedby", hint.id);
   });
 
+  it("hint + error : aria-describedby ne pointe que vers le message d'erreur monté (pas d'idref pendant)", () => {
+    render(<Input label="Nom" hint="Minuscules et tirets" error="Requis" />);
+    const input = screen.getByLabelText("Nom");
+    const errorMsg = screen.getByText("Requis");
+    // error masque hint au rendu → le hint n'est pas dans le DOM…
+    expect(screen.queryByText("Minuscules et tirets")).toBeNull();
+    // …donc aria-describedby ne doit référencer QUE l'id du message d'erreur.
+    expect(input).toHaveAttribute("aria-describedby", errorMsg.id);
+    expect(input.getAttribute("aria-describedby")).not.toContain("-hint");
+  });
+
   it("rend .input-with-icon + .input-icon quand icon fourni", () => {
     render(<Input label="Rechercher" icon={<span data-testid="ic" />} />);
     expect(document.querySelector(".input-with-icon")).toBeInTheDocument();

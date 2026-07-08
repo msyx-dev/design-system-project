@@ -24,6 +24,9 @@ _Rien pour l'instant._
 ### Changed
 - Registre : `filter-bar` reclassé `react:"pending"` → `react:"n-a"` (layout flex présentationnel sans état ni JS — couvert par composition côté consumer, comme `btn-group`/`prose`/`orb`).
 
+### Fixed
+- `<Input>` — `aria-describedby` pendant corrigé : quand `hint` ET `error` étaient fournis simultanément, l'attribut référençait aussi `${id}-hint` alors que le span `.input-hint` n'est pas rendu dans ce cas (error le masque) → idref pendant (défaut a11y). Ne référence plus que l'id du message réellement monté. Même correctif que `<PasswordInput>` de ce sprint. (#627 connexe)
+
 ## v3.0.0-alpha.9 — 2026-07-07 — Sprint 2 « Formulaires A » (7 composants)
 
 > Milestone #41 « Parité React » — sprint 2 : parité 11 → 18 composants portés (`@msyx-dev/react`). Famille Formulaires A : champs de saisie + theming.
