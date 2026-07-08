@@ -27,6 +27,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **Table server-driven — M#40 (#434)** : pattern `server-data-grid` (data.html en fin) + `initServerDataGrid()` distincte, opt-in `.data-grid[data-server]` + `data-page-size`, pagination num&eacute;rot&eacute;e/ellipsis, skeleton rows, `aria-busy`, live region, fetch mock&eacute; setTimeout 600ms 26 lignes, extension CustomEvent `dg:page-change`. CSS additif tables.css, feedback.css intact, mode client non modifi&eacute;. (#434)
 
 ### Changed
+- Registre parité React (M#41) : reclassement `react:"n-a"` de 7 entrées présentationnelles/utilitaires (reset-natif, texture-grain, brand-acssi, code-inline, avatar-img, sidebar-link-disabled, sidebar-sublinks) — dénominateur juste (79→72 pending), aucun wrapper concerné. Bump synchrone 8 sources 2.95.0→2.95.1 (patch). (#396)
 - Registre : `file-upload` passé `react:"ported"` (#469).
 - Registre : `tag-input` passé `react:"ported"` (#466).
 - Registre : `number-input` passé `react:"ported"` (#464).
