@@ -464,6 +464,12 @@ const REACT_TO_REGISTRY = {
   SearchInput: 'search-input',  // #465
   TagInput:    'tag-input',  // #466
   FileUpload:  'file-upload',  // #469
+  OTPInput:    'otp-input',  // #625 (Sprint 3 Formulaires B)
+  Quiz:        'quiz-poll',  // #626 — Quiz + Poll co-localisés dans components/Quiz/
+  PasswordInput: 'password-toggle',  // #627
+  ColorInput:  'color-picker',  // #592
+  TransferList: 'transfer-list',  // #593
+  FormValidation: 'form-validation',  // #599 — dir components/FormValidation/ (FormErrorSummary) ; le hook useFormValidation vit dans src/hooks/
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

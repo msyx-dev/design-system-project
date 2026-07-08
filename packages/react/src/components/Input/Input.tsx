@@ -42,8 +42,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id ?? generatedId;
     const hintId = hint ? `${inputId}-hint` : undefined;
     const errorId = error ? `${inputId}-error` : undefined;
+    // hint et error sont mutuellement exclusifs au rendu (error masque hint) :
+    // ne pas référencer hintId dans aria-describedby quand error est affiché
+    // (sinon idref pendant vers un span non monté). Aligné sur PasswordInput (#627).
     const describedBy =
-      [hintId, errorId].filter(Boolean).join(" ") || undefined;
+      [error ? undefined : hintId, errorId].filter(Boolean).join(" ") ||
+      undefined;
 
     const inputClasses = [
       "input",
