@@ -8,6 +8,13 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.12 — 2026-07-08 — Fix a11y : overlays fermés non focusables (Drawer/BottomSheet/FAB)
+
+> Correctif a11y détecté en vérif adversariale du lot alpha.11 : les overlays gardaient leurs contrôles focusables + `aria-modal` persistant quand fermés (markup monté off-screen). Pendant vanilla dans DS CSS v2.95.2.
+
+### Fixed
+- `<Drawer>` / `<BottomSheet>` / `<FAB>` : quand fermés, le sous-arbre off-screen est neutralisé via `inert` (overlay+panel ; `.fab-actions` pour FAB) + `tabIndex={-1}` en défense ; `role="dialog"`/`aria-modal="true"` posés UNIQUEMENT quand ouvert. Corrige la tabulation clavier vers des contrôles invisibles. Type local `InertAttr` (`inert` non typé par `@types/react` 18, sans `@ts-ignore`). (#396)
+
 ## v3.0.0-alpha.11 — 2026-07-08 — Lot « Overlays + Data » (17 composants/hooks)
 
 > Milestone #41 — regroupement Sprints 4+5+6. Parité **23 → 40** entrées registre portées. 3 reclassées `n-a` (table, comparison-table, stats — layout pur couvert par composition). `data-grid` (#459) déféré (trop gros, sprint dédié).
