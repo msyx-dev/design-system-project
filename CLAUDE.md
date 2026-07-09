@@ -46,7 +46,7 @@ pages/
   data.html         # 16 sections en 5 familles (v2.71.0+) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats + note quand-utiliser, animated-counters) · Jauges & progression/Meter (progress + note famille Meter, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid + col actions sticky-end, server-data-grid initServerDataGrid #434) · Listes & flux (tree-view, lists, activity-feed, risk-matrix) · Heatmap (heatmap-calendar contributions-style, initHeatmapCalendar v2.92.0 #442) · Virtualisation (virtual-list fenêtrée, initVirtualList v2.93.0 #440)
   templates.html    # Kanban, roadmap, backlog, sprint board, pricing (v2.47.0)
   feedback.html     # 13 sections états — alertes (.alert--kpi ex-zone-banner, .alert--cta ex-upgrade-prompt #519), tokens status, toasts, skeleton, empty states, spinners, auto-save, pagination, comments, access-denied page 403 (v2.58.0) — #514, + mention @ (.mention-dropdown, initMentionInput, dropdown positionné au caret via mirror-div, #441)
-  overlays.html     # 8 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514), notes de version (badge + modale timeline + pastille localStorage, initVersionNotes, v2.95.0 #614)
+  overlays.html     # 8 sections surfaces flottantes — modals, drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514), notes de version (badge + modale timeline + pastille localStorage, initVersionNotes, v2.95.0 #614 — désormais dogfoodée dans le header du DS, badge cliquable + modale alimentée par shared/version-notes.json, v2.96.0 #645)
   divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed, + .prose rendu markdown v2.85.0 #439) + Interaction (accordion, command palette fonctionnelle, context menu, copy button) + splitter/resizable panels (.split-pane, initSplitPane v2.90.0 #443) + json-viewer (arbre JSON repliable, initJsonViewer v2.91.0 #446) + diff-viewer (.diff présentation diff pré-calculé, CSS-only, v2.94.0 #447)
 shared/
   styles.css        # Agregateur CSS — imports des 4 modules + base reset
@@ -64,11 +64,12 @@ shared/
   check-sync.sh              # Vérifie version (@ds-version) + mode --check-overrides
   check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
+  version-notes.json         # Données curées {next, released[]} des notes de version — éditées à la main, inlinées au build par bin/generate-version-notes.js (v2.96.0 #645)
   CONSUMER_GUIDE.md          # Guide d'integration pour projets consommateurs
   icons/
     sprite.svg             # Sprite SVG Lucide self-hosted (v2.33.0) — 50 glyphes, ~21 KB
     build-sprite.sh        # Build reproductible (lucide-static + svgo)
-  nav.js            # Header, sidebar (NAV_SECTIONS_MANIFEST généré au build par bin/generate-nav-sections.js, inliné entre marqueurs AUTO-GENERATED, ZÉRO fetch runtime v2.70.0 #528), scroll spy, SPA navigation, LazyLoader
+  nav.js            # Header (badge de version cliquable dogfoodant version-notes #614, VERSION_NOTES généré au build par bin/generate-version-notes.js #645, inliné entre marqueurs AUTO-GENERATED, ZÉRO fetch runtime), sidebar (NAV_SECTIONS_MANIFEST généré au build par bin/generate-nav-sections.js, inliné entre marqueurs AUTO-GENERATED, ZÉRO fetch runtime v2.70.0 #528), scroll spy, SPA navigation, LazyLoader
   components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll, command palette, matrice risque)
 ```
 

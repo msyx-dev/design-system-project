@@ -1,5 +1,5 @@
-/* @ds-version 2.95.2 */
-const VERSION = '2.95.2';
+/* @ds-version 2.96.0 */
+const VERSION = '2.96.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -21,6 +21,10 @@ const NAV_PAGES = [
 
 // Current scroll spy observer (so we can disconnect on page swap)
 let scrollSpyObserver = null;
+
+/* AUTO-GENERATED VERSION NOTES START — ne pas éditer à la main (bin/generate-version-notes.js) */
+const VERSION_NOTES = {"next":{"highlights":[]},"released":[{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
+/* AUTO-GENERATED VERSION NOTES END */
 
 function buildHeader() {
     var header = document.getElementById('site-header');
@@ -113,7 +117,11 @@ function buildHeader() {
 
     // Logo : image si logoSrc défini, sinon texte gradient fallback (#570)
     var logoImgHtml = `<img src="${brandLogoSrc}" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="${brandHref}" class="header-logo" aria-label="${brandText} — Accueil">${logoImgHtml}<span class="brand-wordmark">${brandText}</span></a><span class="header-version">v${VERSION}</span><span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+    // Badge version cliquable — dogfood du composant version-notes (#645, #614).
+    // Présentationnel strict : ouverture déléguée à data-modal-trigger + initModals ;
+    // pastille « nouveau » gérée par initVersionNotes (égalité de chaîne localStorage).
+    var versionBadgeHtml = `<button class="version-badge header-version-badge" data-version-notes data-modal-trigger="ds-version-notes-modal" data-latest-version="${VERSION}" data-storage-key="ds-version-seen" aria-label="Notes de version, v${VERSION}">v${VERSION}<span class="version-badge-dot" aria-hidden="true"></span></button>`;
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="${brandHref}" class="header-logo" aria-label="${brandText} — Accueil">${logoImgHtml}<span class="brand-wordmark">${brandText}</span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
@@ -140,8 +148,59 @@ function buildHeader() {
     }
     // Notifications : dès que la cloche est rendue, indépendamment de l'auth (v2.73.0)
     if (notifVisible) initHeaderNotifications();
+    // Notes de version (#645) : injecter la modale AVANT de câbler les inits.
+    // initModals lie le déclencheur + les listeners de la dialog ; initVersionNotes gère la pastille.
+    // Les deux sont idempotents (dataset.bound) et déjà présents dans reinitAll — appel ici = robustesse d'ordre.
+    ensureVersionNotesDialog();
+    if (typeof initModals === 'function') initModals();
+    if (typeof initVersionNotes === 'function') initVersionNotes();
     // M3 : notifie les consumers que le header DOM est rendu (slot #ds-user-menu disponible)
     document.dispatchEvent(new CustomEvent('msyx:header:ready', { bubbles: true }));
+}
+
+// escapeHtml minimal — les données sont curées (fiables) mais on protège contre <, >, &.
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+}
+
+// Formatte une date ISO YYYY-MM-DD en français court : "7 juil. 2026".
+function formatVersionNoteDate(iso) {
+    try {
+        return new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch (e) { return iso; }
+}
+
+// Rend les .timeline-item depuis VERSION_NOTES.released (structure #614, aucun override CSS).
+function renderVersionNotesTimeline(released) {
+    return released.map(function (n) {
+        var items = (n.highlights || []).map(function (h) {
+            return '<li>' + escapeHtml(h.text) + '</li>';
+        }).join('');
+        return '<div class="timeline-item"><div class="timeline-dot" aria-hidden="true"></div>'
+            + '<div class="timeline-content"><div class="timeline-date"><time datetime="'
+            + escapeHtml(n.date) + '">' + escapeHtml(formatVersionNoteDate(n.date)) + '</time> · v'
+            + escapeHtml(n.version) + '</div><h4>' + escapeHtml(n.titre) + '</h4><ul>' + items
+            + '</ul></div></div>';
+    }).join('');
+}
+
+// Injecte une seule fois la <dialog> des notes de version dans <body>.
+// id = ds-version-notes-modal (référencé par data-modal-trigger du badge).
+function ensureVersionNotesDialog() {
+    if (document.getElementById('ds-version-notes-modal')) return;
+    var released = (typeof VERSION_NOTES === 'object' && VERSION_NOTES && Array.isArray(VERSION_NOTES.released))
+        ? VERSION_NOTES.released : [];
+    var dialog = document.createElement('dialog');
+    dialog.className = 'modal-dialog version-notes-dialog';
+    dialog.id = 'ds-version-notes-modal';
+    dialog.setAttribute('aria-labelledby', 'ds-version-notes-title');
+    dialog.innerHTML = '<div class="modal-header"><h3 id="ds-version-notes-title">Notes de version</h3>'
+        + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
+        + '<div class="modal-body version-notes"><div class="timeline">'
+        + renderVersionNotesTimeline(released) + '</div></div>';
+    document.body.appendChild(dialog);
 }
 
 // Initialise le dropdown avatar

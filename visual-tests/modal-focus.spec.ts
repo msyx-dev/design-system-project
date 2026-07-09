@@ -25,8 +25,11 @@ test.describe("Modal focus restore (WAI APG) — ref aksy UC-288", () => {
     // Attendre que la page soit prete (nav.js + components.js charges)
     await page.waitForLoadState("networkidle");
 
-    // Cibler le 1er bouton [data-modal-trigger] de la section modals
-    const trigger = page.locator("[data-modal-trigger]").first();
+    // Cibler le 1er bouton [data-modal-trigger] de la section modals.
+    // Scopé à #modals : depuis #645, le badge version du header porte aussi
+    // data-modal-trigger et précède #modals dans le DOM — un .first() global
+    // capturerait le badge du header, pas la modale testée ici.
+    const trigger = page.locator("#modals [data-modal-trigger]").first();
     await expect(trigger).toBeVisible();
 
     // Donner le focus au trigger

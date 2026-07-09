@@ -1,5 +1,9 @@
 // Test de non-regression — issue #206
-// Verifie que shared/nav.js parse sans SyntaxError et que le span header-version est correctement clos.
+// Verifie que shared/nav.js parse sans SyntaxError et que le badge de version est correctement clos.
+// Note #645 : le span header-version (statique) a ete remplace par un bouton
+// .version-badge cliquable (dogfood du composant version-notes, #614) — le
+// check ci-dessous est adapte a ce nouveau markup (meme esprit : template
+// literal bien ferme, VERSION definie).
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -15,13 +19,14 @@ try {
   process.exit(1);
 }
 
-// 2. Le span header-version doit etre correctement clos (prevention #206)
-// Apres refactor #211 : template literal avec ${VERSION}, pas de concat fragile
-// On verifie que le pattern template literal est bien ferme et que VERSION est definie
-const headerVersionTemplateLiteral = src.match(/`[^`]*<span class="header-version">v\$\{VERSION\}<\/span>[^`]*`/);
+// 2. Le badge .version-badge doit etre correctement clos (prevention #206, adapte #645)
+// Apres refactor #211 : template literal avec ${VERSION}, pas de concat fragile.
+// Apres #645 : le badge est son propre template literal (versionBadgeHtml) —
+// on verifie qu'il est bien ferme et reference bien ${VERSION}.
+const versionBadgeTemplateLiteral = src.match(/`<button class="version-badge header-version-badge"[^`]*v\$\{VERSION\}[^`]*<\/button>`/);
 const versionConstant = src.match(/const VERSION = '[0-9]+\.[0-9]+\.[0-9]+';/);
-if (!headerVersionTemplateLiteral) {
-  console.error('FAIL: header-version span absent ou mal forme dans template literal (prevention #206)');
+if (!versionBadgeTemplateLiteral) {
+  console.error('FAIL: version-badge absent ou mal forme dans template literal (prevention #206, #645)');
   process.exit(1);
 }
 if (!versionConstant) {
@@ -51,4 +56,4 @@ for (const { pattern, label } of requiredPatterns) {
   }
 }
 
-console.log('OK: nav.js parse + header-version span bien clos (#206 non-regression)');
+console.log('OK: nav.js parse + version-badge bien clos (#206, #645 non-regression)');

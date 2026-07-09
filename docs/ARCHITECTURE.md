@@ -88,8 +88,9 @@ shared/
   build.sh                   # Minification assets CSS (csso) + JS (terser) → dist/
   consumers.json             # Registre des projets consommateurs pour sync-all.sh
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
+  version-notes.json         # Données curées {next, released[]} des notes de version — source unique éditée à la main, inlinée au build par bin/generate-version-notes.js (v2.96.0 #645)
   CONSUMER_GUIDE.md          # Guide d'integration + règle d'or + scripts de vérification
-  nav.js                     # Header, sidebar, scroll spy, SPA navigation, LazyLoader
+  nav.js                     # Header (badge version dogfoodé + VERSION_NOTES inliné au build #645), sidebar, scroll spy, SPA navigation, LazyLoader
   components.js              # 30+ composants JS interactifs (voir section dediee)
   build-themes.js            # Générateur themes/*.json → shared/css/themes.css (v2.39.0)
   scaffold-theme.sh          # Scaffold d'un nouveau theme JSON
@@ -125,6 +126,7 @@ Depuis v2.32.0, le DS expose des artefacts destines aux agents IA (Claude Code e
 - **`shared/components-registry.json`** : champ `example` (string HTML) sur chaque composant — copy-paste ready. Champ `react` (`ported`/`pending`/`n-a`) par composant (v2.68.0 #523) — rend l'écart CSS↔React auditable. 5 composants `ported` : `buttons`, `page-header`, `theme-toggle`, `user-menu`, `login-screen`.
 - **`bin/generate-registry.js`** v1.2 : normalisation du champ `react` (règle de défaut : `kind:module` → `n-a`, `kind:component` sans valeur → `pending`) + bloc parité React (#523) : valide que toute classe émise par `packages/react/` existe dans le CSS du DS (a) et que le marquage `react:ported` est cohérent (b). Écart global affiché dans les logs CI à chaque run. Greffé sur le validateur fantôme #516 — un seul step CI bloquant.
 - **`bin/generate-nav-sections.js`** v1.0 (#528) : scanne `.main > section[id]` (enfants directs) + label `(.section-header h2)||h2` via Playwright sur chaque page de `NAV_PAGES` et inline le manifeste `NAV_SECTIONS_MANIFEST` dans `shared/nav.js` entre marqueurs `AUTO-GENERATED`. Mode `--check` (CI bloquant) : régénère en mémoire et compare à l'inliné — exit 1 si divergence. Élimine les fetch runtime fragiles (immunisé auth-gate préprod, cache, CSP).
+- **`bin/generate-version-notes.js`** (#645) : miroir de `generate-nav-sections.js` — lit `shared/version-notes.json` (données curées à la main, contrat `{next, released[]}`), valide le schéma (enum `type`, dates ISO, versions sans préfixe `v`, ordre récent-d'abord) et inline `const VERSION_NOTES = …;` dans `shared/nav.js` entre marqueurs `AUTO-GENERATED VERSION NOTES START/END`. Mode `--check` (CI bloquant) : régénère en mémoire et compare à l'inliné — exit 1 si divergence. Zéro fetch runtime (#528).
 
 Ces fichiers ne sont pas des demos publiques (pas de lien depuis site.html) : ils sont des references pour les agents, pas pour les utilisateurs finaux.
 
@@ -171,12 +173,13 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 ### Header fixe (56px)
 - Position fixed, z-index 150, pleine largeur
-- Contenu : logo msyx.design, version, selecteur theme, toggle dark/light
+- Contenu : logo msyx.design, badge de version cliquable, selecteur theme, toggle dark/light
+- **Dogfood notes de version (v2.96.0 #645)** : le `span.header-version` statique est remplacé par un bouton `.version-badge.header-version-badge` (`data-version-notes` + `data-modal-trigger="ds-version-notes-modal"` + `data-latest-version="${VERSION}"`) — le DS consomme désormais son propre composant `version-notes` (#614). `ensureVersionNotesDialog()` injecte une fois la `<dialog id="ds-version-notes-modal">` dans `<body>`, sa timeline est rendue par `renderVersionNotesTimeline()` depuis `VERSION_NOTES.released` (bloc inliné au build, cf. `bin/generate-version-notes.js`). Ouverture déléguée à `initModals()`, pastille « nouveau » à `initVersionNotes()` (les deux déjà présents dans `reinitAll()`).
 - Zone utilisateur (auth) : avatar cliquable + dropdown menu + cloche notifications + panel popover
 - Configuration consommateur : `window.MSYX_HEADER` (auth, user, notifications, menu)
 - Sans `window.MSYX_HEADER` ou `auth: false` : header minimal (logo + theme switcher)
 - **Mode démo DS** : toutes les pages du DS définissent `window.MSYX_HEADER` avec un user "Preview" et 3 notifications fictives, activant le header enrichi en conditions réelles
-- Mobile : burger menu integre, version masquee
+- Mobile : burger menu integre. ⚠️ La règle `.site-header .header-version { display:none }` (`layout.css`, media ≤768px) ciblait l'ancien `span.header-version` — elle ne matche plus `.version-badge.header-version-badge` (#645). Le badge reste donc visible sur mobile (non traité dans cette PR, cf. `docs/DS-PRINCIPLES.md`/`.coder-notes.md` #645 — point d'attention pour un éventuel scoping CSS de suivi)
 - Variable CSS : `--header-h: 56px`
 - Fonctions nav.js : `buildHeader()`, `initHeaderUser()`, `initHeaderNotifications()`, `updateHeaderUser()`, `updateNotificationCount()`, `renderNotifications()`
 

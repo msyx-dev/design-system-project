@@ -63,6 +63,10 @@ jobs:
       # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
       - name: Nav sections manifest validation (#528)
         run: node bin/generate-nav-sections.js --check
+      - name: Version notes inline validation (#645)
+        run: node bin/generate-version-notes.js --check
+      - name: Version notes generator tests (#645)
+        run: npm run test:version-notes
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
   # 136 tests valides localement via vitest (npm). Le chemin exact
   # corepack + pnpm install --frozen-lockfile sur Node 24 n'a PAS pu

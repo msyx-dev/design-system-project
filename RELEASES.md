@@ -1,5 +1,25 @@
 # Releases
 
+## 2.96.0 — 2026-07-09 — Dogfood header : notes de version DS (#645)
+
+> Le header du design system consomme désormais son propre composant `version-notes` (#614) : badge de version cliquable ouvrant une modale « Notes de version » (timeline). Contenu piloté par une donnée curée à la main (`shared/version-notes.json`, contrat #281 `{next, released[]}`), inlinée au build par un nouveau générateur (`bin/generate-version-notes.js`, miroir strict de `bin/generate-nav-sections.js`). Zéro fetch runtime (#528).
+
+### Added
+- **`shared/version-notes.json`** (nouveau) — donnée curée `{next, released[]}` ; item `{version, date, titre, highlights[]}`, highlight `{type, text}` (`type` ∈ `nouveaute`/`amelioration`/`correction`/`securite`). 8 versions récentes seedées (2.96.0 → 2.88.0), rédigées en langage produit (bénéfice, zéro nom de classe/composant/issue). `next.highlights` vide en attente de la prochaine release.
+- **`bin/generate-version-notes.js`** (nouveau) — lit `shared/version-notes.json`, valide le schéma (enum `type`, dates ISO `YYYY-MM-DD`, versions sans préfixe `v`, ordre récent-d'abord), sérialise `const VERSION_NOTES = …;` entre marqueurs `AUTO-GENERATED VERSION NOTES START/END` dans `shared/nav.js` (ancre d'insertion : `function buildHeader()`). Mode `--check` anti-drift CI (miroir strict de `bin/generate-nav-sections.js`, mêmes garanties d'idempotence). Scripts npm `generate-version-notes` + `test:version-notes`.
+- **`shared/nav.js` — badge de version cliquable** : `span.header-version` remplacé par `button.version-badge.header-version-badge` (`data-version-notes` + `data-modal-trigger="ds-version-notes-modal"` + `data-latest-version`/`data-storage-key`, `aria-label="Notes de version, vX.Y.Z"`). Nouvelles fonctions `escapeHtml()`, `formatVersionNoteDate()`, `renderVersionNotesTimeline()`, `ensureVersionNotesDialog()` — injectent une fois la `<dialog id="ds-version-notes-modal">` dans `<body>` et rendent la timeline depuis `VERSION_NOTES.released`. Ouverture déléguée à `initModals()` (déjà idempotent, focus-restore WAI APG hérité), pastille « nouveau » à `initVersionNotes()` — les deux appelés en fin de `buildHeader()`, `dataset.bound` préexistant garantit l'absence de double-bind.
+- **CI** : 2 nouvelles étapes dans le job `lint` après `Nav sections manifest validation (#528)` — `Version notes inline validation (#645)` (`node bin/generate-version-notes.js --check`) et `Version notes generator tests (#645)` (`npm run test:version-notes`).
+- **`tests/regression/generate-version-notes.test.js`** (nouveau) — idempotence (2e run = 0 diff), `--check` OK/drift/bloc-absent, écriture strictement cantonnée aux marqueurs, 9 cas de validation du schéma invalides (exit 1 attendu) + seed réel valide (exit 0). 16 assertions.
+
+### Fixed
+- **`tests/regression/nav-js-syntax.test.js`** : adapté à la disparition de `span.header-version` — vérifie désormais que le template literal du bouton `.version-badge` est bien formé et clos (même esprit anti-régression #206).
+
+### Changed (versioning)
+- **Bump synchrone des 8 sources de version** `2.95.2 → 2.96.0` (minor — nouvelle fonctionnalité dogfood) : `@ds-version` (tokens/utilities/components/layout.css), `nav.js` (@ds-version + `const VERSION`), `components-registry.json` (version), `package.json` racine.
+
+### VR
+- Header modifié sur **toutes les pages** (span → badge) — décale toutes les baselines header, + baseline modale ouverte si le harness sait déclencher `showModal()`. Re-baseline via **soft-harvest CI** (recette #514/M#44), effectuée par le parent — pas de `--update-snapshots` local.
+
 ## 2.95.2 — 2026-07-08 — Fix a11y : overlays fermés non focusables (vanilla)
 
 > Pendant vanilla du fix a11y `@msyx-dev/react` v3.0.0-alpha.12.
