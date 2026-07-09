@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { BottomSheet, BottomSheetProps } from "./BottomSheet";
 
@@ -54,15 +55,27 @@ describe("BottomSheet — structure", () => {
     expect(getPanel()).toBeInTheDocument();
   });
 
-  it("le panneau porte role=dialog / aria-modal / aria-label (défaut 'Panneau')", () => {
+  it("ouvert : le panneau porte role=dialog / aria-modal / aria-label (défaut 'Panneau')", () => {
     render(
-      <BottomSheet open={false} onClose={() => {}}>
+      <BottomSheet open onClose={() => {}}>
         <p>Corps</p>
       </BottomSheet>,
     );
     const panel = getPanel();
     expect(panel).toHaveAttribute("role", "dialog");
     expect(panel).toHaveAttribute("aria-modal", "true");
+    expect(panel).toHaveAttribute("aria-label", "Panneau");
+  });
+
+  it("fermé : role/aria-modal sont retirés, aria-label reste (a11y overlay fermé)", () => {
+    render(
+      <BottomSheet open={false} onClose={() => {}}>
+        <p>Corps</p>
+      </BottomSheet>,
+    );
+    const panel = getPanel();
+    expect(panel).not.toHaveAttribute("role");
+    expect(panel).not.toHaveAttribute("aria-modal");
     expect(panel).toHaveAttribute("aria-label", "Panneau");
   });
 
@@ -424,5 +437,104 @@ describe("BottomSheet — focus WAI-APG (WCAG 2.4.3)", () => {
       </BottomSheet>,
     );
     expect(() => unmount()).not.toThrow();
+  });
+});
+
+describe("BottomSheet — a11y overlay fermé (inert + focus, vérif adversariale)", () => {
+  it("fermé : overlay ET panneau portent l'attribut inert", () => {
+    render(
+      <BottomSheet open={false} onClose={() => {}} title="T">
+        <p>c</p>
+      </BottomSheet>,
+    );
+    expect(getOverlay()).toHaveAttribute("inert");
+    expect(getPanel()).toHaveAttribute("inert");
+  });
+
+  it("ouvert : ni overlay ni panneau ne portent inert", () => {
+    render(
+      <BottomSheet open onClose={() => {}} title="T">
+        <p>c</p>
+      </BottomSheet>,
+    );
+    expect(getOverlay()).not.toHaveAttribute("inert");
+    expect(getPanel()).not.toHaveAttribute("inert");
+  });
+
+  it("fermé : .bottom-sheet-close et .bottom-sheet-content sont tabIndex=-1 (non-tabbables)", () => {
+    render(
+      <BottomSheet open={false} onClose={() => {}} title="T">
+        <p>c</p>
+      </BottomSheet>,
+    );
+    expect(document.querySelector(".bottom-sheet-close")).toHaveAttribute(
+      "tabindex",
+      "-1",
+    );
+    expect(document.querySelector(".bottom-sheet-content")).toHaveAttribute(
+      "tabindex",
+      "-1",
+    );
+  });
+
+  it("ouvert : .bottom-sheet-close redevient tabbable, .bottom-sheet-content retrouve tabIndex=0", () => {
+    render(
+      <BottomSheet open onClose={() => {}} title="T">
+        <p>c</p>
+      </BottomSheet>,
+    );
+    expect(document.querySelector(".bottom-sheet-close")).not.toHaveAttribute(
+      "tabindex",
+    );
+    expect(document.querySelector(".bottom-sheet-content")).toHaveAttribute(
+      "tabindex",
+      "0",
+    );
+  });
+
+  it("fermé : Tab depuis un élément externe ne peut PAS atteindre .bottom-sheet-close (document.activeElement inatteignable)", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button data-testid="before">Avant</button>
+        <BottomSheet open={false} onClose={() => {}} title="T">
+          <p>c</p>
+        </BottomSheet>
+      </>,
+    );
+    const before = screen.getByTestId("before") as HTMLButtonElement;
+    before.focus();
+    expect(before).toHaveFocus();
+
+    await user.tab();
+
+    expect(document.activeElement).not.toBe(
+      document.querySelector(".bottom-sheet-close"),
+    );
+    expect(document.activeElement).not.toBe(
+      document.querySelector(".bottom-sheet-content"),
+    );
+  });
+
+  it("ouvert : Tab depuis un élément externe ATTEINT bien .bottom-sheet-close (contrôle redevenu tabbable)", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button data-testid="before">Avant</button>
+        <BottomSheet open onClose={() => {}} title="T">
+          <p>c</p>
+        </BottomSheet>
+      </>,
+    );
+    const before = screen.getByTestId("before") as HTMLButtonElement;
+    // Reprend la main sur "before" après l'auto-focus WAI-APG à l'ouverture.
+    before.focus();
+    expect(before).toHaveFocus();
+
+    await user.tab();
+
+    expect(document.activeElement).toBe(
+      document.querySelector(".bottom-sheet-close"),
+    );
   });
 });

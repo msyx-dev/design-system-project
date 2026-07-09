@@ -1518,14 +1518,32 @@ function initFAB() {
         var trigger = menu.querySelector('.fab-trigger');
         if (!trigger) return;
 
+        // A11y overlay ferme (verif adversariale) : .fab-actions reste TOUJOURS
+        // monte (anim CSS), ses .fab-action-btn restaient focusables au clavier
+        // meme menu ferme (pointer-events:none en CSS n'empeche pas le focus).
+        // `inert` neutralise focus + annonce AT de tout le sous-arbre en un coup.
+        var actionsEl = menu.querySelector('.fab-actions');
+
         function openMenu() {
             menu.classList.add('open');
             trigger.setAttribute('aria-expanded', 'true');
+            if (actionsEl) actionsEl.removeAttribute('inert');
         }
 
         function closeMenu() {
             menu.classList.remove('open');
             trigger.setAttribute('aria-expanded', 'false');
+            if (actionsEl) actionsEl.setAttribute('inert', '');
+        }
+
+        // Normalise l'etat initial (le markup demo ne porte pas .open par
+        // defaut => ferme). Idempotent, sans danger si re-execute (SPA reinit).
+        if (actionsEl) {
+            if (menu.classList.contains('open')) {
+                actionsEl.removeAttribute('inert');
+            } else {
+                actionsEl.setAttribute('inert', '');
+            }
         }
 
         trigger.addEventListener('click', function(e) {
@@ -1894,6 +1912,37 @@ window.__initTreeView = initTreeView;
 
 // Bottom Sheet
 function initBottomSheet() {
+    // A11y overlay ferme (verif adversariale) : le panneau reste TOUJOURS
+    // monte hors ecran (translateY), role="dialog"/aria-modal sont statiques
+    // dans le markup demo => restaient presents ET les controles restaient
+    // focusables au clavier meme ferme. `inert` neutralise focus + annonce AT
+    // sur le panneau ET l'overlay ; role/aria-modal ne sont poses QUE ouvert.
+    function applyClosedA11y(panel, overlay) {
+        panel.setAttribute('inert', '');
+        panel.removeAttribute('role');
+        panel.removeAttribute('aria-modal');
+        if (overlay) overlay.setAttribute('inert', '');
+    }
+
+    function applyOpenA11y(panel, overlay) {
+        panel.removeAttribute('inert');
+        panel.setAttribute('role', 'dialog');
+        panel.setAttribute('aria-modal', 'true');
+        if (overlay) overlay.removeAttribute('inert');
+    }
+
+    // Normalise l'etat initial de chaque panneau (le markup demo porte
+    // role/aria-modal statiquement et pas de classe .open par defaut => ferme).
+    // Idempotent, sans danger si re-execute (SPA reinit).
+    document.querySelectorAll('.bottom-sheet').forEach(function(panel) {
+        var overlay = document.querySelector('[data-bs-overlay="' + panel.id + '"]');
+        if (panel.classList.contains('open')) {
+            applyOpenA11y(panel, overlay);
+        } else {
+            applyClosedA11y(panel, overlay);
+        }
+    });
+
     // Helpers
     function openSheet(panelId) {
         var panel = document.getElementById(panelId);
@@ -1901,6 +1950,7 @@ function initBottomSheet() {
         if (!panel || !overlay) return;
         panel.classList.add('open');
         overlay.classList.add('open');
+        applyOpenA11y(panel, overlay);
         panel.focus && panel.focus();
     }
 
@@ -1910,6 +1960,7 @@ function initBottomSheet() {
         if (!panel || !overlay) return;
         panel.classList.remove('open');
         overlay.classList.remove('open');
+        applyClosedA11y(panel, overlay);
     }
 
     // Trigger buttons

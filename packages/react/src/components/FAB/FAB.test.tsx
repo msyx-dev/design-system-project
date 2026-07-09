@@ -222,3 +222,83 @@ describe("FAB — ouverture / fermeture", () => {
     expect(menus[1]).toHaveClass("open");
   });
 });
+
+describe("FAB — a11y actions fermées (inert + tabIndex, vérif adversariale)", () => {
+  it("menu fermé : .fab-actions porte inert, chaque .fab-action-btn est tabIndex=-1", () => {
+    render(<FAB actions={ACTIONS} />);
+
+    expect(document.querySelector(".fab-actions")).toHaveAttribute("inert");
+    document.querySelectorAll(".fab-action-btn").forEach((btn) => {
+      expect(btn).toHaveAttribute("tabindex", "-1");
+    });
+  });
+
+  it("menu ouvert : .fab-actions ne porte plus inert, les .fab-action-btn redeviennent tabbables", async () => {
+    const user = userEvent.setup();
+    render(<FAB actions={ACTIONS} />);
+
+    await user.click(screen.getByRole("button", { name: "Ouvrir les actions" }));
+
+    expect(document.querySelector(".fab-actions")).not.toHaveAttribute(
+      "inert",
+    );
+    document.querySelectorAll(".fab-action-btn").forEach((btn) => {
+      expect(btn).not.toHaveAttribute("tabindex");
+    });
+  });
+
+  it("le .fab-trigger reste TOUJOURS focusable/tabbable, menu fermé ou ouvert", async () => {
+    const user = userEvent.setup();
+    render(<FAB actions={ACTIONS} />);
+    const trigger = screen.getByRole("button", { name: "Ouvrir les actions" });
+
+    expect(trigger).not.toHaveAttribute("tabindex", "-1");
+    expect(trigger).not.toHaveAttribute("inert");
+
+    await user.click(trigger);
+    expect(trigger).not.toHaveAttribute("tabindex", "-1");
+    expect(trigger).not.toHaveAttribute("inert");
+  });
+
+  it("menu fermé : Tab depuis un élément externe ATTEINT le trigger mais PAS un .fab-action-btn (DOM : actions AVANT trigger)", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button data-testid="before">Avant</button>
+        <FAB actions={ACTIONS} />
+      </>,
+    );
+    const before = screen.getByTestId("before") as HTMLButtonElement;
+    before.focus();
+    expect(before).toHaveFocus();
+
+    await user.tab();
+
+    document.querySelectorAll(".fab-action-btn").forEach((btn) => {
+      expect(document.activeElement).not.toBe(btn);
+    });
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "Ouvrir les actions" }),
+    );
+  });
+
+  it("menu ouvert : Tab depuis un élément externe ATTEINT le premier .fab-action-btn (redevenu tabbable, avant le trigger dans le DOM)", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button data-testid="before">Avant</button>
+        <FAB actions={ACTIONS} />
+      </>,
+    );
+    await user.click(screen.getByRole("button", { name: "Ouvrir les actions" }));
+
+    const before = screen.getByTestId("before") as HTMLButtonElement;
+    before.focus();
+    expect(before).toHaveFocus();
+
+    await user.tab();
+
+    const firstActionBtn = document.querySelector(".fab-action-btn");
+    expect(document.activeElement).toBe(firstActionBtn);
+  });
+});

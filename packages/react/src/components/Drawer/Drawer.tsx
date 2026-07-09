@@ -91,7 +91,19 @@ export interface DrawerProps {
  *
  * SSR-safe : aucun accès à `document`/`window` au niveau module ; tout est
  * dans `useEffect` (post-hydratation).
+ *
+ * **A11y overlay fermé (vérif adversariale)** : le panneau restant TOUJOURS
+ * monté hors écran, ses contrôles (bouton close, contenu, actions) restaient
+ * focusables au clavier même `open=false` — un utilisateur tabulait des
+ * boutons invisibles. Fix : `inert` posé sur l'overlay ET le panneau quand
+ * fermé (rend tout le sous-arbre — y compris le contenu consumer arbitraire
+ * — non focusable et non annoncé aux AT en une seule fois), `.drawer-close`
+ * en plus passé en `tabIndex={-1}` (défense en profondeur, déclaratif et
+ * testable). `role="dialog"`/`aria-modal` ne sont posés QUE quand `open`.
  */
+/** `inert` n'est pas typé par @types/react 18 (ajouté en React 19 types). */
+type InertAttr = { inert?: "" };
+
 export function Drawer({
   open,
   onClose,
@@ -159,15 +171,20 @@ export function Drawer({
 
   const bodyClasses = ["drawer-body", bodyClassName].filter(Boolean).join(" ");
 
+  // Overlay + panneau fermés : `inert` neutralise tout le sous-arbre (focus +
+  // annonce AT), y compris le contenu consumer arbitraire (`children`/`actions`).
+  const inertProps: InertAttr = open ? {} : { inert: "" };
+
   return (
     <>
-      <div className={overlayClasses} onClick={onClose} />
+      <div className={overlayClasses} onClick={onClose} {...inertProps} />
       <div
         className={panelClasses}
         id={id}
-        role="dialog"
-        aria-modal="true"
+        role={open ? "dialog" : undefined}
+        aria-modal={open ? "true" : undefined}
         aria-labelledby={title ? titleId : undefined}
+        {...inertProps}
       >
         <div className="drawer-header">
           {title && <h3 id={titleId}>{title}</h3>}
@@ -176,6 +193,7 @@ export function Drawer({
             ref={closeButtonRef}
             className="drawer-close"
             aria-label={closeLabel}
+            tabIndex={open ? undefined : -1}
             onClick={onClose}
           >
             &times;
