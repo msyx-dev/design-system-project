@@ -1,7 +1,7 @@
 {
   "version": "2.95.1",
   "generated": {
-    "at": "2026-07-08T16:32:23.386Z",
+    "at": "2026-07-09T17:41:11.296Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -185,7 +185,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"75\" aria-valuemin=\"0\" aria-valuemax=\"100\">\n  <div class=\"progress-fill\" style=\"width:75%\"></div>\n</div>\n\n<div class=\"progress-bar progress-bar-striped\">\n  <div class=\"progress-fill\" style=\"width:45%\"></div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/data.css"
       ]
@@ -200,7 +200,7 @@
       ],
       "jsInit": null,
       "example": "<div style=\"text-align:center;\">\n  <div class=\"stat-value\">2 847</div>\n  <div class=\"stat-label\">Utilisateurs actifs</div>\n</div>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/data.css"
       ]
@@ -236,7 +236,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"table-wrap\">\n  <table>\n    <thead>\n      <tr><th scope=\"col\">Nom</th><th scope=\"col\">Statut</th><th scope=\"col\">Date</th></tr>\n    </thead>\n    <tbody>\n      <tr><td>Projet Alpha</td><td><span class=\"badge badge-success\">Actif</span></td><td>2026-05-01</td></tr>\n      <tr><td>Projet Beta</td><td><span class=\"badge badge-warning\">En cours</span></td><td>2026-04-15</td></tr>\n    </tbody>\n  </table>\n</div>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/tables.css"
       ]
@@ -284,7 +284,7 @@
       ],
       "jsInit": "initTreeView",
       "example": "<ul class=\"tree\">\n  <li class=\"tree-item tree-branch\">\n    <span class=\"tree-toggle\">\n      <span class=\"tree-chevron\">&#9654;</span>\n      <span class=\"tree-icon\">&#128193;</span>\n      <span class=\"tree-label\">src/</span>\n    </span>\n    <ul class=\"tree-children\">\n      <li class=\"tree-item tree-leaf\">\n        <span class=\"tree-icon\">&#128196;</span>\n        <span class=\"tree-label\">index.html</span>\n      </li>\n    </ul>\n  </li>\n</ul>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/lists.css"
       ]
@@ -392,7 +392,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"tooltip-wrap\">\n  <button class=\"btn-icon\" aria-describedby=\"tt-example\" aria-label=\"Paramètres\">&#9881;</button>\n  <span class=\"tooltip\" id=\"tt-example\" role=\"tooltip\">Paramètres</span>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/overlays.css"
       ]
@@ -713,7 +713,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"popover-wrap\">\n  <button class=\"btn-ghost\" aria-haspopup=\"true\">Plus d'infos</button>\n  <div class=\"popover\" role=\"tooltip\">\n    <strong>Détails</strong>\n    <p>Contenu enrichi avec du texte et éventuellement des liens.</p>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/overlays.css"
       ]
@@ -757,7 +757,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"drawer-preview\" id=\"drawer-exemple\">\n  <div class=\"drawer-overlay\" onclick=\"this.closest('.drawer-preview').classList.remove('open')\"></div>\n  <div class=\"drawer-panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"drawer-titre\">\n    <div class=\"drawer-header\">\n      <h2 id=\"drawer-titre\">Titre du panneau</h2>\n      <button class=\"drawer-close\" aria-label=\"Fermer\">&#10005;</button>\n    </div>\n    <div class=\"drawer-body\">Contenu du drawer.</div>\n    <div class=\"drawer-footer\">\n      <button class=\"btn-ghost\">Annuler</button>\n      <button class=\"btn-primary\">Confirmer</button>\n    </div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/overlays.css",
         "shared/css/components/_responsive.css"
@@ -778,7 +778,7 @@
       ],
       "jsInit": "initBottomSheet",
       "example": "<div class=\"bottom-sheet\" id=\"bs-exemple\">\n  <div class=\"bottom-sheet-overlay\"></div>\n  <div class=\"bottom-sheet-handle-wrap\">\n    <div class=\"bottom-sheet-handle\"></div>\n  </div>\n  <div class=\"bottom-sheet-header\">\n    <span>Options</span>\n    <button class=\"bottom-sheet-close\" aria-label=\"Fermer\">&#10005;</button>\n  </div>\n  <div class=\"bottom-sheet-content\">Contenu de la feuille bas.</div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/overlays.css"
       ]
@@ -909,7 +909,7 @@
       ],
       "jsInit": "initFAB",
       "example": "<button class=\"fab\" aria-label=\"Créer\" data-fab-id=\"fab-exemple\">&#43;</button>\n\n<!-- FAB avec menu d'actions -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\" hidden>\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
       ]
@@ -977,7 +977,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"comparison-table\">\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\">Fonctionnalité</th>\n        <th scope=\"col\">Free</th>\n        <th scope=\"col\" class=\"comparison-recommended\">Pro</th>\n        <th scope=\"col\">Enterprise</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>Projets actifs</td>\n        <td>3</td>\n        <td class=\"comparison-recommended\">Illimités</td>\n        <td>Illimités</td>\n      </tr>\n      <tr>\n        <td>Domaines personnalisés</td>\n        <td class=\"comparison-no\">&#10007;</td>\n        <td class=\"comparison-recommended comparison-yes\">&#10003;</td>\n        <td class=\"comparison-yes\">&#10003;</td>\n      </tr>\n    </tbody>\n  </table>\n</div>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/tables.css"
       ]
@@ -995,7 +995,7 @@
       ],
       "jsInit": "initAnimatedCounters",
       "example": "<div class=\"counter\" data-counter-target=\"2847\" data-counter-duration=\"1200\">\n  <span class=\"counter-prefix\">+</span>\n  <span class=\"counter-value\">0</span>\n  <span class=\"counter-suffix\"> utilisateurs</span>\n  <div class=\"counter-label\">Inscrits ce mois</div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/data.css"
       ]
@@ -1030,7 +1030,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"progress-tracker\">\n  <div class=\"progress-tracker-value\">75%</div>\n  <div class=\"progress-tracker-label\">Objectif mensuel</div>\n  <div class=\"progress-bar\">\n    <div class=\"progress-fill\" style=\"width:75%\"></div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/tracker.css"
       ]
@@ -1777,7 +1777,7 @@
       ],
       "jsInit": "initComponents",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/data.css",
         "shared/css/components/_responsive.css"
@@ -1798,7 +1798,7 @@
       ],
       "jsInit": "initGauges",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/data.css"
       ]
@@ -1825,7 +1825,7 @@
       ],
       "jsInit": "initActivityFeed",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/lists.css"
       ]
@@ -1857,7 +1857,7 @@
       ],
       "jsInit": "initRiskMatrix",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/data.css",
         "shared/css/components/heatmap-calendar.css"
@@ -1881,7 +1881,7 @@
       ],
       "jsInit": "initUsageMeter",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/pricing.css"
       ]
@@ -3096,7 +3096,7 @@
         ".visible"
       ],
       "jsInit": "initHeatmapCalendar",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/heatmap-calendar.css"
       ]
@@ -3112,7 +3112,7 @@
         ".virtual-spacer"
       ],
       "jsInit": "initVirtualList",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/virtual-list.css"
       ]
@@ -3146,7 +3146,7 @@
         ".version-notes"
       ],
       "jsInit": "initVersionNotes",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/version-notes.css"
       ]

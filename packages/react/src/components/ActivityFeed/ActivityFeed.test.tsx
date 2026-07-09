@@ -315,7 +315,7 @@ describe("ActivityFeed — load-more (option A, .initially-hidden + display:none
     render(<ActivityFeed items={ITEMS_WITH_HIDDEN} filters={FILTERS} />);
     const block = document.querySelector(".activity-load-more");
     expect(block).toBeInTheDocument();
-    const btn = block?.querySelector(".activity-load-more-btn");
+    const btn = block?.querySelector("button");
     expect(btn).toHaveClass("btn-secondary");
     expect(btn).toHaveClass("btn-sm");
     expect(btn?.textContent).toBe("Charger plus");
@@ -328,7 +328,7 @@ describe("ActivityFeed — load-more (option A, .initially-hidden + display:none
         loadMoreLabel="Voir plus d'activité"
       />,
     );
-    expect(document.querySelector(".activity-load-more-btn")?.textContent).toBe(
+    expect(document.querySelector(".activity-load-more button")?.textContent).toBe(
       "Voir plus d'activité",
     );
   });
@@ -337,7 +337,7 @@ describe("ActivityFeed — load-more (option A, .initially-hidden + display:none
     render(<ActivityFeed items={ITEMS_WITH_HIDDEN} filters={FILTERS} />);
 
     fireEvent.click(
-      document.querySelector(".activity-load-more-btn") as HTMLButtonElement,
+      document.querySelector(".activity-load-more button") as HTMLButtonElement,
     );
 
     // Plus aucun item masqué par initially-hidden, ni inline display:none.
@@ -360,7 +360,7 @@ describe("ActivityFeed — load-more (option A, .initially-hidden + display:none
   it("après révélation, un item révélé reste filtrable (.hidden si hors filtre)", () => {
     render(<ActivityFeed items={ITEMS_WITH_HIDDEN} filters={FILTERS} />);
     fireEvent.click(
-      document.querySelector(".activity-load-more-btn") as HTMLButtonElement,
+      document.querySelector(".activity-load-more button") as HTMLButtonElement,
     );
     fireEvent.click(
       document.querySelector(

@@ -205,7 +205,7 @@ export function TreeView({
             >
               <polyline points="5 8 8 11 11 8" />
             </svg>
-            <span className="tree-icon tree-icon-folder">
+            <span className="tree-icon">
               {node.icon ?? (
                 <svg className="icon" aria-hidden="true">
                   <use href="/shared/icons/sprite.svg#i-folder" />
@@ -232,7 +232,7 @@ export function TreeView({
         role="treeitem"
         onClick={() => selectNode(node)}
       >
-        <span className="tree-icon tree-icon-file">
+        <span className="tree-icon">
           {node.icon ?? (
             <svg className="icon" aria-hidden="true">
               <use href="/shared/icons/sprite.svg#i-file" />

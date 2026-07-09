@@ -96,7 +96,7 @@ describe("TreeView — structure & markup canonique", () => {
   it("l'icône dossier d'une branche utilise le sprite #i-folder", () => {
     render(<TreeView nodes={sampleNodes} ariaLabel="Arbre" />);
     const folderIcon = document.querySelector(
-      ".tree-branch > .tree-toggle > .tree-icon-folder use",
+      ".tree-branch > .tree-toggle > .tree-icon use",
     );
     expect(folderIcon).toHaveAttribute(
       "href",
@@ -114,7 +114,7 @@ describe("TreeView — structure & markup canonique", () => {
     expect(readme).toBeTruthy();
     expect(readme).toHaveClass("tree-item");
     expect(readme).toHaveAttribute("role", "treeitem");
-    const fileIcon = readme?.querySelector(".tree-icon-file use");
+    const fileIcon = readme?.querySelector(".tree-icon use");
     expect(fileIcon).toHaveAttribute("href", "/shared/icons/sprite.svg#i-file");
   });
 

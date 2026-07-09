@@ -19,7 +19,7 @@ function rowIndices() {
 }
 
 describe("VirtualList — structure canonique", () => {
-  it("rend .virtual-list > .virtual-list-viewport(role=list) > [spacer, .virtual-list-rows, spacer]", () => {
+  it("rend .virtual-list > .virtual-list-viewport(role=list) > [spacer, ...rows, spacer]", () => {
     render(<VirtualList count={1000} />);
 
     const root = document.querySelector(".virtual-list");
@@ -30,12 +30,13 @@ describe("VirtualList — structure canonique", () => {
     expect(viewport).toHaveAttribute("role", "list");
     expect(viewport).toHaveAttribute("aria-rowcount", "1000");
 
-    // Parité DOM : viewport > [topSpacer, rowsContainer, bottomSpacer]
+    // Parité DOM vanilla : viewport > [topSpacer, ...rows, bottomSpacer]
     const children = Array.from(viewport!.children);
-    expect(children).toHaveLength(3);
     expect(children[0]).toHaveClass("virtual-spacer");
-    expect(children[1]).toHaveClass("virtual-list-rows");
-    expect(children[2]).toHaveClass("virtual-spacer");
+    expect(children[children.length - 1]).toHaveClass("virtual-spacer");
+    const rows = children.slice(1, -1);
+    expect(rows.length).toBeGreaterThan(0);
+    rows.forEach((r) => expect(r).toHaveClass("virtual-list-row"));
   });
 
   it("reflète count sur data-vlist-count (racine)", () => {

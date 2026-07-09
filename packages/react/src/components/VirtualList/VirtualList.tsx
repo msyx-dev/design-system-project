@@ -176,7 +176,7 @@ export function VirtualList({
           aria-hidden="true"
           style={{ height: `${frame.topHeight}px` }}
         />
-        <div className="virtual-list-rows">{rows}</div>
+        {rows}
         <div
           className="virtual-spacer"
           aria-hidden="true"

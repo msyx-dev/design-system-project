@@ -211,7 +211,7 @@ export function ActivityFeed({
         <div className="activity-load-more">
           <button
             type="button"
-            className="btn-secondary btn-sm activity-load-more-btn"
+            className="btn-secondary btn-sm"
             onClick={() => setRevealed(true)}
           >
             {loadMoreLabel}
