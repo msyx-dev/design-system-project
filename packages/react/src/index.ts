@@ -116,3 +116,39 @@ export type {
   FormValidationError,
   FieldProps,
 } from "./hooks/useFormValidation";
+
+// ─── Lot Overlays + Data (v3.0.0-alpha.11) ───
+export { Tooltip } from "./components/Tooltip/Tooltip";
+export type { TooltipProps, TooltipPosition } from "./components/Tooltip/Tooltip";
+export { Popover } from "./components/Popover/Popover";
+export type { PopoverProps, PopoverPosition } from "./components/Popover/Popover";
+export { Drawer } from "./components/Drawer/Drawer";
+export type { DrawerProps } from "./components/Drawer/Drawer";
+export { BottomSheet } from "./components/BottomSheet/BottomSheet";
+export type { BottomSheetProps } from "./components/BottomSheet/BottomSheet";
+export { FAB } from "./components/FAB/FAB";
+export type { FabProps, FabAction } from "./components/FAB/FAB";
+export { VersionBadge } from "./components/VersionBadge/VersionBadge";
+export type { VersionBadgeProps } from "./components/VersionBadge/VersionBadge";
+export { Progress, ProgressRing } from "./components/Progress/Progress";
+export type { ProgressProps, ProgressRingProps } from "./components/Progress/Progress";
+export { ProgressTracker } from "./components/ProgressTracker/ProgressTracker";
+export type { ProgressTrackerProps, ProgressTrackerRing } from "./components/ProgressTracker/ProgressTracker";
+export { Gauge } from "./components/Gauge/Gauge";
+export type { GaugeProps } from "./components/Gauge/Gauge";
+export { UsageMeter } from "./components/UsageMeter/UsageMeter";
+export type { UsageMeterProps, UsageMeterVariant } from "./components/UsageMeter/UsageMeter";
+export { ActivityFeed } from "./components/ActivityFeed/ActivityFeed";
+export type { ActivityFeedProps, ActivityFeedItem, ActivityFilterChip } from "./components/ActivityFeed/ActivityFeed";
+export { RiskMatrix } from "./components/RiskMatrix/RiskMatrix";
+export type { RiskMatrixProps, RiskItem, RiskLevel } from "./components/RiskMatrix/RiskMatrix";
+export { TreeView } from "./components/TreeView/TreeView";
+export type { TreeViewProps, TreeNode } from "./components/TreeView/TreeView";
+export { HeatmapCalendar } from "./components/HeatmapCalendar/HeatmapCalendar";
+export type { HeatmapCalendarProps, HeatmapCell } from "./components/HeatmapCalendar/HeatmapCalendar";
+export { VirtualList } from "./components/VirtualList/VirtualList";
+export type { VirtualListProps } from "./components/VirtualList/VirtualList";
+export { useChartReveal, useChartTooltip, useChart } from "./hooks/useChartReveal";
+export type { UseChartRevealOptions, UseChartTooltipReturn, UseChartOptions, UseChartReturn } from "./hooks/useChartReveal";
+export { useCountUp } from "./hooks/useCountUp";
+export type { UseCountUpOptions, UseCountUpResult } from "./hooks/useCountUp";

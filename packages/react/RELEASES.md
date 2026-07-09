@@ -8,6 +8,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.11 — 2026-07-08 — Lot « Overlays + Data » (17 composants/hooks)
+
+> Milestone #41 — regroupement Sprints 4+5+6. Parité **23 → 40** entrées registre portées. 3 reclassées `n-a` (table, comparison-table, stats — layout pur couvert par composition). `data-grid` (#459) déféré (trop gros, sprint dédié).
+
+### Added
+- **Overlays** : `<Tooltip>` (#631, wiring `aria-describedby` + position typée) · `<Popover>` (#470, classe d'état `.open` — piège #612) · `<Drawer>` (#462, `.open` + focus-trap) · `<BottomSheet>` (#632) · `<FAB>` (#633, `.open` menu d'actions) · `<VersionBadge>` (#634, localStorage `.version-badge--new`, SSR-safe).
+- **Data** : `<Progress>` + `<ProgressRing>` (#635, `width`/`--dash` inline) · `<ProgressTracker>` (#636) · `<Gauge>` (#637, arc SVG) · `<UsageMeter>` (#638) · `<ActivityFeed>` (#639, filtres + load-more) · `<RiskMatrix>` (#640, `grid-template`/positionnement inline + tooltip curseur portal, `.risk-dot-visible`/`-hidden`) · `<TreeView>` (#460, roving tabindex, `.tree-icon` + sprite) · `<HeatmapCalendar>` (#598, binning quartiles `data-level`, roving tabindex, tooltip portal) · `<VirtualList>` (#597, windowing spacers + `.virtual-list-row`, structure vanilla).
+- **Hooks** : `useChartReveal` / `useChartTooltip` / `useChart` (#641, IntersectionObserver `.chart-visible` — le SVG hand-authored reste composé) · `useCountUp` (#642, animation de nombre headless).
+
+### Changed
+- Registre : `table`, `comparison-table`, `stats` → `react:"n-a"` (layout présentationnel, couvert par composition).
+- `REACT_CSS_UNDETECTABLE` (`bin/generate-registry.js`) : ajout `.version-notes-dialog`, `.risk-dot-hidden`, `.risk-dot-visible` (classes réelles en sélecteur compound, non captées par le scanner CSS).
+
 ## v3.0.0-alpha.10 — 2026-07-08 — Sprint 3 « Formulaires B » (6 composants)
 
 > Milestone #41 « Parité React » — sprint 3 : parité 17 → 23 entrées registre portées (`@msyx-dev/react`). Famille Formulaires B : champs interactifs riches + validation a11y. `filter-bar` reclassé `n-a` (layout flex pur, couvert par composition — pas de wrapper).

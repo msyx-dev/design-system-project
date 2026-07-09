@@ -470,6 +470,23 @@ const REACT_TO_REGISTRY = {
   ColorInput:  'color-picker',  // #592
   TransferList: 'transfer-list',  // #593
   FormValidation: 'form-validation',  // #599 — dir components/FormValidation/ (FormErrorSummary) ; le hook useFormValidation vit dans src/hooks/
+  Tooltip: 'tooltip',
+  Popover: 'popover',
+  Drawer: 'drawer',
+  BottomSheet: 'bottom-sheet',
+  FAB: 'fab',
+  VersionBadge: 'version-notes',
+  Progress: 'progress',
+  ProgressTracker: 'progress-tracker',
+  Gauge: 'gauge',
+  UsageMeter: 'usage-meter',
+  ActivityFeed: 'activity-feed',
+  RiskMatrix: 'risk-matrix',
+  TreeView: 'tree-view',
+  HeatmapCalendar: 'heatmap-calendar',
+  VirtualList: 'virtual-list',
+  useChartReveal: 'charts',
+  useCountUp: 'counter',
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -500,6 +517,9 @@ const REACT_KNOWN_SINGLE = new Set([
 // Ne JAMAIS ajouter ici une classe non vérifiée à la main dans le CSS —
 // documenter la référence exacte à chaque ajout (#457).
 const REACT_CSS_UNDETECTABLE = new Set([
+  '.version-notes-dialog', // overlays/version-notes.css compound dialog.modal-dialog.version-notes-dialog
+  '.risk-dot-hidden',      // data.css compound .risk-dot.risk-dot-hidden
+  '.risk-dot-visible',     // data.css compound .risk-dot.risk-dot-visible
   '.selected',       // forms.css:53 .dropdown-option.selected (compound, non capturé)
   '.dropdown-value', // formulaires.html / components.js — span JS-hook sans règle CSS dédiée (hérite .dropdown-trigger)
 ]);
