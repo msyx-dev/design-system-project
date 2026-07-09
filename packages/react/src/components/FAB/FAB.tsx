@@ -101,7 +101,19 @@ export interface FabProps {
  *
  * SSR-safe : aucun accès `document`/`window` au render — tout est en
  * `useEffect`/handlers (post-hydratation).
+ *
+ * **A11y menu fermé (vérif adversariale)** : `.fab-actions`/`.fab-action`
+ * restent TOUJOURS montés (anim CSS), leurs `.fab-action-btn` restaient donc
+ * focusables au clavier même menu fermé (`pointer-events:none` en CSS
+ * n'empêche PAS le focus clavier). Fix : `inert` posé sur `.fab-actions`
+ * quand fermé (neutralise tous les `.fab-action-btn` en une fois), en plus
+ * `tabIndex={-1}` sur chaque `.fab-action-btn` (défense en profondeur,
+ * déclaratif/testable). Le `.fab-trigger` reste TOUJOURS focusable (c'est le
+ * déclencheur qui rouvre le menu).
  */
+/** `inert` n'est pas typé par @types/react 18 (ajouté en React 19 types). */
+type InertAttr = { inert?: "" };
+
 export function FAB({
   actions,
   icon = "+",
@@ -154,9 +166,13 @@ export function FAB({
     .filter(Boolean)
     .join(" ");
 
+  // Actions fermées : `inert` neutralise le focus/l'annonce AT de tous les
+  // `.fab-action-btn` d'un coup. Le trigger, lui, reste toujours focusable.
+  const inertProps: InertAttr = open ? {} : { inert: "" };
+
   return (
     <div ref={menuRef} className={menuClasses} aria-label={menuLabel} style={style}>
-      <div className="fab-actions" aria-live="polite">
+      <div className="fab-actions" aria-live="polite" {...inertProps}>
         {actions.map((action) => {
           const actionAria =
             action.ariaLabel ??
@@ -168,6 +184,7 @@ export function FAB({
                 type="button"
                 className="fab-action-btn"
                 aria-label={actionAria}
+                tabIndex={open ? undefined : -1}
                 style={action.danger ? { color: "var(--danger)" } : undefined}
                 onClick={() => handleSelect(action)}
               >

@@ -1,5 +1,15 @@
 # Releases
 
+## 2.95.2 — 2026-07-08 — Fix a11y : overlays fermés non focusables (vanilla)
+
+> Pendant vanilla du fix a11y `@msyx-dev/react` v3.0.0-alpha.12.
+
+### Fixed
+- `initFAB` / `initBottomSheet` (`shared/components.js`) : toggle `inert` sur `.fab-actions` / `.bottom-sheet` fermés + `aria-modal`/`role` conditionnels (BottomSheet) + normalisation de l'état initial fermé au chargement de page. Corrige la tabulation clavier vers des contrôles invisibles hors-écran. Le drawer vanilla (démo statique `onclick` inline, sans `initDrawer`) n'est pas concerné. Aucun changement CSS (`inert` = attribut) → VR inchangée.
+
+### Changed (versioning)
+- Bump synchrone des 8 sources `2.95.1 → 2.95.2` (patch — fix a11y JS).
+
 ## 2.95.1 — 2026-07-08 — Cleanup registre parité React : 7 reclassements `react:n-a` (Sprint 0)
 
 > Assainissement du dénominateur de parité React (M#41) avant le lot Overlays+Data. 7 entrées présentationnelles/utilitaires sans vocation à un wrapper React sont reclassées `react:"n-a"`. Aucun changement CSS/JS servi (métadonnées registre uniquement). Même recette que #602/#604.

@@ -96,7 +96,18 @@ export interface BottomSheetProps {
  *
  * SSR-safe : aucun accès `document`/`window` au niveau module ni au render ;
  * tout est en `useEffect`/handlers (post-hydratation).
+ *
+ * **A11y overlay fermé (vérif adversariale)** : le panneau restant TOUJOURS
+ * monté hors écran, ses contrôles (bouton close, contenu tabindex=0)
+ * restaient focusables au clavier même `open=false`. Fix : `inert` posé sur
+ * l'overlay ET le panneau quand fermé (couvre aussi le contenu consumer
+ * arbitraire), `.bottom-sheet-close`/`.bottom-sheet-content` en plus passés
+ * en `tabIndex={-1}` (défense en profondeur, déclaratif/testable).
+ * `role="dialog"`/`aria-modal` ne sont posés QUE quand `open`.
  */
+/** `inert` n'est pas typé par @types/react 18 (ajouté en React 19 types). */
+type InertAttr = { inert?: "" };
+
 export function BottomSheet({
   open,
   onClose,
@@ -198,19 +209,25 @@ export function BottomSheet({
   if (dragging) panelStyle.transition = "none";
   if (dragTransform !== null) panelStyle.transform = dragTransform;
 
+  // Overlay + panneau fermés : `inert` neutralise tout le sous-arbre (focus +
+  // annonce AT), y compris le contenu consumer arbitraire (`children`).
+  const inertProps: InertAttr = open ? {} : { inert: "" };
+
   return (
     <>
       <div
         className={overlayClasses}
         aria-hidden="true"
         onClick={onClose}
+        {...inertProps}
       />
       <div
         className={panelClasses}
-        role="dialog"
-        aria-modal="true"
+        role={open ? "dialog" : undefined}
+        aria-modal={open ? "true" : undefined}
         aria-label={ariaLabel}
         style={panelStyle}
+        {...inertProps}
       >
         {showHandle && (
           <div
@@ -229,12 +246,17 @@ export function BottomSheet({
             type="button"
             className="bottom-sheet-close"
             aria-label={closeLabel}
+            tabIndex={open ? undefined : -1}
             onClick={onClose}
           >
             &times;
           </button>
         </div>
-        <div ref={contentRef} className={contentClasses} tabIndex={0}>
+        <div
+          ref={contentRef}
+          className={contentClasses}
+          tabIndex={open ? 0 : -1}
+        >
           {children}
         </div>
       </div>

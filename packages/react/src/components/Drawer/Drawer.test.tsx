@@ -1,5 +1,6 @@
 import { ReactNode, useState } from "react";
 import { cleanup, fireEvent, render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { Drawer, DrawerProps } from "./Drawer";
 
@@ -333,5 +334,120 @@ describe("Drawer — focus restore WAI-APG", () => {
     // Fermeture via Escape → focus restauré sur le déclencheur.
     fireEvent.keyDown(document, { key: "Escape" });
     expect(trigger).toHaveFocus();
+  });
+});
+
+describe("Drawer — a11y overlay fermé (inert + focus, vérif adversariale)", () => {
+  it("fermé : overlay ET panel portent l'attribut inert", () => {
+    render(
+      <Drawer open={false} onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-overlay")).toHaveAttribute("inert");
+    expect(document.querySelector(".drawer-panel")).toHaveAttribute("inert");
+  });
+
+  it("ouvert : ni overlay ni panel ne portent inert", () => {
+    render(
+      <Drawer open onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-overlay")).not.toHaveAttribute(
+      "inert",
+    );
+    expect(document.querySelector(".drawer-panel")).not.toHaveAttribute(
+      "inert",
+    );
+  });
+
+  it("fermé : role=dialog et aria-modal sont retirés du panel", () => {
+    render(
+      <Drawer open={false} onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    const panel = document.querySelector(".drawer-panel");
+    expect(panel).not.toHaveAttribute("role");
+    expect(panel).not.toHaveAttribute("aria-modal");
+  });
+
+  it("ouvert : role=dialog et aria-modal='true' sont présents sur le panel", () => {
+    render(
+      <Drawer open onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    const panel = document.querySelector(".drawer-panel");
+    expect(panel).toHaveAttribute("role", "dialog");
+    expect(panel).toHaveAttribute("aria-modal", "true");
+  });
+
+  it("fermé : .drawer-close est tabIndex=-1 (non-tabbable) ; ouvert : redevient tabbable", () => {
+    const { rerender } = render(
+      <Drawer open={false} onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-close")).toHaveAttribute(
+      "tabindex",
+      "-1",
+    );
+
+    rerender(
+      <Drawer open onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-close")).not.toHaveAttribute(
+      "tabindex",
+    );
+  });
+
+  it("fermé : Tab depuis un élément externe ne peut PAS atteindre .drawer-close (document.activeElement inatteignable)", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button data-testid="before">Avant</button>
+        <Drawer open={false} onClose={() => {}}>
+          Corps
+        </Drawer>
+      </>,
+    );
+    const before = document.querySelector(
+      '[data-testid="before"]',
+    ) as HTMLButtonElement;
+    before.focus();
+    expect(before).toHaveFocus();
+
+    await user.tab();
+
+    const closeBtn = document.querySelector(".drawer-close");
+    expect(document.activeElement).not.toBe(closeBtn);
+  });
+
+  it("ouvert : Tab depuis un élément externe ATTEINT bien .drawer-close (contrôle redevenu tabbable)", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button data-testid="before">Avant</button>
+        <Drawer open onClose={() => {}}>
+          Corps
+        </Drawer>
+      </>,
+    );
+    const before = document.querySelector(
+      '[data-testid="before"]',
+    ) as HTMLButtonElement;
+    // Le focus-restore auto-focus le bouton close à l'ouverture : on reprend
+    // explicitement la main sur "before" pour tester le Tab dans l'ordre DOM.
+    before.focus();
+    expect(before).toHaveFocus();
+
+    await user.tab();
+
+    const closeBtn = document.querySelector(".drawer-close");
+    expect(document.activeElement).toBe(closeBtn);
   });
 });
