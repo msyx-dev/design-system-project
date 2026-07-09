@@ -335,3 +335,16 @@ describe("Popover — nettoyage", () => {
     ).not.toThrow();
   });
 });
+
+describe("Popover — triggerClassName", () => {
+  it("applique triggerClassName sur le <button> déclencheur (parité démos .btn-secondary btn-sm)", () => {
+    render(
+      <Popover trigger="Ouvrir" triggerClassName="btn-secondary btn-sm">
+        Contenu
+      </Popover>,
+    );
+    const btn = document.querySelector(".popover-wrap > button");
+    expect(btn).toHaveClass("btn-secondary");
+    expect(btn).toHaveClass("btn-sm");
+  });
+});

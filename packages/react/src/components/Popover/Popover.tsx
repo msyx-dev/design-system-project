@@ -33,6 +33,8 @@ export interface PopoverProps {
   label?: string;
   /** Classes additionnelles sur le conteneur `.popover-wrap`. */
   className?: string;
+  /** Classe(s) posée(s) sur le <button> déclencheur (ex. "btn-secondary btn-sm" ou "btn-icon", comme les démos DS — sinon bouton natif brut). */
+  triggerClassName?: string;
   /**
    * Classes additionnelles sur le panneau `.popover`. Point d'exposition de
    * l'override de largeur des popovers horizontaux (`left`/`right`) : le CSS DS
@@ -99,6 +101,7 @@ export function Popover({
   label,
   className,
   panelClassName,
+  triggerClassName,
 }: PopoverProps) {
   const panelId = useId();
   const isControlled = open !== undefined;
@@ -155,6 +158,7 @@ export function Popover({
     <div className={wrapClasses} ref={wrapRef}>
       <button
         type="button"
+        className={triggerClassName}
         ref={triggerRef}
         aria-haspopup={role === "dialog" ? "dialog" : undefined}
         aria-expanded={currentOpen}
