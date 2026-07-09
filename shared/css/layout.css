@@ -1,4 +1,4 @@
-/* @ds-version: 2.95.2 */
+/* @ds-version: 2.96.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -19,7 +19,6 @@
     width: 40px; height: 40px;
     object-fit: contain;
 }
-.site-header .header-version { font-size: 0.68rem; color: var(--text-dim); white-space: nowrap; }
 .site-header .header-spacer { flex: 1; }
 .site-header .header-controls { display: flex; align-items: center; gap: var(--space-sm); }
 .site-header .header-burger {
@@ -604,7 +603,8 @@ html.theme-transitioning * {
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
     .site-header .header-burger { display: flex; }
-    .site-header .header-version { display: none; }
+    /* Badge version dogfoodé (#645) : masqué sur mobile comme l'ancien .header-version (parité UX, header 56px contraint) */
+    .site-header .header-version-badge { display: none; }
     .main { margin-inline-start: 0; }
     /* @strip:showcase-start */
     .main section { padding: 3rem 1.5rem; }
