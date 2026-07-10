@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Fixed
+- Notes de version — pastilles de catégorie : chaque highlight de la timeline affiche désormais un `.badge` de statut (Nouveauté / Amélioration / Correction / Sécurité) dérivé de son champ `type`, dans le header dogfoodé (#645) comme dans la vitrine `overlays.html`. Le rendu (`renderVersionNotesTimeline` + démo) ignorait ce champ, les catégories n'apparaissaient pas. Mapping `badge-success`/`badge-info`/`badge-warning`/`badge-danger` aligné sur le pilote cap-transfo (`release-chip-*`, cohérence future #355). (#647)
+
 ### Added
 - Dogfood header notes de version : le badge de version du header devient cliquable et ouvre la modale « Notes de version » (timeline) alimentée par `shared/version-notes.json` (données curées, inlinées au build par `bin/generate-version-notes.js`, zéro-fetch runtime #528). Le DS consomme désormais son propre composant `version-notes` (#614). Générateur avec mode `--check` anti-drift en CI. (#645)
 - Notes de version (.version-badge / initVersionNotes) : badge version cliquable + pastille "nouveau" pilotée par localStorage (comparaison par égalité de chaîne, aucun semver) + modale timeline réutilisant purement dialog.modal-dialog + .timeline. Présentationnel strict (#445) : zéro rendu de données, zéro contenu en dur, ouverture déléguée à data-modal-trigger + initModals() existant. Section #version-notes (overlays.html). (#614)

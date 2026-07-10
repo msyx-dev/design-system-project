@@ -1,5 +1,5 @@
-/* @ds-version 2.96.0 */
-const VERSION = '2.96.0';
+/* @ds-version 2.96.1 */
+const VERSION = '2.96.1';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -23,7 +23,7 @@ const NAV_PAGES = [
 let scrollSpyObserver = null;
 
 /* AUTO-GENERATED VERSION NOTES START — ne pas éditer à la main (bin/generate-version-notes.js) */
-const VERSION_NOTES = {"next":{"highlights":[]},"released":[{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
+const VERSION_NOTES = {"next":{"highlights":[]},"released":[{"version":"2.96.1","date":"2026-07-10","titre":"Catégories dans les notes de version","highlights":[{"type":"amelioration","text":"Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil."}]},{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
 /* AUTO-GENERATED VERSION NOTES END */
 
 function buildHeader() {
@@ -172,11 +172,25 @@ function formatVersionNoteDate(iso) {
     } catch (e) { return iso; }
 }
 
+// Catégories de highlight → .badge de statut DS + libellé FR.
+// Mapping aligné sur le pilote cap-transfo (release-chip-*) pour cohérence avec la migration #355.
+var VERSION_NOTE_CATEGORIES = {
+    nouveaute:    { label: 'Nouveauté',    badge: 'badge-success' },
+    amelioration: { label: 'Amélioration', badge: 'badge-info' },
+    correction:   { label: 'Correction',   badge: 'badge-warning' },
+    securite:     { label: 'Sécurité',     badge: 'badge-danger' }
+};
+
 // Rend les .timeline-item depuis VERSION_NOTES.released (structure #614, aucun override CSS).
+// Chaque highlight porte un .badge de catégorie (dérivé de son type) devant le texte (#647).
 function renderVersionNotesTimeline(released) {
     return released.map(function (n) {
         var items = (n.highlights || []).map(function (h) {
-            return '<li>' + escapeHtml(h.text) + '</li>';
+            var meta = VERSION_NOTE_CATEGORIES[h.type] || { label: h.type || '', badge: 'badge-neutral' };
+            var chip = meta.label
+                ? '<span class="badge ' + meta.badge + '">' + escapeHtml(meta.label) + '</span> '
+                : '';
+            return '<li>' + chip + escapeHtml(h.text) + '</li>';
         }).join('');
         return '<div class="timeline-item"><div class="timeline-dot" aria-hidden="true"></div>'
             + '<div class="timeline-content"><div class="timeline-date"><time datetime="'

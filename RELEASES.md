@@ -1,5 +1,16 @@
 # Releases
 
+## 2.96.1 — 2026-07-10 — Notes de version : pastilles de catégorie (#647)
+
+> Correctif du dogfood #645 : les highlights de la timeline « Notes de version » n'affichaient aucune catégorie. Le champ `type` (`nouveaute`/`amelioration`/`correction`/`securite`), pourtant présent dans la donnée, était ignoré au rendu. Chaque highlight porte désormais un `.badge` de statut DS.
+
+### Fixed
+- **`shared/nav.js` — `renderVersionNotesTimeline()`** : chaque highlight rend un `<span class="badge …">Libellé</span>` devant son texte, via une table `VERSION_NOTE_CATEGORIES` (`nouveaute`→`badge-success` « Nouveauté », `amelioration`→`badge-info` « Amélioration », `correction`→`badge-warning` « Correction », `securite`→`badge-danger` « Sécurité » ; fallback `badge-neutral`). Mapping couleurs aligné sur le pilote cap-transfo (`release-chip-*`) pour cohérence avec la migration #355.
+- **`pages/overlays.html` — vitrine `#version-notes`** : les `.timeline-item` de démo portent les mêmes `.badge` de catégorie (cohérence vitrine ↔ rendu réel). Les modales de démo étant fermées (`display:none`), aucun impact VR.
+
+### Changed (versioning)
+- Bump 8 sources `check-versions.sh` 2.96.0 → **2.96.1** (patch). Nouvelle entrée `2.96.1` en tête de `shared/version-notes.json` (invariant `released[0].version === VERSION`), ré-inlinée par `bin/generate-version-notes.js`.
+
 ## 2.96.0 — 2026-07-09 — Dogfood header : notes de version DS (#645)
 
 > Le header du design system consomme désormais son propre composant `version-notes` (#614) : badge de version cliquable ouvrant une modale « Notes de version » (timeline). Contenu piloté par une donnée curée à la main (`shared/version-notes.json`, contrat #281 `{next, released[]}`), inlinée au build par un nouveau générateur (`bin/generate-version-notes.js`, miroir strict de `bin/generate-nav-sections.js`). Zéro fetch runtime (#528).

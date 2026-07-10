@@ -4,6 +4,14 @@
   },
   "released": [
     {
+      "version": "2.96.1",
+      "date": "2026-07-10",
+      "titre": "Catégories dans les notes de version",
+      "highlights": [
+        { "type": "amelioration", "text": "Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil." }
+      ]
+    },
+    {
       "version": "2.96.0",
       "date": "2026-07-09",
       "titre": "Historique des nouveautés dans le header",

@@ -1,7 +1,7 @@
 {
-  "version": "2.96.0",
+  "version": "2.96.1",
   "generated": {
-    "at": "2026-07-09T21:36:17.719Z",
+    "at": "2026-07-10T04:52:05.530Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2604,7 +2604,8 @@
         ".subgroup-header",
         ".subgroup-title",
         ".subsection",
-        ".grid-auto-fit-"
+        ".grid-auto-fit-",
+        ".header-version-badge"
       ],
       "jsInit": null,
       "generated": true,
