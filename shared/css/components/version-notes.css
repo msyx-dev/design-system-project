@@ -105,3 +105,24 @@ dialog.modal-dialog.version-notes-dialog {
         max-width: 480px;
     }
 }
+
+/* Fix puces parasites (v2.97.1) : les <ul> de highlights héritent du marqueur
+   natif — l'UA repose list-style DIRECTEMENT sur <ul>, ce que le reset de
+   `.timeline` (sur l'<ol> parent, lists.css) ne neutralise pas par héritage.
+   Reset scopé + mise en page propre (chip + texte), calquée sur le pilote. */
+.version-notes .timeline-content ul {
+    list-style: none;
+    margin: var(--space-xs) 0 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+.version-notes .timeline-content ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}

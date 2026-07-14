@@ -1,5 +1,11 @@
 # Releases
 
+## 2.97.1 — 2026-07-15 — Notes de version : correctif puces + note manquante
+
+### Fixed
+- **Puces natives parasites** dans la modale des notes de version : les `<ul>` de highlights affichaient un marqueur de liste (reset `.timeline` sur l'`<ol>` non hérité par les `<ul>` imbriqués). Reset scopé `.version-notes .timeline-content ul` + mise en page chip/texte. Bug préexistant (#645), attrapé au rendu réel.
+- Ajout de la note de version **2.97.1** dans `version-notes.json` (la montée de niveau v2.97.0 n'avait aucune entrée — le badge affichait une version sans note correspondante).
+
 ## 2.97.0 — 2026-07-14 — Notes de version : montée de niveau du rendu (#649)
 
 > Le badge et la modale « Notes de version » (dogfoodés depuis #645) gagnent en lisibilité et en cohérence avec le reste du DS : typo Inter, icône, présence garantie sur mobile, timeline plus sobre et sémantiquement correcte.
