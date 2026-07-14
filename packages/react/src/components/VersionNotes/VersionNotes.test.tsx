@@ -180,6 +180,8 @@ describe("VersionNotes — timeline", () => {
     expect(
       document.querySelector(".timeline-content h4"),
     ).not.toBeInTheDocument();
+    // .timeline-item--latest est posée indépendamment de titre (spec #650)
+    expect(document.querySelector(".timeline-item--latest")).toBeInTheDocument();
   });
 });
 
@@ -203,5 +205,8 @@ describe("VersionNotes — à venir (next)", () => {
     expect(items[0]).toHaveTextContent("Refonte du header");
     // l'upcoming n'est jamais --latest
     expect(items[0]).not.toHaveClass("timeline-item--latest");
+    // --latest reste posée sur la 1re RELEASE (index suivant), pas sur l'upcoming
+    expect(items[1]).toHaveClass("timeline-item--latest");
+    expect(items[1]).toHaveTextContent("2.97.0");
   });
 });
