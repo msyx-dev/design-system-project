@@ -8,6 +8,13 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.13 — 2026-07-15 — `<VersionNotes>` data-driven (badge + modale + timeline)
+
+> Parité React (#650) — remonte l'API d'un cran : les consumers (cap-transfo #355) passent des **données** (`releases`/`next`) au lieu d'écrire le markup timeline à la main. Rend le CSS DS livré en v2.97.0 (#649).
+
+### Added
+- `<VersionNotes latestVersion storageKey releases next? subtitle? className?>` : composant complet **badge + modale + timeline** data-driven. **Compose** `<VersionBadge>` (localStorage `.version-badge--new`, SSR-safe, hérité — pas de duplication) et `<Modal className="version-notes-dialog">` (focus restore, ESC/backdrop). Types exportés : `VersionNotesProps`, `ReleaseNote` (`{version, date, titre?, highlights}`), `Highlight` (`{type, text}`), `VersionNoteCategory`. **Classes d'état** (dont dépend le CSS #649) répliquées : `.timeline-item--latest` sur la 1re release uniquement, `.timeline-item--upcoming` en tête si `next` non vide, chips `.badge badge-{success,info,warning,danger}` mappés par `type` (calque `VERSION_NOTE_CATEGORIES`, `nav.js:178`). `titre`/`subtitle`/`next` optionnels : `<h4>` rendu seulement si `titre`, `.version-notes-sub` seulement si `subtitle`. Date via `<time dateTime>` (format FR calqué `formatVersionNoteDate`). `useId()` pour `aria-labelledby`. `REACT_TO_REGISTRY` mappe `VersionNotes → version-notes` (2e dir, même entrée que `VersionBadge`). (#650)
+
 ## v3.0.0-alpha.12 — 2026-07-08 — Fix a11y : overlays fermés non focusables (Drawer/BottomSheet/FAB)
 
 > Correctif a11y détecté en vérif adversariale du lot alpha.11 : les overlays gardaient leurs contrôles focusables + `aria-modal` persistant quand fermés (markup monté off-screen). Pendant vanilla dans DS CSS v2.95.2.
