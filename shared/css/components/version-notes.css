@@ -78,8 +78,10 @@ dialog.modal-dialog.version-notes-dialog {
     border: 2px solid var(--accent);
     box-shadow: none;
 }
-/* Version la plus récente : nœud plein + halo */
-.version-notes .timeline-item:first-child .timeline-dot {
+/* Version la plus récente : nœud plein + halo. Classe explicite posée par le JS
+   sur la 1re entrée RELEASED (jamais l'item « À venir ») — découplé de :first-child
+   pour ne pas écraser le nœud pointillé quand le bucket « À venir » est en tête (#649). */
+.version-notes .timeline-item--latest .timeline-dot {
     background: var(--accent);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }

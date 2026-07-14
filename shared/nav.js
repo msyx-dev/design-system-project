@@ -211,7 +211,8 @@ function renderVersionNotesTimeline(released) {
             return '<li>' + chip + escapeHtml(h.text) + '</li>';
         }).join('');
         var newBadge = i === 0 ? ' <span class="badge badge-success">Nouveau</span>' : '';
-        return '<li class="timeline-item"><div class="timeline-dot" aria-hidden="true"></div>'
+        var latestCls = i === 0 ? ' timeline-item--latest' : '';
+        return '<li class="timeline-item' + latestCls + '"><div class="timeline-dot" aria-hidden="true"></div>'
             + '<div class="timeline-content"><div class="timeline-date"><time datetime="'
             + escapeHtml(n.date) + '">' + escapeHtml(formatVersionNoteDate(n.date)) + '</time> · v'
             + escapeHtml(n.version) + '</div><h4>' + escapeHtml(n.titre) + newBadge + '</h4><ul>' + items
