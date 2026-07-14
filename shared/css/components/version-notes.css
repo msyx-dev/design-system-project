@@ -1,4 +1,4 @@
-/* @ds-version: 2.95.0 */
+/* @ds-version: 2.97.0 */
 /* ===== VERSION NOTES (badge + pastille nouveau) ===== */
 /* Composant presentationnel strict (#445) : badge cliquable + pastille "nouveau"
    pilotee par localStorage (initVersionNotes, shared/components.js) + reutilisation
@@ -15,12 +15,19 @@
     background: var(--surface);
     border: 1px solid var(--border-color);
     color: var(--text);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 0.8rem;
     font-weight: var(--fw-semibold);
     cursor: pointer;
     transition: border-color var(--duration-base) var(--ease-standard),
                 background-color var(--duration-base) var(--ease-standard);
+}
+/* Icône spark (Lucide sparkles) — accent theme-aware. flex:none = pas de shrink en flex */
+.version-badge svg {
+    width: 14px;
+    height: 14px;
+    color: var(--accent);
+    flex: none;
 }
 .version-badge:hover {
     border-color: var(--border-hover);
@@ -41,6 +48,14 @@
     display: block;
 }
 
+/* R2 (#649) — compact desktop : le badge se réduit hors mobile (header 56px). min-height:44px conservé en base mobile (cible tactile). */
+@media (min-width: 768px) {
+    .version-badge {
+        min-height: 0;
+        padding: 0.35rem var(--space-md);
+    }
+}
+
 /* Modale — variante largeur pour accueillir la timeline (reutilisation pure dialog.modal-dialog) */
 dialog.modal-dialog.version-notes-dialog {
     max-width: 440px;
@@ -50,6 +65,39 @@ dialog.modal-dialog.version-notes-dialog {
 .version-notes {
     max-height: 60vh;
     overflow-y: auto;
+}
+
+/* R4 (#649) — timeline SCOPÉE à la modale notes de version.
+   La primitive globale .timeline/.timeline-dot (lists.css) reste intacte (utilisée par divers.html).
+   Ici : trait continu sobre + nœuds anneau-creux calés sur --surface (fix « couture » --primary). */
+.version-notes .timeline::before {
+    background: var(--border-color);   /* trait continu sobre (remplace le gradient accent) */
+}
+.version-notes .timeline-dot {
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    box-shadow: none;
+}
+/* Version la plus récente : nœud plein + halo. Classe explicite posée par le JS
+   sur la 1re entrée RELEASED (jamais l'item « À venir ») — découplé de :first-child
+   pour ne pas écraser le nœud pointillé quand le bucket « À venir » est en tête (#649). */
+.version-notes .timeline-item--latest .timeline-dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Paquet A (#649) — nœud « À venir » : anneau pointillé neutre (scopé modale) */
+.version-notes .timeline-item--upcoming .timeline-dot {
+    background: var(--surface);
+    border: 2px dashed var(--text-muted);
+    box-shadow: none;
+}
+
+/* R6 (#649) — sous-titre optionnel de la modale (rendu seulement si VERSION_NOTES.subtitle défini) */
+.version-notes-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-md) 0;
 }
 
 @media (min-width: 768px) {

@@ -543,6 +543,7 @@
                         data-latest-version="2.95.0"
                         data-storage-key="ds-demo-version-seen-new"
                         aria-label="Notes de version, v2.95.0">
+                    <svg class="icon" width="14" height="14" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-sparkles"></use></svg>
                     v2.95.0
                     <span class="version-badge-dot" aria-hidden="true"></span>
                 </button>
@@ -557,6 +558,7 @@
                         data-latest-version="2.95.0"
                         data-storage-key="ds-demo-version-seen-ok"
                         aria-label="Notes de version, v2.95.0">
+                    <svg class="icon" width="14" height="14" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-sparkles"></use></svg>
                     v2.95.0
                     <span class="version-badge-dot" aria-hidden="true"></span>
                 </button>
@@ -572,23 +574,33 @@
 
     <dialog class="modal-dialog version-notes-dialog" id="version-notes-modal-new" aria-labelledby="version-notes-title-new">
         <div class="modal-header">
-            <h3 id="version-notes-title-new">Notes de version</h3>
+            <h3 class="modal-title" id="version-notes-title-new">Notes de version</h3>
             <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
         </div>
         <div class="modal-body version-notes">
-            <div class="timeline">
-                <div class="timeline-item">
+            <p class="version-notes-sub">Les dernières évolutions du design system.</p>
+            <ol class="timeline">
+                <li class="timeline-item timeline-item--upcoming">
+                    <div class="timeline-dot" aria-hidden="true"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">À venir</div>
+                        <ul>
+                            <li><span class="badge badge-info">Amélioration</span> Migration du rendu bespoke vers le composant DS</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="timeline-item timeline-item--latest">
                     <div class="timeline-dot" aria-hidden="true"></div>
                     <div class="timeline-content">
                         <div class="timeline-date"><time datetime="2026-07-07">7 juil. 2026</time> &middot; v2.95.0</div>
-                        <h4>Notes de version</h4>
+                        <h4>Notes de version <span class="badge badge-success">Nouveau</span></h4>
                         <ul>
                             <li><span class="badge badge-success">Nouveauté</span> Nouveau composant badge + modale timeline</li>
                             <li><span class="badge badge-success">Nouveauté</span> Pastille &laquo; nouveau &raquo; pilotée par localStorage</li>
                         </ul>
                     </div>
-                </div>
-                <div class="timeline-item">
+                </li>
+                <li class="timeline-item">
                     <div class="timeline-dot" aria-hidden="true"></div>
                     <div class="timeline-content">
                         <div class="timeline-date"><time datetime="2026-06-19">19 juin 2026</time> &middot; v2.77.0</div>
@@ -598,8 +610,8 @@
                             <li><span class="badge badge-info">Amélioration</span> Primitif .menu mutualisé</li>
                         </ul>
                     </div>
-                </div>
-                <div class="timeline-item">
+                </li>
+                <li class="timeline-item">
                     <div class="timeline-dot" aria-hidden="true"></div>
                     <div class="timeline-content">
                         <div class="timeline-date"><time datetime="2026-06-13">13 juin 2026</time> &middot; v2.71.0</div>
@@ -608,30 +620,30 @@
                             <li><span class="badge badge-info">Amélioration</span> 16 sections réorganisées en 5 familles</li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </li>
+            </ol>
         </div>
     </dialog>
 
     <dialog class="modal-dialog version-notes-dialog" id="version-notes-modal-seen" aria-labelledby="version-notes-title-seen">
         <div class="modal-header">
-            <h3 id="version-notes-title-seen">Notes de version</h3>
+            <h3 class="modal-title" id="version-notes-title-seen">Notes de version</h3>
             <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
         </div>
         <div class="modal-body version-notes">
-            <div class="timeline">
-                <div class="timeline-item">
+            <ol class="timeline">
+                <li class="timeline-item timeline-item--latest">
                     <div class="timeline-dot" aria-hidden="true"></div>
                     <div class="timeline-content">
                         <div class="timeline-date"><time datetime="2026-07-07">7 juil. 2026</time> &middot; v2.95.0</div>
-                        <h4>Notes de version</h4>
+                        <h4>Notes de version <span class="badge badge-success">Nouveau</span></h4>
                         <ul>
                             <li><span class="badge badge-success">Nouveauté</span> Nouveau composant badge + modale timeline</li>
                             <li><span class="badge badge-success">Nouveauté</span> Pastille &laquo; nouveau &raquo; pilotée par localStorage</li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </li>
+            </ol>
         </div>
     </dialog>
 </section>

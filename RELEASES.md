@@ -1,5 +1,20 @@
 # Releases
 
+## 2.97.0 — 2026-07-14 — Notes de version : montée de niveau du rendu (#649)
+
+> Le badge et la modale « Notes de version » (dogfoodés depuis #645) gagnent en lisibilité et en cohérence avec le reste du DS : typo Inter, icône, présence garantie sur mobile, timeline plus sobre et sémantiquement correcte.
+
+### Added
+- **Item « À venir »** dans la modale : si une prochaine version a des points curés (`next.highlights`), une entrée en tête de timeline l'annonce avec un nœud pointillé et le libellé « À venir ». Absente tant qu'aucun point n'est renseigné (comportement actuel par défaut).
+- **Pastille « Nouveau »** sur la dernière version publiée, pour repérer l'entrée la plus récente en un coup d'œil.
+- **Sous-titre optionnel** de la modale (`subtitle`), affiché uniquement s'il est renseigné dans la donnée source.
+
+### Changed
+- **Badge** : police passée en Inter (cohérence avec le reste de l'UI) et ajout d'une icône étincelle devant le numéro de version.
+- **Badge visible sur mobile** : il était auparavant masqué en dessous de 768px ; il est désormais toujours affiché (cible tactile 44px), et se compacte légèrement sur desktop.
+- **Timeline de la modale** : trait et nœuds redessinés pour une lecture plus sobre (nœuds en anneau creux, nœud le plus récent mis en avant par un halo) ; la « couture » disgracieuse de l'ancien rendu sur fond de modale est corrigée. La timeline générique utilisée ailleurs dans le design system (page « Divers ») n'est pas affectée.
+- **Structure de la modale** : balisage plus sémantique (liste ordonnée) et titre correctement identifié pour les lecteurs d'écran.
+
 ## 2.96.1 — 2026-07-10 — Notes de version : pastilles de catégorie (#647)
 
 > Correctif du dogfood #645 : les highlights de la timeline « Notes de version » n'affichaient aucune catégorie. Le champ `type` (`nouveaute`/`amelioration`/`correction`/`securite`), pourtant présent dans la donnée, était ignoré au rendu. Chaque highlight porte désormais un `.badge` de statut DS.
