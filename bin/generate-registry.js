@@ -476,6 +476,7 @@ const REACT_TO_REGISTRY = {
   BottomSheet: 'bottom-sheet',
   FAB: 'fab',
   VersionBadge: 'version-notes',
+  VersionNotes: 'version-notes',  // #650 — 2e dir → même entrée registre (cf. ThemeToggle/ThemeSwitcher)
   Progress: 'progress',
   ProgressTracker: 'progress-tracker',
   Gauge: 'gauge',
