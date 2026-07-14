@@ -1,5 +1,5 @@
-/* @ds-version 2.96.1 */
-const VERSION = '2.96.1';
+/* @ds-version 2.97.0 */
+const VERSION = '2.97.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -117,10 +117,11 @@ function buildHeader() {
 
     // Logo : image si logoSrc défini, sinon texte gradient fallback (#570)
     var logoImgHtml = `<img src="${brandLogoSrc}" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
-    // Badge version cliquable — dogfood du composant version-notes (#645, #614).
+    // Badge version cliquable — dogfood du composant version-notes (#645, #614, #649).
     // Présentationnel strict : ouverture déléguée à data-modal-trigger + initModals ;
     // pastille « nouveau » gérée par initVersionNotes (égalité de chaîne localStorage).
-    var versionBadgeHtml = `<button class="version-badge header-version-badge" data-version-notes data-modal-trigger="ds-version-notes-modal" data-latest-version="${VERSION}" data-storage-key="ds-version-seen" aria-label="Notes de version, v${VERSION}">v${VERSION}<span class="version-badge-dot" aria-hidden="true"></span></button>`;
+    // Icône spark (i-sparkles) devant le numéro — .icon = stroke:currentColor;fill:none (_base.css).
+    var versionBadgeHtml = `<button class="version-badge header-version-badge" data-version-notes data-modal-trigger="ds-version-notes-modal" data-latest-version="${VERSION}" data-storage-key="ds-version-seen" aria-label="Notes de version, v${VERSION}"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-sparkles"></use></svg>v${VERSION}<span class="version-badge-dot" aria-hidden="true"></span></button>`;
     header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="${brandHref}" class="header-logo" aria-label="${brandText} — Accueil">${logoImgHtml}<span class="brand-wordmark">${brandText}</span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
 
     var burger = document.getElementById('header-burger');
@@ -181,10 +182,27 @@ var VERSION_NOTE_CATEGORIES = {
     securite:     { label: 'Sécurité',     badge: 'badge-danger' }
 };
 
-// Rend les .timeline-item depuis VERSION_NOTES.released (structure #614, aucun override CSS).
-// Chaque highlight porte un .badge de catégorie (dérivé de son type) devant le texte (#647).
+// Rend un <li.timeline-item--upcoming> « À venir » depuis VERSION_NOTES.next.highlights (#649 paquet A).
+// Nœud pointillé + label « À venir ». Rien si highlights vide (cas par défaut, version-notes.json next.highlights === []).
+function renderVersionNotesUpcoming(next) {
+    var hs = (next && Array.isArray(next.highlights)) ? next.highlights : [];
+    if (!hs.length) return '';
+    var items = hs.map(function (h) {
+        var meta = VERSION_NOTE_CATEGORIES[h.type] || { label: h.type || '', badge: 'badge-neutral' };
+        var chip = meta.label
+            ? '<span class="badge ' + meta.badge + '">' + escapeHtml(meta.label) + '</span> '
+            : '';
+        return '<li>' + chip + escapeHtml(h.text) + '</li>';
+    }).join('');
+    return '<li class="timeline-item timeline-item--upcoming"><div class="timeline-dot" aria-hidden="true"></div>'
+        + '<div class="timeline-content"><div class="timeline-date">À venir</div>'
+        + '<ul>' + items + '</ul></div></li>';
+}
+
+// Rend les <li.timeline-item> depuis VERSION_NOTES.released (structure #614/#649).
+// i===0 : pastille « Nouveau ». Chaque highlight porte un .badge de catégorie (#647).
 function renderVersionNotesTimeline(released) {
-    return released.map(function (n) {
+    return released.map(function (n, i) {
         var items = (n.highlights || []).map(function (h) {
             var meta = VERSION_NOTE_CATEGORIES[h.type] || { label: h.type || '', badge: 'badge-neutral' };
             var chip = meta.label
@@ -192,11 +210,12 @@ function renderVersionNotesTimeline(released) {
                 : '';
             return '<li>' + chip + escapeHtml(h.text) + '</li>';
         }).join('');
-        return '<div class="timeline-item"><div class="timeline-dot" aria-hidden="true"></div>'
+        var newBadge = i === 0 ? ' <span class="badge badge-success">Nouveau</span>' : '';
+        return '<li class="timeline-item"><div class="timeline-dot" aria-hidden="true"></div>'
             + '<div class="timeline-content"><div class="timeline-date"><time datetime="'
             + escapeHtml(n.date) + '">' + escapeHtml(formatVersionNoteDate(n.date)) + '</time> · v'
-            + escapeHtml(n.version) + '</div><h4>' + escapeHtml(n.titre) + '</h4><ul>' + items
-            + '</ul></div></div>';
+            + escapeHtml(n.version) + '</div><h4>' + escapeHtml(n.titre) + newBadge + '</h4><ul>' + items
+            + '</ul></div></li>';
     }).join('');
 }
 
@@ -204,16 +223,20 @@ function renderVersionNotesTimeline(released) {
 // id = ds-version-notes-modal (référencé par data-modal-trigger du badge).
 function ensureVersionNotesDialog() {
     if (document.getElementById('ds-version-notes-modal')) return;
-    var released = (typeof VERSION_NOTES === 'object' && VERSION_NOTES && Array.isArray(VERSION_NOTES.released))
-        ? VERSION_NOTES.released : [];
+    var notes = (typeof VERSION_NOTES === 'object' && VERSION_NOTES) ? VERSION_NOTES : {};
+    var released = Array.isArray(notes.released) ? notes.released : [];
+    var subtitle = (typeof notes.subtitle === 'string' && notes.subtitle.trim()) ? notes.subtitle : '';
     var dialog = document.createElement('dialog');
     dialog.className = 'modal-dialog version-notes-dialog';
     dialog.id = 'ds-version-notes-modal';
     dialog.setAttribute('aria-labelledby', 'ds-version-notes-title');
-    dialog.innerHTML = '<div class="modal-header"><h3 id="ds-version-notes-title">Notes de version</h3>'
+    dialog.innerHTML = '<div class="modal-header"><h3 class="modal-title" id="ds-version-notes-title">Notes de version</h3>'
         + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
-        + '<div class="modal-body version-notes"><div class="timeline">'
-        + renderVersionNotesTimeline(released) + '</div></div>';
+        + '<div class="modal-body version-notes">'
+        + (subtitle ? '<p class="version-notes-sub">' + escapeHtml(subtitle) + '</p>' : '')
+        + '<ol class="timeline">'
+        + renderVersionNotesUpcoming(notes.next)
+        + renderVersionNotesTimeline(released) + '</ol></div>';
     document.body.appendChild(dialog);
 }
 

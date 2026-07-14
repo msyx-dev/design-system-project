@@ -1,7 +1,7 @@
 {
-  "version": "2.96.1",
+  "version": "2.97.0",
   "generated": {
-    "at": "2026-07-10T04:52:05.530Z",
+    "at": "2026-07-14T20:05:47.822Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3144,7 +3144,9 @@
         ".version-badge",
         ".version-badge--new",
         ".version-badge-dot",
-        ".version-notes"
+        ".version-notes",
+        ".timeline-item--upcoming",
+        ".version-notes-sub"
       ],
       "jsInit": "initVersionNotes",
       "react": "ported",
