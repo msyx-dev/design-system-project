@@ -8,7 +8,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Changed
+- Notes de version — montée de niveau (v2.97.0) : badge de version en `--font-sans` (Inter) + icône spark (`#i-sparkles`), désormais **visible en mobile** (cible 44px) et compact en desktop (`min-width:768px`). Timeline de la modale restylée **de façon scopée** (`.version-notes .timeline` : nœuds anneau-creux, dernière version mise en avant plein+halo, nœud « À venir » pointillé) — la primitive globale `.timeline` (lists.css) reste iso-visuelle. Rendu du bucket « À venir » (`next.highlights`, jusque-là non rendu), pastille « Nouveau » sur la dernière version, sous-titre optionnel (`subtitle`), modale sémantique `<ol>`/`<li>` + `.modal-title`. Aligne le composant DS sur le pilote cap-transfo (prérequis migration #355). (#649)
+
 ### Fixed
+- Notes de version — nœud « récent » découplé de `:first-child` (classe `.timeline-item--latest` posée par le JS sur la 1re version *released*) : évite que le style plein+halo n'écrase le nœud pointillé de l'item « À venir » quand le bucket `next` est en tête. (#649)
 - Notes de version — pastilles de catégorie : chaque highlight de la timeline affiche désormais un `.badge` de statut (Nouveauté / Amélioration / Correction / Sécurité) dérivé de son champ `type`, dans le header dogfoodé (#645) comme dans la vitrine `overlays.html`. Le rendu (`renderVersionNotesTimeline` + démo) ignorait ce champ, les catégories n'apparaissaient pas. Mapping `badge-success`/`badge-info`/`badge-warning`/`badge-danger` aligné sur le pilote cap-transfo (`release-chip-*`, cohérence future #355). (#647)
 
 ### Added
