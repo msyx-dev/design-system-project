@@ -4,6 +4,16 @@
   },
   "released": [
     {
+      "version": "2.97.1",
+      "date": "2026-07-15",
+      "titre": "Notes de version plus lisibles",
+      "highlights": [
+        { "type": "amelioration", "text": "La chronologie met en avant la dernière version et annonce les nouveautés à venir." },
+        { "type": "amelioration", "text": "Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne." },
+        { "type": "correction", "text": "Correction de puces parasites qui apparaissaient dans la liste des nouveautés." }
+      ]
+    },
+    {
       "version": "2.96.1",
       "date": "2026-07-10",
       "titre": "Catégories dans les notes de version",
