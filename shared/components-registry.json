@@ -1,7 +1,7 @@
 {
-  "version": "2.97.1",
+  "version": "2.97.2",
   "generated": {
-    "at": "2026-07-14T23:45:20.666Z",
+    "at": "2026-07-15T05:21:18.344Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -122,7 +122,8 @@
       "example": "<span class=\"badge badge-primary\">Nouveau</span>\n<span class=\"badge badge-success\">Actif</span>\n<span class=\"badge badge-warning\">En attente</span>\n<span class=\"badge badge-danger\">Erreur</span>\n<span class=\"badge badge-info\">Info</span>\n<span class=\"tag\">Next.js</span>\n<span class=\"tag\">TypeScript</span>\n\n<!-- Badge compact sidebar/nav -->\n<span class=\"badge badge-primary badge-nav\">12</span>",
       "react": "pending",
       "module": [
-        "shared/css/components/badges.css"
+        "shared/css/components/badges.css",
+        "shared/css/components/version-notes.css"
       ]
     },
     {

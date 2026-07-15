@@ -217,11 +217,18 @@ dialog.modal-dialog .modal-header {
   display: flex; justify-content: space-between; align-items: center;
   padding: var(--space-lg); border-bottom: 1px solid var(--border-color);
 }
-dialog.modal-dialog .modal-header h3 { margin: 0; font-size: 1.1rem; }
+/* `:not(.modal-title)` : un <h3> nu garde 1.1rem, mais <h3 class="modal-title">
+   laisse l'utilitaire token (.modal-title = --type-20 = 20px) l'emporter. */
+dialog.modal-dialog .modal-header h3:not(.modal-title) { margin: 0; font-size: 1.1rem; }
 dialog.modal-dialog .modal-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px;   /* cible tactile a11y (mobile-first) — glyphe centré, taille visuelle inchangée */
   background: none; border: none; color: var(--text-muted); cursor: pointer;
   font-size: 1.2rem; padding: 0.25rem; border-radius: var(--radius-xs);
   transition: color 0.2s, background 0.2s;
+}
+@media (min-width: 768px) {
+  dialog.modal-dialog .modal-close { min-width: 2rem; min-height: 2rem; }   /* compact en desktop (souris) */
 }
 dialog.modal-dialog .modal-close:hover { color: var(--text); background: var(--surface-light); }
 dialog.modal-dialog .modal-body { padding: var(--space-lg); }

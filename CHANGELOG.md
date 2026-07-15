@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Fixed
+- Chrome modal (v2.97.2) — **a11y** : bouton fermer des modales porté à 44×44px en mobile (`dialog.modal-dialog .modal-close`, mobile-first, compact desktop) ; utilitaire `.modal-title` (20px) qui était écrasé par `dialog.modal-dialog .modal-header h3` → scopé `h3:not(.modal-title)`. Trouvés au challenge designer sur la modale notes de version, vérifiés au rendu réel (modale ouverte). Affecte toutes les modales DS.
+
 ### Changed
 - Notes de version — montée de niveau (v2.97.0) : badge de version en `--font-sans` (Inter) + icône spark (`#i-sparkles`), désormais **visible en mobile** (cible 44px) et compact en desktop (`min-width:768px`). Timeline de la modale restylée **de façon scopée** (`.version-notes .timeline` : nœuds anneau-creux, dernière version mise en avant plein+halo, nœud « À venir » pointillé) — la primitive globale `.timeline` (lists.css) reste iso-visuelle. Rendu du bucket « À venir » (`next.highlights`, jusque-là non rendu), pastille « Nouveau » sur la dernière version, sous-titre optionnel (`subtitle`), modale sémantique `<ol>`/`<li>` + `.modal-title`. Aligne le composant DS sur le pilote cap-transfo (prérequis migration #355). (#649)
 

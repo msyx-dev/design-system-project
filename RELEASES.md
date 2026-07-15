@@ -1,5 +1,11 @@
 # Releases
 
+## 2.97.2 — 2026-07-15 — Chrome modal : a11y bouton fermer + titre
+
+### Fixed
+- **Bouton fermer des modales** (`dialog.modal-dialog .modal-close`) : cible tactile portée à **44×44px en mobile** (mobile-first, compact 2rem en desktop) — était ~24-28px, sous le seuil a11y de `DS-PRINCIPLES.md`. Glyphe visuel inchangé (hit-area agrandie via flex + min-width/height). Affecte toutes les modales DS.
+- **`.modal-title` écrasé** : la règle `dialog.modal-dialog .modal-header h3` (font-size 1.1rem, spécificité 0,2,2) l'emportait sur l'utilitaire token `.modal-title` (--type-20 = 20px). Scopée en `h3:not(.modal-title)` → un `<h3>` nu garde 1.1rem, un `<h3 class="modal-title">` rend enfin à 20px. Vérifié au rendu réel (modale ouverte, mesures pixel : close 44/32px, titre 20px).
+
 ## 2.97.1 — 2026-07-15 — Notes de version : correctif puces + note manquante
 
 ### Fixed
