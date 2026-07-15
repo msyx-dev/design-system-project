@@ -4,6 +4,14 @@
   },
   "released": [
     {
+      "version": "2.97.2",
+      "date": "2026-07-15",
+      "titre": "Fenêtres plus accessibles",
+      "highlights": [
+        { "type": "amelioration", "text": "Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles." }
+      ]
+    },
+    {
       "version": "2.97.1",
       "date": "2026-07-15",
       "titre": "Notes de version plus lisibles",
