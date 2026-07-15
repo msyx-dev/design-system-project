@@ -5,6 +5,7 @@
 ### Fixed
 - **Puces natives parasites** dans la modale des notes de version : les `<ul>` de highlights affichaient un marqueur de liste (reset `.timeline` sur l'`<ol>` non hérité par les `<ul>` imbriqués). Reset scopé `.version-notes .timeline-content ul` + mise en page chip/texte. Bug préexistant (#645), attrapé au rendu réel.
 - Ajout de la note de version **2.97.1** dans `version-notes.json` (la montée de niveau v2.97.0 n'avait aucune entrée — le badge affichait une version sans note correspondante).
+- **Polish timeline** (challenge designer sur rendu réel) : trait vertical qui pendouillait sous le dernier nœud → connecteur **par item** de centre-à-centre (s'arrête net au dernier) ; nœuds recentrés horizontalement sur le trait et verticalement sur la date ; début du texte des highlights aligné entre versions (grille chip fixe en desktop) ; pastille de statut « Nouveau » passée en **accent bleu** pour ne plus se confondre avec la catégorie « Nouveauté » (vert) ; fil de liaison rendu plus lisible. Tout scopé `.version-notes` (primitive `.timeline` intacte).
 
 ## 2.97.0 — 2026-07-14 — Notes de version : montée de niveau du rendu (#649)
 

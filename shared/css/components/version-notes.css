@@ -70,10 +70,22 @@ dialog.modal-dialog.version-notes-dialog {
 /* R4 (#649) — timeline SCOPÉE à la modale notes de version.
    La primitive globale .timeline/.timeline-dot (lists.css) reste intacte (utilisée par divers.html).
    Ici : trait continu sobre + nœuds anneau-creux calés sur --surface (fix « couture » --primary). */
-.version-notes .timeline::before {
-    background: var(--border-color);   /* trait continu sobre (remplace le gradient accent) */
+/* M1 — plus de rail pleine hauteur (il pendouillait sous le dernier nœud et
+   dépassait au-dessus du premier). Connecteur PAR ITEM, de centre-de-nœud à
+   centre-de-nœud ; le dernier item n'en a pas → le trait s'arrête net. */
+.version-notes .timeline::before { content: none; }
+.version-notes .timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: calc(-2rem + 6px);        /* ancré sur l'item (comme le dot left:-2rem) → centré sur le nœud */
+    width: 2px;
+    top: calc(0.15rem + 7px);       /* part du centre vertical de CE nœud (dot top 0.15rem + rayon 7px) */
+    bottom: calc(-0.15rem - 7px);   /* rejoint le centre du nœud suivant */
+    background: color-mix(in srgb, var(--text-muted) 22%, transparent);  /* m3 : fil lisible mais sobre */
+    z-index: 0;                     /* sous les dots (z-index:1) */
 }
 .version-notes .timeline-dot {
+    top: 0.15rem;   /* n1 : recale le nœud sur le centre de la date (était 0.3rem, 2px trop bas) */
     background: var(--surface);
     border: 2px solid var(--accent);
     box-shadow: none;
@@ -125,4 +137,23 @@ dialog.modal-dialog.version-notes-dialog {
     font-size: 0.82rem;
     line-height: 1.5;
     color: var(--text-muted);
+}
+/* m1 — desktop : colonne chip fixe pour aligner le début du texte entre versions
+   (en flux inline le texte démarrait en escalier selon la largeur du chip).
+   Mobile garde le flux inline (la colonne fixe y serait trop gourmande). */
+@media (min-width: 768px) {
+    .version-notes .timeline-content ul li {
+        display: grid;
+        grid-template-columns: 6.5rem 1fr;
+        align-items: start;
+        column-gap: var(--space-sm);
+    }
+}
+/* m2 — la pastille de STATUT « Nouveau » (version non lue) passe en accent bleu,
+   pour ne plus se confondre avec la catégorie « Nouveauté » (badge-success vert).
+   C'est le seul .badge placé dans le <h4> d'en-tête de version. */
+.version-notes .timeline-content h4 .badge {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--accent-light);
 }
