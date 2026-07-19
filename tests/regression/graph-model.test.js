@@ -187,6 +187,10 @@ async function main() {
     assertEqual(m.getNode('a').data.color, 'blue', '11. updateNode -> cle non touchee conservee (merge shallow)');
     assertDeepEqual(m.getNode('a').position, { x: 10, y: 20 }, '11. updateNode -> position remplacee');
     assertTrue(warnCount >= 1, '11. updateNode patch.data.id -> console.warn appele (invariant 5)');
+
+    // position:null -> cle supprimee proprement (pas de residu `position: undefined`)
+    m.updateNode('a', { position: null });
+    assertTrue(!('position' in m.getNode('a')), '11b. updateNode position:null -> cle position supprimee (pas de residu undefined)');
   }
 
   // ---- 12. updateNode id absent -> no-op + warn + 0 event ----

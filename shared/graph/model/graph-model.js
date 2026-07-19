@@ -197,10 +197,18 @@ export class GraphModel extends EventTarget {
       existing.data = nextData;
     }
     if (Object.prototype.hasOwnProperty.call(p, 'position')) {
-      existing.position = p.position && typeof p.position === 'object' ? cloneObj(p.position) : undefined;
+      if (p.position && typeof p.position === 'object') {
+        existing.position = cloneObj(p.position);
+      } else {
+        delete existing.position;
+      }
     }
     if (Object.prototype.hasOwnProperty.call(p, 'size')) {
-      existing.size = p.size && typeof p.size === 'object' ? cloneObj(p.size) : undefined;
+      if (p.size && typeof p.size === 'object') {
+        existing.size = cloneObj(p.size);
+      } else {
+        delete existing.size;
+      }
     }
     this.#emit({ op: 'update-node', id, node: existing, patch: p });
   }
