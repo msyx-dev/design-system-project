@@ -19,11 +19,11 @@
       e.preventDefault();
     }
     function onPointerMove(e) {
-      if (!dragging) return;
+      if (!dragging || e.pointerId !== activePointerId) return;
       if (onMove) onMove(e, point(e));
     }
     function endDrag(e) {
-      if (!dragging) return;
+      if (!dragging || e.pointerId !== activePointerId) return;
       dragging = false;
       if (cursor) handle.style.cursor = "";
       try {

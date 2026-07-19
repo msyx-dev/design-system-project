@@ -122,6 +122,25 @@ async function main() {
   handle.dispatch('pointerdown', { pointerId: 2, clientX: 0, clientY: 0, preventDefault() {} });
   assertEqual(started, 1, 'destroy() empeche tout nouveau start (leak-safe)');
 
+  // Isolation multi-pointeurs : un pointermove/pointerup d'un AUTRE pointerId que celui
+  // capture au pointerdown ne doit ni declencher onMove/onEnd, ni interrompre le drag actif.
+  const handle2 = new FakeHandle();
+  let moved2 = 0;
+  let ended2 = 0;
+  pointerDrag(handle2, {
+    onMove: () => { moved2++; },
+    onEnd: () => { ended2++; },
+  });
+  handle2.dispatch('pointerdown', { pointerId: 1, clientX: 0, clientY: 0, preventDefault() {} });
+  handle2.dispatch('pointermove', { pointerId: 42, clientX: 5, clientY: 5 });
+  assertEqual(moved2, 0, 'pointerDrag() ignore pointermove d\'un pointerId etranger au drag actif');
+  handle2.dispatch('pointerup', { pointerId: 42, clientX: 5, clientY: 5 });
+  assertEqual(ended2, 0, 'pointerDrag() ignore pointerup d\'un pointerId etranger (drag toujours actif)');
+  handle2.dispatch('pointermove', { pointerId: 1, clientX: 5, clientY: 5 });
+  assertEqual(moved2, 1, 'pointerDrag() traite bien onMove pour le pointerId capture');
+  handle2.dispatch('pointerup', { pointerId: 1, clientX: 5, clientY: 5 });
+  assertEqual(ended2, 1, 'pointerDrag() traite bien onEnd pour le pointerId capture');
+
   // ---- __registerInstance / __sweepDetached (teardown SPA, shared/components.js) ----
   const registered = new Set();
   function registerInstance(el, destroyFn) {
