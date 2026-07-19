@@ -6,6 +6,8 @@
     <title>Data — msyx.design</title>
     <meta name="description" content="Tables, statistiques, charts SVG et indicateurs du design system msyx.fr.">
     <link rel="stylesheet" href="/shared/styles.css">
+    <!-- graph.css hors barrel (opt-in explicite, #666) — dogfood du flag --components=graph -->
+    <link rel="stylesheet" href="/shared/css/components/graph.css">
     <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
     <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
 </head>
@@ -1381,9 +1383,72 @@
     </div>
 </section>
 
+<section id="graph">
+    <div class="section-header">
+        <span class="overline">Graphe</span>
+        <h2>Graph</h2>
+        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code> et <code class="code-inline">tree</code> purs (DOM-free), alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; organigramme (layout <code class="code-inline">fixed</code>)</span>
+        <div class="graph" data-graph>
+            <script type="application/json" class="graph-config">
+            { "layout": "fixed", "edgeShape": "straight", "label": "Organigramme (demo)",
+              "data": { "nodes": [
+                {"data":{"id":"direction","label":"Direction","type":"root"},"position":{"x":220,"y":24},"size":{"w":140,"h":48}},
+                {"data":{"id":"tech","label":"Direction Technique","type":"dept"},"position":{"x":80,"y":140},"size":{"w":160,"h":48}},
+                {"data":{"id":"produit","label":"Direction Produit","type":"dept"},"position":{"x":300,"y":140},"size":{"w":160,"h":48}},
+                {"data":{"id":"backend","label":"Backend","type":"team"},"position":{"x":40,"y":260},"size":{"w":120,"h":40}},
+                {"data":{"id":"frontend","label":"Frontend","type":"team"},"position":{"x":180,"y":260},"size":{"w":120,"h":40}},
+                {"data":{"id":"design","label":"Design","type":"team"},"position":{"x":320,"y":260},"size":{"w":120,"h":40}}
+              ], "edges": [
+                {"data":{"id":"e1","source":"direction","target":"tech","directed":true}},
+                {"data":{"id":"e2","source":"direction","target":"produit","directed":true}},
+                {"data":{"id":"e3","source":"tech","target":"backend","directed":true}},
+                {"data":{"id":"e4","source":"tech","target":"frontend","directed":true}},
+                {"data":{"id":"e5","source":"produit","target":"design","directed":true}}
+              ] } }
+            </script>
+        </div>
+        <p class="demo-note-last"><code class="code-inline">size</code> explicite sur chaque n&oelig;ud &mdash; la passe <code class="code-inline">measure</code> est skipp&eacute;e, g&eacute;om&eacute;trie d&eacute;terministe (VR stable).</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; arbre (layout <code class="code-inline">tree</code>, Reingold-Tilford)</span>
+        <div class="graph" data-graph>
+            <script type="application/json" class="graph-config">
+            { "layout": "tree", "layoutOptions": {"direction":"TB","gap":{"x":32,"y":56}}, "label": "Arbre (demo)",
+              "data": { "nodes": [
+                {"data":{"id":"root","label":"Epic #656"},"size":{"w":140,"h":44}},
+                {"data":{"id":"i1a","label":"I1a #657"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i1b1","label":"I1b-1 #665"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i1b2","label":"I1b-2 #666"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i3","label":"I3 layouts"},"size":{"w":120,"h":40}}
+              ], "edges": [
+                {"data":{"id":"t1","source":"root","target":"i1a","directed":true}},
+                {"data":{"id":"t2","source":"i1a","target":"i1b1","directed":true}},
+                {"data":{"id":"t3","source":"i1b1","target":"i1b2","directed":true}},
+                {"data":{"id":"t4","source":"i1b2","target":"i3","directed":true}}
+              ] } }
+            </script>
+        </div>
+        <p class="demo-note-last">Racine = n&oelig;ud sans ar&ecirc;te entrante, enfants via <code class="code-inline">outEdges</code>, d&eacute;terministe (m&ecirc;mes entr&eacute;es &rarr; m&ecirc;me g&eacute;om&eacute;trie).</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">Usage</span>
+        <p class="demo-note">Pipeline&nbsp;: <code class="code-inline">measure</code> (tailles effectives dans une <code class="code-inline">Map</code> interne au renderer &mdash; <code class="code-inline">node.size</code> si fourni, sinon mesur&eacute;&nbsp;; le mod&egrave;le n'est <strong>jamais</strong> mut&eacute;) &rarr; <code class="code-inline">layout</code> (<code class="code-inline">{x,y}</code> purs, DOM-free) &rarr; <code class="code-inline">paint</code> (couleurs 100&nbsp;% <code class="code-inline">var(--graph-*)</code> &mdash; repaint gratuit au toggle theme/mode).</p>
+        <p class="demo-note">Cycle de vie&nbsp;: <code class="code-inline">model.addEventListener('graph:model:change', ...)</code> &rarr; repaint d&eacute;bounc&eacute; via <code class="code-inline">requestAnimationFrame</code> &rarr; <code class="code-inline">destroy()</code> enregistr&eacute; via <code class="code-inline">window.__registerInstance</code> (teardown SPA, #657).</p>
+        <p class="demo-note-last">Alternative a11y&nbsp;: <code class="code-inline">.graph-table</code> reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>, reconstruite &agrave; chaque repaint (contrat primaire, WCAG 1.1.1/1.3.1).</p>
+        <div class="code-block"><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"graph"</span> <span class="fn">data-graph</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;script</span> <span class="fn">type</span>=<span class="str">"application/json"</span> <span class="fn">class</span>=<span class="str">"graph-config"</span><span class="kw">&gt;</span>{ ... }<span class="kw">&lt;/script&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">// Init (auto au chargement + reinitAll SPA) — ou API directe :</span><br><span class="fn">window</span>.<span class="fn">MSYXGraph</span>.<span class="fn">createGraph</span>(el, { data, layout: <span class="str">'tree'</span> });</div>
+    </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/dist/graph-lib.global.js"></script>
+    <script src="/shared/dist/graph.global.js"></script>
     <script src="/shared/components.js"></script>
 </body>
 </html>

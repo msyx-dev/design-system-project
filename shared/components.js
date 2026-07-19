@@ -6273,6 +6273,7 @@ function initVirtualList() {
     });
 }
 window.__initVirtualList = initVirtualList;
+//  Graph (moteur node-link)      initGraph()                   .graph[data-graph]
 
 // Version Notes — badge + pastille "nouveau" (localStorage, egalite de chaine)
 // Presentationnel strict (#445) : AUCUN rendu de donnees, AUCUN comparateur semver.
@@ -6313,6 +6314,33 @@ function initVersionNotes() {
 window.__initVersionNotes = initVersionNotes;
 
 
+// ===== GRAPH — moteur node-link (#666, I1b-2) =====
+// Filet monolithe : lit `.graph[data-graph] > script.graph-config` (JSON), delegue le
+// rendu a window.MSYXGraph.createGraph() (shared/graph/global-entry-engine.js). Le
+// bundle graph.global.js n'est charge QUE sur les pages qui rendent un graphe (ex.
+// data.html) — no-op silencieux ailleurs. createGraph() appelle deja __registerInstance
+// en interne ; l'appel ci-dessous est un filet idempotent (destroy() retire dataset.bound).
+function initGraph() {
+    if (!window.MSYXGraph) return;
+    document.querySelectorAll('.graph[data-graph]').forEach(function (el) {
+        if (el.dataset.bound) return;
+        el.dataset.bound = '1';
+        var cfgEl = el.querySelector('script.graph-config');
+        if (!cfgEl) return;
+        var cfg;
+        try {
+            cfg = JSON.parse(cfgEl.textContent);
+        } catch (e) {
+            console.warn('[graph] config JSON invalide', e);
+            return;
+        }
+        var g = window.MSYXGraph.createGraph(el, cfg);
+        window.__registerInstance(el, g.destroy);
+    });
+}
+window.__initGraph = initGraph;
+
+
 // ===== TEARDOWN SPA — registre + sweep (#657, I1a) =====
 // Set de {el, destroy} enregistres par les composants qui posent des listeners
 // destructibles (ex: split-pane/before-after via window.__pointerDrag). __sweepDetached()
@@ -6341,6 +6369,7 @@ function reinitAll() {
     // garantit que dataset.bound est posé par initServerDataGrid sur les grids [data-server]
     // avant que initDataGrids ne les capture avec le sélecteur .data-grid non filtré.
     initServerDataGrid();
+    initGraph();
     initComponents();
     initPricing();
     initNotificationCenter();

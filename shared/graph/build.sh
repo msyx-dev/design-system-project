@@ -24,3 +24,14 @@ npx --yes esbuild shared/graph/lib/global-entry.js \
   --outfile=shared/dist/graph-lib.global.js
 
 echo "OK: shared/dist/graph-lib.global.js genere"
+
+# Moteur complet (model+layout+render) -> window.MSYXGraph (#666, I1b-2)
+# Bundle DISTINCT du lib mince ci-dessus : charge UNIQUEMENT la ou l'on rend un graphe.
+npx --yes esbuild shared/graph/global-entry-engine.js \
+  --bundle \
+  --format=iife \
+  --target=es2019 \
+  --banner:js="/* GENERE — ne pas editer a la main. Source: shared/graph/. Regenerer via ./shared/graph/build.sh (#666) */" \
+  --outfile=shared/dist/graph.global.js
+
+echo "OK: shared/dist/graph.global.js genere"

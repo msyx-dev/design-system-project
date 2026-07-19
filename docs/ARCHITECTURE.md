@@ -103,16 +103,21 @@ canonical-pages/        # 6 pages HTML de reference agent (v2.32.0)
 shared/icons/           # Sprite SVG Lucide self-hosted (v2.33.0)
   sprite.svg            # 50 glyphes Lucide concatenes (21 KB apres svgo, < 50 KB cible)
   build-sprite.sh       # Build reproductible : npm install lucide-static + svgo + concat
-shared/graph/           # Moteur graphique node-link — fondations I1a (v2.98.0, #657)
+shared/graph/           # Moteur graphique node-link — fondations I1a (v2.98.0, #657) + rendu I1b-2 (v2.100.0, #666)
   lib/                  # pointer-drag.js, svg.js (ES modules canoniques) + index.js (barrel) + global-entry.js (entree IIFE)
   model/                 # GraphModel (data plat, EventTarget observable, DOM-free) + toModel() + index.js (barrel) — v2.99.0, #665 (I1b-1)
-  layout/ render/        # .gitkeep — moteur (layout=dagre vendore, render=SVG) livre en I1b-2+
-  build.sh               # esbuild borne → shared/dist/graph-lib.global.js (1re brique DS avec build, cf. ADR-0001)
-  README.md              # Frontiere de build D1, sync.sh --with-graph differe a I1b/I3
+  layout/                 # fixed.js (lit node.position) + tree.js (Reingold-Tilford naif deterministe) + index.js (registre registerLayout/resolveLayout) — purs, DOM-free, testables Node — v2.100.0, #666 (I1b-2)
+  render/                 # svg-renderer.js (SvgRenderer : pipeline measure→layout→paint, cycle observe→repaint(rAF)→destroy) + node-types.js (resolveNodeType, graphCard) + a11y-table.js (graphToTableModel pur + renderA11yTable DOM) — v2.100.0, #666
+  index.js                # API publique ESM : createGraph(el, opts) -> {model, destroy, svg} — v2.100.0, #666
+  global-entry-engine.js  # entree IIFE moteur complet -> window.MSYXGraph {createGraph, GraphModel, toModel} — v2.100.0, #666
+  build.sh               # esbuild borne → shared/dist/graph-lib.global.js + shared/dist/graph.global.js (2e sortie, #666)
+  README.md              # Frontiere de build D1, jalon nexus post-merge (schemaVersion non fige)
 shared/dist/
   graph-lib.global.js    # GENERE (shared/graph/build.sh) mais COMMITE — window.__pointerDrag/__svg, charge avant components.js
-shared/css/components/graph.css  # Module CSS du moteur — hors barrel (opt-in), verifie par shared/check-graph-isolation.sh
+  graph.global.js         # GENERE mais COMMITE — window.MSYXGraph (moteur complet), charge UNIQUEMENT sur les pages qui rendent un graphe (#666)
+shared/css/components/graph.css  # Module CSS du moteur — hors barrel (opt-in via <link>, data.html + sync.sh --with-graph), verifie par shared/check-graph-isolation.sh
 shared/check-graph-isolation.sh  # CI anti-barrel : graph.css ne doit jamais etre importe par un barrel par defaut
+pages/data.html#graph             # Section demo (fixed + tree), initGraph() dans components.js reinitAll()
 docs/adr/
   ADR-0001-moteur-graph.md  # Decision d'architecture du moteur graph (coeur maison + dagre vendore + rendu SVG)
   login.html            # Page de connexion : card centree, inputs email+password, toggle remember-me
@@ -342,6 +347,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **JSON Viewer** (`initJsonViewer()`) : arbre JSON repliable lecture seule — parse `data-json`/`<script application/json>` (JSON.parse, try/catch), génère le DOM récursivement (`role=tree/treeitem/group`, `aria-expanded`), colore par type via `--code-*`, nav clavier WAI-ARIA tree (roving tabindex, ↑↓←→ Home/End). Distinct d'`initTreeView` (data-driven vs HTML statique). Zéro dépendance, `dataset.bound`. (#446)
 - **Version Notes** (`initVersionNotes()`) : badge `.version-badge[data-version-notes]` + pastille « nouveau » — seule logique admise = lire `data-storage-key`/`data-latest-version`, comparer à `localStorage.getItem(storageKey)` par **égalité de chaîne** (pas de semver), poser/retirer `.version-badge--new` + enrichir/restaurer l'`aria-label`. Au clic : `localStorage.setItem` + retrait de la classe. L'ouverture de la modale reste déléguée à `data-modal-trigger` + `initModals()` (2 listeners coexistants). Présentationnel strict (#445) : réutilise `dialog.modal-dialog` + `.timeline` telles quelles, zéro rendu de données, zéro contenu en dur. `dataset.bound`. (#614)
 - **Split Pane** (`initSplitPane()`) : panneaux redimensionnables — `.split-gutter` `role=separator` `tabindex=0`, drag Pointer Events (`setPointerCapture`, ratio clientX/Y vs `getBoundingClientRect`, clamp min/max), clavier flèches/Home/End sur `aria-valuenow`, persistance `localStorage` opt (`data-split-persist-key`), `CustomEvent('split:resize')`. Variante `--vertical`. Zéro dépendance, `dataset.bound`. (#443)
+- **Graph** (`initGraph()`) : filet monolithe — lit `.graph[data-graph] > script.graph-config` (JSON), délègue à `window.MSYXGraph.createGraph(el, cfg)` (`shared/graph/global-entry-engine.js`, no-op si le bundle `graph.global.js` n'est pas chargé sur la page). Le moteur lui-même (`shared/graph/`) : pipeline `measure→layout→paint` (mesure interne, jamais de mutation du modèle `GraphModel` #665), layouts `fixed`/`tree` purs DOM-free (`layout/`), rendu SVG + noeud riche `foreignObject`/`graphCard()` + alternative a11y `.graph-table` (`aria-describedby`, contrat primaire), cycle observe(`graph:model:change`)→repaint(rAF debounce)→destroy (`window.__registerInstance`). Couleurs 100% `var(--graph-*)` — repaint gratuit au toggle theme/mode. `dataset.bound`. (#666)
 - **Transfer List** (`initTransferList()`) : double liste (disponibles↔assignés) — sélection clic+clavier (Enter/Espace toggle, ↑/↓ navigation), transfert des `.transfer-option.selected` entre panneaux (`appendChild`), boutons `[data-transfer=right/left/all-right/all-left]`, filtre substring par `.transfer-search`, région `aria-live` + `CustomEvent('transfer:change')`. Zéro dépendance, `dataset.bound`. (#444)
 - **Color Input** (`initColorInput()`) : présentation d'un `<input type=color>` natif — sync du label hex (`.color-input-value`) + état `aria-pressed` des presets `.color-swatch[data-color]`, clic preset → `input.value` + dispatch `input` natif. Aucun calcul colorimétrique (picker délégué au navigateur). Anti-double-bind `dataset.bound`. (#448)
 - **Form Validation** (`initFormValidation()`) : validation a11y déclarative via `<form data-validate>`, traduit `input.validity` HTML5 native en messages FR, pose `aria-invalid`/`aria-describedby`, région live `aria-live="polite"` au blur, résumé `.alert[role=alert]` focusable au submit, événement `ds:validation` avec `detail: {valid, errors}`. Anti-double-bind `dataset.bound`. (#433)

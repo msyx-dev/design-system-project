@@ -1,7 +1,7 @@
 {
-  "version": "2.99.0",
+  "version": "2.100.0",
   "generated": {
-    "at": "2026-07-15T05:21:18.344Z",
+    "at": "2026-07-19T12:16:40.916Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3154,6 +3154,36 @@
       "react": "ported",
       "module": [
         "shared/css/components/version-notes.css"
+      ]
+    },
+    {
+      "name": "graph",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".graph",
+        ".graph-canvas",
+        ".graph-node",
+        ".graph-node-bg",
+        ".graph-node-card",
+        ".graph-node-icon",
+        ".graph-node-label",
+        ".graph-edge",
+        ".graph-edge-label",
+        ".graph-arrow",
+        ".graph-a11y",
+        ".graph-table",
+        ".graph-measure",
+        ".graph-a11y-details",
+        ".graph-edge--strong",
+        ".graph-node-card-badge",
+        ".graph-node-card-chip",
+        ".graph-node-card-title"
+      ],
+      "jsInit": "initGraph",
+      "react": "pending",
+      "module": [
+        "shared/css/components/graph.css"
       ]
     }
   ]

@@ -20,11 +20,13 @@ set -euo pipefail
 
 NO_SHOWCASE=false
 COMPONENTS_LIST=""
+WITH_GRAPH=false
 
 for ARG in "$@"; do
     case "$ARG" in
         --no-showcase)     NO_SHOWCASE=true ;;
         --components=*)    COMPONENTS_LIST="${ARG#--components=}" ;;
+        --with-graph)      WITH_GRAPH=true ;;
     esac
 done
 
@@ -85,6 +87,20 @@ cp "$SHARED_DIR/nav.js"        "$TARGET/ds-nav.js"
 cp "$SHARED_DIR/components.js" "$TARGET/ds-components.js"
 sed "s#url('css/\([a-z0-9_-]*\)\.css')#url('ds-\1.css')#g" \
     "$SHARED_DIR/styles.css" > "$TARGET/ds-styles.css"
+
+# graph-lib.global.js : window.__pointerDrag/__svg — REQUIS par ds-components.js
+# depuis #657 (split-pane/before-after). Copié PAR DÉFAUT (corrige le gap latent I1a :
+# ds-components.js le référence mais sync ne le livrait pas). Charger AVANT ds-components.js.
+cp "$SHARED_DIR/dist/graph-lib.global.js" "$TARGET/ds-graph-lib.global.js"
+
+# ─── Moteur graph complet (opt-in --with-graph) (#666) ──────────────────────
+if $WITH_GRAPH; then
+    cp "$SHARED_DIR/dist/graph.global.js" "$TARGET/ds-graph.global.js"   # window.MSYXGraph
+    mkdir -p "$TARGET/components"
+    cp "$DS_DIR/components/graph.css"     "$TARGET/components/graph.css"  # CSS moteur (hors barrel)
+    echo "   -> ds-graph.global.js  (moteur graph : window.MSYXGraph.createGraph)"
+    echo "   -> components/graph.css (module graph — charger via <link>, hors barrel)"
+fi
 
 # Nouveau v2.36 : copier le dossier components/ pour que les @import du barrel résolvent
 # Les @import url('./components/...') dans ds-components.css résolvent vers <TARGET>/components/
@@ -163,3 +179,4 @@ echo "   -> components/         (modules CSS resolus par les @import)"
 echo "   -> ds-nav.js           (Niveau C : header, sidebar, scroll-spy, SPA)"
 echo "   -> ds-components.js    (Niveau C : composants interactifs JS)"
 echo "   -> ds-styles.css       (Niveau C : agregateur @import des modules)"
+echo "   -> ds-graph-lib.global.js (window.__pointerDrag/__svg — requis par ds-components.js)"
