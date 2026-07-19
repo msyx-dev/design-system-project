@@ -103,6 +103,17 @@ canonical-pages/        # 6 pages HTML de reference agent (v2.32.0)
 shared/icons/           # Sprite SVG Lucide self-hosted (v2.33.0)
   sprite.svg            # 50 glyphes Lucide concatenes (21 KB apres svgo, < 50 KB cible)
   build-sprite.sh       # Build reproductible : npm install lucide-static + svgo + concat
+shared/graph/           # Moteur graphique node-link — fondations I1a (v2.98.0, #657)
+  lib/                  # pointer-drag.js, svg.js (ES modules canoniques) + index.js (barrel) + global-entry.js (entree IIFE)
+  model/ layout/ render/ # .gitkeep — moteur (model=donnees, layout=dagre vendore, render=SVG) livre en I1b+
+  build.sh               # esbuild borne → shared/dist/graph-lib.global.js (1re brique DS avec build, cf. ADR-0001)
+  README.md              # Frontiere de build D1, sync.sh --with-graph differe a I1b/I3
+shared/dist/
+  graph-lib.global.js    # GENERE (shared/graph/build.sh) mais COMMITE — window.__pointerDrag/__svg, charge avant components.js
+shared/css/components/graph.css  # Module CSS du moteur — hors barrel (opt-in), verifie par shared/check-graph-isolation.sh
+shared/check-graph-isolation.sh  # CI anti-barrel : graph.css ne doit jamais etre importe par un barrel par defaut
+docs/adr/
+  ADR-0001-moteur-graph.md  # Decision d'architecture du moteur graph (coeur maison + dagre vendore + rendu SVG)
   login.html            # Page de connexion : card centree, inputs email+password, toggle remember-me
   settings.html         # Parametres : 2 colonnes, 4 sections (profil, securite, notifications, preferences)
   dashboard-kanban.html # Tableau Kanban : 4 colonnes, toolbar (search + filter-bar + CTA)

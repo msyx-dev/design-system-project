@@ -35,6 +35,12 @@ jobs:
         run: |
           chmod +x shared/check-hardcoded-tokens.sh
           ./shared/check-hardcoded-tokens.sh
+      - name: Check graph.css isolation (anti-barrel, #657)
+        run: |
+          chmod +x shared/check-graph-isolation.sh
+          ./shared/check-graph-isolation.sh
+      - name: Graph lib unit tests (pointerDrag/svg/sweep, #657)
+        run: npm run test:graph-lib
       - name: Run hardcoded tokens script tests (anti-regression #279)
         run: |
           chmod +x tests/test-check-hardcoded-tokens.sh

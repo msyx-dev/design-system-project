@@ -34,6 +34,12 @@
       "threshold_bytes": 35896,
       "baseline_bytes": 34187,
       "note": "JS partagé — composants interactifs"
+    },
+    {
+      "path": "shared/dist/graph-lib.global.js",
+      "threshold_bytes": 1200,
+      "baseline_bytes": 753,
+      "note": "Moteur graph (#657, I1a) — utils partagés seuls (pointerDrag/svg), généré via esbuild. Budget séparé de components.js — le moteur ne doit jamais l'alourdir."
     }
   ]
 }

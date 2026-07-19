@@ -30,8 +30,11 @@ Les 5 fichiers CSS/JS consommes par les projets externes :
 | `shared/css/components.css` | 364 B | 382 B | Barrel complet (26 @import) |
 | `shared/css/components-core.css` | 274 B | 287 B | Barrel essentiel (7 @import) |
 | `shared/components.js` | 34 187 B | 35 896 B | JS interactif partage |
+| `shared/dist/graph-lib.global.js` | 753 B | 1 200 B | Moteur graph (#657, I1a) — utils partages seuls (pointerDrag/svg), genere via esbuild |
 
 Note : `components.css` est un barrel de @import — la taille des modules resolus est separee (voir section Tree-shaking dans `shared/CONSUMER_GUIDE.md`).
+
+`shared/dist/graph-lib.global.js` est le premier artefact **genere par un build** (esbuild borne, cf. `shared/graph/build.sh`) du DS — jusqu'ici 100% statique. Budget separe de `components.js` : le futur moteur graph (I1b+) ne doit jamais alourdir le bundle core.
 
 ### Commandes
 
