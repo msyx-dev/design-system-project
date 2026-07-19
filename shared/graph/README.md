@@ -1,4 +1,4 @@
-# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I2-1 viewport + I3-1/I3-2 layouts riches)
+# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I2-1 viewport + I2-2 fit/sélection/ResizeObserver + I3-1/I3-2 layouts riches)
 
 > Issue #657 (I1a) : fondations — utils partagés, discipline de teardown, tokens,
 > squelette de dossiers, anti-barrel CI, perf-budget. Issue #665 (I1b-1) : le
@@ -15,6 +15,15 @@
 > layout **ASYNC**) + layout **`mindmap`** bilatéral maison (1er use case client NHOOD)
 > + `paint()` async-tolérant (`_applyLayout` + token anti-course). L'auto-détection
 > route désormais réellement vers `layered` (`hasLayout('layered')` est vrai).
+> Issue #668 (I2-2) : **fit-to-content** (`fit()` = reset à l'identité — le `viewBox`
+> posé par `paint()` cadre déjà le contenu, aucun calcul de bbox) + **`zoomToNode(id)`**
+> (centre+zoome, s'appuie sur `this.positions` désormais stocké par `_applyLayout()`)
+> + **sélection** nœud/arête portée par le **renderer** (`select()`/`getSelection()`,
+> classes `.graph-node--selected`/`.graph-edge--selected`, événement
+> `graph:selection:change`) — pré-requis de l'édition (I5), le `GraphModel` reste pur
+> + **`ResizeObserver`** (1ʳᵉ primitive RO du DS, débounce rAF, re-fit conditionnel
+> `opts.refitOnResize`, teardown dans `destroy()`) + clavier viewport (`Escape`/`f`/
+> `+`/`-`/flèches, distinct de la nav nœud-à-nœud I4).
 
 ## Structure
 
@@ -82,9 +91,13 @@ shared/graph/
                   screenToWorld via getScreenCTM().inverse(), pan __pointerDrag deltas
                   maison, pinch tracker 2-pointeurs Map<pointerId>, wheel-zoom ancré
                   curseur rAF-throttle, événement graph:viewport:change sur .graph).
-                  #667 (I2-1).
+                  #667 (I2-1). SvgRenderer.fit()/.zoomToNode(id)/.select(id)/
+                  .getSelection() délèguent le calcul pur à viewport.js (zoomAt/
+                  clampZoom) tout en vivant dans le renderer (accès aux positions +
+                  modèle + el) — #668 (I2-2).
   index.js        createGraph(el, opts) -> {model, destroy, svg, getViewport,
-                  setViewport, screenToWorld} — API publique ESM.
+                  setViewport, screenToWorld, fit, zoomToNode, select, getSelection}
+                  — API publique ESM. #667 (I2-1) + #668 (I2-2).
   global-entry-engine.js — entrée IIFE moteur complet -> window.MSYXGraph
                   {createGraph, GraphModel, toModel}. Bundle DISTINCT de
                   graph-lib.global.js (2e sortie esbuild, cf. build.sh).
@@ -172,6 +185,64 @@ par la démo VR statique (`initialViewport` figé) + vérification manuelle. Les
 fonctions pures (`clampZoom`/`userToWorld`/`worldToUser`/`zoomAt`) sont testées Node
 (`tests/regression/graph-viewport.test.js`), même parti que le renderer #666 (`measure`
 `getBBox` non testé en Node).
+
+## Fit-to-content + `zoomToNode` (#668, I2-2)
+
+`fit()` **ne calcule aucune bbox** : `paint()`/`_applyLayout()` (#666) posent déjà
+`viewBox = bbox+marge` avec `preserveAspectRatio="xMidYMid meet"` — à la transform
+**identité** (`{tx:0, ty:0, k:1}`), le contenu est *déjà* cadré/centré dans le
+rectangle rendu. `fit()` délègue donc simplement à `viewport.setViewport({tx:0,
+ty:0, k:1})`. `zoomToNode(id, k=1.5)` a besoin du centre-monde du nœud ciblé :
+`_applyLayout(positions)` stocke désormais `this.positions` (le `Map<id,{x,y}>`
+calculé par le layout, auparavant jeté après paint) ; `zoomToNode` calcule
+`tx = mid.x - center.x*k` (et `ty` symétrique) via `screenToUser` (#667) pour que
+`worldToUser(center, vp) === mid` (le nœud se retrouve au centre du `<svg>`).
+
+## Sélection nœud/arête (#668, I2-2) — pré-requis de l'édition (I5)
+
+**Concern de vue, porté par le renderer** — pas par `GraphModel`, qui reste données
+pures (invariant #665/#666, jamais muté par le rendu). Contrat :
+
+- API : `graph.select(id | null)` / `graph.getSelection() → {id, kind:'node'|'edge'} | null`.
+- État visuel : classes **`.graph-node--selected`** (sur le `<g class="graph-node">`)
+  / **`.graph-edge--selected`** (sur le `<path class="graph-edge">`) — modificateurs
+  BEM cohérents avec `.graph-edge--strong` existant. Halo via `outline`/`stroke`
+  tokens `var(--accent)` (theme-aware, 6 combos).
+- Événement : **`graph:selection:change`** (`CustomEvent`, `detail:{id,kind}`,
+  `bubbles:true`) sur le conteneur `.graph` (`el`) — même canal que
+  `graph:viewport:change` (#667).
+- Focus : le nœud sélectionné reçoit `tabindex="-1"` + `.focus()` (sauf sélection
+  `silent`, cf. ci-dessous). La navigation roving nœud-à-nœud reste **I4** (hors #668).
+- Détail au clic : `opts.onSelect(selection)` si fourni, sinon `window.__openModal`
+  (label/type/voisins via `model.neighbors(id)`/`getNode`/`getEdge`, déjà dispo #665).
+  `opts.selectionDetail:false` désactive tout détail. Interactif → hors VR.
+- Clic sur le fond du SVG (hors nœud/arête) : **ne désélectionne PAS** (le pan tire
+  dessus) — seuls `select(null)` et `Escape` désélectionnent.
+- `opts.initialSelection` (id) : pose le halo dès l'init, **sans ouvrir le détail**
+  (`select(id, {silent:true})` en interne) — état déterministe pour la VR. L'événement
+  `graph:selection:change` reste émis normalement.
+- **Tooltip hors scope** : le tooltip DS (`.tooltip-wrap .tooltip`, `overlays.css`) est
+  CSS-hover en flux normal, inadapté à des nœuds SVG à coordonnées transformées. Le
+  détail au clic (modal) couvre le besoin — divergence assumée vs DoD #659.
+
+## Clavier viewport (#668, I2-2)
+
+Distinct de la navigation nœud-à-nœud (I4). Listeners sur `.graph` (`el`,
+`tabindex="0"`, posé par `_initKeyboard()`) : `Escape` désélectionne, `f`/`F` appelle
+`fit()`, `+`/`-` zooment centrés sur le milieu du `<svg>` (délègue à `zoomAt` de
+`viewport.js`), les flèches pannent (nice-to-have). Teardown dans `destroy()`.
+
+## `ResizeObserver` (#668, I2-2) — 1ʳᵉ primitive RO du DS
+
+Le responsive de base est **déjà** assuré par le `viewBox` (le SVG n'est pas 1:1 px
+avec l'écran, `getScreenCTM()` s'adapte automatiquement à la taille rendue — centre-
+monde et zoom sont préservés sans JS). Le `ResizeObserver` observe `.graph` et ajoute
+uniquement un **re-fit optionnel** (`opts.refitOnResize`, défaut `false`) : au resize,
+si le viewport n'est **pas** à l'identité (l'utilisateur a déjà navigué), le re-fit est
+**skip** — ne jamais casser la vue d'un utilisateur. Débounce `requestAnimationFrame`
+(évite toute boucle observer → relayout → observer). `disconnect()` dans `destroy()`.
+Non testé unitairement (pas de layout réel en jsdom) — couvert par vérification
+manuelle + `__sweepDetached` (non-fuite en nav SPA).
 
 ## Jalon nexus (post-merge, piloté par le parent)
 

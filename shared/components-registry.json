@@ -1,7 +1,7 @@
 {
-  "version": "2.103.0",
+  "version": "2.104.0",
   "generated": {
-    "at": "2026-07-19T17:49:21.126Z",
+    "at": "2026-07-19T20:18:38.971Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3178,7 +3178,11 @@
         ".graph-edge--strong",
         ".graph-node-card-badge",
         ".graph-node-card-chip",
-        ".graph-node-card-title"
+        ".graph-node-card-title",
+        ".graph-node--selected",
+        ".graph-edge--selected",
+        ".graph--lod-compact",
+        ".graph-viewport"
       ],
       "jsInit": "initGraph",
       "react": "pending",

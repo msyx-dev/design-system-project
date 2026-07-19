@@ -28,8 +28,19 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  * @param {number} [opts.zoomMax] - override du token `--graph-zoom-max` (defaut 4).
  * @param {{tx:number,ty:number,k:number}} [opts.initialViewport] - etat initial
  *   deterministe du viewport (cle pour une demo/VR figee, plutot que l'identite tx:0,ty:0,k:1).
+ * @param {boolean} [opts.selectable=true] - active la selection clic noeud/arete (#668, I2-2).
+ *   `false` desactive entierement (pas de listener clic pose).
+ * @param {string} [opts.initialSelection] - id noeud/arete selectionne des l'init — pose le
+ *   halo visuel SANS ouvrir le detail (etat deterministe pour la VR, cf. render/svg-renderer.js).
+ * @param {(selection:{id:string,kind:'node'|'edge'})=>void} [opts.onSelect] - callback invoque
+ *   a la place du modal DS par defaut lors d'une selection interactive (pas sur initialSelection).
+ * @param {boolean} [opts.selectionDetail=true] - si `false`, aucun detail (ni callback ni modal)
+ *   n'est ouvert au clic — seul l'etat visuel + l'evenement graph:selection:change sont poses.
+ * @param {boolean} [opts.refitOnResize=false] - re-fit automatique (retour a l'identite) quand le
+ *   conteneur est redimensionne, UNIQUEMENT si l'utilisateur n'a pas deja navigue (#668, I2-2).
  * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement,
- *   getViewport:Function, setViewport:Function, screenToWorld:Function}}
+ *   getViewport:Function, setViewport:Function, screenToWorld:Function, fit:Function,
+ *   zoomToNode:Function, select:Function, getSelection:Function}}
  */
 export function createGraph(el, opts) {
   const renderer = new SvgRenderer(el, opts || {});
@@ -45,5 +56,10 @@ export function createGraph(el, opts) {
     getViewport: () => (renderer.viewport ? renderer.viewport.getViewport() : null),
     setViewport: (v) => renderer.viewport && renderer.viewport.setViewport(v),
     screenToWorld: (cx, cy) => (renderer.viewport ? renderer.viewport.screenToWorld(cx, cy) : null),
+    // --- fit + selection + resize (#668, I2-2) ---
+    fit: () => renderer.fit(),
+    zoomToNode: (id, k) => renderer.zoomToNode(id, k),
+    select: (id) => renderer.select(id),
+    getSelection: () => renderer.getSelection(),
   };
 }

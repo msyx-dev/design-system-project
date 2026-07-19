@@ -153,6 +153,27 @@ Le viewport (`opts.viewport`, défaut `true`) mappe écran↔monde via
 endroit après zoom/pan) — à proscrire côté consumer. Les autres transforms CSS
 (translate, layout flex/grid) n'ont pas cet effet.
 
+#### Fit + sélection + `ResizeObserver` (#668)
+
+`fit()` ramène le viewport à l'identité (`{tx:0,ty:0,k:1}`) — le `viewBox` posé par
+le rendu (`paint()`) cadre déjà le contenu, aucun calcul de bbox côté consumer.
+`zoomToNode(id, k)` centre+zoome sur un nœud. La **sélection** (`opts.selectable`,
+défaut `true`) est un concern du renderer, pas du modèle — clic nœud/arête pose les
+classes `.graph-node--selected`/`.graph-edge--selected` et émet
+`graph:selection:change` (`detail:{id,kind}`) sur `.graph`, **même canal** que
+`graph:viewport:change`. C'est le contrat de base pour tout consumer qui construit
+une édition (déplacement/suppression de nœuds) au-dessus du moteur : écouter
+`graph:selection:change` plutôt que de ré-implémenter un état de sélection maison.
+Détail par défaut au clic : modal DS (`window.__openModal`) — fournir
+`opts.onSelect` pour le remplacer, ou `opts.selectionDetail:false` pour ne rien
+ouvrir. `opts.initialSelection` fige un état de sélection déterministe (utile pour
+une démo/VR). `opts.refitOnResize` (défaut `false`) active un re-fit automatique au
+redimensionnement du conteneur via `ResizeObserver` — **skip automatiquement** si
+l'utilisateur a déjà navigué (ne casse jamais une vue existante). Le tooltip DS
+(`.tooltip-wrap`) n'est **pas** utilisable tel quel sur les nœuds du graphe (CSS-hover
+en flux normal, inadapté aux coordonnées SVG transformées) — passer par `opts.onSelect`
+ou le modal par défaut pour le détail.
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)

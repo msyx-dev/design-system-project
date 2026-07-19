@@ -1052,6 +1052,10 @@
   var uidCounter = 0;
   var DEFAULT_SIZE5 = { w: 120, h: 40 };
   var LABEL_PADDING = 12;
+  var KEY_PAN_STEP = 40;
+  function escHtml(s) {
+    return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  }
   var SvgRenderer = class {
     /**
      * @param {HTMLElement} el - conteneur `.graph[data-graph]`
@@ -1073,6 +1077,10 @@
       this.paint();
       if (this.opts.a11yTable !== false) this._renderA11y();
       this._initViewport();
+      this._initSelection();
+      this._initResize();
+      this._initKeyboard();
+      if (this.opts.initialSelection) this.select(this.opts.initialSelection, { silent: true });
     }
     // ---- Viewport pan/zoom/pinch (#667, I2-1) — opt-in par defaut ----
     _initViewport() {
@@ -1088,6 +1096,176 @@
         max: (_b = this.opts.zoomMax) != null ? _b : readNum("--graph-zoom-max", 4),
         initial: this.opts.initialViewport || void 0
       });
+    }
+    // ---- Selection (#668) — concern de vue, GraphModel reste pur (invariant #665/#666) ----
+    // Pre-requis de l'edition (I5) : API/classes/evenement fixes ici.
+    _initSelection() {
+      if (this.opts.selectable === false) return;
+      this._selection = null;
+      this._onCanvasClick = (e) => {
+        const nodeG = e.target.closest(".graph-node");
+        const edgeP = e.target.closest(".graph-edge");
+        if (nodeG && nodeG.dataset.nodeId) this.select(nodeG.dataset.nodeId);
+        else if (edgeP && edgeP.dataset.edgeId) this.select(edgeP.dataset.edgeId);
+      };
+      this.svgEl.addEventListener("click", this._onCanvasClick);
+    }
+    getSelection() {
+      return this._selection ? { ...this._selection } : null;
+    }
+    /**
+     * @param {string|null} id - id noeud OU arete (namespace partage #665) ; null = deselection
+     * @param {{silent?:boolean}} [options] - silent:true = pose l'etat visuel SANS emettre le
+     *   detail (callback onSelect / modal DS) — utilise par initialSelection (VR deterministe).
+     *   L'evenement graph:selection:change reste emis (contrat public inchange).
+     */
+    select(id, { silent = false } = {}) {
+      var _a;
+      this.nodesG.querySelectorAll(".graph-node--selected").forEach((n) => n.classList.remove("graph-node--selected"));
+      this.edgesG.querySelectorAll(".graph-edge--selected").forEach((p) => p.classList.remove("graph-edge--selected"));
+      if (id == null) {
+        this._selection = null;
+        this._emitSelection();
+        return;
+      }
+      const kind = this.model.hasNode(id) ? "node" : this.model.hasEdge(id) ? "edge" : null;
+      if (!kind) {
+        this._selection = null;
+        this._emitSelection();
+        return;
+      }
+      if (kind === "node") {
+        const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+        if (g) {
+          g.classList.add("graph-node--selected");
+          g.setAttribute("tabindex", "-1");
+          if (!silent) (_a = g.focus) == null ? void 0 : _a.call(g);
+        }
+      } else {
+        const p = this.edgesG.querySelector(`[data-edge-id="${CSS.escape(id)}"]`);
+        if (p) p.classList.add("graph-edge--selected");
+      }
+      this._selection = { id, kind };
+      this._emitSelection();
+      if (silent) return;
+      if (typeof this.opts.onSelect === "function") this.opts.onSelect(this._selection);
+      else if (this.opts.selectionDetail !== false) this._openDetail(id, kind);
+    }
+    _emitSelection() {
+      this.el.dispatchEvent(
+        new CustomEvent("graph:selection:change", {
+          detail: this._selection ? { ...this._selection } : { id: null, kind: null },
+          bubbles: true
+        })
+      );
+    }
+    _openDetail(id, kind) {
+      if (typeof window === "undefined" || typeof window.__openModal !== "function") return;
+      if (kind === "node") {
+        const node = this.model.getNode(id);
+        const label = node.data && node.data.label || id;
+        const neighbors = this.model.neighbors(id).map((nid) => {
+          const n = this.model.getNode(nid);
+          return n && n.data && n.data.label || nid;
+        });
+        window.__openModal({
+          title: label,
+          bodyHTML: `<p>Type : ${escHtml(node.data && node.data.type || "\u2014")}</p><p>Voisins : ${neighbors.length ? neighbors.map(escHtml).join(", ") : "aucun"}</p>`
+        });
+      } else {
+        const edge = this.model.getEdge(id);
+        const { source, target, label } = edge.data;
+        window.__openModal({
+          title: label || "Ar\xEAte",
+          bodyHTML: `<p>${escHtml(source)} \u2192 ${escHtml(target)}</p>`
+        });
+      }
+    }
+    // ---- fit-to-content = reset a l'identite (#668) ----
+    // paint()/_applyLayout() posent deja viewBox=bbox+marge + preserveAspectRatio=
+    // "xMidYMid meet" (#666) -> a la transform identite, le contenu est DEJA cadre.
+    // Pas de calcul de bbox ici (le sketch #659 supposait un viewBox=px, faux).
+    fit() {
+      if (this.viewport) this.viewport.setViewport({ tx: 0, ty: 0, k: 1 });
+    }
+    /** Centre + zoome sur un noeud. Necessite this.positions (stocke par _applyLayout). */
+    zoomToNode(id, k = 1.5) {
+      if (!this.viewport || !this.positions) return;
+      const center = this.positions.get(id);
+      if (!center) return;
+      const rect = this.svgEl.getBoundingClientRect();
+      const mid = this.viewport.screenToUser(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      this.viewport.setViewport({ tx: mid.x - center.x * k, ty: mid.y - center.y * k, k });
+    }
+    // ---- ResizeObserver (#668) — 1re primitive RO du DS. Le responsive est DEJA assure
+    // par le viewBox (centre-monde + zoom preserves) : le RO est un hook teardown-safe,
+    // debounce rAF, avec re-fit CONDITIONNEL (ne casse jamais la vue d'un utilisateur qui
+    // a navigue). ----
+    _initResize() {
+      if (typeof ResizeObserver === "undefined") return;
+      let raf = null;
+      this._resizeObs = new ResizeObserver(() => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = null;
+          const vp = this.viewport && this.viewport.getViewport();
+          const atHome = vp && vp.tx === 0 && vp.ty === 0 && vp.k === 1;
+          if (this.opts.refitOnResize && !atHome) this.fit();
+        });
+      });
+      this._resizeObs.observe(this.el);
+    }
+    // ---- Clavier viewport (#668) — distinct de la nav noeud-a-noeud (I4).
+    // Escape/f/+/- = must. Fleches (pan) = nice-to-have. ----
+    _initKeyboard() {
+      if (this.opts.viewport === false) return;
+      this.el.setAttribute("tabindex", "0");
+      this._onKeydown = (e) => {
+        const rect = this.svgEl.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const u = this.viewport ? this.viewport.screenToUser(cx, cy) : null;
+        switch (e.key) {
+          case "Escape":
+            this.select(null);
+            break;
+          case "f":
+          case "F":
+            this.fit();
+            break;
+          case "+":
+          case "=":
+            if (u) this._zoomStep(u, 1.2);
+            e.preventDefault();
+            break;
+          case "-":
+          case "_":
+            if (u) this._zoomStep(u, 1 / 1.2);
+            e.preventDefault();
+            break;
+          case "ArrowUp":
+          case "ArrowDown":
+          case "ArrowLeft":
+          case "ArrowRight":
+            this._panStep(e.key);
+            e.preventDefault();
+            break;
+          default:
+            return;
+        }
+      };
+      this.el.addEventListener("keydown", this._onKeydown);
+    }
+    _zoomStep(u, factor) {
+      if (!this.viewport) return;
+      this.viewport.setViewport(zoomAt(this.viewport.getViewport(), u.x, u.y, factor, this.viewport.min, this.viewport.max));
+    }
+    _panStep(key) {
+      if (!this.viewport) return;
+      const vp = this.viewport.getViewport();
+      const delta = { ArrowUp: [0, KEY_PAN_STEP], ArrowDown: [0, -KEY_PAN_STEP], ArrowLeft: [KEY_PAN_STEP, 0], ArrowRight: [-KEY_PAN_STEP, 0] }[key];
+      if (!delta) return;
+      this.viewport.setViewport({ tx: vp.tx + delta[0], ty: vp.ty + delta[1], k: vp.k });
     }
     // ---- 2.1 Structure SVG emise ----
     _build() {
@@ -1211,6 +1389,7 @@
       this._applyLayout(result);
     }
     _applyLayout(positions) {
+      this.positions = positions;
       this.nodesG.innerHTML = "";
       this.edgesG.innerHTML = "";
       let minX = Infinity;
@@ -1332,6 +1511,12 @@
         this.viewport.destroy();
         this.viewport = null;
       }
+      if (this._resizeObs) {
+        this._resizeObs.disconnect();
+        this._resizeObs = null;
+      }
+      if (this._onCanvasClick) this.svgEl.removeEventListener("click", this._onCanvasClick);
+      if (this._onKeydown) this.el.removeEventListener("keydown", this._onKeydown);
       this.model.removeEventListener("graph:model:change", this._onChange);
       this._paintToken++;
       if (this.raf) {
@@ -1361,7 +1546,12 @@
       // --- viewport (#667) — no-op si opts.viewport===false ---
       getViewport: () => renderer.viewport ? renderer.viewport.getViewport() : null,
       setViewport: (v) => renderer.viewport && renderer.viewport.setViewport(v),
-      screenToWorld: (cx, cy) => renderer.viewport ? renderer.viewport.screenToWorld(cx, cy) : null
+      screenToWorld: (cx, cy) => renderer.viewport ? renderer.viewport.screenToWorld(cx, cy) : null,
+      // --- fit + selection + resize (#668, I2-2) ---
+      fit: () => renderer.fit(),
+      zoomToNode: (id, k) => renderer.zoomToNode(id, k),
+      select: (id) => renderer.select(id),
+      getSelection: () => renderer.getSelection()
     };
   }
 
