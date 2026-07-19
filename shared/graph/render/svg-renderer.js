@@ -432,6 +432,38 @@ export class SvgRenderer {
     const vw = Math.max(maxX - minX + margin * 2, 1);
     const vh = Math.max(maxY - minY + margin * 2, 1);
     this.svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
+
+    this._restoreSelectionVisual(); // #668 — nodesG/edgesG wipes ci-dessus perdent .graph-node--selected
+  }
+
+  // ---- #668 — reapplique le halo de selection apres un repaint (measure->paint) ----
+  // _applyLayout() wipe nodesG/edgesG.innerHTML et repeint des elements FRAIS : sans ce
+  // rattachement, une mutation du modele (graph:model:change -> repaint) pendant qu'un
+  // noeud/arete est selectionne ferait disparaitre le halo visuel tout en laissant
+  // getSelection()/this._selection pointer sur un id toujours "selectionne" -> desync
+  // entre etat public et rendu. Pre-requis de l'edition (I5, cf. README) : l'edition va
+  // muter le modele en continu pendant qu'une selection est active, ce chemin DOIT rester
+  // coherent. Si l'id selectionne a disparu du modele (ex. suppression), deselectionne
+  // proprement (evenement re-emis) plutot que de laisser un etat fantome.
+  _restoreSelectionVisual() {
+    if (!this._selection) return;
+    const { id, kind } = this._selection;
+    const stillExists = kind === 'node' ? this.model.hasNode(id) : this.model.hasEdge(id);
+    if (!stillExists) {
+      this._selection = null;
+      this._emitSelection();
+      return;
+    }
+    if (kind === 'node') {
+      const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+      if (g) {
+        g.classList.add('graph-node--selected');
+        g.setAttribute('tabindex', '-1');
+      }
+    } else {
+      const p = this.edgesG.querySelector(`[data-edge-id="${CSS.escape(id)}"]`);
+      if (p) p.classList.add('graph-edge--selected');
+    }
   }
 
   _paintNode(node, left, top, size) {

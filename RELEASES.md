@@ -38,6 +38,14 @@
   entièrement la sélection (aucun listener posé). `opts.initialSelection` (id) pose
   le halo dès l'init **sans ouvrir le détail** (`select(id,{silent:true})` interne) —
   état déterministe pour la VR, l'événement `graph:selection:change` reste émis.
+  **La sélection survit à un repaint** (`_restoreSelectionVisual()`, appelée en fin
+  d'`_applyLayout()`) : `graph:model:change` (mutation du modèle) déclenche un repaint
+  qui recrée les `<g>`/`<path>` — sans ce rattachement, le halo disparaîtrait tout en
+  laissant `getSelection()` pointer sur un id « fantôme ». Si le nœud/arête
+  sélectionné a été supprimé entre-temps, désélection propre (événement re-émis).
+  Trouvé en review adversariale (édition I5 mutera le modèle en continu pendant
+  qu'une sélection est active), vérifié en navigateur réel (`updateNode` en vol +
+  `removeNode` sur l'élément sélectionné).
   **Pré-requis documenté de l'édition (I5)** — contrat figé dans
   `shared/graph/README.md`.
 - **Tooltip hors scope** (divergence assumée vs DoD #659) : le tooltip DS

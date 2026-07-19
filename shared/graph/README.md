@@ -221,6 +221,14 @@ pures (invariant #665/#666, jamais muté par le rendu). Contrat :
 - `opts.initialSelection` (id) : pose le halo dès l'init, **sans ouvrir le détail**
   (`select(id, {silent:true})` en interne) — état déterministe pour la VR. L'événement
   `graph:selection:change` reste émis normalement.
+- **Survit au repaint** : `_applyLayout()` (déclenché par `graph:model:change`, donc
+  toute mutation du modèle) recrée les `<g>`/`<path>` — sans rattachement, le halo
+  visuel disparaîtrait à chaque repaint alors que `getSelection()` continuerait de
+  pointer sur le même id (désync état public/rendu). `_restoreSelectionVisual()`
+  (appelée en fin d'`_applyLayout()`) réapplique la classe `--selected` sur le
+  nouveau `<g>`/`<path>` si l'id existe toujours, ou désélectionne proprement
+  (événement re-émis) si l'élément a été supprimé — **critique pour I5**, qui mutera
+  le modèle en continu pendant qu'une sélection est active.
 - **Tooltip hors scope** : le tooltip DS (`.tooltip-wrap .tooltip`, `overlays.css`) est
   CSS-hover en flux normal, inadapté à des nœuds SVG à coordonnées transformées. Le
   détail au clic (modal) couvre le besoin — divergence assumée vs DoD #659.
