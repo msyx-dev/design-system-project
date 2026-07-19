@@ -26,8 +26,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
-    "@dagrejs/dagre": "3.0.0",
-    "@dagrejs/graphlib": "4.0.1",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.48.0",
     "esbuild": "^0.28.1",
