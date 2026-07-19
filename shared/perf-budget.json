@@ -43,9 +43,9 @@
     },
     {
       "path": "shared/dist/graph.global.js",
-      "threshold_bytes": 8525,
-      "baseline_bytes": 8119,
-      "note": "Moteur graph complet (#666, I1b-2) — model+layout+render bundlé, window.MSYXGraph. Distinct de graph-lib.global.js : chargé uniquement sur les pages qui rendent un graphe (data.html, sync.sh --with-graph). Baseline 2026-07-19 + buffer 5%."
+      "threshold_bytes": 9309,
+      "baseline_bytes": 8866,
+      "note": "Moteur graph complet (#666, I1b-2 ; +radial/auto-détection #669, I3-1) — model+layout+render bundlé, window.MSYXGraph. Distinct de graph-lib.global.js : chargé uniquement sur les pages qui rendent un graphe (data.html, sync.sh --with-graph). Baseline 2026-07-19 + buffer 5%."
     }
   ]
 }

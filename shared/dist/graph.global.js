@@ -456,6 +456,142 @@
     return pos;
   }
 
+  // shared/graph/layout/radial.js
+  var DEFAULT_SIZE2 = { w: 120, h: 40 };
+  function sizeOf2(sizes, id) {
+    const s = sizes && sizes.get(id);
+    return s && typeof s.w === "number" && typeof s.h === "number" ? s : DEFAULT_SIZE2;
+  }
+  function radialLayout(model, opts) {
+    const o = opts || {};
+    const sizes = o.sizes || /* @__PURE__ */ new Map();
+    const startAngle = typeof o.startAngle === "number" ? o.startAngle : -Math.PI / 2;
+    const sweep = typeof o.sweep === "number" ? o.sweep : Math.PI * 2;
+    const ringGap = typeof o.ringGap === "number" ? o.ringGap : 40;
+    const nodeIds = model.nodes.map((n) => n.data.id);
+    const visited = /* @__PURE__ */ new Set();
+    const children = /* @__PURE__ */ new Map();
+    const depth = /* @__PURE__ */ new Map();
+    const roots = [];
+    const rootOk = o.root != null && (typeof model.hasNode === "function" ? model.hasNode(o.root) : nodeIds.includes(o.root));
+    if (rootOk) roots.push(o.root);
+    nodeIds.forEach((id) => {
+      if (roots.includes(id)) return;
+      const inCount = typeof model.inEdges === "function" ? model.inEdges(id).length : 0;
+      if (inCount === 0) roots.push(id);
+    });
+    function visit(id, d) {
+      if (visited.has(id)) return;
+      visited.add(id);
+      depth.set(id, d);
+      const kids = [];
+      const outs = typeof model.outEdges === "function" ? model.outEdges(id) : [];
+      outs.forEach((e) => {
+        const target = e.data.target;
+        if (!visited.has(target)) kids.push(target);
+      });
+      children.set(id, kids);
+      kids.forEach((k) => visit(k, d + 1));
+    }
+    roots.forEach((id) => visit(id, 0));
+    nodeIds.forEach((id) => {
+      if (!visited.has(id)) {
+        roots.push(id);
+        visit(id, 0);
+      }
+    });
+    const leafWeight = /* @__PURE__ */ new Map();
+    function weigh(id) {
+      const kids = children.get(id) || [];
+      if (kids.length === 0) {
+        leafWeight.set(id, 1);
+        return 1;
+      }
+      const w = kids.reduce((a, k) => a + weigh(k), 0);
+      leafWeight.set(id, w);
+      return w;
+    }
+    const totalLeaves = roots.reduce((a, r) => a + weigh(r), 0) || 1;
+    const maxByDepth = /* @__PURE__ */ new Map();
+    nodeIds.forEach((id) => {
+      const { w, h } = sizeOf2(sizes, id);
+      const d = depth.get(id) || 0;
+      maxByDepth.set(d, Math.max(maxByDepth.get(d) || 0, Math.hypot(w, h) / 2));
+    });
+    const maxDepth = Math.max(0, ...Array.from(maxByDepth.keys()));
+    const radiusAt = /* @__PURE__ */ new Map([[0, 0]]);
+    let acc = 0;
+    for (let d = 1; d <= maxDepth; d++) {
+      acc += (maxByDepth.get(d - 1) || 0) + (maxByDepth.get(d) || 0) + ringGap;
+      radiusAt.set(d, acc);
+    }
+    const angle = /* @__PURE__ */ new Map();
+    function assign(id, a0, a1) {
+      angle.set(id, (a0 + a1) / 2);
+      const kids = children.get(id) || [];
+      let cursor2 = a0;
+      kids.forEach((k) => {
+        const span = (a1 - a0) * leafWeight.get(k) / (leafWeight.get(id) || 1);
+        assign(k, cursor2, cursor2 + span);
+        cursor2 += span;
+      });
+    }
+    let cursor = startAngle;
+    roots.forEach((r) => {
+      const span = sweep * leafWeight.get(r) / totalLeaves;
+      assign(r, cursor, cursor + span);
+      cursor += span;
+    });
+    const pos = /* @__PURE__ */ new Map();
+    nodeIds.forEach((id) => {
+      const r = radiusAt.get(depth.get(id) || 0) || 0;
+      const th = angle.get(id) || startAngle;
+      pos.set(id, { x: r * Math.cos(th), y: r * Math.sin(th) });
+    });
+    return pos;
+  }
+
+  // shared/graph/layout/detect.js
+  function detectLayout(model) {
+    const nodes = model.nodes;
+    if (nodes.length === 0) return "fixed";
+    const roots = nodes.filter((n) => model.inEdges(n.data.id).length === 0);
+    const WHITE = 0, GRAY = 1, BLACK = 2;
+    const color = new Map(nodes.map((n) => [n.data.id, WHITE]));
+    let hasCycle = false;
+    function dfs(id) {
+      color.set(id, GRAY);
+      for (const e of model.outEdges(id)) {
+        const t = e.data.target;
+        if (color.get(t) === GRAY) {
+          hasCycle = true;
+          return;
+        }
+        if (color.get(t) === WHITE) {
+          dfs(t);
+          if (hasCycle) return;
+        }
+      }
+      color.set(id, BLACK);
+    }
+    roots.forEach((n) => {
+      if (color.get(n.data.id) === WHITE) dfs(n.data.id);
+    });
+    nodes.forEach((n) => {
+      if (color.get(n.data.id) === WHITE) dfs(n.data.id);
+    });
+    if (hasCycle) return "layered";
+    if (roots.length === 1) return "tree";
+    return "layered";
+  }
+
+  // shared/graph/layout/auto.js
+  function autoLayout(model, opts) {
+    let name = detectLayout(model);
+    if (name !== "fixed" && !hasLayout(name)) name = "tree";
+    return resolveLayout(name)(model, opts);
+  }
+
   // shared/graph/layout/index.js
   var REGISTRY = /* @__PURE__ */ new Map();
   function registerLayout(name, run) {
@@ -464,8 +600,13 @@
   function resolveLayout(name) {
     return REGISTRY.get(name) || REGISTRY.get("fixed");
   }
+  function hasLayout(name) {
+    return REGISTRY.has(name);
+  }
   registerLayout("fixed", fixedLayout);
   registerLayout("tree", treeLayout);
+  registerLayout("radial", radialLayout);
+  registerLayout("auto", autoLayout);
 
   // shared/graph/render/node-types.js
   function resolveNodeType(node, nodeTypes) {
@@ -580,7 +721,7 @@
 
   // shared/graph/render/svg-renderer.js
   var uidCounter = 0;
-  var DEFAULT_SIZE2 = { w: 120, h: 40 };
+  var DEFAULT_SIZE3 = { w: 120, h: 40 };
   var LABEL_PADDING = 12;
   var SvgRenderer = class {
     /**
@@ -680,8 +821,8 @@
       }
       this.nodesG.removeChild(probe);
       return {
-        w: Math.max(DEFAULT_SIZE2.w, Math.ceil(box.width) + LABEL_PADDING * 2),
-        h: Math.max(DEFAULT_SIZE2.h, Math.ceil(box.height) + LABEL_PADDING * 2)
+        w: Math.max(DEFAULT_SIZE3.w, Math.ceil(box.width) + LABEL_PADDING * 2),
+        h: Math.max(DEFAULT_SIZE3.h, Math.ceil(box.height) + LABEL_PADDING * 2)
       };
     }
     _measureRich(node) {
@@ -696,8 +837,8 @@
       this.measureHost.appendChild(content);
       const rect = content.getBoundingClientRect();
       return {
-        w: Math.max(DEFAULT_SIZE2.w, Math.ceil(rect.width)),
-        h: Math.max(DEFAULT_SIZE2.h, Math.ceil(rect.height))
+        w: Math.max(DEFAULT_SIZE3.w, Math.ceil(rect.width)),
+        h: Math.max(DEFAULT_SIZE3.h, Math.ceil(rect.height))
       };
     }
     _buildRichContent(node) {
@@ -715,7 +856,7 @@
       let maxY = -Infinity;
       this.model.nodes.forEach((node) => {
         const id = node.data.id;
-        const size = this.sizes.get(id) || DEFAULT_SIZE2;
+        const size = this.sizes.get(id) || DEFAULT_SIZE3;
         const center = positions.get(id) || { x: 0, y: 0 };
         const left = center.x - size.w / 2;
         const top = center.y - size.h / 2;

@@ -1,17 +1,20 @@
-// index.js — API publique du moteur graph, barrel ESM (#666, I1b-2)
+// index.js — API publique du moteur graph, barrel ESM (#666, I1b-2 ; #669, I3-1)
 // Point d'entree consumers ESM (bundle global, @msyx-dev/react futur, tests).
 import { SvgRenderer } from './render/svg-renderer.js';
 
 export { GraphModel, toModel } from './model/index.js';
-export { resolveLayout, registerLayout } from './layout/index.js';
+export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
 
 /**
  * @param {HTMLElement} el - conteneur `.graph[data-graph]`
  * @param {Object} opts
  * @param {Object|Array|import('./model/graph-model.js').GraphModel} opts.data - GraphData
  *   | {nodes,edges} | GraphModel deja construit (reutilise tel quel).
- * @param {'fixed'|'tree'} [opts.layout='fixed']
- * @param {{direction?:'TB'|'LR', gap?:{x:number,y:number}, root?:string}} [opts.layoutOptions]
+ * @param {'fixed'|'tree'|'radial'|'auto'} [opts.layout='fixed'] - `'auto'` : detecte le
+ *   layout via l'index d'adjacence (arbre 1-racine acyclique -> `tree`, DAG/cyclique ->
+ *   `layered` si enregistre sinon degrade vers `tree`, cf. layout/detect.js #669).
+ *   `radial`/`mindmap` restent explicites (jamais auto-choisis).
+ * @param {{direction?:'TB'|'LR', gap?:{x:number,y:number}, root?:string, startAngle?:number, sweep?:number, ringGap?:number}} [opts.layoutOptions]
  * @param {'straight'|'curved'} [opts.edgeShape='straight']
  * @param {Object} [opts.nodeTypes] - {typeName: {className, icon}}
  * @param {(node:Object)=>(HTMLElement)} [opts.renderNode] - escape hatch noeud riche custom

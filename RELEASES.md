@@ -1,5 +1,27 @@
 # Releases
 
+## 2.101.0 — 2026-07-19 — Moteur graph I3-1 : layout radial + auto-détection de layout (#669)
+
+> Quatrième brique du moteur graphique node-link — 1ers **layouts riches** (Epic #656,
+> lot I3). `radial` = mindmap 360° maison, purs DOM-free, même contrat/garanties que
+> `tree.js` (#666). L'**auto-détection** est le vrai déblocage DX : `createGraph(el,
+> {data:{nodes,edges}})` sans `layout` ni coordonnées rend désormais correctement
+> **out-of-the-box** (avant #669 : fallback `fixed` → tous les nœuds en `(0,0)` + warn).
+
+### Added
+- **`radial.js`** (`shared/graph/layout/radial.js`) — layout radial 360° **pur, DOM-free, déterministe**. Racine au centre `(0,0)` ; profondeur → anneau (rayon cumulatif = extent max du palier précédent + extent max du palier courant + `ringGap`, défaut 40px) ; enfants répartis en secteurs angulaires proportionnels à la **charge feuille** de leur sous-arbre (nombre de feuilles), parent centré angulairement sur ses enfants → aucun chevauchement angulaire. Convention polaire : `theta` mesuré depuis `-π/2` (haut), sens horaire (idiome `initProgressTrackers`, `components.js:2622`). Mêmes garanties de couverture que `tree.js` : racines = nœuds sans arête entrante (`opts.root` en tête, ordre d'insertion sinon), garde anti-cycle `Set`, racines de secours pour les nœuds jamais atteints (cycle pur/forêt) → termine toujours, tous les nœuds positionnés. Options : `root`, `startAngle` (défaut `-π/2`), `sweep` (défaut `2π`), `ringGap`. Consomme `opts.sizes` pour dimensionner les anneaux (évite le chevauchement radial des nœuds larges).
+- **Auto-détection de layout** (`layout:'auto'`) — `detect.js` (`detectLayout(model)`) : heuristique **pure**, consomme uniquement l'index d'adjacence du modèle (`inEdges`/`outEdges`, aucun recalcul de graphe). DFS colorée (blanc/gris/noir) sur `outEdges` pour détecter les back-edges (cycles). Route : 1 racine + acyclique → `'tree'` ; DAG multi-racines → `'layered'` ; cyclique → `'layered'` ; graphe vide → `'fixed'`. **`radial`/`mindmap` ne sont jamais auto-choisis** (choix esthétique/domaine, opt-in explicite) ; `fixed` **jamais** par défaut (réservé au graphe vide).
+- **`auto.js`** (wrapper `autoLayout`) — traduit le nom cible de `detectLayout` en layout **réellement enregistré**, avec **dégradation coord-free-safe** : si la cible (`'layered'`, possédée par #670) n'est pas encore enregistrée, retombe sur `'tree'` (rend sans coordonnées) plutôt que sur le fallback `'fixed'` de `resolveLayout` (qui exigerait `node.position`). Garantit que #669 est **mergeable avant #670** et ne produit **jamais de `Promise`** ni de rendu cassé. Cycle ESM `index.js ↔ auto.js` volontaire et sûr : `resolveLayout`/`hasLayout` ne sont référencées qu'à l'exécution (corps de `autoLayout`), jamais au top-level (contrairement à un `registerLayout()` top-level qui serait en TDZ, cf. déviation documentée #666 pour `fixed.js`/`tree.js`/`radial.js`).
+- **`hasLayout(name)`** (`shared/graph/layout/index.js`) — nouveau helper exposé (`export { hasLayout }` depuis `shared/graph/index.js` également), consommé par `auto.js` pour la dégradation gracieuse.
+- **Registre** — `radial` et `auto` enregistrés dans `layout/index.js` (pattern import-puis-`registerLayout`, aucun auto-enregistrement circulaire — même déviation documentée que #666). JSDoc `createGraph(el, opts)` (`shared/graph/index.js`) : union `opts.layout` étendue à `'fixed'|'tree'|'radial'|'auto'`.
+- **Sous-démo radiale** dans `data.html#graph` — mindmap compacte (1 racine + 2 niveaux, 8 nœuds), `size` **explicite sur chaque nœud** → passe `measure` skippée → géométrie 100 % déterministe (VR stable). `<p>` d'intro de la section mis à jour (mention `radial`/`auto`).
+- **Tests Node DOM-free** (`tests/regression/graph-layout-radial.test.js`, 25 assertions, `npm run test:graph-layout-radial`, step CI dédié `Graph radial/auto-detect unit tests (#669, I3-1)`) — déterminisme radial, racine centrée, rayon croissant par profondeur, angles distincts sur 2 enfants/petits-enfants, cycle pur (couverture totale, < 1s), forêt multi-racines, `detectLayout` sur les 3 topologies + graphe vide, `autoLayout` sans `Promise` avec dégradation `tree` tant que `layered` absent, `autoLayout` route bien vers `tree` sur un arbre 1-racine (positions identiques à `resolveLayout('tree')` direct), `resolveLayout`/`hasLayout` pour `radial`/`auto`, `autoLayout` route vers `layered` une fois celui-ci enregistré (simulation post-#670).
+- **`shared/dist/graph.global.js`** régénéré (`npm run build:graph`) — 8.66 KB gzip (budget `shared/perf-budget.json` réévalué, seuil 9.31 KB + buffer 5 %, +0.75 KB vs I1b-2 #666).
+
+### Notes
+- **Indépendance vis-à-vis de #670** prouvée par test : un DAG multi-racines sans `layered` enregistré est quand même intégralement positionné (dégradation `tree`). Fichiers partagés avec #670 (`layout/index.js`, `graph/index.js`, `data.html#graph`, 8 sources de version) → **merge séquentiel** (I3-1 #669 avant I3-2 #670, cf. revue parent).
+- Hors scope (itération suivante, #670) : `mindmap` bilatéral (use case client NHOOD), `layered` (dagre vendoré), palette catégorielle >5 types.
+
 ## 2.100.0 — 2026-07-19 — Moteur graph I1b-2 : SvgRenderer, layouts fixed/tree, a11y table (#666)
 
 > Troisième brique du moteur graphique node-link — le **1er rendu visuel**. Découplage
