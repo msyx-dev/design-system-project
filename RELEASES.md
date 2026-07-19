@@ -1,5 +1,26 @@
 # Releases
 
+## 2.100.0 — 2026-07-19 — Moteur graph I1b-2 : SvgRenderer, layouts fixed/tree, a11y table (#666)
+
+> Troisième brique du moteur graphique node-link — le **1er rendu visuel**. Découplage
+> strict layout/paint : les layouts produisent des `{x,y}` purs (DOM-free), le renderer
+> peint 100 % `var(--graph-*)` (repaint gratuit sur les 6 combos theme/mode).
+
+### Added
+- **`SvgRenderer`** (`shared/graph/render/svg-renderer.js`) — pipeline `measure → layout → paint` : `measure()` construit une `Map<nodeId,{w,h}>` **interne au renderer** (`node.size` si fourni, sinon mesuré via `getBBox()`/`getBoundingClientRect()` d'un host hors-écran `.graph-measure`) — **le modèle `GraphModel` n'est jamais muté** (évite la boucle measure→updateNode→`graph:model:change`→repaint→measure). Cycle de vie `observe(model.addEventListener('graph:model:change'))` → `repaint` débouncé `requestAnimationFrame` → `destroy()` (retire le listener, annule le rAF, retire le host de mesure, vide le SVG) enregistré via `window.__registerInstance` (#657) pour le teardown SPA.
+- **Layouts purs, DOM-free** (`shared/graph/layout/`) — `fixed.js` lit `node.position.{x,y}` (shape Cytoscape #665, fallback `(0,0)` + `console.warn` si absent) ; `tree.js` = Reingold-Tilford **naïf déterministe** (racines = nœuds sans arête entrante ou `opts.root`, enfants via `outEdges` en ordre d'insertion, garde anti-cycle `Set` + racines de secours pour couverture totale, forêt multi-racines supportée, `direction:'TB'|'LR'`). Registre `registerLayout`/`resolveLayout` (`layout/index.js`). Testés en Node (`tests/regression/graph-layout.test.js`, 22 assertions, `npm run test:graph-layout`, step CI jumeau de `test:graph-model`).
+- **Alternative a11y `table`** (contrat **PRIMAIRE**, dès I1b, WCAG 1.1.1/1.3.1) — `graphToTableModel()` (`shared/graph/render/a11y-table.js`) dérivation **pure** (nœuds + relations in/out via l'adjacence #665), testable Node ; `renderA11yTable()` construit `<table class="graph-table">` dans un `<details>`, reliée au `<svg>` par `aria-describedby`, reconstruite à chaque repaint.
+- **`nodeTypes` + `graphCard()`** (`shared/graph/render/node-types.js`) — support nœud riche (NHOOD) : `resolveNodeType()` (classe+icône par `node.data.type`) et `graphCard()` (composition `.card`/`.badge`/`.chip` DS dans un `foreignObject`, statut jamais par la seule couleur). Arêtes `straight`/`curved` + marqueur directionnel (`<defs><marker>`, `uid` par instance — pas de collision multi-graphes sur une même page), labels d'arête ancrés géométriquement (jamais `getPointAtLength`).
+- **API publique** `createGraph(el, opts)` (`shared/graph/index.js`) → `{model, destroy, svg}`. **Bundle global dédié** `shared/graph/global-entry-engine.js` → `shared/dist/graph.global.js` (`window.MSYXGraph = {createGraph, GraphModel, toModel}`, IIFE es2019 esbuild, **2e sortie distincte** de `graph-lib.global.js` dans `build.sh` — ne gonfle pas le lib mince chargé sur toutes les pages split-pane/before-after). ~8.1 KB gzip, budget dédié dans `perf-budget.json`.
+- **`graph.css` sort du stub** (`shared/css/components/graph.css`) — règles réelles, tokens `var(--graph-*)` uniquement (`tokens.css` #657), toujours **hors barrel** (`check-graph-isolation.sh` reste vert). Opt-in explicite : `data.html` charge via `<link>` dans le `<head>`.
+- **Section démo `#graph`** dans `data.html` (17e section, 6e famille « Graphe ») — organigramme (`layout:'fixed'`) + arbre (`layout:'tree'`), `size` **explicite sur chaque nœud** → la passe `measure` (dépendante du rendu de police) est **skippée** → géométrie déterministe (12 baselines VR neuves, 6 theme/mode × 2 viewports).
+- **`sync.sh --with-graph`** (livré) — corrige le gap latent I1a : `graph-lib.global.js` (`window.__pointerDrag`/`__svg`, requis par `ds-components.js` depuis #657) est désormais copié **par défaut** vers les consumers. `--with-graph` ajoute `ds-graph.global.js` (`window.MSYXGraph`) + `components/graph.css` (hors barrel généré, à charger via `<link>` explicite côté consumer).
+- **Registre** — entrée `graph` (`kind:component`, `page:data`, `jsInit:initGraph`, `react:pending`). `initGraph()` dans `shared/components.js` (filet monolithe : lit `.graph[data-graph] > script.graph-config`, délègue à `window.MSYXGraph.createGraph`, no-op si le bundle n'est pas chargé), appelé dans `reinitAll()`.
+
+### Notes
+- **`schemaVersion:1` NON figé** dans cette PR — jalon nexus post-merge (round-trip réel sur un arbre/organigramme NHOOD, piloté par le parent, hors repo DS) documenté dans `shared/graph/README.md`. Le modèle reste forward-tolérant.
+- Hors scope (itérations suivantes) : layouts radial/layered/mindmap (dagre vendoré, I3 #669/#670), navigation clavier nœuds/arêtes (I4 #671), sélection/déplacement/édition (I5), wrapper `@msyx-dev/react <Graph>` (I6), zoom/pan (`--graph-zoom-*` posés mais non câblés).
+
 ## 2.99.0 — 2026-07-19 — Moteur graph I1b-1 : modèle GraphModel (#665)
 
 > Deuxième brique du moteur graphique node-link. Toujours **aucun rendu visuel** —

@@ -114,6 +114,37 @@ Integration dans une page consumer :
 > le meme dossier styles/). Les fichiers JS sont distribues **byte-identiques** a
 > la source DS — recopier a chaque sync ulterieur pour rester aligne sur la version.
 
+### Moteur graph — `--with-graph` (#666)
+
+`ds-graph-lib.global.js` (utils partages `window.__pointerDrag`/`__svg`, requis par
+`ds-components.js` pour split-pane/before-after) est copie **par defaut** avec le
+Niveau C, sans flag. Pour utiliser le moteur graphique complet (`window.MSYXGraph.
+createGraph`), passer `--with-graph` :
+
+```bash
+./shared/sync.sh --with-graph /path/vers/votre-projet/src/styles/
+```
+
+Ajoute :
+
+- `ds-graph.global.js` — bundle IIFE, `window.MSYXGraph = { createGraph, GraphModel, toModel }`
+- `components/graph.css` — module CSS du moteur, **hors barrel genere** (a charger
+  explicitement via `<link>`, meme pattern opt-in que le DS lui-meme sur `data.html`)
+
+Ordre de chargement obligatoire dans la page consumer :
+
+```html
+<head>
+  <link rel="stylesheet" href="/styles/ds-styles.css">
+  <link rel="stylesheet" href="/styles/components/graph.css">
+</head>
+<body>
+  <script src="/styles/ds-graph-lib.global.js"></script>
+  <script src="/styles/ds-graph.global.js"></script>
+  <script src="/styles/ds-components.js"></script>
+</body>
+```
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)

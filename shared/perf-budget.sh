@@ -41,6 +41,7 @@ FILES=(
     "shared/css/components-core.css"
     "shared/components.js"
     "shared/dist/graph-lib.global.js"
+    "shared/dist/graph.global.js"
 )
 
 # Mesure gzip d'un fichier (sortie : taille en octets)

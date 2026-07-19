@@ -40,6 +40,12 @@
       "threshold_bytes": 1200,
       "baseline_bytes": 753,
       "note": "Moteur graph (#657, I1a) — utils partagés seuls (pointerDrag/svg), généré via esbuild. Budget séparé de components.js — le moteur ne doit jamais l'alourdir."
+    },
+    {
+      "path": "shared/dist/graph.global.js",
+      "threshold_bytes": 8525,
+      "baseline_bytes": 8119,
+      "note": "Moteur graph complet (#666, I1b-2) — model+layout+render bundlé, window.MSYXGraph. Distinct de graph-lib.global.js : chargé uniquement sur les pages qui rendent un graphe (data.html, sync.sh --with-graph). Baseline 2026-07-19 + buffer 5%."
     }
   ]
 }
