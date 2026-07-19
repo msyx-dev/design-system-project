@@ -1,5 +1,102 @@
 # Releases
 
+## 2.104.0 — 2026-07-19 — Moteur graph I2-2 : fit + sélection + ResizeObserver (#668)
+
+> Septième brique du moteur graphique node-link — **fit-to-content** (`fit()` = reset
+> à l'identité, le `viewBox` #666 cadre déjà le contenu), **`zoomToNode(id)`**
+> (centre+zoome via `this.positions`, désormais stocké), **sélection** nœud/arête
+> portée par le **renderer** (`select()`/`getSelection()`, classes
+> `.graph-node--selected`/`.graph-edge--selected`, événement
+> `graph:selection:change`) — **pré-requis de l'édition (I5)**, et **`ResizeObserver`**
+> (1ʳᵉ primitive RO du DS, re-fit conditionnel). Consomme le viewport #667.
+
+### Added
+- **`fit()`** (`SvgRenderer`, `shared/graph/render/svg-renderer.js`) — délègue à
+  `viewport.setViewport({tx:0,ty:0,k:1})`. **Aucun calcul de bbox** : `paint()`/
+  `_applyLayout()` (#666) posent déjà `viewBox = bbox+marge` avec
+  `preserveAspectRatio="xMidYMid meet"` — à la transform identité, le contenu est
+  **déjà** cadré/centré. Le sketch #659 (« calcule la bbox → k,tx,ty ») supposait un
+  `viewBox` en px (faux) ; simplification tranchée au groom.
+- **`zoomToNode(id, k=1.5)`** — centre + zoome sur un nœud. `_applyLayout(positions)`
+  stocke désormais `this.positions` (le `Map<id,{x,y}>` calculé par le layout,
+  auparavant jeté après paint). Calcule `tx = mid.x - center.x*k` (`ty` symétrique,
+  `mid` = centre du `<svg>` via `screenToUser`, #667) pour que
+  `worldToUser(center, vp) === mid`.
+- **Sélection nœud/arête** (`_initSelection()`/`select(id, {silent})`/
+  `getSelection()`) — **concern du renderer**, PAS du `GraphModel` (invariant
+  #665/#666, données pures jamais mutées par le rendu). Clic sur `.graph-node`/
+  `.graph-edge` → classes **`.graph-node--selected`**/**`.graph-edge--selected`**
+  (modificateurs BEM cohérents avec `.graph-edge--strong` existant, halo
+  `outline`/`stroke` `var(--accent)`, theme-aware 6 combos) + `tabindex="-1"` +
+  `.focus()` sur le nœud + événement **`graph:selection:change`** (`CustomEvent`,
+  `detail:{id,kind}`, `bubbles:true`) sur `.graph` (`el`) — même canal que
+  `graph:viewport:change`. Clic sur le fond du SVG **ne désélectionne PAS** (le pan
+  tire dessus) — seuls `select(null)`/`Escape` désélectionnent. Détail au clic :
+  `opts.onSelect(sel)` si fourni, sinon `window.__openModal` (label/type/voisins via
+  `model.neighbors(id)`/`getNode`/`getEdge`, déjà dispo #665) ; `opts.selectionDetail:
+  false` désactive tout détail. `opts.selectable` (bool, défaut `true`) désactive
+  entièrement la sélection (aucun listener posé). `opts.initialSelection` (id) pose
+  le halo dès l'init **sans ouvrir le détail** (`select(id,{silent:true})` interne) —
+  état déterministe pour la VR, l'événement `graph:selection:change` reste émis.
+  **La sélection survit à un repaint** (`_restoreSelectionVisual()`, appelée en fin
+  d'`_applyLayout()`) : `graph:model:change` (mutation du modèle) déclenche un repaint
+  qui recrée les `<g>`/`<path>` — sans ce rattachement, le halo disparaîtrait tout en
+  laissant `getSelection()` pointer sur un id « fantôme ». Si le nœud/arête
+  sélectionné a été supprimé entre-temps, désélection propre (événement re-émis).
+  Trouvé en review adversariale (édition I5 mutera le modèle en continu pendant
+  qu'une sélection est active), vérifié en navigateur réel (`updateNode` en vol +
+  `removeNode` sur l'élément sélectionné).
+  **Pré-requis documenté de l'édition (I5)** — contrat figé dans
+  `shared/graph/README.md`.
+- **Tooltip hors scope** (divergence assumée vs DoD #659) : le tooltip DS
+  (`.tooltip-wrap .tooltip`, CSS-hover en flux normal) est inadapté à des nœuds SVG à
+  coordonnées transformées (position `absolute` relative au wrap, pas au point SVG).
+  Le détail au clic (modal) couvre le besoin ; un vrai tooltip positionné-SVG sera
+  rouvert si un consumer le réclame.
+- **`ResizeObserver`** (`_initResize()`) — **1ʳᵉ primitive `ResizeObserver` du DS**.
+  Le responsive de base est **déjà** assuré par le `viewBox` (`getScreenCTM()`
+  s'adapte à la taille rendue, centre-monde + zoom préservés sans JS). Le RO observe
+  `.graph` et ajoute un **re-fit conditionnel** (`opts.refitOnResize`, défaut
+  `false`) : skip si le viewport n'est pas à l'identité (l'utilisateur a déjà
+  navigué) — ne casse jamais une vue existante. Débounce `requestAnimationFrame`
+  (évite toute boucle observer→relayout→observer). `disconnect()` dans `destroy()`.
+- **Clavier viewport** (`_initKeyboard()`, conteneur `.graph` `tabindex="0"`,
+  distinct de la nav nœud-à-nœud I4) — `Escape` désélectionne (`select(null)`),
+  `f`/`F` appelle `fit()`, `+`/`-` zooment centrés sur le milieu du `<svg>` (délègue
+  `zoomAt` de `viewport.js`), flèches pannent (nice-to-have). Teardown dans
+  `destroy()`.
+- **API publique `createGraph()`** (`shared/graph/index.js`) étendue : `fit()`,
+  `zoomToNode(id,k)`, `select(id)`, `getSelection()`. Nouvelles options JSDoc :
+  `opts.selectable`, `opts.initialSelection`, `opts.onSelect`,
+  `opts.selectionDetail`, `opts.refitOnResize`.
+- **CSS** (`shared/css/components/graph.css`) : `.graph-node--selected
+  .graph-node-bg` / `.graph-edge--selected` — halo `var(--accent)`, tokens
+  uniquement (`check-graph-isolation.sh` reste vert). `content-visibility:auto`
+  **volontairement pas ajouté** (risque VR identifié au groom, `contain:layout
+  paint` posé en #667 suffit).
+- **`destroy()`** (`SvgRenderer`) — teardown complet : `_resizeObs.disconnect()`,
+  retrait du listener `click` (sélection) et `keydown` (clavier viewport), en plus
+  du teardown viewport #667. Aucune fuite SPA (`__sweepDetached`).
+- **Démo** dans `data.html#graph` — la 3ᵉ sous-démo (`viewport`, #667) devient
+  « viewport + sélection » : `selectable:true` + `initialSelection:"i1b2"` (halo
+  déterministe pour la VR, sans ouvrir de modal) en plus de `initialViewport` figé.
+- **Tests Node DOM-free** (`tests/regression/graph-viewport.test.js`, +4 assertions) :
+  vérification de la **formule** derrière `fit()` (identité `{0,0,1}` ⇒
+  `worldToUser`/`userToWorld` sont des no-op) et derrière `zoomToNode` (`tx = mid.x -
+  center.x*k` place bien `center` en `mid` via `worldToUser`, y compris centre
+  négatif et `k<1`). `select()`/`ResizeObserver`/clavier/`__openModal`/
+  `getBoundingClientRect` **non testés unitairement** (indisponibles en jsdom,
+  documenté dans `shared/graph/README.md`) — couverts par la VR statique
+  (`initialSelection`) + vérification manuelle.
+- Docs mises à jour : `docs/ARCHITECTURE.md` (sous-section moteur graph), `CLAUDE.md`
+  (description `data.html`/`shared/graph/`), `shared/graph/README.md` (sections
+  dédiées fit/sélection/ResizeObserver/clavier — contrat sélection comme pré-requis
+  I5). `shared/dist/graph.global.js` régénéré (`npm run build:graph`).
+- Registre (`shared/components-registry.json`) : `cssClasses` du composant `graph`
+  enrichi de `.graph-node--selected`/`.graph-edge--selected` (+ rattrapage
+  `.graph--lod-compact`/`.graph-viewport` détectés par `generate-registry.js`,
+  gap latent #667) ; `module[]` auto-dérivé (`npm run generate-registry`).
+
 ## 2.103.0 — 2026-07-19 — Moteur graph I2-1 : viewport pan/zoom/pinch (#667)
 
 > Sixième brique du moteur graphique node-link — le **viewport** interactif :

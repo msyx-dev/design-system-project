@@ -1,5 +1,6 @@
-/* @ds-version: 2.103.0 */
-/* graph.css — module CSS du moteur graphique node-link (#666, I1b-2 ; viewport #667, I2-1)
+/* @ds-version: 2.104.0 */
+/* graph.css — module CSS du moteur graphique node-link (#666, I1b-2 ; viewport #667, I2-1 ;
+   fit + selection + ResizeObserver #668, I2-2)
    HORS BARREL — jamais importe par components.css ni components-core.css
    (verifie par shared/check-graph-isolation.sh en CI). Opt-in explicite :
    data.html charge ce module via <link> dans le <head> ; un consumer sync.sh
@@ -71,6 +72,19 @@
 .graph-node:focus-visible .graph-node-bg {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+}
+
+/* ===== Selection (#668, I2-2) — pre-requis de l'edition (I5) ===== */
+/* Modificateurs BEM coherents avec .graph-edge--strong existant. */
+.graph-node--selected .graph-node-bg {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    stroke: var(--accent);
+}
+
+.graph-edge--selected {
+    stroke: var(--accent);
+    stroke-width: 2.5;
 }
 
 /* ===== Noeud riche (foreignObject, support NHOOD) ===== */
