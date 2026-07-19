@@ -49,6 +49,8 @@ jobs:
         run: npm run test:graph-layout-radial
       - name: Graph layered(dagre)/mindmap unit tests (#670, I3-2)
         run: npm run test:graph-layout-layered
+      - name: Graph viewport pan/zoom/pinch unit tests (#667, I2-1)
+        run: npm run test:graph-viewport
       - name: Run hardcoded tokens script tests (anti-regression #279)
         run: |
           chmod +x tests/test-check-hardcoded-tokens.sh

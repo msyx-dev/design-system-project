@@ -1,5 +1,93 @@
 # Releases
 
+## 2.103.0 — 2026-07-19 — Moteur graph I2-1 : viewport pan/zoom/pinch (#667)
+
+> Sixième brique du moteur graphique node-link — le **viewport** interactif :
+> `transform`+`scale` sur un nouveau `<g class="graph-viewport">`, `screenToWorld` via
+> `getScreenCTM`, `non-scaling-stroke` pour une épaisseur d'arête constante au zoom.
+> Bloque #668 (I2-2) qui consommera `getViewport`/`setViewport`/`screenToWorld` +
+> `graph:viewport:change` + le `<g class="graph-viewport">` pour `fit()`/`zoomToNode()`.
+
+### Added
+- **`shared/graph/render/viewport.js`** (NOUVEAU) — fonctions pures DOM-free
+  exportées et testables Node (`clampZoom`, `userToWorld`, `worldToUser`, `zoomAt`)
+  + classe `Viewport` (câblage DOM). Transform portée par un nouveau
+  `<g class="graph-viewport">` (inséré dans `_build()` de `SvgRenderer`, enveloppe
+  `.graph-edges`+`.graph-nodes`) qui **survit** au wipe `innerHTML` de `paint()` — le
+  `viewBox` calculé par `paint()` (bbox+marge) reste le cadre « monde/home » inchangé,
+  la transform vp est **préservée** entre repaints (aucune autre ligne de `paint()`
+  touchée).
+- **`screenToWorld(cx,cy)`** — passe par `svg.getScreenCTM().inverse()` : le `<svg>`
+  porte un `viewBox` calculé + `preserveAspectRatio="xMidYMid meet"` + CSS
+  `width:100%;height:auto`, donc **n'est PAS 1:1 px** avec l'écran ; `getScreenCTM()`
+  gère le mapping viewBox→écran automatiquement, puis la transform vp est inversée
+  (`userToWorld`).
+- **Pan** via `window.__pointerDrag` (#657, single-pointer, leak-safe) — le vrai
+  contrat `onMove(e,{clientX,clientY})` n'expose que des coordonnées absolues (pas de
+  `{dx,dy}`), les deltas sont calculés depuis le dernier point client capturé au
+  `onStart`.
+- **Pinch** via un tracker 2-pointeurs dédié (Pointer Events, `Map<pointerId>`, car
+  `pointerDrag` reste mono-pointeur) — ratio de distances entre les 2 pointeurs,
+  zoom centré sur leur point milieu ; garde `pinchActive` qui neutralise le pan
+  pendant le pinch.
+- **Wheel-zoom ancré curseur**, throttlé `requestAnimationFrame` (facteurs cumulés
+  entre frames) — `zoomAt(vp,ux,uy,factor,min,max)` garantit que le point
+  écran/utilisateur sous le curseur reste **fixe** après le zoom
+  (`worldToUser(userToWorld(p,vp),zoomAt(...))` ≈ `p`).
+- **Bornes de zoom** : tokens `--graph-zoom-min: 0.2` / `--graph-zoom-max: 4` (posés
+  en I1a #657), lus via `getComputedStyle` (fallback numérique si absent, façon
+  `initVirtualList` pour `--vlist-row-h`) ; override optionnel `opts.zoomMin`/
+  `opts.zoomMax`.
+- **`opts.initialViewport`** (`{tx,ty,k}`) — état initial déterministe du viewport,
+  clé pour une démo/VR figée (pan/zoom sinon non capturables par Playwright).
+- **Anti-distorsion** : `vector-effect: non-scaling-stroke` sur `.graph-edge`/
+  `.graph-edge--strong` (épaisseur d'arête constante à tout `k`, s'applique aussi au
+  marker de flèche via le path) ; LOD `.graph--lod-compact` masque les labels
+  d'arête sous un seuil de `k` (0.5) — illisibles en zoom-out. `--graph-inv-k` posée
+  en JS sur le `<g class="graph-viewport">` (disponible pour un consumer qui
+  voudrait contre-scaler un label précis) mais **non appliquée par défaut** : les
+  labels de nœud scalent avec leur nœud (comportement attendu d'un zoom node-link,
+  divergence documentée vs le sketch #659).
+- **Événement `graph:viewport:change`** (`CustomEvent`, `detail:{tx,ty,k}`,
+  `bubbles:true`) émis sur le conteneur **`.graph`** (`el`), **PAS** sur le
+  `GraphModel` — le modèle reste données pures, le viewport est un concern de vue.
+- **API publique `createGraph()`** (`shared/graph/index.js`) étendue :
+  `getViewport()`/`setViewport(v)`/`screenToWorld(cx,cy)` (no-op silencieux si
+  `opts.viewport===false`). `opts.viewport` (bool, défaut `true`) désactive
+  entièrement le viewport (aucun listener posé). `fit()`/`zoomToNode()` **stubés**
+  en #667, remplis en #668.
+- **`destroy()`** (`SvgRenderer`) — teardown du viewport en tête (`viewport.destroy()`
+  retire wheel + pointeurs + pan `__pointerDrag`) : aucune fuite SPA, vérifiée via
+  `__sweepDetached`.
+- **CSS** (`shared/css/components/graph.css`) : `touch-action:none` + `cursor:grab` +
+  `contain:layout paint` sur `.graph-canvas` (pan/pinch tactile fluides) ;
+  `will-change:transform` sur `.graph-viewport`. Ajouts **tokens-only**, aucune
+  valeur hex/rgb — `check-graph-isolation.sh` reste vert.
+- **3ᵉ sous-démo** dans `data.html#graph` — graphe `layout:'tree'` avec
+  `initialViewport:{tx:-60,ty:-30,k:1.4}` (état zoomé statique déterministe, VR
+  stable). Les 2 démos existantes (`fixed`, `tree` sans `initialViewport`) restent à
+  l'identité (`k=1`) → pixels inchangés (le `<g>` wrapper est transparent,
+  `non-scaling-stroke` sans effet à `k=1`).
+- **Tests Node DOM-free** (`tests/regression/graph-viewport.test.js`, 20 assertions :
+  bornes `clampZoom` sous/sur/dans, inversion `userToWorld`/`worldToUser` avec
+  tolérance flottante, ancrage `zoomAt` — le point écran/utilisateur reste fixe
+  après zoom-in/zoom-out y compris depuis une vp non triviale, clamp sur facteur
+  énorme/minuscule avec `tx`/`ty` finis), `npm run test:graph-viewport`, step CI
+  dédié. Non testé unitairement (documenté, même parti que le renderer #666) :
+  `getScreenCTM`/`DOMPoint`/`wheel`/pointer capture indisponibles en jsdom (pas de
+  layout SVG) — le câblage DOM de `Viewport` est couvert par la VR statique +
+  vérification manuelle.
+- Docs mises à jour : `docs/ARCHITECTURE.md` (sous-section moteur graph, contrat
+  viewport), `shared/CONSUMER_GUIDE.md` + `shared/graph/README.md` (**contrainte
+  d'intégration** : un ancêtre `transform:scale()` casse `getScreenCTM()` — interdit
+  côté consumer, critère d'acceptation #659), `CLAUDE.md` (ligne `pages/data.html` +
+  arbo `shared/graph/render/`).
+- `shared/dist/graph.global.js` régénéré (`npm run build:graph`) — 12.09 KB gzip
+  (+1.9 KB vs v2.102.0, `viewport.js` ajouté au bundle ; dagre/layered restent hors
+  bundle, inchangé). Budget perf réévalué (`shared/perf-budget.json`, baseline
+  2026-07-19 + buffer 5%). Bump des **8 sources @ds-version** (feature → minor,
+  2.102.0 → 2.103.0) ; `graph.css` porte aussi `@ds-version` (bump).
+
 ## 2.102.0 — 2026-07-19 — Moteur graph I3-2 : layout layered (dagre vendoré) + mindmap bilatéral NHOOD (#670)
 
 > Cinquième brique du moteur graphique node-link — le layout **`layered`** (Sugiyama

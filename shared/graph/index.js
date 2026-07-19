@@ -1,4 +1,4 @@
-// index.js — API publique du moteur graph, barrel ESM (#666, I1b-2 ; #669, I3-1)
+// index.js — API publique du moteur graph, barrel ESM (#666, I1b-2 ; #669, I3-1 ; #667, I2-1)
 // Point d'entree consumers ESM (bundle global, @msyx-dev/react futur, tests).
 import { SvgRenderer } from './render/svg-renderer.js';
 
@@ -22,7 +22,14 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  * @param {(node:Object)=>(HTMLElement)} [opts.renderNode] - escape hatch noeud riche custom
  * @param {string} [opts.label] - aria-label du <svg>
  * @param {boolean} [opts.a11yTable=true] - construit l'alternative table
- * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement}}
+ * @param {boolean} [opts.viewport=true] - pan/zoom/pinch interactif (#667, I2-1). `false`
+ *   desactive entierement le viewport (pas de listeners poses, transform identite figee).
+ * @param {number} [opts.zoomMin] - override du token `--graph-zoom-min` (defaut 0.2).
+ * @param {number} [opts.zoomMax] - override du token `--graph-zoom-max` (defaut 4).
+ * @param {{tx:number,ty:number,k:number}} [opts.initialViewport] - etat initial
+ *   deterministe du viewport (cle pour une demo/VR figee, plutot que l'identite tx:0,ty:0,k:1).
+ * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement,
+ *   getViewport:Function, setViewport:Function, screenToWorld:Function}}
  */
 export function createGraph(el, opts) {
   const renderer = new SvgRenderer(el, opts || {});
@@ -30,5 +37,13 @@ export function createGraph(el, opts) {
   if (typeof window !== 'undefined' && typeof window.__registerInstance === 'function') {
     window.__registerInstance(el, destroy); // teardown SPA (#657) — sweep si el detache
   }
-  return { model: renderer.model, destroy, svg: renderer.svgEl };
+  return {
+    model: renderer.model,
+    destroy,
+    svg: renderer.svgEl,
+    // --- viewport (#667) — no-op si opts.viewport===false ---
+    getViewport: () => (renderer.viewport ? renderer.viewport.getViewport() : null),
+    setViewport: (v) => renderer.viewport && renderer.viewport.setViewport(v),
+    screenToWorld: (cx, cy) => (renderer.viewport ? renderer.viewport.screenToWorld(cx, cy) : null),
+  };
 }

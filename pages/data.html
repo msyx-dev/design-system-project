@@ -1387,7 +1387,7 @@
     <div class="section-header">
         <span class="overline">Graphe</span>
         <h2>Graph</h2>
-        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code>, <code class="code-inline">tree</code>, <code class="code-inline">radial</code> et <code class="code-inline">mindmap</code> purs (DOM-free) plus <code class="code-inline">layered</code> (Sugiyama via dagre vendor&eacute;, seul layout <strong>asynchrone</strong>), auto-d&eacute;tection <code class="code-inline">layout:&nbsp;'auto'</code> qui route vers <code class="code-inline">tree</code> ou <code class="code-inline">layered</code> selon la topologie, alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>.</p>
+        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code>, <code class="code-inline">tree</code>, <code class="code-inline">radial</code> et <code class="code-inline">mindmap</code> purs (DOM-free) plus <code class="code-inline">layered</code> (Sugiyama via dagre vendor&eacute;, seul layout <strong>asynchrone</strong>), auto-d&eacute;tection <code class="code-inline">layout:&nbsp;'auto'</code> qui route vers <code class="code-inline">tree</code> ou <code class="code-inline">layered</code> selon la topologie, viewport <strong>pan/zoom/pinch</strong> (molette ancr&eacute;e curseur, glisser, pincer tactile, born&eacute;e <code class="code-inline">--graph-zoom-min/-max</code>), alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>.</p>
     </div>
 
     <div class="demo-box">
@@ -1436,6 +1436,33 @@
             </script>
         </div>
         <p class="demo-note-last">Racine = n&oelig;ud sans ar&ecirc;te entrante, enfants via <code class="code-inline">outEdges</code>, d&eacute;terministe (m&ecirc;mes entr&eacute;es &rarr; m&ecirc;me g&eacute;om&eacute;trie).</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; viewport (zoom initial fig&eacute;, pan/zoom/pinch actifs)</span>
+        <div class="graph" data-graph>
+            <script type="application/json" class="graph-config">
+            { "layout": "tree", "layoutOptions": {"direction":"TB","gap":{"x":32,"y":56}},
+              "label": "Graphe navigable (demo)",
+              "viewport": true,
+              "initialViewport": {"tx": -60, "ty": -30, "k": 1.4},
+              "data": { "nodes": [
+                {"data":{"id":"root","label":"Epic #656"},"size":{"w":140,"h":44}},
+                {"data":{"id":"i1a","label":"I1a #657"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i1b1","label":"I1b-1 #665"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i1b2","label":"I1b-2 #666"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i2","label":"I2 viewport"},"size":{"w":120,"h":40}},
+                {"data":{"id":"i4","label":"I4 clavier"},"size":{"w":120,"h":40}}
+              ], "edges": [
+                {"data":{"id":"v1","source":"root","target":"i1a","directed":true}},
+                {"data":{"id":"v2","source":"root","target":"i2","directed":true}},
+                {"data":{"id":"v3","source":"i1a","target":"i1b1","directed":true}},
+                {"data":{"id":"v4","source":"i1b1","target":"i1b2","directed":true}},
+                {"data":{"id":"v5","source":"i1b2","target":"i4","directed":true}}
+              ] } }
+            </script>
+        </div>
+        <p class="demo-note-last">Molette&nbsp;: zoom centr&eacute; curseur &middot; glisser&nbsp;: pan &middot; pincer&nbsp;: zoom tactile. <code class="code-inline">initialViewport</code> fige un &eacute;tat d&eacute;terministe (VR stable). Ar&ecirc;tes en <code class="code-inline">vector-effect:non-scaling-stroke</code> (&eacute;paisseur constante au zoom).</p>
     </div>
 
     <div class="demo-box">
@@ -1517,6 +1544,7 @@
         <span class="demo-label">Usage</span>
         <p class="demo-note">Pipeline&nbsp;: <code class="code-inline">measure</code> (tailles effectives dans une <code class="code-inline">Map</code> interne au renderer &mdash; <code class="code-inline">node.size</code> si fourni, sinon mesur&eacute;&nbsp;; le mod&egrave;le n'est <strong>jamais</strong> mut&eacute;) &rarr; <code class="code-inline">layout</code> (<code class="code-inline">{x,y}</code> purs, DOM-free) &rarr; <code class="code-inline">paint</code> (couleurs 100&nbsp;% <code class="code-inline">var(--graph-*)</code> &mdash; repaint gratuit au toggle theme/mode).</p>
         <p class="demo-note">Cycle de vie&nbsp;: <code class="code-inline">model.addEventListener('graph:model:change', ...)</code> &rarr; repaint d&eacute;bounc&eacute; via <code class="code-inline">requestAnimationFrame</code> &rarr; <code class="code-inline">destroy()</code> enregistr&eacute; via <code class="code-inline">window.__registerInstance</code> (teardown SPA, #657).</p>
+        <p class="demo-note">Viewport&nbsp;: <code class="code-inline">opts.viewport</code> (bool, d&eacute;faut <code class="code-inline">true</code>), <code class="code-inline">opts.zoomMin</code>/<code class="code-inline">opts.zoomMax</code> (override <code class="code-inline">--graph-zoom-min/-max</code>), <code class="code-inline">opts.initialViewport</code> (<code class="code-inline">{tx,ty,k}</code> &eacute;tat d&eacute;terministe). API retourn&eacute;e&nbsp;: <code class="code-inline">getViewport()</code>/<code class="code-inline">setViewport(v)</code>/<code class="code-inline">screenToWorld(cx,cy)</code>, &eacute;v&eacute;nement <code class="code-inline">graph:viewport:change</code> (<code class="code-inline">detail:{tx,ty,k}</code>) sur le conteneur <code class="code-inline">.graph</code>. Un anc&ecirc;tre en <code class="code-inline">transform:scale()</code> casse <code class="code-inline">getScreenCTM()</code> &mdash; <strong>interdit</strong> c&ocirc;t&eacute; consumer.</p>
         <p class="demo-note-last">Alternative a11y&nbsp;: <code class="code-inline">.graph-table</code> reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>, reconstruite &agrave; chaque repaint (contrat primaire, WCAG 1.1.1/1.3.1).</p>
         <div class="code-block"><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"graph"</span> <span class="fn">data-graph</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;script</span> <span class="fn">type</span>=<span class="str">"application/json"</span> <span class="fn">class</span>=<span class="str">"graph-config"</span><span class="kw">&gt;</span>{ ... }<span class="kw">&lt;/script&gt;</span><br><span class="kw">&lt;/div&gt;</span><br><br><span class="cm">// Init (auto au chargement + reinitAll SPA) — ou API directe :</span><br><span class="fn">window</span>.<span class="fn">MSYXGraph</span>.<span class="fn">createGraph</span>(el, { data, layout: <span class="str">'tree'</span> });</div>
     </div>

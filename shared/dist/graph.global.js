@@ -904,6 +904,150 @@
     container.appendChild(details);
   }
 
+  // shared/graph/render/viewport.js
+  function clampZoom(k, min, max) {
+    return Math.min(max, Math.max(min, k));
+  }
+  function userToWorld({ x, y }, vp) {
+    return { x: (x - vp.tx) / vp.k, y: (y - vp.ty) / vp.k };
+  }
+  function zoomAt(vp, ux, uy, factor, min, max) {
+    const k2 = clampZoom(vp.k * factor, min, max);
+    const tx = ux - (ux - vp.tx) / vp.k * k2;
+    const ty = uy - (uy - vp.ty) / vp.k * k2;
+    return { tx, ty, k: k2 };
+  }
+  var LOD_COMPACT_K = 0.5;
+  var Viewport = class {
+    /**
+     * @param {SVGSVGElement} svgEl - le <svg class="graph-canvas">
+     * @param {SVGGElement} groupEl - le <g class="graph-viewport">
+     * @param {HTMLElement} host - le conteneur .graph (cible de graph:viewport:change)
+     * @param {{min?:number,max?:number,initial?:{tx,ty,k}}} [opts]
+     */
+    constructor(svgEl, groupEl, host, opts = {}) {
+      var _a, _b;
+      this.svgEl = svgEl;
+      this.groupEl = groupEl;
+      this.host = host;
+      this.min = (_a = opts.min) != null ? _a : 0.2;
+      this.max = (_b = opts.max) != null ? _b : 4;
+      this.vp = opts.initial ? { ...opts.initial } : { tx: 0, ty: 0, k: 1 };
+      this._pointers = /* @__PURE__ */ new Map();
+      this._pinchActive = false;
+      this._pinchStartDist = 0;
+      this._pinchStartK = 1;
+      this._ticking = false;
+      this._pendingFactor = 1;
+      this._pendingUser = null;
+      this._onWheel = this._onWheel.bind(this);
+      this._onPointerDown = this._onPointerDown.bind(this);
+      this._onPointerMove = this._onPointerMove.bind(this);
+      this._onPointerUp = this._onPointerUp.bind(this);
+      svgEl.addEventListener("wheel", this._onWheel, { passive: false });
+      svgEl.addEventListener("pointerdown", this._onPointerDown);
+      svgEl.addEventListener("pointermove", this._onPointerMove);
+      svgEl.addEventListener("pointerup", this._onPointerUp);
+      svgEl.addEventListener("pointercancel", this._onPointerUp);
+      this._panDestroy = window.__pointerDrag ? window.__pointerDrag(svgEl, {
+        onStart: (e, p) => {
+          if (this._pinchActive) return;
+          this._panStart = this.screenToUser(p.clientX, p.clientY);
+          this._panOrig = { tx: this.vp.tx, ty: this.vp.ty };
+        },
+        onMove: (e, p) => {
+          if (this._pinchActive || !this._panStart) return;
+          const u = this.screenToUser(p.clientX, p.clientY);
+          this.setViewport({
+            tx: this._panOrig.tx + (u.x - this._panStart.x),
+            ty: this._panOrig.ty + (u.y - this._panStart.y),
+            k: this.vp.k
+          });
+        },
+        onEnd: () => {
+          this._panStart = null;
+        },
+        cursor: "grabbing"
+      }) : null;
+      this.apply();
+    }
+    /** point ecran -> espace-utilisateur SVG (independant de la transform vp). */
+    screenToUser(clientX, clientY) {
+      const ctm = this.svgEl.getScreenCTM();
+      if (!ctm) return { x: clientX, y: clientY };
+      const p = new DOMPoint(clientX, clientY).matrixTransform(ctm.inverse());
+      return { x: p.x, y: p.y };
+    }
+    /** point ecran -> monde (API publique, ex: placer/selectionner sous zoom). */
+    screenToWorld(clientX, clientY) {
+      return userToWorld(this.screenToUser(clientX, clientY), this.vp);
+    }
+    getViewport() {
+      return { ...this.vp };
+    }
+    setViewport({ tx, ty, k }) {
+      this.vp = { tx, ty, k: clampZoom(k, this.min, this.max) };
+      this.apply();
+      this.host.dispatchEvent(
+        new CustomEvent("graph:viewport:change", {
+          detail: { ...this.vp },
+          bubbles: true
+        })
+      );
+    }
+    apply() {
+      const { tx, ty, k } = this.vp;
+      this.groupEl.setAttribute("transform", `translate(${tx} ${ty}) scale(${k})`);
+      this.groupEl.style.setProperty("--graph-inv-k", String(1 / k));
+      this.host.classList.toggle("graph--lod-compact", k < LOD_COMPACT_K);
+    }
+    _onWheel(e) {
+      e.preventDefault();
+      this._pendingFactor *= e.deltaY < 0 ? 1.1 : 1 / 1.1;
+      this._pendingUser = this.screenToUser(e.clientX, e.clientY);
+      if (this._ticking) return;
+      this._ticking = true;
+      requestAnimationFrame(() => {
+        const u = this._pendingUser;
+        this.setViewport(zoomAt(this.vp, u.x, u.y, this._pendingFactor, this.min, this.max));
+        this._pendingFactor = 1;
+        this._ticking = false;
+      });
+    }
+    _onPointerDown(e) {
+      this._pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this._pointers.size === 2) {
+        this._pinchActive = true;
+        const [a, b] = [...this._pointers.values()];
+        this._pinchStartDist = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        this._pinchStartK = this.vp.k;
+      }
+    }
+    _onPointerMove(e) {
+      if (!this._pointers.has(e.pointerId)) return;
+      this._pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (!this._pinchActive || this._pointers.size < 2) return;
+      const [a, b] = [...this._pointers.values()];
+      const dist = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+      const midUser = this.screenToUser((a.x + b.x) / 2, (a.y + b.y) / 2);
+      const targetK = this._pinchStartK * (dist / this._pinchStartDist);
+      this.setViewport(zoomAt(this.vp, midUser.x, midUser.y, targetK / this.vp.k, this.min, this.max));
+    }
+    _onPointerUp(e) {
+      this._pointers.delete(e.pointerId);
+      if (this._pointers.size < 2) this._pinchActive = false;
+    }
+    destroy() {
+      this.svgEl.removeEventListener("wheel", this._onWheel);
+      this.svgEl.removeEventListener("pointerdown", this._onPointerDown);
+      this.svgEl.removeEventListener("pointermove", this._onPointerMove);
+      this.svgEl.removeEventListener("pointerup", this._onPointerUp);
+      this.svgEl.removeEventListener("pointercancel", this._onPointerUp);
+      if (this._panDestroy) this._panDestroy();
+      this._pointers.clear();
+    }
+  };
+
   // shared/graph/render/svg-renderer.js
   var uidCounter = 0;
   var DEFAULT_SIZE5 = { w: 120, h: 40 };
@@ -928,6 +1072,22 @@
       this.measure();
       this.paint();
       if (this.opts.a11yTable !== false) this._renderA11y();
+      this._initViewport();
+    }
+    // ---- Viewport pan/zoom/pinch (#667, I2-1) — opt-in par defaut ----
+    _initViewport() {
+      var _a, _b;
+      if (this.opts.viewport === false) return;
+      const cs = typeof getComputedStyle === "function" ? getComputedStyle(this.el) : null;
+      const readNum = (name, fb) => {
+        const v = cs && parseFloat(cs.getPropertyValue(name));
+        return Number.isFinite(v) ? v : fb;
+      };
+      this.viewport = new Viewport(this.svgEl, this.viewportG, this.el, {
+        min: (_a = this.opts.zoomMin) != null ? _a : readNum("--graph-zoom-min", 0.2),
+        max: (_b = this.opts.zoomMax) != null ? _b : readNum("--graph-zoom-max", 4),
+        initial: this.opts.initialViewport || void 0
+      });
     }
     // ---- 2.1 Structure SVG emise ----
     _build() {
@@ -955,10 +1115,12 @@
       marker.appendChild(svg("path", { d: "M0,0 L8,4 L0,8 Z" }));
       defs.appendChild(marker);
       this.svgEl.appendChild(defs);
+      this.viewportG = svg("g", { class: "graph-viewport" });
       this.edgesG = svg("g", { class: "graph-edges", "aria-hidden": "true" });
       this.nodesG = svg("g", { class: "graph-nodes" });
-      this.svgEl.appendChild(this.edgesG);
-      this.svgEl.appendChild(this.nodesG);
+      this.viewportG.appendChild(this.edgesG);
+      this.viewportG.appendChild(this.nodesG);
+      this.svgEl.appendChild(this.viewportG);
       this.a11yEl = document.createElement("div");
       this.a11yEl.className = "graph-a11y";
       this.a11yEl.id = descId;
@@ -1166,6 +1328,10 @@
     }
     // ---- 2.3 destroy() — teardown SPA (#657 __registerInstance) ----
     destroy() {
+      if (this.viewport) {
+        this.viewport.destroy();
+        this.viewport = null;
+      }
       this.model.removeEventListener("graph:model:change", this._onChange);
       this._paintToken++;
       if (this.raf) {
@@ -1188,7 +1354,15 @@
     if (typeof window !== "undefined" && typeof window.__registerInstance === "function") {
       window.__registerInstance(el, destroy);
     }
-    return { model: renderer.model, destroy, svg: renderer.svgEl };
+    return {
+      model: renderer.model,
+      destroy,
+      svg: renderer.svgEl,
+      // --- viewport (#667) — no-op si opts.viewport===false ---
+      getViewport: () => renderer.viewport ? renderer.viewport.getViewport() : null,
+      setViewport: (v) => renderer.viewport && renderer.viewport.setViewport(v),
+      screenToWorld: (cx, cy) => renderer.viewport ? renderer.viewport.screenToWorld(cx, cy) : null
+    };
   }
 
   // shared/graph/global-entry-engine.js

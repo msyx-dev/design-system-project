@@ -43,9 +43,9 @@
     },
     {
       "path": "shared/dist/graph.global.js",
-      "threshold_bytes": 11014,
-      "baseline_bytes": 10489,
-      "note": "Moteur graph complet (#666, I1b-2 ; +radial/auto-détection #669, I3-1 ; +mindmap bilatéral maison #670, I3-2) — model+layout+render bundlé, window.MSYXGraph. Distinct de graph-lib.global.js : chargé uniquement sur les pages qui rendent un graphe (data.html, sync.sh --with-graph). Croissance vs v2.101.0 (+1.6 KB gzip) = mindmap.js (maison, sync) ajouté au bundle — dagre/layered restent HORS bundle : layout/layered.js calcule son specifier dynamique via une variable (`spec`), qu'esbuild ne peut PAS résoudre statiquement en IIFE → jamais inliné, quel que soit --external (cf. ligne graph-layered.js ci-dessous). Baseline 2026-07-19 (#670) + buffer 5%."
+      "threshold_bytes": 12995,
+      "baseline_bytes": 12376,
+      "note": "Moteur graph complet (#666, I1b-2 ; +radial/auto-détection #669, I3-1 ; +mindmap bilatéral maison #670, I3-2 ; +viewport pan/zoom/pinch #667, I2-1) — model+layout+render+viewport bundlé, window.MSYXGraph. Distinct de graph-lib.global.js : chargé uniquement sur les pages qui rendent un graphe (data.html, sync.sh --with-graph). Croissance vs v2.102.0 (+1.9 KB gzip) = viewport.js (Viewport + fonctions pures clampZoom/userToWorld/worldToUser/zoomAt) ajouté au bundle — dagre/layered restent HORS bundle (inchangé). Baseline 2026-07-19 (#667) + buffer 5%."
     },
     {
       "path": "shared/graph/vendor/graph-layered.js",

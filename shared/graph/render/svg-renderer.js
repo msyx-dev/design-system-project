@@ -10,6 +10,7 @@ import { GraphModel } from '../model/index.js';
 import { resolveLayout } from '../layout/index.js';
 import { resolveNodeType, graphCard } from './node-types.js';
 import { renderA11yTable } from './a11y-table.js';
+import { Viewport } from './viewport.js';
 
 let uidCounter = 0;
 const DEFAULT_SIZE = { w: 120, h: 40 };
@@ -36,6 +37,22 @@ export class SvgRenderer {
     this.measure();
     this.paint();
     if (this.opts.a11yTable !== false) this._renderA11y();
+    this._initViewport();
+  }
+
+  // ---- Viewport pan/zoom/pinch (#667, I2-1) — opt-in par defaut ----
+  _initViewport() {
+    if (this.opts.viewport === false) return;
+    const cs = typeof getComputedStyle === 'function' ? getComputedStyle(this.el) : null;
+    const readNum = (name, fb) => {
+      const v = cs && parseFloat(cs.getPropertyValue(name));
+      return Number.isFinite(v) ? v : fb;
+    };
+    this.viewport = new Viewport(this.svgEl, this.viewportG, this.el, {
+      min: this.opts.zoomMin ?? readNum('--graph-zoom-min', 0.2),
+      max: this.opts.zoomMax ?? readNum('--graph-zoom-max', 4),
+      initial: this.opts.initialViewport || undefined,
+    });
   }
 
   // ---- 2.1 Structure SVG emise ----
@@ -67,10 +84,12 @@ export class SvgRenderer {
     defs.appendChild(marker);
     this.svgEl.appendChild(defs);
 
+    this.viewportG = svg('g', { class: 'graph-viewport' });
     this.edgesG = svg('g', { class: 'graph-edges', 'aria-hidden': 'true' });
     this.nodesG = svg('g', { class: 'graph-nodes' });
-    this.svgEl.appendChild(this.edgesG);
-    this.svgEl.appendChild(this.nodesG);
+    this.viewportG.appendChild(this.edgesG);
+    this.viewportG.appendChild(this.nodesG);
+    this.svgEl.appendChild(this.viewportG);
 
     this.a11yEl = document.createElement('div');
     this.a11yEl.className = 'graph-a11y';
@@ -302,6 +321,10 @@ export class SvgRenderer {
 
   // ---- 2.3 destroy() — teardown SPA (#657 __registerInstance) ----
   destroy() {
+    if (this.viewport) {
+      this.viewport.destroy();
+      this.viewport = null;
+    }
     this.model.removeEventListener('graph:model:change', this._onChange);
     this._paintToken++; // invalide tout paint async en vol (#670) -> resolution tardive = no-op
     if (this.raf) {
