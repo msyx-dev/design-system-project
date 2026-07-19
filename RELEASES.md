@@ -1,5 +1,25 @@
 # Releases
 
+## 2.99.0 — 2026-07-19 — Moteur graph I1b-1 : modèle GraphModel (#665)
+
+> Deuxième brique du moteur graphique node-link. Toujours **aucun rendu visuel** —
+> uniquement le modèle de données observable dont dépendent le renderer SVG (I1b-2,
+> #666) et toutes les itérations suivantes (navigation, édition, wrapper React).
+
+### Added
+- **`GraphModel`** (`shared/graph/model/graph-model.js`) — `class GraphModel extends EventTarget` : structure node-link plate, shape Cytoscape-alignée (sémantique dans `data{}`, géométrie `position`/`size` en sibling optionnel — `size` **porté, jamais mesuré**). Observable via `dispatchEvent(new CustomEvent('graph:model:change', { detail, bubbles:true }))`, idiome déjà utilisé 18× dans `components.js` (`split:resize`). **DOM-free** : aucun `document`, testable sans jsdom (`EventTarget`/`CustomEvent` globaux Node 20).
+- **Accès** : `nodes`/`edges` (read-only par contrat), `nodeCount`/`edgeCount`, `getNode`/`getEdge`/`hasNode`/`hasEdge`, itération ordre d'insertion stable.
+- **Index d'adjacence** incrémental : `adjacency` (`Map<nodeId, {in,out}>`, live), `inEdges`/`outEdges`/`neighbors`, indexé par rôle (`source→out`/`target→in`) indépendamment de `directed`.
+- **Mutations atomiques** (1 op ⇒ 1 event, uniquement si effectif) : `addNode`/`updateNode` (merge shallow de `data`, `position`/`size` remplacés, `id` immuable)/`removeNode` (cascade ses arêtes incidentes en **un seul** event `remove-node` avec `removedEdges`), `addEdge`/`updateEdge` (data-only, `id`/`source`/`target` immuables)/`removeEdge`, `toJSON()` (deep clone, round-trip garanti).
+- **`toModel(input)`** (`shared/graph/model/to-model.js`) — normalisation tolérante **jamais de throw** : accepte `{nodes,edges}` nu ou `GraphData` complet, génère un id si manquant, déduplique par id (namespace partagé nœuds∪arêtes), droppe les arêtes pendantes (endpoint inexistant) — chaque anomalie loggée en `console.warn`.
+- **Invariants lenient** (imposés partout, `console.warn` + skip, **jamais de `throw`**) : id unique nœuds∪arêtes, id non vide, arête → nœuds existants, pas d'arête pendante persistante (cascade), immuabilité `id`/`source`/`target`.
+- **`schemaVersion:1` PROVISOIRE non figé** — réserve documentée en tête de `graph-model.js` : forward-tolérant (une entrée `schemaVersion:2` n'est ni rejetée ni migrée), aucune logique version-gated. Gravure repoussée au round-trip réel sur le consumer d'ancrage `nexus` (I1b-2, #666).
+- **`tests/regression/graph-model.test.js`** — 17 cas unitaires DOM-free (round-trip, shape nue, id généré, arête pendante, id dupliqué, CRUD + events, cascade `removeNode`, compte d'events 1/mutation effective, `schemaVersion` forward-tolérant, `neighbors`/`inEdges`/`outEdges` sur un graphe en losange), réplique du style `graph-lib.test.js` (asserts maison, `import()` dynamique). Script `npm run test:graph-model`, step CI dédié.
+
+### Notes
+- `build.sh`, `shared/graph/render/`, `shared/graph/layout/` **inchangés** — le modèle est ESM pur, non émis dans le global `shared/dist/graph-lib.global.js`. Aucun `components-registry.json`, aucune section démo, aucune CSS : le composant `graph` visible entre au registre en I1b-2 (#666).
+- Aucun conflit de fichiers avec I1b-2 (#666, séquencement strict `blocked by` #665) : I1b-1 ne touche que `shared/graph/model/` + script/CI + versions.
+
 ## 2.98.0 — 2026-07-19 — Moteur graph I1a : fondations + remboursement de dette (#657)
 
 > Première brique du futur moteur graphique node-link du design system. Aucun rendu de

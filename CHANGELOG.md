@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- Moteur graph **I1b-1** (#665) — `GraphModel` (`shared/graph/model/graph-model.js`) : structure node-link plate, data pure, `class GraphModel extends EventTarget` observable (`CustomEvent('graph:model:change', { detail, bubbles:true })`), testable **sans DOM** (aucun `document`, Node 20, zéro jsdom). Shape Cytoscape-alignée : sémantique dans `data{}`, géométrie (`position`/`size`) en sibling — `size` **porté, jamais mesuré**. CRUD atomique (`addNode`/`updateNode`/`removeNode` cascade/`addEdge`/`updateEdge`/`removeEdge`, 1 op ⇒ 1 event effectif), accès (`get*`/`has*`/`*Count`/itération), index d'adjacence incrémental (`adjacency`/`inEdges`/`outEdges`/`neighbors`), invariants **lenient** (`console.warn` + skip, jamais de `throw`). `toModel()` (`shared/graph/model/to-model.js`) normalise toute entrée tolérante (shape nu, id généré, pendante droppée, doublon droppé). `schemaVersion:1` **PROVISOIRE non figé** (réserve documentée en tête de fichier, forward-tolérant, aucune logique version-gated — gravure repoussée au round-trip `nexus` en I1b-2 #666). `tests/regression/graph-model.test.js` (17 cas, `npm run test:graph-model`, câblé en CI). `build.sh`/`render/`/`layout/` inchangés — aucun rendu, aucun registry, aucune CSS dans cette issue. v2.99.0.
+
 ### Fixed
 - Chrome modal (v2.97.2) — **a11y** : bouton fermer des modales porté à 44×44px en mobile (`dialog.modal-dialog .modal-close`, mobile-first, compact desktop) ; utilitaire `.modal-title` (20px) qui était écrasé par `dialog.modal-dialog .modal-header h3` → scopé `h3:not(.modal-title)`. Trouvés au challenge designer sur la modale notes de version, vérifiés au rendu réel (modale ouverte). Affecte toutes les modales DS.
 
