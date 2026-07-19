@@ -103,6 +103,10 @@ test.describe("Visual regression — full matrix (par section)", () => {
       await freezeJsAnimations(page);
       await page.goto(path, { waitUntil: "networkidle" });
 
+      // Fix tooling VR (#669) : masque le header fixe (.site-header) — son badge de version
+      // churnait les captures des sections plus hautes que le viewport a chaque bump.
+      await page.addStyleTag({ content: ".site-header { display: none !important; }" });
+
       // --- Garde-fou anti-régression Bug 1 (#286) ---
       // index.html a un <title> different : si le flag -s revient ou que
       // serve.json est mal configure, ce test echoue ICI, pas en silence.
