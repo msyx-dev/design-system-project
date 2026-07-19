@@ -38,9 +38,13 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  *   n'est ouvert au clic — seul l'etat visuel + l'evenement graph:selection:change sont poses.
  * @param {boolean} [opts.refitOnResize=false] - re-fit automatique (retour a l'identite) quand le
  *   conteneur est redimensionne, UNIQUEMENT si l'utilisateur n'a pas deja navigue (#668, I2-2).
+ * @param {boolean} [opts.keyboardNav=true] - nav clavier noeud-a-noeud (#671, I4-1) : roving
+ *   tabindex (1 seul noeud tab-stop a la fois) + traversee via arbre couvrant deterministe
+ *   (WAI-ARIA APG tree : fleches/Home/End/Enter). `false` desactive entierement (aucun
+ *   listener pose sur `nodesG`, symetrique de `viewport`/`selectable`).
  * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement,
  *   getViewport:Function, setViewport:Function, screenToWorld:Function, fit:Function,
- *   zoomToNode:Function, select:Function, getSelection:Function}}
+ *   zoomToNode:Function, select:Function, getSelection:Function, focusNode:Function}}
  */
 export function createGraph(el, opts) {
   const renderer = new SvgRenderer(el, opts || {});
@@ -61,5 +65,7 @@ export function createGraph(el, opts) {
     zoomToNode: (id, k) => renderer.zoomToNode(id, k),
     select: (id) => renderer.select(id),
     getSelection: () => renderer.getSelection(),
+    // --- nav clavier (#671, I4-1) — no-op si opts.keyboardNav===false (noeud introuvable) ---
+    focusNode: (id) => renderer._focusNode(id),
   };
 }
