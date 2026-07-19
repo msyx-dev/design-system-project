@@ -34,7 +34,11 @@ export default defineConfig({
   // (playwright.a11y.config.ts) et son script `test:a11y` : il ne doit PAS
   // tourner sous `test:visual`. On garde visual.spec.ts (VR) + modal-focus
   // (smoke a11y rapide, 1 test) qui dépendent de cette config.
-  testMatch: ["**/visual.spec.ts", "**/modal-focus.spec.ts"],
+  testMatch: [
+    "**/visual.spec.ts",
+    "**/modal-focus.spec.ts",
+    "**/graph-keyboard.spec.ts",
+  ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
