@@ -145,6 +145,14 @@ Ordre de chargement obligatoire dans la page consumer :
 </body>
 ```
 
+#### Viewport pan/zoom/pinch — contrainte d'intégration (#667)
+
+Le viewport (`opts.viewport`, défaut `true`) mappe écran↔monde via
+`svg.getScreenCTM().inverse()`. **Un ancêtre du conteneur `.graph` portant un
+`transform: scale(...)` CSS casse ce mapping** (le curseur ne pointe plus au bon
+endroit après zoom/pan) — à proscrire côté consumer. Les autres transforms CSS
+(translate, layout flex/grid) n'ont pas cet effet.
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)

@@ -1,5 +1,5 @@
-/* @ds-version: 2.100.0 */
-/* graph.css — module CSS du moteur graphique node-link (#666, I1b-2)
+/* @ds-version: 2.103.0 */
+/* graph.css — module CSS du moteur graphique node-link (#666, I1b-2 ; viewport #667, I2-1)
    HORS BARREL — jamais importe par components.css ni components-core.css
    (verifie par shared/check-graph-isolation.sh en CI). Opt-in explicite :
    data.html charge ce module via <link> dans le <head> ; un consumer sync.sh
@@ -17,18 +17,25 @@
     display: block;
     width: 100%;
     height: auto;
+    touch-action: none;   /* pan/pinch tactile fluides (pointer-drag.js, #667) */
+    cursor: grab;
+    contain: layout paint;
 }
+
+.graph-viewport { will-change: transform; }
 
 /* ===== Aretes ===== */
 .graph-edge {
     fill: none;
     stroke: var(--graph-edge);
     stroke-width: 1.5;
+    vector-effect: non-scaling-stroke; /* epaisseur constante au zoom (#667) */
 }
 
 .graph-edge--strong {
     stroke: var(--graph-edge-strong);
     stroke-width: 2;
+    vector-effect: non-scaling-stroke; /* epaisseur constante au zoom (#667) */
 }
 
 .graph-arrow path {
@@ -40,6 +47,9 @@
     font-family: var(--font-sans);
     font-size: 11px;
 }
+
+/* LOD : sous --graph-zoom seuil, masquer les labels d'arete (illisibles en zoom-out, #667). */
+.graph--lod-compact .graph-edge-label { display: none; }
 
 /* ===== Noeuds ===== */
 .graph-node-bg {

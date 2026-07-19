@@ -1,12 +1,15 @@
-# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I3-1/I3-2 layouts riches)
+# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I2-1 viewport + I3-1/I3-2 layouts riches)
 
 > Issue #657 (I1a) : fondations — utils partagés, discipline de teardown, tokens,
 > squelette de dossiers, anti-barrel CI, perf-budget. Issue #665 (I1b-1) : le
 > **modèle** (`model/`) — data pure, DOM-free, aucun rendu. Issue #666 (I1b-2) : le
 > **1er rendu** — `layout/` (fixed+tree, purs DOM-free) + `render/` (SvgRenderer,
 > pipeline measure→layout→paint) + alternative a11y table + bundle global dédié.
-> Issue #669 (I3-1) : layout **`radial`** (mindmap 360°, purs DOM-free) + **auto-détection**
-> de layout (`detect.js` + wrapper `'auto'`) — route `tree`/`layered` selon la topologie.
+> Issue #667 (I2-1) : le **viewport** pan/zoom/pinch (`render/viewport.js`) — transform
+> sur un nouveau `<g class="graph-viewport">`, `screenToWorld` via `getScreenCTM`,
+> `non-scaling-stroke`, bornes `--graph-zoom-min/-max`. Issue #669 (I3-1) : layout
+> **`radial`** (mindmap 360°, purs DOM-free) + **auto-détection** de layout
+> (`detect.js` + wrapper `'auto'`) — route `tree`/`layered` selon la topologie.
 > Issue #670 (I3-2) : layout **`layered`** (Sugiyama via **dagre vendoré**,
 > `shared/graph/vendor/` — 1ʳᵉ dépendance tierce vendorée du DS, dynamic import, seul
 > layout **ASYNC**) + layout **`mindmap`** bilatéral maison (1er use case client NHOOD)
@@ -74,7 +77,14 @@ shared/graph/
                   a11y-table.js — graphToTableModel() PURE (dérivation tabulaire,
                   testable Node) + renderA11yTable() (couche DOM, aria-describedby,
                   contrat a11y PRIMAIRE). #666 (I1b-2).
-  index.js        createGraph(el, opts) -> {model, destroy, svg} — API publique ESM.
+                  viewport.js — fonctions PURES DOM-free (clampZoom/userToWorld/
+                  worldToUser/zoomAt, testables Node) + classe Viewport (câblage DOM :
+                  screenToWorld via getScreenCTM().inverse(), pan __pointerDrag deltas
+                  maison, pinch tracker 2-pointeurs Map<pointerId>, wheel-zoom ancré
+                  curseur rAF-throttle, événement graph:viewport:change sur .graph).
+                  #667 (I2-1).
+  index.js        createGraph(el, opts) -> {model, destroy, svg, getViewport,
+                  setViewport, screenToWorld} — API publique ESM.
   global-entry-engine.js — entrée IIFE moteur complet -> window.MSYXGraph
                   {createGraph, GraphModel, toModel}. Bundle DISTINCT de
                   graph-lib.global.js (2e sortie esbuild, cf. build.sh).
@@ -131,6 +141,37 @@ Module CSS dédié, **hors barrel** (`components.css`/`components-core.css` ne l
 jamais — vérifié par `shared/check-graph-isolation.sh` en CI). Opt-in explicite :
 `data.html` le charge via `<link>` direct dans le `<head>` ; un consumer sync.sh passe
 `--with-graph` (copié dans `components/graph.css`, jamais ajouté au barrel généré).
+
+## Viewport pan/zoom/pinch (#667, I2-1)
+
+Transform portée par un `<g class="graph-viewport">` qui enveloppe `.graph-edges` +
+`.graph-nodes` (inséré dans `_build()`, survit au wipe `innerHTML` de `paint()` — le
+`viewBox` calculé par `paint()` reste le cadre « monde/home », inchangé, la transform
+vp est préservée entre repaints). `screenToWorld` passe par
+`svg.getScreenCTM().inverse()` — le `<svg>` porte un `viewBox` + `preserveAspectRatio`
++ CSS `width:100%;height:auto`, donc **pas 1:1 px avec l'écran** — puis inverse la
+transform vp. Pan via `window.__pointerDrag` (le contrat réel n'expose que
+`{clientX,clientY}`, les deltas sont calculés depuis le dernier point client). Pinch
+via un tracker 2-pointeurs dédié (`pointerDrag` est mono-pointeur). Wheel-zoom ancré
+curseur, throttlé `requestAnimationFrame`, bornes `--graph-zoom-min/-max` (tokens I1a)
+ou override `opts.zoomMin`/`zoomMax`. `opts.initialViewport` fige un état déterministe
+(clé pour une démo/VR stable). Anti-distorsion : `vector-effect:non-scaling-stroke`
+sur les arêtes (épaisseur constante au zoom), LOD `.graph--lod-compact` masque les
+labels d'arête sous un seuil de `k`. Événement `graph:viewport:change`
+(`CustomEvent`, `detail:{tx,ty,k}`, `bubbles:true`) émis sur le conteneur `.graph`
+(`el`) — pas sur `GraphModel`, qui reste données pures.
+
+**Contrainte d'intégration (critère d'acceptation #659)** : un ancêtre du conteneur
+`.graph` portant un `transform: scale(...)` CSS casse `getScreenCTM()` — le mapping
+écran↔monde devient faux (curseur désaligné après zoom/pan). **Interdit côté
+consumer.**
+
+Non testé unitairement : `getScreenCTM`/`DOMPoint`/`wheel`/pointer capture ne sont pas
+disponibles en jsdom (pas de layout SVG) — le câblage DOM de `Viewport` est couvert
+par la démo VR statique (`initialViewport` figé) + vérification manuelle. Les
+fonctions pures (`clampZoom`/`userToWorld`/`worldToUser`/`zoomAt`) sont testées Node
+(`tests/regression/graph-viewport.test.js`), même parti que le renderer #666 (`measure`
+`getBBox` non testé en Node).
 
 ## Jalon nexus (post-merge, piloté par le parent)
 
