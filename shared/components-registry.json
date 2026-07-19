@@ -1,7 +1,7 @@
 {
-  "version": "2.101.0",
+  "version": "2.102.0",
   "generated": {
-    "at": "2026-07-19T12:16:40.916Z",
+    "at": "2026-07-19T17:49:21.126Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [

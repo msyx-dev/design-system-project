@@ -93,13 +93,28 @@ sed "s#url('css/\([a-z0-9_-]*\)\.css')#url('ds-\1.css')#g" \
 # ds-components.js le référence mais sync ne le livrait pas). Charger AVANT ds-components.js.
 cp "$SHARED_DIR/dist/graph-lib.global.js" "$TARGET/ds-graph-lib.global.js"
 
-# ─── Moteur graph complet (opt-in --with-graph) (#666) ──────────────────────
+# ─── Moteur graph complet (opt-in --with-graph) (#666 ; vendor dagre #670) ──
 if $WITH_GRAPH; then
     cp "$SHARED_DIR/dist/graph.global.js" "$TARGET/ds-graph.global.js"   # window.MSYXGraph
     mkdir -p "$TARGET/components"
     cp "$DS_DIR/components/graph.css"     "$TARGET/components/graph.css"  # CSS moteur (hors barrel)
     echo "   -> ds-graph.global.js  (moteur graph : window.MSYXGraph.createGraph)"
     echo "   -> components/graph.css (module graph — charger via <link>, hors barrel)"
+
+    # dagre vendoré (#670, I3-2) — layout 'layered'. layered.js (dans le bundle IIFE
+    # ci-dessus) charge ce fichier via un chemin ABSOLU site-root
+    # `/shared/graph/vendor/graph-layered.js` (cf. shared/graph/vendor/VENDOR.md) —
+    # le CONSOMMATEUR DOIT servir sa copie a cette URL exacte (meme limitation deja
+    # acceptee pour le sprite d'icones `/shared/icons/sprite.svg`). Copie ici dans
+    # <TARGET>/graph/vendor/ pour rester correlee au chemin source ; a l'integrateur
+    # de router/monter ce dossier sous /shared/graph/vendor/ sur son site.
+    mkdir -p "$TARGET/graph/vendor"
+    cp "$SHARED_DIR/graph/vendor/graph-layered.js"  "$TARGET/graph/vendor/graph-layered.js"
+    cp "$SHARED_DIR/graph/vendor/LICENSE-dagre"     "$TARGET/graph/vendor/LICENSE-dagre"
+    cp "$SHARED_DIR/graph/vendor/LICENSE-graphlib"  "$TARGET/graph/vendor/LICENSE-graphlib"
+    cp "$SHARED_DIR/graph/vendor/NOTICE"            "$TARGET/graph/vendor/NOTICE"
+    echo "   -> graph/vendor/graph-layered.js (dagre vendoré, layout 'layered' — à servir en /shared/graph/vendor/graph-layered.js, cf. VENDOR.md)"
+    echo "   -> graph/vendor/{LICENSE-dagre,LICENSE-graphlib,NOTICE}"
 fi
 
 # Nouveau v2.36 : copier le dossier components/ pour que les @import du barrel résolvent

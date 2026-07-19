@@ -1,4 +1,4 @@
-# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I3-1 layouts riches)
+# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I3-1/I3-2 layouts riches)
 
 > Issue #657 (I1a) : fondations — utils partagés, discipline de teardown, tokens,
 > squelette de dossiers, anti-barrel CI, perf-budget. Issue #665 (I1b-1) : le
@@ -6,14 +6,25 @@
 > **1er rendu** — `layout/` (fixed+tree, purs DOM-free) + `render/` (SvgRenderer,
 > pipeline measure→layout→paint) + alternative a11y table + bundle global dédié.
 > Issue #669 (I3-1) : layout **`radial`** (mindmap 360°, purs DOM-free) + **auto-détection**
-> de layout (`detect.js` + wrapper `'auto'`) — route `tree`/`layered` selon la topologie,
-> dégrade gracieusement vers `tree` tant que `layered` (#670) n'est pas enregistré
-> (`hasLayout()`), garantissant que #669 est mergeable avant #670.
+> de layout (`detect.js` + wrapper `'auto'`) — route `tree`/`layered` selon la topologie.
+> Issue #670 (I3-2) : layout **`layered`** (Sugiyama via **dagre vendoré**,
+> `shared/graph/vendor/` — 1ʳᵉ dépendance tierce vendorée du DS, dynamic import, seul
+> layout **ASYNC**) + layout **`mindmap`** bilatéral maison (1er use case client NHOOD)
+> + `paint()` async-tolérant (`_applyLayout` + token anti-course). L'auto-détection
+> route désormais réellement vers `layered` (`hasLayout('layered')` est vrai).
 
 ## Structure
 
 ```
 shared/graph/
+  vendor/         graph-layered.js — @dagrejs/dagre@3.0.0 + @dagrejs/graphlib@4.0.1
+                  VENDORES (ESM esbuild lisible, AUCUN min.js), MIT. build-vendor.sh
+                  (reproductible, patron icons/build-sprite.sh) + VENDOR.md (version
+                  pinnee, hash sha256, owner CVE, veille) + LICENSE-dagre +
+                  LICENSE-graphlib + NOTICE. Charge en dynamic import() par
+                  layout/layered.js UNIQUEMENT si layout:'layered' — HORS du bundle
+                  de base (specifier calcule dans une variable, esbuild ne peut pas
+                  l'inliner en IIFE, cf. layout/layered.js). #670 (I3-2).
   lib/            pointer-drag.js, svg.js — utils canoniques ES (cf. D1 de la spec #657)
                   index.js   — barrel ESM (consumers ESM : moteur I1b+, @msyx-dev/react)
                   global-entry.js — entrée IIFE (monde monolithe, cf. build.sh)
@@ -27,20 +38,37 @@ shared/graph/
   layout/         fixed.js (lit node.position.{x,y}) + tree.js (Reingold-Tilford naif
                   deterministe, forêt + garde anti-cycle) + radial.js (mindmap radiale
                   360°, racine au centre, anneaux ∝ profondeur, secteurs ∝ charge feuille,
-                  memes garanties que tree.js — #669, I3-1) + detect.js (heuristique
-                  topologique PURE : arbre 1-racine acyclique -> 'tree', DAG/cyclique ->
-                  'layered', graphe vide -> 'fixed' ; 'radial'/'mindmap' jamais
-                  auto-choisis) + auto.js (wrapper layout 'auto' : detecte puis delegue,
-                  degrade vers 'tree' via hasLayout() tant que 'layered' (#670) absent —
-                  jamais de Promise) + index.js (registre registerLayout/resolveLayout/
-                  hasLayout). PURS — jamais de document/window, testables Node
-                  (tests/regression/graph-layout.test.js, graph-layout-radial.test.js).
-                  #666 (I1b-2) + #669 (I3-1). Layout par defaut recommande pour un graphe
-                  sans coordonnees : 'auto'.
+                  memes garanties que tree.js — #669, I3-1) + mindmap.js (mindmap
+                  BILATERALE maison : racine centrale, branches N1 reparties gauche/
+                  droite par glouton d'equilibrage (charge = hauteur cumulee ou nb de
+                  feuilles), chaque cote = arbre horizontal RT tourne 90°, cote gauche
+                  miroir en x, consomme node.size — 1er use case client NHOOD, toujours
+                  EXPLICITE, jamais auto-choisi — #670, I3-2) + layered.js (Sugiyama via
+                  dagre VENDORE — shared/graph/vendor/ — dynamic import, SEUL layout
+                  ASYNC du moteur : run() renvoie une Promise<Map> ; gere nativement les
+                  cycles (greedy FAS interne de dagre) — #670, I3-2) + detect.js
+                  (heuristique topologique PURE : arbre 1-racine acyclique -> 'tree',
+                  DAG/cyclique -> 'layered', graphe vide -> 'fixed' ; 'radial'/'mindmap'
+                  jamais auto-choisis) + auto.js (wrapper layout 'auto' : detecte puis
+                  delegue — route desormais reellement vers le vrai 'layered' depuis
+                  #670, hasLayout('layered') est vrai) + index.js (registre
+                  registerLayout/resolveLayout/hasLayout — 'layered' enregistre via un
+                  LOADER LAZY, import('./layered.js') jamais statique, pour ne jamais
+                  entrainer dagre dans le bundle de base). PURS — jamais de
+                  document/window, testables Node (tests/regression/graph-layout.test.js,
+                  graph-layout-radial.test.js, graph-layout-layered.test.js). #666
+                  (I1b-2) + #669 (I3-1) + #670 (I3-2). Layout par defaut recommande pour
+                  un graphe sans coordonnees : 'auto'.
   render/         svg-renderer.js — class SvgRenderer : pipeline measure (Map interne
                   de tailles, modèle jamais muté) → layout (délègue à layout/) → paint
-                  (var(--graph-*) uniquement). Cycle observe(graph:model:change) →
-                  repaint (rAF-debounce) → destroy (__registerInstance, #657).
+                  (var(--graph-*) uniquement). paint() est ASYNC-TOLERANT (#670,
+                  I3-2) : detecte un run() thenable (layout 'layered') → extraction
+                  _applyLayout(positions) + token anti-course (_paintToken, incremente
+                  a chaque paint et a destroy() — une resolution async tardive dont le
+                  token ne correspond plus devient un no-op). Les layouts synchrones
+                  (fixed/tree/radial/mindmap) restent inchanges, aucun frame
+                  supplementaire. Cycle observe(graph:model:change) → repaint
+                  (rAF-debounce) → destroy (__registerInstance, #657).
                   node-types.js — resolveNodeType() + graphCard() (nœud riche NHOOD :
                   .card/.badge/.chip dans un foreignObject).
                   a11y-table.js — graphToTableModel() PURE (dérivation tabulaire,

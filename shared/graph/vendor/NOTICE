@@ -1,0 +1,14 @@
+msyx-design-system — NOTICE
+
+Ce produit inclut du logiciel tiers VENDORE (source lisible, aucun binaire/min.js) :
+
+  * @dagrejs/dagre (version pinnee : voir VENDOR.md) — MIT — voir LICENSE-dagre
+  * @dagrejs/graphlib (version pinnee : voir VENDOR.md) — MIT — voir LICENSE-graphlib
+
+Vendore pour le layout `layered` (Sugiyama) du moteur graphique node-link
+(shared/graph/), issue #670 (I3-2). Regenere de facon reproductible via
+shared/graph/vendor/build-vendor.sh. Charge en dynamic import() a l'execution,
+HORS du bundle de base (shared/dist/graph.global.js).
+
+Aucune modification du code source des paquets vendores — bundle esbuild brut
+(--bundle --format=esm --platform=neutral), lisible, non minifie.

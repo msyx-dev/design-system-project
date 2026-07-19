@@ -1,16 +1,83 @@
-/* GENERE — ne pas editer a la main. Source: shared/graph/. Regenerer via ./shared/graph/build.sh (#666) */
+/* GENERE — ne pas editer a la main. Source: shared/graph/. Regenerer via ./shared/graph/build.sh (#666, --external dagre #670) */
 (() => {
   var __defProp = Object.defineProperty;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
   var __typeError = (msg) => {
     throw TypeError(msg);
   };
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __esm = (fn, res, err) => function __init() {
+    if (err) throw err[0];
+    try {
+      return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+    } catch (e) {
+      throw err = [e], e;
+    }
+  };
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
   var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
   var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
   var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
+
+  // shared/graph/layout/layered.js
+  var layered_exports = {};
+  __export(layered_exports, {
+    layeredLayout: () => layeredLayout
+  });
+  function sizeOf4(sizes, id) {
+    const s = sizes && sizes.get(id);
+    return s && typeof s.w === "number" && typeof s.h === "number" ? s : DEFAULT_SIZE4;
+  }
+  function loadDagre() {
+    if (!_dagrePromise) {
+      const spec = typeof window !== "undefined" ? "/shared/graph/vendor/graph-layered.js" : "../vendor/graph-layered.js";
+      _dagrePromise = import(spec);
+    }
+    return _dagrePromise;
+  }
+  async function layeredLayout(model, opts) {
+    const o = opts || {};
+    const sizes = o.sizes || /* @__PURE__ */ new Map();
+    const mod = await loadDagre();
+    const dagre = mod.default || mod;
+    const g = new dagre.graphlib.Graph({ directed: true, multigraph: true, compound: false });
+    g.setGraph({
+      rankdir: o.direction === "LR" ? "LR" : "TB",
+      nodesep: o.gap && o.gap.x || 32,
+      ranksep: o.gap && o.gap.y || 48,
+      marginx: 0,
+      marginy: 0
+    });
+    g.setDefaultEdgeLabel(() => ({}));
+    model.nodes.forEach((n) => {
+      const s = sizeOf4(sizes, n.data.id);
+      g.setNode(n.data.id, { width: s.w, height: s.h });
+    });
+    model.edges.forEach((e) => g.setEdge(e.data.source, e.data.target, {}, e.data.id));
+    dagre.layout(g);
+    const pos = /* @__PURE__ */ new Map();
+    g.nodes().forEach((id) => {
+      const nd = g.node(id);
+      if (nd) pos.set(id, { x: nd.x, y: nd.y });
+    });
+    model.nodes.forEach((n) => {
+      if (!pos.has(n.data.id)) pos.set(n.data.id, { x: 0, y: 0 });
+    });
+    return pos;
+  }
+  var DEFAULT_SIZE4, _dagrePromise;
+  var init_layered = __esm({
+    "shared/graph/layout/layered.js"() {
+      DEFAULT_SIZE4 = { w: 120, h: 40 };
+      _dagrePromise = null;
+    }
+  });
 
   // shared/graph/lib/svg.js
   var SVG_NS = "http://www.w3.org/2000/svg";
@@ -551,6 +618,122 @@
     return pos;
   }
 
+  // shared/graph/layout/mindmap.js
+  var DEFAULT_SIZE3 = { w: 120, h: 40 };
+  function sizeOf3(sizes, id) {
+    const s = sizes && sizes.get(id);
+    return s && typeof s.w === "number" && typeof s.h === "number" ? s : DEFAULT_SIZE3;
+  }
+  function mindmapLayout(model, opts) {
+    const o = opts || {};
+    const sizes = o.sizes || /* @__PURE__ */ new Map();
+    const gapX = o.gap && o.gap.x || 48;
+    const gapY = o.gap && o.gap.y || 16;
+    const byCount = o.balance === "count";
+    const nodeIds = model.nodes.map((n) => n.data.id);
+    const visited = /* @__PURE__ */ new Set();
+    const children = /* @__PURE__ */ new Map();
+    const depth = /* @__PURE__ */ new Map();
+    const rootOk = o.root != null && (typeof model.hasNode === "function" ? model.hasNode(o.root) : nodeIds.includes(o.root));
+    let root = rootOk ? o.root : null;
+    if (root == null) {
+      root = nodeIds.find((id) => {
+        const inCount = typeof model.inEdges === "function" ? model.inEdges(id).length : 0;
+        return inCount === 0;
+      }) || nodeIds[0];
+    }
+    function build(id, d) {
+      if (visited.has(id)) return;
+      visited.add(id);
+      depth.set(id, d);
+      const kids = [];
+      const outs = typeof model.outEdges === "function" ? model.outEdges(id) : [];
+      outs.forEach((e) => {
+        const target = e.data.target;
+        if (!visited.has(target)) kids.push(target);
+      });
+      children.set(id, kids);
+      kids.forEach((childId) => build(childId, d + 1));
+    }
+    if (root != null) build(root, 0);
+    nodeIds.forEach((id) => {
+      if (!visited.has(id)) build(id, 0);
+    });
+    const load = /* @__PURE__ */ new Map();
+    function weigh(id) {
+      const kids = children.get(id) || [];
+      if (kids.length === 0) {
+        const w2 = byCount ? 1 : sizeOf3(sizes, id).h;
+        load.set(id, w2);
+        return w2;
+      }
+      const w = kids.reduce((a, k) => a + weigh(k), 0);
+      load.set(id, w);
+      return w;
+    }
+    if (root != null) weigh(root);
+    const topKids = children.get(root) || [];
+    const right = [];
+    const left = [];
+    let rLoad = 0;
+    let lLoad = 0;
+    topKids.forEach((k) => {
+      const w = load.get(k) || 0;
+      if (rLoad <= lLoad) {
+        right.push(k);
+        rLoad += w;
+      } else {
+        left.push(k);
+        lLoad += w;
+      }
+    });
+    const pos = /* @__PURE__ */ new Map();
+    if (root != null) pos.set(root, { x: 0, y: 0 });
+    const maxWidthByDepth = /* @__PURE__ */ new Map();
+    nodeIds.forEach((id) => {
+      const d = depth.get(id);
+      if (d == null) return;
+      const w = sizeOf3(sizes, id).w;
+      maxWidthByDepth.set(d, Math.max(maxWidthByDepth.get(d) || 0, w));
+    });
+    const maxDepth = Math.max(0, ...Array.from(maxWidthByDepth.keys()));
+    const offsetAtDepth = /* @__PURE__ */ new Map();
+    let acc = (maxWidthByDepth.get(0) || DEFAULT_SIZE3.w) / 2;
+    offsetAtDepth.set(0, 0);
+    for (let d = 1; d <= maxDepth; d++) {
+      const extent = maxWidthByDepth.get(d) || DEFAULT_SIZE3.w;
+      acc += gapX + extent / 2;
+      offsetAtDepth.set(d, acc);
+      acc += extent / 2;
+    }
+    function layoutSide(branchRoots, sign) {
+      let cursorY = 0;
+      function place(id) {
+        const kids = children.get(id) || [];
+        const d = depth.get(id) || 0;
+        const x = sign * (offsetAtDepth.get(d) || 0);
+        let y;
+        if (kids.length === 0) {
+          const h = sizeOf3(sizes, id).h;
+          y = cursorY + h / 2;
+          cursorY += h + gapY;
+        } else {
+          const ys = kids.map((k) => place(k));
+          y = ys.reduce((a, b) => a + b, 0) / ys.length;
+        }
+        pos.set(id, { x, y });
+        return y;
+      }
+      branchRoots.forEach((b) => place(b));
+    }
+    layoutSide(right, 1);
+    layoutSide(left, -1);
+    nodeIds.forEach((id) => {
+      if (!pos.has(id)) pos.set(id, { x: 0, y: 0 });
+    });
+    return pos;
+  }
+
   // shared/graph/layout/detect.js
   function detectLayout(model) {
     const nodes = model.nodes;
@@ -606,7 +789,9 @@
   registerLayout("fixed", fixedLayout);
   registerLayout("tree", treeLayout);
   registerLayout("radial", radialLayout);
+  registerLayout("mindmap", mindmapLayout);
   registerLayout("auto", autoLayout);
+  registerLayout("layered", (model, opts) => Promise.resolve().then(() => (init_layered(), layered_exports)).then((m) => m.layeredLayout(model, opts)));
 
   // shared/graph/render/node-types.js
   function resolveNodeType(node, nodeTypes) {
@@ -721,7 +906,7 @@
 
   // shared/graph/render/svg-renderer.js
   var uidCounter = 0;
-  var DEFAULT_SIZE3 = { w: 120, h: 40 };
+  var DEFAULT_SIZE5 = { w: 120, h: 40 };
   var LABEL_PADDING = 12;
   var SvgRenderer = class {
     /**
@@ -736,6 +921,7 @@
       this.sizes = /* @__PURE__ */ new Map();
       this.raf = null;
       this.measureHost = null;
+      this._paintToken = 0;
       this._onChange = this._onChange.bind(this);
       this._build();
       this.model.addEventListener("graph:model:change", this._onChange);
@@ -821,8 +1007,8 @@
       }
       this.nodesG.removeChild(probe);
       return {
-        w: Math.max(DEFAULT_SIZE3.w, Math.ceil(box.width) + LABEL_PADDING * 2),
-        h: Math.max(DEFAULT_SIZE3.h, Math.ceil(box.height) + LABEL_PADDING * 2)
+        w: Math.max(DEFAULT_SIZE5.w, Math.ceil(box.width) + LABEL_PADDING * 2),
+        h: Math.max(DEFAULT_SIZE5.h, Math.ceil(box.height) + LABEL_PADDING * 2)
       };
     }
     _measureRich(node) {
@@ -837,17 +1023,32 @@
       this.measureHost.appendChild(content);
       const rect = content.getBoundingClientRect();
       return {
-        w: Math.max(DEFAULT_SIZE3.w, Math.ceil(rect.width)),
-        h: Math.max(DEFAULT_SIZE3.h, Math.ceil(rect.height))
+        w: Math.max(DEFAULT_SIZE5.w, Math.ceil(rect.width)),
+        h: Math.max(DEFAULT_SIZE5.h, Math.ceil(rect.height))
       };
     }
     _buildRichContent(node) {
       return typeof this.opts.renderNode === "function" ? this.opts.renderNode(node) : graphCard(node);
     }
-    // ---- 2.2.3 paint(positions, sizes) ----
+    // ---- 2.2.3 paint(positions, sizes) — async-tolerant (#670, I3-2) ----
+    // `run()` reste SYNCHRONE pour fixed/tree/radial/mindmap (aucun frame supplementaire,
+    // 100% retro-compatible). Seul `layered` (dagre, dynamic import) renvoie une Promise.
+    // Un thenable declenche l'extraction _applyLayout() + un token anti-course : si un
+    // repaint plus recent demarre avant la resolution d'un paint async en vol, la
+    // resolution tardive devient un no-op (jamais de flicker/ordre inverse).
     paint() {
       const run = resolveLayout(this.opts.layout || "fixed");
-      const positions = run(this.model, { ...this.opts.layoutOptions || {}, sizes: this.sizes });
+      const result = run(this.model, { ...this.opts.layoutOptions || {}, sizes: this.sizes });
+      if (result && typeof result.then === "function") {
+        const token = ++this._paintToken;
+        result.then((positions) => {
+          if (token === this._paintToken) this._applyLayout(positions);
+        });
+        return;
+      }
+      this._applyLayout(result);
+    }
+    _applyLayout(positions) {
       this.nodesG.innerHTML = "";
       this.edgesG.innerHTML = "";
       let minX = Infinity;
@@ -856,7 +1057,7 @@
       let maxY = -Infinity;
       this.model.nodes.forEach((node) => {
         const id = node.data.id;
-        const size = this.sizes.get(id) || DEFAULT_SIZE3;
+        const size = this.sizes.get(id) || DEFAULT_SIZE5;
         const center = positions.get(id) || { x: 0, y: 0 };
         const left = center.x - size.w / 2;
         const top = center.y - size.h / 2;
@@ -966,6 +1167,7 @@
     // ---- 2.3 destroy() — teardown SPA (#657 __registerInstance) ----
     destroy() {
       this.model.removeEventListener("graph:model:change", this._onChange);
+      this._paintToken++;
       if (this.raf) {
         cancelAnimationFrame(this.raf);
         this.raf = null;
