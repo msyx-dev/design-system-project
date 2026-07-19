@@ -28,6 +28,7 @@ export class SvgRenderer {
     this.sizes = new Map(); // Map<nodeId,{w,h}> — interne au renderer, jamais ecrite au modele
     this.raf = null;
     this.measureHost = null;
+    this._paintToken = 0; // anti-course paint async (#670, I3-2) — cf. paint()/_applyLayout()
     this._onChange = this._onChange.bind(this);
 
     this._build();
@@ -152,11 +153,26 @@ export class SvgRenderer {
     return typeof this.opts.renderNode === 'function' ? this.opts.renderNode(node) : graphCard(node);
   }
 
-  // ---- 2.2.3 paint(positions, sizes) ----
+  // ---- 2.2.3 paint(positions, sizes) — async-tolerant (#670, I3-2) ----
+  // `run()` reste SYNCHRONE pour fixed/tree/radial/mindmap (aucun frame supplementaire,
+  // 100% retro-compatible). Seul `layered` (dagre, dynamic import) renvoie une Promise.
+  // Un thenable declenche l'extraction _applyLayout() + un token anti-course : si un
+  // repaint plus recent demarre avant la resolution d'un paint async en vol, la
+  // resolution tardive devient un no-op (jamais de flicker/ordre inverse).
   paint() {
     const run = resolveLayout(this.opts.layout || 'fixed');
-    const positions = run(this.model, { ...(this.opts.layoutOptions || {}), sizes: this.sizes });
+    const result = run(this.model, { ...(this.opts.layoutOptions || {}), sizes: this.sizes });
+    if (result && typeof result.then === 'function') {
+      const token = ++this._paintToken;
+      result.then((positions) => {
+        if (token === this._paintToken) this._applyLayout(positions);
+      });
+      return;
+    }
+    this._applyLayout(result);
+  }
 
+  _applyLayout(positions) {
     this.nodesG.innerHTML = '';
     this.edgesG.innerHTML = '';
 
@@ -287,6 +303,7 @@ export class SvgRenderer {
   // ---- 2.3 destroy() — teardown SPA (#657 __registerInstance) ----
   destroy() {
     this.model.removeEventListener('graph:model:change', this._onChange);
+    this._paintToken++; // invalide tout paint async en vol (#670) -> resolution tardive = no-op
     if (this.raf) {
       cancelAnimationFrame(this.raf);
       this.raf = null;

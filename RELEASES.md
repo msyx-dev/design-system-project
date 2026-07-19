@@ -1,5 +1,119 @@
 # Releases
 
+## 2.102.0 — 2026-07-19 — Moteur graph I3-2 : layout layered (dagre vendoré) + mindmap bilatéral NHOOD (#670)
+
+> Cinquième brique du moteur graphique node-link — le layout **`layered`** (Sugiyama
+> via **dagre vendoré**, 1ʳᵉ dépendance tierce vendorée du DS) et le layout **`mindmap`**
+> bilatéral maison, **1er use case client réel (NHOOD)** : nœud central → branches
+> réparties gauche/droite → feuilles riches. `layered` active enfin le chemin
+> `auto`→`layered` posé par #669 (`hasLayout('layered')` devient vrai).
+
+### Added
+- **Vendoring dagre** (`shared/graph/vendor/`) — `@dagrejs/dagre@3.0.0` +
+  `@dagrejs/graphlib@4.0.1` (fork **maintenu** de l'organisation `dagrejs`, **PAS** le
+  legacy `dagre@0.8.5` non maintenu depuis 2018 ; **MIT** tous deux). `build-vendor.sh`
+  reproductible (patron `shared/icons/build-sprite.sh` : sandbox `mktemp -d` jetable,
+  `npm pack` + `npm install --no-save`, bundle esbuild `--format=esm --platform=neutral
+  --legal-comments=inline`, **AUCUN `min.js`**, source lisible). `graph-layered.js`
+  généré et **committé** (~53.5 KB brut / ~15.2 KB gzip). `VENDOR.md` : version pinnée,
+  hash sha256 d'intégrité, **owner CVE nommé** (mainteneur DS), cadence de veille
+  trimestrielle + réaction Dependabot upstream, surface CVE quasi nulle (calcul pur,
+  aucun I/O/réseau/eval). `LICENSE-dagre` + `LICENSE-graphlib` + `NOTICE`. Nouvelle
+  ligne `shared/perf-budget.json` dédiée (seuil isolé, 16.3 KB gzip).
+- **`layered.js`** (`shared/graph/layout/layered.js`) — layout hiérarchique Sugiyama,
+  **SEUL layout ASYNC** du moteur : `run(model,opts)` renvoie `Promise<Map<id,{x,y}>>`
+  (dagre chargé en dynamic import). Adapte le modèle (`GraphModel`) vers
+  `dagre.graphlib.Graph`, lit `nd.x`/`nd.y` (centre du nœud, aligné avec le contrat du
+  moteur), gère les cycles **nativement** (greedy FAS interne de dagre — jamais
+  d'infini). Options : `direction:'TB'|'LR'`, `gap:{x,y}`. Le specifier du dynamic
+  import est calculé dans une **variable** (`typeof window !== 'undefined' ?
+  '/shared/graph/vendor/graph-layered.js' : '../vendor/graph-layered.js'`) — deux
+  contextes de résolution distincts (ESM brut Node/bundler vs bundle IIFE navigateur où
+  un chemin relatif se résoudrait contre l'URL du `<script>`, pas contre celle de
+  `layered.js`, même convention que le sprite d'icônes `/shared/icons/sprite.svg`).
+  Cette variable n'est **jamais inlinable statiquement par esbuild** en IIFE — garantie
+  d'isolation plus robuste que le seul `--external:*graph-layered.js` (conservé dans
+  `build.sh` en défense en profondeur).
+- **`mindmap.js`** (`shared/graph/layout/mindmap.js`) — layout mindmap **BILATÉRAL**
+  maison, pur, déterministe, DOM-free — **1er use case client (NHOOD)**. Racine centrale
+  `(0,0)` ; branches de 1er niveau réparties **gauche/droite** par glouton d'équilibrage
+  (charge = hauteur cumulée du sous-arbre par défaut, ou nombre de feuilles via
+  `balance:'count'` ; égalité → droite d'abord, déterministe) ; chaque côté = arbre
+  horizontal Reingold-Tilford tourné 90° (côté gauche **miroir** en x) ; largeur par
+  palier dérivée du **`node.size.w`** réel (cumul, même mécanique que `maxByDepth` de
+  `tree.js`) → évite le chevauchement horizontal des nœuds larges ; empilement vertical
+  par curseur global au côté (aucun chevauchement vertical entre feuilles). **Consomme
+  `node.size`** (nœuds riches NHOOD à largeur/hauteur variables — indispensable) ; ne
+  place que `{x,y}` (séparation stricte layout/render, le contenu riche reste porté par
+  `nodeTypes`/`renderNode`/`graphCard()`, #666). Toujours **explicite** (jamais
+  auto-choisi, comme `radial`). Couverture totale garantie (racines de secours, filet
+  défensif `(0,0)`).
+- **`paint()` async-tolérant** (`shared/graph/render/svg-renderer.js`) — extraction du
+  corps de rendu en `_applyLayout(positions)` ; `paint()` détecte un `run()` thenable
+  (layout `layered`) et attend sa résolution avant de peindre, via un **token
+  anti-course** (`this._paintToken`, incrémenté à chaque appel de `paint()` **et** à
+  `destroy()`) : si un repaint plus récent démarre avant la résolution d'un paint async
+  en vol, la résolution tardive devient un **no-op** (jamais de flicker/ordre inversé,
+  jamais de repaint après `destroy()`). Les layouts synchrones (`fixed`/`tree`/`radial`/
+  `mindmap`) sont **inchangés**, **aucun frame supplémentaire** — retro-compatibilité
+  totale.
+- **`layout/index.js`** — `mindmap` enregistré **statiquement** (sync, maison, même
+  pattern que `fixed`/`tree`/`radial`). `layered` enregistré via un **loader lazy**
+  (`registerLayout('layered', (model,opts) => import('./layered.js').then(m =>
+  m.layeredLayout(model,opts)))`) — `./layered.js` (et donc le vendoré dagre) ne charge
+  **jamais statiquement**, uniquement au premier appel réel du layout `layered`.
+  `hasLayout('layered')` est désormais **vrai** dès le chargement du module —
+  l'auto-détection (`layout:'auto'`, #669) **route réellement** un DAG multi-racines ou
+  un graphe cyclique vers `layered` (le comportement de dégradation gracieuse vers
+  `tree` tant que `layered` était absent, introduit par #669, est **retiré** : voir
+  Notes ci-dessous et `tests/regression/graph-layout-radial.test.js` mis à jour).
+  JSDoc `createGraph(el,opts)` (`shared/graph/index.js`) : union `opts.layout` étendue à
+  `'fixed'|'tree'|'radial'|'mindmap'|'layered'|'auto'`.
+- **`build.sh`** — `--external:*graph-layered.js` sur la sortie IIFE (`graph.global.js`)
+  en défense en profondeur (le specifier variable de `layered.js` rend déjà
+  l'inlining statiquement impossible pour esbuild). `shared/dist/graph.global.js`
+  régénéré : **10.2 KB gzip** (+1.6 KB vs #669, attribuable à `mindmap.js` — dagre/
+  `layered` restent **prouvés hors bundle**, ligne `perf-budget.json` dédiée pour
+  `graph-layered.js`, 15.2 KB gzip isolé).
+- **`sync.sh --with-graph`** étendu — copie désormais `shared/graph/vendor/*`
+  (`graph-layered.js` + `LICENSE-dagre` + `LICENSE-graphlib` + `NOTICE`) vers
+  `<TARGET>/graph/vendor/` chez le consumer ; à l'intégrateur de servir ce dossier à
+  l'URL absolue `/shared/graph/vendor/graph-layered.js` (même limitation déjà acceptée
+  pour le sprite d'icônes).
+- **2 sous-démos** dans `data.html#graph` : **dépendances** (layout `layered`, DAG
+  multi-racines `spec`+`docs` → `design`/`build` → `test` → `deploy`, `direction:'TB'`,
+  6 nœuds, `size` explicite) et **mindmap NHOOD** (layout `mindmap`, nœud central
+  « Refonte NHOOD » + 4 branches riches `graphCard()` — badge statut + chip personne
+  via `foreignObject`, `data.rich:true`, `size` explicite sur chaque nœud → VR
+  déterministe). `<p>` d'intro de la section mis à jour (mention `mindmap`/`layered`).
+- **Tests Node DOM-free** (`tests/regression/graph-layout-layered.test.js`, 19
+  assertions, `npm run test:graph-layout-layered`, step CI dédié « Graph
+  layered(dagre)/mindmap unit tests (#670, I3-2) ») : golden-test positions **exactes**
+  (dagre@3.0.0 pinné, reproductibilité du build vendoré), gestion des cycles (`< 2s`,
+  couverture totale), `rankdir` TB (y croît) vs LR (x croît), déterminisme `mindmap`
+  (mêmes entrées → même `Map`), répartition bilatérale (racine centrée, ≥1 branche
+  x>0 et ≥1 x<0), équilibrage `'height'` vs `'count'` distinct sur cas asymétrique,
+  non-chevauchement vertical sur tailles variables, couverture foret/cycle, registre
+  (`hasLayout`/`resolveLayout` mindmap+layered, thenable). **`tests/regression/
+  graph-layout-radial.test.js` mis à jour** (25 assertions, inchangé en nombre) : les
+  2 blocs qui simulaient/vérifiaient l'absence de `layered` (dégradation `tree`) sont
+  remplacés par des assertions sur le **vrai** routage async vers `layered` (#670 rend
+  `hasLayout('layered')` réellement vrai dès le chargement du module).
+
+### Notes
+- **VR** : la sous-démo `layered`/`mindmap` modifie `data-graph.png` (seule section
+  impactée, churn attendu) — **NON finalisé dans cette PR**, laissé au parent
+  (`test:visual:update`, recette soft-harvest #514). `layered` peint en **async** —
+  risque d'instabilité VR (capture avant résolution du dynamic import) potentiellement
+  couvert par le garde-fou de stabilité dimensionnelle de `visual.spec.ts` ; à vérifier
+  au harvest.
+- **Coordination #669** : fichiers partagés (`layout/index.js`, `graph/index.js`,
+  `data.html#graph`, 8 sources de version) mergés **après** #669 (déjà sur `main`,
+  v2.101.0) — pas de conflit.
+- Hors scope (jalon suivant, piloté par le parent, **hors code**) : round-trip
+  `nexus` avec un mindmap NHOOD réel (badges statut, chips personne) AVANT de graver
+  `schemaVersion:1` (retire la réserve « PROVISOIRE » de `to-model.js`/`graph-model.js`).
+
 ## 2.101.0 — 2026-07-19 — Moteur graph I3-1 : layout radial + auto-détection de layout (#669)
 
 > Quatrième brique du moteur graphique node-link — 1ers **layouts riches** (Epic #656,

@@ -1387,7 +1387,7 @@
     <div class="section-header">
         <span class="overline">Graphe</span>
         <h2>Graph</h2>
-        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code>, <code class="code-inline">tree</code> et <code class="code-inline">radial</code> purs (DOM-free), auto-d&eacute;tection <code class="code-inline">layout:&nbsp;'auto'</code> qui route vers <code class="code-inline">tree</code> ou <code class="code-inline">layered</code> selon la topologie, alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>.</p>
+        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code>, <code class="code-inline">tree</code>, <code class="code-inline">radial</code> et <code class="code-inline">mindmap</code> purs (DOM-free) plus <code class="code-inline">layered</code> (Sugiyama via dagre vendor&eacute;, seul layout <strong>asynchrone</strong>), auto-d&eacute;tection <code class="code-inline">layout:&nbsp;'auto'</code> qui route vers <code class="code-inline">tree</code> ou <code class="code-inline">layered</code> selon la topologie, alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>.</p>
     </div>
 
     <div class="demo-box">
@@ -1464,6 +1464,53 @@
             </script>
         </div>
         <p class="demo-note-last">Racine au centre, profondeur &rarr; anneau, secteurs &prop; feuilles. <code class="code-inline">size</code> explicite &rarr; mesure skipp&eacute;e, VR d&eacute;terministe.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; d&eacute;pendances (layout <code class="code-inline">layered</code>, Sugiyama via dagre vendor&eacute;)</span>
+        <div class="graph" data-graph>
+            <script type="application/json" class="graph-config">
+            { "layout": "layered", "layoutOptions": {"direction":"TB","gap":{"x":32,"y":56}}, "label": "Pipeline de d&eacute;ploiement (demo)",
+              "data": { "nodes": [
+                {"data":{"id":"spec","label":"Spec"},"size":{"w":110,"h":40}},
+                {"data":{"id":"docs","label":"Docs"},"size":{"w":110,"h":40}},
+                {"data":{"id":"design","label":"Design"},"size":{"w":110,"h":40}},
+                {"data":{"id":"build","label":"Build"},"size":{"w":110,"h":40}},
+                {"data":{"id":"test","label":"Tests"},"size":{"w":110,"h":40}},
+                {"data":{"id":"deploy","label":"Deploy"},"size":{"w":110,"h":40}}
+              ], "edges": [
+                {"data":{"id":"l1","source":"spec","target":"design","directed":true}},
+                {"data":{"id":"l2","source":"spec","target":"build","directed":true}},
+                {"data":{"id":"l3","source":"design","target":"test","directed":true}},
+                {"data":{"id":"l4","source":"build","target":"test","directed":true}},
+                {"data":{"id":"l5","source":"test","target":"deploy","directed":true}},
+                {"data":{"id":"l6","source":"docs","target":"deploy","directed":true}}
+              ] } }
+            </script>
+        </div>
+        <p class="demo-note-last">DAG multi-racines (<code class="code-inline">spec</code>+<code class="code-inline">docs</code>) &mdash; couches Sugiyama via <code class="code-inline">@dagrejs/dagre</code> <strong>vendor&eacute;</strong> (dynamic import, hors bundle de base). <code class="code-inline">layered</code> est le seul layout <strong>asynchrone</strong> du moteur (<code class="code-inline">run()</code> renvoie une <code class="code-inline">Promise</code>) &mdash; <code class="code-inline">paint()</code> tol&egrave;re le thenable, token anti-course.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; mindmap NHOOD (layout <code class="code-inline">mindmap</code>, bilat&eacute;ral)</span>
+        <div class="graph" data-graph>
+            <script type="application/json" class="graph-config">
+            { "layout": "mindmap", "label": "Mindmap bilat&eacute;rale NHOOD (demo)",
+              "data": { "nodes": [
+                {"data":{"id":"hub","label":"Refonte NHOOD"},"size":{"w":150,"h":48}},
+                {"data":{"id":"design","label":"Design","status":"En cours","assignee":"L. Martin","rich":true},"size":{"w":190,"h":98}},
+                {"data":{"id":"dev","label":"Développement","status":"Bloqué","assignee":"K. Nguyen","rich":true},"size":{"w":190,"h":98}},
+                {"data":{"id":"qa","label":"QA","status":"À faire","assignee":"S. Diallo","rich":true},"size":{"w":190,"h":98}},
+                {"data":{"id":"ops","label":"Ops","status":"Fait","assignee":"R. Haddad","rich":true},"size":{"w":190,"h":98}}
+              ], "edges": [
+                {"data":{"id":"m1","source":"hub","target":"design","directed":true}},
+                {"data":{"id":"m2","source":"hub","target":"dev","directed":true}},
+                {"data":{"id":"m3","source":"hub","target":"qa","directed":true}},
+                {"data":{"id":"m4","source":"hub","target":"ops","directed":true}}
+              ] } }
+            </script>
+        </div>
+        <p class="demo-note-last">1er use case client (NHOOD) : n&oelig;ud central &rarr; branches r&eacute;parties gauche/droite (glouton, &eacute;quilibrage par charge de sous-arbre) &rarr; feuilles riches (<code class="code-inline">graphCard()</code> &mdash; badge statut + chip personne dans un <code class="code-inline">foreignObject</code>). <code class="code-inline">layout:'mindmap'</code> reste toujours <strong>explicite</strong> (jamais auto-d&eacute;tect&eacute;). <code class="code-inline">size</code> explicite sur chaque n&oelig;ud &rarr; VR d&eacute;terministe.</p>
     </div>
 
     <div class="demo-box">

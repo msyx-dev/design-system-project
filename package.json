@@ -1,6 +1,6 @@
 {
   "name": "msyx-design-system",
-  "version": "2.101.0",
+  "version": "2.102.0",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
   "workspaces": [
@@ -17,6 +17,7 @@
     "test:graph-model": "node tests/regression/graph-model.test.js",
     "test:graph-layout": "node tests/regression/graph-layout.test.js",
     "test:graph-layout-radial": "node tests/regression/graph-layout-radial.test.js",
+    "test:graph-layout-layered": "node tests/regression/graph-layout-layered.test.js",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
     "test:visual:report": "playwright show-report",
@@ -25,6 +26,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
+    "@dagrejs/dagre": "3.0.0",
+    "@dagrejs/graphlib": "4.0.1",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.48.0",
     "esbuild": "^0.28.1",

@@ -48,7 +48,7 @@ async function main() {
   const { radialLayout } = await import('../../shared/graph/layout/radial.js');
   const { detectLayout } = await import('../../shared/graph/layout/detect.js');
   const { autoLayout } = await import('../../shared/graph/layout/auto.js');
-  const { resolveLayout, hasLayout, treeLayout, registerLayout } = await import('../../shared/graph/layout/index.js');
+  const { resolveLayout, hasLayout, treeLayout } = await import('../../shared/graph/layout/index.js');
 
   const mindmapSizes = () =>
     new Map([
@@ -180,12 +180,13 @@ async function main() {
     assertEqual(detectLayout(empty), 'fixed', "14. detectLayout : graphe vide -> 'fixed'");
   }
 
-  // ---- autoLayout : degradation coord-free-safe (layered absent) ----
+  // ---- autoLayout : DAG multi-racines -> route vers 'layered' REEL (#670) ----
+  // Depuis #670, 'layered' (dagre vendore, dynamic import) est enregistre pour de vrai
+  // des le chargement de layout/index.js -> autoLayout ne degrade plus jamais vers
+  // 'tree' sur un DAG multi-racines : il route vers le vrai 'layered', ASYNC (Promise).
+  // Comportement de degradation (#669 seul, 'layered' absent) retire -> cf. RELEASES #670.
   {
-    // DAG multi-racines -> detectLayout cible 'layered', absent du registre dans ce
-    // process de test -> autoLayout doit degrader vers 'tree' (jamais de Promise, aucune
-    // coordonnee requise -> preuve d'independance vis-a-vis de #670).
-    assertTrue(!hasLayout('layered'), "15. pre-requis test : 'layered' non enregistre (independance #670)");
+    assertTrue(hasLayout('layered'), "15. hasLayout('layered') === true (#670 : dagre vendore enregistre)");
     const dag = new GraphModel({
       nodes: [{ data: { id: 'r1' } }, { data: { id: 'r2' } }, { data: { id: 'leaf' } }],
       edges: [
@@ -194,8 +195,12 @@ async function main() {
       ],
     });
     const result = autoLayout(dag, {});
-    assertTrue(!(result instanceof Promise), '16. autoLayout : ne renvoie jamais de Promise (sync tant que layered absent)');
-    assertEqual(result.size, dag.nodeCount, '17. autoLayout : DAG multi-racines quand meme integralement positionne (degrade tree)');
+    assertTrue(
+      result && typeof result.then === 'function',
+      "16. autoLayout : DAG multi-racines -> route vers 'layered' REEL -> renvoie une Promise (#670)"
+    );
+    const pos = await result;
+    assertEqual(pos.size, dag.nodeCount, '17. autoLayout : DAG multi-racines integralement positionne via layered (dagre)');
   }
 
   // ---- autoLayout : arbre 1-racine -> route bien vers tree (positions identiques) ----
@@ -221,28 +226,15 @@ async function main() {
     assertTrue(hasLayout('radial') === true, "21. hasLayout('radial') === true");
     assertTrue(hasLayout('tree') === true, "22. hasLayout('tree') === true");
     assertTrue(hasLayout('inconnu') === false, "23. hasLayout('inconnu') === false");
+    assertTrue(hasLayout('mindmap') === true, "24. hasLayout('mindmap') === true (#670)");
+    assertTrue(hasLayout('layered') === true, "25. hasLayout('layered') === true (#670)");
   }
 
-  // ---- autoLayout : une fois 'layered' enregistre (simulation post-#670), route dessus ----
-  {
-    let layeredCalled = false;
-    registerLayout('layered', (model) => {
-      layeredCalled = true;
-      const pos = new Map();
-      model.nodes.forEach((n, i) => pos.set(n.data.id, { x: i * 10, y: 0 }));
-      return pos;
-    });
-    assertTrue(hasLayout('layered'), "24. hasLayout('layered') === true apres registerLayout simule");
-    const dag = new GraphModel({
-      nodes: [{ data: { id: 'r1' } }, { data: { id: 'r2' } }, { data: { id: 'leaf' } }],
-      edges: [
-        { data: { id: 'e1', source: 'r1', target: 'leaf', directed: true } },
-        { data: { id: 'e2', source: 'r2', target: 'leaf', directed: true } },
-      ],
-    });
-    autoLayout(dag, {});
-    assertTrue(layeredCalled, "25. autoLayout : une fois 'layered' enregistre, DAG multi-racines route dessus (plus de degradation)");
-  }
+  // NOTE (#670) : le bloc historique "autoLayout : une fois 'layered' enregistre
+  // (simulation post-#670)" est retire ici — il simulait via un registerLayout() manuel
+  // la situation que #670 rend desormais REELLE des le chargement du module (cf. bloc
+  // 15-17 ci-dessus). Couverture complete (golden-test dagre, cycles, rankdir, mindmap
+  // bilateral) : tests/regression/graph-layout-layered.test.js (#670, I3-2).
 
   if (FAILED > 0) {
     console.error(`\n${FAILED} test(s) en echec.`);
