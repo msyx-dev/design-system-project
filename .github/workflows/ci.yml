@@ -45,6 +45,8 @@ jobs:
         run: npm run test:graph-model
       - name: Graph layout unit tests (fixed/tree/a11y-table, #666)
         run: npm run test:graph-layout
+      - name: Graph radial/auto-detect unit tests (#669, I3-1)
+        run: npm run test:graph-layout-radial
       - name: Run hardcoded tokens script tests (anti-regression #279)
         run: |
           chmod +x tests/test-check-hardcoded-tokens.sh

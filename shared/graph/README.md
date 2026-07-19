@@ -1,10 +1,14 @@
-# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu)
+# shared/graph/ — moteur graphique node-link (I1a fondations + I1b-1 modèle + I1b-2 rendu + I3-1 layouts riches)
 
 > Issue #657 (I1a) : fondations — utils partagés, discipline de teardown, tokens,
 > squelette de dossiers, anti-barrel CI, perf-budget. Issue #665 (I1b-1) : le
 > **modèle** (`model/`) — data pure, DOM-free, aucun rendu. Issue #666 (I1b-2) : le
 > **1er rendu** — `layout/` (fixed+tree, purs DOM-free) + `render/` (SvgRenderer,
 > pipeline measure→layout→paint) + alternative a11y table + bundle global dédié.
+> Issue #669 (I3-1) : layout **`radial`** (mindmap 360°, purs DOM-free) + **auto-détection**
+> de layout (`detect.js` + wrapper `'auto'`) — route `tree`/`layered` selon la topologie,
+> dégrade gracieusement vers `tree` tant que `layered` (#670) n'est pas enregistré
+> (`hasLayout()`), garantissant que #669 est mergeable avant #670.
 
 ## Structure
 
@@ -21,9 +25,18 @@ shared/graph/
                   Shape Cytoscape-alignee : semantique dans data{}, geometrie
                   (position/size) en sibling — size PORTE, jamais mesure. #665 (I1b-1).
   layout/         fixed.js (lit node.position.{x,y}) + tree.js (Reingold-Tilford naif
-                  deterministe, forêt + garde anti-cycle) + index.js (registre
-                  registerLayout/resolveLayout). PURS — jamais de document/window,
-                  testables Node (tests/regression/graph-layout.test.js). #666 (I1b-2).
+                  deterministe, forêt + garde anti-cycle) + radial.js (mindmap radiale
+                  360°, racine au centre, anneaux ∝ profondeur, secteurs ∝ charge feuille,
+                  memes garanties que tree.js — #669, I3-1) + detect.js (heuristique
+                  topologique PURE : arbre 1-racine acyclique -> 'tree', DAG/cyclique ->
+                  'layered', graphe vide -> 'fixed' ; 'radial'/'mindmap' jamais
+                  auto-choisis) + auto.js (wrapper layout 'auto' : detecte puis delegue,
+                  degrade vers 'tree' via hasLayout() tant que 'layered' (#670) absent —
+                  jamais de Promise) + index.js (registre registerLayout/resolveLayout/
+                  hasLayout). PURS — jamais de document/window, testables Node
+                  (tests/regression/graph-layout.test.js, graph-layout-radial.test.js).
+                  #666 (I1b-2) + #669 (I3-1). Layout par defaut recommande pour un graphe
+                  sans coordonnees : 'auto'.
   render/         svg-renderer.js — class SvgRenderer : pipeline measure (Map interne
                   de tailles, modèle jamais muté) → layout (délègue à layout/) → paint
                   (var(--graph-*) uniquement). Cycle observe(graph:model:change) →
