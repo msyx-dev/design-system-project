@@ -1176,7 +1176,7 @@
         if (g) {
           g.classList.add("graph-node--selected");
           g.setAttribute("tabindex", "-1");
-          this._setRoving(id);
+          if (this.opts.keyboardNav !== false) this._setRoving(id);
           if (!silent) (_a = g.focus) == null ? void 0 : _a.call(g);
         }
       } else {
@@ -1301,6 +1301,7 @@
     }
     /** roving + focus DOM + recentrage conditionnel (nav clavier -> #671). */
     _focusNode(id) {
+      if (this.opts.keyboardNav === false) return;
       const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
       if (!g) return;
       this._setRoving(id);

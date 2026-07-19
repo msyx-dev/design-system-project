@@ -135,4 +135,58 @@ test.describe("Graph — nav clavier roving + traversee (#671, I4-1)", () => {
     );
     expect(outline).not.toBe("none");
   });
+
+  // Regression : select() (et _focusNode()/focusNode() public) ne doivent JAMAIS
+  // poser tabindex="0" quand keyboardNav:false — sinon un noeud selectionne devient
+  // un tab-stop et une fleche pressee dessus bubble au conteneur -> reintroduit le
+  // conflit pan/traversee que #671 resout. Instance ad-hoc (pas une demo publique
+  // de data.html) creee via window.MSYXGraph deja charge par la page.
+  test("keyboardNav:false — select() ne pose jamais tabindex=0 (aucun tab-stop)", async ({
+    page,
+  }) => {
+    const result = await page.evaluate(() => {
+      const host = document.createElement("div");
+      host.id = "graph-kbnav-false-fixture";
+      document.body.appendChild(host);
+      const g = (window as any).MSYXGraph.createGraph(host, {
+        layout: "fixed",
+        keyboardNav: false,
+        a11yTable: false,
+        data: {
+          nodes: [
+            {
+              data: { id: "a", label: "A" },
+              position: { x: 0, y: 0 },
+              size: { w: 100, h: 40 },
+            },
+            {
+              data: { id: "b", label: "B" },
+              position: { x: 200, y: 0 },
+              size: { w: 100, h: 40 },
+            },
+          ],
+          edges: [
+            { data: { id: "e1", source: "a", target: "b", directed: true } },
+          ],
+        },
+      });
+      g.select("a");
+      g.focusNode("b"); // API publique — meme garde attendue
+      const tabbable = host.querySelectorAll(
+        '.graph-node[tabindex="0"]',
+      ).length;
+      const aTabindex = host
+        .querySelector('[data-node-id="a"]')
+        ?.getAttribute("tabindex");
+      const bTabindex = host
+        .querySelector('[data-node-id="b"]')
+        ?.getAttribute("tabindex");
+      g.destroy();
+      host.remove();
+      return { tabbable, aTabindex, bTabindex };
+    });
+    expect(result.tabbable).toBe(0); // aucun noeud tab-stop
+    expect(result.aTabindex).toBe("-1"); // selectionne mais focusable programmatiquement seulement
+    expect(result.bTabindex).toBe("-1"); // focusNode() n'a pas non plus promu de tab-stop
+  });
 });

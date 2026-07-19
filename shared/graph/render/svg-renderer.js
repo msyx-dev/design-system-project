@@ -117,7 +117,12 @@ export class SvgRenderer {
       if (g) {
         g.classList.add('graph-node--selected');
         g.setAttribute('tabindex', '-1');
-        this._setRoving(id); // #671 — continuite souris<->clavier : la selection suit le roving
+        // #671 — continuite souris<->clavier : la selection suit le roving. Gate a la
+        // source (le caller) plutot que dans _setRoving() : en keyboardNav:false le
+        // noeud reste focusable programmatiquement (tabindex="-1" ci-dessus) mais ne
+        // doit JAMAIS devenir un tab-stop (sinon une fleche pressee dessus bubble au
+        // conteneur et reintroduit le conflit pan/traversee que #671 resout).
+        if (this.opts.keyboardNav !== false) this._setRoving(id);
         if (!silent) g.focus?.(); // pas de vol de focus au chargement (initialSelection)
       }
     } else {
@@ -253,6 +258,7 @@ export class SvgRenderer {
 
   /** roving + focus DOM + recentrage conditionnel (nav clavier -> #671). */
   _focusNode(id) {
+    if (this.opts.keyboardNav === false) return; // #671 — API publique focusNode() : meme garde que _initNodeNav()
     const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
     if (!g) return;
     this._setRoving(id);
