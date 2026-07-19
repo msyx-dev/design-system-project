@@ -1,0 +1,6 @@
+{
+  "name": "@msyx-dev/graph-lib-internal",
+  "private": true,
+  "type": "module",
+  "description": "Scope ESM local a shared/graph/ — n'affecte pas le reste du repo (CommonJS par defaut)."
+}

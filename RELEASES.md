@@ -1,5 +1,30 @@
 # Releases
 
+## 2.98.0 — 2026-07-19 — Moteur graph I1a : fondations + remboursement de dette (#657)
+
+> Première brique du futur moteur graphique node-link du design system. Aucun rendu de
+> graphe visible dans cette version — uniquement les fondations partagées et une dette
+> technique remboursée sur des composants existants.
+
+### Added
+- **`pointerDrag()`** — util de drag pointer unifié (`shared/graph/lib/pointer-drag.js`), leak-safe (`destroy()` retire tous les listeners, posés sur l'élément et non sur `document`).
+- **`svg(tag, attrs)`** — helper de création d'éléments SVG (`shared/graph/lib/svg.js`), refactor pur sans changement de comportement.
+- **Discipline de teardown SPA** dans `shared/components.js` : registre `__registerInstance`/`__sweepDetached`, appelé en tête de `reinitAll()` — purge les instances dont l'élément n'est plus dans le DOM après une navigation SPA.
+- **Tokens `--graph-*`** dans `tokens.css` (node/edge/label/grid/zoom), dérivés via `color-mix()` des tokens déjà themés.
+- **Squelette `shared/graph/`** (`lib/`, `model/`, `layout/`, `render/`) + `shared/css/components/graph.css` (hors barrel, opt-in).
+- **1ʳᵉ brique DS avec build** : `esbuild` borné (`shared/graph/build.sh`) émet `shared/dist/graph-lib.global.js` (IIFE, `window.__pointerDrag`/`window.__svg`), chargé avant `components.js` sur toutes les pages.
+- **`shared/check-graph-isolation.sh`** (CI) : échoue si `graph.css` apparaît dans un barrel par défaut.
+- **ADR** `docs/adr/ADR-0001-moteur-graph.md` — décision d'architecture du moteur graph (cœur maison + dagre vendoré + rendu SVG).
+- Budget perf dédié pour `shared/dist/graph-lib.global.js` (`perf-budget.json`, `docs/PERF-BUDGET.md`).
+
+### Changed
+- **`initSplitPane`** et **`initBeforeAfter`** (`shared/components.js`) migrés sur `pointerDrag()`. `before-after` gagne au passage la correction d'une fuite mémoire SPA réelle (6 listeners `mousedown`/`mousemove`/`mouseup`/`touchstart`/`touchmove`/`touchend`, dont 4 posés sur `document`, jamais retirés) ; le drag démarre désormais sur le handle (`.before-after-handle`) plutôt que n'importe où dans le container.
+- **`buildPieChart`/`buildDonutChart`** (pie/donut chart) et **`initProgressTrackers`** (progress-tracker simple + multi) refactorés pour utiliser `svg()` au lieu de `document.createElementNS` dupliqué (5 sites).
+
+### Notes
+- Kanban (HTML5 Drag & Drop natif) et sortable-list (reorder + clone 2D tactile) restent **hors-scope** : patterns structurellement différents de `pointerDrag()`, aucun bénéfice à les y faire rentrer de force.
+- `sync.sh --with-graph` **différé à I1b/I3** (documenté dans `shared/graph/README.md`) — le moteur n'est pas encore consommable par les projets tiers.
+
 ## 2.97.2 — 2026-07-15 — Chrome modal : a11y bouton fermer + titre
 
 ### Fixed

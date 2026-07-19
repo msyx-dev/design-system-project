@@ -1,6 +1,6 @@
 {
   "name": "msyx-design-system",
-  "version": "2.97.2",
+  "version": "2.98.0",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
   "workspaces": [
@@ -10,8 +10,10 @@
     "generate-registry": "node bin/generate-registry.js",
     "generate-nav-sections": "node bin/generate-nav-sections.js",
     "generate-version-notes": "node bin/generate-version-notes.js",
+    "build:graph": "bash shared/graph/build.sh",
     "test:syntax": "node tests/regression/nav-js-syntax.test.js",
     "test:version-notes": "node tests/regression/generate-version-notes.test.js",
+    "test:graph-lib": "node tests/regression/graph-lib.test.js",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
     "test:visual:report": "playwright show-report",
@@ -22,6 +24,7 @@
     "@axe-core/playwright": "^4.11.3",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.48.0",
+    "esbuild": "^0.28.1",
     "http-server": "^14.1.1",
     "wait-on": "^9.0.5"
   },

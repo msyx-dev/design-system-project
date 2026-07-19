@@ -1,4 +1,4 @@
-/* @ds-version: 2.97.2 */
+/* @ds-version: 2.98.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -253,6 +253,21 @@
     /* Alert messaging — alphas surchargeables par modificateur (#519) */
     --alert-bg-alpha: 8%;       /* fond par défaut (.alert variantes) */
     --alert-border-alpha: 20%;  /* bordure par défaut (.alert variantes) */
+
+    /* ===== GRAPH ENGINE (v2.98.0, #657) ===== */
+    /* Derives via color-mix() a partir de tokens deja themes (--accent/--text/--text-muted/--surface-solid) :
+       une seule declaration suffit a couvrir les 6 combos theme/mode (substitution var() paresseuse,
+       resolue au point d'usage avec le --text-muted/--accent en vigueur sur l'element). */
+    --graph-node-bg: var(--surface-solid);
+    --graph-node-border: color-mix(in srgb, var(--accent) 22%, transparent);
+    --graph-node-fg: var(--text);
+    --graph-edge: color-mix(in srgb, var(--text-muted) 78%, transparent); /* vise >=3:1 sur --graph-node-bg */
+    --graph-edge-strong: var(--accent);
+    --graph-label: var(--text);
+    --graph-grid: color-mix(in srgb, var(--text-muted) 14%, transparent);
+    --graph-zoom-min: 0.2;
+    --graph-zoom-max: 4;
+    --graph-grid-size: 16px;
 
     /* === Aliases legacy — deprecated, remove in v3 === */
     --border: var(--border-color); /* deprecated, remove in v3 */

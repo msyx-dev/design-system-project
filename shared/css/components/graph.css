@@ -1,0 +1,7 @@
+/* @ds-version: 2.98.0 */
+/* graph.css — module CSS du moteur graphique node-link (#657, I1a)
+   HORS BARREL — jamais importe par components.css ni components-core.css
+   (verifie par shared/check-graph-isolation.sh en CI). Opt-in explicite :
+   un consumer qui veut le moteur graph passera --components=graph a sync.sh
+   (flag differe a I1b/I3, cf. shared/graph/README.md).
+   I1a = squelette seul, aucune regle visuelle (aucun composant graph rendu). */

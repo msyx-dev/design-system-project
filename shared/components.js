@@ -2333,12 +2333,13 @@ function initPieCharts() {
             const angle = (val / total) * 360;
             const endAngle = currentAngle + angle;
             const color = resolveColor(colors[i], i);
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', describeArcPath(cx, cy, r, currentAngle, endAngle));
-            path.setAttribute('fill', color);
+            const path = window.__svg('path', {
+                d: describeArcPath(cx, cy, r, currentAngle, endAngle),
+                fill: color,
+                role: 'img', // a11y: legitimise aria-label on SVG path (aria-prohibited-attr fix)
+                'aria-label': `${labels[i]}: ${val}`,
+            });
             path.classList.add('pie-segment');
-            path.setAttribute('role', 'img'); // a11y: legitimise aria-label on SVG path (aria-prohibited-attr fix)
-            path.setAttribute('aria-label', `${labels[i]}: ${val}`);
             path.style.opacity = '0';
             svg.appendChild(path);
             segments.push({ el: path, label: labels[i], color });
@@ -2390,20 +2391,19 @@ function initPieCharts() {
             const dashLen = fraction * circumference;
             const color = resolveColor(colors[i], i);
 
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', cx);
-            circle.setAttribute('cy', cy);
-            circle.setAttribute('r', r);
-            circle.setAttribute('fill', 'none');
-            circle.setAttribute('stroke', color);
-            circle.setAttribute('stroke-width', strokeW);
             // rotate via stroke-dashoffset : offset = circumference - (offsetAngle/360)*circumference
             const dashOffset = circumference - (offsetAngle / 360) * circumference;
-            circle.setAttribute('stroke-dasharray', `${dashLen} ${circumference}`);
-            circle.setAttribute('stroke-dashoffset', dashOffset);
+            const circle = window.__svg('circle', {
+                cx: cx, cy: cy, r: r,
+                fill: 'none',
+                stroke: color,
+                'stroke-width': strokeW,
+                'stroke-dasharray': `${dashLen} ${circumference}`,
+                'stroke-dashoffset': dashOffset,
+                role: 'img', // a11y: legitimise aria-label on SVG circle (aria-prohibited-attr fix)
+                'aria-label': `${labels[i]}: ${val}`,
+            });
             circle.classList.add('pie-donut-segment');
-            circle.setAttribute('role', 'img'); // a11y: legitimise aria-label on SVG circle (aria-prohibited-attr fix)
-            circle.setAttribute('aria-label', `${labels[i]}: ${val}`);
             circle.style.opacity = '0';
             // rotate from top : transform-origin at center
             circle.style.transformOrigin = `${cx}px ${cy}px`;
@@ -2622,14 +2622,10 @@ function initProgressTrackers() {
                 const angle = (2 * Math.PI * i) / steps - Math.PI / 2;
                 const dx = CX + R * Math.cos(angle);
                 const dy = CY + R * Math.sin(angle);
-                const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                dot.setAttribute('cx', dx);
-                dot.setAttribute('cy', dy);
-                dot.setAttribute('r', '5');
                 let state = 'pt-step--pending';
                 if (i < current - 1) state = 'pt-step--done';
                 else if (i === current - 1) state = 'pt-step--active';
-                dot.setAttribute('class', `pt-step ${state}`);
+                const dot = window.__svg('circle', { cx: dx, cy: dy, r: '5', class: `pt-step ${state}` });
                 svg.appendChild(dot);
             }
         }
@@ -2674,21 +2670,11 @@ function initProgressTrackers() {
             const circumference = 2 * Math.PI * r;
 
             // Track
-            const track = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            track.setAttribute('cx', CX);
-            track.setAttribute('cy', CY);
-            track.setAttribute('r', r);
-            track.setAttribute('class', 'pt-track');
-            track.setAttribute('stroke-width', SW);
+            const track = window.__svg('circle', { cx: CX, cy: CY, r: r, class: 'pt-track', 'stroke-width': SW });
             svg.appendChild(track);
 
             // Fill
-            const fill = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            fill.setAttribute('cx', CX);
-            fill.setAttribute('cy', CY);
-            fill.setAttribute('r', r);
-            fill.setAttribute('class', 'pt-fill');
-            fill.setAttribute('stroke-width', SW);
+            const fill = window.__svg('circle', { cx: CX, cy: CY, r: r, class: 'pt-fill', 'stroke-width': SW });
             fill.style.stroke = color;
             fill.style.transformOrigin = `${CX}px ${CY}px`;
             fill.style.transform = 'rotate(-90deg)';
@@ -2922,8 +2908,6 @@ function initBeforeAfter() {
         const handle = container.querySelector('.before-after-handle');
         if (!before || !handle) return;
 
-        let dragging = false;
-
         function applyPercent(percent) {
             const clamped = Math.min(95, Math.max(5, percent));
             before.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
@@ -2935,28 +2919,15 @@ function initBeforeAfter() {
             return ((clientX - rect.left) / rect.width) * 100;
         }
 
-        // Mouse events
-        container.addEventListener('mousedown', e => {
-            dragging = true;
-            applyPercent(getPercent(e.clientX));
-            e.preventDefault();
+        // Drag — pointerDrag() partagé (#657, I1a) : remplace les 6 listeners mouse/touch
+        // dont 4 sur document (fuite SPA corrigee). Le drag demarre desormais sur le HANDLE
+        // (comportement plus previsible tactile — cf. spec §1).
+        handle.style.touchAction = 'none';
+        var destroyDrag = window.__pointerDrag(handle, {
+            onMove: function (e) { applyPercent(getPercent(e.clientX)); },
+            axis: 'x',
         });
-        document.addEventListener('mousemove', e => {
-            if (!dragging) return;
-            applyPercent(getPercent(e.clientX));
-        });
-        document.addEventListener('mouseup', () => { dragging = false; });
-
-        // Touch events
-        container.addEventListener('touchstart', e => {
-            dragging = true;
-            applyPercent(getPercent(e.touches[0].clientX));
-        }, { passive: true });
-        document.addEventListener('touchmove', e => {
-            if (!dragging) return;
-            applyPercent(getPercent(e.touches[0].clientX));
-        }, { passive: true });
-        document.addEventListener('touchend', () => { dragging = false; });
+        window.__registerInstance(container, destroyDrag);
     });
 }
 window.__initBeforeAfter = initBeforeAfter;
@@ -5398,30 +5369,14 @@ function initSplitPane() {
         }
         applyRatio(initialRatio !== null && !isNaN(initialRatio) ? initialRatio : 50, { persist: false });
 
-        // Drag — Pointer Events (souris + tactile + stylet unifiés)
-        var dragging = false;
-
-        gutter.addEventListener('pointerdown', function(e) {
-            dragging = true;
-            gutter.setPointerCapture(e.pointerId);
-            pane.classList.add('split-pane--dragging');
-            e.preventDefault();
+        // Drag — pointerDrag() partagé (#657, I1a) : Pointer Events + setPointerCapture unifiés
+        var destroyDrag = window.__pointerDrag(gutter, {
+            onStart: function () { pane.classList.add('split-pane--dragging'); },
+            onMove: function (e) { applyRatio(ratioFromPoint(e.clientX, e.clientY)); },
+            onEnd: function () { pane.classList.remove('split-pane--dragging'); },
+            axis: vertical ? 'y' : 'x',
         });
-
-        gutter.addEventListener('pointermove', function(e) {
-            if (!dragging) return;
-            applyRatio(ratioFromPoint(e.clientX, e.clientY));
-        });
-
-        function endDrag(e) {
-            if (!dragging) return;
-            dragging = false;
-            pane.classList.remove('split-pane--dragging');
-            try { gutter.releasePointerCapture(e.pointerId); } catch (err) { /* déjà relâché */ }
-        }
-
-        gutter.addEventListener('pointerup', endDrag);
-        gutter.addEventListener('pointercancel', endDrag);
+        window.__registerInstance(pane, destroyDrag);
 
         // Clavier — flèches ajustent par pas, Home/End = bornes min/max
         gutter.addEventListener('keydown', function(e) {
@@ -6358,8 +6313,28 @@ function initVersionNotes() {
 window.__initVersionNotes = initVersionNotes;
 
 
+// ===== TEARDOWN SPA — registre + sweep (#657, I1a) =====
+// Set de {el, destroy} enregistres par les composants qui posent des listeners
+// destructibles (ex: split-pane/before-after via window.__pointerDrag). __sweepDetached()
+// est appele en tete de reinitAll() : purge les instances dont l'element n'est plus dans
+// le DOM (navigateTo() swap innerHTML -> fuite sinon, cf. spec #657 §3).
+var __instances = new Set();
+window.__registerInstance = function (el, destroy) {
+    __instances.add({ el: el, destroy: destroy });
+};
+function __sweepDetached() {
+    __instances.forEach(function (rec) {
+        if (!document.contains(rec.el)) {
+            try { rec.destroy(); } catch (e) { /* best-effort */ }
+            __instances.delete(rec);
+        }
+    });
+}
+window.__sweepDetached = __sweepDetached;
+
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
 function reinitAll() {
+    __sweepDetached();
     initCalendar();
     initTimePicker();
     // initServerDataGrid AVANT initComponents (qui appelle initDataGrids) :

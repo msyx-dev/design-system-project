@@ -10,6 +10,12 @@ playwright-report/
 
 # Build artifacts locaux (shared/build.sh) — ajouté avant deploy v2.48.0
 shared/dist/
+# Exception (#657, I1a) : le DS n'a aucun build au deploiement (Caddy sert le statique
+# tel quel) -> l'artefact esbuild du moteur graph est GENERE mais COMMITE (meme logique
+# que shared/icons/sprite.svg). Regenerer via shared/graph/build.sh apres toute modif
+# de shared/graph/lib/*.js.
+!shared/dist/
+!shared/dist/graph-lib.global.js
 
 # @msyx-dev/react — build artifact généré (ne pas commiter)
 packages/react/dist/
