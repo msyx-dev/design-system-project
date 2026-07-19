@@ -69,6 +69,10 @@ shared/
   icons/
     sprite.svg             # Sprite SVG Lucide self-hosted (v2.33.0) — 50 glyphes, ~21 KB
     build-sprite.sh        # Build reproductible (lucide-static + svgo)
+  graph/             # Moteur graphique node-link — fondations I1a (v2.98.0 #657) + modele I1b-1 (v2.99.0 #665)
+    lib/              # pointer-drag.js, svg.js (ES modules) + index.js (barrel) + global-entry.js (IIFE, cf. build.sh)
+    model/            # GraphModel (EventTarget observable, DOM-free) + toModel() + index.js (barrel) — data plat Cytoscape-aligne, v2.99.0 #665
+    layout/ render/   # .gitkeep — dagre vendore + rendu SVG, livres en I1b-2+ (#666)
   nav.js            # Header (badge de version cliquable dogfoodant version-notes #614, VERSION_NOTES généré au build par bin/generate-version-notes.js #645, inliné entre marqueurs AUTO-GENERATED, ZÉRO fetch runtime), sidebar (NAV_SECTIONS_MANIFEST généré au build par bin/generate-nav-sections.js, inliné entre marqueurs AUTO-GENERATED, ZÉRO fetch runtime v2.70.0 #528), scroll spy, SPA navigation, LazyLoader
   components.js     # Composants JS partages (toasts, modals, tabs, kanban, sliders, chips, search inputs, data grids, carousel, copy buttons, rating, segmented controls, bottom nav, number inputs, OTP, tag inputs, tree view, bottom sheet, lightbox, context menu, FAB, theme/mode switcher, video embeds, quiz/poll, command palette, matrice risque)
 ```

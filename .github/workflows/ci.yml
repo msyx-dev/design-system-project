@@ -41,6 +41,8 @@ jobs:
           ./shared/check-graph-isolation.sh
       - name: Graph lib unit tests (pointerDrag/svg/sweep, #657)
         run: npm run test:graph-lib
+      - name: Graph model unit tests (GraphModel/toModel, #665)
+        run: npm run test:graph-model
       - name: Run hardcoded tokens script tests (anti-regression #279)
         run: |
           chmod +x tests/test-check-hardcoded-tokens.sh

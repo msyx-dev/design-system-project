@@ -105,7 +105,8 @@ shared/icons/           # Sprite SVG Lucide self-hosted (v2.33.0)
   build-sprite.sh       # Build reproductible : npm install lucide-static + svgo + concat
 shared/graph/           # Moteur graphique node-link — fondations I1a (v2.98.0, #657)
   lib/                  # pointer-drag.js, svg.js (ES modules canoniques) + index.js (barrel) + global-entry.js (entree IIFE)
-  model/ layout/ render/ # .gitkeep — moteur (model=donnees, layout=dagre vendore, render=SVG) livre en I1b+
+  model/                 # GraphModel (data plat, EventTarget observable, DOM-free) + toModel() + index.js (barrel) — v2.99.0, #665 (I1b-1)
+  layout/ render/        # .gitkeep — moteur (layout=dagre vendore, render=SVG) livre en I1b-2+
   build.sh               # esbuild borne → shared/dist/graph-lib.global.js (1re brique DS avec build, cf. ADR-0001)
   README.md              # Frontiere de build D1, sync.sh --with-graph differe a I1b/I3
 shared/dist/
