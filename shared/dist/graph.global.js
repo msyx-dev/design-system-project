@@ -1096,6 +1096,28 @@
     }
   };
 
+  // shared/graph/render/port-drop.js
+  function nearestNodeAt(positions, sizes, point, excludeId) {
+    if (!positions || !point) return null;
+    let bestId = null;
+    let bestDist = Infinity;
+    positions.forEach((center, id) => {
+      if (id === excludeId) return;
+      const size = sizes && sizes.get(id) || { w: 0, h: 0 };
+      const left = center.x - size.w / 2;
+      const top = center.y - size.h / 2;
+      const withinX = point.x >= left && point.x <= left + size.w;
+      const withinY = point.y >= top && point.y <= top + size.h;
+      if (!withinX || !withinY) return;
+      const dist = Math.hypot(center.x - point.x, center.y - point.y);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestId = id;
+      }
+    });
+    return bestId;
+  }
+
   // shared/graph/render/svg-renderer.js
   var uidCounter = 0;
   var DEFAULT_SIZE5 = { w: 120, h: 40 };
@@ -1103,6 +1125,8 @@
   var KEY_PAN_STEP = 40;
   var LIVE_ANNOUNCE_DEBOUNCE_MS = 300;
   var NEW_NODE_LABEL = "N\u0153ud";
+  var ROLE_DOCUMENT = "graphics-document";
+  var ROLE_APPLICATION = "application";
   function escHtml(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   }
@@ -1545,8 +1569,13 @@
       this._editSeq = 0;
       this._buildToolbar();
       this._onEditDblClick = (e) => {
+        if (this._inlineEdit) return;
         const hit = this._hitTest(e);
-        if (hit && hit.closest && hit.closest(".graph-node")) return;
+        const nodeG = hit && hit.closest && hit.closest(".graph-node");
+        if (nodeG && nodeG.dataset.nodeId) {
+          this._startInlineEdit(nodeG.dataset.nodeId);
+          return;
+        }
         const world = this._clientToWorld(e.clientX, e.clientY);
         this._createNodeAt(world.x, world.y);
       };
@@ -1691,6 +1720,195 @@
         });
       }
     }
+    // ---- Edition inline du label (#674, I5-2) — declenchee par _onEditDblClick sur un noeud ----
+    /**
+     * Overlay HTML `<input class="graph-inline-edit">` positionne au-dessus du `<g>` noeud
+     * (getBoundingClientRect, coordonnees CSS relatives au conteneur `.graph` — deja
+     * position:relative pour la toolbar). Pre-rempli avec le label courant, focus pose (contrat
+     * d'ouverture). Pose `role="application"` sur le `<svg>` (arbitrage A, #662) — LOCAL au
+     * temps de l'edition, restaure a ROLE_DOCUMENT a la fermeture (`_closeInlineEdit`) : la nav
+     * SR/clavier I4 (#671/#672) n'est JAMAIS degradee en dehors d'une session d'edition inline.
+     */
+    _startInlineEdit(id) {
+      if (this._inlineEdit) return;
+      const node = this.model.getNode(id);
+      if (!node) return;
+      const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+      if (!g) return;
+      const hostRect = this.el.getBoundingClientRect();
+      const nodeRect = g.getBoundingClientRect();
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "input graph-inline-edit";
+      input.setAttribute("aria-label", "Libell\xE9 du n\u0153ud");
+      const original = node.data && node.data.label || "";
+      input.value = original;
+      input.style.left = `${nodeRect.left - hostRect.left}px`;
+      input.style.top = `${nodeRect.top - hostRect.top}px`;
+      input.style.width = `${nodeRect.width}px`;
+      input.style.height = `${nodeRect.height}px`;
+      const onKeydown = (e) => {
+        e.stopPropagation();
+        if (e.key === "Enter") {
+          e.preventDefault();
+          this._commitInlineEdit();
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          this._cancelInlineEdit();
+        }
+      };
+      const onBlur = () => this._commitInlineEdit();
+      input.addEventListener("keydown", onKeydown);
+      input.addEventListener("blur", onBlur);
+      this._inlineEdit = { id, input, original, onKeydown, onBlur };
+      this.svgEl.setAttribute("role", ROLE_APPLICATION);
+      this.el.appendChild(input);
+      input.focus();
+      input.select();
+    }
+    /** Enter/blur : valide (skip si vide/inchange, #674) puis ferme. */
+    _commitInlineEdit() {
+      const state = this._inlineEdit;
+      if (!state) return;
+      const val = state.input.value.trim();
+      const changed = val !== "" && val !== state.original;
+      const { id } = state;
+      this._closeInlineEdit();
+      if (!changed) return;
+      this.model.updateNode(id, { data: { label: val } });
+      requestAnimationFrame(() => {
+        if (!this.model.hasNode(id)) return;
+        const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+        if (g) g.focus();
+      });
+    }
+    /** Échap : annule sans mutation, ferme. */
+    _cancelInlineEdit() {
+      if (!this._inlineEdit) return;
+      this._closeInlineEdit();
+    }
+    /**
+     * Teardown partage commit/cancel/destroy() : retire l'overlay + listeners, restaure le role,
+     * re-focus le `<g>` noeud (mecanique focus-restore, contrat WCAG 2.4.3). `this._inlineEdit`
+     * est remis a `null` EN PREMIER (idempotence) : retirer un `<input>` focalise du DOM
+     * declenche un `blur` SYNCHRONE -> sans cette garde, `onBlur` reinvoquerait
+     * `_commitInlineEdit()` pendant sa propre fermeture (reentrance).
+     */
+    _closeInlineEdit() {
+      const state = this._inlineEdit;
+      if (!state) return;
+      this._inlineEdit = null;
+      state.input.removeEventListener("keydown", state.onKeydown);
+      state.input.removeEventListener("blur", state.onBlur);
+      state.input.remove();
+      this.svgEl.setAttribute("role", ROLE_DOCUMENT);
+      const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(state.id)}"]`);
+      if (g) g.focus();
+    }
+    // ---- Ports/handles de connexion (#674, I5-2) — mode edit uniquement, drag-to-connect ----
+    /**
+     * Rayon SVG (unites "monde", COURANTES) du port, garantissant une hit-area
+     * >=`--graph-port-size` CSS px (#662 arbitrage C) — QUEL QUE SOIT le niveau de zoom ou la
+     * largeur du conteneur. Un rayon fige en unites monde se retrouve sous 44px des qu'un
+     * conteneur etroit (mobile 375px) ou un zoom-out reduit l'echelle effective de rendu
+     * (constat review #674 : echouait sur les projects Playwright `*-mobile`) -> recalcule a
+     * CHAQUE repaint (appele par `_applyLayout()` juste avant de peindre, avec le `vw` FINAL
+     * de ce repaint), jamais memoise. Echelle = largeur CSS RENDUE du `<svg>` / largeur du
+     * viewBox : `.graph-canvas{width:100%;height:auto}` -> la largeur CSS ne depend QUE du
+     * conteneur parent (jamais du viewBox, qui ne pilote que le ratio -> `height:auto`), donc
+     * `getBoundingClientRect().width` reste valide meme lue AVANT que le NOUVEAU viewBox soit
+     * pose sur le `<svg>` (contrairement a `getScreenCTM()`, dont le calcul aurait utilise le
+     * viewBox encore PERIME du repaint precedent — piege initial de cette fonction).
+     * `this.viewport.getViewport().k` (zoom courant du `<g class="graph-viewport">`, transform
+     * DISTINCTE du viewBox, cf. viewport.js) complete l'echelle : world -> CSS px = svgScale * k.
+     */
+    _computePortRadius(vw) {
+      const cs = typeof getComputedStyle === "function" ? getComputedStyle(this.el) : null;
+      const v = cs && parseFloat(cs.getPropertyValue("--graph-port-size"));
+      const targetPx = Number.isFinite(v) ? v : 44;
+      const rect = this.svgEl && typeof this.svgEl.getBoundingClientRect === "function" ? this.svgEl.getBoundingClientRect() : null;
+      const svgScale = rect && rect.width && vw ? rect.width / vw : 1;
+      const k = this.viewport ? this.viewport.getViewport().k : this.opts.initialViewport && this.opts.initialViewport.k || 1;
+      const scale = (svgScale || 1) * (k || 1);
+      return targetPx / 2 / (scale || 1);
+    }
+    /** Peint le port d'un noeud (bord droit, milieu vertical) — appele par _paintNode() quand
+     * opts.mode==='edit'. Recree a CHAQUE repaint (comme le reste de nodesG), meme convention
+     * que le reste du renderer (aucun teardown explicite requis : l'element + ses listeners
+     * sont garbage-collectes avec l'ancien <g> une fois nodesG.innerHTML wipe). */
+    _paintPort(g, id, size) {
+      const port = svg("circle", {
+        class: "graph-port",
+        "data-port-for": id,
+        cx: size.w,
+        cy: size.h / 2,
+        r: this._portRadius || 22
+      });
+      g.appendChild(port);
+      this._wirePortDrag(port, id);
+    }
+    /** Point d'ancrage MONDE du port (bord droit, meme espace que edgesG/positions). */
+    _portAnchor(id) {
+      if (!this.positions) return null;
+      const center = this.positions.get(id);
+      if (!center) return null;
+      const size = this.sizes.get(id) || DEFAULT_SIZE5;
+      return { x: center.x + size.w / 2, y: center.y };
+    }
+    /**
+     * Drag handle->cible (#662 arbitrage C) via `window.__pointerDrag` (#657, reutilise tel
+     * quel — aucune duplication). Ligne fantome `.graph-port-link` (suit le pointeur via
+     * `_clientToWorld`) ajoutee en enfant DIRECT de `viewportG` (PAS edgesG/nodesG : ces deux-la
+     * sont wipes a chaque repaint par `_applyLayout()`, le fantome vivrait une existence
+     * incertaine si un repaint survenait pendant le drag). Au drop : `nearestNodeAt()`
+     * (`port-drop.js`, geometrique — cf. commentaire du fichier pour la divergence documentee
+     * vs `_hitTest()`) desambiguise le chevauchement -> `model.addEdge` (validation lenient
+     * existante, aucun doublon/auto-boucle EXTRA requis : `excludeId` exclut deja la source).
+     */
+    _wirePortDrag(port, sourceId) {
+      if (typeof window === "undefined" || !window.__pointerDrag) return;
+      let ghost = null;
+      const onEscape = (e) => {
+        if (e.key !== "Escape") return;
+        this._portDragCancelled = true;
+        if (this._activePortDragCleanup) this._activePortDragCleanup();
+      };
+      window.__pointerDrag(port, {
+        onStart: (e) => {
+          e.stopPropagation();
+          this._portDragCancelled = false;
+          ghost = svg("path", { class: "graph-port-link" });
+          this.viewportG.appendChild(ghost);
+          window.addEventListener("keydown", onEscape, true);
+          this._activePortDragCleanup = () => {
+            window.removeEventListener("keydown", onEscape, true);
+            if (ghost) {
+              ghost.remove();
+              ghost = null;
+            }
+            this._activePortDragCleanup = null;
+          };
+        },
+        onMove: (e, p) => {
+          if (!ghost) return;
+          const anchor = this._portAnchor(sourceId);
+          if (!anchor) return;
+          const world = this._clientToWorld(p.clientX, p.clientY);
+          ghost.setAttribute("d", `M${anchor.x},${anchor.y} L${world.x},${world.y}`);
+        },
+        onEnd: (e, p) => {
+          const cancelled = this._portDragCancelled;
+          if (this._activePortDragCleanup) this._activePortDragCleanup();
+          this._portDragCancelled = false;
+          if (cancelled) return;
+          const world = this._clientToWorld(p.clientX, p.clientY);
+          const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
+          if (!targetId) return;
+          this.model.addEdge({ data: { id: this._genEditId("e"), source: sourceId, target: targetId, directed: true } });
+        },
+        cursor: "crosshair"
+      });
+    }
     // ---- 2.1 Structure SVG emise ----
     _build() {
       this.el.classList.add("graph");
@@ -1699,7 +1917,7 @@
       const descId = `graph-${this.uid}-desc`;
       this.svgEl = svg("svg", {
         class: "graph-canvas",
-        role: "graphics-document",
+        role: ROLE_DOCUMENT,
         // etait 'img' (#671) — expose les enfants focusables (noeuds)
         "aria-label": this.opts.label || "Graphe",
         "aria-describedby": descId,
@@ -1822,6 +2040,10 @@
       this._applyLayout(result);
     }
     _applyLayout(positions) {
+      if (this._activePortDragCleanup) {
+        this._portDragCancelled = true;
+        this._activePortDragCleanup();
+      }
       this.positions = positions;
       this.nodesG.innerHTML = "";
       this.edgesG.innerHTML = "";
@@ -1839,9 +2061,7 @@
         minY = Math.min(minY, top);
         maxX = Math.max(maxX, left + size.w);
         maxY = Math.max(maxY, top + size.h);
-        this._paintNode(node, left, top, size);
       });
-      this.model.edges.forEach((edge) => this._paintEdge(edge, positions));
       if (!isFinite(minX)) {
         minX = 0;
         minY = 0;
@@ -1853,9 +2073,27 @@
       const vy = minY - margin;
       const vw = Math.max(maxX - minX + margin * 2, 1);
       const vh = Math.max(maxY - minY + margin * 2, 1);
+      if (this.opts.mode === "edit") this._portRadius = this._computePortRadius(vw);
+      this.model.nodes.forEach((node) => {
+        const id = node.data.id;
+        const size = this.sizes.get(id) || DEFAULT_SIZE5;
+        const center = positions.get(id) || { x: 0, y: 0 };
+        const left = center.x - size.w / 2;
+        const top = center.y - size.h / 2;
+        this._paintNode(node, left, top, size);
+      });
+      this.model.edges.forEach((edge) => this._paintEdge(edge, positions));
       this.svgEl.setAttribute("viewBox", `${vx} ${vy} ${vw} ${vh}`);
       this._restoreSelectionVisual();
       this._restoreNodeNav();
+      if (this.opts.mode === "edit") {
+        requestAnimationFrame(() => {
+          const r = this._computePortRadius(vw);
+          if (!(r > 0)) return;
+          this._portRadius = r;
+          this.nodesG.querySelectorAll(".graph-port").forEach((p) => p.setAttribute("r", String(r)));
+        });
+      }
     }
     // ---- #668 — reapplique le halo de selection apres un repaint (measure->paint) ----
     // _applyLayout() wipe nodesG/edgesG.innerHTML et repeint des elements FRAIS : sans ce
@@ -1927,6 +2165,7 @@
         text.textContent = node.data && node.data.label || id;
         g.appendChild(text);
       }
+      if (this.opts.mode === "edit") this._paintPort(g, id, size);
       this.nodesG.appendChild(g);
     }
     _paintEdge(edge, positions) {
@@ -1991,6 +2230,8 @@
         this._toolbarEl.remove();
         this._toolbarEl = null;
       }
+      if (this._inlineEdit) this._closeInlineEdit();
+      if (this._activePortDragCleanup) this._activePortDragCleanup();
       if (this._liveTimer) {
         clearTimeout(this._liveTimer);
         this._liveTimer = null;

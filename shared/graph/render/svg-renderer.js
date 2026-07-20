@@ -13,6 +13,7 @@ import { resolveLayout } from '../layout/index.js';
 import { resolveNodeType, graphCard } from './node-types.js';
 import { renderA11yTable } from './a11y-table.js';
 import { Viewport, zoomAt, worldToUser } from './viewport.js';
+import { nearestNodeAt } from './port-drop.js';
 
 let uidCounter = 0;
 const DEFAULT_SIZE = { w: 120, h: 40 };
@@ -20,6 +21,8 @@ const LABEL_PADDING = 12;
 const KEY_PAN_STEP = 40; // #668 — pas de pan clavier (fleches), unite espace-utilisateur
 const LIVE_ANNOUNCE_DEBOUNCE_MS = 300; // #672 — annonce des connexions au repos
 const NEW_NODE_LABEL = 'Nœud'; // #673 — libelle par defaut d'un noeud cree en mode edition
+const ROLE_DOCUMENT = 'graphics-document'; // #671 — role par defaut (nav SR/clavier I4)
+const ROLE_APPLICATION = 'application'; // #674 — role LOCAL, pose uniquement pendant l'edition inline (arbitrage A, #662)
 
 /** echappement minimal — le moteur graph est un module ESM isole (pas d'acces a
  * escapeHTML() de components.js, monde monolithe distinct, cf. README frontiere D1). */
@@ -523,12 +526,18 @@ export class SvgRenderer {
 
     this._buildToolbar();
 
-    // Double-clic sur le FOND (cible != .graph-node) -> creation au point (screenToWorld).
+    // Double-clic sur un NOEUD -> edition inline du label (#674, I5-2) ; sur le FOND
+    // (cible != .graph-node) -> creation au point (screenToWorld, inchange depuis #673).
     // _hitTest() (pas e.target, cf. _onCanvasClick) : le pan (#667) capture le pointeur sur
     // svgEl a chaque pointerdown -> 'dblclick' est retargete comme 'click', meme mecanique.
     this._onEditDblClick = (e) => {
+      if (this._inlineEdit) return; // #674 — neutralise les gestes concurrents pendant l'edition
       const hit = this._hitTest(e);
-      if (hit && hit.closest && hit.closest('.graph-node')) return; // reserve I5-2 (inline-label)
+      const nodeG = hit && hit.closest && hit.closest('.graph-node');
+      if (nodeG && nodeG.dataset.nodeId) {
+        this._startInlineEdit(nodeG.dataset.nodeId);
+        return;
+      }
       const world = this._clientToWorld(e.clientX, e.clientY);
       this._createNodeAt(world.x, world.y);
     };
@@ -695,6 +704,215 @@ export class SvgRenderer {
     }
   }
 
+  // ---- Edition inline du label (#674, I5-2) — declenchee par _onEditDblClick sur un noeud ----
+  /**
+   * Overlay HTML `<input class="graph-inline-edit">` positionne au-dessus du `<g>` noeud
+   * (getBoundingClientRect, coordonnees CSS relatives au conteneur `.graph` — deja
+   * position:relative pour la toolbar). Pre-rempli avec le label courant, focus pose (contrat
+   * d'ouverture). Pose `role="application"` sur le `<svg>` (arbitrage A, #662) — LOCAL au
+   * temps de l'edition, restaure a ROLE_DOCUMENT a la fermeture (`_closeInlineEdit`) : la nav
+   * SR/clavier I4 (#671/#672) n'est JAMAIS degradee en dehors d'une session d'edition inline.
+   */
+  _startInlineEdit(id) {
+    if (this._inlineEdit) return; // deja en edition -> neutralise un 2e dblclick concurrent
+    const node = this.model.getNode(id);
+    if (!node) return;
+    const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+    if (!g) return;
+
+    const hostRect = this.el.getBoundingClientRect();
+    const nodeRect = g.getBoundingClientRect();
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'input graph-inline-edit'; // reutilise .input (forms.css, tokens deja poses) + positionnement local
+    input.setAttribute('aria-label', 'Libellé du nœud');
+    const original = (node.data && node.data.label) || '';
+    input.value = original;
+    input.style.left = `${nodeRect.left - hostRect.left}px`;
+    input.style.top = `${nodeRect.top - hostRect.top}px`;
+    input.style.width = `${nodeRect.width}px`;
+    input.style.height = `${nodeRect.height}px`;
+
+    // stopPropagation INCONDITIONNEL : l'input est un DESCENDANT de `this.el`, qui porte les
+    // listeners keydown de la nav clavier viewport (_onKeydown, #668) et de la suppression
+    // (_onEditKeydown, #673) -> sans ce garde-fou, taper "f"/"+"/"-"/Suppr dans le label
+    // declencherait fit/zoom/suppression PENDANT la frappe (#674, "neutraliser les gestes
+    // concurrents").
+    const onKeydown = (e) => {
+      e.stopPropagation();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this._commitInlineEdit();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        this._cancelInlineEdit();
+      }
+    };
+    const onBlur = () => this._commitInlineEdit();
+    input.addEventListener('keydown', onKeydown);
+    input.addEventListener('blur', onBlur);
+
+    this._inlineEdit = { id, input, original, onKeydown, onBlur };
+    this.svgEl.setAttribute('role', ROLE_APPLICATION); // #662, arbitrage A — local, le temps de l'edition
+    this.el.appendChild(input);
+    input.focus();
+    input.select();
+  }
+
+  /** Enter/blur : valide (skip si vide/inchange, #674) puis ferme. */
+  _commitInlineEdit() {
+    const state = this._inlineEdit;
+    if (!state) return;
+    const val = state.input.value.trim();
+    const changed = val !== '' && val !== state.original;
+    const { id } = state;
+    this._closeInlineEdit();
+    if (!changed) return;
+    this.model.updateNode(id, { data: { label: val } });
+    // Le repaint (rAF, cf. _scheduleRepaint) recree le <g> (wipe innerHTML de _applyLayout())
+    // -> le focus synchrone pose par _closeInlineEdit() est perdu. Re-affirme APRES le repaint
+    // reel (meme mecanique que _createNodeAt()/_deleteSelection(), #673).
+    requestAnimationFrame(() => {
+      if (!this.model.hasNode(id)) return;
+      const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+      if (g) g.focus();
+    });
+  }
+
+  /** Échap : annule sans mutation, ferme. */
+  _cancelInlineEdit() {
+    if (!this._inlineEdit) return;
+    this._closeInlineEdit();
+  }
+
+  /**
+   * Teardown partage commit/cancel/destroy() : retire l'overlay + listeners, restaure le role,
+   * re-focus le `<g>` noeud (mecanique focus-restore, contrat WCAG 2.4.3). `this._inlineEdit`
+   * est remis a `null` EN PREMIER (idempotence) : retirer un `<input>` focalise du DOM
+   * declenche un `blur` SYNCHRONE -> sans cette garde, `onBlur` reinvoquerait
+   * `_commitInlineEdit()` pendant sa propre fermeture (reentrance).
+   */
+  _closeInlineEdit() {
+    const state = this._inlineEdit;
+    if (!state) return;
+    this._inlineEdit = null;
+    state.input.removeEventListener('keydown', state.onKeydown);
+    state.input.removeEventListener('blur', state.onBlur);
+    state.input.remove();
+    this.svgEl.setAttribute('role', ROLE_DOCUMENT);
+    const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(state.id)}"]`);
+    if (g) g.focus();
+  }
+
+  // ---- Ports/handles de connexion (#674, I5-2) — mode edit uniquement, drag-to-connect ----
+  /**
+   * Rayon SVG (unites "monde", COURANTES) du port, garantissant une hit-area
+   * >=`--graph-port-size` CSS px (#662 arbitrage C) — QUEL QUE SOIT le niveau de zoom ou la
+   * largeur du conteneur. Un rayon fige en unites monde se retrouve sous 44px des qu'un
+   * conteneur etroit (mobile 375px) ou un zoom-out reduit l'echelle effective de rendu
+   * (constat review #674 : echouait sur les projects Playwright `*-mobile`) -> recalcule a
+   * CHAQUE repaint (appele par `_applyLayout()` juste avant de peindre, avec le `vw` FINAL
+   * de ce repaint), jamais memoise. Echelle = largeur CSS RENDUE du `<svg>` / largeur du
+   * viewBox : `.graph-canvas{width:100%;height:auto}` -> la largeur CSS ne depend QUE du
+   * conteneur parent (jamais du viewBox, qui ne pilote que le ratio -> `height:auto`), donc
+   * `getBoundingClientRect().width` reste valide meme lue AVANT que le NOUVEAU viewBox soit
+   * pose sur le `<svg>` (contrairement a `getScreenCTM()`, dont le calcul aurait utilise le
+   * viewBox encore PERIME du repaint precedent — piege initial de cette fonction).
+   * `this.viewport.getViewport().k` (zoom courant du `<g class="graph-viewport">`, transform
+   * DISTINCTE du viewBox, cf. viewport.js) complete l'echelle : world -> CSS px = svgScale * k.
+   */
+  _computePortRadius(vw) {
+    const cs = typeof getComputedStyle === 'function' ? getComputedStyle(this.el) : null;
+    const v = cs && parseFloat(cs.getPropertyValue('--graph-port-size'));
+    const targetPx = Number.isFinite(v) ? v : 44;
+    const rect = this.svgEl && typeof this.svgEl.getBoundingClientRect === 'function' ? this.svgEl.getBoundingClientRect() : null;
+    const svgScale = rect && rect.width && vw ? rect.width / vw : 1; // CSS px par unite viewBox
+    const k = this.viewport ? this.viewport.getViewport().k : (this.opts.initialViewport && this.opts.initialViewport.k) || 1;
+    const scale = (svgScale || 1) * (k || 1);
+    return targetPx / 2 / (scale || 1);
+  }
+
+  /** Peint le port d'un noeud (bord droit, milieu vertical) — appele par _paintNode() quand
+   * opts.mode==='edit'. Recree a CHAQUE repaint (comme le reste de nodesG), meme convention
+   * que le reste du renderer (aucun teardown explicite requis : l'element + ses listeners
+   * sont garbage-collectes avec l'ancien <g> une fois nodesG.innerHTML wipe). */
+  _paintPort(g, id, size) {
+    const port = svg('circle', {
+      class: 'graph-port',
+      'data-port-for': id,
+      cx: size.w,
+      cy: size.h / 2,
+      r: this._portRadius || 22,
+    });
+    g.appendChild(port);
+    this._wirePortDrag(port, id);
+  }
+
+  /** Point d'ancrage MONDE du port (bord droit, meme espace que edgesG/positions). */
+  _portAnchor(id) {
+    if (!this.positions) return null;
+    const center = this.positions.get(id);
+    if (!center) return null;
+    const size = this.sizes.get(id) || DEFAULT_SIZE;
+    return { x: center.x + size.w / 2, y: center.y };
+  }
+
+  /**
+   * Drag handle->cible (#662 arbitrage C) via `window.__pointerDrag` (#657, reutilise tel
+   * quel — aucune duplication). Ligne fantome `.graph-port-link` (suit le pointeur via
+   * `_clientToWorld`) ajoutee en enfant DIRECT de `viewportG` (PAS edgesG/nodesG : ces deux-la
+   * sont wipes a chaque repaint par `_applyLayout()`, le fantome vivrait une existence
+   * incertaine si un repaint survenait pendant le drag). Au drop : `nearestNodeAt()`
+   * (`port-drop.js`, geometrique — cf. commentaire du fichier pour la divergence documentee
+   * vs `_hitTest()`) desambiguise le chevauchement -> `model.addEdge` (validation lenient
+   * existante, aucun doublon/auto-boucle EXTRA requis : `excludeId` exclut deja la source).
+   */
+  _wirePortDrag(port, sourceId) {
+    if (typeof window === 'undefined' || !window.__pointerDrag) return;
+    let ghost = null;
+    const onEscape = (e) => {
+      if (e.key !== 'Escape') return;
+      this._portDragCancelled = true;
+      if (this._activePortDragCleanup) this._activePortDragCleanup(); // retire le fantome tout de suite, pas d'attente du pointerup
+    };
+    window.__pointerDrag(port, {
+      onStart: (e) => {
+        e.stopPropagation(); // #674 — n'active PAS le pan/pinch du viewport (meme svgEl, cf. viewport.js)
+        this._portDragCancelled = false;
+        ghost = svg('path', { class: 'graph-port-link' });
+        this.viewportG.appendChild(ghost);
+        window.addEventListener('keydown', onEscape, true);
+        this._activePortDragCleanup = () => {
+          window.removeEventListener('keydown', onEscape, true);
+          if (ghost) {
+            ghost.remove();
+            ghost = null;
+          }
+          this._activePortDragCleanup = null;
+        };
+      },
+      onMove: (e, p) => {
+        if (!ghost) return;
+        const anchor = this._portAnchor(sourceId);
+        if (!anchor) return;
+        const world = this._clientToWorld(p.clientX, p.clientY);
+        ghost.setAttribute('d', `M${anchor.x},${anchor.y} L${world.x},${world.y}`);
+      },
+      onEnd: (e, p) => {
+        const cancelled = this._portDragCancelled;
+        if (this._activePortDragCleanup) this._activePortDragCleanup();
+        this._portDragCancelled = false;
+        if (cancelled) return; // Echap ou drop hors noeud (cf. plus bas) -> aucune arete
+        const world = this._clientToWorld(p.clientX, p.clientY);
+        const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
+        if (!targetId) return; // drop hors noeud -> annule (#674)
+        this.model.addEdge({ data: { id: this._genEditId('e'), source: sourceId, target: targetId, directed: true } });
+      },
+      cursor: 'crosshair',
+    });
+  }
+
   // ---- 2.1 Structure SVG emise ----
   _build() {
     this.el.classList.add('graph');
@@ -704,7 +922,7 @@ export class SvgRenderer {
 
     this.svgEl = svg('svg', {
       class: 'graph-canvas',
-      role: 'graphics-document', // etait 'img' (#671) — expose les enfants focusables (noeuds)
+      role: ROLE_DOCUMENT, // etait 'img' (#671) — expose les enfants focusables (noeuds)
       'aria-label': this.opts.label || 'Graphe',
       'aria-describedby': descId,
       preserveAspectRatio: 'xMidYMid meet',
@@ -845,6 +1063,18 @@ export class SvgRenderer {
   }
 
   _applyLayout(positions) {
+    // #674 review — un drag de port EN VOL a ses listeners poses sur le <circle> qui va etre
+    // wipe par nodesG.innerHTML='' ci-dessous : une fois detache, plus AUCUN pointermove/up
+    // reel ne peut plus l'atteindre (routage DOM standard) -> `onEnd` (pointer-drag.js) ne se
+    // declenche JAMAIS -> fantome `.graph-port-link` bloque pour toujours + listener Echap
+    // (window, ferme sur `this`) fuit definitivement (pire : ecrase par le PROCHAIN drag, donc
+    // meme plus recuperable via destroy()). Repro confirmee : Suppr sur une selection tierce
+    // PENDANT un drag de port declenche exactement ce repaint. Traite comme une annulation
+    // propre (meme comportement qu'un Echap manuel) avant de wiper.
+    if (this._activePortDragCleanup) {
+      this._portDragCancelled = true;
+      this._activePortDragCleanup();
+    }
     this.positions = positions; // #668 — reutilise par zoomToNode()
     this.nodesG.innerHTML = '';
     this.edgesG.innerHTML = '';
@@ -854,6 +1084,12 @@ export class SvgRenderer {
     let maxX = -Infinity;
     let maxY = -Infinity;
 
+    // #674 — pre-passe bbox PURE (positions+sizes deja en memoire, AUCUN DOM) : necessaire
+    // pour connaitre `vw` AVANT de peindre les noeuds/ports. `_computePortRadius(vw)` a
+    // besoin du viewBox FINAL (largeur CSS rendue / vw = echelle courante) -> sans cette
+    // pre-passe, les ports du premier noeud peint seraient dimensionnes avec un `vw` perime
+    // (celui du repaint precedent, ou aucun sur le tout premier paint) -> hit-area <44px sur
+    // conteneurs etroits (constat review : echouait sur les projects Playwright `*-mobile`).
     this.model.nodes.forEach((node) => {
       const id = node.data.id;
       const size = this.sizes.get(id) || DEFAULT_SIZE;
@@ -864,10 +1100,7 @@ export class SvgRenderer {
       minY = Math.min(minY, top);
       maxX = Math.max(maxX, left + size.w);
       maxY = Math.max(maxY, top + size.h);
-      this._paintNode(node, left, top, size);
     });
-
-    this.model.edges.forEach((edge) => this._paintEdge(edge, positions));
 
     if (!isFinite(minX)) {
       minX = 0;
@@ -880,10 +1113,38 @@ export class SvgRenderer {
     const vy = minY - margin;
     const vw = Math.max(maxX - minX + margin * 2, 1);
     const vh = Math.max(maxY - minY + margin * 2, 1);
+
+    if (this.opts.mode === 'edit') this._portRadius = this._computePortRadius(vw);
+
+    this.model.nodes.forEach((node) => {
+      const id = node.data.id;
+      const size = this.sizes.get(id) || DEFAULT_SIZE;
+      const center = positions.get(id) || { x: 0, y: 0 };
+      const left = center.x - size.w / 2;
+      const top = center.y - size.h / 2;
+      this._paintNode(node, left, top, size);
+    });
+
+    this.model.edges.forEach((edge) => this._paintEdge(edge, positions));
+
     this.svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
 
     this._restoreSelectionVisual(); // #668 — nodesG/edgesG wipes ci-dessus perdent .graph-node--selected
     this._restoreNodeNav(); // #671 — idem pour le roving tabindex (nodesG.innerHTML='' ci-dessus)
+
+    // #674 — la hit-area 44px ECRAN des ports depend du scale reel (rect.width/vw*k). Au paint
+    // synchrone, svgEl.getBoundingClientRect() peut etre premature (largeur 0 ou desktop sur un
+    // 1er rendu mobile) -> fallback svgScale=1 -> hit-area <44px sur conteneur etroit (echec
+    // Playwright *-mobile). On recalcule en rAF (layout stabilise) et on met a jour les cercles
+    // ports deja peints. Idempotent, mode edit uniquement.
+    if (this.opts.mode === 'edit') {
+      requestAnimationFrame(() => {
+        const r = this._computePortRadius(vw);
+        if (!(r > 0)) return;
+        this._portRadius = r;
+        this.nodesG.querySelectorAll('.graph-port').forEach((p) => p.setAttribute('r', String(r)));
+      });
+    }
   }
 
   // ---- #668 — reapplique le halo de selection apres un repaint (measure->paint) ----
@@ -956,6 +1217,7 @@ export class SvgRenderer {
       text.textContent = (node.data && node.data.label) || id;
       g.appendChild(text);
     }
+    if (this.opts.mode === 'edit') this._paintPort(g, id, size); // #674 — handle de connexion (hit-area 44px)
     this.nodesG.appendChild(g);
   }
 
@@ -1027,6 +1289,10 @@ export class SvgRenderer {
       this._toolbarEl.remove();
       this._toolbarEl = null;
     }
+    // #674 — edition inline ouverte : ferme sans mutation (force-close, pas de commit en teardown)
+    if (this._inlineEdit) this._closeInlineEdit();
+    // #674 — drag de port en vol : retire le fantome + le listener Echap (fuite sinon, window)
+    if (this._activePortDragCleanup) this._activePortDragCleanup();
     if (this._liveTimer) {
       clearTimeout(this._liveTimer);
       this._liveTimer = null;

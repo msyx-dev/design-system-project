@@ -55,11 +55,26 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  *   l'arbre couvrant -> 1er noeud de l'ordre DFS -> null), calcule AVANT la mutation puis
  *   applique APRES le repaint reel (rAF) — jamais synchroniquement (le DOM est recree par
  *   `_applyLayout()`). Suppression d'arete : aucun deplacement de focus. Le `<svg>` GARDE
- *   `role="graphics-document"` en mode edit (arbitrage A opt1, #662) — `role="application"`
- *   reste reserve a I5-2 (input inline actif uniquement), la nav SR/clavier I4 n'est jamais
- *   degradee. Chaque mutation ré-émet un `CustomEvent('graph:edit', {detail})` sur `.graph`
- *   en écho de `graph:model:change` (alias semantique, arbitrage F — pas un 2e canal de
- *   verite). `destroy()` retire les listeners d'edition + la `.graph-toolbar` du DOM.
+ *   `role="graphics-document"` en mode edit (arbitrage A opt1, #662) — la nav SR/clavier I4
+ *   n'est jamais degradee. Chaque mutation ré-émet un `CustomEvent('graph:edit', {detail})`
+ *   sur `.graph` en écho de `graph:model:change` (alias semantique, arbitrage F — pas un 2e
+ *   canal de verite). `destroy()` retire les listeners d'edition + la `.graph-toolbar` du DOM.
+ *   I5-2 (#674) — édition inline : double-clic sur un noeud -> `<input
+ *   class="graph-inline-edit">` overlay HTML positionne au-dessus du `<g>` noeud
+ *   (`getBoundingClientRect`), pre-rempli, focus pose (contrat d'ouverture). `Enter`/blur ->
+ *   `model.updateNode(id,{data:{label}})` (skip si vide/inchange) ; `Échap` -> annule. Pendant
+ *   l'edition, et UNIQUEMENT pendant l'edition, `role="application"` remplace localement
+ *   `role="graphics-document"` sur le `<svg>` (arbitrage A, #662) — restaure a la fermeture
+ *   (re-focus le `<g>` noeud, mecanique focus-restore WCAG 2.4.3). Double-clic sur le fond
+ *   reste create-node (I5-1, non affecte).
+ *   I5-2 (#674) — ports/handles : chaque noeud peint un `.graph-port` (cercle SVG, bord
+ *   droit) — hit-area >=44px (token `--graph-port-size`), revele au survol/focus du noeud
+ *   parent (CSS `:hover`/`:focus-within`, zero JS de toggle). Drag (`window.__pointerDrag`,
+ *   #657) depuis un port -> ligne fantome `.graph-port-link` qui suit le pointeur
+ *   (`screenToWorld`) -> au drop, `nearestNodeAt()` (`render/port-drop.js`, fonction pure
+ *   testable Node) desambiguise un chevauchement de noeuds (cible = centre le plus proche du
+ *   point, source toujours exclue -> jamais d'auto-boucle) -> `model.addEdge`. Drop hors
+ *   noeud ou `Échap` en cours de drag -> annule (aucune arete, fantome retire).
  * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement,
  *   getViewport:Function, setViewport:Function, screenToWorld:Function, fit:Function,
  *   zoomToNode:Function, select:Function, getSelection:Function, focusNode:Function}}

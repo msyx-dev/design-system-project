@@ -1,4 +1,4 @@
-/* @ds-version: 2.107.0 */
+/* @ds-version: 2.108.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -271,6 +271,10 @@
     /* #672 — 2e indice de contraste selection : halo derive de --text (JAMAIS --accent) ->
        reste distinguable meme sur un noeud custom deja accent-colore (opts.nodeTypes). */
     --graph-select-halo: color-mix(in srgb, var(--text) 55%, transparent);
+    /* #674 — hit-area des ports/handles de connexion (mode edit) : diametre CSS px, lu par
+       svg-renderer.js (_readPortRadius, getComputedStyle) pour dimensionner le rayon SVG ->
+       une seule source de verite pour la cible tactile WCAG 2.5.5 (44px). */
+    --graph-port-size: 44px;
 
     /* === Aliases legacy — deprecated, remove in v3 === */
     --border: var(--border-color); /* deprecated, remove in v3 */

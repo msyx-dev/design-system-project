@@ -1,7 +1,8 @@
-/* @ds-version: 2.107.0 */
+/* @ds-version: 2.108.0 */
 /* graph.css — module CSS du moteur graphique node-link (#666, I1b-2 ; viewport #667, I2-1 ;
    fit + selection + ResizeObserver #668, I2-2 ; nav clavier roving #671, I4-1 ;
-   live-region SR + forced-colors + contraste #672, I4-2 ; mode edition create/delete #673, I5-1)
+   live-region SR + forced-colors + contraste #672, I4-2 ; mode edition create/delete #673, I5-1 ;
+   edition inline label + ports/handles 44px #674, I5-2)
    HORS BARREL — jamais importe par components.css ni components-core.css
    (verifie par shared/check-graph-isolation.sh en CI). Opt-in explicite :
    data.html charge ce module via <link> dans le <head> ; un consumer sync.sh
@@ -120,6 +121,62 @@
     stroke: var(--warning);
     stroke-width: 2.5;
     stroke-dasharray: 4 2;
+}
+
+/* ===== Edition inline du label (#674, I5-2) — overlay HTML au-dessus du <g> noeud ===== */
+/* Positionnement (left/top/width/height) pose en JS via getBoundingClientRect (inline style,
+   l'emporte sur toute regle CSS ici). Reutilise .input (forms.css deja charge par le barrel
+   sur data.html) pour le fond/bordure/focus-ring tokenises -> cette regle n'ajoute QUE le
+   positionnement + l'alignement visuel avec le label SVG qu'elle recouvre. */
+.graph-inline-edit {
+    position: absolute;
+    z-index: var(--z-sticky);
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+    font-size: 13px; /* aligne avec .graph-node-label (meme unite "px" que le reste du moteur, cf. LABEL_PADDING) */
+    text-align: center;
+    padding: 0 var(--space-2, 8px);
+}
+
+/* ===== Ports/handles de connexion (#674, I5-2) — mode:'edit' uniquement ===== */
+/* Cercle SVG enfant de .graph-node (peint par _paintNode/_paintPort quand opts.mode==='edit'),
+   hit-area >=44px (rayon derive du token --graph-port-size, lu par svg-renderer.js). Invisible
+   par defaut, pointer-events:none -> ne bloque JAMAIS un clic/pan derriere lui tant que le
+   noeud n'est pas survole/focalise. Revele au survol/focus du NOEUD PARENT (:hover/
+   :focus-within se propagent aux descendants — standard CSS, coherent avec le contrat "au
+   survol/focus d'un noeud", #662 arbitrage C) : la reveal persiste au deplacement du curseur
+   du corps du noeud vers le port (le port reste un descendant du <g> survole). */
+.graph-port {
+    fill: color-mix(in srgb, var(--graph-node-bg) 55%, var(--accent) 45%);
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0;
+    pointer-events: none;
+    cursor: crosshair;
+    transition: opacity var(--duration-fast) var(--ease-standard), fill var(--duration-fast) var(--ease-standard);
+}
+
+.graph-node:hover .graph-port,
+.graph-node:focus-within .graph-port {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.graph-port:hover,
+.graph-port:focus-visible {
+    fill: var(--accent);
+}
+
+/* Ligne fantome pendant un drag port -> cible (#674) — meme famille visuelle que .graph-edge
+   mais tiretee pour signaler un etat TRANSITOIRE (aucune arete tant que non relachee sur un
+   noeud). Enfant direct de .graph-viewport (jamais wipe par le repaint, cf. svg-renderer.js). */
+.graph-port-link {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-dasharray: 4 3;
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
 }
 
 /* ===== Noeud riche (foreignObject, support NHOOD) ===== */
@@ -296,6 +353,19 @@
     .graph-edge--selected {
         stroke: Highlight;
         stroke-width: 3;
+        forced-color-adjust: none;
+    }
+
+    /* Ports (#674, I5-2) : couleurs SYSTEME (LinkText, coherent avec la source de connexion
+       ci-dessus) — le fill color-mix() n'est pas remappe automatiquement en forced-colors. */
+    .graph-port {
+        fill: Canvas;
+        stroke: LinkText;
+        forced-color-adjust: none;
+    }
+
+    .graph-port-link {
+        stroke: LinkText;
         forced-color-adjust: none;
     }
 }
