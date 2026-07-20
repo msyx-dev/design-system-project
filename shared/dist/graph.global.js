@@ -2040,6 +2040,10 @@
       this._applyLayout(result);
     }
     _applyLayout(positions) {
+      if (this._activePortDragCleanup) {
+        this._portDragCancelled = true;
+        this._activePortDragCleanup();
+      }
       this.positions = positions;
       this.nodesG.innerHTML = "";
       this.edgesG.innerHTML = "";

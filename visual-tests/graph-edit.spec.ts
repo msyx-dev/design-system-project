@@ -595,4 +595,55 @@ test.describe("Graph — mode edition create/delete + contrat de focus (#673, I5
       "graphics-document",
     );
   });
+
+  test("repaint pendant un drag de port (Suppr sur autre sélection) annule le drag — pas de fantôme bloqué (#674 review)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    await el.locator('[data-node-id="e-b"]').click(); // sélection tierce
+    await expect(el.locator('[data-node-id="e-b"]')).toHaveClass(
+      /graph-node--selected/,
+    );
+    const beforeNodes = await el.locator(".graph-node").count();
+    // démarre un drag de port depuis e-root SANS pointerup (drag EN VOL)
+    const started = await page.evaluate(() => {
+      const host = document.querySelectorAll(
+        "#graph .graph[data-graph]",
+      )[6] as HTMLElement;
+      const port = host.querySelector(
+        '[data-node-id="e-root"] .graph-port',
+      ) as SVGCircleElement | null;
+      if (!port) return false;
+      const r = port.getBoundingClientRect();
+      const base = {
+        pointerId: 9100,
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      };
+      port.dispatchEvent(
+        new PointerEvent("pointerdown", {
+          ...base,
+          clientX: r.left + r.width / 2,
+          clientY: r.top + r.height / 2,
+        }),
+      );
+      port.dispatchEvent(
+        new PointerEvent("pointermove", {
+          ...base,
+          clientX: r.left + 180,
+          clientY: r.top + 180,
+        }),
+      );
+      return true;
+    });
+    expect(started).toBe(true);
+    await expect(el.locator(".graph-port-link")).toHaveCount(1); // fantôme en vol
+    // repaint concurrent : Suppr supprime la sélection tierce (e-b)
+    await page.keyboard.press("Delete");
+    await expect(el.locator(".graph-node")).toHaveCount(beforeNodes - 1);
+    await expect(el.locator('[data-node-id="e-b"]')).toHaveCount(0);
+    // le fix (#674 review) annule le drag avant le wipe -> fantôme retiré, pas de fuite
+    await expect(el.locator(".graph-port-link")).toHaveCount(0);
+  });
 });

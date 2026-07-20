@@ -1063,6 +1063,18 @@ export class SvgRenderer {
   }
 
   _applyLayout(positions) {
+    // #674 review — un drag de port EN VOL a ses listeners poses sur le <circle> qui va etre
+    // wipe par nodesG.innerHTML='' ci-dessous : une fois detache, plus AUCUN pointermove/up
+    // reel ne peut plus l'atteindre (routage DOM standard) -> `onEnd` (pointer-drag.js) ne se
+    // declenche JAMAIS -> fantome `.graph-port-link` bloque pour toujours + listener Echap
+    // (window, ferme sur `this`) fuit definitivement (pire : ecrase par le PROCHAIN drag, donc
+    // meme plus recuperable via destroy()). Repro confirmee : Suppr sur une selection tierce
+    // PENDANT un drag de port declenche exactement ce repaint. Traite comme une annulation
+    // propre (meme comportement qu'un Echap manuel) avant de wiper.
+    if (this._activePortDragCleanup) {
+      this._portDragCancelled = true;
+      this._activePortDragCleanup();
+    }
     this.positions = positions; // #668 — reutilise par zoomToNode()
     this.nodesG.innerHTML = '';
     this.edgesG.innerHTML = '';
