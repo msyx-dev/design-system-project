@@ -124,6 +124,18 @@
     return { parent, children, order, roots };
   }
 
+  // shared/graph/lib/edit-focus.js
+  function nextFocusAfterRemoval(model, tree, id) {
+    const neighbors = (model && typeof model.neighbors === "function" ? model.neighbors(id) : []).filter((nid) => nid !== id);
+    if (neighbors.length) return neighbors[0];
+    const parent = tree && tree.parent ? tree.parent.get(id) : null;
+    if (parent != null) return parent;
+    const order = tree && tree.order || [];
+    const fallback = order.find((nid) => nid !== id);
+    if (fallback != null) return fallback;
+    return null;
+  }
+
   // shared/graph/model/to-model.js
   var SCHEMA_VERSION = 1;
   function warn(msg) {
@@ -1090,6 +1102,7 @@
   var LABEL_PADDING = 12;
   var KEY_PAN_STEP = 40;
   var LIVE_ANNOUNCE_DEBOUNCE_MS = 300;
+  var NEW_NODE_LABEL = "N\u0153ud";
   function escHtml(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   }
@@ -1119,6 +1132,7 @@
       this._initLive();
       this._initResize();
       this._initKeyboard();
+      if (this.opts.mode === "edit") this._initEdit();
       if (this.opts.initialSelection) this.select(this.opts.initialSelection, { silent: true });
     }
     // ---- Viewport pan/zoom/pinch (#667, I2-1) — opt-in par defaut ----
@@ -1142,12 +1156,24 @@
       if (this.opts.selectable === false) return;
       this._selection = null;
       this._onCanvasClick = (e) => {
-        const nodeG = e.target.closest(".graph-node");
-        const edgeP = e.target.closest(".graph-edge");
+        const hit = this._hitTest(e);
+        if (this._connectMode) {
+          this._handleConnectClick(hit);
+          return;
+        }
+        const nodeG = hit && hit.closest(".graph-node");
+        const edgeP = hit && hit.closest(".graph-edge");
         if (nodeG && nodeG.dataset.nodeId) this.select(nodeG.dataset.nodeId);
         else if (edgeP && edgeP.dataset.edgeId) this.select(edgeP.dataset.edgeId);
       };
       this.svgEl.addEventListener("click", this._onCanvasClick);
+    }
+    /** hit-test frais aux coordonnees ecran de l'evenement — contourne le retargeting de
+     * `e.target` par setPointerCapture() (#667, cf. commentaire _onCanvasClick ci-dessus). */
+    _hitTest(e) {
+      const doc = this.svgEl.ownerDocument;
+      if (!doc || typeof doc.elementFromPoint !== "function") return e.target;
+      return doc.elementFromPoint(e.clientX, e.clientY) || e.target;
     }
     getSelection() {
       return this._selection ? { ...this._selection } : null;
@@ -1464,6 +1490,10 @@
         const u = this.viewport ? this.viewport.screenToUser(cx, cy) : null;
         switch (e.key) {
           case "Escape":
+            if (this._connectMode) {
+              this._toggleConnectMode();
+              break;
+            }
             this.select(null);
             break;
           case "f":
@@ -1503,6 +1533,163 @@
       const delta = { ArrowUp: [0, KEY_PAN_STEP], ArrowDown: [0, -KEY_PAN_STEP], ArrowLeft: [KEY_PAN_STEP, 0], ArrowRight: [-KEY_PAN_STEP, 0] }[key];
       if (!delta) return;
       this.viewport.setViewport({ tx: vp.tx + delta[0], ty: vp.ty + delta[1], k: vp.k });
+    }
+    // ---- Mode edition (#673, I5-1) — opt-in `opts.mode:'edit'` (defaut 'view', inchange) ----
+    // Garde role="graphics-document" sur le <svg> (arbitrage A opt1, #662) : la nav SR/clavier
+    // I4 reste intacte, `role="application"` est reserve a I5-2 (input inline actif uniquement).
+    // Toolbar overlay HTML (`.graph-toolbar`, hors SVG) + gestes create/delete/relier branches
+    // sur les elements existants (svgEl/el) — aucune primitive I2/I4 dupliquee.
+    _initEdit() {
+      this._connectMode = false;
+      this._connectSource = null;
+      this._editSeq = 0;
+      this._buildToolbar();
+      this._onEditDblClick = (e) => {
+        const hit = this._hitTest(e);
+        if (hit && hit.closest && hit.closest(".graph-node")) return;
+        const world = this._clientToWorld(e.clientX, e.clientY);
+        this._createNodeAt(world.x, world.y);
+      };
+      this.svgEl.addEventListener("dblclick", this._onEditDblClick);
+      this._onEditKeydown = (e) => {
+        if (e.key !== "Delete" && e.key !== "Backspace") return;
+        if (!this.getSelection()) return;
+        e.preventDefault();
+        this._deleteSelection();
+      };
+      this.el.addEventListener("keydown", this._onEditKeydown);
+    }
+    /** point ecran -> monde, avec/sans viewport actif (opts.viewport===false -> transform identite). */
+    _clientToWorld(clientX, clientY) {
+      if (this.viewport) return this.viewport.screenToWorld(clientX, clientY);
+      const ctm = this.svgEl.getScreenCTM();
+      if (!ctm) return { x: clientX, y: clientY };
+      const p = new DOMPoint(clientX, clientY).matrixTransform(ctm.inverse());
+      return { x: p.x, y: p.y };
+    }
+    /** id unique dans le namespace partage noeuds/aretes (#665) — prefixe + compteur d'instance. */
+    _genEditId(kind) {
+      return `edit-${this.uid}-${kind}${++this._editSeq}`;
+    }
+    _buildToolbar() {
+      const bar = document.createElement("div");
+      bar.className = "graph-toolbar";
+      bar.setAttribute("role", "toolbar");
+      bar.setAttribute("aria-label", "\xC9dition du graphe");
+      const group = document.createElement("div");
+      group.className = "btn-group";
+      const addBtn = this._toolbarButton("i-plus", "Ajouter un n\u0153ud", () => this._createNodeCenter());
+      const connectBtn = this._toolbarButton("i-link", "Relier", () => this._toggleConnectMode());
+      connectBtn.setAttribute("aria-pressed", "false");
+      const deleteBtn = this._toolbarButton("i-trash", "Supprimer", () => this._deleteSelection());
+      group.appendChild(addBtn);
+      group.appendChild(connectBtn);
+      group.appendChild(deleteBtn);
+      bar.appendChild(group);
+      this.el.appendChild(bar);
+      this._toolbarEl = bar;
+      this._connectBtn = connectBtn;
+    }
+    _toolbarButton(icon, label, onClick) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn-icon graph-toolbar__btn";
+      btn.setAttribute("aria-label", label);
+      btn.title = label;
+      btn.innerHTML = `<svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#${icon}"/></svg>`;
+      btn.addEventListener("click", onClick);
+      return btn;
+    }
+    _toggleConnectMode() {
+      this._connectMode = !this._connectMode;
+      if (this._connectBtn) {
+        this._connectBtn.setAttribute("aria-pressed", String(this._connectMode));
+      }
+      if (!this._connectMode) this._clearConnectSource();
+    }
+    /**
+     * clic nœud source puis clic nœud cible (mode "Relier") -> model.addEdge (#662, arbitrage B/C).
+     * @param {Element} hit - element resolu par _hitTest() (PAS e.target, retargete par setPointerCapture)
+     */
+    _handleConnectClick(hit) {
+      const nodeG = hit && hit.closest ? hit.closest(".graph-node") : null;
+      if (!nodeG || !nodeG.dataset.nodeId) return;
+      const id = nodeG.dataset.nodeId;
+      if (!this._connectSource) {
+        this._connectSource = id;
+        nodeG.classList.add("graph-node--connect-source");
+        return;
+      }
+      const source = this._connectSource;
+      this._clearConnectSource();
+      if (source === id) return;
+      this.model.addEdge({ data: { id: this._genEditId("e"), source, target: id, directed: true } });
+    }
+    _clearConnectSource() {
+      if (this._connectSource) {
+        const prev = this.nodesG.querySelector(`[data-node-id="${CSS.escape(this._connectSource)}"]`);
+        if (prev) prev.classList.remove("graph-node--connect-source");
+      }
+      this._connectSource = null;
+    }
+    /** creation au centre du viewport courant (action toolbar, #662 arbitrage B). */
+    _createNodeCenter() {
+      const rect = this.svgEl.getBoundingClientRect();
+      const { x, y } = this._clientToWorld(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      this._createNodeAt(x, y);
+    }
+    /**
+     * Cree un noeud au point (x,y) MONDE puis pose le contrat de focus create (#662, arbitrage E
+     * — pendant symetrique) : le repaint est asynchrone (rAF, cf. _scheduleRepaint()) -> le focus
+     * ne peut etre pose qu'APRES que le <g> frais existe dans le DOM. `requestAnimationFrame`
+     * enregistre ICI est mis en file APRES celui deja programme par `graph:model:change` (meme
+     * tick synchrone) -> s'execute dans le MEME frame, juste apres le repaint reel.
+     */
+    _createNodeAt(x, y) {
+      const id = this._genEditId("n");
+      this.model.addNode({ data: { id, label: NEW_NODE_LABEL }, position: { x, y } });
+      requestAnimationFrame(() => this._focusCreatedNode(id));
+    }
+    /** contrat focus create (#662, arbitrage E) : select() (silent — pas de modal) puis focus DOM. */
+    _focusCreatedNode(id) {
+      if (!this.model.hasNode(id)) return;
+      this.select(id, { silent: true });
+      const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+      if (g) g.focus();
+      this._ensureNodeVisible(id);
+      this._announce(id);
+    }
+    /**
+     * Suppression (Suppr/Backspace ou bouton toolbar) — contrat de focus delete (#662, arbitrage E) :
+     * la destination (voisin -> parent -> order -> null) est calculee AVANT removeNode() (l'index
+     * d'adjacence change une fois le noeud retire), puis le focus est pose APRES le repaint reel
+     * (rAF) — jamais synchroniquement (on focuserait un noeud sur le point d'etre detruit par le
+     * wipe innerHTML de _applyLayout()). Arete : aucun deplacement de focus (reste au noeud roving
+     * courant, cf. spec #673).
+     */
+    _deleteSelection() {
+      const sel = this.getSelection();
+      if (!sel) return;
+      if (sel.kind === "node") {
+        const dest = nextFocusAfterRemoval(this.model, this._tree, sel.id);
+        this.model.removeNode(sel.id);
+        requestAnimationFrame(() => {
+          let target = dest;
+          if (target == null || !this.model.hasNode(target)) {
+            target = this._tree && this._tree.order[0] || null;
+          }
+          if (target != null) this._focusNode(target);
+        });
+      } else if (sel.kind === "edge") {
+        this.model.removeEdge(sel.id);
+        requestAnimationFrame(() => {
+          const rid = this._rovingId;
+          if (rid && this.model.hasNode(rid)) {
+            const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(rid)}"]`);
+            if (g) g.focus();
+          }
+        });
+      }
     }
     // ---- 2.1 Structure SVG emise ----
     _build() {
@@ -1550,8 +1737,11 @@
       this.el.appendChild(this.liveEl);
     }
     // ---- 2.3 Cycle de vie observe -> repaint(rAF) -> destroy ----
-    _onChange() {
+    _onChange(e) {
       this._scheduleRepaint();
+      if (this.opts.mode === "edit") {
+        this.el.dispatchEvent(new CustomEvent("graph:edit", { detail: e && e.detail, bubbles: true }));
+      }
     }
     _scheduleRepaint() {
       if (this.raf) return;
@@ -1795,6 +1985,12 @@
       if (this._onCanvasClick) this.svgEl.removeEventListener("click", this._onCanvasClick);
       if (this._onNodeKeydown) this.nodesG.removeEventListener("keydown", this._onNodeKeydown);
       if (this._onLiveKeydown) this.nodesG.removeEventListener("keydown", this._onLiveKeydown);
+      if (this._onEditDblClick) this.svgEl.removeEventListener("dblclick", this._onEditDblClick);
+      if (this._onEditKeydown) this.el.removeEventListener("keydown", this._onEditKeydown);
+      if (this._toolbarEl) {
+        this._toolbarEl.remove();
+        this._toolbarEl = null;
+      }
       if (this._liveTimer) {
         clearTimeout(this._liveTimer);
         this._liveTimer = null;

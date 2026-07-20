@@ -1,7 +1,7 @@
 {
-  "version": "2.106.0",
+  "version": "2.107.0",
   "generated": {
-    "at": "2026-07-20T00:16:04.922Z",
+    "at": "2026-07-20T06:37:10.740Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -31,6 +31,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/buttons.css",
+        "shared/css/components/graph.css",
         "shared/css/components/_a11y.css"
       ]
     },
@@ -2991,7 +2992,8 @@
       "jsInit": null,
       "react": "n-a",
       "module": [
-        "shared/css/components/buttons.css"
+        "shared/css/components/buttons.css",
+        "shared/css/components/graph.css"
       ]
     },
     {
@@ -3183,7 +3185,9 @@
         ".graph-edge--selected",
         ".graph--lod-compact",
         ".graph-viewport",
-        ".graph-live"
+        ".graph-live",
+        ".graph-node--connect-source",
+        ".graph-toolbar"
       ],
       "jsInit": "initGraph",
       "react": "pending",

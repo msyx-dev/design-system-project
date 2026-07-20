@@ -39,6 +39,7 @@ export default defineConfig({
     "**/modal-focus.spec.ts",
     "**/graph-keyboard.spec.ts",
     "**/graph-a11y.spec.ts",
+    "**/graph-edit.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

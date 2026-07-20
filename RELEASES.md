@@ -1,5 +1,28 @@
 # Releases
 
+## 2.107.0 — 2026-07-20 — Moteur graph I5-1 : édition create/delete + contrat de focus (#673)
+
+> Première brique d'**édition** du moteur graphique (passage read-only → read-write) —
+> `opts.mode:'edit'` : barre d'outils, création de nœuds (double-clic fond + bouton) et
+> d'arêtes (mode « Relier »), suppression (Suppr/Backspace + cascade), **contrat de focus**
+> a11y (création → nouveau nœud ; suppression → voisin le plus proche via `nextFocusAfterRemoval`).
+
+### Added
+- **`opts.mode:'view'|'edit'`** (défaut `'view'`, mode lecture strictement inchangé).
+- **Barre d'outils** `.graph-toolbar` (`.btn-group` DS, boutons Ajouter/Relier/Supprimer ≥44px, `role="toolbar"`).
+- **Création** : double-clic sur le fond (`screenToWorld` → `addNode`) + bouton toolbar (centre viewport) ; **arêtes** via le mode « Relier » (clic source → clic cible → `addEdge`).
+- **Suppression** : `Suppr`/`Backspace` sur la sélection ou bouton → `removeNode`/`removeEdge` (cascade des arêtes via l'index).
+- **Contrat de focus** (arbitrage E #662) : création → nouveau nœud ; suppression → `nextFocusAfterRemoval(model, tree, id)` (util pur `shared/graph/lib/edit-focus.js` : voisin → parent arbre couvrant → 1er de l'ordre → null), calculé **avant** la mutation, appliqué **après** le repaint rAF.
+- **`graph:edit`** ré-émis sur `.graph` (alias sémantique de `graph:model:change`, arbitrage F).
+
+### Decisions
+- **Arbitrage A opt1 (#662)** : `role="graphics-document"` **conservé** en mode edit (nav SR/clavier I4 intacte) — `role="application"` reste réservé à l'édition inline (I5-2).
+- Le **drag-to-connect par ports 44px** est reporté à **I5-2** (#674) ; I5-1 crée les arêtes au clic (mode « Relier »).
+
+### Tests
+- Node pur `tests/regression/graph-edit-focus.test.js` (`nextFocusAfterRemoval` : voisin/parent/order/null, cyclique/disjoint/auto-boucle).
+- Playwright fonctionnel `visual-tests/graph-edit.spec.ts` (12 combos, PAS de screenshot VR) : création (double-clic + bouton), suppression + contrat focus, mode « Relier », mode `view` inchangé, `role` conservé.
+
 ## 2.106.0 — 2026-07-20 — Moteur graph I4-2 : live-region SR + forced-colors + contraste (#672)
 
 > Neuvième brique du moteur graphique node-link — **verbalisation dynamique** pour
