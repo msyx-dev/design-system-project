@@ -1089,6 +1089,7 @@
   var DEFAULT_SIZE5 = { w: 120, h: 40 };
   var LABEL_PADDING = 12;
   var KEY_PAN_STEP = 40;
+  var LIVE_ANNOUNCE_DEBOUNCE_MS = 300;
   function escHtml(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   }
@@ -1115,6 +1116,7 @@
       this._initViewport();
       this._initSelection();
       this._initNodeNav();
+      this._initLive();
       this._initResize();
       this._initKeyboard();
       if (this.opts.initialSelection) this.select(this.opts.initialSelection, { silent: true });
@@ -1178,6 +1180,7 @@
           g.setAttribute("tabindex", "-1");
           if (this.opts.keyboardNav !== false) this._setRoving(id);
           if (!silent) (_a = g.focus) == null ? void 0 : _a.call(g);
+          if (!silent) this._announce(id);
         }
       } else {
         const p = this.edgesG.querySelector(`[data-edge-id="${CSS.escape(id)}"]`);
@@ -1307,6 +1310,7 @@
       this._setRoving(id);
       g.focus();
       this._ensureNodeVisible(id);
+      this._announce(id);
     }
     /** exactement UN noeud tabindex=0 (le courant) — tous les autres -1. */
     _setRoving(id) {
@@ -1362,6 +1366,57 @@
         this._rovingId = this._tree.order[0] || null;
       }
       this._syncRovingTabindex();
+    }
+    // ---- Live-region SR (#672, I4-2) — verbalise dynamiquement le noeud actif +
+    // ses connexions. `.graph-a11y` (table) reste le contrat PRIMAIRE (WCAG 1.1.1/1.3.1) ;
+    // cette live-region complete la nav clavier (#671) qui ne verbalise QUE l'aria-label
+    // du noeud focuse, jamais ses aretes. Independante de opts.keyboardNav : le focus
+    // peut aussi survenir via select() (clic + focus programmatique), cf. select(). ----
+    _initLive() {
+      this._liveTimer = null;
+      this._onLiveKeydown = (e) => {
+        if (e.key !== "i" && e.key !== "I") return;
+        const nodeG = e.target && typeof e.target.closest === "function" ? e.target.closest(".graph-node") : null;
+        if (!nodeG || !nodeG.dataset.nodeId) return;
+        if (this._liveTimer) {
+          clearTimeout(this._liveTimer);
+          this._liveTimer = null;
+        }
+        this._announceConnections(nodeG.dataset.nodeId);
+      };
+      this.nodesG.addEventListener("keydown", this._onLiveKeydown);
+    }
+    /**
+     * Ecrit le label IMMEDIATEMENT dans `.graph-live`, puis programme (ou reprogramme)
+     * l'annonce des connexions apres LIVE_ANNOUNCE_DEBOUNCE_MS au repos. Appele a
+     * chaque deplacement (_focusNode) ou selection (select(), branche noeud) — le
+     * timer precedent est TOUJOURS annule avant d'en reprogrammer un nouveau : une
+     * traversee rapide (fleches en rafale) n'empile jamais d'annonces successives
+     * dans la file `polite`, seul l'etat FINAL (noeud sur lequel l'utilisateur
+     * s'arrete) declenche l'annonce des connexions.
+     */
+    _announce(id) {
+      if (!this.liveEl || !this.model.hasNode(id)) return;
+      const node = this.model.getNode(id);
+      const label = node.data && node.data.label || id;
+      this.liveEl.textContent = label;
+      if (this._liveTimer) clearTimeout(this._liveTimer);
+      this._liveTimer = setTimeout(() => {
+        this._liveTimer = null;
+        this._announceConnections(id);
+      }, LIVE_ANNOUNCE_DEBOUNCE_MS);
+    }
+    /** Format : « {label}. Connecté à {N} : {labels…} » — voisins via model.neighbors()
+     * (in ∪ out, y compris cross-edges hors arbre couvrant — complete la nav I4-1). */
+    _announceConnections(id) {
+      if (!this.liveEl || !this.model.hasNode(id)) return;
+      const node = this.model.getNode(id);
+      const label = node.data && node.data.label || id;
+      const neighborLabels = this.model.neighbors(id).map((nid) => {
+        const n = this.model.getNode(nid);
+        return n && n.data && n.data.label || nid;
+      });
+      this.liveEl.textContent = neighborLabels.length ? `${label}. Connect\xE9 \xE0 ${neighborLabels.length} : ${neighborLabels.join(", ")}` : `${label}. Aucune connexion`;
     }
     // ---- fit-to-content = reset a l'identite (#668) ----
     // paint()/_applyLayout() posent deja viewBox=bbox+marge + preserveAspectRatio=
@@ -1485,9 +1540,14 @@
       this.a11yEl = document.createElement("div");
       this.a11yEl.className = "graph-a11y";
       this.a11yEl.id = descId;
+      this.liveEl = document.createElement("div");
+      this.liveEl.className = "graph-live";
+      this.liveEl.setAttribute("aria-live", "polite");
+      this.liveEl.setAttribute("aria-atomic", "true");
       this.el.innerHTML = "";
       this.el.appendChild(this.svgEl);
       this.el.appendChild(this.a11yEl);
+      this.el.appendChild(this.liveEl);
     }
     // ---- 2.3 Cycle de vie observe -> repaint(rAF) -> destroy ----
     _onChange() {
@@ -1734,6 +1794,11 @@
       }
       if (this._onCanvasClick) this.svgEl.removeEventListener("click", this._onCanvasClick);
       if (this._onNodeKeydown) this.nodesG.removeEventListener("keydown", this._onNodeKeydown);
+      if (this._onLiveKeydown) this.nodesG.removeEventListener("keydown", this._onLiveKeydown);
+      if (this._liveTimer) {
+        clearTimeout(this._liveTimer);
+        this._liveTimer = null;
+      }
       if (this._onKeydown) this.el.removeEventListener("keydown", this._onKeydown);
       this.model.removeEventListener("graph:model:change", this._onChange);
       this._paintToken++;

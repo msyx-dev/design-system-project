@@ -1,5 +1,78 @@
 # Releases
 
+## 2.106.0 — 2026-07-20 — Moteur graph I4-2 : live-region SR + forced-colors + contraste (#672)
+
+> Neuvième brique du moteur graphique node-link — **verbalisation dynamique** pour
+> lecteur d'écran (`.graph-live`, label immédiat + connexions après debounce/`i`,
+> consomme le roving/`select()` #671) + **résilience Windows High Contrast Mode**
+> (`@media (forced-colors: active)`, nœuds/arêtes/sélection distingués par
+> forme/bordure + couleurs système) + **2e indice de contraste** sur la sélection
+> (halo neutre `--graph-select-halo`, indépendant de `--accent`) + kill-switch
+> `prefers-reduced-motion`. **Pas de bouton pause** (divergence assumée, aucune
+> boucle rAF d'animation continue dans le moteur read-only — dette conditionnelle
+> documentée `docs/ARCHITECTURE.md`).
+
+### Added
+- **Live-region SR** (`SvgRenderer._initLive()`/`_announce()`/`_announceConnections()`,
+  `shared/graph/render/svg-renderer.js`) — `<div class="graph-live" aria-live="polite"
+  aria-atomic="true">` créée dans `_build()`. Hookée dans `_focusNode(id)` (nav clavier
+  #671) et `select(id)` (branche nœud, clic/Enter, sauf `silent`). Écrit le **label
+  immédiatement**, programme les **connexions** (`model.neighbors()`, in∪out) après
+  **`LIVE_ANNOUNCE_DEBOUNCE_MS`=300ms de repos** ou sur la touche **`i`** (listener
+  délégué sur `nodesG`). Le timer précédent est **toujours** annulé avant
+  reprogrammation — une traversée rapide n'empile jamais d'annonces, seul l'état
+  final s'annonce. `destroy()` : clear timer + retrait listener.
+- **`@media (forced-colors: active)`** (`shared/css/components/graph.css`, NOUVEAU
+  bloc) — les `var(--graph-*)` ne sont pas auto-remappées par le navigateur sur
+  `fill`/`stroke` SVG en High Contrast Mode. Nœuds `fill:Canvas`/`stroke:CanvasText`
+  (distinction **forme+bordure**), labels/icônes `CanvasText`, arêtes `CanvasText`
+  (`--strong` en `stroke-width:3`, épaisseur = 2e signal), sélection/focus via
+  `outline:3px solid Highlight` (couleur **système**, pas `--accent`, ignorée en
+  forced-colors), `forced-color-adjust:none` **ciblé** sur ces éléments.
+- **`@media (prefers-reduced-motion: reduce)`** (`graph.css`) — kill-switch
+  `.graph, .graph * { transition:none!important; animation:none!important; }`.
+  `graph.css` est **hors barrel** (n'hérite pas de la règle globale `_a11y.css`).
+- **2e indice de contraste sélection** — `outline-offset` porté à 3px (le ring se
+  lit hors du fill du nœud, pas dessus) + `filter:drop-shadow()` avec le nouveau
+  token **`--graph-select-halo: color-mix(in srgb, var(--text) 55%, transparent)`**
+  (`shared/css/tokens.css`) — dérivé de `--text`, jamais confondu avec `--accent` :
+  couvre le cas d'un nœud custom déjà accent-coloré (`opts.nodeTypes`).
+- **`.graph-live`** (CSS, `graph.css`) — pattern SR-only local (dupliqué de
+  `.sr-only`/_a11y.css, `graph.css` restant isolé du barrel).
+- Tests Playwright **fonctionnels** (`visual-tests/graph-a11y.spec.ts`, NOUVEAU, PAS
+  de screenshot VR, ajouté au `testMatch`) : label immédiat + connexions après
+  debounce/`i`, non-empilement en traversée rapide, `.graph-live` masquée SR-only,
+  forced-colors (`page.emulateMedia({forcedColors:'active'})` — l'option de contexte
+  `test.use({forcedColors})` s'est révélée non fiable dans cet environnement) →
+  nœuds/arêtes/sélection distinguables par assertions de style.
+- Registre : `.graph-live` ajoutée à `cssClasses` de l'entrée `graph` (auto-mergée
+  par `npm run generate-registry`).
+- `shared/dist/graph.global.js` régénéré (`npm run build:graph`).
+
+### Contraste mesuré (6 combos, WCAG relative luminance)
+| Combo | `--graph-edge` vs fond page | `--graph-edge` vs `--graph-node-bg` | `--graph-label` vs `--graph-node-bg` | sélection (`--accent`) vs `--graph-node-bg` |
+|---|---|---|---|---|
+| MSYX dark | 4.93:1 | 4.07:1 | 13.35:1 | 3.98:1 |
+| MSYX light | 4.20:1 | 4.33:1 | 17.85:1 | 3.68:1 |
+| ACSSI dark | 5.79:1 | 4.67:1 | 9.85:1 | 6.06:1 |
+| ACSSI light | 5.06:1 | 5.39:1 | 15.86:1 | 12.68:1 |
+| NHOOD dark | 5.73:1 | 5.35:1 | 15.34:1 | 3.57:1 |
+| NHOOD light | 3.66:1 | 3.78:1 | 17.40:1 | 6.43:1 |
+
+Tous les seuils (`--graph-edge`≥3:1, `--graph-label`≥4.5:1, sélection≥3:1) sont
+respectés sur les 6 combos sans correction de token — le 2e indice
+(`--graph-select-halo`) reste une protection **défensive** pour le cas nœud
+accent-coloré (pas de token à corriger aujourd'hui).
+
+### Divergences assumées
+- **Pas de bouton pause reduced-motion** — le moteur read-only n'a aucune boucle
+  rAF d'animation continue (le rAF de `viewport.js` throttle le wheel/pinch,
+  transitoire, pas une animation) → WCAG 2.2.2 non déclenché. Dette conditionnelle
+  documentée (`docs/ARCHITECTURE.md`) : bouton pause + `matchMedia().addEventListener`
+  requis dès qu'une animation JS continue est introduite (layout animé vNext / I5+).
+- **Test SR manuel (NVDA/VoiceOver)** — non exécutable en run autonome. Checklist
+  documentée, remontée comme action manuelle Mike (fail-soft), non cochée.
+
 ## 2.105.0 — 2026-07-20 — Moteur graph I4-1 : a11y clavier roving + traversée spanning-tree (#671)
 
 > Huitième brique du moteur graphique node-link — **socle a11y clavier net-neuf** :

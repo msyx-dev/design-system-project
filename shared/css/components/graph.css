@@ -1,6 +1,7 @@
-/* @ds-version: 2.105.0 */
+/* @ds-version: 2.106.0 */
 /* graph.css — module CSS du moteur graphique node-link (#666, I1b-2 ; viewport #667, I2-1 ;
-   fit + selection + ResizeObserver #668, I2-2)
+   fit + selection + ResizeObserver #668, I2-2 ; nav clavier roving #671, I4-1 ;
+   live-region SR + forced-colors + contraste #672, I4-2)
    HORS BARREL — jamais importe par components.css ni components-core.css
    (verifie par shared/check-graph-isolation.sh en CI). Opt-in explicite :
    data.html charge ce module via <link> dans le <head> ; un consumer sync.sh
@@ -76,10 +77,16 @@
 
 /* ===== Selection (#668, I2-2) — pre-requis de l'edition (I5) ===== */
 /* Modificateurs BEM coherents avec .graph-edge--strong existant. */
+/* #672 — 2e indice de contraste : un noeud custom (opts.nodeTypes) peut porter un fill
+   deja accent-colore -> l'outline seul (meme couleur) peut tomber sous 3:1. outline-offset
+   accru (3px, etait 2px) decolle le ring du fill du noeud (le ring se lit sur le fond de
+   canvas, pas sur le noeud) + drop-shadow neutre (var(--graph-select-halo), derive de
+   --text donc jamais == --accent) ajoute un 2e signal ne dependant PAS de --accent. */
 .graph-node--selected .graph-node-bg {
     outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline-offset: 3px;
     stroke: var(--accent);
+    filter: drop-shadow(0 0 3px var(--graph-select-halo));
 }
 
 .graph-edge--selected {
@@ -117,6 +124,22 @@
     left: -9999px;
     top: 0;
     pointer-events: none;
+}
+
+/* ===== Live-region SR (#672, I4-2) — annonces dynamiques (label + connexions) ===== */
+/* Meme pattern que .sr-only (_a11y.css) : masquee visuellement, lisible SR. Pas de
+   dependance a la classe globale (graph.css reste HORS BARREL, isole du barrel ou
+   vit .sr-only) -> duplique le pattern localement plutot qu'un import croise. */
+.graph-live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* ===== Alternative a11y tabulaire (contrat PRIMAIRE) ===== */
@@ -162,5 +185,81 @@
 @media (min-width: 768px) {
     .graph-a11y-details summary {
         font-size: 12px;
+    }
+}
+
+/* ===== prefers-reduced-motion (#672, I4-2) ===== */
+/* Kill-switch : le moteur read-only n'a AUCUNE boucle rAF d'animation continue a mettre
+   en pause (le rAF de viewport.js throttle le wheel/pinch, transitoire, pas une boucle
+   d'animation -> WCAG 2.2.2 non declenche, PAS de bouton pause). Les seules "animations"
+   sont des transitions CSS (halo de selection, transform du viewport) -> on les neutralise.
+   graph.css est HORS BARREL (n'herite PAS de la regle globale _a11y.css) -> duplique le
+   kill-switch localement. Divergence assumee vs #661 (meme raisonnement que le tooltip
+   en I2-2) -> DETTE CONDITIONNELLE : l'ecoute dynamique matchMedia().addEventListener
+   ET un bouton pause deviennent REQUIS des qu'une animation JS continue est introduite
+   (layout anime vNext / I5+), cf. docs/ARCHITECTURE.md. */
+@media (prefers-reduced-motion: reduce) {
+    .graph,
+    .graph * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* ===== forced-colors (#672, I4-2) — Windows High Contrast Mode ===== */
+/* Les var(--graph-*) (color-mix(), tokens themes) ne sont PAS auto-remappees par le
+   navigateur sur fill/stroke SVG en forced-colors -> sans ce bloc, noeuds/aretes/labels
+   peuvent devenir indistincts (constat groom #672). Couleurs systeme (Canvas/CanvasText/
+   Highlight) + forced-color-adjust:none CIBLE (sur les elements ou l'on prend explicitement
+   le controle, pour eviter tout double-traitement UA) -> distinction par FORME/BORDURE
+   (noeud = rect rempli+bordure, arete = trait fin), pas seulement par teinte. */
+@media (forced-colors: active) {
+    .graph-node-bg {
+        fill: Canvas;
+        stroke: CanvasText;
+        stroke-width: 2px;
+        forced-color-adjust: none;
+    }
+
+    .graph-node-label,
+    .graph-edge-label {
+        fill: CanvasText;
+        forced-color-adjust: none;
+    }
+
+    .graph-node-icon {
+        color: CanvasText;
+        forced-color-adjust: none;
+    }
+
+    .graph-edge,
+    .graph-edge--strong {
+        stroke: CanvasText;
+        forced-color-adjust: none;
+    }
+
+    .graph-edge--strong {
+        stroke-width: 3; /* distinction par EPAISSEUR (forme), pas seulement couleur */
+    }
+
+    .graph-arrow path {
+        fill: CanvasText;
+        forced-color-adjust: none;
+    }
+
+    /* Selection/focus : couleurs SYSTEME (pas --accent, ignore en forced-colors) */
+    .graph-node:focus-visible .graph-node-bg,
+    .graph-node--selected .graph-node-bg {
+        outline: 3px solid Highlight;
+        outline-offset: 3px;
+        stroke: Highlight;
+        filter: none; /* le halo drop-shadow (--graph-select-halo) n'a pas de sens ici */
+        forced-color-adjust: none;
+    }
+
+    .graph-edge--selected {
+        stroke: Highlight;
+        stroke-width: 3;
+        forced-color-adjust: none;
     }
 }

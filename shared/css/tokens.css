@@ -1,4 +1,4 @@
-/* @ds-version: 2.105.0 */
+/* @ds-version: 2.106.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -268,6 +268,9 @@
     --graph-zoom-min: 0.2;
     --graph-zoom-max: 4;
     --graph-grid-size: 16px;
+    /* #672 — 2e indice de contraste selection : halo derive de --text (JAMAIS --accent) ->
+       reste distinguable meme sur un noeud custom deja accent-colore (opts.nodeTypes). */
+    --graph-select-halo: color-mix(in srgb, var(--text) 55%, transparent);
 
     /* === Aliases legacy — deprecated, remove in v3 === */
     --border: var(--border-color); /* deprecated, remove in v3 */

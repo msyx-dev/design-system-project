@@ -1,7 +1,7 @@
 {
-  "version": "2.105.0",
+  "version": "2.106.0",
   "generated": {
-    "at": "2026-07-19T20:18:38.971Z",
+    "at": "2026-07-20T00:16:04.922Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3182,7 +3182,8 @@
         ".graph-node--selected",
         ".graph-edge--selected",
         ".graph--lod-compact",
-        ".graph-viewport"
+        ".graph-viewport",
+        ".graph-live"
       ],
       "jsInit": "initGraph",
       "react": "pending",
