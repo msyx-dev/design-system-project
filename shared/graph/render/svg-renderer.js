@@ -17,6 +17,7 @@ let uidCounter = 0;
 const DEFAULT_SIZE = { w: 120, h: 40 };
 const LABEL_PADDING = 12;
 const KEY_PAN_STEP = 40; // #668 — pas de pan clavier (fleches), unite espace-utilisateur
+const LIVE_ANNOUNCE_DEBOUNCE_MS = 300; // #672 — annonce des connexions au repos
 
 /** echappement minimal — le moteur graph est un module ESM isole (pas d'acces a
  * escapeHTML() de components.js, monde monolithe distinct, cf. README frontiere D1). */
@@ -48,6 +49,7 @@ export class SvgRenderer {
     this._initViewport();
     this._initSelection();
     this._initNodeNav();
+    this._initLive();
     this._initResize();
     this._initKeyboard();
     // etat VR deterministe : pose le halo SANS ouvrir le modal (silent) — cf. #668 §5.2.
@@ -124,6 +126,7 @@ export class SvgRenderer {
         // conteneur et reintroduit le conflit pan/traversee que #671 resout).
         if (this.opts.keyboardNav !== false) this._setRoving(id);
         if (!silent) g.focus?.(); // pas de vol de focus au chargement (initialSelection)
+        if (!silent) this._announce(id); // #672 — live-region SR : label immediat + connexions debounce/i
       }
     } else {
       const p = this.edgesG.querySelector(`[data-edge-id="${CSS.escape(id)}"]`);
@@ -264,6 +267,7 @@ export class SvgRenderer {
     this._setRoving(id);
     g.focus();
     this._ensureNodeVisible(id);
+    this._announce(id); // #672 — live-region SR : label immediat + connexions debounce/i
   }
 
   /** exactement UN noeud tabindex=0 (le courant) — tous les autres -1. */
@@ -324,6 +328,62 @@ export class SvgRenderer {
       this._rovingId = this._tree.order[0] || null;
     }
     this._syncRovingTabindex();
+  }
+
+  // ---- Live-region SR (#672, I4-2) — verbalise dynamiquement le noeud actif +
+  // ses connexions. `.graph-a11y` (table) reste le contrat PRIMAIRE (WCAG 1.1.1/1.3.1) ;
+  // cette live-region complete la nav clavier (#671) qui ne verbalise QUE l'aria-label
+  // du noeud focuse, jamais ses aretes. Independante de opts.keyboardNav : le focus
+  // peut aussi survenir via select() (clic + focus programmatique), cf. select(). ----
+  _initLive() {
+    this._liveTimer = null;
+    this._onLiveKeydown = (e) => {
+      if (e.key !== 'i' && e.key !== 'I') return;
+      const nodeG = e.target && typeof e.target.closest === 'function' ? e.target.closest('.graph-node') : null;
+      if (!nodeG || !nodeG.dataset.nodeId) return;
+      if (this._liveTimer) {
+        clearTimeout(this._liveTimer);
+        this._liveTimer = null;
+      }
+      this._announceConnections(nodeG.dataset.nodeId);
+    };
+    this.nodesG.addEventListener('keydown', this._onLiveKeydown);
+  }
+
+  /**
+   * Ecrit le label IMMEDIATEMENT dans `.graph-live`, puis programme (ou reprogramme)
+   * l'annonce des connexions apres LIVE_ANNOUNCE_DEBOUNCE_MS au repos. Appele a
+   * chaque deplacement (_focusNode) ou selection (select(), branche noeud) — le
+   * timer precedent est TOUJOURS annule avant d'en reprogrammer un nouveau : une
+   * traversee rapide (fleches en rafale) n'empile jamais d'annonces successives
+   * dans la file `polite`, seul l'etat FINAL (noeud sur lequel l'utilisateur
+   * s'arrete) declenche l'annonce des connexions.
+   */
+  _announce(id) {
+    if (!this.liveEl || !this.model.hasNode(id)) return;
+    const node = this.model.getNode(id);
+    const label = (node.data && node.data.label) || id;
+    this.liveEl.textContent = label;
+    if (this._liveTimer) clearTimeout(this._liveTimer);
+    this._liveTimer = setTimeout(() => {
+      this._liveTimer = null;
+      this._announceConnections(id);
+    }, LIVE_ANNOUNCE_DEBOUNCE_MS);
+  }
+
+  /** Format : « {label}. Connecté à {N} : {labels…} » — voisins via model.neighbors()
+   * (in ∪ out, y compris cross-edges hors arbre couvrant — complete la nav I4-1). */
+  _announceConnections(id) {
+    if (!this.liveEl || !this.model.hasNode(id)) return;
+    const node = this.model.getNode(id);
+    const label = (node.data && node.data.label) || id;
+    const neighborLabels = this.model.neighbors(id).map((nid) => {
+      const n = this.model.getNode(nid);
+      return (n && n.data && n.data.label) || nid;
+    });
+    this.liveEl.textContent = neighborLabels.length
+      ? `${label}. Connecté à ${neighborLabels.length} : ${neighborLabels.join(', ')}`
+      : `${label}. Aucune connexion`;
   }
 
   // ---- fit-to-content = reset a l'identite (#668) ----
@@ -461,9 +521,15 @@ export class SvgRenderer {
     this.a11yEl.className = 'graph-a11y';
     this.a11yEl.id = descId;
 
+    this.liveEl = document.createElement('div'); // #672 — annonces SR dynamiques
+    this.liveEl.className = 'graph-live';
+    this.liveEl.setAttribute('aria-live', 'polite');
+    this.liveEl.setAttribute('aria-atomic', 'true');
+
     this.el.innerHTML = '';
     this.el.appendChild(this.svgEl);
     this.el.appendChild(this.a11yEl);
+    this.el.appendChild(this.liveEl);
   }
 
   // ---- 2.3 Cycle de vie observe -> repaint(rAF) -> destroy ----
@@ -732,6 +798,11 @@ export class SvgRenderer {
     }
     if (this._onCanvasClick) this.svgEl.removeEventListener('click', this._onCanvasClick);
     if (this._onNodeKeydown) this.nodesG.removeEventListener('keydown', this._onNodeKeydown);
+    if (this._onLiveKeydown) this.nodesG.removeEventListener('keydown', this._onLiveKeydown);
+    if (this._liveTimer) {
+      clearTimeout(this._liveTimer);
+      this._liveTimer = null;
+    }
     if (this._onKeydown) this.el.removeEventListener('keydown', this._onKeydown);
     this.model.removeEventListener('graph:model:change', this._onChange);
     this._paintToken++; // invalide tout paint async en vol (#670) -> resolution tardive = no-op
