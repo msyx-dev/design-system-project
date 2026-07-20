@@ -1,7 +1,7 @@
 {
-  "version": "2.107.0",
+  "version": "2.108.0",
   "generated": {
-    "at": "2026-07-20T06:37:10.740Z",
+    "at": "2026-07-20T09:32:46.711Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -171,6 +171,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css",
+        "shared/css/components/graph.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
       ]
@@ -3187,7 +3188,10 @@
         ".graph-viewport",
         ".graph-live",
         ".graph-node--connect-source",
-        ".graph-toolbar"
+        ".graph-toolbar",
+        ".graph-inline-edit",
+        ".graph-port",
+        ".graph-port-link"
       ],
       "jsInit": "initGraph",
       "react": "pending",

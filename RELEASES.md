@@ -1,5 +1,24 @@
 # Releases
 
+## 2.108.0 — 2026-07-20 — Moteur graph I5-2 : édition inline + ports 44px (#674)
+
+> Deuxième brique d'édition — **édition inline du label** (double-clic nœud → `<input>`,
+> `role="application"` local pendant l'édition, contrat de focus WCAG) + **ports/handles
+> 44px** (drag-to-connect, complète le mode « Relier » au clic de I5-1).
+
+### Added
+- **Inline-label** : double-clic nœud (mode edit) → overlay `<input class="graph-inline-edit">` pré-rempli + focus → `Enter`/blur = `updateNode`, `Échap` = annule, fermeture = re-focus du nœud.
+- **Ports/handles 44px** : `.graph-port` révélés au `:hover`/`:focus-within` (hit-area ≥44px), **drag** handle→cible (`__pointerDrag` + ligne fantôme `.graph-port-link`) → `addEdge` ; drop hors nœud/`Échap` → annulé.
+- **Désambiguïsation** : util pur `shared/graph/render/port-drop.js` (cible = centre le plus proche du drop), testable Node.
+
+### Decisions
+- **Arbitrage A opt1 (#662)** : `role="application"` posé sur le `<svg>` **uniquement** pendant qu'un `<input>` inline est ouvert (restauré à `graphics-document` ensuite) — la nav SR/clavier I4 reste intacte hors édition.
+- Le mode « Relier » au clic (I5-1) est **conservé** comme chemin accessible ; le drag-par-ports est l'UX riche tactile.
+
+### Tests
+- Node `tests/regression/graph-port-drop.test.js` (désambiguïsation cible).
+- Playwright `visual-tests/graph-edit.spec.ts` étendu (12 combos) : inline edit + focus-restore + `role=application` local + drag port → arête + non-régression I5-1/mode view.
+
 ## 2.107.0 — 2026-07-20 — Moteur graph I5-1 : édition create/delete + contrat de focus (#673)
 
 > Première brique d'**édition** du moteur graphique (passage read-only → read-write) —
