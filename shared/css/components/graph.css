@@ -249,6 +249,14 @@
         forced-color-adjust: none;
     }
 
+    /* Source de connexion (mode « Relier », #673) : distinguee via couleur SYSTEME
+       (LinkText + epaisseur), coherent avec le traitement forced-colors du reste du graphe
+       — sinon le stroke var(--warning) l'emportait par specificite (#673 review). */
+    .graph-node--connect-source .graph-node-bg {
+        stroke: LinkText;
+        stroke-width: 3px;
+    }
+
     .graph-node-label,
     .graph-edge-label {
         fill: CanvasText;

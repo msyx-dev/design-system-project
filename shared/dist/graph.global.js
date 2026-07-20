@@ -1490,6 +1490,10 @@
         const u = this.viewport ? this.viewport.screenToUser(cx, cy) : null;
         switch (e.key) {
           case "Escape":
+            if (this._connectMode) {
+              this._toggleConnectMode();
+              break;
+            }
             this.select(null);
             break;
           case "f":
@@ -1678,6 +1682,13 @@
         });
       } else if (sel.kind === "edge") {
         this.model.removeEdge(sel.id);
+        requestAnimationFrame(() => {
+          const rid = this._rovingId;
+          if (rid && this.model.hasNode(rid)) {
+            const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(rid)}"]`);
+            if (g) g.focus();
+          }
+        });
       }
     }
     // ---- 2.1 Structure SVG emise ----

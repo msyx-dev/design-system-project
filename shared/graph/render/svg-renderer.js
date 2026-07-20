@@ -462,6 +462,10 @@ export class SvgRenderer {
       const u = this.viewport ? this.viewport.screenToUser(cx, cy) : null;
       switch (e.key) {
         case 'Escape':
+          if (this._connectMode) {
+            this._toggleConnectMode(); // sortie clavier du mode « Relier » (clear source + aria-pressed) — #673 review
+            break;
+          }
           this.select(null);
           break;
         case 'f':
@@ -677,6 +681,17 @@ export class SvgRenderer {
       });
     } else if (sel.kind === 'edge') {
       this.model.removeEdge(sel.id);
+      // Le repaint (rAF) recree les <g> noeuds (wipe innerHTML de _applyLayout) -> le noeud qui
+      // portait le focus DOM est detruit ; _restoreNodeNav() ne remet que le tabindex, pas le
+      // focus. Sans ca activeElement retombe sur <body> (perte de position clavier). L'arete
+      // n'a pas de focus propre -> on restaure le focus sur le noeud roving courant (spec #673).
+      requestAnimationFrame(() => {
+        const rid = this._rovingId;
+        if (rid && this.model.hasNode(rid)) {
+          const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(rid)}"]`);
+          if (g) g.focus();
+        }
+      });
     }
   }
 

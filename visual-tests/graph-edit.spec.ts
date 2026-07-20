@@ -210,4 +210,70 @@ test.describe("Graph — mode edition create/delete + contrat de focus (#673, I5
       /graph-node--connect-source/,
     );
   });
+
+  test("supprimer une arête garde le focus dans le graphe (nœud roving), pas sur <body> (#673 review)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    await el.locator('[data-node-id="e-root"]').focus(); // focus DOM initial (roving order[0])
+    const beforeEdges = await el.locator(".graph-edge").count();
+    // Sélectionne l'arête e-t1 par un clic au milieu de son tracé (getPointAtLength).
+    const clicked = await page.evaluate(() => {
+      const host = document.querySelectorAll(
+        "#graph .graph[data-graph]",
+      )[6] as HTMLElement;
+      const path = host.querySelector(
+        '[data-edge-id="e-t1"]',
+      ) as SVGPathElement | null;
+      if (!path) return false;
+      const mid = path.getPointAtLength(path.getTotalLength() / 2);
+      const m = path.getScreenCTM();
+      if (!m) return false;
+      const x = mid.x * m.a + mid.y * m.c + m.e;
+      const y = mid.x * m.b + mid.y * m.d + m.f;
+      path.dispatchEvent(
+        new MouseEvent("click", {
+          clientX: x,
+          clientY: y,
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        }),
+      );
+      return true;
+    });
+    expect(clicked).toBe(true);
+    await expect(el.locator('[data-edge-id="e-t1"]')).toHaveClass(
+      /graph-edge--selected/,
+    );
+    await page.keyboard.press("Delete");
+    await expect(el.locator(".graph-edge")).toHaveCount(beforeEdges - 1);
+    // Contrat #673 : le focus reste sur un nœud du graphe, jamais sur <body>.
+    const active = await page.evaluate(
+      () => document.activeElement?.getAttribute("data-node-id") ?? null,
+    );
+    expect(active).not.toBeNull();
+  });
+
+  test('Échap annule le mode "Relier" en cours — pas d\'arête inattendue (#673 review)', async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    const beforeEdges = await el.locator(".graph-edge").count();
+    const relierBtn = el.locator('.graph-toolbar button[aria-label="Relier"]');
+    await relierBtn.click();
+    await expect(relierBtn).toHaveAttribute("aria-pressed", "true");
+    await el.locator('[data-node-id="e-a"]').click(); // source choisie
+    await expect(el.locator('[data-node-id="e-a"]')).toHaveClass(
+      /graph-node--connect-source/,
+    );
+    await page.keyboard.press("Escape"); // sortie clavier du mode « Relier »
+    await expect(relierBtn).toHaveAttribute("aria-pressed", "false");
+    await expect(el.locator('[data-node-id="e-a"]')).not.toHaveClass(
+      /graph-node--connect-source/,
+    );
+    // un clic ultérieur ne crée PAS d'arête (mode sorti, source périmée nettoyée)
+    await el.locator('[data-node-id="e-b"]').click();
+    await expect(el.locator(".graph-edge")).toHaveCount(beforeEdges);
+  });
 });
