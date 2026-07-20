@@ -24,6 +24,14 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
   var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
+  var __privateWrapper = (obj, member, setter, getter) => ({
+    set _(value) {
+      __privateSet(obj, member, value, setter);
+    },
+    get _() {
+      return __privateGet(obj, member, getter);
+    }
+  });
 
   // shared/graph/layout/layered.js
   var layered_exports = {};
@@ -328,6 +336,9 @@
       }
       const existing = __privateGet(this, _nodes).get(id);
       const p = patch && typeof patch === "object" ? patch : {};
+      const prev = { data: cloneObj(existing.data) };
+      if (existing.position) prev.position = cloneObj(existing.position);
+      if (existing.size) prev.size = cloneObj(existing.size);
       if (p.data && typeof p.data === "object") {
         if ("id" in p.data && p.data.id !== existing.data.id) {
           warn2(`updateNode: id "${id}" immuable -> patch.data.id ignore`);
@@ -349,7 +360,7 @@
           delete existing.size;
         }
       }
-      __privateMethod(this, _GraphModel_instances, emit_fn).call(this, { op: "update-node", id, node: existing, patch: p });
+      __privateMethod(this, _GraphModel_instances, emit_fn).call(this, { op: "update-node", id, node: existing, patch: p, prev });
     }
     removeNode(id) {
       if (!__privateGet(this, _nodes).has(id)) {
@@ -399,6 +410,7 @@
       }
       const existing = __privateGet(this, _edges).get(id);
       const p = patch && typeof patch === "object" ? patch : {};
+      const prev = { data: cloneObj(existing.data) };
       if (p.data && typeof p.data === "object") {
         const attemptedImmutable = "id" in p.data && p.data.id !== existing.data.id || "source" in p.data && p.data.source !== existing.data.source || "target" in p.data && p.data.target !== existing.data.target;
         if (attemptedImmutable) {
@@ -413,7 +425,7 @@
         };
         existing.data = nextData;
       }
-      __privateMethod(this, _GraphModel_instances, emit_fn).call(this, { op: "update-edge", id, edge: existing, patch: p });
+      __privateMethod(this, _GraphModel_instances, emit_fn).call(this, { op: "update-edge", id, edge: existing, patch: p, prev });
     }
     removeEdge(id) {
       if (!__privateGet(this, _edges).has(id)) {
@@ -466,6 +478,170 @@
   };
   /** @type {number} PROVISOIRE — voir reserve en tete de fichier. */
   __publicField(GraphModel, "SCHEMA_VERSION", SCHEMA_VERSION);
+
+  // shared/graph/model/history.js
+  function clone(v) {
+    return v == null ? v : structuredClone(v);
+  }
+  function projNode(n) {
+    if (!n || typeof n !== "object") return { data: {} };
+    return { data: clone(n.data) || {}, position: clone(n.position), size: clone(n.size) };
+  }
+  function patchFromNode(p) {
+    return { data: p.data, position: p.position == null ? null : p.position, size: p.size == null ? null : p.size };
+  }
+  function buildRecord(detail) {
+    if (!detail || !detail.op) return null;
+    const id = detail.id;
+    switch (detail.op) {
+      case "add-node": {
+        const snap = clone(detail.node);
+        return { forward: (m) => m.addNode(clone(snap)), inverse: (m) => m.removeNode(id) };
+      }
+      case "remove-node": {
+        const node = clone(detail.node);
+        const edges = (detail.removedEdges || []).map(clone);
+        return {
+          forward: (m) => m.removeNode(id),
+          inverse: (m) => {
+            m.addNode(clone(node));
+            edges.forEach((edge) => m.addEdge(clone(edge)));
+          }
+        };
+      }
+      case "add-edge": {
+        const snap = clone(detail.edge);
+        return { forward: (m) => m.addEdge(clone(snap)), inverse: (m) => m.removeEdge(id) };
+      }
+      case "remove-edge": {
+        const snap = clone(detail.edge);
+        return { forward: (m) => m.removeEdge(id), inverse: (m) => m.addEdge(clone(snap)) };
+      }
+      case "update-node": {
+        const after = projNode(detail.node);
+        const before = projNode(detail.prev);
+        return {
+          forward: (m) => m.updateNode(id, patchFromNode(after)),
+          inverse: (m) => m.updateNode(id, patchFromNode(before))
+        };
+      }
+      case "update-edge": {
+        const afterData = clone(detail.edge && detail.edge.data) || {};
+        const beforeData = clone(detail.prev && detail.prev.data) || {};
+        return {
+          forward: (m) => m.updateEdge(id, { data: afterData }),
+          inverse: (m) => m.updateEdge(id, { data: beforeData })
+        };
+      }
+      default:
+        return null;
+    }
+  }
+  var _model, _undo, _redo, _applying, _txnDepth, _txn;
+  var GraphHistory = class extends EventTarget {
+    // Array<Record> de la transaction en cours
+    /** @param {import('./graph-model.js').GraphModel} model */
+    constructor(model) {
+      super();
+      __privateAdd(this, _model);
+      __privateAdd(this, _undo, []);
+      // Array<Entry>  Entry = Array<Record> (une entrée = une session/mutation)
+      __privateAdd(this, _redo, []);
+      __privateAdd(this, _applying, false);
+      // garde de re-entrance pendant undo()/redo()
+      __privateAdd(this, _txnDepth, 0);
+      __privateAdd(this, _txn, null);
+      __privateSet(this, _model, model);
+      this._onChange = this._onChange.bind(this);
+      model.addEventListener("graph:model:change", this._onChange);
+    }
+    get canUndo() {
+      return __privateGet(this, _undo).length > 0;
+    }
+    get canRedo() {
+      return __privateGet(this, _redo).length > 0;
+    }
+    /** Nombre d'entrées undo empilées (diagnostic/test). */
+    get depth() {
+      return __privateGet(this, _undo).length;
+    }
+    /** Ouvre (ou ré-entre dans) une transaction — les records suivants sont coalescés. */
+    beginTransaction() {
+      if (__privateGet(this, _txnDepth) === 0) __privateSet(this, _txn, []);
+      __privateWrapper(this, _txnDepth)._++;
+    }
+    /** Ferme la transaction racine : pousse les records groupés en UNE entrée (no-op si vide). */
+    commit() {
+      if (__privateGet(this, _txnDepth) === 0) return;
+      __privateWrapper(this, _txnDepth)._--;
+      if (__privateGet(this, _txnDepth) > 0) return;
+      const txn = __privateGet(this, _txn);
+      __privateSet(this, _txn, null);
+      if (txn && txn.length) {
+        __privateGet(this, _undo).push(txn);
+        __privateGet(this, _redo).length = 0;
+        this._notify();
+      }
+    }
+    undo() {
+      if (!__privateGet(this, _undo).length) return false;
+      const entry = __privateGet(this, _undo).pop();
+      this._apply(() => {
+        for (let i = entry.length - 1; i >= 0; i--) entry[i].inverse(__privateGet(this, _model));
+      });
+      __privateGet(this, _redo).push(entry);
+      this._notify();
+      return true;
+    }
+    redo() {
+      if (!__privateGet(this, _redo).length) return false;
+      const entry = __privateGet(this, _redo).pop();
+      this._apply(() => {
+        for (let i = 0; i < entry.length; i++) entry[i].forward(__privateGet(this, _model));
+      });
+      __privateGet(this, _undo).push(entry);
+      this._notify();
+      return true;
+    }
+    destroy() {
+      __privateGet(this, _model).removeEventListener("graph:model:change", this._onChange);
+      __privateGet(this, _undo).length = 0;
+      __privateGet(this, _redo).length = 0;
+      __privateSet(this, _txn, null);
+      __privateSet(this, _txnDepth, 0);
+    }
+    _apply(fn) {
+      __privateSet(this, _applying, true);
+      try {
+        fn();
+      } finally {
+        __privateSet(this, _applying, false);
+      }
+    }
+    _onChange(e) {
+      if (__privateGet(this, _applying)) return;
+      const rec = buildRecord(e && e.detail);
+      if (!rec) return;
+      if (__privateGet(this, _txnDepth) > 0) {
+        __privateGet(this, _txn).push(rec);
+        return;
+      }
+      __privateGet(this, _undo).push([rec]);
+      __privateGet(this, _redo).length = 0;
+      this._notify();
+    }
+    _notify() {
+      this.dispatchEvent(
+        new CustomEvent("graph:history:change", { detail: { canUndo: this.canUndo, canRedo: this.canRedo } })
+      );
+    }
+  };
+  _model = new WeakMap();
+  _undo = new WeakMap();
+  _redo = new WeakMap();
+  _applying = new WeakMap();
+  _txnDepth = new WeakMap();
+  _txn = new WeakMap();
 
   // shared/graph/layout/fixed.js
   function fixedLayout(model) {
@@ -1567,6 +1743,7 @@
       this._connectMode = false;
       this._connectSource = null;
       this._editSeq = 0;
+      this.history = new GraphHistory(this.model);
       this._buildToolbar();
       this._onEditDblClick = (e) => {
         if (this._inlineEdit) return;
@@ -1581,12 +1758,55 @@
       };
       this.svgEl.addEventListener("dblclick", this._onEditDblClick);
       this._onEditKeydown = (e) => {
+        const mod = e.ctrlKey || e.metaKey;
+        if (mod && (e.key === "z" || e.key === "Z")) {
+          e.preventDefault();
+          if (e.shiftKey) this._redo();
+          else this._undo();
+          return;
+        }
+        if (mod && (e.key === "y" || e.key === "Y")) {
+          e.preventDefault();
+          this._redo();
+          return;
+        }
         if (e.key !== "Delete" && e.key !== "Backspace") return;
         if (!this.getSelection()) return;
         e.preventDefault();
         this._deleteSelection();
       };
       this.el.addEventListener("keydown", this._onEditKeydown);
+    }
+    // ---- undo/redo (#675, I5-3) — Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z (ou Ctrl+Y) ----
+    _undo() {
+      if (!this.history) return;
+      const roving = this._rovingId;
+      if (this.history.undo()) this._afterHistoryNav(roving);
+    }
+    _redo() {
+      if (!this.history) return;
+      const roving = this._rovingId;
+      if (this.history.redo()) this._afterHistoryNav(roving);
+    }
+    /**
+     * Focus post-undo/redo. Les mutations d'undo/redo emettent `graph:model:change` ->
+     * `_onChange` planifie UN repaint (rAF) qui wipe nodesG.innerHTML (perte du focus DOM) et
+     * reconstruit `_tree`/roving via `_restoreNodeNav()` (mais NE repose PAS le focus). Ce rAF,
+     * enregistre APRES celui du repaint (meme tick), s'execute juste apres lui -> on repose le
+     * focus clavier sur le noeud roving s'il survit, sinon le 1er de l'ordre (meme mecanique
+     * que _createNodeAt()/_deleteSelection(), #673). La selection perimee est deja purgee par
+     * `_restoreSelectionVisual()` (#668) pendant le repaint.
+     */
+    _afterHistoryNav(prevRovingId) {
+      requestAnimationFrame(() => {
+        let target = prevRovingId && this.model.hasNode(prevRovingId) ? prevRovingId : null;
+        if (!target) target = this._rovingId && this.model.hasNode(this._rovingId) ? this._rovingId : null;
+        if (!target) {
+          const first = this.model.nodes[0];
+          target = first ? first.data.id : null;
+        }
+        if (target != null) this._focusNode(target);
+      });
     }
     /** point ecran -> monde, avec/sans viewport actif (opts.viewport===false -> transform identite). */
     _clientToWorld(clientX, clientY) {
@@ -1761,6 +1981,7 @@
       input.addEventListener("keydown", onKeydown);
       input.addEventListener("blur", onBlur);
       this._inlineEdit = { id, input, original, onKeydown, onBlur };
+      if (this.history) this.history.beginTransaction();
       this.svgEl.setAttribute("role", ROLE_APPLICATION);
       this.el.appendChild(input);
       input.focus();
@@ -1774,8 +1995,9 @@
       const changed = val !== "" && val !== state.original;
       const { id } = state;
       this._closeInlineEdit();
+      if (changed) this.model.updateNode(id, { data: { label: val } });
+      if (this.history) this.history.commit();
       if (!changed) return;
-      this.model.updateNode(id, { data: { label: val } });
       requestAnimationFrame(() => {
         if (!this.model.hasNode(id)) return;
         const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
@@ -1786,6 +2008,7 @@
     _cancelInlineEdit() {
       if (!this._inlineEdit) return;
       this._closeInlineEdit();
+      if (this.history) this.history.commit();
     }
     /**
      * Teardown partage commit/cancel/destroy() : retire l'overlay + listeners, restaure le role,
@@ -1877,6 +2100,7 @@
         onStart: (e) => {
           e.stopPropagation();
           this._portDragCancelled = false;
+          if (this.history) this.history.beginTransaction();
           ghost = svg("path", { class: "graph-port-link" });
           this.viewportG.appendChild(ghost);
           window.addEventListener("keydown", onEscape, true);
@@ -1900,11 +2124,14 @@
           const cancelled = this._portDragCancelled;
           if (this._activePortDragCleanup) this._activePortDragCleanup();
           this._portDragCancelled = false;
-          if (cancelled) return;
-          const world = this._clientToWorld(p.clientX, p.clientY);
-          const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
-          if (!targetId) return;
-          this.model.addEdge({ data: { id: this._genEditId("e"), source: sourceId, target: targetId, directed: true } });
+          if (!cancelled) {
+            const world = this._clientToWorld(p.clientX, p.clientY);
+            const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
+            if (targetId) {
+              this.model.addEdge({ data: { id: this._genEditId("e"), source: sourceId, target: targetId, directed: true } });
+            }
+          }
+          if (this.history) this.history.commit();
         },
         cursor: "crosshair"
       });
@@ -2232,6 +2459,10 @@
       }
       if (this._inlineEdit) this._closeInlineEdit();
       if (this._activePortDragCleanup) this._activePortDragCleanup();
+      if (this.history) {
+        this.history.destroy();
+        this.history = null;
+      }
       if (this._liveTimer) {
         clearTimeout(this._liveTimer);
         this._liveTimer = null;
@@ -2273,7 +2504,12 @@
       select: (id) => renderer.select(id),
       getSelection: () => renderer.getSelection(),
       // --- nav clavier (#671, I4-1) — no-op si opts.keyboardNav===false (noeud introuvable) ---
-      focusNode: (id) => renderer._focusNode(id)
+      focusNode: (id) => renderer._focusNode(id),
+      // --- undo/redo (#675, I5-3) — no-op hors mode edit (historique absent) ---
+      undo: () => renderer.history ? renderer.history.undo() : false,
+      redo: () => renderer.history ? renderer.history.redo() : false,
+      canUndo: () => renderer.history ? renderer.history.canUndo : false,
+      canRedo: () => renderer.history ? renderer.history.canRedo : false
     };
   }
 

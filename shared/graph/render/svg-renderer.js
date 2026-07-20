@@ -8,7 +8,7 @@
 import { svg } from '../lib/svg.js';
 import { buildSpanningTree } from '../lib/spanning-tree.js';
 import { nextFocusAfterRemoval } from '../lib/edit-focus.js';
-import { GraphModel } from '../model/index.js';
+import { GraphModel, GraphHistory } from '../model/index.js';
 import { resolveLayout } from '../layout/index.js';
 import { resolveNodeType, graphCard } from './node-types.js';
 import { renderA11yTable } from './a11y-table.js';
@@ -524,6 +524,10 @@ export class SvgRenderer {
     this._connectSource = null;
     this._editSeq = 0;
 
+    // #675, I5-3 — historique undo/redo (pile de patches inverses). Observe le modele :
+    // toute mutation d'edition (create/delete/inline/lien) est captee automatiquement.
+    this.history = new GraphHistory(this.model);
+
     this._buildToolbar();
 
     // Double-clic sur un NOEUD -> edition inline du label (#674, I5-2) ; sur le FOND
@@ -543,14 +547,64 @@ export class SvgRenderer {
     };
     this.svgEl.addEventListener('dblclick', this._onEditDblClick);
 
-    // Suppr/Backspace sur la selection courante -> suppression + contrat de focus.
+    // Clavier edition (#673 : Suppr ; #675 : undo/redo). Listener sur `this.el` : les <g>
+    // noeuds focuses sont des descendants -> leur keydown bubble ici (les listeners
+    // nodesG #671/#672 ne consomment que fleches/Home/End/Enter/i, jamais Ctrl+Z). L'input
+    // inline fait `e.stopPropagation()` inconditionnel -> Ctrl+Z DANS le champ = undo natif,
+    // ne remonte jamais ici (aucun conflit avec l'undo du graphe).
     this._onEditKeydown = (e) => {
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        if (e.shiftKey) this._redo();
+        else this._undo();
+        return;
+      }
+      if (mod && (e.key === 'y' || e.key === 'Y')) {
+        e.preventDefault();
+        this._redo();
+        return;
+      }
       if (e.key !== 'Delete' && e.key !== 'Backspace') return;
       if (!this.getSelection()) return;
       e.preventDefault();
       this._deleteSelection();
     };
     this.el.addEventListener('keydown', this._onEditKeydown);
+  }
+
+  // ---- undo/redo (#675, I5-3) — Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z (ou Ctrl+Y) ----
+  _undo() {
+    if (!this.history) return;
+    const roving = this._rovingId;
+    if (this.history.undo()) this._afterHistoryNav(roving);
+  }
+
+  _redo() {
+    if (!this.history) return;
+    const roving = this._rovingId;
+    if (this.history.redo()) this._afterHistoryNav(roving);
+  }
+
+  /**
+   * Focus post-undo/redo. Les mutations d'undo/redo emettent `graph:model:change` ->
+   * `_onChange` planifie UN repaint (rAF) qui wipe nodesG.innerHTML (perte du focus DOM) et
+   * reconstruit `_tree`/roving via `_restoreNodeNav()` (mais NE repose PAS le focus). Ce rAF,
+   * enregistre APRES celui du repaint (meme tick), s'execute juste apres lui -> on repose le
+   * focus clavier sur le noeud roving s'il survit, sinon le 1er de l'ordre (meme mecanique
+   * que _createNodeAt()/_deleteSelection(), #673). La selection perimee est deja purgee par
+   * `_restoreSelectionVisual()` (#668) pendant le repaint.
+   */
+  _afterHistoryNav(prevRovingId) {
+    requestAnimationFrame(() => {
+      let target = prevRovingId && this.model.hasNode(prevRovingId) ? prevRovingId : null;
+      if (!target) target = this._rovingId && this.model.hasNode(this._rovingId) ? this._rovingId : null;
+      if (!target) {
+        const first = this.model.nodes[0];
+        target = first ? first.data.id : null;
+      }
+      if (target != null) this._focusNode(target);
+    });
   }
 
   /** point ecran -> monde, avec/sans viewport actif (opts.viewport===false -> transform identite). */
@@ -754,6 +808,7 @@ export class SvgRenderer {
     input.addEventListener('blur', onBlur);
 
     this._inlineEdit = { id, input, original, onKeydown, onBlur };
+    if (this.history) this.history.beginTransaction(); // #675 — coalescing : 1 patch par session inline
     this.svgEl.setAttribute('role', ROLE_APPLICATION); // #662, arbitrage A — local, le temps de l'edition
     this.el.appendChild(input);
     input.focus();
@@ -768,8 +823,11 @@ export class SvgRenderer {
     const changed = val !== '' && val !== state.original;
     const { id } = state;
     this._closeInlineEdit();
+    if (changed) this.model.updateNode(id, { data: { label: val } });
+    // #675 — ferme la transaction inline APRES la mutation (record capte dans la session) ;
+    // no-op si rien n'a change (transaction vide). Balance le beginTransaction de _startInlineEdit.
+    if (this.history) this.history.commit();
     if (!changed) return;
-    this.model.updateNode(id, { data: { label: val } });
     // Le repaint (rAF, cf. _scheduleRepaint) recree le <g> (wipe innerHTML de _applyLayout())
     // -> le focus synchrone pose par _closeInlineEdit() est perdu. Re-affirme APRES le repaint
     // reel (meme mecanique que _createNodeAt()/_deleteSelection(), #673).
@@ -784,6 +842,7 @@ export class SvgRenderer {
   _cancelInlineEdit() {
     if (!this._inlineEdit) return;
     this._closeInlineEdit();
+    if (this.history) this.history.commit(); // #675 — transaction vide (annulation) -> no-op
   }
 
   /**
@@ -880,6 +939,7 @@ export class SvgRenderer {
       onStart: (e) => {
         e.stopPropagation(); // #674 — n'active PAS le pan/pinch du viewport (meme svgEl, cf. viewport.js)
         this._portDragCancelled = false;
+        if (this.history) this.history.beginTransaction(); // #675 — 1 patch par session drag
         ghost = svg('path', { class: 'graph-port-link' });
         this.viewportG.appendChild(ghost);
         window.addEventListener('keydown', onEscape, true);
@@ -903,11 +963,16 @@ export class SvgRenderer {
         const cancelled = this._portDragCancelled;
         if (this._activePortDragCleanup) this._activePortDragCleanup();
         this._portDragCancelled = false;
-        if (cancelled) return; // Echap ou drop hors noeud (cf. plus bas) -> aucune arete
-        const world = this._clientToWorld(p.clientX, p.clientY);
-        const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
-        if (!targetId) return; // drop hors noeud -> annule (#674)
-        this.model.addEdge({ data: { id: this._genEditId('e'), source: sourceId, target: targetId, directed: true } });
+        // #674 — arete uniquement si drop sur un noeud (hors source) et pas annule (Echap).
+        if (!cancelled) {
+          const world = this._clientToWorld(p.clientX, p.clientY);
+          const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
+          if (targetId) {
+            this.model.addEdge({ data: { id: this._genEditId('e'), source: sourceId, target: targetId, directed: true } });
+          }
+        }
+        // #675 — ferme la transaction drag sur TOUS les chemins (annule/sans cible = vide = no-op).
+        if (this.history) this.history.commit();
       },
       cursor: 'crosshair',
     });
@@ -1293,6 +1358,11 @@ export class SvgRenderer {
     if (this._inlineEdit) this._closeInlineEdit();
     // #674 — drag de port en vol : retire le fantome + le listener Echap (fuite sinon, window)
     if (this._activePortDragCleanup) this._activePortDragCleanup();
+    // #675 — historique undo/redo : detache son listener graph:model:change + vide les piles
+    if (this.history) {
+      this.history.destroy();
+      this.history = null;
+    }
     if (this._liveTimer) {
       clearTimeout(this._liveTimer);
       this._liveTimer = null;

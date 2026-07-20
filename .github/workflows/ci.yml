@@ -51,6 +51,14 @@ jobs:
         run: npm run test:graph-layout-layered
       - name: Graph viewport pan/zoom/pinch unit tests (#667, I2-1)
         run: npm run test:graph-viewport
+      - name: Graph spanning-tree unit tests (#671, I4-1)
+        run: npm run test:graph-spanning-tree
+      - name: Graph edit-focus unit tests (#673, I5-1)
+        run: npm run test:graph-edit-focus
+      - name: Graph port-drop unit tests (#674, I5-2)
+        run: npm run test:graph-port-drop
+      - name: Graph history (undo/redo) unit tests (#675, I5-3)
+        run: npm run test:graph-history
       - name: Run hardcoded tokens script tests (anti-regression #279)
         run: |
           chmod +x tests/test-check-hardcoded-tokens.sh

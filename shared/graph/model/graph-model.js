@@ -189,6 +189,13 @@ export class GraphModel extends EventTarget {
     const existing = this.#nodes.get(id);
     const p = patch && typeof patch === 'object' ? patch : {};
 
+    // État d'AVANT (projection invertible) — capture NON-BREAKING pour l'historique undo/redo
+    // (#675, I5-3). L'inverse d'un updateNode(id,patch) = updateNode(id,prev). Cloné pour
+    // survivre à la mutation en place ci-dessous.
+    const prev = { data: cloneObj(existing.data) };
+    if (existing.position) prev.position = cloneObj(existing.position);
+    if (existing.size) prev.size = cloneObj(existing.size);
+
     if (p.data && typeof p.data === 'object') {
       if ('id' in p.data && p.data.id !== existing.data.id) {
         warn(`updateNode: id "${id}" immuable -> patch.data.id ignore`);
@@ -210,7 +217,7 @@ export class GraphModel extends EventTarget {
         delete existing.size;
       }
     }
-    this.#emit({ op: 'update-node', id, node: existing, patch: p });
+    this.#emit({ op: 'update-node', id, node: existing, patch: p, prev });
   }
 
   removeNode(id) {
@@ -267,6 +274,9 @@ export class GraphModel extends EventTarget {
     const existing = this.#edges.get(id);
     const p = patch && typeof patch === 'object' ? patch : {};
 
+    // État d'AVANT (data seule pour une arête) — capture non-breaking pour l'undo/redo (#675).
+    const prev = { data: cloneObj(existing.data) };
+
     if (p.data && typeof p.data === 'object') {
       const attemptedImmutable =
         ('id' in p.data && p.data.id !== existing.data.id) ||
@@ -284,7 +294,7 @@ export class GraphModel extends EventTarget {
       };
       existing.data = nextData;
     }
-    this.#emit({ op: 'update-edge', id, edge: existing, patch: p });
+    this.#emit({ op: 'update-edge', id, edge: existing, patch: p, prev });
   }
 
   removeEdge(id) {

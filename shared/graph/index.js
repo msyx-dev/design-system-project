@@ -75,9 +75,17 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  *   testable Node) desambiguise un chevauchement de noeuds (cible = centre le plus proche du
  *   point, source toujours exclue -> jamais d'auto-boucle) -> `model.addEdge`. Drop hors
  *   noeud ou `Échap` en cours de drag -> annule (aucune arete, fantome retire).
+ *   I5-3 (#675) — undo/redo : `mode:'edit'` instancie un `GraphHistory` (pile de patches
+ *   inverses observant `graph:model:change`). `Ctrl/Cmd+Z` annule, `Ctrl/Cmd+Shift+Z` (ou
+ *   `Ctrl+Y`) refait — chaque session (edition inline complete, drag complet) = 1 patch
+ *   (coalescing via `beginTransaction`/`commit`), create/delete atomiques = 1 patch chacun.
+ *   undo/redo appliquent via les mutations existantes du modele -> le renderer repeint par le
+ *   cycle `graph:model:change` habituel + repose le focus clavier. Exposes aussi hors clavier :
+ *   `undo()`/`redo()`/`canUndo()`/`canRedo()` sur l'API retournee (no-op en mode view).
  * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement,
  *   getViewport:Function, setViewport:Function, screenToWorld:Function, fit:Function,
- *   zoomToNode:Function, select:Function, getSelection:Function, focusNode:Function}}
+ *   zoomToNode:Function, select:Function, getSelection:Function, focusNode:Function,
+ *   undo:Function, redo:Function, canUndo:Function, canRedo:Function}}
  */
 export function createGraph(el, opts) {
   const renderer = new SvgRenderer(el, opts || {});
@@ -100,5 +108,10 @@ export function createGraph(el, opts) {
     getSelection: () => renderer.getSelection(),
     // --- nav clavier (#671, I4-1) — no-op si opts.keyboardNav===false (noeud introuvable) ---
     focusNode: (id) => renderer._focusNode(id),
+    // --- undo/redo (#675, I5-3) — no-op hors mode edit (historique absent) ---
+    undo: () => (renderer.history ? renderer.history.undo() : false),
+    redo: () => (renderer.history ? renderer.history.redo() : false),
+    canUndo: () => (renderer.history ? renderer.history.canUndo : false),
+    canRedo: () => (renderer.history ? renderer.history.canRedo : false),
   };
 }
