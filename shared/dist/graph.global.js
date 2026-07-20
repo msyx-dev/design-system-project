@@ -1779,14 +1779,18 @@
     }
     // ---- undo/redo (#675, I5-3) — Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z (ou Ctrl+Y) ----
     _undo() {
-      if (!this.history) return;
+      if (!this.history) return false;
       const roving = this._rovingId;
-      if (this.history.undo()) this._afterHistoryNav(roving);
+      const ok = this.history.undo();
+      if (ok) this._afterHistoryNav(roving);
+      return ok;
     }
     _redo() {
-      if (!this.history) return;
+      if (!this.history) return false;
       const roving = this._rovingId;
-      if (this.history.redo()) this._afterHistoryNav(roving);
+      const ok = this.history.redo();
+      if (ok) this._afterHistoryNav(roving);
+      return ok;
     }
     /**
      * Focus post-undo/redo. Les mutations d'undo/redo emettent `graph:model:change` ->
@@ -2100,7 +2104,6 @@
         onStart: (e) => {
           e.stopPropagation();
           this._portDragCancelled = false;
-          if (this.history) this.history.beginTransaction();
           ghost = svg("path", { class: "graph-port-link" });
           this.viewportG.appendChild(ghost);
           window.addEventListener("keydown", onEscape, true);
@@ -2131,7 +2134,6 @@
               this.model.addEdge({ data: { id: this._genEditId("e"), source: sourceId, target: targetId, directed: true } });
             }
           }
-          if (this.history) this.history.commit();
         },
         cursor: "crosshair"
       });
@@ -2505,9 +2507,10 @@
       getSelection: () => renderer.getSelection(),
       // --- nav clavier (#671, I4-1) — no-op si opts.keyboardNav===false (noeud introuvable) ---
       focusNode: (id) => renderer._focusNode(id),
-      // --- undo/redo (#675, I5-3) — no-op hors mode edit (historique absent) ---
-      undo: () => renderer.history ? renderer.history.undo() : false,
-      redo: () => renderer.history ? renderer.history.redo() : false,
+      // --- undo/redo (#675, I5-3) — passe par _undo()/_redo() (focus clavier re-posé via
+      // _afterHistoryNav), pas history.undo() en direct. No-op hors mode edit (history absent). ---
+      undo: () => renderer._undo(),
+      redo: () => renderer._redo(),
       canUndo: () => renderer.history ? renderer.history.canUndo : false,
       canRedo: () => renderer.history ? renderer.history.canRedo : false
     };

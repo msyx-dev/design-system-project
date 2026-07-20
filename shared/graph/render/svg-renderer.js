@@ -575,15 +575,19 @@ export class SvgRenderer {
 
   // ---- undo/redo (#675, I5-3) — Ctrl/Cmd+Z / Ctrl/Cmd+Shift+Z (ou Ctrl+Y) ----
   _undo() {
-    if (!this.history) return;
+    if (!this.history) return false;
     const roving = this._rovingId;
-    if (this.history.undo()) this._afterHistoryNav(roving);
+    const ok = this.history.undo();
+    if (ok) this._afterHistoryNav(roving);
+    return ok;
   }
 
   _redo() {
-    if (!this.history) return;
+    if (!this.history) return false;
     const roving = this._rovingId;
-    if (this.history.redo()) this._afterHistoryNav(roving);
+    const ok = this.history.redo();
+    if (ok) this._afterHistoryNav(roving);
+    return ok;
   }
 
   /**
@@ -939,7 +943,13 @@ export class SvgRenderer {
       onStart: (e) => {
         e.stopPropagation(); // #674 — n'active PAS le pan/pinch du viewport (meme svgEl, cf. viewport.js)
         this._portDragCancelled = false;
-        if (this.history) this.history.beginTransaction(); // #675 — 1 patch par session drag
+        // #675 — PAS de transaction ici : un drag de port n'emet qu'UNE mutation atomique
+        // (addEdge au drop) -> naturellement 1 entree undo. Une transaction encadrant tout le
+        // drag serait un piege : un repaint declenche PENDANT le drag (ex. Suppr concurrente,
+        // #674 _applyLayout force-cancel) annule le drag SANS `onEnd` immediat -> la transaction
+        // resterait ouverte et absorberait les mutations suivantes (le Suppr lui-meme, puis tout
+        // le reste). L'edition inline, elle, borne proprement sa transaction (overlay hors nodesG,
+        // non affecte par les repaints).
         ghost = svg('path', { class: 'graph-port-link' });
         this.viewportG.appendChild(ghost);
         window.addEventListener('keydown', onEscape, true);
@@ -964,6 +974,7 @@ export class SvgRenderer {
         if (this._activePortDragCleanup) this._activePortDragCleanup();
         this._portDragCancelled = false;
         // #674 — arete uniquement si drop sur un noeud (hors source) et pas annule (Echap).
+        // #675 — l'addEdge est atomique -> 1 entree undo, sans transaction (cf. onStart).
         if (!cancelled) {
           const world = this._clientToWorld(p.clientX, p.clientY);
           const targetId = nearestNodeAt(this.positions, this.sizes, world, sourceId);
@@ -971,8 +982,6 @@ export class SvgRenderer {
             this.model.addEdge({ data: { id: this._genEditId('e'), source: sourceId, target: targetId, directed: true } });
           }
         }
-        // #675 — ferme la transaction drag sur TOUS les chemins (annule/sans cible = vide = no-op).
-        if (this.history) this.history.commit();
       },
       cursor: 'crosshair',
     });

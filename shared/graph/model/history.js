@@ -9,9 +9,11 @@
 // Node sans jsdom, comme model/*, layout/*, render/port-drop.js, render/viewport.js (fns pures).
 //
 // COALESCING (arbitrage D, validé Mike) — 1 patch par SESSION : `beginTransaction()` /
-// `commit()` encadrent une session côté renderer (édition inline complète, drag complet).
-// Les records émis pendant une transaction ouverte sont groupés en UNE seule entrée undo.
-// Les mutations atomiques hors transaction (create/delete) = 1 entrée chacune.
+// `commit()` encadrent une session côté renderer (p.ex. l'édition inline). Les records émis
+// pendant une transaction ouverte sont groupés en UNE seule entrée undo. Les mutations
+// atomiques hors transaction (create/delete de nœud, addEdge par drag de port) = 1 entrée
+// chacune — elles n'ouvrent PAS de transaction (une transaction qui engloberait tout un drag
+// serait un piège : un repaint annulant le drag en vol la laisserait ouverte, cf. #675 review).
 //
 // RE-ENTRANCE — `undo()`/`redo()` réappliquent des mutations sur le modèle, qui RÉ-ÉMET
 // `graph:model:change`. Le flag `_applying` fait ignorer ces events auto-infligés : sans lui

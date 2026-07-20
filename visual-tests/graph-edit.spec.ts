@@ -761,4 +761,58 @@ test.describe("Graph — mode edition create/delete + contrat de focus (#673, I5
     await page.keyboard.press("Control+z");
     await expect(el.locator(".graph-node")).toHaveCount(before); // rien ne change en mode view
   });
+
+  test("un drag de port interrompu par un repaint ne casse pas l'historique — le Suppr concurrent reste annulable (#675 review)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    await el.locator('[data-node-id="e-b"]').click(); // sélection tierce
+    const beforeNodes = await el.locator(".graph-node").count();
+    // démarre un drag de port depuis e-root SANS pointerup (drag EN VOL)
+    const started = await page.evaluate(() => {
+      const host = document.querySelectorAll(
+        "#graph .graph[data-graph]",
+      )[6] as HTMLElement;
+      const port = host.querySelector(
+        '[data-node-id="e-root"] .graph-port',
+      ) as SVGCircleElement | null;
+      if (!port) return false;
+      const r = port.getBoundingClientRect();
+      const base = {
+        pointerId: 9200,
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      };
+      port.dispatchEvent(
+        new PointerEvent("pointerdown", {
+          ...base,
+          clientX: r.left + r.width / 2,
+          clientY: r.top + r.height / 2,
+        }),
+      );
+      port.dispatchEvent(
+        new PointerEvent("pointermove", {
+          ...base,
+          clientX: r.left + 180,
+          clientY: r.top + 180,
+        }),
+      );
+      return true;
+    });
+    expect(started).toBe(true);
+    // repaint concurrent : Suppr supprime la sélection tierce (e-b), ce qui force-annule le
+    // drag en vol (#674). Le Suppr NE doit PAS être absorbé par une transaction de drag fantôme.
+    await page.keyboard.press("Delete");
+    await expect(el.locator('[data-node-id="e-b"]')).toHaveCount(0);
+    await expect(el.locator(".graph-node")).toHaveCount(beforeNodes - 1);
+
+    // #675 review : sans le fix (transaction de drag retirée), le removeNode serait resté
+    // capté dans une transaction jamais commitée -> non-annulable. Avec le fix, c'est une
+    // entrée undo normale.
+    await el.locator('[data-node-id="e-root"]').focus();
+    await page.keyboard.press("Control+z");
+    await expect(el.locator('[data-node-id="e-b"]')).toHaveCount(1); // e-b restauré
+    await expect(el.locator(".graph-node")).toHaveCount(beforeNodes);
+  });
 });

@@ -9,7 +9,7 @@
 
 ### Added
 - **`GraphHistory`** (`shared/graph/model/history.js` NOUVEAU) — `EventTarget` observant `graph:model:change`, construit un **record réversible** `{forward, inverse}` par mutation (`buildRecord` pur), appliqué via les **mutations existantes** du modèle (pas de `restore()` façon snapshot). Pile undo/redo, `beginTransaction()`/`commit()`, `undo()`/`redo()`, `canUndo`/`canRedo`, event `graph:history:change`, `destroy()`. DOM-free, testable Node.
-- **Coalescing** (arbitrage D) : `beginTransaction`/`commit` encadrent une session côté renderer (édition inline complète, drag de port complet) → **1 patch/session** ; create/delete atomiques = 1 patch chacun. Un `Ctrl+Z` restaure un libellé **entier** (pas frappe par frappe).
+- **Coalescing** (arbitrage D) : `beginTransaction`/`commit` encadrent la **session d'édition inline** → **1 patch/session** (un `Ctrl+Z` restaure un libellé **entier**, pas frappe par frappe). Create/delete de nœud et création d'arête par drag de port sont **atomiques** = 1 patch chacun.
 - **Intégration renderer** (`svg-renderer.js`) : `this.history = new GraphHistory(model)` dans `_initEdit()` ; `Ctrl/Cmd+Z`=undo, `Ctrl/Cmd+Shift+Z`|`Ctrl+Y`=redo (branché dans `_onEditKeydown`) ; `_afterHistoryNav()` repose le focus clavier après le repaint rAF ; `history.destroy()` dans `destroy()`.
 - **API** : `createGraph()` expose `undo()`/`redo()`/`canUndo()`/`canRedo()` (no-op en mode view).
 - **Enrichissement `prev`** : `GraphModel.updateNode`/`updateEdge` émettent désormais l'état d'avant (`prev`) dans le detail — **ajout non-breaking** (données pures) qui rend l'inverse d'un update constructible.

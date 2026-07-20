@@ -77,8 +77,8 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  *   noeud ou `Échap` en cours de drag -> annule (aucune arete, fantome retire).
  *   I5-3 (#675) — undo/redo : `mode:'edit'` instancie un `GraphHistory` (pile de patches
  *   inverses observant `graph:model:change`). `Ctrl/Cmd+Z` annule, `Ctrl/Cmd+Shift+Z` (ou
- *   `Ctrl+Y`) refait — chaque session (edition inline complete, drag complet) = 1 patch
- *   (coalescing via `beginTransaction`/`commit`), create/delete atomiques = 1 patch chacun.
+ *   `Ctrl+Y`) refait — l'edition inline coalesce sa session en 1 patch (`beginTransaction`/
+ *   `commit`) ; create/delete et addEdge (drag de port) sont atomiques = 1 patch chacun.
  *   undo/redo appliquent via les mutations existantes du modele -> le renderer repeint par le
  *   cycle `graph:model:change` habituel + repose le focus clavier. Exposes aussi hors clavier :
  *   `undo()`/`redo()`/`canUndo()`/`canRedo()` sur l'API retournee (no-op en mode view).
@@ -108,9 +108,10 @@ export function createGraph(el, opts) {
     getSelection: () => renderer.getSelection(),
     // --- nav clavier (#671, I4-1) — no-op si opts.keyboardNav===false (noeud introuvable) ---
     focusNode: (id) => renderer._focusNode(id),
-    // --- undo/redo (#675, I5-3) — no-op hors mode edit (historique absent) ---
-    undo: () => (renderer.history ? renderer.history.undo() : false),
-    redo: () => (renderer.history ? renderer.history.redo() : false),
+    // --- undo/redo (#675, I5-3) — passe par _undo()/_redo() (focus clavier re-posé via
+    // _afterHistoryNav), pas history.undo() en direct. No-op hors mode edit (history absent). ---
+    undo: () => renderer._undo(),
+    redo: () => renderer._redo(),
     canUndo: () => (renderer.history ? renderer.history.canUndo : false),
     canRedo: () => (renderer.history ? renderer.history.canRedo : false),
   };
