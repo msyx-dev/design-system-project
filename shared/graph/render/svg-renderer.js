@@ -6,11 +6,12 @@
 // renderer (`node.size` si fourni, sinon mesure) ; le modele n'est JAMAIS mute par le
 // rendu (sinon boucle measure -> updateNode -> graph:model:change -> repaint -> measure).
 import { svg } from '../lib/svg.js';
+import { buildSpanningTree } from '../lib/spanning-tree.js';
 import { GraphModel } from '../model/index.js';
 import { resolveLayout } from '../layout/index.js';
 import { resolveNodeType, graphCard } from './node-types.js';
 import { renderA11yTable } from './a11y-table.js';
-import { Viewport, zoomAt } from './viewport.js';
+import { Viewport, zoomAt, worldToUser } from './viewport.js';
 
 let uidCounter = 0;
 const DEFAULT_SIZE = { w: 120, h: 40 };
@@ -46,6 +47,7 @@ export class SvgRenderer {
     if (this.opts.a11yTable !== false) this._renderA11y();
     this._initViewport();
     this._initSelection();
+    this._initNodeNav();
     this._initResize();
     this._initKeyboard();
     // etat VR deterministe : pose le halo SANS ouvrir le modal (silent) — cf. #668 §5.2.
@@ -115,6 +117,12 @@ export class SvgRenderer {
       if (g) {
         g.classList.add('graph-node--selected');
         g.setAttribute('tabindex', '-1');
+        // #671 — continuite souris<->clavier : la selection suit le roving. Gate a la
+        // source (le caller) plutot que dans _setRoving() : en keyboardNav:false le
+        // noeud reste focusable programmatiquement (tabindex="-1" ci-dessus) mais ne
+        // doit JAMAIS devenir un tab-stop (sinon une fleche pressee dessus bubble au
+        // conteneur et reintroduit le conflit pan/traversee que #671 resout).
+        if (this.opts.keyboardNav !== false) this._setRoving(id);
         if (!silent) g.focus?.(); // pas de vol de focus au chargement (initialSelection)
       }
     } else {
@@ -162,6 +170,160 @@ export class SvgRenderer {
         bodyHTML: `<p>${escHtml(source)} → ${escHtml(target)}</p>`,
       });
     }
+  }
+
+  // ---- Nav clavier noeud-a-noeud (#671, I4-1) — roving tabindex + arbre couvrant ----
+  // Conflit fleches resolu ici : listener DELEGUE sur `nodesG` (survit aux repaints, seul
+  // innerHTML est wipe par _applyLayout()) — distinct du listener flechesv=pan pose par
+  // _initKeyboard() (#668) sur `this.el`. Quand un noeud a le focus, les 4 fleches sont
+  // preventDefault()+stopPropagation() -> le pan conteneur (I2-2) ne se declenche jamais.
+  // Focus hors noeud (conteneur) -> rien n'est stoppe -> le pan I2-2 reste intact.
+  // Escape/+/-/f ne sont JAMAIS stoppes ici (bubblent au conteneur, reutilise I2-2).
+  _initNodeNav() {
+    if (this.opts.keyboardNav === false) return;
+    this._rovingId = null;
+    this._onNodeKeydown = (e) => this._handleNodeKey(e);
+    this.nodesG.addEventListener('keydown', this._onNodeKeydown);
+    this._restoreNodeNav();
+  }
+
+  /** Mapping clavier WAI-ARIA APG tree. */
+  _handleNodeKey(e) {
+    const nodeG = e.target && typeof e.target.closest === 'function' ? e.target.closest('.graph-node') : null;
+    if (!nodeG || !nodeG.dataset.nodeId || !this._tree) return; // focus hors noeud -> bubble (pan I2-2)
+    const id = nodeG.dataset.nodeId;
+    if (!this.model.hasNode(id)) return;
+    const { parent, children, order } = this._tree;
+
+    switch (e.key) {
+      case 'ArrowUp': {
+        const p = parent.get(id);
+        if (p != null) this._focusNode(p);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      }
+      case 'ArrowDown': {
+        const kids = children.get(id) || [];
+        if (kids.length) this._focusNode(kids[0]);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      }
+      case 'ArrowLeft': {
+        const prev = this._sibling(id, -1);
+        if (prev) this._focusNode(prev);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      }
+      case 'ArrowRight': {
+        const next = this._sibling(id, 1);
+        if (next) this._focusNode(next);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      }
+      case 'Home':
+        if (order[0]) this._focusNode(order[0]);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      case 'End':
+        if (order[order.length - 1]) this._focusNode(order[order.length - 1]);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      case 'Enter':
+      case ' ':
+        this.select(id);
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      default:
+        return; // Escape/f/+/- (et le reste) bubblent -> comportement I2-2 (#668) reutilise
+    }
+  }
+
+  /** frere precedent (dir=-1) ou suivant (dir=1), PAS de wrap. Racine -> siblings = this._tree.roots. */
+  _sibling(id, dir) {
+    const { parent, children, roots } = this._tree;
+    const p = parent.get(id);
+    const siblings = p == null ? roots : children.get(p) || [];
+    const idx = siblings.indexOf(id);
+    if (idx === -1) return null;
+    const next = siblings[idx + dir];
+    return next !== undefined ? next : null;
+  }
+
+  /** roving + focus DOM + recentrage conditionnel (nav clavier -> #671). */
+  _focusNode(id) {
+    if (this.opts.keyboardNav === false) return; // #671 — API publique focusNode() : meme garde que _initNodeNav()
+    const g = this.nodesG.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
+    if (!g) return;
+    this._setRoving(id);
+    g.focus();
+    this._ensureNodeVisible(id);
+  }
+
+  /** exactement UN noeud tabindex=0 (le courant) — tous les autres -1. */
+  _setRoving(id) {
+    this._rovingId = id;
+    this._syncRovingTabindex();
+  }
+
+  _syncRovingTabindex() {
+    this.nodesG.querySelectorAll('.graph-node').forEach((g) => {
+      g.setAttribute('tabindex', g.dataset.nodeId === this._rovingId ? '0' : '-1');
+    });
+  }
+
+  /**
+   * Recentre le viewport (zoom courant garde) UNIQUEMENT si le noeud cible est hors du
+   * cadre visible (viewBox). Un noeud deja visible ne declenche AUCUN mouvement de camera
+   * (moins jarring qu'un zoomToNode systematique) — raffine l'"auto zoomToNode" de #661.
+   */
+  _ensureNodeVisible(id) {
+    if (!this.viewport || !this.positions) return;
+    const center = this.positions.get(id);
+    if (!center) return;
+    const size = this.sizes.get(id) || DEFAULT_SIZE;
+    const vp = this.viewport.getViewport();
+    const left = center.x - size.w / 2;
+    const top = center.y - size.h / 2;
+    const p1 = worldToUser({ x: left, y: top }, vp);
+    const p2 = worldToUser({ x: left + size.w, y: top + size.h }, vp);
+    const box = this._currentViewBox();
+    if (!box) return;
+    const withinX = p1.x >= box.x && p2.x <= box.x + box.width;
+    const withinY = p1.y >= box.y && p2.y <= box.y + box.height;
+    if (withinX && withinY) return; // deja visible -> aucun mouvement de camera
+    this.zoomToNode(id, vp.k); // recentre, garde le zoom courant
+  }
+
+  _currentViewBox() {
+    const attr = this.svgEl.getAttribute('viewBox');
+    if (!attr) return null;
+    const parts = attr.trim().split(/\s+/).map(Number);
+    if (parts.length !== 4 || !parts.every(Number.isFinite)) return null;
+    const [x, y, width, height] = parts;
+    return { x, y, width, height };
+  }
+
+  /**
+   * Reconstruit l'arbre couvrant + resynchronise le roving apres un repaint (#671).
+   * Meme emplacement/raison que _restoreSelectionVisual() : _applyLayout() wipe
+   * nodesG.innerHTML et repeint des <g> frais (tabindex=-1 par defaut) -> sans ce
+   * rattachement, plus AUCUN noeud ne serait un tab-stop apres la 1re mutation modele.
+   */
+  _restoreNodeNav() {
+    if (this.opts.keyboardNav === false) return;
+    const rootId = this.opts.layoutOptions && this.opts.layoutOptions.root;
+    this._tree = buildSpanningTree(this.model, rootId);
+    if (!this._rovingId || !this.model.hasNode(this._rovingId)) {
+      this._rovingId = this._tree.order[0] || null;
+    }
+    this._syncRovingTabindex();
   }
 
   // ---- fit-to-content = reset a l'identite (#668) ----
@@ -268,7 +430,7 @@ export class SvgRenderer {
 
     this.svgEl = svg('svg', {
       class: 'graph-canvas',
-      role: 'img',
+      role: 'graphics-document', // etait 'img' (#671) — expose les enfants focusables (noeuds)
       'aria-label': this.opts.label || 'Graphe',
       'aria-describedby': descId,
       preserveAspectRatio: 'xMidYMid meet',
@@ -434,6 +596,7 @@ export class SvgRenderer {
     this.svgEl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
 
     this._restoreSelectionVisual(); // #668 — nodesG/edgesG wipes ci-dessus perdent .graph-node--selected
+    this._restoreNodeNav(); // #671 — idem pour le roving tabindex (nodesG.innerHTML='' ci-dessus)
   }
 
   // ---- #668 — reapplique le halo de selection apres un repaint (measure->paint) ----
@@ -473,7 +636,8 @@ export class SvgRenderer {
       class: `graph-node${className ? ' ' + className : ''}`,
       transform: `translate(${left},${top})`,
       'data-node-id': id,
-      role: 'img',
+      role: 'graphics-symbol', // etait 'img' (#671) — noeud focusable expose
+      tabindex: '-1', // roving : promu a '0' par _syncRovingTabindex()
       'aria-label': (node.data && node.data.label) || id,
     });
 
@@ -567,6 +731,7 @@ export class SvgRenderer {
       this._resizeObs = null;
     }
     if (this._onCanvasClick) this.svgEl.removeEventListener('click', this._onCanvasClick);
+    if (this._onNodeKeydown) this.nodesG.removeEventListener('keydown', this._onNodeKeydown);
     if (this._onKeydown) this.el.removeEventListener('keydown', this._onKeydown);
     this.model.removeEventListener('graph:model:change', this._onChange);
     this._paintToken++; // invalide tout paint async en vol (#670) -> resolution tardive = no-op

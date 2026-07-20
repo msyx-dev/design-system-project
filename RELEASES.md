@@ -1,5 +1,55 @@
 # Releases
 
+## 2.105.0 — 2026-07-20 — Moteur graph I4-1 : a11y clavier roving + traversée spanning-tree (#671)
+
+> Huitième brique du moteur graphique node-link — **socle a11y clavier net-neuf** :
+> roving tabindex (1 seul nœud tab-stop à la fois) + traversée nœud→voisin via un
+> **arbre couvrant déterministe** (nouveau `buildSpanningTree()`), rôles ARIA
+> `graphics-document`/`graphics-symbol`, cohabitation avec le pan clavier #668
+> (flèches = traversée sur un nœud, pan sur le conteneur). Live-region/annonce des
+> connexions/forced-colors = **hors scope** (#672, I4-2).
+
+### Added
+- **`buildSpanningTree(model, rootId?)`** (`shared/graph/lib/spanning-tree.js`,
+  NOUVEAU, pur DOM-free, exporté par `shared/graph/lib/index.js`) — DFS déterministe
+  (`model.neighbors()`), racine = `rootId` si présent sinon 1er nœud du modèle,
+  **forêt** pour les composants disjoints, `order` = préordre couvrant 100 % des
+  nœuds même sur un graphe cyclique (1er parent gagne, aucune reassignation).
+  Retourne `{parent, children, order, roots}`.
+- **Roving tabindex** (`SvgRenderer._initNodeNav()`/`_syncRovingTabindex()`/
+  `_restoreNodeNav()`) — exactement un `.graph-node` a `tabindex="0"` à tout
+  instant, restauré après chaque repaint (même emplacement que
+  `_restoreSelectionVisual()`, même raison : `nodesG.innerHTML=''`).
+- **Nav clavier nœud-à-nœud** (`_handleNodeKey()`/`_sibling()`/`_focusNode()`) —
+  mapping WAI-ARIA APG tree : `↑`=parent, `↓`=1er enfant, `←`/`→`=frère
+  précédent/suivant (pas de wrap), `Home`/`End`=`order[0]`/`order[dernier]`,
+  `Enter`/`Espace`=`select(id)`. Listener **délégué sur `nodesG`** (survit aux
+  repaints) — distinct du listener flèches=pan de `_initKeyboard()` (#668) posé sur
+  `this.el`. Sur un nœud focusé, les flèches `preventDefault()`+`stopPropagation()`
+  → le pan conteneur ne se déclenche jamais ; focus hors nœud → pan #668 intact.
+  `Échap`/`f`/`+`/`-` ne sont jamais stoppés (bubblent, comportement #668 réutilisé).
+- **Auto-visibilité** (`_ensureNodeVisible()`) — recentre la caméra
+  (`zoomToNode(id, kCourant)`, zoom **conservé**) uniquement si le nœud ciblé est
+  hors du `viewBox` courant ; un nœud déjà visible ne bouge pas la caméra.
+- **Sélection ↔ roving harmonisés** — `select(id)` (nœud) appelle `_setRoving(id)` :
+  clic et clavier restent synchronisés (continuité souris↔clavier).
+- **Rôles ARIA** — `<svg>` `role:'graphics-document'` (était `'img'`, expose les
+  enfants focusables) ; nœuds `role:'graphics-symbol'` (était `'img'`, `aria-label`
+  conservé). Filet conforme = la table a11y déjà livrée (#666).
+- **`opts.keyboardNav`** (bool, défaut `true`) — désactive entièrement la nav
+  clavier nœud-à-nœud (aucun listener posé), symétrique de `viewport`/`selectable`.
+  `createGraph()` expose désormais `focusNode(id)`.
+- Tests Node **DOM-free** (`tests/regression/graph-spanning-tree.test.js`, 28
+  assertions : déterminisme, couverture totale cyclique/disjointe, forêt, 1 seul
+  parent par nœud), `npm run test:graph-spanning-tree`.
+- Test Playwright **fonctionnel** (`visual-tests/graph-keyboard.spec.ts`, PAS de
+  screenshot VR, ajouté au `testMatch` de `playwright.config.ts`) : Tab→1er nœud
+  tabindex=0, unicité du tabindex=0, traversée flèches/Home/End, `Enter` sélectionne,
+  flèches sur un nœud ne pannent pas / flèches sur le conteneur pannent, focus
+  visible.
+- `pages/data.html#graph` : mention de la nav clavier dans le texte de section.
+- `shared/dist/graph.global.js` régénéré (`npm run build:graph`).
+
 ## 2.104.0 — 2026-07-19 — Moteur graph I2-2 : fit + sélection + ResizeObserver (#668)
 
 > Septième brique du moteur graphique node-link — **fit-to-content** (`fit()` = reset
