@@ -42,6 +42,24 @@ export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
  *   tabindex (1 seul noeud tab-stop a la fois) + traversee via arbre couvrant deterministe
  *   (WAI-ARIA APG tree : fleches/Home/End/Enter). `false` desactive entierement (aucun
  *   listener pose sur `nodesG`, symetrique de `viewport`/`selectable`).
+ * @param {'view'|'edit'} [opts.mode='view'] - `'view'` = read-only, INCHANGE (comportement
+ *   I1-I4). `'edit'` (#673, I5-1) active `_initEdit()` : barre d'outils `.graph-toolbar`
+ *   (Ajouter/Relier/Supprimer, `.btn-group`/`.btn-icon` DS), creation de noeuds (bouton
+ *   toolbar au centre du viewport OU double-clic sur le fond -> `screenToWorld` ->
+ *   `model.addNode`), creation d'aretes (mode "Relier" : clic noeud source puis clic noeud
+ *   cible -> `model.addEdge`), suppression (Suppr/Backspace sur la selection ->
+ *   `model.removeNode`/`removeEdge`, cascade des aretes incidentes via l'index). Contrat de
+ *   focus (arbitrage E, #662) : creation -> focus le nouveau noeud (reutilise `select()`
+ *   silencieux + roving + focus DOM) ; suppression de noeud -> focus le **voisin** (util pur
+ *   `nextFocusAfterRemoval()`, `shared/graph/lib/edit-focus.js` : 1er voisin -> parent de
+ *   l'arbre couvrant -> 1er noeud de l'ordre DFS -> null), calcule AVANT la mutation puis
+ *   applique APRES le repaint reel (rAF) — jamais synchroniquement (le DOM est recree par
+ *   `_applyLayout()`). Suppression d'arete : aucun deplacement de focus. Le `<svg>` GARDE
+ *   `role="graphics-document"` en mode edit (arbitrage A opt1, #662) — `role="application"`
+ *   reste reserve a I5-2 (input inline actif uniquement), la nav SR/clavier I4 n'est jamais
+ *   degradee. Chaque mutation ré-émet un `CustomEvent('graph:edit', {detail})` sur `.graph`
+ *   en écho de `graph:model:change` (alias semantique, arbitrage F — pas un 2e canal de
+ *   verite). `destroy()` retire les listeners d'edition + la `.graph-toolbar` du DOM.
  * @returns {{model:import('./model/graph-model.js').GraphModel, destroy:Function, svg:SVGElement,
  *   getViewport:Function, setViewport:Function, screenToWorld:Function, fit:Function,
  *   zoomToNode:Function, select:Function, getSelection:Function, focusNode:Function}}

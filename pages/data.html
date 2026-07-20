@@ -1387,7 +1387,7 @@
     <div class="section-header">
         <span class="overline">Graphe</span>
         <h2>Graph</h2>
-        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code>, <code class="code-inline">tree</code>, <code class="code-inline">radial</code> et <code class="code-inline">mindmap</code> purs (DOM-free) plus <code class="code-inline">layered</code> (Sugiyama via dagre vendor&eacute;, seul layout <strong>asynchrone</strong>), auto-d&eacute;tection <code class="code-inline">layout:&nbsp;'auto'</code> qui route vers <code class="code-inline">tree</code> ou <code class="code-inline">layered</code> selon la topologie, viewport <strong>pan/zoom/pinch</strong> (molette ancr&eacute;e curseur, glisser, pincer tactile, born&eacute;e <code class="code-inline">--graph-zoom-min/-max</code>), <strong>fit-to-content</strong> et <strong>s&eacute;lection</strong> n&oelig;ud/ar&ecirc;te (clic, clavier, <code class="code-inline">ResizeObserver</code> optionnel), <strong>nav clavier n&oelig;ud-&agrave;-n&oelig;ud</strong> (roving tabindex + traversal via un arbre couvrant d&eacute;terministe, mapping WAI-ARIA APG tree&nbsp;: fl&egrave;ches/Home/End/Enter), alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>.</p>
+        <p>Moteur graphique node-link maison &mdash; pipeline <code class="code-inline">measure&nbsp;&rarr;&nbsp;layout&nbsp;&rarr;&nbsp;paint</code>, layouts <code class="code-inline">fixed</code>, <code class="code-inline">tree</code>, <code class="code-inline">radial</code> et <code class="code-inline">mindmap</code> purs (DOM-free) plus <code class="code-inline">layered</code> (Sugiyama via dagre vendor&eacute;, seul layout <strong>asynchrone</strong>), auto-d&eacute;tection <code class="code-inline">layout:&nbsp;'auto'</code> qui route vers <code class="code-inline">tree</code> ou <code class="code-inline">layered</code> selon la topologie, viewport <strong>pan/zoom/pinch</strong> (molette ancr&eacute;e curseur, glisser, pincer tactile, born&eacute;e <code class="code-inline">--graph-zoom-min/-max</code>), <strong>fit-to-content</strong> et <strong>s&eacute;lection</strong> n&oelig;ud/ar&ecirc;te (clic, clavier, <code class="code-inline">ResizeObserver</code> optionnel), <strong>nav clavier n&oelig;ud-&agrave;-n&oelig;ud</strong> (roving tabindex + traversal via un arbre couvrant d&eacute;terministe, mapping WAI-ARIA APG tree&nbsp;: fl&egrave;ches/Home/End/Enter), alternative accessible sous forme de tableau reli&eacute;e au SVG par <code class="code-inline">aria-describedby</code>, et un <strong>mode &eacute;dition</strong> optionnel (<code class="code-inline">mode:&nbsp;'edit'</code> &mdash; barre d'outils, cr&eacute;ation/suppression de n&oelig;uds et ar&ecirc;tes, contrat de focus create/delete).</p>
     </div>
 
     <div class="demo-box">
@@ -1540,6 +1540,28 @@
             </script>
         </div>
         <p class="demo-note-last">1er use case client (NHOOD) : n&oelig;ud central &rarr; branches r&eacute;parties gauche/droite (glouton, &eacute;quilibrage par charge de sous-arbre) &rarr; feuilles riches (<code class="code-inline">graphCard()</code> &mdash; badge statut + chip personne dans un <code class="code-inline">foreignObject</code>). <code class="code-inline">layout:'mindmap'</code> reste toujours <strong>explicite</strong> (jamais auto-d&eacute;tect&eacute;). <code class="code-inline">size</code> explicite sur chaque n&oelig;ud &rarr; VR d&eacute;terministe.</p>
+    </div>
+
+    <div class="demo-box">
+        <span class="demo-label">D&eacute;mo &mdash; mode &eacute;dition (<code class="code-inline">mode:&nbsp;'edit'</code>, create/delete + contrat de focus)</span>
+        <div class="graph" data-graph>
+            <script type="application/json" class="graph-config">
+            { "layout": "tree", "layoutOptions": {"direction":"TB","gap":{"x":32,"y":56}},
+              "label": "Graphe editable (demo)",
+              "mode": "edit",
+              "selectionDetail": false,
+              "data": { "nodes": [
+                {"data":{"id":"e-root","label":"Racine"},"size":{"w":120,"h":44}},
+                {"data":{"id":"e-a","label":"Branche A"},"size":{"w":120,"h":40}},
+                {"data":{"id":"e-b","label":"Branche B"},"size":{"w":120,"h":40}}
+              ], "edges": [
+                {"data":{"id":"e-t1","source":"e-root","target":"e-a","directed":true}},
+                {"data":{"id":"e-t2","source":"e-root","target":"e-b","directed":true}}
+              ] } }
+            </script>
+        </div>
+        <p class="demo-note">Barre d'outils <code class="code-inline">.graph-toolbar</code> (<code class="code-inline">.btn-group</code> DS, cibles &ge;44px)&nbsp;: <strong>Ajouter un n&oelig;ud</strong> (centre du viewport), <strong>Relier</strong> (bascule un mode &laquo;&nbsp;clic source&nbsp;&rarr;&nbsp;clic cible&nbsp;&raquo; qui cree une ar&ecirc;te), <strong>Supprimer</strong> (agit sur la selection courante). Double-clic sur le fond du canevas&nbsp;: cree aussi un n&oelig;ud au point cliqu&eacute; (<code class="code-inline">screenToWorld</code>). <kbd>Suppr</kbd>/<kbd>Retour arri&egrave;re</kbd>&nbsp;: supprime la selection. <code class="code-inline">selectionDetail:&nbsp;false</code>&nbsp;: le clic sur un n&oelig;ud le s&eacute;lectionne (halo + focus) <strong>sans</strong> ouvrir le modal de d&eacute;tail (I2-2) &mdash; &eacute;vite qu'une fen&ecirc;tre s'interpose pendant une session d'&eacute;dition.</p>
+        <p class="demo-note-last"><strong>Contrat de focus</strong> (#673, I5-1)&nbsp;: cr&eacute;ation &rarr; le focus clavier se pose sur le nouveau n&oelig;ud (r&eacute;utilise <code class="code-inline">select()</code>/roving/I4) ; suppression d'un n&oelig;ud &rarr; le focus se pose sur un <strong>voisin</strong> (<code class="code-inline">nextFocusAfterRemoval()</code>&nbsp;: 1er voisin &rarr; parent de l'arbre couvrant &rarr; 1er n&oelig;ud de l'ordre &rarr; aucun), calcul&eacute; <strong>avant</strong> la mutation puis appliqu&eacute; <strong>apr&egrave;s</strong> le repaint r&eacute;el (le DOM est recr&eacute;&eacute;). Le <code class="code-inline">&lt;svg&gt;</code> garde <code class="code-inline">role=&quot;graphics-document&quot;</code> (nav SR/clavier I4 intacte) &mdash; <code class="code-inline">role=&quot;application&quot;</code> reste r&eacute;serv&eacute; &agrave; l'&eacute;dition inline (I5-2). Chaque mutation r&eacute;-&eacute;met <code class="code-inline">graph:edit</code> sur <code class="code-inline">.graph</code> (alias de <code class="code-inline">graph:model:change</code>). Le mode <code class="code-inline">view</code> (d&eacute;faut, toutes les d&eacute;mos ci-dessus) reste totalement inchang&eacute; &mdash; aucune toolbar, aucun geste d'&eacute;dition.</p>
     </div>
 
     <div class="demo-box">

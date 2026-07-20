@@ -1,7 +1,7 @@
-/* @ds-version: 2.106.0 */
+/* @ds-version: 2.107.0 */
 /* graph.css — module CSS du moteur graphique node-link (#666, I1b-2 ; viewport #667, I2-1 ;
    fit + selection + ResizeObserver #668, I2-2 ; nav clavier roving #671, I4-1 ;
-   live-region SR + forced-colors + contraste #672, I4-2)
+   live-region SR + forced-colors + contraste #672, I4-2 ; mode edition create/delete #673, I5-1)
    HORS BARREL — jamais importe par components.css ni components-core.css
    (verifie par shared/check-graph-isolation.sh en CI). Opt-in explicite :
    data.html charge ce module via <link> dans le <head> ; un consumer sync.sh
@@ -92,6 +92,34 @@
 .graph-edge--selected {
     stroke: var(--accent);
     stroke-width: 2.5;
+}
+
+/* ===== Toolbar edition (#673, I5-1) — mode:'edit' uniquement ===== */
+/* Overlay HTML ancre en haut-debut du conteneur .graph (position:relative deja pose plus
+   haut). Composee de .btn-group/.btn-icon DS (buttons.css) -> AUCUN style de bouton
+   reimplemente ici, cibles deja >=44px. z-index au-dessus du canvas SVG (element non
+   positionne, une couche position:absolute suffit a passer devant sans le forcer). */
+.graph-toolbar {
+    position: absolute;
+    top: var(--space-sm);
+    inset-inline-start: var(--space-sm);
+    z-index: var(--z-sticky);
+}
+
+/* Etat "actif" du bouton toggle "Relier" — meme pattern que .color-swatch[aria-pressed] (forms.css). */
+.graph-toolbar .btn-icon[aria-pressed="true"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    color: var(--accent);
+}
+
+/* Noeud source choisi en mode "Relier" (avant le clic sur la cible) — signal distinct du
+   halo de selection (--warning plutot que --accent, pour ne jamais se confondre avec
+   .graph-node--selected pendant une session d'edition). */
+.graph-node--connect-source .graph-node-bg {
+    stroke: var(--warning);
+    stroke-width: 2.5;
+    stroke-dasharray: 4 2;
 }
 
 /* ===== Noeud riche (foreignObject, support NHOOD) ===== */
