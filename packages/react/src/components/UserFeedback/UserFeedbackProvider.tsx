@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { UserFeedbackModal } from "./UserFeedbackModal";
 import type {
   FeedbackDevice,
   FeedbackEnv,
@@ -39,8 +40,14 @@ export interface UserFeedbackProviderProps {
   user?: FeedbackUser | null;
   tenant?: string | null;
   onSubmit?: FeedbackSubmitHandler;
+  /** Affiche le bouton de capture d'écran opt-in de la Modal. Défaut `true`. */
+  allowScreenshot?: boolean;
   children: ReactNode;
 }
+
+/** `onSubmit` no-op — utilisé tant qu'aucun handler n'est fourni au provider,
+ * pour que la Modal (props requises) reste montable sans branchement backend. */
+const noopSubmit: FeedbackSubmitHandler = () => {};
 
 const UserFeedbackContext = createContext<UseUserFeedbackReturn | null>(null);
 
@@ -144,9 +151,10 @@ async function fetchVersion(versionUrl: string): Promise<string | null> {
  * Le snapshot exposé (`context`) est recalculé à chaque `openFeedback()` —
  * pas seulement au montage — pour refléter la route/viewport courants.
  *
- * **Périmètre #692** : expose l'état (`isOpen`) mais ne monte pas encore la
- * Modal (livrée #693) — `isOpen` pilote uniquement l'état interne pour
- * l'instant.
+ * Monte `<UserFeedbackModal>` (#693) uniquement quand `isOpen` est vrai —
+ * `context`/`onSubmit`/`allowScreenshot` sont branchés tels quels, `onClose`
+ * délègue à `closeFeedback`. Le formulaire n'est donc jamais instancié tant
+ * que le consumer n'a pas ouvert le feedback (`openFeedback()`).
  *
  * SSR-safe : aucun accès `window`/`document`/`fetch` au niveau module, tout
  * est confiné à `useEffect`/aux handlers.
@@ -157,6 +165,7 @@ export function UserFeedbackProvider({
   user = null,
   tenant = null,
   onSubmit,
+  allowScreenshot = true,
   children,
 }: UserFeedbackProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -211,6 +220,15 @@ export function UserFeedbackProvider({
   return (
     <UserFeedbackContext.Provider value={contextValue}>
       {children}
+      {isOpen && (
+        <UserFeedbackModal
+          open={isOpen}
+          onClose={closeFeedback}
+          context={context}
+          onSubmit={onSubmit ?? noopSubmit}
+          allowScreenshot={allowScreenshot}
+        />
+      )}
     </UserFeedbackContext.Provider>
   );
 }
