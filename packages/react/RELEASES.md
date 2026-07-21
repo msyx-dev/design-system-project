@@ -8,6 +8,21 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.14 — 2026-07-21 — Feedback Core ① : UserFeedback* + DataGrid
+
+> Milestone « Feedback Core ① — Design System » (#691, 5 issues). Brique transverse de retour utilisateur (Provider + Modal + Button) composée **exclusivement de primitives DS existantes** (zéro CSS nouveau), plus le port React du `DataGrid`. Registre : `data-grid` porté, nouvelle entrée `user-feedback` distincte de la catégorie `feedback`. Contrats inter-issues figés en amont par le parent /sprint (groom léger).
+
+### Added
+- **`<UserFeedbackProvider>` + `useUserFeedback()`** (#692) : contexte transverse de feedback. Capture automatique — environnement par nom d'hôte (`*.miklaw.fr` → préprod, `*.msyx.fr` → prod, `localhost`/`127.*` → dev), version via `fetch(/version)` tolérant, route, navigateur/appareil/viewport, langue, utilisateur + tenant. Mode connecté ET anonyme. Expose `openFeedback()`/`closeFeedback()`/`isOpen`, snapshot rafraîchi à l'ouverture. Patron `ToastProvider`, SSR-safe. Types partagés dans `components/UserFeedback/types.ts` (`UserFeedbackContextData`, `FeedbackFormValues`, `FeedbackSubmitHandler`, …).
+- **`<UserFeedbackModal>`** (#693) : formulaire de retour composant `<Modal>` + `<Input>`/`<Select>`/`<Button>` + `useFormValidation()`/`<FormErrorSummary>` pour l'accessibilité. Champs type / titre / description / impact + email conditionnel (requis en mode anonyme). Capture d'écran optionnelle (opt-in) réduite en **WebP ≤ 512 Ko** via `<canvas>.toBlob('image/webp', q)`, sans dépendance externe. Montée par le Provider sur `isOpen`.
+- **`<UserFeedbackButton>`** (#694) : bouton icône déclencheur pour le header d'une app. Réutilise `.header-notification`/`.btn-icon` (zéro CSS nouveau), `aria-haspopup="dialog"` + `aria-expanded`, contrôlé/non-contrôlé (convention `UserMenu`). Appelle `openFeedback()` par défaut.
+- **`<DataGrid>`** (#696) : port React du composant DS `data-grid` (`tables.css`). API générique typée `DataGridProps<T>`/`DataGridColumn<T>`, tri interne avec gestion `aria-sort`, colonnes `stickyEnd`, états `loading`/vide. Markup canonique `.data-grid-*` (jamais de classe non préfixée).
+- **Exports + registre** (#695) : `index.ts` expose les 5 composants et leurs types. Registre régénéré — `data-grid` passe `pending → ported`, nouvelle entrée `user-feedback` (mappée sur le dossier co-localisé `components/UserFeedback/`, une seule clé `REACT_TO_REGISTRY`).
+
+### Notes
+- Versioning consolidé (convention #314) : les 5 PR sont mergées en `[skip-changelog]`, cette entrée agrège le lot au cut de release.
+- Icône par défaut du bouton : `i-message-circle` (le sprite Lucide DS n'expose pas `message-square`).
+
 ## v3.0.0-alpha.13 — 2026-07-15 — `<VersionNotes>` data-driven (badge + modale + timeline)
 
 > Parité React (#650) — remonte l'API d'un cran : les consumers (cap-transfo #355) passent des **données** (`releases`/`next`) au lieu d'écrire le markup timeline à la main. Rend le CSS DS livré en v2.97.0 (#649).
