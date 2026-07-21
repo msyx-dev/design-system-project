@@ -1,4 +1,10 @@
-import { type ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Modal } from "../Modal/Modal";
 import { Input } from "../Input/Input";
 import { Select, type SelectOption } from "../Input/Select";
@@ -38,6 +44,9 @@ const MAX_DOWNSCALE_PASSES = 4;
 const DOWNSCALE_FACTOR = 0.75;
 /** Sous ce seuil de dimension, on abandonne plutôt que de produire une image inutilisable. */
 const MIN_CANVAS_DIMENSION = 16;
+/** Garde-fou : un flux qui ne délivre jamais de frame (`loadeddata`) ne doit
+ * jamais bloquer indéfiniment le bouton « Joindre une capture ». */
+const FRAME_READY_TIMEOUT_MS = 4000;
 
 /** Canvas-like minimal — permet de tester `encodeScreenshotWebp` sans DOM/canvas réel. */
 export interface EncodableCanvas {
@@ -141,13 +150,18 @@ export async function captureScreenCanvas(): Promise<HTMLCanvasElement | null> {
       // un stream valide — on tente quand même de lire une frame ci-dessous.
     }
 
-    await new Promise<void>((resolve) => {
+    // Garde-fou : un flux qui ne délivre jamais `loadeddata` (partage arrêté
+    // immédiatement, source vide…) ne doit jamais bloquer indéfiniment le
+    // bouton « Joindre une capture » — on abandonne proprement après le délai.
+    const frameReady = await new Promise<boolean>((resolve) => {
       if (video.readyState >= 2) {
-        resolve();
+        resolve(true);
         return;
       }
-      video.onloadeddata = () => resolve();
+      video.onloadeddata = () => resolve(true);
+      setTimeout(() => resolve(false), FRAME_READY_TIMEOUT_MS);
     });
+    if (!frameReady) return null;
 
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth || 1;
@@ -225,6 +239,18 @@ export function UserFeedbackModal({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // `getDisplayMedia()` affiche un prompt navigateur qui peut rester ouvert
+  // plusieurs secondes — si la modale se démonte (fermeture) pendant ce
+  // délai, les callbacks async de capture/soumission ne doivent PAS appeler
+  // setState sur un composant démonté.
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   const resetFormState = useCallback(() => {
     setType("bug");
     setTitle("");
@@ -257,8 +283,10 @@ export function UserFeedbackModal({
         screenshot,
       };
       await onSubmit(values, context);
+      if (!mountedRef.current) return;
       onClose();
     } catch {
+      if (!mountedRef.current) return;
       setSubmitError(
         "L'envoi du retour a échoué. Vérifiez votre connexion et réessayez.",
       );
@@ -291,6 +319,7 @@ export function UserFeedbackModal({
   const handleCaptureScreenshot = useCallback(async () => {
     setScreenshotStatus("capturing");
     const blob = await captureFeedbackScreenshot();
+    if (!mountedRef.current) return;
     if (blob) {
       setScreenshot(blob);
       setScreenshotStatus("attached");
