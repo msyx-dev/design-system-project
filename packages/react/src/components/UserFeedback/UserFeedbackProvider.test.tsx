@@ -1,6 +1,7 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { UserFeedbackProvider, useUserFeedback } from "./UserFeedbackProvider";
+import type { UserFeedbackProviderProps } from "./UserFeedbackProvider";
 import type { ReactNode } from "react";
 import type { FeedbackUser } from "./types";
 
@@ -37,9 +38,7 @@ function setUserAgent(ua: string) {
   });
 }
 
-function wrapperFor(
-  props: Partial<React.ComponentProps<typeof UserFeedbackProvider>> = {},
-) {
+function wrapperFor(props: Partial<UserFeedbackProviderProps> = {}) {
   return function Wrapper({ children }: { children: ReactNode }) {
     return (
       <UserFeedbackProvider appId="ds-showcase" {...props}>
@@ -282,12 +281,10 @@ describe("UserFeedbackProvider — version (fetch tolérant)", () => {
   });
 
   it("version résolue depuis /version par défaut", async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValue({
-        ok: true,
-        json: async () => ({ version: "3.0.0-alpha.14" }),
-      });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ version: "3.0.0-alpha.14" }),
+    });
     vi.stubGlobal("fetch", fetchMock);
 
     const { result } = renderHook(() => useUserFeedback(), {
