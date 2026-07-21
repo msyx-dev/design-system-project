@@ -245,6 +245,34 @@ describe("UserFeedbackProvider — browser (userAgent)", () => {
     });
     expect(result.current.context.browser).toBe("Firefox");
   });
+
+  it("détecte Safari", () => {
+    setUserAgent(
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
+    );
+    const { result } = renderHook(() => useUserFeedback(), {
+      wrapper: wrapperFor(),
+    });
+    expect(result.current.context.browser).toBe("Safari");
+  });
+
+  it("détecte Edge (priorité sur Chrome, UA le contenant aussi)", () => {
+    setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+    );
+    const { result } = renderHook(() => useUserFeedback(), {
+      wrapper: wrapperFor(),
+    });
+    expect(result.current.context.browser).toBe("Edge");
+  });
+
+  it("UA vide ou non reconnu → unknown", () => {
+    setUserAgent("SomeWeirdBot/1.0");
+    const { result } = renderHook(() => useUserFeedback(), {
+      wrapper: wrapperFor(),
+    });
+    expect(result.current.context.browser).toBe("unknown");
+  });
 });
 
 describe("UserFeedbackProvider — route", () => {

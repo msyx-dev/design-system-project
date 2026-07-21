@@ -168,6 +168,13 @@ export function UserFeedbackProvider({
   useEffect(() => {
     let cancelled = false;
 
+    // Si versionUrl change après une résolution précédente, versionRef
+    // garderait sinon la valeur de l'ancienne URL le temps du nouveau fetch —
+    // on la neutralise immédiatement pour éviter d'attribuer une version
+    // périmée à la nouvelle URL.
+    versionRef.current = null;
+    setContext((prev) => ({ ...prev, version: null }));
+
     fetchVersion(versionUrl).then((version) => {
       if (cancelled) return;
       versionRef.current = version;
