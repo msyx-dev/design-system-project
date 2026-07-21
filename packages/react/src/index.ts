@@ -208,3 +208,32 @@ export type {
 } from "./hooks/useChartReveal";
 export { useCountUp } from "./hooks/useCountUp";
 export type { UseCountUpOptions, UseCountUpResult } from "./hooks/useCountUp";
+
+// ─── Lot Feedback Core (v3.0.0-alpha.14) — #695 ───
+export {
+  UserFeedbackProvider,
+  useUserFeedback,
+} from "./components/UserFeedback/UserFeedbackProvider";
+export type {
+  UserFeedbackProviderProps,
+  UseUserFeedbackReturn,
+} from "./components/UserFeedback/UserFeedbackProvider";
+export { UserFeedbackModal } from "./components/UserFeedback/UserFeedbackModal";
+export type { UserFeedbackModalProps } from "./components/UserFeedback/UserFeedbackModal";
+export { UserFeedbackButton } from "./components/UserFeedback/UserFeedbackButton";
+export type { UserFeedbackButtonProps } from "./components/UserFeedback/UserFeedbackButton";
+export type {
+  UserFeedbackContextData,
+  FeedbackFormValues,
+  FeedbackType,
+  FeedbackImpact,
+  FeedbackEnv,
+  FeedbackDevice,
+  FeedbackUser,
+  FeedbackSubmitHandler,
+} from "./components/UserFeedback/types";
+export { DataGrid } from "./components/DataGrid/DataGrid";
+export type {
+  DataGridProps,
+  DataGridColumn,
+} from "./components/DataGrid/DataGrid";

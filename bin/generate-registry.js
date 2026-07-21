@@ -488,6 +488,11 @@ const REACT_TO_REGISTRY = {
   VirtualList: 'virtual-list',
   useChartReveal: 'charts',
   useCountUp: 'counter',
+  DataGrid:    'data-grid',  // #695 — entrée 'data-grid' existait déjà (pending → ported)
+  // #695 — les 3 fichiers UserFeedbackProvider/Modal/Button sont co-localisés
+  // dans UN SEUL dossier components/UserFeedback/ (cf. précédent Quiz+Poll dans
+  // components/Quiz/) : une seule clé de dossier réel, pas 3 clés par fichier.
+  UserFeedback: 'user-feedback',
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
