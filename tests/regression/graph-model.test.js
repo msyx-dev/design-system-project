@@ -188,6 +188,11 @@ async function main() {
     assertDeepEqual(m.getNode('a').position, { x: 10, y: 20 }, '11. updateNode -> position remplacee');
     assertTrue(warnCount >= 1, '11. updateNode patch.data.id -> console.warn appele (invariant 5)');
 
+    // #675 — enrichissement `prev` (etat AVANT mutation) : socle de l'inverse undo/redo.
+    assertEqual(events[0].prev.data.label, 'A', '11. update-node event.prev = etat AVANT (label original)');
+    assertEqual(events[0].prev.data.color, 'blue', '11. update-node event.prev conserve les cles non touchees');
+    assertDeepEqual(events[0].prev.position, { x: 0, y: 0 }, '11. update-node event.prev.position = avant remplacement');
+
     // position:null -> cle supprimee proprement (pas de residu `position: undefined`)
     m.updateNode('a', { position: null });
     assertTrue(!('position' in m.getNode('a')), '11b. updateNode position:null -> cle position supprimee (pas de residu undefined)');
@@ -236,6 +241,24 @@ async function main() {
     assertEqual(events[0].op, 'remove-edge', '14. removeEdge -> op remove-edge');
     assertEqual(m.outEdges('a').length, 0, '14. removeEdge -> outEdges(source) purgee');
     assertEqual(m.inEdges('b').length, 0, '14. removeEdge -> inEdges(target) purgee');
+  }
+
+  // ---- 14b. updateEdge -> data mergee, source/target/id immuables, event + prev (#675) ----
+  {
+    const m = new GraphModel({
+      nodes: [{ data: { id: 'a' } }, { data: { id: 'b' } }],
+      edges: [{ data: { id: 'e1', source: 'a', target: 'b', label: 'ancien' } }],
+    });
+    const events = listen(m);
+    captureWarnings();
+    m.updateEdge('e1', { data: { label: 'nouveau', source: 'x' } }); // source immuable -> ignore
+    restoreWarnings();
+    assertEqual(events.length, 1, '14b. updateEdge -> 1 event');
+    assertEqual(events[0].op, 'update-edge', '14b. updateEdge -> op update-edge');
+    assertEqual(m.getEdge('e1').data.label, 'nouveau', '14b. updateEdge -> data.label mergee');
+    assertEqual(m.getEdge('e1').data.source, 'a', '14b. updateEdge -> source immuable (invariant 5)');
+    assertEqual(events[0].prev.data.label, 'ancien', '14b. update-edge event.prev = label AVANT (#675)');
+    assertTrue(warnCount >= 1, '14b. updateEdge source dans patch -> console.warn (invariant 5)');
   }
 
   // ---- 15. Compte d'events = 1 par mutation effective ; 0 pour les no-op ----

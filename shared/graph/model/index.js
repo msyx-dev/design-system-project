@@ -3,3 +3,4 @@
 // Aligne sur shared/graph/lib/index.js (meme convention de barrel).
 export { GraphModel } from './graph-model.js';
 export { toModel } from './to-model.js';
+export { GraphHistory, buildRecord } from './history.js';

@@ -646,4 +646,173 @@ test.describe("Graph — mode edition create/delete + contrat de focus (#673, I5
     // le fix (#674 review) annule le drag avant le wipe -> fantôme retiré, pas de fuite
     await expect(el.locator(".graph-port-link")).toHaveCount(0);
   });
+
+  // ---- #675, I5-3 — undo/redo (Ctrl+Z / Ctrl+Shift+Z) ----
+  // Le listener undo/redo vit sur `.graph` (this.el) ; un <g> noeud focusé bubble jusqu'à lui.
+  // On focus un noeud connu AVANT le raccourci quand le geste précédent ne laisse pas le focus
+  // sur un noeud déterministe (ex. mode « Relier » ne re-focus pas de noeud).
+
+  test("Ctrl+Z annule une création de nœud ; Ctrl+Shift+Z la refait", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    const before = await el.locator(".graph-node").count();
+
+    // création par bouton toolbar (déterministe) -> le nouveau nœud reçoit le focus.
+    await el
+      .locator('.graph-toolbar button[aria-label="Ajouter un nœud"]')
+      .click();
+    await expect(el.locator(".graph-node")).toHaveCount(before + 1);
+
+    await page.keyboard.press("Control+z");
+    await expect(el.locator(".graph-node")).toHaveCount(before); // création annulée
+
+    await page.keyboard.press("Control+Shift+z");
+    await expect(el.locator(".graph-node")).toHaveCount(before + 1); // refaite
+  });
+
+  test("Ctrl+Z annule une suppression de nœud (le nœud réapparaît)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    const before = await el.locator(".graph-node").count();
+
+    await el.locator('[data-node-id="e-a"]').click();
+    await page.keyboard.press("Delete");
+    await expect(el.locator('[data-node-id="e-a"]')).toHaveCount(0);
+    await expect(el.locator(".graph-node")).toHaveCount(before - 1);
+
+    await el.locator('[data-node-id="e-root"]').focus(); // focus déterministe pour le raccourci
+    await page.keyboard.press("Control+z");
+    await expect(el.locator('[data-node-id="e-a"]')).toHaveCount(1); // restauré
+    await expect(el.locator(".graph-node")).toHaveCount(before);
+  });
+
+  test("Ctrl+Z annule une édition inline en 1 fois (coalescing : label complet restauré)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    expect(await dblclickNode(page, "e-a")).toBe(true);
+    await el.locator(".graph-inline-edit").fill("Renommé");
+    await el.locator(".graph-inline-edit").press("Enter");
+    await expect(
+      el.locator('[data-node-id="e-a"] .graph-node-label'),
+    ).toHaveText("Renommé");
+
+    // focus re-posé sur e-a après Enter (#674) -> le raccourci bubble jusqu'à .graph.
+    await page.keyboard.press("Control+z");
+    // 1 seul undo restaure le libellé ENTIER (transaction = 1 patch/session), pas caractère
+    // par caractère.
+    await expect(
+      el.locator('[data-node-id="e-a"] .graph-node-label'),
+    ).toHaveText("Branche A");
+
+    await page.keyboard.press("Control+Shift+z");
+    await expect(
+      el.locator('[data-node-id="e-a"] .graph-node-label'),
+    ).toHaveText("Renommé");
+  });
+
+  test('Ctrl+Z annule la création d\'une arête (mode "Relier")', async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    const beforeEdges = await el.locator(".graph-edge").count();
+
+    await el.locator('.graph-toolbar button[aria-label="Relier"]').click();
+    await el.locator('[data-node-id="e-a"]').click();
+    await el.locator('[data-node-id="e-b"]').click();
+    await expect(el.locator(".graph-edge")).toHaveCount(beforeEdges + 1);
+
+    await el.locator('[data-node-id="e-root"]').focus(); // « Relier » ne re-focus pas de nœud
+    await page.keyboard.press("Control+z");
+    await expect(el.locator(".graph-edge")).toHaveCount(beforeEdges); // arête annulée
+  });
+
+  test("une nouvelle mutation vide la pile redo (Ctrl+Shift+Z sans effet après)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    const before = await el.locator(".graph-node").count();
+
+    // create #1 -> undo -> create #2 (nouvelle mutation) -> redo ne doit RIEN refaire.
+    await el
+      .locator('.graph-toolbar button[aria-label="Ajouter un nœud"]')
+      .click();
+    await expect(el.locator(".graph-node")).toHaveCount(before + 1);
+    await page.keyboard.press("Control+z");
+    await expect(el.locator(".graph-node")).toHaveCount(before);
+
+    await el
+      .locator('.graph-toolbar button[aria-label="Ajouter un nœud"]')
+      .click(); // nouvelle mutation -> pile redo invalidée
+    await expect(el.locator(".graph-node")).toHaveCount(before + 1);
+
+    await page.keyboard.press("Control+Shift+z"); // redo vidé -> no-op
+    await expect(el.locator(".graph-node")).toHaveCount(before + 1);
+  });
+
+  test('mode "view" : Ctrl+Z est inerte (aucun historique instancié)', async ({
+    page,
+  }) => {
+    const el = viewContainer(page);
+    const before = await el.locator(".graph-node").count();
+    await el.locator(".graph-node").first().focus();
+    await page.keyboard.press("Control+z");
+    await expect(el.locator(".graph-node")).toHaveCount(before); // rien ne change en mode view
+  });
+
+  test("un drag de port interrompu par un repaint ne casse pas l'historique — le Suppr concurrent reste annulable (#675 review)", async ({
+    page,
+  }) => {
+    const el = editContainer(page);
+    await el.locator('[data-node-id="e-b"]').click(); // sélection tierce
+    const beforeNodes = await el.locator(".graph-node").count();
+    // démarre un drag de port depuis e-root SANS pointerup (drag EN VOL)
+    const started = await page.evaluate(() => {
+      const host = document.querySelectorAll(
+        "#graph .graph[data-graph]",
+      )[6] as HTMLElement;
+      const port = host.querySelector(
+        '[data-node-id="e-root"] .graph-port',
+      ) as SVGCircleElement | null;
+      if (!port) return false;
+      const r = port.getBoundingClientRect();
+      const base = {
+        pointerId: 9200,
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      };
+      port.dispatchEvent(
+        new PointerEvent("pointerdown", {
+          ...base,
+          clientX: r.left + r.width / 2,
+          clientY: r.top + r.height / 2,
+        }),
+      );
+      port.dispatchEvent(
+        new PointerEvent("pointermove", {
+          ...base,
+          clientX: r.left + 180,
+          clientY: r.top + 180,
+        }),
+      );
+      return true;
+    });
+    expect(started).toBe(true);
+    // repaint concurrent : Suppr supprime la sélection tierce (e-b), ce qui force-annule le
+    // drag en vol (#674). Le Suppr NE doit PAS être absorbé par une transaction de drag fantôme.
+    await page.keyboard.press("Delete");
+    await expect(el.locator('[data-node-id="e-b"]')).toHaveCount(0);
+    await expect(el.locator(".graph-node")).toHaveCount(beforeNodes - 1);
+
+    // #675 review : sans le fix (transaction de drag retirée), le removeNode serait resté
+    // capté dans une transaction jamais commitée -> non-annulable. Avec le fix, c'est une
+    // entrée undo normale.
+    await el.locator('[data-node-id="e-root"]').focus();
+    await page.keyboard.press("Control+z");
+    await expect(el.locator('[data-node-id="e-b"]')).toHaveCount(1); // e-b restauré
+    await expect(el.locator(".graph-node")).toHaveCount(beforeNodes);
+  });
 });

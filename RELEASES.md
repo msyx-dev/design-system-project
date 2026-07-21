@@ -1,5 +1,32 @@
 # Releases
 
+## 2.109.0 — 2026-07-20 — Moteur graph I5-3 : undo/redo (pile de patches inverses) (#675)
+
+> Dernière brique du lot **I5** (édition) — **undo/redo** au clavier via une pile de
+> **patches inverses** (arbitrage A #662/#675, validé Mike). Chaque mutation d'édition est
+> réversible ; `Ctrl/Cmd+Z` annule, `Ctrl/Cmd+Shift+Z` (ou `Ctrl+Y`) refait. Clôt le
+> conteneur #662.
+
+### Added
+- **`GraphHistory`** (`shared/graph/model/history.js` NOUVEAU) — `EventTarget` observant `graph:model:change`, construit un **record réversible** `{forward, inverse}` par mutation (`buildRecord` pur), appliqué via les **mutations existantes** du modèle (pas de `restore()` façon snapshot). Pile undo/redo, `beginTransaction()`/`commit()`, `undo()`/`redo()`, `canUndo`/`canRedo`, event `graph:history:change`, `destroy()`. DOM-free, testable Node.
+- **Coalescing** (arbitrage D) : `beginTransaction`/`commit` encadrent la **session d'édition inline** → **1 patch/session** (un `Ctrl+Z` restaure un libellé **entier**, pas frappe par frappe). Create/delete de nœud et création d'arête par drag de port sont **atomiques** = 1 patch chacun.
+- **Intégration renderer** (`svg-renderer.js`) : `this.history = new GraphHistory(model)` dans `_initEdit()` ; `Ctrl/Cmd+Z`=undo, `Ctrl/Cmd+Shift+Z`|`Ctrl+Y`=redo (branché dans `_onEditKeydown`) ; `_afterHistoryNav()` repose le focus clavier après le repaint rAF ; `history.destroy()` dans `destroy()`.
+- **API** : `createGraph()` expose `undo()`/`redo()`/`canUndo()`/`canRedo()` (no-op en mode view).
+- **Enrichissement `prev`** : `GraphModel.updateNode`/`updateEdge` émettent désormais l'état d'avant (`prev`) dans le detail — **ajout non-breaking** (données pures) qui rend l'inverse d'un update constructible.
+
+### Decisions
+- **Arbitrage A (undo, validé Mike 2026-07-20)** : pile de **patches inverses** (plutôt que snapshots `toJSON()` par transaction) — léger, collab-ready, round-trip testable. Les events update enrichis de `prev` évitent une surface `restore()`.
+- **Clavier-only** dans cette itération : **pas de boutons undo/redo dans la toolbar** — le sprite Lucide n'expose aucun glyphe undo/redo, les ajouter impliquerait un rebuild du sprite + churn VR sur le ticket de clôture. Les boutons touch (≥44px) sont **différés en follow-up** (issue dédiée, une fois les glyphes ajoutés). Le raccourci clavier satisfait l'arbitrage validé et la DoD.
+- **Limitation assumée** : l'inverse d'un `update-*` passe par `updateNode`/`updateEdge` (merge `data`) → restaure les clés modifiées/supprimées mais ne peut pas retirer une clé *ajoutée* par un patch forward. La surface d'édition runtime ne mute que des clés existantes (`label`) ou `position`/`size` (remplacement atomique) → round-trip **exact** pour toutes les opérations réelles et la DoD.
+
+### Fixed
+- **CI** : câblage dans `ci.yml` des tests unitaires graph jusque-là présents en `package.json` mais **jamais lancés** (`graph-spanning-tree` #671, `graph-edit-focus` #673, `graph-port-drop` #674) + ajout de `graph-history` — trou de couverture réel corrigé.
+
+### Tests
+- Node `tests/regression/graph-history.test.js` : round-trip `toJSON` (undo total ≡ initial, redo ≡ final), coalescing (N updates d'1 transaction = 1 undo), redo vidé après nouvelle mutation, `canUndo`/`canRedo`, `graph:history:change`, re-entrance, cascade remove-node.
+- Node `tests/regression/graph-model.test.js` : assertions `prev` (update-node/update-edge) + nouveau bloc `updateEdge`.
+- Playwright `visual-tests/graph-edit.spec.ts` (12 combos) : `Ctrl+Z` annule create/delete/inline (label complet = coalescing)/lien ; `Ctrl+Shift+Z` refait ; nouvelle mutation vide la pile redo ; mode view inerte.
+
 ## 2.108.0 — 2026-07-20 — Moteur graph I5-2 : édition inline + ports 44px (#674)
 
 > Deuxième brique d'édition — **édition inline du label** (double-clic nœud → `<input>`,
