@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Feedback — msyx.design</title>
+    <meta name="description" content="Parcours de retour utilisateur (User Feedback) du design system msyx.fr — bouton header, modale formulaire, mode connecté/anonyme.">
+    <link rel="stylesheet" href="/shared/styles.css">
+    <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+    <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
+</head>
+<body>
+    <header class="site-header" id="site-header"></header>
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+
+<section id="user-feedback-intro">
+    <div class="section-header"><span class="overline">User Feedback</span><h2>Retours utilisateurs</h2><p>Brique <code class="code-inline">@msyx-dev/react</code> (alpha.14) qui capture le contexte applicatif au moment du retour — distincte des alertes/toasts système de la page <a href="/pages/feedback.html">Feedback</a>.</p></div>
+    <div class="demo-box">
+        <h4>Contexte capturé par le Provider</h4>
+        <pre id="uf-context" class="code-block" style="white-space:pre-wrap;">app_id: msyx-design-system
+version: 2.110.0
+env: préprod
+route: /pages/user-feedback.html
+browser: —
+device: —
+viewport: —
+langue: fr
+user: preview@msyx.fr (tenant: msyx)</pre>
+    </div>
+</section>
+
+<section id="user-feedback-flow">
+    <div class="section-header"><span class="overline">User Feedback</span><h2>Parcours complet</h2><p>Démo 100% vanilla du parcours : bouton header &rarr; modale formulaire &rarr; envoi. Reproduit avec les classes DS existantes déjà consommées par le composant React — zéro CSS nouveau.</p></div>
+
+    <div class="demo-box">
+        <h4>Header de démo</h4>
+        <div class="uf-demo-header" style="display:flex;align-items:center;justify-content:flex-end;gap:var(--space-sm);padding:var(--space-sm) var(--space-md);background:var(--surface);border:1px solid var(--border-color);border-radius:var(--radius-sm);">
+            <button class="header-notification btn-icon" data-modal-trigger="uf-demo-modal" aria-haspopup="dialog" aria-label="Donner un feedback">
+                <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="demo-box">
+        <h4>Mode utilisateur</h4>
+        <div class="uf-demo-toggle" data-uf-mode-toggle role="group" aria-label="Mode utilisateur">
+            <button type="button" class="btn-primary btn-sm" data-uf-mode="connected" aria-pressed="true">Connecté</button>
+            <button type="button" class="btn-secondary btn-sm" data-uf-mode="anonymous" aria-pressed="false">Anonyme</button>
+        </div>
+        <p class="typo-small mt-sm" data-uf-mode-hint>Mode connecté : email pré-rempli depuis la session, champ masqué dans le formulaire.</p>
+    </div>
+
+    <dialog id="uf-demo-modal" class="modal-dialog" aria-labelledby="uf-demo-modal-title">
+        <div class="modal-header">
+            <h3 id="uf-demo-modal-title">Votre retour</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="uf-demo-form" data-uf-form>
+                <div class="input-group mb-md">
+                    <label class="input-label" for="uf-type">Type</label>
+                    <select class="input" id="uf-type">
+                        <option value="bug">Bug</option>
+                        <option value="idea">Idée</option>
+                        <option value="question">Question</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                <div class="input-group mb-md">
+                    <label class="input-label" for="uf-title">Titre</label>
+                    <input class="input" type="text" id="uf-title" placeholder="Résumé en quelques mots">
+                </div>
+                <div class="input-group mb-md">
+                    <label class="input-label" for="uf-description">Description</label>
+                    <textarea class="input" id="uf-description" rows="3" placeholder="Décrivez votre retour..."></textarea>
+                </div>
+                <div class="input-group mb-md">
+                    <label class="input-label" for="uf-impact">Impact</label>
+                    <select class="input" id="uf-impact">
+                        <option value="">—</option>
+                        <option value="low">Faible</option>
+                        <option value="medium">Moyen</option>
+                        <option value="high">Fort</option>
+                    </select>
+                </div>
+                <div class="input-group mb-md" id="uf-email-group" hidden>
+                    <label class="input-label" for="uf-email">Email</label>
+                    <input class="input" type="email" id="uf-email" placeholder="vous@exemple.fr">
+                </div>
+                <div class="input-group mb-md">
+                    <button type="button" class="btn-secondary btn-sm">Joindre une capture</button>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" data-modal-close>Annuler</button>
+                    <button type="submit" class="btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+</section>
+
+</div>
+    <script src="/shared/nav.js"></script>
+    <script src="/shared/dist/graph-lib.global.js"></script>
+    <script src="/shared/components.js"></script>
+</body>
+</html>
