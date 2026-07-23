@@ -1,5 +1,18 @@
 # Releases
 
+## 2.111.0 — 2026-07-23 — Bouton UserFeedback standard dans le header (#708)
+
+> Le header du DS est la référence de ce qui sera déployé **par défaut** sur un nouveau projet
+> msyx : le composant **UserFeedback** (`@msyx-dev/react` alpha.14, démo vitrine #705) devient un
+> élément standard du header construit par `shared/nav.js`, à côté de la cloche notifications —
+> et non plus confiné à la page démo `pages/user-feedback.html`.
+
+### Added
+- **`shared/nav.js` — `buildHeader()`** : bouton feedback `.header-notification.btn-icon` (icône `#i-message-circle`, `aria-haspopup="dialog"`, `aria-label="Donner un retour"`) rendu dans la zone droite du header, sur **toutes** les pages du DS. Indépendant de l'auth (comme la cloche), désactivable via `MSYX_HEADER.feedback.enabled = false`.
+- **`ensureUserFeedbackDialog()`** (`shared/nav.js`, patron `ensureVersionNotesDialog()` #614/#645) : injecte une seule fois la `<dialog id="ds-user-feedback-modal">` dans `<body>`, indépendamment de la page démo. Même markup formulaire que `pages/user-feedback.html` (type/titre/description/impact/email conditionnel/capture), ids préfixés `ds-uf-` pour éviter toute collision avec la démo lorsque le header est rendu sur cette page même. Mode connecté/anonyme déterminé **une fois à l'injection** depuis l'état réel `window.MSYX_HEADER.user` (présent ⇒ connecté, email masqué ; absent ⇒ anonyme, email visible + `required`) — pas de toggle démo dans le header standard.
+- **`initHeaderUserFeedback()`** (`shared/components.js`, appelée dans `reinitAll()`) : soumission du formulaire — validation native, capture du contexte réel (`app_id`/`version`/`env`/`route`/`browser`/`device`/`viewport`/`langue`/`user`+`tenant`, déduit de `window.MSYX_HEADER` + `navigator`/`location`), toast succès, fermeture + reset. Ouverture/fermeture déléguées à `initModals()` (déjà présent dans `reinitAll()`).
+- Registre : entrée `user-feedback` — `notes` étendue pour documenter le dogfood direct dans le header standard (aucune classe CSS nouvelle, composition pure des primitives existantes).
+
 ## 2.110.1 — 2026-07-23 — Fix : `.input-group[hidden]` masque réellement (#705)
 
 > Gotcha CSS corrigé, détecté à la validation visuelle de la démo User Feedback : `.input-group { display: flex }` écrasait `[hidden]`, laissant le champ email visible en mode connecté.

@@ -60,6 +60,7 @@
 //  Heatmap calendrier           initHeatmapCalendar()        .heatmap-cal
 //  Virtual list (fenetree)      initVirtualList()            .virtual-list
 //  Version notes (pastille)     initVersionNotes()           .version-badge[data-version-notes]
+//  Feedback header standard     initHeaderUserFeedback()     #ds-user-feedback-form (#708)
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -715,6 +716,47 @@ function initUserFeedbackDemo() {
         ];
         ctx.textContent = lines.join('\n');
     }
+}
+
+// Bouton feedback standard du header (#708) — modale injectée par nav.js
+// (ensureUserFeedbackDialog, id ds-user-feedback-modal). Pas de toggle démo ici : le mode
+// connecté/anonyme (email masqué ou requis) a déjà été figé à l'injection depuis l'état réel
+// window.MSYX_HEADER.user (cf. commentaire nav.js). Cette fonction gère uniquement la
+// soumission : validation native, capture du contexte réel, feedback utilisateur (toast),
+// fermeture + reset. Ouverture/fermeture de la <dialog> déléguées à initModals() (idempotent).
+function initHeaderUserFeedback() {
+    var form = document.getElementById('ds-user-feedback-form');
+    if (!form || form.dataset.bound) return;
+    form.dataset.bound = '1';
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        var cfg = (typeof window.MSYX_HEADER === 'object' && window.MSYX_HEADER) ? window.MSYX_HEADER : {};
+        var user = cfg.user || {};
+        var versionBadge = document.querySelector('[data-latest-version]');
+        var context = {
+            app_id: (cfg.brand && cfg.brand.text) || 'msyx-design-system',
+            version: versionBadge ? versionBadge.dataset.latestVersion : '',
+            env: /miklaw\.fr$/.test(location.hostname) ? 'préprod' : (/msyx\.fr$/.test(location.hostname) ? 'prod' : 'local'),
+            route: location.pathname,
+            browser: navigator.userAgent.split(' ').slice(-1)[0],
+            device: navigator.maxTouchPoints > 0 ? 'tactile' : 'desktop',
+            viewport: window.innerWidth + 'x' + window.innerHeight,
+            langue: navigator.language || 'fr',
+            user: user.email || user.name || 'anonyme',
+            tenant: cfg.tenant || null
+        };
+        // Vitrine statique — pas de backend de collecte ici, le contexte est simplement
+        // capturé/journalisé (contrat consommé par @msyx-dev/react UserFeedbackProvider en amont).
+        if (window.console && console.debug) console.debug('[msyx-feedback] context', context);
+        var dialog = form.closest('dialog.modal-dialog');
+        showToast('Merci pour votre retour', 'success');
+        if (dialog) dialog.close();
+        form.reset();
+    });
 }
 
 // Modal Dialog
@@ -6473,6 +6515,7 @@ function reinitAll() {
     initVirtualList();
     initVersionNotes();
     initUserFeedbackDemo();
+    initHeaderUserFeedback();
 }
 window.__initComponents = reinitAll;
 
