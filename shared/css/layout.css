@@ -1,4 +1,4 @@
-/* @ds-version: 2.111.0 */
+/* @ds-version: 2.112.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -578,6 +578,17 @@ html.theme-transitioning * {
 @media (max-width: 480px) {
     .header-notif-panel { width: calc(100vw - 2rem); right: -1rem; }
     .header-dropdown { min-width: 160px; }
+}
+
+/* Compaction mobile du header — corrige l'overflow horizontal < 640px (#711).
+   À l'étroit, on masque le wordmark texte (le mark logo reste), le badge de version
+   et le sélecteur de thème (opt-in), pour garder logo + burger + mode + cloche +
+   feedback + avatar. Interim : refactor mobile-first complet du header suivi dans #711. */
+@media (max-width: 640px) {
+    .site-header { padding: 0 var(--space-md); gap: var(--space-sm); }
+    .site-header .brand-wordmark { display: none; }
+    .site-header .version-badge { display: none; }
+    .site-header .header-controls .theme-switcher { display: none; }
 }
 
 /* @strip:showcase-start */

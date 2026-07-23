@@ -10,6 +10,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.112.0] - 2026-07-23 — Polish header (taille bouton, overflow mobile, détection M3)
+
+### Fixed
+- **Bouton feedback header** (#708) : retrait de `.btn-icon` — le bouton passe de 44×44 à **34×34**, identique à la cloche de notifications (`shared/nav.js`).
+- **Overflow horizontal du header en mobile** (#711, pré-existant) : compaction sous 640px (masquage wordmark texte, badge de version et sélecteur de thème ; padding/gap réduits) — plus de débordement à 320/360/375px (`shared/css/layout.css`).
+
+### Added
+- **Détection connecté asynchrone (flow M3 Authentik)** (#710) : `updateFeedbackAuthState(user)` + API publique `window.__updateFeedbackAuthState(user)` — patche la modale feedback (masque l'e-mail si connecté) après résolution async de l'identité (`/me.json`). Hooké dans `updateHeaderUser()`. Renseigne aussi `window.MSYX_HEADER.user` (`shared/nav.js`).
+
 ## [2.111.0] - 2026-07-23 — Consolidation v2.98 → v2.111
 
 > Cut consolidé du travail accumulé depuis v2.97.2 : **moteur graph** node-link (v2.98→v2.109), brique **User Feedback** (v2.110), **bouton feedback header standard** (v2.111). Dates par version détaillées dans `RELEASES.md`.

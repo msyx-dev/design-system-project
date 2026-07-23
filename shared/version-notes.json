@@ -4,6 +4,25 @@
   },
   "released": [
     {
+      "version": "2.112.0",
+      "date": "2026-07-23",
+      "titre": "Header plus soigné",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Le bouton de retour du header est à la même taille que la cloche de notifications."
+        },
+        {
+          "type": "correction",
+          "text": "Le header ne déborde plus horizontalement sur mobile (compaction sous 640px)."
+        },
+        {
+          "type": "amelioration",
+          "text": "En connexion via Authentik, le formulaire de retour masque désormais correctement le champ e-mail."
+        }
+      ]
+    },
+    {
       "version": "2.111.0",
       "date": "2026-07-23",
       "titre": "Bouton de retour dans le header",

@@ -1,5 +1,16 @@
 # Releases
 
+## 2.112.0 — 2026-07-23 — Polish header : taille bouton, overflow mobile, détection M3 (#708/#710/#711)
+
+> Suite aux retours sur le header #708 : le bouton feedback est ramené à la taille de la cloche (34×34), le header ne déborde plus en mobile (compaction < 640px, #711), et le mode connecté/anonyme du feedback se met à jour après la résolution asynchrone de l'identité en flow M3 Authentik (#710).
+
+### Fixed
+- Bouton feedback header : `.btn-icon` retiré → 34×34 comme la cloche (`shared/nav.js`). (#708)
+- Overflow horizontal du header < 640px : compaction mobile (wordmark/version-badge/theme-switcher masqués, padding/gap réduits) — vérifié 320/360/375 sur composants.html + formulaires.html (`shared/css/layout.css`). (#711)
+
+### Added
+- `updateFeedbackAuthState(user)` + `window.__updateFeedbackAuthState(user)` : ré-évalue connecté/anonyme de la modale feedback après résolution async M3 (`/me.json`), renseigne `MSYX_HEADER.user` (`shared/nav.js`). (#710)
+
 ## 2.111.0 — 2026-07-23 — Bouton UserFeedback standard dans le header (#708)
 
 > Le header du DS est la référence de ce qui sera déployé **par défaut** sur un nouveau projet

@@ -1,5 +1,5 @@
-/* @ds-version 2.111.0 */
-const VERSION = '2.111.0';
+/* @ds-version 2.112.0 */
+const VERSION = '2.112.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -24,7 +24,7 @@ const NAV_PAGES = [
 let scrollSpyObserver = null;
 
 /* AUTO-GENERATED VERSION NOTES START — ne pas éditer à la main (bin/generate-version-notes.js) */
-const VERSION_NOTES = {"next":{"highlights":[]},"released":[{"version":"2.111.0","date":"2026-07-23","titre":"Bouton de retour dans le header","highlights":[{"type":"nouveaute","text":"Un bouton « Donner un retour » est désormais présent par défaut dans l'en-tête, à côté des notifications : il ouvre un formulaire de feedback qui capture automatiquement le contexte (page, environnement, appareil)."}]},{"version":"2.110.0","date":"2026-07-23","titre":"Retours utilisateurs","highlights":[{"type":"nouveaute","text":"Nouveau parcours « User Feedback » : bouton, fenêtre de retour et capture de contexte, en mode connecté comme anonyme."},{"type":"correction","text":"Le champ e-mail se masque correctement en mode connecté."}]},{"version":"2.109.0","date":"2026-07-20","titre":"Édition de graphes","highlights":[{"type":"nouveaute","text":"Le composant de graphe permet désormais de créer, relier et supprimer des nœuds, avec annuler/refaire au clavier."}]},{"version":"2.100.0","date":"2026-07-19","titre":"Graphes node-link","highlights":[{"type":"nouveaute","text":"Nouveau composant de graphe (organigrammes, arbres, mindmaps, dépendances) : rendu SVG accessible, navigation clavier, zoom et déplacement."}]},{"version":"2.97.2","date":"2026-07-15","titre":"Fenêtres plus accessibles","highlights":[{"type":"amelioration","text":"Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles."}]},{"version":"2.97.1","date":"2026-07-15","titre":"Notes de version plus lisibles","highlights":[{"type":"amelioration","text":"La chronologie met en avant la dernière version et annonce les nouveautés à venir."},{"type":"amelioration","text":"Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne."},{"type":"correction","text":"Correction de puces parasites qui apparaissaient dans la liste des nouveautés."}]},{"version":"2.96.1","date":"2026-07-10","titre":"Catégories dans les notes de version","highlights":[{"type":"amelioration","text":"Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil."}]},{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
+const VERSION_NOTES = {"next":{"highlights":[]},"released":[{"version":"2.112.0","date":"2026-07-23","titre":"Header plus soigné","highlights":[{"type":"amelioration","text":"Le bouton de retour du header est à la même taille que la cloche de notifications."},{"type":"correction","text":"Le header ne déborde plus horizontalement sur mobile (compaction sous 640px)."},{"type":"amelioration","text":"En connexion via Authentik, le formulaire de retour masque désormais correctement le champ e-mail."}]},{"version":"2.111.0","date":"2026-07-23","titre":"Bouton de retour dans le header","highlights":[{"type":"nouveaute","text":"Un bouton « Donner un retour » est désormais présent par défaut dans l'en-tête, à côté des notifications : il ouvre un formulaire de feedback qui capture automatiquement le contexte (page, environnement, appareil)."}]},{"version":"2.110.0","date":"2026-07-23","titre":"Retours utilisateurs","highlights":[{"type":"nouveaute","text":"Nouveau parcours « User Feedback » : bouton, fenêtre de retour et capture de contexte, en mode connecté comme anonyme."},{"type":"correction","text":"Le champ e-mail se masque correctement en mode connecté."}]},{"version":"2.109.0","date":"2026-07-20","titre":"Édition de graphes","highlights":[{"type":"nouveaute","text":"Le composant de graphe permet désormais de créer, relier et supprimer des nœuds, avec annuler/refaire au clavier."}]},{"version":"2.100.0","date":"2026-07-19","titre":"Graphes node-link","highlights":[{"type":"nouveaute","text":"Nouveau composant de graphe (organigrammes, arbres, mindmaps, dépendances) : rendu SVG accessible, navigation clavier, zoom et déplacement."}]},{"version":"2.97.2","date":"2026-07-15","titre":"Fenêtres plus accessibles","highlights":[{"type":"amelioration","text":"Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles."}]},{"version":"2.97.1","date":"2026-07-15","titre":"Notes de version plus lisibles","highlights":[{"type":"amelioration","text":"La chronologie met en avant la dernière version et annonce les nouveautés à venir."},{"type":"amelioration","text":"Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne."},{"type":"correction","text":"Correction de puces parasites qui apparaissaient dans la liste des nouveautés."}]},{"version":"2.96.1","date":"2026-07-10","titre":"Catégories dans les notes de version","highlights":[{"type":"amelioration","text":"Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil."}]},{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
 /* AUTO-GENERATED VERSION NOTES END */
 
 function buildHeader() {
@@ -111,7 +111,7 @@ function buildHeader() {
     var feedbackCfg = cfg.feedback || {};
     var feedbackVisible = feedbackCfg.enabled !== false;
     var feedbackBtnHtml = feedbackVisible
-        ? `<button class="header-notification btn-icon" id="header-feedback-btn" data-modal-trigger="ds-user-feedback-modal" aria-haspopup="dialog" aria-label="Donner un retour"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg></button>`
+        ? `<button class="header-notification" id="header-feedback-btn" data-modal-trigger="ds-user-feedback-modal" aria-haspopup="dialog" aria-label="Donner un retour"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg></button>`
         : '';
 
     // Zone user : rendue si cloche OU feedback OU profil présent (évite un wrapper vide orphelin)
@@ -442,7 +442,25 @@ function renderNotifications(items) {
 }
 
 // Mettre à jour les infos user à la volée (ex: après login)
+// #710 — ré-évalue l'état connecté/anonyme de la modale feedback APRÈS résolution
+// ASYNCHRONE de l'identité (flow M3 Authentik Proxy, fetch /me.json). ensureUserFeedbackDialog()
+// lit MSYX_HEADER.user de façon synchrone à buildHeader() ; ce helper patche la modale déjà
+// injectée (#ds-user-feedback-modal) quand l'identité arrive, + renseigne MSYX_HEADER.user.
+function updateFeedbackAuthState(user) {
+    if (typeof window.MSYX_HEADER !== 'object' || !window.MSYX_HEADER) window.MSYX_HEADER = {};
+    window.MSYX_HEADER.user = user || null;
+    var isConnected = !!(user && (user.name || user.initials || user.avatar || user.email));
+    var group = document.getElementById('ds-uf-email-group');
+    var email = document.getElementById('ds-uf-email');
+    if (group) group.hidden = isConnected;   // .input-group[hidden]{display:none} (fix v2.110.1)
+    if (email) {
+        email.required = !isConnected;
+        if (isConnected) email.value = '';
+    }
+}
+
 function updateHeaderUser(user) {
+    updateFeedbackAuthState(user);   // #710 — MAJ modale feedback après résolution async M3
     var btn = document.getElementById('header-avatar-btn');
     if (!btn) return;
     var avatarContent = '';
@@ -1062,6 +1080,9 @@ document.addEventListener('click', e => {
 // ===== APIS PUBLIQUES — header user =====
 window.__updateHeaderUser = function(data) { updateHeaderUser(data); };
 window.__updateNotificationCount = function(count) { updateNotificationCount(count); };
+// #710 — MAJ de l'état connecté/anonyme de la modale feedback sans toucher l'avatar
+// (pour les consumers M3 qui résolvent l'identité via /me.json). Passer null → mode anonyme.
+window.__updateFeedbackAuthState = function(user) { updateFeedbackAuthState(user); };
 
 document.addEventListener('DOMContentLoaded', function() {
     buildHeader();
