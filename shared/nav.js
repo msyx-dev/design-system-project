@@ -1,5 +1,5 @@
-/* @ds-version 2.109.0 */
-const VERSION = '2.109.0';
+/* @ds-version 2.110.0 */
+const VERSION = '2.110.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -13,6 +13,7 @@ const NAV_PAGES = [
     { title: 'Navigation',  path: '/pages/navigation.html',      icon: '&#9776;' },
     { title: 'Data',        path: '/pages/data.html',            icon: '#' },
     { title: 'Feedback',    path: '/pages/feedback.html',        icon: '&#9888;' },
+    { title: 'User Feedback', path: '/pages/user-feedback.html', icon: '&#128172;' },
     { title: 'Overlays',    path: '/pages/overlays.html',        icon: '&#9645;' },
     { title: 'Avancé',      path: '/pages/divers.html',          icon: '&#8942;' },
     { title: 'Templates',   path: '/pages/templates.html',       icon: '&#8862;' }
@@ -444,6 +445,7 @@ const NAV_SECTIONS_MANIFEST = {
   "/pages/navigation.html": [{"id":"header-user","label":"Header — Zone utilisateur"},{"id":"nav-components","label":"Navigation"},{"id":"breadcrumbs","label":"Breadcrumbs"},{"id":"stepper","label":"Stepper"},{"id":"bottom-nav","label":"Bottom Navigation"},{"id":"sidebar-rail","label":"Sidebar Rail"},{"id":"action-menu","label":"Action Menu"},{"id":"user-menu","label":"User Menu"}],
   "/pages/data.html": [{"id":"charts","label":"Charts"},{"id":"pie-donut","label":"Pie & Donut Charts"},{"id":"stats","label":"Statistiques"},{"id":"animated-counters","label":"Animated Counters"},{"id":"progress","label":"Progress"},{"id":"progress-tracker","label":"Progress Tracker"},{"id":"gauge","label":"Gauge / Speedometer"},{"id":"usage-meter","label":"Usage Meter"},{"id":"tables","label":"Tables"},{"id":"comparison","label":"Comparison Table"},{"id":"data-grid","label":"Data Grid"},{"id":"tree-view","label":"Tree View"},{"id":"lists","label":"Listes"},{"id":"activity-feed","label":"Activity Feed"},{"id":"risk-matrix","label":"Risk Matrix"},{"id":"server-data-grid","label":"Table server-driven"},{"id":"heatmap-calendar","label":"Heatmap calendrier"},{"id":"virtual-list","label":"Virtual list"},{"id":"graph","label":"Graph"}],
   "/pages/feedback.html": [{"id":"alerts","label":"Alertes"},{"id":"status-tokens","label":"Tokens status (fg / bg / border)"},{"id":"toasts","label":"Toasts"},{"id":"skeleton","label":"Skeleton loading"},{"id":"zone-banner","label":"Zone Banner — KPI"},{"id":"empty-states","label":"Empty States"},{"id":"spinners","label":"Spinners / Loading"},{"id":"auto-save","label":"Auto-save Indicator"},{"id":"upgrade-prompt","label":"Upgrade Prompt — Alerte CTA"},{"id":"pagination","label":"Pagination"},{"id":"comments","label":"Comments / Thread"},{"id":"access-denied","label":"Access Denied — Page 403"},{"id":"mention","label":"Mention @"}],
+  "/pages/user-feedback.html": [{"id":"user-feedback-intro","label":"Retours utilisateurs"},{"id":"user-feedback-flow","label":"Parcours complet"}],
   "/pages/overlays.html": [{"id":"modals","label":"Modals"},{"id":"drawer","label":"Drawer"},{"id":"bottom-sheet","label":"Bottom Sheet"},{"id":"fab","label":"FAB — Floating Action Button"},{"id":"notification-center","label":"Notification Center"},{"id":"confirm-popover","label":"Confirm Popover"},{"id":"tooltip","label":"Tooltip & Popover"},{"id":"version-notes","label":"Notes de version"}],
   "/pages/divers.html": [{"id":"timeline","label":"Timeline"},{"id":"code","label":"Code blocks"},{"id":"carousel","label":"Carousel / Image Slider"},{"id":"lightbox","label":"Lightbox"},{"id":"video-embed","label":"Video Embed"},{"id":"accordion","label":"Accordion"},{"id":"command-palette","label":"Command Palette"},{"id":"context-menu","label":"Context Menu"},{"id":"copy-button","label":"Copy Button"},{"id":"decision-tree","label":"Decision Tree"},{"id":"before-after","label":"Before / After"},{"id":"prose","label":"Rendu Markdown / Prose"},{"id":"splitter","label":"Splitter / Resizable panels"},{"id":"json-viewer","label":"JSON viewer"},{"id":"diff-viewer","label":"Diff viewer"}],
   "/pages/templates.html": [{"id":"kanban","label":"Kanban Board"},{"id":"roadmap","label":"Roadmap"},{"id":"backlog","label":"Backlog"},{"id":"sprint","label":"Sprint Board"},{"id":"settings-panel","label":"Settings Panel"},{"id":"pricing","label":"Pricing Table"}]
@@ -824,6 +826,7 @@ var PAGE_TO_LAZY = {
     '/pages/navigation.html': 'lazy-navigation',
     '/pages/data.html': 'lazy-data',
     '/pages/feedback.html': 'lazy-feedback',
+    '/pages/user-feedback.html': 'lazy-user-feedback',
     '/pages/overlays.html': 'lazy-overlays',
     '/pages/divers.html': 'lazy-divers',
     '/pages/templates.html': 'lazy-templates'

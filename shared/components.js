@@ -242,6 +242,9 @@ function initComponents() {
     // Modals
     initModals();
 
+    // User Feedback demo (vitrine vanilla — #705)
+    initUserFeedbackDemo();
+
     // Copy Buttons
     initCopyButtons();
 
@@ -641,6 +644,73 @@ function attachFocusRestore(dialog) {
         }
         _trigger = null;
     });
+}
+
+// User Feedback demo — parcours vitrine vanilla (#705)
+// Ouverture/fermeture de la modale = déjà gérée par initModals() via data-modal-trigger/data-modal-close.
+// Ici : uniquement le toggle Connecté/Anonyme + le submit du formulaire démo.
+function initUserFeedbackDemo() {
+    document.querySelectorAll('[data-uf-mode-toggle]').forEach(function(toggle) {
+        if (toggle.dataset.bound) return;
+        toggle.dataset.bound = '1';
+        var buttons = toggle.querySelectorAll('[data-uf-mode]');
+        var section = toggle.closest('section') || document;
+        var emailGroup = section.querySelector('#uf-email-group');
+        var emailInput = section.querySelector('#uf-email');
+        var hint = section.querySelector('[data-uf-mode-hint]');
+        function setMode(mode) {
+            buttons.forEach(function(b) {
+                var active = b.dataset.ufMode === mode;
+                b.classList.toggle('btn-primary', active);
+                b.classList.toggle('btn-secondary', !active);
+                b.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+            var anonymous = mode === 'anonymous';
+            if (emailGroup) emailGroup.hidden = !anonymous;
+            if (emailInput) {
+                emailInput.required = anonymous;
+                if (!anonymous) emailInput.value = '';
+            }
+            if (hint) {
+                hint.textContent = anonymous
+                    ? 'Mode anonyme : email requis pour pouvoir répondre au retour.'
+                    : 'Mode connecté : email pré-rempli depuis la session, champ masqué dans le formulaire.';
+            }
+        }
+        buttons.forEach(function(b) {
+            b.addEventListener('click', function() { setMode(b.dataset.ufMode); });
+        });
+        setMode('connected');
+    });
+
+    document.querySelectorAll('[data-uf-form]').forEach(function(form) {
+        if (form.dataset.bound) return;
+        form.dataset.bound = '1';
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var dialog = form.closest('dialog.modal-dialog');
+            showToast('Merci pour votre retour', 'success');
+            if (dialog) dialog.close();
+            form.reset();
+        });
+    });
+
+    var ctx = document.getElementById('uf-context');
+    if (ctx && !ctx.dataset.bound) {
+        ctx.dataset.bound = '1';
+        var lines = [
+            'app_id: msyx-design-system',
+            'version: 2.110.0',
+            'env: préprod',
+            'route: ' + location.pathname,
+            'browser: ' + navigator.userAgent.split(' ').slice(-1)[0],
+            'device: ' + (navigator.maxTouchPoints > 0 ? 'tactile' : 'desktop'),
+            'viewport: ' + window.innerWidth + 'x' + window.innerHeight,
+            'langue: ' + (navigator.language || 'fr'),
+            'user: preview@msyx.fr (tenant: msyx)'
+        ];
+        ctx.textContent = lines.join('\n');
+    }
 }
 
 // Modal Dialog
@@ -6398,6 +6468,7 @@ function reinitAll() {
     initHeatmapCalendar();
     initVirtualList();
     initVersionNotes();
+    initUserFeedbackDemo();
 }
 window.__initComponents = reinitAll;
 

@@ -1,5 +1,19 @@
 # Releases
 
+## 2.110.0 — 2026-07-23 — Page démo User Feedback (parcours + nav distincte) (#705)
+
+> Vitrine 100% vanilla du parcours **User Feedback** (`@msyx-dev/react` alpha.14) : bouton
+> header, modale formulaire, mode connecté/anonyme — reproduite avec les classes CSS DS
+> existantes, sans aucun CSS nouveau. Résout la collision de catégorie avec la page
+> **Feedback** système (alertes/toasts) en créant une page dédiée et une entrée de
+> navigation distincte.
+
+### Added
+- **`pages/user-feedback.html`** (NOUVEAU) — 2 sections : contexte capturé par le Provider (`#user-feedback-intro`) et parcours complet bouton→modale→envoi (`#user-feedback-flow`), avec toggle Connecté/Anonyme (email conditionnel requis en anonyme).
+- **`initUserFeedbackDemo()`** (`shared/components.js`) — toggle connecté/anonyme (pattern `dataset.bound`) + submit du formulaire démo (`showToast` succès + fermeture modale). L'ouverture/fermeture de la modale reste gérée par `initModals()`.
+- **Navigation distincte** : entrée « User Feedback » dans `NAV_PAGES`/`PAGE_TO_LAZY` (`shared/nav.js`), hub-card dédiée dans `site.html`.
+- Registre : entrée `user-feedback` mise à jour (`page: "user-feedback"`, `jsInit: "initUserFeedbackDemo"`) — reste liée au wrapper React porté (#692-695).
+
 ## 2.109.0 — 2026-07-20 — Moteur graph I5-3 : undo/redo (pile de patches inverses) (#675)
 
 > Dernière brique du lot **I5** (édition) — **undo/redo** au clavier via une pile de

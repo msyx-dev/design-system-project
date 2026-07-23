@@ -57,6 +57,7 @@ const NAV_PAGES_PATHS = [
   '/pages/navigation.html',
   '/pages/data.html',
   '/pages/feedback.html',
+  '/pages/user-feedback.html',
   '/pages/overlays.html',
   '/pages/divers.html',
   '/pages/templates.html',
@@ -72,11 +73,12 @@ const EXPECTED_COUNTS = {
   '/pages/navigation.html':      8,
   '/pages/data.html':            19,
   '/pages/feedback.html':        13,
+  '/pages/user-feedback.html':   2,
   '/pages/overlays.html':        8,
   '/pages/divers.html':          15,
   '/pages/templates.html':       6,
 };
-const EXPECTED_TOTAL = 124;
+const EXPECTED_TOTAL = 126;
 
 // ─── Décodage des entités HTML ─────────────────────────────────────────────────
 

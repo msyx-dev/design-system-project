@@ -12,6 +12,11 @@ const PAGES = [
   { slug: "data", path: "/pages/data.html", title: "Data" },
   { slug: "templates", path: "/pages/templates.html", title: "Templates" },
   { slug: "feedback", path: "/pages/feedback.html", title: "Feedback" },
+  {
+    slug: "user-feedback",
+    path: "/pages/user-feedback.html",
+    title: "User Feedback",
+  },
   { slug: "overlays", path: "/pages/overlays.html", title: "Overlays" },
   // divers.html : le <title> du <head> est "Avancé — msyx.design" (et non "Divers")
   { slug: "divers", path: "/pages/divers.html", title: "Avancé" },
@@ -105,7 +110,9 @@ test.describe("Visual regression — full matrix (par section)", () => {
 
       // Fix tooling VR (#669) : masque le header fixe (.site-header) — son badge de version
       // churnait les captures des sections plus hautes que le viewport a chaque bump.
-      await page.addStyleTag({ content: ".site-header { display: none !important; }" });
+      await page.addStyleTag({
+        content: ".site-header { display: none !important; }",
+      });
 
       // --- Garde-fou anti-régression Bug 1 (#286) ---
       // index.html a un <title> different : si le flag -s revient ou que

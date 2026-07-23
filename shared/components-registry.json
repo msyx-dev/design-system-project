@@ -1,7 +1,7 @@
 {
-  "version": "2.109.0",
+  "version": "2.110.0",
   "generated": {
-    "at": "2026-07-21T21:11:15.029Z",
+    "at": "2026-07-23T06:05:32.113Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -273,7 +273,7 @@
     {
       "name": "user-feedback",
       "kind": "component",
-      "page": "feedback",
+      "page": "user-feedback",
       "cssClasses": [
         ".header-notification",
         ".btn-icon",
@@ -293,8 +293,8 @@
         ".input-error-msg",
         ".input-hint"
       ],
-      "jsInit": null,
-      "notes": "Composant React pur (#692/#693/#694/#695) — pas de contrepartie vanilla JS/HTML dédiée. Compose intégralement des primitives DS existantes (bouton header-notification+btn-icon, Modal, Input/Select via alert/input-*) — zéro classe CSS nouvelle. Entrée DISTINCTE de 'feedback' (module auto-généré miroir de shared/css/components/feedback.css) pour éviter toute collision de nom (cf. #695 groom).",
+      "jsInit": "initUserFeedbackDemo",
+      "notes": "Composant React pur (#692/#693/#694/#695) — dogfoodé par une démo vanilla dédiée pages/user-feedback.html (#705, parcours bouton header→modale→submit, mode connecté/anonyme). Compose intégralement des primitives DS existantes (bouton header-notification+btn-icon, Modal, Input/Select via alert/input-*) — zéro classe CSS nouvelle. Entrée DISTINCTE de 'feedback' (module auto-généré miroir de shared/css/components/feedback.css) pour éviter toute collision de nom (cf. #695 groom).",
       "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
