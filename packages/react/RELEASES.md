@@ -8,6 +8,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.17 — 2026-07-23 — `<NotificationBell>` : cloche de notifications du header
+
+> Feature (#717) — port React du contrat "cloche de notifications" du header vanilla (`shared/nav.js`). Première pièce du chantier SiteHeader côté React.
+
+### Added
+- **`<NotificationBell>`** (#717) : composant **présentationnel/contrôlé** cloche + panel + badge + mark-all-read. **Zéro CSS nouveau** — réutilise `.header-notification`/`.header-notif-panel`/`.header-notif-item`… (`layout.css`) et `.header-user-zone` comme ancre `position:relative` (parité vanilla). `notifications: NotificationItem[]`, badge via `unreadCount` (défaut dérivé de `notifications.filter(n => n.unread).length`, masqué si 0, « 99+ » au-delà). Mark-all-read **GLOBAL** seul (`onMarkAllRead`, parité header — pas de mark-as-read individuel) ; clic item = `onItemClick(item)` (ne marque pas lu, ne ferme pas). Contrôlé/non-contrôlé (`open`/`onOpenChange`, convention `UserMenu`). Panel `role="dialog"` **non-modal, sans focus trap** ; fermé, neutralisé par `inert` + `aria-hidden` (précédent alpha.12 #396). aria : cloche `aria-haspopup="dialog"` + `aria-expanded` + `aria-controls` (`useId`), Échap ferme + refocus, clic extérieur ferme. Items rendus `<a href>` si `href`, sinon `<div role="button" tabIndex=0>` quand `onItemClick` fourni. Icône via primitif interne `<Icon name="bell">`.
+- **`Icon` : glyphe `bell`** (#717) : ajout de `bell` au type `IconName` + à `ICON_CHILDREN` (copie fidèle du symbole `i-bell` de `shared/icons/sprite.svg`). Le primitif passe de 11 à 12 glyphes.
+- **Exports + registre** (#717) : `index.ts` expose `NotificationBell` + types `NotificationBellProps`/`NotificationItem`. Nouvelle entrée registre `notification-bell` (`react:"ported"`, `REACT_TO_REGISTRY`).
+
+### Notes
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314). 0 fichier `shared/css/**` touché.
+- Publish = tag `react-v3.0.0-alpha.17` (hors scope du /dev — cut de release parent).
+
 ## v3.0.0-alpha.16 — 2026-07-23 — `<UserFeedbackModal>` : pièce jointe via `<FileUpload>` (fin de la capture d'écran live)
 
 > Bug (#714) — décision Mike : la capture d'écran live (`getDisplayMedia` + ré-encodage WebP) posait un risque de fiabilité/permissions ; remplacée par un ajout de fichier explicite via le composant DS `<FileUpload>`.

@@ -237,3 +237,10 @@ export type {
   DataGridProps,
   DataGridColumn,
 } from "./components/DataGrid/DataGrid";
+
+// ─── SiteHeader (v3.0.0-alpha.17) — #717 ───
+export { NotificationBell } from "./components/NotificationBell/NotificationBell";
+export type {
+  NotificationBellProps,
+  NotificationItem,
+} from "./components/NotificationBell/NotificationBell";
