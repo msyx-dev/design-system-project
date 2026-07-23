@@ -262,6 +262,13 @@ function ensureVersionNotesDialog() {
 // (pas de toggle démo dans le header standard, contrairement à #705) :
 //   - cfg.user présent (name/initials/avatar/email) → connecté, email masqué (hidden)
 //   - cfg.user absent → anonyme, email visible + required
+// LIMITE CONNUE (M3 Authentik Proxy) : le slot UserMenu (#ds-user-menu, cf. profileHtml plus
+// haut) résout l'identité de façon ASYNCHRONE via fetch /me.json et ne renseigne JAMAIS
+// window.MSYX_HEADER.user (seul updateHeaderUser() met à jour le DOM de l'avatar legacy).
+// Comme cette fonction s'exécute de façon SYNCHRONE dans buildHeader(), un consumer M3 est
+// donc toujours traité comme anonyme ici — dégradation sûre (email demandé par défaut),
+// mais pas la « vraie » détection de connexion pour ce flow. Hors scope #708 (l'AC ne
+// couvre que window.MSYX_HEADER.user synchrone) — suivi à ouvrir séparément si besoin.
 // Soumission + capture de contexte : initHeaderUserFeedback() (shared/components.js, reinitAll()).
 function ensureUserFeedbackDialog() {
     if (document.getElementById('ds-user-feedback-modal')) return;
@@ -274,7 +281,7 @@ function ensureUserFeedbackDialog() {
     dialog.setAttribute('aria-labelledby', 'ds-user-feedback-title');
     dialog.innerHTML = '<div class="modal-header"><h3 id="ds-user-feedback-title">Votre retour</h3>'
         + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
-        + '<div class="modal-body"><form id="ds-user-feedback-form" data-uf-form-header>'
+        + '<div class="modal-body"><form id="ds-user-feedback-form">'
         + '<div class="input-group mb-md"><label class="input-label" for="ds-uf-type">Type</label>'
         + '<select class="input" id="ds-uf-type"><option value="bug">Bug</option><option value="idea">Idée</option>'
         + '<option value="question">Question</option><option value="other">Autre</option></select></div>'
