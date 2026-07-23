@@ -15,7 +15,9 @@ describe("ThemeToggle — rendu", () => {
   });
 
   it("ajoute is-dark en mode dark, l'omet en mode light", () => {
-    const { rerender } = render(<ThemeToggle mode="dark" onToggle={() => {}} />);
+    const { rerender } = render(
+      <ThemeToggle mode="dark" onToggle={() => {}} />,
+    );
     expect(screen.getByRole("switch")).toHaveClass("is-dark");
     rerender(<ThemeToggle mode="light" onToggle={() => {}} />);
     expect(screen.getByRole("switch")).not.toHaveClass("is-dark");
@@ -27,8 +29,24 @@ describe("ThemeToggle — rendu", () => {
     );
     expect(container.querySelector(".mode-switch-track")).toBeInTheDocument();
     expect(container.querySelector(".mode-switch-thumb")).toBeInTheDocument();
-    expect(container.querySelector(".mode-switch-icon--sun")).toBeInTheDocument();
-    expect(container.querySelector(".mode-switch-icon--moon")).toBeInTheDocument();
+    expect(
+      container.querySelector(".mode-switch-icon--sun"),
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector(".mode-switch-icon--moon"),
+    ).toBeInTheDocument();
+  });
+
+  it("les icônes sont inline (paths, data-icon) sans <use> sprite", () => {
+    const { container } = render(
+      <ThemeToggle mode="dark" onToggle={() => {}} />,
+    );
+    const sun = container.querySelector(".mode-switch-icon--sun");
+    const moon = container.querySelector(".mode-switch-icon--moon");
+    expect(sun).toHaveAttribute("data-icon", "sun");
+    expect(moon).toHaveAttribute("data-icon", "moon");
+    expect(sun?.querySelector("path")).not.toBeNull();
+    expect(container.querySelector("use")).toBeNull();
   });
 });
 

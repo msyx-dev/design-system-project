@@ -48,21 +48,20 @@ describe("UserFeedbackButton — markup DS (zéro CSS nouveau)", () => {
     );
   });
 
-  it("rend l'icône par défaut du sprite DS (i-message-circle)", () => {
+  it("rend l'icône par défaut inline (message-circle), sans <use> sprite", () => {
     renderButton();
     const button = screen.getByRole("button", { name: "Donner un feedback" });
-    const use = button.querySelector("svg.icon use");
-    expect(use).not.toBeNull();
-    expect(use?.getAttribute("href")).toBe(
-      "/shared/icons/sprite.svg#i-message-circle",
-    );
+    const svg = button.querySelector('svg.icon[data-icon="message-circle"]');
+    expect(svg).not.toBeNull();
+    expect(svg?.querySelector("path")).not.toBeNull();
+    expect(button.querySelector("use")).toBeNull();
   });
 
   it("accepte une icône custom qui remplace l'icône par défaut", () => {
     renderButton({ icon: <span data-testid="custom-icon">★</span> });
     expect(screen.getByTestId("custom-icon")).toBeInTheDocument();
     const button = screen.getByRole("button", { name: "Donner un feedback" });
-    expect(button.querySelector("svg.icon use")).toBeNull();
+    expect(button.querySelector('svg[data-icon="message-circle"]')).toBeNull();
   });
 });
 

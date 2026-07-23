@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { Icon } from "../../icons/Icon";
 
 /** Entrée de la liste contrôlée `.file-item` — cf. `files` prop. */
 export interface FileUploadFileItem {
@@ -198,9 +199,7 @@ export function FileUpload({
         onDrop={handleDrop}
       >
         <span className="file-upload-icon" aria-hidden="true">
-          <svg className="icon" width={28} height={28}>
-            <use href="/shared/icons/sprite.svg#i-upload" />
-          </svg>
+          <Icon name="upload" width={28} height={28} />
         </span>
         <div className="file-upload-text">
           Déposez vos fichiers ici ou{" "}
@@ -213,9 +212,7 @@ export function FileUpload({
           {files.map((file, index) => (
             <div className="file-item" key={`${file.name}-${index}`}>
               <span className="file-item-icon" aria-hidden="true">
-                <svg className="icon" width={18} height={18}>
-                  <use href="/shared/icons/sprite.svg#i-file" />
-                </svg>
+                <Icon name="file" width={18} height={18} />
               </span>
               <div className="file-item-info">
                 <div className="file-item-name">{file.name}</div>

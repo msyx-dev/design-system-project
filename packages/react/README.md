@@ -140,7 +140,7 @@ Bascule dark/light du DS. Composant **sans état interne** : le parent gère `mo
 
 **Sémantique a11y** : `aria-checked="true"` === mode **DARK** actif (#382).
 
-> ⚠️ **Dépendance sprite** : les icônes sun/moon sont rendues via `<use href="/shared/icons/sprite.svg#i-sun|#i-moon">`. Le consumer **doit servir** le sprite SVG du DS à `/shared/icons/sprite.svg` (fourni par la distribution DS CSS), sinon les icônes seront vides.
+> Icônes auto-contenues (inline SVG, #713) — aucun sprite à servir côté consumer.
 
 | Prop       | Type                  | Défaut | Description                                            |
 |------------|-----------------------|--------|-------------------------------------------------------|
@@ -181,7 +181,7 @@ import { ThemeSwitcher, useTheme } from "@msyx-dev/react";
 const { theme, mode, setTheme, toggleMode, isModeLocked } = useTheme();
 ```
 
-> ⚠️ Mêmes dépendances que `ThemeToggle` (sprite `/shared/icons/sprite.svg`). Recommandé : script anti-FOUC synchrone inline dans `<head>` lisant `msyx-theme`/`msyx-mode` avant le premier paint.
+> Recommandé : script anti-FOUC synchrone inline dans `<head>` lisant `msyx-theme`/`msyx-mode` avant le premier paint.
 
 ### `PageHeader`
 

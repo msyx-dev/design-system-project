@@ -93,18 +93,17 @@ describe("TreeView — structure & markup canonique", () => {
     expect(chevron?.querySelector("use")).toBeNull();
   });
 
-  it("l'icône dossier d'une branche utilise le sprite #i-folder", () => {
+  it("l'icône dossier d'une branche est le glyphe inline folder (sans <use>)", () => {
     render(<TreeView nodes={sampleNodes} ariaLabel="Arbre" />);
     const folderIcon = document.querySelector(
-      ".tree-branch > .tree-toggle > .tree-icon use",
+      ".tree-branch > .tree-toggle > .tree-icon > svg.icon",
     );
-    expect(folderIcon).toHaveAttribute(
-      "href",
-      "/shared/icons/sprite.svg#i-folder",
-    );
+    expect(folderIcon).toHaveAttribute("data-icon", "folder");
+    expect(folderIcon?.querySelector("path")).not.toBeNull();
+    expect(folderIcon?.querySelector("use")).toBeNull();
   });
 
-  it("une feuille est un <li.tree-item.tree-leaf> avec icône sprite #i-file + .tree-label", () => {
+  it("une feuille est un <li.tree-item.tree-leaf> avec icône inline file + .tree-label", () => {
     render(<TreeView nodes={sampleNodes} ariaLabel="Arbre" />);
     // README.md est une feuille racine.
     const leaves = Array.from(document.querySelectorAll("li.tree-leaf"));
@@ -114,8 +113,9 @@ describe("TreeView — structure & markup canonique", () => {
     expect(readme).toBeTruthy();
     expect(readme).toHaveClass("tree-item");
     expect(readme).toHaveAttribute("role", "treeitem");
-    const fileIcon = readme?.querySelector(".tree-icon use");
-    expect(fileIcon).toHaveAttribute("href", "/shared/icons/sprite.svg#i-file");
+    const fileIcon = readme?.querySelector(".tree-icon > svg.icon");
+    expect(fileIcon).toHaveAttribute("data-icon", "file");
+    expect(fileIcon?.querySelector("use")).toBeNull();
   });
 
   it("les .tree-children portent role=group et sont récursifs (key=node.id)", () => {
@@ -143,16 +143,27 @@ describe("TreeView — structure & markup canonique", () => {
         label: "dossier",
         icon: <span data-testid="custom-folder">📁</span>,
         children: [
-          { id: "leaf", label: "fichier", icon: <span data-testid="custom-file">📄</span> },
+          {
+            id: "leaf",
+            label: "fichier",
+            icon: <span data-testid="custom-file">📄</span>,
+          },
         ],
       },
     ];
     render(<TreeView nodes={nodes} ariaLabel="Arbre" />);
-    expect(document.querySelector("[data-testid='custom-folder']")).toBeInTheDocument();
-    expect(document.querySelector("[data-testid='custom-file']")).toBeInTheDocument();
-    // Aucun sprite folder/file quand l'icône est fournie.
     expect(
-      document.querySelector("use[href='/shared/icons/sprite.svg#i-folder']"),
+      document.querySelector("[data-testid='custom-folder']"),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector("[data-testid='custom-file']"),
+    ).toBeInTheDocument();
+    // Aucun glyphe DS par défaut quand l'icône custom est fournie.
+    expect(
+      document.querySelector('.tree-icon svg[data-icon="folder"]'),
+    ).toBeNull();
+    expect(
+      document.querySelector('.tree-icon svg[data-icon="file"]'),
     ).toBeNull();
   });
 });
