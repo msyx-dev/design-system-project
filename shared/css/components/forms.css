@@ -3,6 +3,8 @@
 
 /* ===== INPUTS ===== */
 .input-group { display: flex; flex-direction: column; gap: 0.4rem; }
+/* [hidden] doit masquer un .input-group : sans ça, display:flex écrase l'attribut hidden (UA). #705 */
+.input-group[hidden] { display: none; }
 .input-label { font-size: 0.85rem; font-weight: var(--fw-medium); color: var(--text); }
 .input { padding: var(--space-2) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.9rem; outline: none; font-family: var(--font-sans); transition: border-color var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard), background-color var(--duration-base) var(--ease-standard); width: 100%; }
 .input:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }

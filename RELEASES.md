@@ -1,5 +1,12 @@
 # Releases
 
+## 2.110.1 — 2026-07-23 — Fix : `.input-group[hidden]` masque réellement (#705)
+
+> Gotcha CSS corrigé, détecté à la validation visuelle de la démo User Feedback : `.input-group { display: flex }` écrasait `[hidden]`, laissant le champ email visible en mode connecté.
+
+### Fixed
+- `.input-group[hidden] { display: none }` (`shared/css/components/forms.css`) — l'attribut `hidden` masque désormais un `.input-group`. Corrige tout masquage conditionnel de champ (démo User Feedback + tous consumers du DS). (#705)
+
 ## 2.110.0 — 2026-07-23 — Page démo User Feedback (parcours + nav distincte) (#705)
 
 > Vitrine 100% vanilla du parcours **User Feedback** (`@msyx-dev/react` alpha.14) : bouton
