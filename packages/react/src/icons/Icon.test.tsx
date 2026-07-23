@@ -16,6 +16,7 @@ const ALL_NAMES: IconName[] = [
   "message-circle",
   "sun",
   "moon",
+  "bell",
 ];
 
 describe("Icon — primitif inline auto-contenu (#713)", () => {
@@ -60,7 +61,7 @@ describe("Icon — primitif inline auto-contenu (#713)", () => {
     expect(svg).toHaveAttribute("height", "18");
   });
 
-  it("chaque glyphe (11) rend au moins un enfant SVG, sans <use>", () => {
+  it("chaque glyphe (12) rend au moins un enfant SVG, sans <use>", () => {
     ALL_NAMES.forEach((name) => {
       const { container, unmount } = render(<Icon name={name} />);
       const svg = container.querySelector(`svg[data-icon="${name}"]`);
@@ -68,5 +69,12 @@ describe("Icon — primitif inline auto-contenu (#713)", () => {
       expect(svg?.querySelector("use")).toBeNull();
       unmount();
     });
+  });
+
+  it("rend le glyphe bell (2 paths, sans <use>)", () => {
+    const { container } = render(<Icon name="bell" />);
+    const svg = container.querySelector('svg[data-icon="bell"]');
+    expect(svg?.querySelectorAll("path").length).toBe(2);
+    expect(container.querySelector("use")).toBeNull();
   });
 });

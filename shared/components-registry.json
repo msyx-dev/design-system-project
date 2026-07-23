@@ -1,7 +1,7 @@
 {
   "version": "2.112.1",
   "generated": {
-    "at": "2026-07-23T06:05:32.113Z",
+    "at": "2026-07-23T21:45:35.655Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -307,6 +307,37 @@
         "shared/css/components/version-notes.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css",
+        "shared/css/components/_base.css"
+      ]
+    },
+    {
+      "name": "notification-bell",
+      "kind": "component",
+      "page": "navigation",
+      "cssClasses": [
+        ".header-user-zone",
+        ".header-notification",
+        ".header-notification-badge",
+        ".header-notif-panel",
+        ".header-notif-panel-header",
+        ".header-notif-mark-read",
+        ".header-notif-list",
+        ".header-notif-item",
+        ".header-notif-icon",
+        ".header-notif-body",
+        ".header-notif-title",
+        ".header-notif-desc",
+        ".header-notif-time",
+        ".header-notif-empty",
+        ".icon"
+      ],
+      "jsInit": null,
+      "notes": "Port React (#717) du contrat 'cloche de notifications' du header vanilla (shared/nav.js buildHeader L81-88 + initHeaderNotifications L369-443). Composant présentationnel/contrôlé <NotificationBell> (@msyx-dev/react) : cloche + panel role=dialog non-modal + badge (.hidden si 0, 99+ au-delà) + mark-all-read GLOBAL (parité — pas de mark-as-read individuel). Réutilise intégralement les classes .header-notif*/.header-notification*/.header-user-zone (layout.css) — ZÉRO CSS nouveau. Icône via primitif <Icon name='bell'> (#713). jsInit null : l'équivalent vanilla est initHeaderNotifications (nav.js), pas une init de section démo. Entrée DISTINCTE du module 'layout' (qui référence les mêmes classes en kind:module) et compatible avec 'user-feedback' qui cite aussi .header-notification (aucune contrainte d'unicité de classe inter-entrées).",
+      "react": "ported",
+      "module": [
+        "shared/css/components/forms.css",
+        "shared/css/components/overlays.css",
+        "shared/css/layout.css",
         "shared/css/components/_base.css"
       ]
     },
@@ -1596,7 +1627,8 @@
       "example": "<span class=\"brand-wordmark\">design-system</span>",
       "react": "pending",
       "module": [
-        "shared/css/components/brand.css"
+        "shared/css/components/brand.css",
+        "shared/css/layout.css"
       ]
     },
     {
@@ -3196,7 +3228,8 @@
       "jsInit": "initVersionNotes",
       "react": "ported",
       "module": [
-        "shared/css/components/version-notes.css"
+        "shared/css/components/version-notes.css",
+        "shared/css/layout.css"
       ]
     },
     {

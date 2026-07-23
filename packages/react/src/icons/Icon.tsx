@@ -27,7 +27,8 @@ export type IconName =
   | "eye-off"
   | "message-circle"
   | "sun"
-  | "moon";
+  | "moon"
+  | "bell";
 
 /**
  * Enfants SVG de chaque glyphe — copie FIDÈLE des `<symbol id="i-…">` de
@@ -85,6 +86,12 @@ const ICON_CHILDREN: Record<IconName, ReactElement> = {
   ),
   moon: (
     <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+  ),
+  bell: (
+    <>
+      <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+      <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+    </>
   ),
 };
 

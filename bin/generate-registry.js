@@ -493,6 +493,7 @@ const REACT_TO_REGISTRY = {
   // dans UN SEUL dossier components/UserFeedback/ (cf. précédent Quiz+Poll dans
   // components/Quiz/) : une seule clé de dossier réel, pas 3 clés par fichier.
   UserFeedback: 'user-feedback',
+  NotificationBell: 'notification-bell',  // #717 — port du contrat cloche du header vanilla
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
