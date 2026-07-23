@@ -1,11 +1,14 @@
-import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  UserFeedbackModal,
-  encodeScreenshotWebp,
-  type EncodableCanvas,
-} from "./UserFeedbackModal";
+import { UserFeedbackModal } from "./UserFeedbackModal";
 import type { UserFeedbackContextData } from "./types";
 
 afterEach(cleanup);
@@ -71,11 +74,12 @@ describe("UserFeedbackModal — structure & composition DS", () => {
     expect(email.type).toBe("email");
   });
 
-  it("affiche le bouton de capture par défaut, le masque si allowScreenshot=false", () => {
+  it("affiche la zone de pièce jointe par défaut, la masque si allowScreenshot=false", () => {
     const { rerender } = renderModal();
     expect(
-      screen.getByRole("button", { name: "Joindre une capture" }),
+      screen.getByText("Joindre un fichier (optionnel)"),
     ).toBeInTheDocument();
+    expect(document.querySelector(".file-upload")).toBeInTheDocument();
 
     rerender(
       <UserFeedbackModal
@@ -86,9 +90,7 @@ describe("UserFeedbackModal — structure & composition DS", () => {
         allowScreenshot={false}
       />,
     );
-    expect(
-      screen.queryByRole("button", { name: "Joindre une capture" }),
-    ).not.toBeInTheDocument();
+    expect(document.querySelector(".file-upload")).not.toBeInTheDocument();
   });
 
   it("le bouton Annuler appelle onClose sans appeler onSubmit", async () => {
@@ -173,196 +175,76 @@ describe("UserFeedbackModal — validation a11y", () => {
   });
 });
 
-describe("UserFeedbackModal — screenshot opt-in WebP", () => {
-  it("capture puis attache une capture (mock getDisplayMedia + canvas.toBlob)", async () => {
-    const user = userEvent.setup();
-
-    const fakeTrack = { stop: vi.fn() };
-    const fakeStream = {
-      getTracks: () => [fakeTrack],
-    } as unknown as MediaStream;
-
-    Object.defineProperty(window.navigator, "mediaDevices", {
-      value: { getDisplayMedia: vi.fn().mockResolvedValue(fakeStream) },
-      configurable: true,
-    });
-
-    const playSpy = vi
-      .spyOn(HTMLMediaElement.prototype, "play")
-      .mockResolvedValue(undefined);
-    const readyStateSpy = vi
-      .spyOn(HTMLMediaElement.prototype, "readyState", "get")
-      .mockReturnValue(2);
-
-    const fakeBlob = new Blob([new Uint8Array(1024)], { type: "image/webp" });
-    const getContextSpy = vi
-      .spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockReturnValue({
-        drawImage: vi.fn(),
-      } as unknown as CanvasRenderingContext2D);
-    const toBlobSpy = vi
-      .spyOn(HTMLCanvasElement.prototype, "toBlob")
-      .mockImplementation((callback: BlobCallback) => {
-        callback(fakeBlob);
-      });
-
-    try {
-      renderModal();
-
-      await user.click(
-        screen.getByRole("button", { name: "Joindre une capture" }),
-      );
-
-      expect(await screen.findByText(/Capture jointe/)).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Retirer la capture" }),
-      ).toBeInTheDocument();
-      expect(fakeTrack.stop).toHaveBeenCalled();
-    } finally {
-      playSpy.mockRestore();
-      readyStateSpy.mockRestore();
-      getContextSpy.mockRestore();
-      toBlobSpy.mockRestore();
-    }
-  });
-
-  it("refus/échec de capture (getDisplayMedia rejette) affiche un état d'erreur non bloquant", async () => {
-    const user = userEvent.setup();
-
-    Object.defineProperty(window.navigator, "mediaDevices", {
-      value: {
-        getDisplayMedia: vi
-          .fn()
-          .mockRejectedValue(
-            new DOMException("Permission denied", "NotAllowedError"),
-          ),
-      },
-      configurable: true,
-    });
-
-    renderModal();
-
-    await user.click(
-      screen.getByRole("button", { name: "Joindre une capture" }),
-    );
-
-    expect(
-      await screen.findByText(/Capture indisponible ou refusée/),
-    ).toBeInTheDocument();
-    // Le bouton de capture reste disponible — aucun blocage du flux.
-    expect(
-      screen.getByRole("button", { name: "Joindre une capture" }),
-    ).toBeInTheDocument();
-  });
-
-  it("retirer une capture attachée revient à l'état idle", async () => {
-    const user = userEvent.setup();
-
-    const fakeStream = {
-      getTracks: () => [{ stop: vi.fn() }],
-    } as unknown as MediaStream;
-    Object.defineProperty(window.navigator, "mediaDevices", {
-      value: { getDisplayMedia: vi.fn().mockResolvedValue(fakeStream) },
-      configurable: true,
-    });
-    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
-    vi.spyOn(HTMLMediaElement.prototype, "readyState", "get").mockReturnValue(
-      2,
-    );
-    const fakeBlob = new Blob([new Uint8Array(10)], { type: "image/webp" });
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({
-      drawImage: vi.fn(),
-    } as unknown as CanvasRenderingContext2D);
-    vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(
-      (callback: BlobCallback) => callback(fakeBlob),
-    );
-
-    renderModal();
-    await user.click(
-      screen.getByRole("button", { name: "Joindre une capture" }),
-    );
-    await screen.findByText(/Capture jointe/);
-
-    await user.click(
-      screen.getByRole("button", { name: "Retirer la capture" }),
-    );
-
-    expect(
-      screen.getByRole("button", { name: "Joindre une capture" }),
-    ).toBeInTheDocument();
-    expect(screen.queryByText(/Capture jointe/)).not.toBeInTheDocument();
-
-    vi.restoreAllMocks();
-  });
-});
-
-describe("encodeScreenshotWebp — downscale/qualité récursifs", () => {
-  function makeCanvas(
-    width: number,
-    height: number,
-    toBlobImpl: EncodableCanvas["toBlob"],
-  ): EncodableCanvas {
-    return { width, height, toBlob: toBlobImpl };
+describe("UserFeedbackModal — pièce jointe fichier (#714)", () => {
+  function getHiddenInput(container: HTMLElement): HTMLInputElement {
+    return container.querySelector('input[type="file"]') as HTMLInputElement;
   }
 
-  it("retourne le blob dès qu'un palier de qualité passe sous 512Ko", async () => {
-    const smallBlob = new Blob([new Uint8Array(1000)], { type: "image/webp" });
-    const toBlob = vi.fn((cb: (b: Blob | null) => void) => cb(smallBlob));
-    const canvas = makeCanvas(800, 600, toBlob);
+  it("attache une image valide via FileUpload et la transmet dans values.screenshot", async () => {
+    const user = userEvent.setup();
+    const { container, onSubmit } = renderModal({ context: baseContext });
 
-    const result = await encodeScreenshotWebp(canvas);
+    const file = new File([new Uint8Array(1024)], "capture.png", {
+      type: "image/png",
+    });
+    fireEvent.change(getHiddenInput(container), { target: { files: [file] } });
 
-    expect(result).toBe(smallBlob);
-    expect(toBlob).toHaveBeenCalledTimes(1);
+    // La liste .file-item native de FileUpload affiche le fichier joint.
+    expect(await screen.findByText("capture.png")).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("Titre"), "Titre");
+    await user.type(
+      screen.getByLabelText("Description"),
+      "Description complète.",
+    );
+    await user.click(screen.getByRole("button", { name: "Envoyer" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    const [values] = onSubmit.mock.calls[0];
+    expect(values.screenshot).toBe(file);
   });
 
-  it("downscale les dimensions quand aucune qualité ne suffit, puis réussit", async () => {
-    // downscaleCanvas() crée un <canvas> DOM réel pour le pass suivant —
-    // jsdom n'implémente ni getContext('2d') ni toBlob() sans le package
-    // `canvas`, donc on les mocke pour ce test (drawImage n'a pas besoin
-    // d'un rendu réel, la logique testée est la boucle qualité/downscale).
-    const getContextSpy = vi
-      .spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockReturnValue({
-        drawImage: vi.fn(),
-      } as unknown as CanvasRenderingContext2D);
+  it("rejette un fichier non-image sans bloquer la soumission (message non bloquant)", async () => {
+    const { container } = renderModal({ context: baseContext });
 
-    const bigBlob = new Blob([new Uint8Array(600 * 1024)], {
-      type: "image/webp",
-    });
-    const smallBlob = new Blob([new Uint8Array(1000)], { type: "image/webp" });
+    const file = new File(["x"], "notes.txt", { type: "text/plain" });
+    fireEvent.change(getHiddenInput(container), { target: { files: [file] } });
 
-    // Le canvas réel produit par downscaleCanvas() passe par
-    // HTMLCanvasElement.prototype.toBlob — réussit dès le 1er palier de
-    // qualité pour isoler la vérification du downscale lui-même.
-    const prototypeToBlobSpy = vi
-      .spyOn(HTMLCanvasElement.prototype, "toBlob")
-      .mockImplementation((cb: BlobCallback) => cb(smallBlob));
-
-    // Le canvas source (mock EncodableCanvas, pas un HTMLCanvasElement réel)
-    // épuise les 6 paliers de qualité sans jamais passer sous 512Ko.
-    const sourceToBlob = vi.fn((cb: (b: Blob | null) => void) => cb(bigBlob));
-    const canvas = makeCanvas(1920, 1080, sourceToBlob);
-
-    const result = await encodeScreenshotWebp(canvas);
-
-    expect(result).toBe(smallBlob);
-    expect(sourceToBlob).toHaveBeenCalledTimes(6);
-    expect(prototypeToBlobSpy).toHaveBeenCalledTimes(1);
-
-    getContextSpy.mockRestore();
-    prototypeToBlobSpy.mockRestore();
+    expect(
+      await screen.findByText(/Format non pris en charge/),
+    ).toBeInTheDocument();
+    // Aucune pièce jointe retenue, la zone reste disponible.
+    expect(screen.queryByText("notes.txt")).not.toBeInTheDocument();
+    expect(document.querySelector(".file-upload")).toBeInTheDocument();
   });
 
-  it("retourne null si aucune combinaison qualité/dimension ne passe sous le seuil", async () => {
-    const bigBlob = new Blob([new Uint8Array(600 * 1024)], {
-      type: "image/webp",
+  it("rejette un fichier image > 5 Mo (message non bloquant)", async () => {
+    const { container } = renderModal({ context: baseContext });
+
+    const file = new File([new Uint8Array(8)], "huge.png", {
+      type: "image/png",
     });
-    const toBlob = vi.fn((cb: (b: Blob | null) => void) => cb(bigBlob));
-    const canvas = makeCanvas(64, 64, toBlob);
+    Object.defineProperty(file, "size", { value: 6 * 1024 * 1024 });
+    fireEvent.change(getHiddenInput(container), { target: { files: [file] } });
 
-    const result = await encodeScreenshotWebp(canvas);
+    expect(await screen.findByText(/trop volumineux/)).toBeInTheDocument();
+    expect(screen.queryByText("huge.png")).not.toBeInTheDocument();
+  });
 
-    expect(result).toBeNull();
+  it("retirer la pièce jointe la remet à null (onRemove FileUpload)", async () => {
+    const user = userEvent.setup();
+    const { container } = renderModal({ context: baseContext });
+
+    const file = new File([new Uint8Array(1024)], "capture.png", {
+      type: "image/png",
+    });
+    fireEvent.change(getHiddenInput(container), { target: { files: [file] } });
+    await screen.findByText("capture.png");
+
+    await user.click(
+      screen.getByRole("button", { name: "Supprimer capture.png" }),
+    );
+
+    expect(screen.queryByText("capture.png")).not.toBeInTheDocument();
   });
 });

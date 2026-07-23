@@ -8,6 +8,17 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.16 — 2026-07-23 — `<UserFeedbackModal>` : pièce jointe via `<FileUpload>` (fin de la capture d'écran live)
+
+> Bug (#714) — décision Mike : la capture d'écran live (`getDisplayMedia` + ré-encodage WebP) posait un risque de fiabilité/permissions ; remplacée par un ajout de fichier explicite via le composant DS `<FileUpload>`.
+
+### Fixed
+- **`<UserFeedbackModal>` (#714)** : la capture d'écran live (`getDisplayMedia` + ré-encodage WebP) est **remplacée** par un ajout de fichier via `<FileUpload>` DS (drag & drop + parcourir, libellé « Joindre un fichier »). Validation `image/*` + 5 Mo max, sans re-encodage, rejet **non bloquant** (message + soumission toujours possible). `FeedbackFormValues.screenshot` inchangé (`Blob | null` accepte un `File`) — **aucun breaking**. Suppression du pipeline `captureScreenCanvas`/`encodeScreenshotWebp`/`captureFeedbackScreenshot` (internes, non exportés par `index.ts`).
+
+### Notes
+- 100 % `packages/react/` (+ démo vanilla `pages/user-feedback.html`, classes `.file-upload*` déjà existantes — aucun bump `@ds-version`, aucune entrée `RELEASES.md` racine, convention #314).
+- Publish = tag `react-v3.0.0-alpha.16` (hors scope du /dev — cut de release parent).
+
 ## v3.0.0-alpha.15 — 2026-07-23 — Icônes React auto-contenues (inline SVG, zéro dépendance sprite)
 
 > Correctif de packaging (#713) : 7 composants référençaient `<use href="/shared/icons/sprite.svg#i-…">`, rendant leurs icônes invisibles chez tout consumer ne servant pas le sprite DS à `/shared/icons/sprite.svg`. Introduction d'un primitif interne `<Icon>` qui inline les paths des glyphes Lucide.
