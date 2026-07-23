@@ -23,8 +23,8 @@ Si une règle te paraît ambiguë : `docs/DS-PRINCIPLES.md` a un exemple ❌ Don
 
 ## Stack
 - HTML/CSS/JS statique pur (pas de framework, pas de build)
-- Servi par Caddy `file_server` (pas de Docker)
-- URL : https://design-system.msyx.fr
+- Servi en préprod par Coolify (app `design-system-preprod`), 100% Authentik-gated
+- URL (préprod-only) : https://design-system.miklaw.fr — ⚠️ le DS ne vit QU'EN préprod ; `design-system.msyx.fr` N'EXISTE PAS (absent de la config Caddy active)
 
 ## Structure
 ```
@@ -85,7 +85,7 @@ shared/
 ## Convention RELEASES.md par package (monorepo)
 
 Le repo distribue **deux artefacts indépendants** :
-1. **DS CSS statique** (`shared/css/*`, tokens, registry, `sync.sh`) — servi par Caddy via `design-system.msyx.fr`.
+1. **DS CSS statique** (`shared/css/*`, tokens, registry, `sync.sh`) — servi en préprod via `design-system.miklaw.fr` (Coolify, Authentik-gated).
 2. **`@msyx-dev/react`** (workspace `packages/react/`) — package npm publié sur GitHub Packages.
 
 **Chaque artefact a son propre `RELEASES.md`** :

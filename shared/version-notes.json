@@ -4,11 +4,62 @@
   },
   "released": [
     {
+      "version": "2.111.0",
+      "date": "2026-07-23",
+      "titre": "Bouton de retour dans le header",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Un bouton « Donner un retour » est désormais présent par défaut dans l'en-tête, à côté des notifications : il ouvre un formulaire de feedback qui capture automatiquement le contexte (page, environnement, appareil)."
+        }
+      ]
+    },
+    {
+      "version": "2.110.0",
+      "date": "2026-07-23",
+      "titre": "Retours utilisateurs",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Nouveau parcours « User Feedback » : bouton, fenêtre de retour et capture de contexte, en mode connecté comme anonyme."
+        },
+        {
+          "type": "correction",
+          "text": "Le champ e-mail se masque correctement en mode connecté."
+        }
+      ]
+    },
+    {
+      "version": "2.109.0",
+      "date": "2026-07-20",
+      "titre": "Édition de graphes",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Le composant de graphe permet désormais de créer, relier et supprimer des nœuds, avec annuler/refaire au clavier."
+        }
+      ]
+    },
+    {
+      "version": "2.100.0",
+      "date": "2026-07-19",
+      "titre": "Graphes node-link",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Nouveau composant de graphe (organigrammes, arbres, mindmaps, dépendances) : rendu SVG accessible, navigation clavier, zoom et déplacement."
+        }
+      ]
+    },
+    {
       "version": "2.97.2",
       "date": "2026-07-15",
       "titre": "Fenêtres plus accessibles",
       "highlights": [
-        { "type": "amelioration", "text": "Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles." }
+        {
+          "type": "amelioration",
+          "text": "Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles."
+        }
       ]
     },
     {
@@ -16,9 +67,18 @@
       "date": "2026-07-15",
       "titre": "Notes de version plus lisibles",
       "highlights": [
-        { "type": "amelioration", "text": "La chronologie met en avant la dernière version et annonce les nouveautés à venir." },
-        { "type": "amelioration", "text": "Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne." },
-        { "type": "correction", "text": "Correction de puces parasites qui apparaissaient dans la liste des nouveautés." }
+        {
+          "type": "amelioration",
+          "text": "La chronologie met en avant la dernière version et annonce les nouveautés à venir."
+        },
+        {
+          "type": "amelioration",
+          "text": "Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne."
+        },
+        {
+          "type": "correction",
+          "text": "Correction de puces parasites qui apparaissaient dans la liste des nouveautés."
+        }
       ]
     },
     {
@@ -26,7 +86,10 @@
       "date": "2026-07-10",
       "titre": "Catégories dans les notes de version",
       "highlights": [
-        { "type": "amelioration", "text": "Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil." }
+        {
+          "type": "amelioration",
+          "text": "Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil."
+        }
       ]
     },
     {
@@ -34,8 +97,14 @@
       "date": "2026-07-09",
       "titre": "Historique des nouveautés dans le header",
       "highlights": [
-        { "type": "nouveaute", "text": "Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system." },
-        { "type": "amelioration", "text": "Une pastille signale les nouveautés que vous n'avez pas encore consultées." }
+        {
+          "type": "nouveaute",
+          "text": "Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."
+        },
+        {
+          "type": "amelioration",
+          "text": "Une pastille signale les nouveautés que vous n'avez pas encore consultées."
+        }
       ]
     },
     {
@@ -43,7 +112,10 @@
       "date": "2026-07-07",
       "titre": "Notes de version",
       "highlights": [
-        { "type": "nouveaute", "text": "Un nouveau composant présente l'historique des versions sous forme de chronologie." }
+        {
+          "type": "nouveaute",
+          "text": "Un nouveau composant présente l'historique des versions sous forme de chronologie."
+        }
       ]
     },
     {
@@ -51,7 +123,10 @@
       "date": "2026-06-30",
       "titre": "Comparaison de fichiers",
       "highlights": [
-        { "type": "nouveaute", "text": "Un affichage de différences met en évidence les lignes ajoutées et supprimées." }
+        {
+          "type": "nouveaute",
+          "text": "Un affichage de différences met en évidence les lignes ajoutées et supprimées."
+        }
       ]
     },
     {
@@ -59,7 +134,10 @@
       "date": "2026-06-30",
       "titre": "Longues listes plus fluides",
       "highlights": [
-        { "type": "amelioration", "text": "Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande." }
+        {
+          "type": "amelioration",
+          "text": "Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."
+        }
       ]
     },
     {
@@ -67,7 +145,10 @@
       "date": "2026-06-30",
       "titre": "Visualiser l'activité dans le temps",
       "highlights": [
-        { "type": "nouveaute", "text": "Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives." }
+        {
+          "type": "nouveaute",
+          "text": "Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."
+        }
       ]
     },
     {
@@ -75,7 +156,10 @@
       "date": "2026-06-30",
       "titre": "Explorer des données complexes",
       "highlights": [
-        { "type": "nouveaute", "text": "Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section." }
+        {
+          "type": "nouveaute",
+          "text": "Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."
+        }
       ]
     },
     {
@@ -83,7 +167,10 @@
       "date": "2026-06-30",
       "titre": "Panneaux ajustables",
       "highlights": [
-        { "type": "nouveaute", "text": "Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare." }
+        {
+          "type": "nouveaute",
+          "text": "Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."
+        }
       ]
     },
     {
@@ -91,7 +178,10 @@
       "date": "2026-06-30",
       "titre": "Affectation simplifiée entre deux listes",
       "highlights": [
-        { "type": "nouveaute", "text": "Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier." }
+        {
+          "type": "nouveaute",
+          "text": "Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."
+        }
       ]
     }
   ]

@@ -8,6 +8,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+_Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
+
+## [2.111.0] - 2026-07-23 — Consolidation v2.98 → v2.111
+
+> Cut consolidé du travail accumulé depuis v2.97.2 : **moteur graph** node-link (v2.98→v2.109), brique **User Feedback** (v2.110), **bouton feedback header standard** (v2.111). Dates par version détaillées dans `RELEASES.md`.
+
 ### Added
 - **Bouton feedback dans le header standard** (`shared/nav.js`, #708) — le composant **UserFeedback** (#692-695, démo vitrine #705) devient un élément standard du header `buildHeader()`, à côté de la cloche notifications, présent sur **toutes** les pages du DS. `ensureUserFeedbackDialog()` (patron `ensureVersionNotesDialog()`) injecte une fois la `<dialog id="ds-user-feedback-modal">` dans `<body>`, indépendamment de la page démo. Mode connecté/anonyme (email masqué ou requis) déterminé depuis l'état réel `window.MSYX_HEADER.user` (pas de toggle démo dans le header standard). Soumission + capture de contexte (app_id/version/env/route/browser/device/viewport/langue/user+tenant) : `initHeaderUserFeedback()` (`shared/components.js`, `reinitAll()`). A11y : `aria-haspopup="dialog"`, `aria-label`, focus-restore + ESC natifs (`initModals()`). Désactivable via `MSYX_HEADER.feedback.enabled = false`. v2.111.0.
 - Vitrine : page dédiée **User Feedback** (`pages/user-feedback.html`, #705) — démo vanilla du parcours de retour utilisateur (bouton header `.header-notification`/`.btn-icon` → `<dialog class="modal-dialog">` : type/titre/description/impact/email conditionnel/capture opt-in), mode connecté ET anonyme. Entrée nav **distincte** de la catégorie « Feedback » système (résout la collision de nom A6). `initUserFeedbackDemo` (`shared/components.js`), 5 combos thème/mode, a11y (focus-restore, ESC natif, aria). v2.110.0.
