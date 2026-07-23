@@ -688,6 +688,10 @@ function initUserFeedbackDemo() {
         form.dataset.bound = '1';
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
             var dialog = form.closest('dialog.modal-dialog');
             showToast('Merci pour votre retour', 'success');
             if (dialog) dialog.close();
