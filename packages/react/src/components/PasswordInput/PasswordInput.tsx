@@ -5,9 +5,12 @@ import {
   useId,
   useState,
 } from "react";
+import { Icon } from "../../icons/Icon";
 
-export interface PasswordInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size"> {
+export interface PasswordInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type" | "size"
+> {
   /** Libellé affiché au-dessus du champ (`.input-label`). */
   label?: ReactNode;
   /** Texte d'aide sous le champ (`.input-hint`), lié via `aria-describedby`. */
@@ -46,8 +49,8 @@ export interface PasswordInputProps
  *     <input class="input" id="..." type="password">
  *     <button type="button" class="password-toggle" aria-pressed="false"
  *             aria-label="Afficher le mot de passe" aria-controls="...">
- *       <svg class="icon password-toggle-on" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye" /></svg>
- *       <svg class="icon password-toggle-off" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-eye-off" /></svg>
+ *       <svg class="icon password-toggle-on" aria-hidden="true">…path…</svg>
+ *       <svg class="icon password-toggle-off" aria-hidden="true">…path…</svg>
  *     </button>
  *   </div>
  * </div>
@@ -75,10 +78,8 @@ export interface PasswordInputProps
  * `disabled` propage au champ natif ET au bouton toggle (`:disabled`,
  * `forms.css:552`, opacity + cursor not-allowed).
  *
- * ⚠️ Dépendance sprite : les icônes oeil/oeil-barré sont rendues via
- * `<use href="/shared/icons/sprite.svg#i-eye|#i-eye-off">`. Le consumer
- * **doit servir** le sprite SVG du DS à `/shared/icons/sprite.svg` (fourni
- * par la distribution DS CSS), sinon les boutons seront vides.
+ * Icônes oeil/oeil-barré auto-contenues (inline SVG via `<Icon>`, #713) —
+ * aucun sprite à servir côté consumer.
  *
  * SSR-safe : aucun accès à `document`/`window`.
  */
@@ -113,7 +114,9 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
 
     const isControlled = revealedProp !== undefined;
     const [internalRevealed, setInternalRevealed] = useState(defaultRevealed);
-    const revealed = isControlled ? (revealedProp as boolean) : internalRevealed;
+    const revealed = isControlled
+      ? (revealedProp as boolean)
+      : internalRevealed;
 
     function handleToggle() {
       const next = !revealed;
@@ -154,12 +157,16 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             disabled={disabled}
             onClick={handleToggle}
           >
-            <svg className="icon password-toggle-on" aria-hidden="true">
-              <use href="/shared/icons/sprite.svg#i-eye" />
-            </svg>
-            <svg className="icon password-toggle-off" aria-hidden="true">
-              <use href="/shared/icons/sprite.svg#i-eye-off" />
-            </svg>
+            <Icon
+              name="eye"
+              className="icon password-toggle-on"
+              aria-hidden="true"
+            />
+            <Icon
+              name="eye-off"
+              className="icon password-toggle-off"
+              aria-hidden="true"
+            />
           </button>
         </div>
         {error ? (

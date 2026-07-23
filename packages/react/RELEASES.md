@@ -8,6 +8,17 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.15 — 2026-07-23 — Icônes React auto-contenues (inline SVG, zéro dépendance sprite)
+
+> Correctif de packaging (#713) : 7 composants référençaient `<use href="/shared/icons/sprite.svg#i-…">`, rendant leurs icônes invisibles chez tout consumer ne servant pas le sprite DS à `/shared/icons/sprite.svg`. Introduction d'un primitif interne `<Icon>` qui inline les paths des glyphes Lucide.
+
+### Fixed
+- **Icônes invisibles sans sprite servi (#713)** : nouveau primitif INTERNE `src/icons/Icon.tsx` (`<Icon name=… />`, 11 glyphes) qui inline les `<path>`/`<circle>` des symboles de `shared/icons/sprite.svg` au lieu de `<use href>`. Consommé par `UserFeedbackButton` (message-circle), `ThemeToggle` (sun/moon), `Dropdown` (check), `FileUpload` (upload/file), `PasswordInput` (eye/eye-off), `TreeView` (folder/file), `TransferList` (chevron-left/right). Les composants sont désormais 100 % autonomes — plus aucun sprite à servir côté app. `className="icon"` conservé (rendu identique via CSS `.icon`) ; `fill`/`stroke`/`stroke-width` posés en attributs de présentation (écrasés par `.icon`, et garantissant la visibilité de `.mode-switch-icon` qui ne porte pas de règle de trait). `Icon` reste interne (non exporté depuis `index.ts`). `data-icon={name}` ajouté comme hook de test/debug.
+
+### Notes
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md` racine (convention #314).
+- Publish = tag `react-v3.0.0-alpha.15` (hors scope du /dev — cut de release parent).
+
 ## v3.0.0-alpha.14 — 2026-07-21 — Feedback Core ① : UserFeedback* + DataGrid
 
 > Milestone « Feedback Core ① — Design System » (#691, 5 issues). Brique transverse de retour utilisateur (Provider + Modal + Button) composée **exclusivement de primitives DS existantes** (zéro CSS nouveau), plus le port React du `DataGrid`. Registre : `data-grid` porté, nouvelle entrée `user-feedback` distincte de la catégorie `feedback`. Contrats inter-issues figés en amont par le parent /sprint (groom léger).

@@ -7,15 +7,16 @@
 
 import type { ReactNode } from "react";
 import { useUserFeedback } from "./UserFeedbackProvider";
+import { Icon } from "../../icons/Icon";
 
 export interface UserFeedbackButtonProps {
   /** aria-label du bouton — défaut « Donner un feedback ». */
   label?: string;
   /**
-   * Icône affichée dans le bouton — défaut icône DS via le sprite Lucide
-   * self-hosted (`i-message-circle`). Le contrat évoque "message-square" à
-   * titre d'exemple mais ce glyphe n'existe pas dans `shared/icons/sprite.svg` ;
-   * `i-message-circle` est l'équivalent le plus proche disponible.
+   * Icône affichée dans le bouton — défaut icône DS inline via `<Icon>`
+   * (`message-circle`). Le contrat évoque "message-square" à titre d'exemple
+   * mais ce glyphe n'existe pas dans `shared/icons/sprite.svg` ;
+   * `message-circle` est l'équivalent le plus proche disponible.
    */
   icon?: ReactNode;
   className?: string;
@@ -32,11 +33,7 @@ export interface UserFeedbackButtonProps {
 const DEFAULT_LABEL = "Donner un feedback";
 
 function DefaultIcon() {
-  return (
-    <svg className="icon" aria-hidden="true">
-      <use href="/shared/icons/sprite.svg#i-message-circle" />
-    </svg>
-  );
+  return <Icon name="message-circle" aria-hidden="true" />;
 }
 
 /**

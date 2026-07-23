@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { Icon } from "../../icons/Icon";
 
 export interface DropdownOption {
   /** Valeur unique de l'option (utilisée pour `value`/`onChange`). */
@@ -78,7 +79,7 @@ function getOptionText(label: ReactNode): string | null {
  *   <div class="dropdown-menu [open]" role="listbox">
  *     <div class="dropdown-search"><input placeholder="Filtrer..."></div>
  *     <div class="dropdown-option [selected]" role="option" aria-selected="…">
- *       <span class="check"><svg class="icon"><use href="…#i-check"/></svg></span> Libellé
+ *       <span class="check"><svg class="icon">…path…</svg></span> Libellé
  *     </div>
  *   </div>
  * </div>
@@ -108,9 +109,8 @@ function getOptionText(label: ReactNode): string | null {
  * extérieur ferme (idem). Ouverture pose le focus sur la recherche si
  * `searchable`, sinon sur la première option activable.
  *
- * ⚠️ Dépendance sprite : l'icône `.check` est rendue via
- * `<use href="/shared/icons/sprite.svg#i-check">` — le consumer doit servir
- * le sprite SVG du DS.
+ * Icône `.check` auto-contenue (inline SVG via `<Icon>`, #713) — aucun
+ * sprite à servir.
  *
  * SSR-safe : aucun accès à `document`/`window` au niveau module ; tout est
  * dans `useEffect`/handlers (post-hydratation).
@@ -366,9 +366,7 @@ export function Dropdown(props: DropdownProps) {
                 onKeyDown={(event) => handleOptionKeyDown(event, option)}
               >
                 <span className="check">
-                  <svg className="icon" aria-hidden="true">
-                    <use href="/shared/icons/sprite.svg#i-check" />
-                  </svg>
+                  <Icon name="check" aria-hidden="true" />
                 </span>
                 {option.label}
               </div>

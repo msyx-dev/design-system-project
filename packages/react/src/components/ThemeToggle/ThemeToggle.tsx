@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
+import { Icon } from "../../icons/Icon";
 
 export interface ThemeToggleProps extends Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -19,12 +20,8 @@ export interface ThemeToggleProps extends Omit<
  * ```html
  * <button class="mode-switch [is-dark]" role="switch" aria-checked="true|false" aria-label="…">
  *   <span class="mode-switch-track">
- *     <svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14">
- *       <use href="/shared/icons/sprite.svg#i-sun" />
- *     </svg>
- *     <svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14">
- *       <use href="/shared/icons/sprite.svg#i-moon" />
- *     </svg>
+ *     <svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14">…paths…</svg>
+ *     <svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14">…paths…</svg>
  *     <span class="mode-switch-thumb"></span>
  *   </span>
  * </button>
@@ -34,10 +31,7 @@ export interface ThemeToggleProps extends Omit<
  * L'état dark est piloté par la classe `.is-dark` (prop `mode`), plus par `[data-mode]`.
  * Sémantique a11y : `aria-checked="true"` === mode DARK actif (#382).
  *
- * ⚠️ Dépendance sprite : les icônes sun/moon sont rendues via
- * `<use href="/shared/icons/sprite.svg#i-sun|#i-moon">`. Le consumer
- * **doit servir** le sprite SVG du DS à `/shared/icons/sprite.svg`
- * (fourni par la distribution DS CSS), sinon les icônes seront vides.
+ * Icônes auto-contenues (inline SVG via `<Icon>`, #713) — aucun sprite à servir.
  */
 export function ThemeToggle({
   mode,
@@ -68,22 +62,20 @@ export function ThemeToggle({
       {...rest}
     >
       <span className="mode-switch-track">
-        <svg
+        <Icon
+          name="sun"
           className="mode-switch-icon mode-switch-icon--sun"
           aria-hidden="true"
           width={14}
           height={14}
-        >
-          <use href="/shared/icons/sprite.svg#i-sun" />
-        </svg>
-        <svg
+        />
+        <Icon
+          name="moon"
           className="mode-switch-icon mode-switch-icon--moon"
           aria-hidden="true"
           width={14}
           height={14}
-        >
-          <use href="/shared/icons/sprite.svg#i-moon" />
-        </svg>
+        />
         <span className="mode-switch-thumb" />
       </span>
     </button>

@@ -1,4 +1,5 @@
 import { ReactNode, useState } from "react";
+import { Icon } from "../../icons/Icon";
 
 export interface TreeNode {
   /** Identifiant stable — clé React + modèle d'expansion/sélection. Unique dans tout l'arbre (les libellés, eux, peuvent être dupliqués). */
@@ -7,7 +8,7 @@ export interface TreeNode {
   label: string;
   /**
    * Icône personnalisée rendue dans `.tree-icon`. Absente, le défaut est
-   * le sprite `#i-folder` (branche) ou `#i-file` (feuille).
+   * le glyphe inline `folder` (branche) ou `file` (feuille) (`<Icon>`).
    */
   icon?: ReactNode;
   /**
@@ -67,13 +68,13 @@ function collectExpanded(nodes: TreeNode[], acc: Set<string>): Set<string> {
  *   <li class="tree-item tree-branch open" role="treeitem" aria-expanded="true">
  *     <button class="tree-toggle" aria-label="Basculer src">
  *       <svg class="tree-chevron">…<polyline points="5 8 8 11 11 8"/></svg>
- *       <span class="tree-icon tree-icon-folder"><svg class="icon"><use href="…#i-folder"/></svg></span>
+ *       <span class="tree-icon tree-icon-folder"><svg class="icon">…path…</svg></span>
  *       <span class="tree-label">src</span>
  *     </button>
  *     <ul class="tree tree-children open" role="group">…</ul>
  *   </li>
  *   <li class="tree-item tree-leaf" role="treeitem">
- *     <span class="tree-icon tree-icon-file"><svg class="icon"><use href="…#i-file"/></svg></span>
+ *     <span class="tree-icon tree-icon-file"><svg class="icon">…path…</svg></span>
  *     <span class="tree-label">package.json</span>
  *   </li>
  * </ul>
@@ -105,7 +106,7 @@ function collectExpanded(nodes: TreeNode[], acc: Set<string>): Set<string> {
  *
  * **Chevron** : SVG inline `<polyline>` unique qui pivote (-90deg fermé),
  * JAMAIS le sprite et JAMAIS de swap de glyphe. Dossier/fichier =
- * sprite `<use href>`.
+ * le glyphe inline `folder`/`file` (`<Icon>`).
  *
  * **Parité — pas de navigation clavier** : le vanilla est click-only
  * (feuilles `<li>` non focusables). Le wrapper reste iso. Une éventuelle
@@ -206,11 +207,7 @@ export function TreeView({
               <polyline points="5 8 8 11 11 8" />
             </svg>
             <span className="tree-icon">
-              {node.icon ?? (
-                <svg className="icon" aria-hidden="true">
-                  <use href="/shared/icons/sprite.svg#i-folder" />
-                </svg>
-              )}
+              {node.icon ?? <Icon name="folder" aria-hidden="true" />}
             </span>
             <span className="tree-label">{node.label}</span>
           </button>
@@ -233,11 +230,7 @@ export function TreeView({
         onClick={() => selectNode(node)}
       >
         <span className="tree-icon">
-          {node.icon ?? (
-            <svg className="icon" aria-hidden="true">
-              <use href="/shared/icons/sprite.svg#i-file" />
-            </svg>
-          )}
+          {node.icon ?? <Icon name="file" aria-hidden="true" />}
         </span>
         <span className="tree-label">{node.label}</span>
       </li>

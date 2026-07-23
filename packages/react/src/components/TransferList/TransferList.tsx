@@ -1,4 +1,5 @@
 import { KeyboardEvent, useMemo, useRef, useState } from "react";
+import { Icon } from "../../icons/Icon";
 
 export interface TransferListItem {
   /** Identifiant stable — clé React + modèle de sélection/partition. */
@@ -174,7 +175,9 @@ export function TransferList({
     onChange(nextAssigned);
     onTransfer?.({ direction, count: movedIds.length });
     const destinationTitle = goingRight ? targetTitle : sourceTitle;
-    announce(`${movedIds.length} élément(s) déplacé(s) vers ${destinationTitle}.`);
+    announce(
+      `${movedIds.length} élément(s) déplacé(s) vers ${destinationTitle}.`,
+    );
   }
 
   function handleMoveSelected(direction: "right" | "left") {
@@ -186,7 +189,8 @@ export function TransferList({
   }
 
   function handleMoveAll(direction: "all-right" | "all-left") {
-    const fromItems = direction === "all-right" ? availableItems : assignedItems;
+    const fromItems =
+      direction === "all-right" ? availableItems : assignedItems;
     const movedIds = fromItems.map((item) => item.id);
     commitTransfer(direction, movedIds);
   }
@@ -208,7 +212,8 @@ export function TransferList({
     );
     const idx = options.indexOf(event.currentTarget);
     event.preventDefault();
-    const target = event.key === "ArrowDown" ? options[idx + 1] : options[idx - 1];
+    const target =
+      event.key === "ArrowDown" ? options[idx + 1] : options[idx - 1];
     target?.focus();
   }
 
@@ -275,9 +280,7 @@ export function TransferList({
           aria-label="Transférer la sélection à droite"
           onClick={() => handleMoveSelected("right")}
         >
-          <svg className="icon" aria-hidden="true">
-            <use href="/shared/icons/sprite.svg#i-chevron-right" />
-          </svg>
+          <Icon name="chevron-right" aria-hidden="true" />
         </button>
         <button
           type="button"
@@ -285,9 +288,7 @@ export function TransferList({
           aria-label="Transférer la sélection à gauche"
           onClick={() => handleMoveSelected("left")}
         >
-          <svg className="icon" aria-hidden="true">
-            <use href="/shared/icons/sprite.svg#i-chevron-left" />
-          </svg>
+          <Icon name="chevron-left" aria-hidden="true" />
         </button>
         <button
           type="button"

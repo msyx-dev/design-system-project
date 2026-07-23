@@ -39,20 +39,22 @@ describe("PasswordInput — structure", () => {
     expect(toggle).toBeInTheDocument();
   });
 
-  it("monte les DEUX <svg> .password-toggle-on/.password-toggle-off avec les hrefs sprite corrects", () => {
+  it("monte les DEUX <svg> .password-toggle-on/.password-toggle-off inline (eye / eye-off), sans <use> sprite", () => {
     render(<PasswordInput />);
-    const onIcon = document.querySelector(".password-toggle-on use");
-    const offIcon = document.querySelector(".password-toggle-off use");
-    expect(document.querySelector(".password-toggle-on")).toBeInTheDocument();
-    expect(document.querySelector(".password-toggle-off")).toBeInTheDocument();
-    expect(onIcon).toHaveAttribute(
-      "href",
-      "/shared/icons/sprite.svg#i-eye",
-    );
-    expect(offIcon).toHaveAttribute(
-      "href",
-      "/shared/icons/sprite.svg#i-eye-off",
-    );
+    const onIcon = document.querySelector(".password-toggle-on");
+    const offIcon = document.querySelector(".password-toggle-off");
+    expect(onIcon).toBeInTheDocument();
+    expect(offIcon).toBeInTheDocument();
+    // Classe .icon conservée (driver CSS du swap via aria-pressed inchangé).
+    expect(onIcon).toHaveClass("icon");
+    expect(offIcon).toHaveClass("icon");
+    // Glyphes inline auto-contenus.
+    expect(onIcon).toHaveAttribute("data-icon", "eye");
+    expect(offIcon).toHaveAttribute("data-icon", "eye-off");
+    expect(onIcon?.querySelector("path")).not.toBeNull();
+    expect(offIcon?.querySelector("path")).not.toBeNull();
+    // Plus aucune dépendance au sprite servi.
+    expect(document.querySelector(".password-field use")).toBeNull();
   });
 
   it("l'input démarre en type=password et le bouton en aria-pressed=false", () => {
@@ -152,9 +154,7 @@ describe("PasswordInput — mode contrôlé (revealed/onRevealedChange)", () => 
 
   it("le clic appelle onRevealedChange et le parent contrôlé met à jour le rendu", () => {
     const handleRevealedChange = vi.fn();
-    render(
-      <ControlledPasswordInput onRevealedChange={handleRevealedChange} />,
-    );
+    render(<ControlledPasswordInput onRevealedChange={handleRevealedChange} />);
     const input = document.querySelector("input.input") as HTMLInputElement;
     const toggle = document.querySelector(
       ".password-toggle",
@@ -171,7 +171,10 @@ describe("PasswordInput — mode contrôlé (revealed/onRevealedChange)", () => 
     // Composant contrôlé "figé" : le parent ne relaie pas la prop après clic.
     const handleRevealedChange = vi.fn();
     render(
-      <PasswordInput revealed={false} onRevealedChange={handleRevealedChange} />,
+      <PasswordInput
+        revealed={false}
+        onRevealedChange={handleRevealedChange}
+      />,
     );
     const input = document.querySelector("input.input") as HTMLInputElement;
     const toggle = document.querySelector(

@@ -37,10 +37,8 @@ const THEME_LABELS: Record<string, string> = {
  * </div>
  * ```
  *
- * ⚠️ Dépendances héritées de `<ThemeToggle>` : le consumer doit servir le
- * sprite SVG DS à `/shared/icons/sprite.svg` (sinon les icônes sun/moon sont
- * vides). Il est aussi recommandé d'ajouter le script anti-FOUC synchrone
- * inline dans `<head>` qui lit `msyx-theme`/`msyx-mode` et pose les attributs
+ * Il est recommandé d'ajouter le script anti-FOUC synchrone inline dans
+ * `<head>` qui lit `msyx-theme`/`msyx-mode` et pose les attributs
  * `documentElement` avant le premier paint — évite le flash du thème par
  * défaut le temps que React hydrate/monte.
  */
