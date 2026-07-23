@@ -8,6 +8,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.18 — 2026-07-24 — `<SiteHeader>` : header applicatif composable
+
+> Feature (#716, sous-issue 1/3 du chantier #712) — brique de composition qui assemble les composants header déjà portés en un header applicatif prêt à l'emploi. Deuxième pièce du chantier SiteHeader (après `<NotificationBell>` #717).
+
+### Added
+- **`<SiteHeader>`** (#716) : composant **100 % présentationnel** (zéro fetch interne, zéro ownership de données) qui **compose** `NotificationBell`, `UserMenu`, `VersionNotes`, `UserFeedbackButton` (+ `UserFeedbackProvider` si `feedback.provider` fourni) et `ThemeSwitcher`. **Zéro CSS nouveau** — réutilise `.header-*` (`layout.css`) + `.skeleton`/`.skeleton-avatar` (`feedback.css`), ordre de placement calqué sur le header vanilla (`shared/nav.js buildHeader`). **Identité 3 états** : `identity===undefined` → skeleton avatar (loading, pas de flash), `identity===null` → anonyme (zone user réduite), objet → `<UserMenu>` (défauts sûrs `email:""`/`authentikUserUrl:"#"`/`logoutUrl:"#"`). Chaque feature **opt-out** (rendue seulement si sa prop/données fournies) : `notifications`→`NotificationBell`, `feedback`→`UserFeedbackButton`, `versionNotes`→`VersionNotes`, `themeSwitch`→`ThemeSwitcher`, `onMenuToggle`→burger. Coexiste avec `<PageHeader>` (rôles distincts). Types exportés : `SiteHeaderProps`, `SiteHeaderIdentity`, `SiteHeaderFeedbackConfig`.
+- **Exports + registre** (#716) : `index.ts` expose `SiteHeader` + types. Nouvelle entrée registre `site-header` (`react:"ported"`, `REACT_TO_REGISTRY: SiteHeader → site-header`).
+
+### Notes
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314). 0 fichier `shared/css/**` touché.
+- `CONSUMER_GUIDE` + démo vitrine = **sous-issue #718** (hors scope).
+- Publish = tag `react-v3.0.0-alpha.18` (hors scope du /dev — cut de release parent).
+
 ## v3.0.0-alpha.17 — 2026-07-23 — `<NotificationBell>` : cloche de notifications du header
 
 > Feature (#717) — port React du contrat "cloche de notifications" du header vanilla (`shared/nav.js`). Première pièce du chantier SiteHeader côté React.
