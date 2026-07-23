@@ -7,7 +7,7 @@
     <meta name="description" content="Parcours de retour utilisateur (User Feedback) du design system msyx.fr — bouton header, modale formulaire, mode connecté/anonyme.">
     <link rel="stylesheet" href="/shared/styles.css">
     <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
-    <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
+    <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P',email:'preview@msyx.fr'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
 </head>
 <body>
     <header class="site-header" id="site-header"></header>
@@ -36,7 +36,7 @@ user: preview@msyx.fr (tenant: msyx)</pre>
     <div class="demo-box">
         <h4>Header de démo</h4>
         <div class="uf-demo-header" style="display:flex;align-items:center;justify-content:flex-end;gap:var(--space-sm);padding:var(--space-sm) var(--space-md);background:var(--surface);border:1px solid var(--border-color);border-radius:var(--radius-sm);">
-            <button class="header-notification btn-icon" data-modal-trigger="uf-demo-modal" aria-haspopup="dialog" aria-label="Donner un feedback">
+            <button class="header-notification" data-modal-trigger="uf-demo-modal" aria-haspopup="dialog" aria-label="Donner un feedback">
                 <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg>
             </button>
         </div>
@@ -48,7 +48,7 @@ user: preview@msyx.fr (tenant: msyx)</pre>
             <button type="button" class="btn-primary btn-sm" data-uf-mode="connected" aria-pressed="true">Connecté</button>
             <button type="button" class="btn-secondary btn-sm" data-uf-mode="anonymous" aria-pressed="false">Anonyme</button>
         </div>
-        <p class="typo-small mt-sm" data-uf-mode-hint>Mode connecté : email pré-rempli depuis la session, champ masqué dans le formulaire.</p>
+        <p class="typo-small mt-sm" data-uf-mode-hint>Mode connecté : email pré-rempli depuis la session (modifiable).</p>
     </div>
 
     <dialog id="uf-demo-modal" class="modal-dialog" aria-labelledby="uf-demo-modal-title">
@@ -84,7 +84,7 @@ user: preview@msyx.fr (tenant: msyx)</pre>
                         <option value="high">Fort</option>
                     </select>
                 </div>
-                <div class="input-group mb-md" id="uf-email-group" hidden>
+                <div class="input-group mb-md" id="uf-email-group">
                     <label class="input-label" for="uf-email">Email</label>
                     <input class="input" type="email" id="uf-email" placeholder="vous@exemple.fr">
                 </div>

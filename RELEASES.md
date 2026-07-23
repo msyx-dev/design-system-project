@@ -1,5 +1,12 @@
 # Releases
 
+## 2.112.1 — 2026-07-23 — Formulaire de retour : e-mail pré-rempli en connecté (#708)
+
+> Suite à ton retour : en connecté, le champ e-mail du formulaire de retour est **visible et pré-rempli** depuis la session (modifiable) plutôt que masqué — plus cohérent et transparent.
+
+### Changed
+- Header modale (`shared/nav.js`) + démo (`shared/components.js`, `pages/user-feedback.html`) : e-mail visible, pré-rempli + non-requis en connecté ; vide + requis en anonyme. `user` démo doté d'un e-mail (pages vitrine) pour la démonstration. Bouton feedback démo aligné à 34×34.
+
 ## 2.112.0 — 2026-07-23 — Polish header : taille bouton, overflow mobile, détection M3 (#708/#710/#711)
 
 > Suite aux retours sur le header #708 : le bouton feedback est ramené à la taille de la cloche (34×34), le header ne déborde plus en mobile (compaction < 640px, #711), et le mode connecté/anonyme du feedback se met à jour après la résolution asynchrone de l'identité en flow M3 Authentik (#710).

@@ -667,15 +667,16 @@ function initUserFeedbackDemo() {
                 b.setAttribute('aria-pressed', active ? 'true' : 'false');
             });
             var anonymous = mode === 'anonymous';
-            if (emailGroup) emailGroup.hidden = !anonymous;
+            // Email TOUJOURS visible : connecté → pré-rempli (session) + non-requis ; anonyme → vide + requis.
+            if (emailGroup) emailGroup.hidden = false;
             if (emailInput) {
                 emailInput.required = anonymous;
-                if (!anonymous) emailInput.value = '';
+                emailInput.value = anonymous ? '' : 'preview@msyx.fr';
             }
             if (hint) {
                 hint.textContent = anonymous
                     ? 'Mode anonyme : email requis pour pouvoir répondre au retour.'
-                    : 'Mode connecté : email pré-rempli depuis la session, champ masqué dans le formulaire.';
+                    : 'Mode connecté : email pré-rempli depuis la session (modifiable).';
             }
         }
         buttons.forEach(function(b) {

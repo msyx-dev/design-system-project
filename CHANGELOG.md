@@ -10,6 +10,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.112.1] - 2026-07-23 — Formulaire de retour : e-mail pré-rempli (au lieu de masqué)
+
+### Changed
+- **Formulaire de retour (feedback)** : en mode **connecté**, le champ e-mail est désormais **visible et pré-rempli** depuis la session (non-requis, modifiable) au lieu d'être masqué ; en **anonyme**, il reste vide + requis. Aligné entre le header standard (`shared/nav.js` — `ensureUserFeedbackDialog()` + `updateFeedbackAuthState()`) et la démo (`shared/components.js` — `initUserFeedbackDemo()`, `pages/user-feedback.html`). Les pages vitrine dotent le `user` démo d'un e-mail pour rendre le pré-remplissage démontrable. Bouton feedback de la démo aligné à 34×34.
+
 ## [2.112.0] - 2026-07-23 — Polish header (taille bouton, overflow mobile, détection M3)
 
 ### Fixed

@@ -4,6 +4,17 @@
   },
   "released": [
     {
+      "version": "2.112.1",
+      "date": "2026-07-23",
+      "titre": "Formulaire de retour : e-mail pré-rempli",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "En mode connecté, le champ e-mail du formulaire de retour est désormais visible et pré-rempli depuis votre session (modifiable), plutôt que masqué."
+        }
+      ]
+    },
+    {
       "version": "2.112.0",
       "date": "2026-07-23",
       "titre": "Header plus soigné",
@@ -15,10 +26,6 @@
         {
           "type": "correction",
           "text": "Le header ne déborde plus horizontalement sur mobile (compaction sous 640px)."
-        },
-        {
-          "type": "amelioration",
-          "text": "En connexion via Authentik, le formulaire de retour masque désormais correctement le champ e-mail."
         }
       ]
     },
