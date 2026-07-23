@@ -402,6 +402,42 @@ Le changement de theme/mode via le header declenche automatiquement :
 - `html.theme-transitioning` sur le document (transition CSS douce, 250ms)
 - Un toast de confirmation ("Theme : ACSSI", "Mode : Light")
 
+## Header standard (SiteHeader) — @msyx-dev/react
+
+Pour une app React, le header standard est le composant `<SiteHeader>` (`@msyx-dev/react`, #716) — équivalent React du header vanilla `buildHeader()` (`shared/nav.js`). Il compose les briques déjà portées (`<NotificationBell>`, `<UserMenu>`, `<VersionNotes>`, `<UserFeedbackButton>`, `<ThemeSwitcher>`) et réutilise **les classes `.header-*` existantes** (`layout.css`) — zéro CSS créé. 100 % présentationnel : il ne fetch rien (sauf `feedback.provider` auto-monté, opt-in explicite de l'app).
+
+> **Table de props détaillée : voir le TSDoc de `packages/react/src/components/SiteHeader/SiteHeader.tsx`.** (non dupliquée ici pour éviter la dérive)
+
+### Identité — 3 états (`identity`)
+
+| Valeur de `identity` | État | Rendu |
+|---|---|---|
+| `undefined` | **Chargement** | Skeleton d'avatar (`.skeleton.skeleton-avatar`) — pas de flash |
+| `null` | **Anonyme** | Zone user réduite — aucun `<UserMenu>` |
+| objet `SiteHeaderIdentity` | **Connecté** | `<UserMenu>` (avatar + dropdown) |
+
+### Features opt-out
+
+Chaque feature n'est rendue que si sa prop/donnée est fournie :
+- `notifications` (array) → `<NotificationBell>` (masqué si `undefined`)
+- `feedback` (`true` ou config) → `<UserFeedbackButton>` (+ `<UserFeedbackProvider>` si `feedback.provider` fourni)
+- `versionNotes` → `<VersionNotes>` ; `themeSwitch: true` → `<ThemeSwitcher>` ; `onMenuToggle` → burger mobile
+
+### Mapping M3 — résolution de l'identité
+
+`<SiteHeader>` est présentationnel : l'app résout l'identité selon son pattern M3 et la passe via `identity`.
+
+| Pattern M3 | Source de l'identité | Prop `identity` |
+|---|---|---|
+| `static-proxy` (Authentik Proxy) | `fetch('/me.json')` | `undefined` → objet (ou `null` si 401) |
+| `oauth2-dynamic` (OIDC `@msyx-dev/auth-node`) | `getSession()` | idem, depuis la session serveur |
+
+Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (skeleton). Puis `null` en anonyme, l'objet en connecté.
+
+### Dépendance sprite (héritée de NotificationBell)
+
+`<NotificationBell>` (composé par `<SiteHeader>`) rend l'icône cloche via le sprite `#i-bell`. Le fichier `shared/icons/sprite.svg` doit être servi et accessible (même contrainte que le header vanilla, cf. section « Header avec utilisateur connecte »). Adapter le chemin si le sprite est ailleurs chez le consumer.
+
 ## Anti-FOUC
 
 Pour eviter le flash de theme au chargement, ajouter ce script inline dans `<head>` :

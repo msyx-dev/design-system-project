@@ -1,5 +1,5 @@
-/* @ds-version 2.112.2 */
-const VERSION = '2.112.2';
+/* @ds-version 2.113.0 */
+const VERSION = '2.113.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -28,7 +28,7 @@ const VERSION_NOTES = {"next":{"highlights":[]},"released":[{"version":"2.112.1"
 /* AUTO-GENERATED VERSION NOTES END */
 
 function buildHeader() {
-    var header = document.getElementById('site-header');
+    var header = document.querySelector('.site-header');
     if (!header) return;
 
     // Lire la config consommateur

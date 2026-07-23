@@ -1,5 +1,16 @@
 # Releases
 
+## 2.113.0 — 2026-07-24 — Vitrine : header standard (SiteHeader) + Notification Bell (#718)
+
+> Documentation + démo vitrine des briques header portées en React (#716 `SiteHeader`, #717 `NotificationBell`) : deux sections vanilla dans `pages/navigation.html` (dogfood des classes `.header-*`, zéro CSS nouveau) + guide d'intégration `SiteHeader`. Clôt le chantier #712.
+
+### Added
+- **`pages/navigation.html`** — section `#site-header` (« Header standard ») : 3 états d'identité (chargement/skeleton, anonyme, connecté), features opt-out et mapping M3, renvoi TSDoc. Section `#notification-bell` (« Notification Bell ») : badge (compteur/masqué/99+), panneau ouvert (`role="dialog"` non-modal), état vide, dépendance sprite `#i-bell`. Les deux réutilisent uniquement les classes existantes (`.header-*`, `.skeleton-avatar`, `.header-notif-*`) — aucun CSS nouveau. Résout les 2 entrées registre orphelines #511 (`site-header`, `notification-bell`). (#718)
+- **`shared/CONSUMER_GUIDE.md`** — sous-section « Header standard (SiteHeader) » : 3 états `identity`, features opt-out, mapping M3 (`static-proxy` `/me.json` vs `oauth2-dynamic` `getSession()`), dépendance sprite. Renvoi vers le TSDoc de `SiteHeader.tsx` pour les props détaillées. (#718)
+
+### Changed
+- **`shared/nav.js` — `buildHeader()`** : montage du header résolu par **classe** `querySelector('.site-header')` au lieu de `getElementById('site-header')`. Back-compat total (tous les shells portent `class="site-header"`) ; libère l'id `site-header` pour la nouvelle section démo (évite l'id dupliqué + le lien sidebar cassé). Retrait de `id="site-header"` sur le shell de `navigation.html` uniquement. (#718)
+
 ## 2.112.2 — 2026-07-24 — Fix : header vanilla aligné sur le flux fichier feedback (#721)
 
 > Le header dogfoodé (`shared/nav.js`) portait encore l'ancien libellé « Joindre une capture » alors que la démo `pages/user-feedback.html` et le composant React (#714) ont basculé sur un ajout de fichier. Alignement pixel-perfect.

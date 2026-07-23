@@ -10,9 +10,83 @@
     <script>window.MSYX_HEADER={themeSwitcher:true,auth:true,user:{name:'Preview',initials:'P',email:'preview@msyx.fr'},notifications:{enabled:true,count:3,items:[{title:'Nouveau composant',desc:'Bottom Sheet ajouté au DS',icon:'🧩',time:'2min',unread:true},{title:'Mise à jour v2.23',desc:'15 issues fermées ce sprint',icon:'🚀',time:'1h',unread:true},{title:'Revue terminée',desc:'PR #135 approuvée et mergée',icon:'✅',time:'3h',unread:false}]},menu:[{label:'Profil',icon:'&#128100;',href:'#'},{label:'Préférences',icon:'&#9881;',href:'#'},{divider:true},{label:'Déconnexion',icon:'&#128682;',action:'logout','class':'danger'}]};</script>
 </head>
 <body>
-    <header class="site-header" id="site-header"></header>
+    <header class="site-header"></header>
     <aside class="sidebar" id="sidebar"></aside>
     <div class="main">
+
+<!-- SITE HEADER (header applicatif standard — SiteHeader #716) -->
+<section id="site-header">
+    <div class="section-header">
+        <span class="overline">Navigation</span>
+        <h2>Header standard</h2>
+        <p>Le header applicatif d'une app msyx : marque, badge de version, cloche de notifications, bouton retour et zone d'identité. Porté en React sous <code style="font-family:'Fira Code',monospace;font-size:0.85em;color:var(--accent-light);">&lt;SiteHeader&gt;</code> (<code style="font-family:'Fira Code',monospace;font-size:0.85em;">@msyx-dev/react</code>) : 100% présentationnel, il compose les briques déjà portées (cloche, menu utilisateur, notes de version, feedback, switcher thème) et réutilise les classes <code style="font-family:'Fira Code',monospace;font-size:0.82em;">.header-*</code> existantes (aucun CSS propre). L'identité a <strong>3 états</strong> : chargement, anonyme, connecté.</p>
+    </div>
+
+    <div class="demo-grid demo-grid-2">
+
+        <!-- État chargement (identity: undefined) -->
+        <div class="demo-box" style="grid-column:1 / -1;">
+            <span class="demo-label">Identité — chargement (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">identity: undefined</code>)</span>
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <span class="brand-wordmark" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.95rem;color:var(--text);">design-system</span>
+                    <span class="version-badge">v2.113</span>
+                </div>
+                <div class="header-user-zone">
+                    <button class="header-notification" aria-label="Notifications">
+                        <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    </button>
+                    <span class="skeleton skeleton-avatar" aria-hidden="true"></span>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Tant que l'identité n'est pas résolue (fetch <code style="font-family:'Fira Code',monospace;font-size:0.82em;">/me.json</code> ou <code style="font-family:'Fira Code',monospace;font-size:0.82em;">getSession()</code>), un skeleton d'avatar évite tout flash de contenu.</p>
+        </div>
+
+        <!-- État anonyme (identity: null) -->
+        <div class="demo-box">
+            <span class="demo-label">Anonyme (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">identity: null</code>)</span>
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+                <span class="brand-wordmark" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);">design-system</span>
+                <div class="header-user-zone">
+                    <button class="header-notification" aria-label="Notifications">
+                        <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    </button>
+                    <button class="header-notification" aria-label="Donner un retour">
+                        <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg>
+                    </button>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Zone user réduite : pas de menu utilisateur. Cloche et bouton retour restent indépendants de l'auth.</p>
+        </div>
+
+        <!-- État connecté (identity: objet) -->
+        <div class="demo-box">
+            <span class="demo-label">Connecté (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">identity: { name, … }</code>)</span>
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+                <span class="brand-wordmark" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;color:var(--text);">design-system</span>
+                <div class="header-user-zone">
+                    <button class="header-notification" aria-label="Notifications">
+                        <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                        <span class="header-notification-badge">3</span>
+                    </button>
+                    <button class="header-notification" aria-label="Donner un retour">
+                        <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg>
+                    </button>
+                    <button class="header-avatar-trigger" aria-label="Menu utilisateur" aria-haspopup="true">M</button>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Le menu utilisateur (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">&lt;UserMenu&gt;</code>) est rendu dès que l'objet identité est fourni : avatar + dropdown (compte, déconnexion).</p>
+        </div>
+
+        <!-- API + mapping M3 (renvoi TSDoc) -->
+        <div class="demo-box" style="grid-column:1 / -1;">
+            <span class="demo-label">API React &lt;SiteHeader&gt; — features opt-out & mapping M3</span>
+            <p class="typo-small" style="margin-bottom:0.5rem;">Chaque feature n'est rendue que si sa prop est fournie : <code style="font-family:'Fira Code',monospace;font-size:0.82em;">notifications</code> → cloche, <code style="font-family:'Fira Code',monospace;font-size:0.82em;">feedback</code> → bouton retour, <code style="font-family:'Fira Code',monospace;font-size:0.82em;">versionNotes</code> → badge de version, <code style="font-family:'Fira Code',monospace;font-size:0.82em;">themeSwitch</code> → switcher thème. Table de props détaillée : voir le TSDoc de <code style="font-family:'Fira Code',monospace;font-size:0.82em;">SiteHeader.tsx</code> et le guide d'intégration (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">shared/CONSUMER_GUIDE.md</code> — section « Header standard »).</p>
+            <p class="typo-small text-muted">M3 : l'app résout l'identité selon son pattern — <code style="font-family:'Fira Code',monospace;font-size:0.82em;">static-proxy</code> via <code style="font-family:'Fira Code',monospace;font-size:0.82em;">/me.json</code>, <code style="font-family:'Fira Code',monospace;font-size:0.82em;">oauth2-dynamic</code> via <code style="font-family:'Fira Code',monospace;font-size:0.82em;">getSession()</code> (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">@msyx-dev/auth-node</code>) — puis la passe à <code style="font-family:'Fira Code',monospace;font-size:0.82em;">identity</code>.</p>
+        </div>
+
+    </div>
+</section>
 
 <!-- HEADER USER ZONE -->
 <section id="header-user">
@@ -168,6 +242,86 @@
                     <span style="color:var(--success-light,#86efac);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Toast de confirmation ("Theme : ACSSI", "Mode : Light")
                 </div>
             </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- NOTIFICATION BELL (cloche header — NotificationBell #717) -->
+<section id="notification-bell">
+    <div class="section-header">
+        <span class="overline">Navigation</span>
+        <h2>Notification Bell</h2>
+        <p>La cloche de notifications du header : bouton cloche + badge de compteur + panneau (dialog non-modal) avec « Tout lire » global. Portée en React sous <code style="font-family:'Fira Code',monospace;font-size:0.85em;color:var(--accent-light);">&lt;NotificationBell&gt;</code> (<code style="font-family:'Fira Code',monospace;font-size:0.85em;">@msyx-dev/react</code>), composée par <code style="font-family:'Fira Code',monospace;font-size:0.82em;">&lt;SiteHeader&gt;</code>. Réutilise les classes <code style="font-family:'Fira Code',monospace;font-size:0.82em;">.header-notif*</code> existantes — aucun CSS propre.</p>
+    </div>
+
+    <div class="demo-grid demo-grid-2">
+
+        <!-- États du badge -->
+        <div class="demo-box">
+            <span class="demo-label">Badge — compteur, masqué, plafond 99+</span>
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:1rem 1.2rem;display:flex;align-items:center;gap:1.5rem;">
+                <button class="header-notification" aria-label="Notifications, 3 non lues">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    <span class="header-notification-badge">3</span>
+                </button>
+                <button class="header-notification" aria-label="Notifications">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    <span class="header-notification-badge hidden"></span>
+                </button>
+                <button class="header-notification" aria-label="Notifications, 99+ non lues">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    <span class="header-notification-badge">99+</span>
+                </button>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Le badge est masqué (<code style="font-family:'Fira Code',monospace;font-size:0.82em;">.hidden</code>) à 0 et plafonné à <code style="font-family:'Fira Code',monospace;font-size:0.82em;">99+</code> au-delà.</p>
+        </div>
+
+        <!-- Panneau ouvert (statique via .open) -->
+        <div class="demo-box" style="min-height:360px;">
+            <span class="demo-label">Panneau ouvert</span>
+            <div style="position:relative;display:inline-flex;">
+                <button class="header-notification active" aria-label="Notifications" aria-expanded="true">
+                    <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-bell"/></svg>
+                    <span class="header-notification-badge">2</span>
+                </button>
+                <div class="header-notif-panel open" role="dialog" aria-label="Centre de notifications">
+                    <div class="header-notif-panel-header">
+                        <span>Notifications</span>
+                        <button class="header-notif-mark-read">Tout lire</button>
+                    </div>
+                    <div class="header-notif-list">
+                        <div class="header-notif-item unread">
+                            <span class="header-notif-icon">&#128201;</span>
+                            <div class="header-notif-body">
+                                <div class="header-notif-title">Nouveau composant disponible</div>
+                                <div class="header-notif-desc">Header standard — v2.113</div>
+                            </div>
+                            <span class="header-notif-time">2 min</span>
+                        </div>
+                        <div class="header-notif-item unread">
+                            <span class="header-notif-icon">&#9989;</span>
+                            <div class="header-notif-body">
+                                <div class="header-notif-title">Deploy reussi</div>
+                                <div class="header-notif-desc">design-system.miklaw.fr</div>
+                            </div>
+                            <span class="header-notif-time">15 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Panneau <code style="font-family:'Fira Code',monospace;font-size:0.82em;">role="dialog"</code> non-modal ouvert via la classe <code style="font-family:'Fira Code',monospace;font-size:0.82em;">.open</code>. « Tout lire » est global (parité — pas de marquage individuel).</p>
+        </div>
+
+        <!-- État vide + dépendance sprite -->
+        <div class="demo-box" style="grid-column:1 / -1;">
+            <span class="demo-label">État vide & dépendance sprite</span>
+            <div style="background:var(--primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);border-radius:var(--radius-sm);padding:0.5rem;max-width:300px;">
+                <div class="header-notif-list">
+                    <div class="header-notif-empty">Aucune notification</div>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:0.75rem;">Sans item : <code style="font-family:'Fira Code',monospace;font-size:0.82em;">.header-notif-empty</code>. L'icône cloche utilise le sprite <code style="font-family:'Fira Code',monospace;font-size:0.82em;">/shared/icons/sprite.svg#i-bell</code> — dépendance héritée par <code style="font-family:'Fira Code',monospace;font-size:0.82em;">&lt;SiteHeader&gt;</code>.</p>
         </div>
 
     </div>

@@ -10,6 +10,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.113.0] - 2026-07-24 — Vitrine : header standard (SiteHeader) + Notification Bell
+
+### Added
+- **Vitrine header standard** (#718) : sections `#site-header` et `#notification-bell` dans `pages/navigation.html` — démo vanilla dogfoodant les classes `.header-*`/`.skeleton-avatar`/`.header-notif-*` (zéro CSS nouveau). 3 états d'identité `SiteHeader` (chargement/anonyme/connecté) + états du `NotificationBell` (badge, panneau ouvert, vide). Résout les 2 entrées registre orphelines #511.
+- **`shared/CONSUMER_GUIDE.md`** (#718) : sous-section « Header standard (SiteHeader) » — identité 3 états, features opt-out, mapping M3 (`static-proxy`/`oauth2-dynamic`), dépendance sprite `#i-bell`, renvoi TSDoc.
+
+### Changed
+- **`shared/nav.js` `buildHeader()`** (#718) : montage du header par classe (`querySelector('.site-header')`) au lieu de l'id — back-compat, libère l'id `site-header` pour la section démo. Retrait de `id="site-header"` sur le shell de `navigation.html`.
+
 ## [2.112.2] - 2026-07-24 — Fix : header vanilla aligné sur le flux fichier feedback
 
 ### Fixed
