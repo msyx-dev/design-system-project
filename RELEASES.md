@@ -1,5 +1,12 @@
 # Releases
 
+## 2.112.2 — 2026-07-24 — Fix : header vanilla aligné sur le flux fichier feedback (#721)
+
+> Le header dogfoodé (`shared/nav.js`) portait encore l'ancien libellé « Joindre une capture » alors que la démo `pages/user-feedback.html` et le composant React (#714) ont basculé sur un ajout de fichier. Alignement pixel-perfect.
+
+### Fixed
+- Modale feedback du header (`ensureUserFeedbackDialog()`, `shared/nav.js`) : bouton décoratif « Joindre une capture » remplacé par le bloc `.file-upload` (span `.input-label` « Joindre un fichier » + icône/texte/hint), identique à `pages/user-feedback.html`. Purement visuel — aucune logique de capture ou d'upload n'existait ni n'est ajoutée. (#721)
+
 ## 2.112.1 — 2026-07-23 — Formulaire de retour : e-mail pré-rempli en connecté (#708)
 
 > Suite à ton retour : en connecté, le champ e-mail du formulaire de retour est **visible et pré-rempli** depuis la session (modifiable) plutôt que masqué — plus cohérent et transparent.
