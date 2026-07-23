@@ -9,6 +9,7 @@ import { Modal } from "../Modal/Modal";
 import { Input } from "../Input/Input";
 import { Select, type SelectOption } from "../Input/Select";
 import { Button } from "../Button/Button";
+import { FileUpload } from "../FileUpload/FileUpload";
 import { FormErrorSummary } from "../FormValidation/FormErrorSummary";
 import { useFormValidation } from "../../hooks/useFormValidation";
 import type {
@@ -35,156 +36,16 @@ const IMPACT_OPTIONS: SelectOption[] = [
   { value: "high", label: "Élevé" },
 ];
 
-/** Seuil de taille cible pour la capture WebP encodée (contrat #693). */
-const MAX_SCREENSHOT_BYTES = 512 * 1024;
-/** Paliers de qualité `toBlob('image/webp', q)`, du meilleur au plus compressé. */
-const WEBP_QUALITY_STEPS = [0.92, 0.8, 0.65, 0.5, 0.35, 0.2] as const;
-/** Nombre max de réductions de dimensions si la qualité seule ne suffit pas. */
-const MAX_DOWNSCALE_PASSES = 4;
-const DOWNSCALE_FACTOR = 0.75;
-/** Sous ce seuil de dimension, on abandonne plutôt que de produire une image inutilisable. */
-const MIN_CANVAS_DIMENSION = 16;
-/** Garde-fou : un flux qui ne délivre jamais de frame (`loadeddata`) ne doit
- * jamais bloquer indéfiniment le bouton « Joindre une capture ». */
-const FRAME_READY_TIMEOUT_MS = 4000;
+/** Taille max acceptée pour la pièce jointe (validation non bloquante, #714). */
+const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
+/** Préfixe MIME accepté (image seule). */
+const ACCEPTED_TYPE_PREFIX = "image/";
 
-/** Canvas-like minimal — permet de tester `encodeScreenshotWebp` sans DOM/canvas réel. */
-export interface EncodableCanvas {
-  width: number;
-  height: number;
-  toBlob: (
-    callback: (blob: Blob | null) => void,
-    type?: string,
-    quality?: number,
-  ) => void;
-}
-
-function canvasToWebpBlob(
-  canvas: EncodableCanvas,
-  quality: number,
-): Promise<Blob | null> {
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), "image/webp", quality);
-  });
-}
-
-function downscaleCanvas(
-  source: EncodableCanvas,
-  width: number,
-  height: number,
-): EncodableCanvas | null {
-  if (typeof document === "undefined") return null;
-  const scaled = document.createElement("canvas");
-  scaled.width = width;
-  scaled.height = height;
-  const ctx = scaled.getContext("2d");
-  if (!ctx) return null;
-  // `source` peut être un HTMLCanvasElement réel (drawImage l'accepte) ou un
-  // mock de test (EncodableCanvas) — drawImage n'est appelé qu'en environnement
-  // navigateur réel, jamais dans les tests unitaires de cette fonction.
-  ctx.drawImage(source as unknown as CanvasImageSource, 0, 0, width, height);
-  return scaled;
-}
-
-/**
- * Downscale/encode récursif WebP jusqu'à ≤512Ko (contrat #693) : boucle de
- * qualité décroissante à dimensions fixes, puis réduction de dimensions si
- * la qualité minimale ne suffit toujours pas. Retourne `null` si le budget
- * n'est atteignable dans les limites (pas de blocage du flux de soumission —
- * `screenshot` reste optionnel).
- */
-export async function encodeScreenshotWebp(
-  sourceCanvas: EncodableCanvas,
-): Promise<Blob | null> {
-  let working: EncodableCanvas = sourceCanvas;
-
-  for (let pass = 0; pass <= MAX_DOWNSCALE_PASSES; pass++) {
-    for (const quality of WEBP_QUALITY_STEPS) {
-      const blob = await canvasToWebpBlob(working, quality);
-      if (blob && blob.size <= MAX_SCREENSHOT_BYTES) return blob;
-    }
-
-    const nextWidth = Math.floor(working.width * DOWNSCALE_FACTOR);
-    const nextHeight = Math.floor(working.height * DOWNSCALE_FACTOR);
-    if (nextWidth < MIN_CANVAS_DIMENSION || nextHeight < MIN_CANVAS_DIMENSION) {
-      break;
-    }
-    const scaled = downscaleCanvas(working, nextWidth, nextHeight);
-    if (!scaled) break;
-    working = scaled;
+/** Formate une taille d'octets en Ko / Mo pour `.file-item-size`. */
+function formatFileSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
   }
-
-  return null;
-}
-
-/**
- * Capture un unique instantané de l'écran via `getDisplayMedia` (derrière
- * try/catch — un refus utilisateur ou une API indisponible retourne `null`
- * sans jamais bloquer le flux, cf. contrat #693) et le peint sur un canvas
- * hors-DOM. Aucune dépendance externe.
- */
-export async function captureScreenCanvas(): Promise<HTMLCanvasElement | null> {
-  if (
-    typeof navigator === "undefined" ||
-    !navigator.mediaDevices?.getDisplayMedia
-  ) {
-    return null;
-  }
-
-  let stream: MediaStream;
-  try {
-    stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-  } catch {
-    // Refus utilisateur, contexte non sécurisé, API absente… — jamais bloquant.
-    return null;
-  }
-
-  try {
-    const video = document.createElement("video");
-    video.srcObject = stream;
-    video.muted = true;
-    try {
-      await video.play();
-    } catch {
-      // certains environnements (autoplay policy) rejettent play() malgré
-      // un stream valide — on tente quand même de lire une frame ci-dessous.
-    }
-
-    // Garde-fou : un flux qui ne délivre jamais `loadeddata` (partage arrêté
-    // immédiatement, source vide…) ne doit jamais bloquer indéfiniment le
-    // bouton « Joindre une capture » — on abandonne proprement après le délai.
-    const frameReady = await new Promise<boolean>((resolve) => {
-      if (video.readyState >= 2) {
-        resolve(true);
-        return;
-      }
-      video.onloadeddata = () => resolve(true);
-      setTimeout(() => resolve(false), FRAME_READY_TIMEOUT_MS);
-    });
-    if (!frameReady) return null;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth || 1;
-    canvas.height = video.videoHeight || 1;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas;
-  } catch {
-    return null;
-  } finally {
-    stream.getTracks().forEach((track) => track.stop());
-  }
-}
-
-/** Bout en bout capture → encodage, exposé pour être appelé par la Modal. */
-export async function captureFeedbackScreenshot(): Promise<Blob | null> {
-  const canvas = await captureScreenCanvas();
-  if (!canvas) return null;
-  return encodeScreenshotWebp(canvas);
-}
-
-function formatKb(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / 1024))} Ko`;
 }
 
@@ -197,11 +58,9 @@ export interface UserFeedbackModalProps {
   context: UserFeedbackContextData;
   /** Handler de soumission — reçoit les valeurs saisies + le contexte. */
   onSubmit: FeedbackSubmitHandler;
-  /** Affiche le bouton de capture d'écran opt-in. Défaut `true`. */
+  /** Affiche la zone de pièce jointe (image) opt-in. Défaut `true`. */
   allowScreenshot?: boolean;
 }
-
-type ScreenshotStatus = "idle" | "capturing" | "attached" | "error";
 
 /**
  * UserFeedbackModal — Formulaire de retour utilisateur du Design System
@@ -211,7 +70,8 @@ type ScreenshotStatus = "idle" | "capturing" | "attached" | "error";
  *
  * Champs : `type`/`title`/`description` requis, `impact` optionnel, `email`
  * requis uniquement si `context.user === null` (mode anonyme), `screenshot`
- * opt-in (WebP ≤512Ko, sans dépendance externe — `captureFeedbackScreenshot`).
+ * opt-in (pièce jointe image ≤5 Mo via `<FileUpload>` DS — drag & drop +
+ * parcourir, validation type/taille non bloquante, sans re-encodage, #714).
  *
  * Contrôlée par le parent (`open`/`onClose`), sans état de session propre :
  * l'état local du formulaire est réinitialisé quand `open` redevient `false`
@@ -233,15 +93,13 @@ export function UserFeedbackModal({
   const [description, setDescription] = useState("");
   const [impact, setImpact] = useState<FeedbackImpact | "">("");
   const [email, setEmail] = useState("");
-  const [screenshot, setScreenshot] = useState<Blob | null>(null);
-  const [screenshotStatus, setScreenshotStatus] =
-    useState<ScreenshotStatus>("idle");
+  const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // `getDisplayMedia()` affiche un prompt navigateur qui peut rester ouvert
-  // plusieurs secondes — si la modale se démonte (fermeture) pendant ce
-  // délai, les callbacks async de capture/soumission ne doivent PAS appeler
+  // `onSubmit` peut être asynchrone (POST réseau) : si la modale se démonte
+  // (fermeture) pendant l'attente, les callbacks ne doivent PAS appeler
   // setState sur un composant démonté.
   const mountedRef = useRef(true);
   useEffect(() => {
@@ -258,7 +116,7 @@ export function UserFeedbackModal({
     setImpact("");
     setEmail("");
     setScreenshot(null);
-    setScreenshotStatus("idle");
+    setAttachmentError(null);
     setSubmitting(false);
     setSubmitError(null);
   }, []);
@@ -316,22 +174,28 @@ export function UserFeedbackModal({
     onClose();
   }, [onClose]);
 
-  const handleCaptureScreenshot = useCallback(async () => {
-    setScreenshotStatus("capturing");
-    const blob = await captureFeedbackScreenshot();
-    if (!mountedRef.current) return;
-    if (blob) {
-      setScreenshot(blob);
-      setScreenshotStatus("attached");
-    } else {
-      setScreenshot(null);
-      setScreenshotStatus("error");
+  const handleAttachFiles = useCallback((files: File[]) => {
+    const file = files[0] ?? null;
+    if (!file) return;
+    if (!file.type.startsWith(ACCEPTED_TYPE_PREFIX)) {
+      setAttachmentError(
+        "Format non pris en charge — choisissez une image. Vous pouvez continuer sans.",
+      );
+      return;
     }
+    if (file.size > MAX_ATTACHMENT_BYTES) {
+      setAttachmentError(
+        "Fichier trop volumineux (max 5 Mo). Vous pouvez continuer sans.",
+      );
+      return;
+    }
+    setAttachmentError(null);
+    setScreenshot(file);
   }, []);
 
-  const handleRemoveScreenshot = useCallback(() => {
+  const handleRemoveAttachment = useCallback(() => {
     setScreenshot(null);
-    setScreenshotStatus("idle");
+    setAttachmentError(null);
   }, []);
 
   const descriptionField = getFieldProps("description");
@@ -442,35 +306,27 @@ export function UserFeedbackModal({
 
         {allowScreenshot && (
           <div className="input-group">
-            <span className="input-label">Capture d'écran (optionnel)</span>
-            {screenshot ? (
-              <div>
-                <p className="input-hint">
-                  Capture jointe ({formatKb(screenshot.size)})
-                </p>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleRemoveScreenshot}
-                >
-                  Retirer la capture
-                </Button>
-              </div>
-            ) : (
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                loading={screenshotStatus === "capturing"}
-                onClick={handleCaptureScreenshot}
-              >
-                Joindre une capture
-              </Button>
-            )}
-            {screenshotStatus === "error" && (
-              <span className="input-hint">
-                Capture indisponible ou refusée — vous pouvez continuer sans.
+            <span className="input-label">Joindre un fichier (optionnel)</span>
+            <FileUpload
+              accept="image/*"
+              multiple={false}
+              hint="Image jusqu'à 5 Mo (PNG, JPG, WebP…)"
+              onFiles={handleAttachFiles}
+              files={
+                screenshot
+                  ? [
+                      {
+                        name: screenshot.name,
+                        size: formatFileSize(screenshot.size),
+                      },
+                    ]
+                  : undefined
+              }
+              onRemove={handleRemoveAttachment}
+            />
+            {attachmentError && (
+              <span className="input-hint" role="status">
+                {attachmentError}
               </span>
             )}
           </div>

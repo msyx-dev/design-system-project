@@ -59,7 +59,7 @@ export interface FeedbackFormValues {
   impact?: FeedbackImpact;
   /** Requis si `context.user === null` (mode anonyme). */
   email?: string;
-  /** WebP downscalé ≤512Ko, opt-in. */
+  /** Pièce jointe optionnelle (image ≤5 Mo). Un `File` est accepté (`File extends Blob`). */
   screenshot?: Blob | null;
 }
 
