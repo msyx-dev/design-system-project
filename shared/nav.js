@@ -1,5 +1,5 @@
-/* @ds-version 2.112.1 */
-const VERSION = '2.112.1';
+/* @ds-version 2.112.2 */
+const VERSION = '2.112.2';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -296,7 +296,10 @@ function ensureUserFeedbackDialog() {
         + '<label class="input-label" for="ds-uf-email">Email</label>'
         + '<input class="input" type="email" id="ds-uf-email"' + (isConnected ? '' : ' required') + ' value="' + (user.email || '') + '" placeholder="vous@exemple.fr">'
         + '<span class="input-hint" id="ds-uf-email-hint">' + (isConnected ? 'Pré-rempli depuis votre session — modifiable.' : 'Requis pour pouvoir répondre à votre retour.') + '</span></div>'
-        + '<div class="input-group mb-md"><button type="button" class="btn-secondary btn-sm">Joindre une capture</button></div>'
+        + '<div class="input-group mb-md"><span class="input-label">Joindre un fichier</span>'
+        + '<div class="file-upload"><div class="file-upload-icon">&#128206;</div>'
+        + '<div class="file-upload-text">Déposez un fichier ici ou <span class="file-upload-browse">parcourir</span></div>'
+        + '<div class="file-upload-hint">Image jusqu\'à 5 Mo (PNG, JPG, WebP…)</div></div></div>'
         + '<div class="modal-actions"><button type="button" class="btn-secondary" data-modal-close>Annuler</button>'
         + '<button type="submit" class="btn-primary">Envoyer</button></div>'
         + '</form></div>';

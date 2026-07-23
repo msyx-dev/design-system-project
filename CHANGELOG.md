@@ -10,6 +10,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.112.2] - 2026-07-24 — Fix : header vanilla aligné sur le flux fichier feedback
+
+### Fixed
+- **Modale feedback du header** (#721) : le bouton décoratif « Joindre une capture » (`ensureUserFeedbackDialog()`, `shared/nav.js`) est remplacé par le bloc `.file-upload` (« Joindre un fichier »), identique à `pages/user-feedback.html` et au composant React (#714). Purement visuel — aucune logique n'existait ni n'est ajoutée.
+
 ## [2.112.1] - 2026-07-23 — Formulaire de retour : e-mail pré-rempli (au lieu de masqué)
 
 ### Changed
