@@ -1,5 +1,5 @@
 {
-  "version": "2.110.1",
+  "version": "2.111.0",
   "generated": {
     "at": "2026-07-23T06:05:32.113Z",
     "by": "bin/generate-registry.js v1.3"
@@ -294,7 +294,7 @@
         ".input-hint"
       ],
       "jsInit": "initUserFeedbackDemo",
-      "notes": "Composant React pur (#692/#693/#694/#695) — dogfoodé par une démo vanilla dédiée pages/user-feedback.html (#705, parcours bouton header→modale→submit, mode connecté/anonyme). Compose intégralement des primitives DS existantes (bouton header-notification+btn-icon, Modal, Input/Select via alert/input-*) — zéro classe CSS nouvelle. Entrée DISTINCTE de 'feedback' (module auto-généré miroir de shared/css/components/feedback.css) pour éviter toute collision de nom (cf. #695 groom).",
+      "notes": "Composant React pur (#692/#693/#694/#695) — dogfoodé par une démo vanilla dédiée pages/user-feedback.html (#705, parcours bouton header→modale→submit, mode connecté/anonyme). Compose intégralement des primitives DS existantes (bouton header-notification+btn-icon, Modal, Input/Select via alert/input-*) — zéro classe CSS nouvelle. Entrée DISTINCTE de 'feedback' (module auto-généré miroir de shared/css/components/feedback.css) pour éviter toute collision de nom (cf. #695 groom). Depuis #708 (v2.111.0) : également dogfoodé DIRECTEMENT dans le header standard shared/nav.js — bouton .header-notification près de la cloche + modale ds-user-feedback-modal injectée une fois par ensureUserFeedbackDialog() (patron ensureVersionNotesDialog), mode connecté/anonyme déterminé depuis l'état réel window.MSYX_HEADER.user (pas de toggle démo), submit géré par initHeaderUserFeedback() (shared/components.js, reinitAll()). Désactivable via MSYX_HEADER.feedback.enabled=false.",
       "react": "ported",
       "module": [
         "shared/css/components/alerts.css",

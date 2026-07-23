@@ -1,5 +1,5 @@
-/* @ds-version 2.110.1 */
-const VERSION = '2.110.1';
+/* @ds-version 2.111.0 */
+const VERSION = '2.111.0';
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -105,10 +105,19 @@ function buildHeader() {
         }
     }
 
-    // Zone user : rendue si cloche OU profil présent (évite un wrapper vide orphelin)
+    // Bouton feedback (#708) — élément standard du header, à côté de la cloche.
+    // Dogfood du composant UserFeedback (#692-695, démo vitrine #705). Indépendant de l'auth
+    // (comme la cloche) ; désactivable via MSYX_HEADER.feedback.enabled === false.
+    var feedbackCfg = cfg.feedback || {};
+    var feedbackVisible = feedbackCfg.enabled !== false;
+    var feedbackBtnHtml = feedbackVisible
+        ? `<button class="header-notification btn-icon" id="header-feedback-btn" data-modal-trigger="ds-user-feedback-modal" aria-haspopup="dialog" aria-label="Donner un retour"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg></button>`
+        : '';
+
+    // Zone user : rendue si cloche OU feedback OU profil présent (évite un wrapper vide orphelin)
     var userZoneHtml = '';
-    if (notifBellHtml || profileHtml) {
-        userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}${profileHtml}</div>`;
+    if (notifBellHtml || feedbackBtnHtml || profileHtml) {
+        userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}${feedbackBtnHtml}${profileHtml}</div>`;
     }
 
     // Switcher thème : derrière flag themeSwitcher (défaut false — opt-in vitrine/multi-thème)
@@ -154,6 +163,9 @@ function buildHeader() {
     // initModals lie le déclencheur + les listeners de la dialog ; initVersionNotes gère la pastille.
     // Les deux sont idempotents (dataset.bound) et déjà présents dans reinitAll — appel ici = robustesse d'ordre.
     ensureVersionNotesDialog();
+    // Modale UserFeedback (#708) : injectée une seule fois, indépendamment de la page démo
+    // (patron identique à ensureVersionNotesDialog). Skip si le bouton est désactivé.
+    if (feedbackVisible) ensureUserFeedbackDialog();
     if (typeof initModals === 'function') initModals();
     if (typeof initVersionNotes === 'function') initVersionNotes();
     // M3 : notifie les consumers que le header DOM est rendu (slot #ds-user-menu disponible)
@@ -239,6 +251,47 @@ function ensureVersionNotesDialog() {
         + '<ol class="timeline">'
         + renderVersionNotesUpcoming(notes.next)
         + renderVersionNotesTimeline(released) + '</ol></div>';
+    document.body.appendChild(dialog);
+}
+
+// Injecte une seule fois la <dialog> UserFeedback dans <body> (#708 — bouton standard du header).
+// id = ds-user-feedback-modal (référencé par data-modal-trigger du bouton feedback).
+// Même markup form que la démo pages/user-feedback.html, ids préfixés ds-uf- (évite toute
+// collision avec les ids uf-* de la démo lorsque le header est rendu SUR cette page même).
+// Mode connecté/anonyme déterminé UNE FOIS ici depuis l'état réel MSYX_HEADER.user
+// (pas de toggle démo dans le header standard, contrairement à #705) :
+//   - cfg.user présent (name/initials/avatar/email) → connecté, email masqué (hidden)
+//   - cfg.user absent → anonyme, email visible + required
+// Soumission + capture de contexte : initHeaderUserFeedback() (shared/components.js, reinitAll()).
+function ensureUserFeedbackDialog() {
+    if (document.getElementById('ds-user-feedback-modal')) return;
+    var cfg = (typeof window.MSYX_HEADER === 'object' && window.MSYX_HEADER) ? window.MSYX_HEADER : {};
+    var user = cfg.user || {};
+    var isConnected = !!(user.name || user.initials || user.avatar || user.email);
+    var dialog = document.createElement('dialog');
+    dialog.className = 'modal-dialog';
+    dialog.id = 'ds-user-feedback-modal';
+    dialog.setAttribute('aria-labelledby', 'ds-user-feedback-title');
+    dialog.innerHTML = '<div class="modal-header"><h3 id="ds-user-feedback-title">Votre retour</h3>'
+        + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
+        + '<div class="modal-body"><form id="ds-user-feedback-form" data-uf-form-header>'
+        + '<div class="input-group mb-md"><label class="input-label" for="ds-uf-type">Type</label>'
+        + '<select class="input" id="ds-uf-type"><option value="bug">Bug</option><option value="idea">Idée</option>'
+        + '<option value="question">Question</option><option value="other">Autre</option></select></div>'
+        + '<div class="input-group mb-md"><label class="input-label" for="ds-uf-title">Titre</label>'
+        + '<input class="input" type="text" id="ds-uf-title" placeholder="Résumé en quelques mots"></div>'
+        + '<div class="input-group mb-md"><label class="input-label" for="ds-uf-description">Description</label>'
+        + '<textarea class="input" id="ds-uf-description" rows="3" placeholder="Décrivez votre retour..."></textarea></div>'
+        + '<div class="input-group mb-md"><label class="input-label" for="ds-uf-impact">Impact</label>'
+        + '<select class="input" id="ds-uf-impact"><option value="">—</option><option value="low">Faible</option>'
+        + '<option value="medium">Moyen</option><option value="high">Fort</option></select></div>'
+        + '<div class="input-group mb-md" id="ds-uf-email-group"' + (isConnected ? ' hidden' : '') + '>'
+        + '<label class="input-label" for="ds-uf-email">Email</label>'
+        + '<input class="input" type="email" id="ds-uf-email"' + (isConnected ? '' : ' required') + ' placeholder="vous@exemple.fr"></div>'
+        + '<div class="input-group mb-md"><button type="button" class="btn-secondary btn-sm">Joindre une capture</button></div>'
+        + '<div class="modal-actions"><button type="button" class="btn-secondary" data-modal-close>Annuler</button>'
+        + '<button type="submit" class="btn-primary">Envoyer</button></div>'
+        + '</form></div>';
     document.body.appendChild(dialog);
 }
 
