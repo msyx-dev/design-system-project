@@ -494,6 +494,7 @@ const REACT_TO_REGISTRY = {
   // components/Quiz/) : une seule clé de dossier réel, pas 3 clés par fichier.
   UserFeedback: 'user-feedback',
   NotificationBell: 'notification-bell',  // #717 — port du contrat cloche du header vanilla
+  SiteHeader: 'site-header',              // #716 — header applicatif composable (compose les briques ci-dessus)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

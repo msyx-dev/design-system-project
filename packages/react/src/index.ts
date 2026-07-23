@@ -244,3 +244,11 @@ export type {
   NotificationBellProps,
   NotificationItem,
 } from "./components/NotificationBell/NotificationBell";
+
+// ─── SiteHeader (v3.0.0-alpha.18) — #716 ───
+export { SiteHeader } from "./components/SiteHeader/SiteHeader";
+export type {
+  SiteHeaderProps,
+  SiteHeaderIdentity,
+  SiteHeaderFeedbackConfig,
+} from "./components/SiteHeader/SiteHeader";
