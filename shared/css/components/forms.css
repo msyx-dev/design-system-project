@@ -527,7 +527,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .password-field .input { padding-right: 2.75rem; }
 .password-toggle {
   position: absolute;
-  right: var(--space-1);
+  right: var(--space-sm);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
