@@ -10,6 +10,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.113.3] - 2026-07-25 — Fix render-risk : import CSS barrel + tokens d'espacement fantômes
+
+### Fixed
+- **`shared/styles.css`** (#704) : les 7 `@import url('css/X.css');` remplacés par la forme string `@import 'css/X.css';` — la forme `url()` est silencieusement droppée par Tailwind v4 / Lightning CSS (CSS jamais bundlé côté consumer, sans erreur de build).
+- **`shared/css/components/forms.css`** + **`shared/css/components/graph.css`** (#704) : tokens fantômes `--space-1`/`--space-3` (jamais définis dans `tokens.css`) remplacés par les tokens réels les plus proches — `.password-toggle` → `var(--space-sm)` ; `.graph-a11y` et `.graph-table th/td` → `var(--space-2)` (0.75rem, identique aux fallbacks `12px` existants).
+
 ## [2.113.2] - 2026-07-24 — Fix : version-notes.json réaligné + chantier header curé
 
 ### Fixed

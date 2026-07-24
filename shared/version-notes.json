@@ -4,6 +4,21 @@
   },
   "released": [
     {
+      "version": "2.113.3",
+      "date": "2026-07-25",
+      "titre": "Corrections d'affichage (imports CSS + espacements)",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Correction d'un import CSS interne qui pouvait être ignoré par certains outils de build côté application, entraînant un rendu incomplet du design system."
+        },
+        {
+          "type": "correction",
+          "text": "Correction du positionnement de l'icône œil dans le champ mot de passe et d'espacements internes du composant graphe."
+        }
+      ]
+    },
+    {
       "version": "2.113.2",
       "date": "2026-07-24",
       "titre": "Header standard : toggle clair/sombre + doc",
