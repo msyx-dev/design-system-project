@@ -1,7 +1,7 @@
-@import url('css/fonts.css');
-@import url('css/tokens.css');
-@import url('css/themes.css');
-@import url('css/utilities.css');
-@import url('css/layout.css');
-@import url('css/components.css');
-@import url('css/base.css');
+@import 'css/fonts.css';
+@import 'css/tokens.css';
+@import 'css/themes.css';
+@import 'css/utilities.css';
+@import 'css/layout.css';
+@import 'css/components.css';
+@import 'css/base.css';
