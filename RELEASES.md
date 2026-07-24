@@ -1,5 +1,12 @@
 # Releases
 
+## 2.113.2 — 2026-07-24 — Fix : version-notes.json réaligné sur le chantier header (#729)
+
+> `shared/version-notes.json` s'arrêtait à 2.112.1 alors que le chantier header (#713-#718/#721/#725/#727) avait livré 2.112.2, 2.113.0, 2.113.1 : le badge de version du header affichait une version périmée et n'annonçait aucune des nouveautés. Réalignement en 3 entrées curées + re-bump.
+
+### Fixed
+- **`shared/version-notes.json`** — 3 entrées ajoutées en tête de `released[]` : `2.113.2` (toggle clair/sombre standard + doc guide d'intégration), `2.113.0` (header standard & centre de notifications), `2.112.2` (retour : joindre un fichier). `2.113.1` (doc pure) couverte par le highlight « guide d'intégration » de `2.113.2` — pas d'entrée séparée. (#729)
+
 ## 2.113.1 — 2026-07-24 — Fix doc : CONSUMER_GUIDE désynchro `paletteSwitch` + fausse dépendance sprite (#727)
 
 > `shared/CONSUMER_GUIDE.md` mentionnait encore l'ancienne prop `themeSwitch` de `<SiteHeader>` (renommée `paletteSwitch` par #725, toggle clair/sombre désormais standard) et affirmait à tort que `<NotificationBell>` dépendait du sprite `shared/icons/sprite.svg` — faux depuis #713/#717, les composants `@msyx-dev/react` rendent leurs icônes inline via le primitif `Icon`. Correction documentaire pure, aucun code touché.
