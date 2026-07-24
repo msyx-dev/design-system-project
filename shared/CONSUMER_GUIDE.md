@@ -421,7 +421,7 @@ Pour une app React, le header standard est le composant `<SiteHeader>` (`@msyx-d
 Chaque feature n'est rendue que si sa prop/donnée est fournie :
 - `notifications` (array) → `<NotificationBell>` (masqué si `undefined`)
 - `feedback` (`true` ou config) → `<UserFeedbackButton>` (+ `<UserFeedbackProvider>` si `feedback.provider` fourni)
-- `versionNotes` → `<VersionNotes>` ; `themeSwitch: true` → `<ThemeSwitcher>` ; `onMenuToggle` → burger mobile
+- `versionNotes` → `<VersionNotes>` ; toggle clair/sombre **toujours présent** (standard), `paletteSwitch` → ajoute le `<select>` palette MSYX/ACSSI/Nhood ; `onMenuToggle` → burger mobile
 
 ### Mapping M3 — résolution de l'identité
 
@@ -434,9 +434,9 @@ Chaque feature n'est rendue que si sa prop/donnée est fournie :
 
 Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (skeleton). Puis `null` en anonyme, l'objet en connecté.
 
-### Dépendance sprite (héritée de NotificationBell)
+### Icônes — composants React self-contained
 
-`<NotificationBell>` (composé par `<SiteHeader>`) rend l'icône cloche via le sprite `#i-bell`. Le fichier `shared/icons/sprite.svg` doit être servi et accessible (même contrainte que le header vanilla, cf. section « Header avec utilisateur connecte »). Adapter le chemin si le sprite est ailleurs chez le consumer.
+`<NotificationBell>` (composé par `<SiteHeader>`), et les composants `@msyx-dev/react` en général, rendent leurs icônes **inline** via le primitif interne `Icon` (#713) — **aucun sprite externe à servir** côté consumer. Contrairement au header vanilla (`shared/nav.js`, cf. section « Header avec utilisateur connecte ») qui dépend de `shared/icons/sprite.svg#i-bell`, la version React est autonome : pas de fichier sprite à copier, pas de chemin à adapter.
 
 ## Anti-FOUC
 

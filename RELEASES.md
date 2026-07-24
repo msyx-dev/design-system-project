@@ -1,5 +1,12 @@
 # Releases
 
+## 2.113.1 — 2026-07-24 — Fix doc : CONSUMER_GUIDE désynchro `paletteSwitch` + fausse dépendance sprite (#727)
+
+> `shared/CONSUMER_GUIDE.md` mentionnait encore l'ancienne prop `themeSwitch` de `<SiteHeader>` (renommée `paletteSwitch` par #725, toggle clair/sombre désormais standard) et affirmait à tort que `<NotificationBell>` dépendait du sprite `shared/icons/sprite.svg` — faux depuis #713/#717, les composants `@msyx-dev/react` rendent leurs icônes inline via le primitif `Icon`. Correction documentaire pure, aucun code touché.
+
+### Fixed
+- **`shared/CONSUMER_GUIDE.md`** — section « Header standard (SiteHeader) » : `themeSwitch: true` → toggle clair/sombre **toujours présent** (standard) + `paletteSwitch` (opt-in) pour le `<select>` palette MSYX/ACSSI/Nhood. Section « Dépendance sprite » réécrite : `<NotificationBell>` et les composants React en général rendent leurs icônes **inline** (primitif `Icon`, #713) — plus aucune dépendance au sprite pour ces composants (contrainte propre au header vanilla uniquement). (#727)
+
 ## 2.113.0 — 2026-07-24 — Vitrine : header standard (SiteHeader) + Notification Bell (#718)
 
 > Documentation + démo vitrine des briques header portées en React (#716 `SiteHeader`, #717 `NotificationBell`) : deux sections vanilla dans `pages/navigation.html` (dogfood des classes `.header-*`, zéro CSS nouveau) + guide d'intégration `SiteHeader`. Clôt le chantier #712.

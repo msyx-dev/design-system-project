@@ -10,6 +10,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.113.1] - 2026-07-24 — Fix doc : CONSUMER_GUIDE désynchro paletteSwitch + fausse dépendance sprite
+
+### Fixed
+- **`shared/CONSUMER_GUIDE.md`** (#727) : mention obsolète `themeSwitch: true` remplacée — toggle clair/sombre **toujours présent** (standard), `paletteSwitch` (opt-in) ajoute le `<select>` palette MSYX/ACSSI/Nhood. Section « Dépendance sprite » corrigée : `<NotificationBell>` (et les composants `@msyx-dev/react` en général) rendent leurs icônes **inline** via le primitif `Icon` (#713) — aucun sprite à servir côté consumer, contrairement au header vanilla.
+
 ## [2.113.0] - 2026-07-24 — Vitrine : header standard (SiteHeader) + Notification Bell
 
 ### Added
