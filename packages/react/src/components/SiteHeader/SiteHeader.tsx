@@ -18,6 +18,8 @@ import {
   type VersionNotesProps,
 } from "../VersionNotes/VersionNotes";
 import { ThemeSwitcher } from "../ThemeSwitcher/ThemeSwitcher";
+import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
+import { useTheme } from "../ThemeSwitcher/useTheme";
 import {
   UserFeedbackButton,
   type UserFeedbackButtonProps,
@@ -73,8 +75,13 @@ export interface SiteHeaderProps {
   feedback?: SiteHeaderFeedbackConfig | boolean;
   /** `<VersionNotes>` (badge + modale). Rendu si fourni. */
   versionNotes?: VersionNotesProps;
-  /** `<ThemeSwitcher>` (palette + mode). Rendu si `true`. */
-  themeSwitch?: boolean;
+  /**
+   * Affiche le sélecteur de palette (`<ThemeSwitcher>`, dropdown MSYX/ACSSI/Nhood).
+   * Le toggle clair/sombre est **toujours présent** (batteries-included), avec
+   * ou sans cette prop : `<ThemeSwitcher>` (qui l'inclut déjà) si `true`, sinon
+   * `<ThemeToggle>` seul.
+   */
+  paletteSwitch?: boolean;
   /** Burger mobile — affiché seulement si fourni. */
   onMenuToggle?: () => void;
   className?: string;
@@ -140,8 +147,11 @@ function renderFeedback(feedback: SiteHeaderProps["feedback"]): ReactNode {
  * (`shared/nav.js buildHeader`) : burger → brand → version → spacer → thème →
  * zone user (notifs → feedback → identité).
  *
- * Chaque feature est **opt-out** : rendue uniquement si sa prop/données sont
- * fournies. Coexiste avec `<PageHeader>` (rôles distincts).
+ * Chaque feature est **opt-out** (rendue uniquement si sa prop/données sont
+ * fournies), **sauf le toggle clair/sombre** : standard, toujours présent
+ * (batteries-included) — `paletteSwitch` ajoute en plus le sélecteur de
+ * palette (`<ThemeSwitcher>`, qui inclut déjà le toggle, donc pas de doublon).
+ * Coexiste avec `<PageHeader>` (rôles distincts).
  */
 export function SiteHeader({
   brand,
@@ -152,13 +162,14 @@ export function SiteHeader({
   onItemClick,
   feedback,
   versionNotes,
-  themeSwitch,
+  paletteSwitch,
   onMenuToggle,
   className,
 }: SiteHeaderProps) {
   const rootClasses = ["site-header", className].filter(Boolean).join(" ");
   const feedbackNode = renderFeedback(feedback);
   const identityNode = renderIdentity(identity);
+  const { mode, toggleMode, isModeLocked } = useTheme();
 
   return (
     <header className={rootClasses}>
@@ -179,11 +190,18 @@ export function SiteHeader({
 
       <span className="header-spacer" />
 
-      {themeSwitch && (
-        <div className="header-controls">
+      <div className="header-controls">
+        {paletteSwitch ? (
           <ThemeSwitcher />
-        </div>
-      )}
+        ) : (
+          <ThemeToggle
+            mode={mode}
+            onToggle={toggleMode}
+            disabled={isModeLocked}
+            aria-disabled={isModeLocked || undefined}
+          />
+        )}
+      </div>
 
       {/* NotificationBell rend SA PROPRE .header-user-zone (ancre du panel
           position:absolute — contrat shipped alpha.17, non re-wrappable). */}

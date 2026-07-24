@@ -8,6 +8,20 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.19 — 2026-07-24 — `<SiteHeader>` : toggle clair/sombre standard, palette opt-in
+
+> Fix (#725) — le toggle clair/sombre du header vanilla est « toujours visible » (CLAUDE.md) ; `<SiteHeader>` (alpha.18, #716) le rendait couplé à `themeSwitch` (opt-out) via `<ThemeSwitcher>` (palette + toggle), donc **absent par défaut**. Décision Mike 2026-07-24 : toggle = standard, sélecteur de palette = opt-in.
+
+### Fixed
+- **`<SiteHeader>` (#725)** : le toggle clair/sombre (`<ThemeToggle>`, `.mode-switch`) est désormais **toujours rendu**, dans les 3 états d'identité — via `useTheme()` (même hook que `<ThemeSwitcher>`). Le sélecteur de palette (`<select class="theme-switcher-select">`, MSYX/ACSSI/Nhood) reste **opt-in**.
+
+### Changed
+- **Prop renommée** `themeSwitch?: boolean` → `paletteSwitch?: boolean` sur `SiteHeaderProps`. `paletteSwitch: true` → `<ThemeSwitcher>` (palette + toggle, sans doublon car il inclut déjà le toggle) ; sinon → `<ThemeToggle>` seul. Pas de breaking réel : alpha.18 n'est pas publié npm.
+
+### Notes
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
+- `shared/CONSUMER_GUIDE.md` (mention `themeSwitch: true` ligne ~424) non touché — suivi doc séparé pour éviter la règle dual-artefact #314 (cf. issue #725 « Note doc »).
+
 ## v3.0.0-alpha.18 — 2026-07-24 — `<SiteHeader>` : header applicatif composable
 
 > Feature (#716, sous-issue 1/3 du chantier #712) — brique de composition qui assemble les composants header déjà portés en un header applicatif prêt à l'emploi. Deuxième pièce du chantier SiteHeader (après `<NotificationBell>` #717).
