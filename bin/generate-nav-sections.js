@@ -70,7 +70,7 @@ const EXPECTED_COUNTS = {
   '/pages/fondation.html':       16,
   '/pages/composants.html':      14,
   '/pages/formulaires.html':     19,
-  '/pages/navigation.html':      8,
+  '/pages/navigation.html':      10,
   '/pages/data.html':            19,
   '/pages/feedback.html':        13,
   '/pages/user-feedback.html':   2,
@@ -78,7 +78,7 @@ const EXPECTED_COUNTS = {
   '/pages/divers.html':          15,
   '/pages/templates.html':       6,
 };
-const EXPECTED_TOTAL = 126;
+const EXPECTED_TOTAL = 128;
 
 // ─── Décodage des entités HTML ─────────────────────────────────────────────────
 
