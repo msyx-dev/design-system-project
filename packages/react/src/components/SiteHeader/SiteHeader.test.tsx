@@ -123,17 +123,44 @@ describe("SiteHeader — versionNotes opt-out", () => {
   });
 });
 
-describe("SiteHeader — themeSwitch opt-out", () => {
-  it("false/absent → pas de theme-switcher", () => {
+describe("SiteHeader — toggle clair/sombre standard + paletteSwitch opt-in", () => {
+  it("sans prop → toggle .mode-switch rendu par défaut, pas de theme-switcher", () => {
     render(<SiteHeader />);
+    expect(document.querySelector(".mode-switch")).not.toBeNull();
     expect(document.querySelector(".theme-switcher")).toBeNull();
   });
-  it("true → ThemeSwitcher dans .header-controls", () => {
-    render(<SiteHeader themeSwitch />);
+
+  it("identity undefined (loading) → toggle quand même présent", () => {
+    render(<SiteHeader identity={undefined} />);
+    expect(document.querySelector(".mode-switch")).not.toBeNull();
+  });
+
+  it("identity null (anonyme) → toggle quand même présent", () => {
+    render(<SiteHeader identity={null} />);
+    expect(document.querySelector(".mode-switch")).not.toBeNull();
+  });
+
+  it("identity objet (connecté) → toggle quand même présent", () => {
+    render(<SiteHeader identity={identity} />);
+    expect(document.querySelector(".mode-switch")).not.toBeNull();
+  });
+
+  it("paletteSwitch → ThemeSwitcher (.theme-switcher-select) dans .header-controls", () => {
+    render(<SiteHeader paletteSwitch />);
     expect(
       document.querySelector(".header-controls .theme-switcher"),
     ).not.toBeNull();
-    expect(document.querySelector(".mode-switch")).not.toBeNull();
+    expect(document.querySelector(".theme-switcher-select")).not.toBeNull();
+  });
+
+  it("paletteSwitch → un seul .mode-switch (pas de double toggle)", () => {
+    render(<SiteHeader paletteSwitch />);
+    expect(document.querySelectorAll(".mode-switch")).toHaveLength(1);
+  });
+
+  it("sans paletteSwitch → pas de .theme-switcher-select", () => {
+    render(<SiteHeader />);
+    expect(document.querySelector(".theme-switcher-select")).toBeNull();
   });
 });
 
