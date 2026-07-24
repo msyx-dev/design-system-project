@@ -1,6 +1,7 @@
 import { ReactNode, useId, useState } from "react";
 import { Modal } from "../Modal/Modal";
 import { VersionBadge } from "../VersionBadge/VersionBadge";
+import { Icon } from "../../icons/Icon";
 
 /**
  * Catégories de highlight — calque `VERSION_NOTE_CATEGORIES` (shared/nav.js:178)
@@ -103,6 +104,10 @@ function renderHighlights(highlights: Highlight[]): ReactNode {
  * **Composition, pas duplication** :
  * - le badge = `<VersionBadge>` (localStorage `.version-badge--new`, SSR-safe,
  *   aria-label augmenté) — hérité tel quel, `onOpen` ouvre la modale interne ;
+ *   `children` porte le picto sparkle (`<Icon name="sparkles">`, #713) devant
+ *   `v${latestVersion}` — parité avec le header vanilla (`shared/nav.js`,
+ *   `<svg class="icon"><use href="#i-sparkles">`), CSS déjà prévu
+ *   (`.version-badge svg`, `version-notes.css`), #732 ;
  * - la modale = `<Modal className="version-notes-dialog">` (focus restore
  *   WAI-APG, ESC/backdrop) — jamais re-wrappée.
  *
@@ -131,7 +136,10 @@ export function VersionNotes({
         storageKey={storageKey}
         className={className}
         onOpen={() => setOpen(true)}
-      />
+      >
+        <Icon name="sparkles" aria-hidden="true" width={14} height={14} />
+        {`v${latestVersion}`}
+      </VersionBadge>
       <Modal
         open={open}
         onClose={() => setOpen(false)}

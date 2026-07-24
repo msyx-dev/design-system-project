@@ -67,6 +67,14 @@ describe("VersionNotes — badge & état localStorage", () => {
     );
   });
 
+  it("rend le picto sparkle <svg> DANS le badge (parité header vanilla, #732)", () => {
+    renderNotes();
+    const badge = document.querySelector(".version-badge");
+    const svg = badge?.querySelector('svg[data-icon="sparkles"]');
+    expect(svg).not.toBeNull();
+    expect(badge).toHaveTextContent(`v${LATEST}`);
+  });
+
   it("au clic sur le badge : persiste, retire --new et ouvre la modale", async () => {
     const user = userEvent.setup();
     renderNotes();
@@ -181,7 +189,9 @@ describe("VersionNotes — timeline", () => {
       document.querySelector(".timeline-content h4"),
     ).not.toBeInTheDocument();
     // .timeline-item--latest est posée indépendamment de titre (spec #650)
-    expect(document.querySelector(".timeline-item--latest")).toBeInTheDocument();
+    expect(
+      document.querySelector(".timeline-item--latest"),
+    ).toBeInTheDocument();
   });
 });
 
