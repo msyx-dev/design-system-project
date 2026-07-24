@@ -4,6 +4,47 @@
   },
   "released": [
     {
+      "version": "2.113.2",
+      "date": "2026-07-24",
+      "titre": "Header standard : toggle clair/sombre + doc",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Le header standard affiche le toggle clair/sombre par défaut, comme l'en-tête habituel ; le sélecteur de palette (MSYX/ACSSI/Nhood) reste optionnel."
+        },
+        {
+          "type": "amelioration",
+          "text": "Guide d'intégration du header standard mis à jour (composants React auto-suffisants, aucune icône à servir côté application)."
+        }
+      ]
+    },
+    {
+      "version": "2.113.0",
+      "date": "2026-07-24",
+      "titre": "Header standard & centre de notifications",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Nouveau header applicatif « standard » prêt à l'emploi (marque, notes de version, cloche de notifications, bouton de retour, zone d'identité) — démo dans la page Navigation."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Nouvelle cloche de notifications (panneau, compteur, « tout marquer comme lu ») — démo dans la page Navigation."
+        }
+      ]
+    },
+    {
+      "version": "2.112.2",
+      "date": "2026-07-24",
+      "titre": "Retour : joindre un fichier",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Le formulaire de retour propose désormais « Joindre un fichier » (image) au lieu d'un partage d'écran."
+        }
+      ]
+    },
+    {
       "version": "2.112.1",
       "date": "2026-07-23",
       "titre": "Formulaire de retour : e-mail pré-rempli",

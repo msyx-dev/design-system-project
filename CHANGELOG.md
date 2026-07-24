@@ -10,6 +10,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.113.2] - 2026-07-24 — Fix : version-notes.json réaligné + chantier header curé
+
+### Fixed
+- **`shared/version-notes.json`** (#729) : réalignement — 3 entrées ajoutées en tête de `released[]` (`2.113.2` toggle clair/sombre standard + doc, `2.113.0` header standard & centre de notifications, `2.112.2` retour joindre un fichier) curant le chantier header (`SiteHeader`, `NotificationBell`, feedback fichier) dans les notes de version (badge header). Le badge affichait une version périmée (2.112.1) et n'annonçait aucune des nouveautés livrées depuis.
+
 ## [2.113.1] - 2026-07-24 — Fix doc : CONSUMER_GUIDE désynchro paletteSwitch + fausse dépendance sprite
 
 ### Fixed
