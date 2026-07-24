@@ -8,6 +8,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.20 — 2026-07-24 — Parité header : taille bouton feedback + sparkle VersionNotes
+
+> Bugs de parité visuelle découverts en migrant cap-transfo vers `<SiteHeader>` (#731, #732).
+
+### Fixed
+- **`<UserFeedbackButton>` (#731)** : émet désormais `<button class="header-notification">` **seul** (retrait de `.btn-icon`) — parité stricte 34×34 avec `<NotificationBell>`, qui n'ajoute pas `.btn-icon`. Avant : `.btn-icon` (`buttons.css`) forçait `min-width`/`min-height: 44px`, faisant déborder le bouton feedback par rapport à la cloche voisine dans le header. Le commentaire JSDoc du composant, qui affirmait à tort que le markup canonique était `.header-notification` + `.btn-icon`, est corrigé.
+- **`<VersionNotes>` (#732)** : le `.version-badge` rend désormais le picto sparkle (`<Icon name="sparkles">`, #713) devant `v${latestVersion}`, à parité avec le header vanilla (`shared/nav.js`, badge `✨ vX.Y.Z`). Le CSS `.version-badge svg` (`version-notes.css`) était déjà prévu mais resté sans effet, le composant React ne rendant aucun `<svg>`.
+- **`Icon` : glyphe `sparkles`** : ajout de `sparkles` au type `IconName` + à `ICON_CHILDREN` (copie fidèle du symbole `i-sparkles` de `shared/icons/sprite.svg`). Le primitif passe de 12 à 13 glyphes.
+
+### Notes
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
+- Publish = tag `react-v3.0.0-alpha.20` (hors scope du /dev — cut de release parent).
+
 ## v3.0.0-alpha.19 — 2026-07-24 — `<SiteHeader>` : toggle clair/sombre standard, palette opt-in
 
 > Fix (#725) — le toggle clair/sombre du header vanilla est « toujours visible » (CLAUDE.md) ; `<SiteHeader>` (alpha.18, #716) le rendait couplé à `themeSwitch` (opt-out) via `<ThemeSwitcher>` (palette + toggle), donc **absent par défaut**. Décision Mike 2026-07-24 : toggle = standard, sélecteur de palette = opt-in.
