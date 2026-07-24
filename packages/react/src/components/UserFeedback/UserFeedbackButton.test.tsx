@@ -26,13 +26,16 @@ function renderButton(
 }
 
 describe("UserFeedbackButton — markup DS (zéro CSS nouveau)", () => {
-  it('émet <button class="header-notification btn-icon">', () => {
+  it('émet <button class="header-notification"> SEUL (parité 34×34 avec NotificationBell, sans .btn-icon)', () => {
     renderButton();
     const button = screen.getByRole("button", { name: "Donner un feedback" });
     expect(button.tagName).toBe("BUTTON");
     expect(button).toHaveAttribute("type", "button");
     expect(button.className.split(" ")).toEqual(
-      expect.arrayContaining(["header-notification", "btn-icon"]),
+      expect.arrayContaining(["header-notification"]),
+    );
+    expect(button.className.split(" ")).not.toEqual(
+      expect.arrayContaining(["btn-icon"]),
     );
   });
 
@@ -40,11 +43,10 @@ describe("UserFeedbackButton — markup DS (zéro CSS nouveau)", () => {
     renderButton({ className: "custom-extra" });
     const button = screen.getByRole("button", { name: "Donner un feedback" });
     expect(button.className.split(" ")).toEqual(
-      expect.arrayContaining([
-        "header-notification",
-        "btn-icon",
-        "custom-extra",
-      ]),
+      expect.arrayContaining(["header-notification", "custom-extra"]),
+    );
+    expect(button.className.split(" ")).not.toEqual(
+      expect.arrayContaining(["btn-icon"]),
     );
   });
 

@@ -40,9 +40,11 @@ function DefaultIcon() {
  * UserFeedbackButton — Déclencheur du feedback utilisateur (#694).
  *
  * **Zéro CSS nouveau** : émet le markup canonique du bouton-cloche header —
- * `<button class="header-notification btn-icon">` (`layout.css`
- * `.header-notification` + `buttons.css` `.btn-icon`), classes existantes
- * réutilisées à l'identique, aucune classe DS créée pour ce composant.
+ * `<button class="header-notification">` (`layout.css` `.header-notification`
+ * SEUL, 34×34 — parité stricte avec `NotificationBell`, qui n'ajoute PAS
+ * `.btn-icon`). `.btn-icon` (`buttons.css`) force un `min-width`/`min-height`
+ * de 44px et ferait déborder le bouton par rapport à la cloche voisine dans
+ * le header (bug de parité #731) — ne JAMAIS le réintroduire ici.
  *
  * Doit être rendu à l'intérieur d'un `<UserFeedbackProvider>` (#692) — sans
  * quoi `useUserFeedback()` lève une erreur explicite. Par défaut appelle
@@ -62,9 +64,7 @@ export function UserFeedbackButton({
 }: UserFeedbackButtonProps) {
   const { isOpen, openFeedback } = useUserFeedback();
 
-  const classes = ["header-notification", "btn-icon", className]
-    .filter(Boolean)
-    .join(" ");
+  const classes = ["header-notification", className].filter(Boolean).join(" ");
 
   function handleClick() {
     if (onClick) {
