@@ -8,6 +8,18 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.21 — 2026-07-25 — Fix packaging : directive `"use client"` manquante (#703)
+
+> Bug P1 packaging (#703) — le barrel `dist/index.js`/`dist/index.cjs` genere par tsup n'avait AUCUNE directive `"use client"` en tete. Un consumer Next 15 App Router important un composant de `@msyx-dev/react` depuis un **Server Component** cassait (hooks/etat client non marques comme client boundary). Decouvert sur `<PageHeader>`, alpha.14.
+
+### Fixed
+- **Barrel `dist/index.js` + `dist/index.cjs`** : les deux artefacts (ESM et CJS) commencent desormais par `"use client";`, faisant du barrel un client boundary propre — importable tel quel depuis un Server Component. `@msyx-dev/react` est un package de composants majoritairement interactifs (Modal, Tabs, hooks, etat), le pattern standard est une directive globale sur tout le bundle plutot qu'un decoupage par module (aucune directive `"use client"` par fichier n'existait dans `src/` avant ce fix — verifie).
+
+### Notes techniques
+- L'option tsup/esbuild native `banner: { js: '"use client";' }` a ete essayee en premier mais **silencieusement strippee au build** par esbuild >=0.19 (`Module level directives cause errors when bundled` — une directive de prologue injectee en tete d'un bundle multi-modules est rejetee ; verifie empiriquement : `dist/index.cjs` sortait avec `'use strict';` seul). Fix retenu dans `tsup.config.ts` : hook `onSuccess` qui prefixe le texte APRES l'ecriture des fichiers par esbuild (hors de son pipeline de parsing/validation des directives) — deterministe, sans warning de build.
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
+- Publish = tag `react-v3.0.0-alpha.21` (hors scope du /dev — cut de release parent).
+
 ## v3.0.0-alpha.20 — 2026-07-24 — Parité header : taille bouton feedback + sparkle VersionNotes
 
 > Bugs de parité visuelle découverts en migrant cap-transfo vers `<SiteHeader>` (#731, #732).
