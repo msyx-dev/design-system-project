@@ -1,7 +1,7 @@
 {
   "version": "2.113.4",
   "generated": {
-    "at": "2026-07-23T23:35:57.371Z",
+    "at": "2026-07-25T18:31:01.905Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3291,7 +3291,7 @@
         ".graph-port-link"
       ],
       "jsInit": "initGraph",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/graph.css"
       ]
