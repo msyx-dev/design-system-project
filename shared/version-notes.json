@@ -4,6 +4,17 @@
   },
   "released": [
     {
+      "version": "2.114.0",
+      "date": "2026-07-25",
+      "titre": "Annuler/Rétablir accessibles au doigt",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "En mode édition du graphe, les boutons Annuler et Rétablir sont désormais accessibles au doigt (mobile, tablette) en plus du raccourci clavier — ils se grisent automatiquement quand il n'y a plus rien à annuler ou à rétablir."
+        }
+      ]
+    },
+    {
       "version": "2.113.4",
       "date": "2026-07-25",
       "titre": "Chiffres de la page d'accueil corrigés",

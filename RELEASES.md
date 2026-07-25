@@ -1,5 +1,14 @@
 # Releases
 
+## 2.114.0 — 2026-07-25 — Graph édition : boutons undo/redo tactiles (toolbar) + glyphes au sprite (#697)
+
+> Suite de #675 (I5-3) : l'undo/redo du mode édition du graphe était **clavier-only** (`Ctrl/Cmd+Z`), inatteignable sur tactile (mobile/tablette) alors que le reste du mode édition (double-clic, ports 44px) est pensé tactile. Décision tranchée au groom de #675 : reporté à un ticket dédié le temps d'ajouter les glyphes manquants au sprite Lucide.
+
+### Added
+- **`shared/icons/sprite.svg`** (#697) : 2 nouveaux glyphes `i-undo-2`/`i-redo-2` (Lucide `undo-2`/`redo-2`, choisis pour leur lisibilité à petite taille et leur reconnaissance universelle dans les toolbars, préférés à `corner-up-left`/`corner-up-right` plus ambigus). Ajoutés via `shared/icons/build-sprite.sh` (tableau `ICONS`), sprite régénéré (58 → 60 glyphes).
+- **`.graph-toolbar`** (mode édition du graphe, `shared/graph/render/svg-renderer.js`) : 2e `.btn-group` Annuler/Rétablir (≥44px, cohérent avec les boutons existants), disposé à côté du groupe Ajouter/Relier/Supprimer. Appelle `_undo()`/`_redo()` (mêmes méthodes que le raccourci clavier — focus restauré identiquement). État `disabled` piloté par l'event `graph:history:change {canUndo,canRedo}` déjà émis par `GraphHistory` (aucune réimplémentation de la logique), + `aria-disabled` cohérent. `destroy()` détache proprement le listener posé sur l'instance `GraphHistory` en plus du teardown existant.
+- **`shared/css/components/graph.css`** : `.graph-toolbar` passe en `display:flex; gap:var(--space-sm); flex-wrap:wrap` pour accueillir les 2 groupes de boutons (tokens uniquement). Aucun style `disabled` dédié ajouté — vérifié que `.btn-icon:disabled`/`.btn-icon[disabled]` (buttons.css) porte déjà opacité/cursor/pointer-events pour tous les `.btn-icon` du DS (documenté en commentaire pour éviter une future duplication).
+
 ## 2.113.4 — 2026-07-25 — Réconciliation des compteurs de la page d'accueil + en-tête ARCHITECTURE.md stale (#707)
 
 > Trois sources du « nombre de composants » divergeaient (registre 138 entrées / site.html hero 107 / ARCHITECTURE.md 88) sans détection automatique — le drift n'était exposé qu'au bilan manuel d'un sprint (#705). Source de vérité tranchée : entrées `kind:component` du registre (109, modules/patterns/layouts/utilities exclus). En creusant avec le check-counters.sh d'origine, 7 autres chiffres se sont révélés faux sur la page d'accueil (version + compteurs de sections par catégorie) : soldés dans la foulée plutôt que rendus invisibles par un check amputé. Tout est désormais dérivé au build (`bin/generate-counters.js`) et bloquant en CI.

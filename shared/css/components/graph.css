@@ -95,16 +95,21 @@
     stroke-width: 2.5;
 }
 
-/* ===== Toolbar edition (#673, I5-1) — mode:'edit' uniquement ===== */
+/* ===== Toolbar edition (#673, I5-1 ; groupe historique undo/redo #697) — mode:'edit' uniquement ===== */
 /* Overlay HTML ancre en haut-debut du conteneur .graph (position:relative deja pose plus
    haut). Composee de .btn-group/.btn-icon DS (buttons.css) -> AUCUN style de bouton
    reimplemente ici, cibles deja >=44px. z-index au-dessus du canvas SVG (element non
-   positionne, une couche position:absolute suffit a passer devant sans le forcer). */
+   positionne, une couche position:absolute suffit a passer devant sans le forcer).
+   display:flex + gap (#697) : 2 .btn-group accoles (edition + historique), wrap sur
+   viewport etroit plutot que deborder du conteneur .graph. */
 .graph-toolbar {
     position: absolute;
     top: var(--space-sm);
     inset-inline-start: var(--space-sm);
     z-index: var(--z-sticky);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }
 
 /* Etat "actif" du bouton toggle "Relier" — meme pattern que .color-swatch[aria-pressed] (forms.css). */
@@ -113,6 +118,14 @@
     outline-offset: 2px;
     color: var(--accent);
 }
+
+/* Boutons historique Annuler/Rétablir (#697) — AUCUN style disabled dédié ici volontairement :
+   .btn-icon:disabled / .btn-icon[disabled] (buttons.css) porte déjà opacité 0.5 + cursor:not-allowed
+   + pointer-events:none pour TOUS les .btn-icon du DS (vérifié avant d'écrire cette règle — le
+   catch-all `[disabled]` global de _a11y.css EXCLUT explicitement .btn-icon car il a déjà sa
+   propre gestion, cf. commentaire "disabled global" v2.40.2 ; ne pas confondre "exclu du
+   catch-all" avec "non stylé"). Redéfinir ici serait un override de classe DS (anti-pattern,
+   DS-PRINCIPLES). */
 
 /* Noeud source choisi en mode "Relier" (avant le clic sur la cible) — signal distinct du
    halo de selection (--warning plutot que --accent, pour ne jamais se confondre avec
