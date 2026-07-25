@@ -10,6 +10,20 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.115.0] - 2026-07-25 — Graph : export SVG/PNG/print-PDF + round-trip JSON + import Cytoscape/DOT
+
+### Added
+- **Round-trip JSON versionné** (#664) : `shared/graph/io/{json,schema}.js` — `importGraphJSON(exportGraphJSON(model))` ≡ `model` (testé), `schemaVersion` figé à 1 + crochet de migration au load.
+- **Imports** (#664) : adaptateur Cytoscape JSON (`io/cytoscape.js`) et parseur maison d'un sous-ensemble DOT (`io/dot.js` — `digraph`/`graph`, arêtes `->`/`--`, `label` ; hors sous-ensemble = échec explicite).
+- **Export SVG** (#664) : `io/export-svg.js` — tokens CSS résolus inlinés (thème figé à l'export) + `<use>` du sprite résolus → SVG autonome hors DS.
+- **Export PNG** (#664) : `io/export-png.js` — SVG → Image → `canvas.toBlob`, hi-DPI via `devicePixelRatio`.
+- **Print-PDF** (#664) : `@media print` dans `components/graph.css` (0 KB de JS) — masque toolbar/ports/édition inline/live-region, `break-inside: avoid`, rendu papier lisible via les nouveaux tokens `--graph-print-bg`/`--graph-print-fg`/`--graph-print-line`.
+- API exposée depuis `shared/graph/index.js` ; tests Node `test:graph-io` câblés dans `ci.yml`.
+
+### Notes
+- PDF programmatique (jsPDF/svg2pdf) **hors périmètre** : licences non vérifiées, aucune dépendance ajoutée.
+- Limite connue : `<foreignObject>` (nœuds riches `renderNode`) mal rendu par Safari à l'export PNG.
+
 ## [2.114.0] - 2026-07-25 — Graph édition : boutons undo/redo tactiles (toolbar) + glyphes au sprite
 
 ### Added

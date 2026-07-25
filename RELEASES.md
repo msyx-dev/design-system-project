@@ -1,5 +1,22 @@
 # Releases
 
+## 2.115.0 — 2026-07-25 — Graph : export SVG/PNG/print-PDF + round-trip JSON + import Cytoscape/DOT (#664)
+
+> Dernier lot du moteur graph (Epic #656, milestone #45). Un graphe se sortait de l'écran uniquement par capture d'écran, et rien ne permettait de le recharger. Cette version ferme la boucle : sortie fidèle (SVG/PNG/papier) et entrée depuis des formats tiers. **Zéro dépendance ajoutée.**
+
+### Added
+- **Round-trip JSON versionné** (`shared/graph/io/json.js`, `schema.js`) : `importGraphJSON(exportGraphJSON(model))` ≡ `model`, garanti par test. `schemaVersion` figé à **1** avec le crochet de migration au load — l'évolution future du format ne cassera pas les fichiers déjà écrits.
+- **Import Cytoscape JSON** (`io/cytoscape.js`) : adaptateur mince, le modèle DS étant déjà Cytoscape-aligné (`{data:{id,…}}`).
+- **Import DOT** (`io/dot.js`) : parseur maison d'un sous-ensemble (`digraph`/`graph`, nœuds, arêtes `->`/`--`, attribut `label`). Ce qui sort du sous-ensemble échoue proprement plutôt que de produire un graphe faux.
+- **Export SVG** (`io/export-svg.js`) : sérialisation autonome — tokens CSS **résolus et inlinés** (thème figé à l'instant de l'export) et `<use href="#i-…">` du sprite résolus, pour qu'un SVG ouvert hors du DS garde ses couleurs et ses icônes.
+- **Export PNG** (`io/export-png.js`) : SVG → `Image` → `canvas.toBlob`, hi-DPI (`devicePixelRatio`).
+- **Print-PDF** : bloc `@media print` dans `components/graph.css` — `window.print()` suffit, **0 KB de JS**. Masque les affordances interactives (toolbar, ports, édition inline, live-region), évite la coupure entre deux pages, et force un rendu lisible sur papier via 3 nouveaux tokens `--graph-print-bg` / `--graph-print-fg` / `--graph-print-line` (volontairement hors theming : un thème dark imprimé donnerait des traits clairs sur blanc).
+- API exposée depuis le point d'entrée public `shared/graph/index.js`. Tests Node `test:graph-io` **câblés dans la CI**.
+
+### Notes
+- **Hors périmètre assumé** : le PDF *programmatique* (jsPDF + svg2pdf) reste non livré — licences non vérifiées, et le print-PDF natif couvre le besoin sans dépendance.
+- Limite connue : les nœuds riches (`renderNode`) utilisent `<foreignObject>`, mal rendu par Safari à l'export PNG.
+
 ## 2.114.0 — 2026-07-25 — Graph édition : boutons undo/redo tactiles (toolbar) + glyphes au sprite (#697)
 
 > Suite de #675 (I5-3) : l'undo/redo du mode édition du graphe était **clavier-only** (`Ctrl/Cmd+Z`), inatteignable sur tactile (mobile/tablette) alors que le reste du mode édition (double-clic, ports 44px) est pensé tactile. Décision tranchée au groom de #675 : reporté à un ticket dédié le temps d'ajouter les glyphes manquants au sprite Lucide.

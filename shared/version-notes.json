@@ -4,6 +4,21 @@
   },
   "released": [
     {
+      "version": "2.115.0",
+      "date": "2026-07-25",
+      "titre": "Graphes : exporter et importer",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Un graphe peut désormais être exporté en image (SVG ou PNG) ou imprimé en PDF depuis le navigateur, en gardant ses couleurs et ses icônes."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Un graphe peut être sauvegardé puis rechargé à l'identique, et des graphes créés ailleurs (formats Cytoscape ou DOT) peuvent être importés."
+        }
+      ]
+    },
+    {
       "version": "2.114.0",
       "date": "2026-07-25",
       "titre": "Annuler/Rétablir accessibles au doigt",
