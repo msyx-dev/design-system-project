@@ -1,10 +1,19 @@
-import { useEffect, useRef } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  type ForwardedRef,
+  type ReactElement,
+  type Ref,
+} from "react";
 import {
   createGraph,
   type CreateGraphOptions,
   type GraphEdge,
   type GraphEngineInstance,
   type GraphEngineModel,
+  type GraphEngineModelChangeDetail,
   type GraphLayout,
   type GraphLayoutOptions,
   type GraphNode,
@@ -17,7 +26,24 @@ export type {
   GraphNode,
   GraphEdge,
   NodeTypeSpec,
+  GraphEngineModelChangeDetail,
 };
+
+/**
+ * Ref impérative exposée par `<Graph>` (et les presets Mindmap/OrgChart/DependencyMap
+ * qui la relaient, #677 I6-2) — undo/redo hors du flux props/callbacks, car ce sont
+ * des COMMANDES ponctuelles adressées au moteur (pas un état à refléter dans le JSX),
+ * exactement le cas d'usage documenté de `useImperativeHandle` (piloter un instant
+ * impératif d'un enfant, ici la pile `GraphHistory` du moteur, cf. `shared/graph/model/
+ * history.js`). No-op hors `mode:'edit'` (le moteur n'instancie pas de `GraphHistory`
+ * en mode `view` — cf. `shared/graph/index.js`).
+ */
+export interface GraphHandle {
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+}
 
 export interface GraphProps<TNode = unknown, TEdge = unknown> {
   /** Nœuds du graphe — `data.id` unique (namespace partagé avec les arêtes). */
@@ -61,6 +87,28 @@ export interface GraphProps<TNode = unknown, TEdge = unknown> {
   ariaLabel: string;
   /** Classes additionnelles sur le conteneur (le moteur ajoute `.graph` en plus). */
   className?: string;
+  /**
+   * `'view'` (défaut, INCHANGÉ depuis I6-1) ou `'edit'` (#673-675, I5) — monte la
+   * `.graph-toolbar` (Ajouter/Relier/Supprimer), la création/suppression de
+   * nœuds/arêtes, l'édition inline du label et l'historique undo/redo (cf.
+   * `GraphHandle`). Option de CONSTRUCTION côté moteur (comme `layout`) : un
+   * changement de `mode` en cours de vie remonte l'instance (destroy+create).
+   */
+  mode?: "view" | "edit";
+  /**
+   * Invoqué à chaque mutation atomique du modèle moteur — branché sur le
+   * `CustomEvent('graph:model:change')` réel de `GraphModel` (retranscrit
+   * `GraphEngineModelChangeDetail`, PAS l'alias DOM `graph:edit` posé sur le
+   * conteneur : ce dernier n'est qu'un rebalance optionnel réservé aux consumers
+   * qui écoutent l'élément hôte plutôt que le modèle, cf. `shared/graph/render/
+   * svg-renderer.js` `_onChange()` — « pas un 2e canal de vérité »). Se déclenche
+   * pour TOUTE mutation du modèle, y compris celles issues de la réconciliation
+   * warm-start (changement des props `nodes`/`edges`) — pas seulement les éditions
+   * utilisateur en `mode:'edit'` (aucune mutation initiale n'est émise : la
+   * construction du modèle via `data` ne déclenche aucun événement, cf. `GraphModel`
+   * constructeur — seuls les changements RÉELS après montage sont notifiés).
+   */
+  onModelChange?: (detail: GraphEngineModelChangeDetail) => void;
 }
 
 /** État interne d'un nœud/arête réduit à sa comparaison de contenu (warm-start diff). */
@@ -132,8 +180,11 @@ function reconcileGraphData(
 
 /**
  * `<Graph>` — wrapper React data-driven du moteur graphique node-link maison
- * (`shared/graph/`, #676 I6-1). Vue seule (`mode:'view'`) : presets Mindmap/OrgChart/
- * DependencyMap et mode édition exposé sont l'issue #677 (I6-2), hors scope ici.
+ * (`shared/graph/`, #676 I6-1 view-only + #677 I6-2 mode édition/presets). Défaut
+ * `mode:'view'` INCHANGÉ depuis I6-1 ; `mode:'edit'` monte la toolbar et expose
+ * undo/redo via la ref impérative (`GraphHandle`). Les presets `Mindmap`/`OrgChart`/
+ * `DependencyMap` (#677) composent PAR-DESSUS ce composant (defaults d'options),
+ * ils ne dupliquent ni le moteur ni ce wrapper.
  *
  * Le moteur touche le DOM/SVG directement (measure→layout→paint) : montage
  * **client-only** via `useEffect` (jamais au render, SSR-safe par construction —
@@ -164,13 +215,15 @@ function reconcileGraphData(
  * le moteur pilote seul (aucun état React interne nécessaire, contrairement à
  * `<TreeView>` : la sélection vit déjà visuellement dans le DOM peint par le moteur).
  */
-export function Graph<TNode = unknown, TEdge = unknown>(
+function GraphInner<TNode = unknown, TEdge = unknown>(
   props: GraphProps<TNode, TEdge>,
+  ref: ForwardedRef<GraphHandle>,
 ) {
   const {
     nodes,
     edges,
     layout = "auto",
+    mode = "view",
     selectedId,
     selectedEdgeId,
     ariaLabel,
@@ -187,10 +240,13 @@ export function Graph<TNode = unknown, TEdge = unknown>(
   latest.current = props;
 
   // ---- Effet 1 — création/destruction de l'instance moteur ----
-  // Ne dépend QUE de `layout` (seule option de construction hot-swappée
-  // automatiquement par remount, cf. docstring). `layoutOptions`/`nodeTypes`/
-  // `renderNode`/données/sélection initiale sont lus via `latest.current` au moment
-  // du montage — toujours à jour grâce à l'assignation synchrone ci-dessus.
+  // Dépend de `layout` ET `mode` (#677 : `mode` est aussi une option de
+  // CONSTRUCTION côté moteur — `_initEdit()` n'est appelé qu'une fois dans le
+  // constructeur du renderer, cf. `shared/graph/render/svg-renderer.js` — donc
+  // hot-swappée automatiquement par remount, comme `layout`). `layoutOptions`/
+  // `nodeTypes`/`renderNode`/données/sélection initiale sont lus via
+  // `latest.current` au moment du montage — toujours à jour grâce à
+  // l'assignation synchrone ci-dessus.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -227,7 +283,7 @@ export function Graph<TNode = unknown, TEdge = unknown>(
       renderNode: initialProps.renderNode as
         ((node: GraphNode) => HTMLElement) | undefined,
       label: initialProps.ariaLabel,
-      mode: "view", // I6-1 = view-only ; mode édition = #677 (I6-2)
+      mode, // #677, I6-2 — 'view' (défaut, inchangé) ou 'edit' (toolbar + undo/redo)
       initialSelection,
       // selectionDetail:false — le wrapper route TOUJOURS vers onSelect/onSelectEdge
       // (composition React : Modal/Drawer DS côté consommateur), jamais la modale
@@ -250,15 +306,50 @@ export function Graph<TNode = unknown, TEdge = unknown>(
     const instance = createGraph(el, opts);
     instanceRef.current = instance;
 
+    // #677, I6-2 — `onModelChange` branché sur l'événement RÉEL du modèle
+    // (`graph:model:change`, PAS l'alias DOM `graph:edit` — cf. docstring du
+    // composant et JSDoc de `GraphProps.onModelChange`).
+    const onModelChangeListener = (
+      event: CustomEvent<GraphEngineModelChangeDetail>,
+    ) => {
+      latest.current.onModelChange?.(event.detail);
+    };
+    instance.model.addEventListener(
+      "graph:model:change",
+      onModelChangeListener,
+    );
+
     return () => {
       if (settleRaf1 != null) cancelAnimationFrame(settleRaf1);
       if (settleRaf2 != null) cancelAnimationFrame(settleRaf2);
       observer.disconnect();
+      instance.model.removeEventListener(
+        "graph:model:change",
+        onModelChangeListener,
+      );
       instance.destroy();
       instanceRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layout]);
+  }, [layout, mode]);
+
+  // ---- Ref impérative — undo/redo (#677, I6-2) ----
+  // Lit toujours `instanceRef.current` au moment de l'appel (pas de capture figée) :
+  // no-op sûr (retour par défaut) tant que l'instance n'est pas montée ou hors
+  // `mode:'edit'` (le moteur renvoie lui-même des no-op dans ce cas, cf. `shared/
+  // graph/index.js` — `undo`/`redo` passent par `_undo()`/`_redo()` qui retournent
+  // `false` sans `GraphHistory`, `canUndo`/`canRedo` lisent `renderer.history` qui
+  // reste `undefined` en mode `view`).
+  useImperativeHandle(
+    ref,
+    () => ({
+      undo: () => instanceRef.current?.undo(),
+      redo: () => instanceRef.current?.redo(),
+      canUndo: () => instanceRef.current?.canUndo() ?? false,
+      canRedo: () => instanceRef.current?.canRedo() ?? false,
+    }),
+    [],
+  );
 
   // ---- Effet 2 — réconciliation warm-start des données ----
   useEffect(() => {
@@ -300,4 +391,21 @@ export function Graph<TNode = unknown, TEdge = unknown>(
   return <div ref={containerRef} className={className} />;
 }
 
-Graph.displayName = "Graph";
+// `forwardRef` + générique : TS ne préserve pas `<TNode,TEdge>` à travers
+// `forwardRef()` nativement (perd les paramètres de type, cf. limitation connue
+// de la lib React types). Cast local sur un type de fonction appelable générique
+// (même pattern que `graph-engine.ts` `createGraph` — le composant réel N'EST PAS
+// réimplémenté, seul le TYPE exposé est reconstitué). `displayName` posé AVANT le
+// cast (propriété absente du type fonction générique final, mais bien présente à
+// l'exécution sur le même objet).
+const GraphWithRef = forwardRef(
+  GraphInner as (
+    props: GraphProps<unknown, unknown>,
+    ref: ForwardedRef<GraphHandle>,
+  ) => ReactElement,
+);
+GraphWithRef.displayName = "Graph";
+
+export const Graph = GraphWithRef as <TNode = unknown, TEdge = unknown>(
+  props: GraphProps<TNode, TEdge> & { ref?: Ref<GraphHandle> },
+) => ReactElement;
