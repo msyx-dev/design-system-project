@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# check-counters.sh — Verifie la coherence des compteurs de site.html (issue #380).
+# check-counters.sh — Verifie la coherence des compteurs de site.html (issue #380, source de verite tranchee #707).
 #
 # Source de verite :
-#   - Nombre de composants    = entrees de shared/components-registry.json avec "page" non nul
+#   - Nombre de composants    = entrees de shared/components-registry.json
+#                                dont "kind" === "component" (issue #707 —
+#                                modules/patterns/layouts/utilities exclus)
 #   - Nombre de sections/page = nombre de <section id="..."> dans pages/<page>.html
 #   - Version                 = const VERSION de shared/nav.js (== @ds-version)
 #
@@ -23,10 +25,11 @@ PAGES_DIR="$ROOT/pages"
 fail=0
 report() { echo "  MISMATCH: $1"; fail=1; }
 
-# --- Source de verite : compte des composants (page non nul) ---
+# --- Source de verite : compte des composants (kind === "component", #707) ---
 component_count=$(node -e '
   const r = require(process.argv[1]);
-  const n = r.components.filter(c => c.page !== undefined && c.page !== null).length;
+  const list = Array.isArray(r) ? r : r.components;
+  const n = list.filter(c => c && c.kind === "component").length;
   process.stdout.write(String(n));
 ' "$REGISTRY")
 
@@ -71,6 +74,6 @@ if [ "$fail" -eq 0 ]; then
   echo "OK -- compteurs coherents."
 else
   echo
-  echo "Compteurs incoherents (voir ci-dessus)."
+  echo "Compteurs incoherents (voir ci-dessus). Lancer : node bin/generate-counters.js"
 fi
 exit "$fail"

@@ -1,5 +1,20 @@
 # Releases
 
+## 2.113.4 — 2026-07-25 — Réconciliation des compteurs de la page d'accueil + en-tête ARCHITECTURE.md stale (#707)
+
+> Trois sources du « nombre de composants » divergeaient (registre 138 entrées / site.html hero 107 / ARCHITECTURE.md 88) sans détection automatique — le drift n'était exposé qu'au bilan manuel d'un sprint (#705). Source de vérité tranchée : entrées `kind:component` du registre (109, modules/patterns/layouts/utilities exclus). En creusant avec le check-counters.sh d'origine, 7 autres chiffres se sont révélés faux sur la page d'accueil (version + compteurs de sections par catégorie) : soldés dans la foulée plutôt que rendus invisibles par un check amputé. Tout est désormais dérivé au build (`bin/generate-counters.js`) et bloquant en CI.
+
+### Added
+- **`bin/generate-counters.js`** (#707) : dérive et synchronise dans `site.html` (1) le compteur de composants (`kind:component` de `shared/components-registry.json`, meta description/hero-stat/footer), (2) les compteurs de sections de chaque hub-card (nombre réel de `<section id>` par page), (3) la version affichée (meta description + footer, depuis `const VERSION` de `shared/nav.js`) ; + le compteur en tête de `docs/ARCHITECTURE.md`. Mode `--check` idempotent (même pattern que `generate-nav-sections.js`/`generate-version-notes.js`). Script npm `generate-counters`.
+
+### Fixed
+- **`site.html`** (#707) : compteur composants 107 → 109 (aligné sur `kind:component` du registre) ; version affichée v2.110.1 → v2.113.4 (meta + footer, stale depuis plusieurs releases) ; 6 hub-card-count corrigés sur les chiffres réels de sections par page — composants 13→14, formulaires 16→19, navigation 8→10, data 16→19, feedback 12→13, divers 11→15 (fondation/user-feedback/overlays/templates étaient déjà justes).
+- **`docs/ARCHITECTURE.md`** (#707) : en-tête corrigé — compteur 107 → 109, retrait de la parenthèse de suivi #707 devenue obsolète, « Version courante » 2.111.0 → 2.113.4.
+- **`shared/check-counters.sh`** (#707) : source de vérité du compte de composants alignée sur `kind:component` (109, au lieu de `page != null` qui comptait aussi des `module`/`pattern`/`utility`, 111) — le reste de la couverture d'origine (issue #380 : version, pages, hub-card vs sections réelles) est conservé intégralement, désormais vérifié en CI.
+
+### CI
+- **`.github/workflows/ci.yml`** (#707) : câblage bloquant de `shared/check-counters.sh` + `bin/generate-counters.js --check` — le script existait déjà mais n'était référencé dans aucun workflow, seul un audit manuel exposait le drift.
+
 ## 2.113.3 — 2026-07-25 — Fix render-risk : import CSS barrel + tokens d'espacement fantômes (#704)
 
 > Deux bugs de rendu affectant les consumers (feedbacks band-aid côté cap-transfo) : la forme `@import url('css/X.css');` du barrel `shared/styles.css` est silencieusement droppée par Tailwind v4 / Lightning CSS (CSS jamais bundlé, sans erreur de build) ; et 3 usages de tokens `--space-1`/`--space-3` jamais définis dans `tokens.css` (échelle réelle : `--space-xs/sm/2/md/5/lg/xl/2xl/3xl/4xl`).

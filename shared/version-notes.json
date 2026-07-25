@@ -4,6 +4,21 @@
   },
   "released": [
     {
+      "version": "2.113.4",
+      "date": "2026-07-25",
+      "titre": "Chiffres de la page d'accueil corrigés",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le nombre de composants affiché sur la page d'accueil est désormais exact et reste à jour automatiquement à chaque nouvelle version."
+        },
+        {
+          "type": "correction",
+          "text": "La version affichée et le nombre de sections indiqué sur chaque catégorie de la page d'accueil, qui n'étaient plus à jour, ont été recalculés."
+        }
+      ]
+    },
+    {
       "version": "2.113.3",
       "date": "2026-07-25",
       "titre": "Corrections d'affichage (imports CSS + espacements)",

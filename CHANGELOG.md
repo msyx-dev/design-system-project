@@ -10,6 +10,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.113.4] - 2026-07-25 — Réconciliation des compteurs de la page d'accueil + en-tête ARCHITECTURE.md stale
+
+### Added
+- **`bin/generate-counters.js`** (#707) : dérive le compteur de composants (`kind:component` du registre, 109), les compteurs de sections de chaque hub-card (nombre réel de `<section id>` par page), et la version affichée sur `site.html` (depuis `const VERSION` de `shared/nav.js`). Met à jour `site.html` (meta/hero/footer/hub-cards) + l'en-tête de `docs/ARCHITECTURE.md`. Mode `--check` en CI, script npm `generate-counters`.
+
+### Fixed
+- **`site.html`** + **`docs/ARCHITECTURE.md`** (#707) : compteur composants 107/88 → 109 (source de vérité : registre `kind:component`) ; version affichée v2.110.1 → v2.113.4 ; 6 hub-card-count corrigés sur les chiffres réels de sections par page (composants, formulaires, navigation, data, feedback, divers) ; parenthèse de suivi #707 obsolète retirée de ARCHITECTURE.md.
+- **`shared/check-counters.sh`** (#707) : source de vérité du compte de composants alignée sur `kind:component` (109 au lieu de `page != null`, 111) — couverture complète conservée (version, pages, hub-card vs sections réelles), câblée bloquante dans `ci.yml` — n'était référencée dans aucun workflow jusqu'ici.
+
 ## [2.113.3] - 2026-07-25 — Fix render-risk : import CSS barrel + tokens d'espacement fantômes
 
 ### Fixed
