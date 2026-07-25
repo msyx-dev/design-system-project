@@ -85,9 +85,41 @@ export interface GraphEdgePatch {
 }
 
 /**
+ * Détail du `CustomEvent('graph:model:change')` émis par `GraphModel#emit()`
+ * (`shared/graph/model/graph-model.js`) — 1 mutation atomique = 1 événement.
+ * `update-node`/`update-edge` portent `prev` (état avant patch, #675). Consommé
+ * par `onModelChange` (#677, I6-2) — retranscription fidèle, pas une réinvention.
+ */
+export type GraphEngineModelChangeDetail =
+  | { op: "add-node"; id: string; node: GraphNode }
+  | {
+      op: "update-node";
+      id: string;
+      node: GraphNode;
+      patch: GraphNodePatch;
+      prev: GraphNode;
+    }
+  | {
+      op: "remove-node";
+      id: string;
+      node: GraphNode;
+      removedEdges: GraphEdge[];
+    }
+  | { op: "add-edge"; id: string; edge: GraphEdge }
+  | {
+      op: "update-edge";
+      id: string;
+      edge: GraphEdge;
+      patch: GraphEdgePatch;
+      prev: GraphEdge;
+    }
+  | { op: "remove-edge"; id: string; edge: GraphEdge };
+
+/**
  * Surface minimale de `GraphModel` (`shared/graph/model/graph-model.js`) exploitée par
- * le wrapper pour la réconciliation warm-start (#676) — PAS l'API complète du moteur
- * (pas d'exposition undo/redo/history ici, hors scope I6-1 view-only).
+ * le wrapper pour la réconciliation warm-start (#676) et l'écoute `onModelChange`
+ * (#677, I6-2). `GraphModel extends EventTarget` (cf. en-tête du fichier source) —
+ * `addEventListener`/`removeEventListener` retranscrits ici pour `graph:model:change`.
  */
 export interface GraphEngineModel {
   readonly nodes: GraphNode[];
@@ -102,6 +134,14 @@ export interface GraphEngineModel {
   addEdge(edge: GraphEdge): void;
   updateEdge(id: string, patch: GraphEdgePatch): void;
   removeEdge(id: string): void;
+  addEventListener(
+    type: "graph:model:change",
+    listener: (event: CustomEvent<GraphEngineModelChangeDetail>) => void,
+  ): void;
+  removeEventListener(
+    type: "graph:model:change",
+    listener: (event: CustomEvent<GraphEngineModelChangeDetail>) => void,
+  ): void;
 }
 
 /** Options réelles de `createGraph(el, opts)` — cf. JSDoc `shared/graph/index.js`. */
@@ -142,6 +182,16 @@ export interface GraphEngineInstance {
   select: (id: string | null, opts?: { silent?: boolean }) => void;
   getSelection: () => GraphEngineSelection | null;
   fit: () => void;
+  /**
+   * Undo/redo (#675, I5-3) — no-op (retourne `false`/`undefined`) hors `mode:'edit'`
+   * (pas de `GraphHistory` instanciée côté renderer). Passe par `_undo()`/`_redo()`
+   * en interne (repose le focus clavier via `_afterHistoryNav`), pas `history.undo()`
+   * en direct — cf. `shared/graph/index.js`.
+   */
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 }
 
 /**

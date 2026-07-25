@@ -8,6 +8,20 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.23 — 2026-07-25 — Presets Graph + mode édition (I6-2, #677)
+
+> Complète `<Graph>` (I6-1, #676, view-only) : presets métier + exposition du mode édition (I5) du moteur.
+
+### Added
+- **`<Mindmap>`, `<OrgChart>`, `<DependencyMap>`** : presets composant PAR-DESSUS `<Graph>` — defaults d'options purs, **aucune duplication du moteur ni du wrapper**. `<Mindmap>` → `layout:'mindmap'` (bilatéral maison, use case NHOOD). `<OrgChart>` → `layout:'tree'` + `layoutOptions:{direction:'TB'}`. `<DependencyMap>` → `layout:'layered'` (Sugiyama/dagre vendoré, DAG — le seul layout ASYNC du moteur, invisible côté wrapper). Toutes les props de `<Graph>` sont acceptées ; un `layout`/`layoutOptions` explicite du consumer **gagne** sur le défaut du preset. Co-localisés dans `components/Graph/` — pas de nouvelle clé `REACT_TO_REGISTRY` (variantes de l'entrée `graph`, déjà `react:"ported"` depuis #676).
+- **Mode édition exposé sur `<Graph>`** — périmètre initial d'I6-2 (spec #663) perdu au split #676/#677, réintégré ici : prop `mode?:'view'|'edit'` (défaut `'view'`, comportement I6-1 **strictement inchangé**), option de construction au même titre que `layout` (remonte l'instance moteur au changement — `_initEdit()` du renderer n'est appelé qu'au constructeur). `mode:'edit'` monte la `.graph-toolbar` (Ajouter/Relier/Supprimer + Annuler/Rétablir) et active création/suppression/édition inline/undo-redo côté moteur (#673→#675, déjà livrés côté DS CSS).
+- **`onModelChange?`** : branché sur l'événement RÉEL du modèle, `CustomEvent('graph:model:change')` sur `instance.model` (PAS l'alias DOM `graph:edit` posé sur le conteneur — celui-ci n'est qu'un rebalance optionnel pour les consumers qui écoutent l'élément hôte plutôt que le modèle, explicitement documenté « pas un 2e canal de vérité » dans `shared/graph/render/svg-renderer.js`). Se déclenche pour toute mutation atomique du modèle (`{op,...}` retranscrit fidèlement), y compris celles issues de la réconciliation warm-start des props `nodes`/`edges` — aucune mutation à la construction initiale (le modèle n'émet rien tant qu'aucun abonné n'existe encore).
+- **`GraphHandle` (ref impérative)** : `undo()`/`redo()`/`canUndo()`/`canRedo()` exposés via `useImperativeHandle` — choix retenu car ce sont des COMMANDES ponctuelles adressées au moteur (pas un état à refléter dans le JSX), cas d'usage canonique de la ref impérative React. No-op sûr hors `mode:'edit'` (le moteur n'instancie pas de `GraphHistory` en mode `view`). `<Mindmap>`/`<OrgChart>`/`<DependencyMap>` relaient la même ref.
+
+### Notes
+- Registre : aucun changement à `REACT_TO_REGISTRY`/`components-registry.json` — les 3 presets sont des variantes co-localisées de l'entrée `graph` (`npm run generate-registry` vérifié OK).
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
+
 ## v3.0.0-alpha.22 — 2026-07-25 — `<Graph>` : wrapper React du moteur node-link (I6-1, #676)
 
 > Le moteur graph (`shared/graph/`, v2.98→v2.114) n'était pilotable qu'en vanilla. `<Graph>` l'expose en React data-driven, **view-only** — les presets Mindmap/OrgChart/DependencyMap et l'exposition du mode édition sont l'objet de #677 (I6-2).

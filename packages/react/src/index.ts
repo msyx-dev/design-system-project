@@ -254,6 +254,7 @@ export type {
 } from "./components/SiteHeader/SiteHeader";
 
 // ─── Graph (v3.0.0-alpha.22) — #676, I6-1 view-only ───
+// ─── Graph presets + mode édition (v3.0.0-alpha.23) — #677, I6-2 ───
 export { Graph } from "./components/Graph/Graph";
 export type {
   GraphProps,
@@ -262,4 +263,12 @@ export type {
   GraphNode,
   GraphEdge,
   NodeTypeSpec,
+  GraphHandle,
+  GraphEngineModelChangeDetail,
 } from "./components/Graph/Graph";
+export { Mindmap } from "./components/Graph/Mindmap";
+export type { MindmapProps } from "./components/Graph/Mindmap";
+export { OrgChart } from "./components/Graph/OrgChart";
+export type { OrgChartProps } from "./components/Graph/OrgChart";
+export { DependencyMap } from "./components/Graph/DependencyMap";
+export type { DependencyMapProps } from "./components/Graph/DependencyMap";

@@ -19,3 +19,18 @@ if (typeof HTMLDialogElement !== "undefined") {
     };
   }
 }
+
+// jsdom n'implémente pas `SVGGraphicsElement.prototype.getScreenCTM()` (méthode
+// absente, pas seulement no-op) — le moteur graph (`shared/graph/render/
+// viewport.js` `screenToUser()`) a une branche défensive explicite pour ce cas
+// (« env sans layout ») qui retombe sur les coordonnées écran telles quelles
+// quand `getScreenCTM()` renvoie `null`. Sans ce polyfill, l'appel lève
+// `TypeError: ... is not a function` (constaté sur `<Graph mode="edit">`,
+// #677 I6-2 — création de nœud via la toolbar déclenche `_clientToWorld()`).
+// Le polyfill retourne `null` : exactement la branche déjà prévue côté moteur,
+// aucun comportement inventé.
+if (typeof SVGGraphicsElement !== "undefined") {
+  if (!SVGGraphicsElement.prototype.getScreenCTM) {
+    SVGGraphicsElement.prototype.getScreenCTM = () => null;
+  }
+}

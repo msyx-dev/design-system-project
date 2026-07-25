@@ -1,6 +1,12 @@
+import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
-import { Graph, type GraphEdge, type GraphNode } from "./Graph";
+import {
+  Graph,
+  type GraphEdge,
+  type GraphHandle,
+  type GraphNode,
+} from "./Graph";
 
 afterEach(cleanup);
 
@@ -322,5 +328,110 @@ describe("Graph — montage/démontage (pas de fuite)", () => {
       );
       unmount();
     }
+  });
+});
+
+function addNodeButton(container: HTMLElement) {
+  return container.querySelector<HTMLButtonElement>(
+    'button[aria-label="Ajouter un nœud"]',
+  );
+}
+
+describe("Graph — mode édition (#677, I6-2)", () => {
+  it("mode='view' (défaut) NE monte PAS .graph-toolbar — non-régression I6-1", () => {
+    const { nodes, edges } = makeGraphData();
+    const { container } = render(
+      <Graph
+        nodes={nodes}
+        edges={edges}
+        ariaLabel="Topologie"
+        layout="fixed"
+      />,
+    );
+    expect(container.querySelector(".graph-toolbar")).not.toBeInTheDocument();
+  });
+
+  it("mode='edit' monte .graph-toolbar (Ajouter/Relier/Supprimer + Annuler/Rétablir)", () => {
+    const { nodes, edges } = makeGraphData();
+    const { container } = render(
+      <Graph
+        nodes={nodes}
+        edges={edges}
+        ariaLabel="Topologie"
+        layout="fixed"
+        mode="edit"
+      />,
+    );
+    expect(container.querySelector(".graph-toolbar")).toBeInTheDocument();
+    expect(addNodeButton(container)).toBeInTheDocument();
+  });
+
+  it("onModelChange est appelé sur mutation — branché sur `graph:model:change` (PAS l'alias DOM `graph:edit`, cf. docstring)", () => {
+    const { nodes, edges } = makeGraphData();
+    const onModelChange = vi.fn();
+    const { container } = render(
+      <Graph
+        nodes={nodes}
+        edges={edges}
+        ariaLabel="Topologie"
+        layout="fixed"
+        mode="edit"
+        onModelChange={onModelChange}
+      />,
+    );
+    expect(onModelChange).not.toHaveBeenCalled(); // construction du modèle = silencieuse
+
+    fireEvent.click(addNodeButton(container)!);
+
+    expect(onModelChange).toHaveBeenCalledTimes(1);
+    expect(onModelChange.mock.calls[0][0]).toMatchObject({ op: "add-node" });
+  });
+});
+
+describe("Graph — ref impérative undo/redo (GraphHandle, #677 I6-2)", () => {
+  it("hors mode edit (mode='view' par défaut) : canUndo/canRedo = false, undo/redo no-op sans throw", () => {
+    const { nodes, edges } = makeGraphData();
+    const ref = createRef<GraphHandle>();
+    render(
+      <Graph
+        ref={ref}
+        nodes={nodes}
+        edges={edges}
+        ariaLabel="Topologie"
+        layout="fixed"
+      />,
+    );
+    expect(ref.current?.canUndo()).toBe(false);
+    expect(ref.current?.canRedo()).toBe(false);
+    expect(() => ref.current?.undo()).not.toThrow();
+    expect(() => ref.current?.redo()).not.toThrow();
+  });
+
+  it("mode='edit' : undo()/redo() pilotent réellement l'historique du moteur (création d'un nœud via toolbar)", () => {
+    const { nodes, edges } = makeGraphData();
+    const ref = createRef<GraphHandle>();
+    const { container } = render(
+      <Graph
+        ref={ref}
+        nodes={nodes}
+        edges={edges}
+        ariaLabel="Topologie"
+        layout="fixed"
+        mode="edit"
+      />,
+    );
+    expect(ref.current?.canUndo()).toBe(false);
+
+    fireEvent.click(addNodeButton(container)!);
+    expect(ref.current?.canUndo()).toBe(true);
+    expect(ref.current?.canRedo()).toBe(false);
+
+    ref.current?.undo();
+    expect(ref.current?.canUndo()).toBe(false);
+    expect(ref.current?.canRedo()).toBe(true);
+
+    ref.current?.redo();
+    expect(ref.current?.canUndo()).toBe(true);
+    expect(ref.current?.canRedo()).toBe(false);
   });
 });
