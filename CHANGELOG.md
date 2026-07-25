@@ -10,6 +10,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.113.4] - 2026-07-25 — Réconciliation des compteurs de composants + en-tête ARCHITECTURE.md stale
+
+### Added
+- **`bin/generate-counters.js`** (#707) : dérive le compteur de composants (`kind:component` du registre, 109) et met à jour `site.html` (meta/hero/footer) + l'en-tête de `docs/ARCHITECTURE.md`. Mode `--check` en CI, script npm `generate-counters`.
+
+### Fixed
+- **`site.html`** + **`docs/ARCHITECTURE.md`** (#707) : compteur composants 107/88 → 109 (source de vérité : registre `kind:component`) ; parenthèse de suivi #707 obsolète retirée ; version courante ARCHITECTURE.md réalignée sur 2.113.4.
+- **`shared/check-counters.sh`** (#707) : recentré sur registre ↔ site.html ↔ ARCHITECTURE.md, câblé (bloquant) dans `ci.yml` — n'était référencé dans aucun workflow jusqu'ici.
+
 ## [2.113.3] - 2026-07-25 — Fix render-risk : import CSS barrel + tokens d'espacement fantômes
 
 ### Fixed

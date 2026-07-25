@@ -1,5 +1,20 @@
 # Releases
 
+## 2.113.4 — 2026-07-25 — Réconciliation des compteurs de composants + en-tête ARCHITECTURE.md stale (#707)
+
+> Trois sources du « nombre de composants » divergeaient (registre 138 entrées / site.html hero 107 / ARCHITECTURE.md 88) sans détection automatique — le drift n'était exposé qu'au bilan manuel d'un sprint (#705). Source de vérité tranchée : entrées `kind:component` du registre (109, modules/patterns/layouts/utilities exclus). Le compteur est désormais dérivé au build (`bin/generate-counters.js`) et sa cohérence est bloquante en CI.
+
+### Added
+- **`bin/generate-counters.js`** (#707) : dérive le compteur de composants (`kind:component` de `shared/components-registry.json`) et met à jour `site.html` (meta description, hero-stat, footer) + l'en-tête de `docs/ARCHITECTURE.md`. Mode `--check` idempotent (même pattern que `generate-nav-sections.js`/`generate-version-notes.js`). Script npm `generate-counters`.
+
+### Fixed
+- **`site.html`** (#707) : compteur composants 107 → 109 (3 emplacements : meta description, hero-stat, footer), aligné sur `kind:component` du registre.
+- **`docs/ARCHITECTURE.md`** (#707) : en-tête corrigé — compteur 107 → 109, retrait de la parenthèse de suivi #707 devenue obsolète, « Version courante » 2.111.0 → 2.113.4 (désormais alignée sur le bump synchrone).
+- **`shared/check-counters.sh`** (#707) : recentré sur le périmètre de l'issue — compare registre `kind:component` ↔ site.html ↔ ARCHITECTURE.md (les checks hors scope hub-card/sections-par-page et version footer, dette distincte non tranchée ici, sont retirés).
+
+### CI
+- **`.github/workflows/ci.yml`** (#707) : câblage bloquant de `shared/check-counters.sh` + `bin/generate-counters.js --check` — le script existait déjà mais n'était référencé dans aucun workflow, seul un audit manuel exposait le drift.
+
 ## 2.113.3 — 2026-07-25 — Fix render-risk : import CSS barrel + tokens d'espacement fantômes (#704)
 
 > Deux bugs de rendu affectant les consumers (feedbacks band-aid côté cap-transfo) : la forme `@import url('css/X.css');` du barrel `shared/styles.css` est silencieusement droppée par Tailwind v4 / Lightning CSS (CSS jamais bundlé, sans erreur de build) ; et 3 usages de tokens `--space-1`/`--space-3` jamais définis dans `tokens.css` (échelle réelle : `--space-xs/sm/2/md/5/lg/xl/2xl/3xl/4xl`).
