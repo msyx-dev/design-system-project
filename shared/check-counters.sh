@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
-# check-counters.sh — Verifie la coherence des compteurs de site.html (issue #380).
+# check-counters.sh — Verifie la coherence du compteur de composants (issue #707).
 #
-# Source de verite :
-#   - Nombre de composants    = entrees de shared/components-registry.json avec "page" non nul
-#   - Nombre de sections/page = nombre de <section id="..."> dans pages/<page>.html
-#   - Version                 = const VERSION de shared/nav.js (== @ds-version)
+# Source de verite (tranchee #707) :
+#   Nombre de composants = entrees de shared/components-registry.json dont
+#   "kind" === "component" (les kind:module/pattern/layout/utility ne sont PAS
+#   des composants UI et ne comptent pas).
 #
-# Verifie : hero "Composants", meta description, footer (version + composants + pages),
-#           et chaque hub-card-count vs le nombre reel de sections de la page ciblee.
+# Compare cette valeur aux 3 emplacements qui doivent la refleter :
+#   - site.html hero-stat            (<div class="number">N</div> ... Composants)
+#   - site.html meta description     ("N composants, ...")
+#   - site.html footer               ("N composants")
+#   - docs/ARCHITECTURE.md en-tete   ("**N composants UI**")
+#
+# Perimetre volontairement restreint au compteur de composants (titre de
+# l'issue #707) — ne verifie PAS les sections/page des hub-cards ni la
+# version affichee dans le footer de site.html (dette distincte, hors
+# perimetre de cette issue).
 #
 # Sortie : liste les ecarts. Exit 0 si tout est coherent, 1 sinon.
 # Usage  : bash shared/check-counters.sh   (depuis la racine du repo)
@@ -17,60 +25,43 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REGISTRY="$ROOT/shared/components-registry.json"
 SITE="$ROOT/site.html"
-NAVJS="$ROOT/shared/nav.js"
-PAGES_DIR="$ROOT/pages"
+ARCHITECTURE="$ROOT/docs/ARCHITECTURE.md"
 
 fail=0
 report() { echo "  MISMATCH: $1"; fail=1; }
 
-# --- Source de verite : compte des composants (page non nul) ---
+# --- Source de verite : compte des composants (kind === "component") ---
 component_count=$(node -e '
   const r = require(process.argv[1]);
-  const n = r.components.filter(c => c.page !== undefined && c.page !== null).length;
+  const list = Array.isArray(r) ? r : r.components;
+  const n = list.filter(c => c && c.kind === "component").length;
   process.stdout.write(String(n));
 ' "$REGISTRY")
 
-# --- Version reelle ---
-version=$(grep -oE "const VERSION = '[^']+'" "$NAVJS" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
-
-# --- Nombre de pages = nombre de hub-cards dans site.html ---
-page_count=$(grep -cE 'class="hub-card"' "$SITE")
-
-echo "Source de verite : $component_count composants - $page_count pages - v$version"
+echo "Source de verite (registre, kind:component) : $component_count composants"
 echo
 
-# --- Hero "Composants" ---
+# --- site.html : hero-stat ---
 hero=$(grep -oE '<div class="number">[0-9]+</div><div class="label">Composants</div>' "$SITE" | grep -oE '[0-9]+' | head -1)
-[ "$hero" = "$component_count" ] || report "hero Composants = $hero (attendu $component_count)"
+[ "$hero" = "$component_count" ] || report "site.html hero-stat = ${hero:-absent} (attendu $component_count)"
 
-# --- Meta description ---
-grep -qE "content=\"[^\"]*$component_count composants" "$SITE" || report "meta description : '$component_count composants' absent"
+# --- site.html : meta description ---
+meta=$(grep -oE '<meta name="description" content="[^"]*[0-9]+ composants' "$SITE" | grep -oE '[0-9]+ composants' | grep -oE '[0-9]+' | head -1)
+[ "$meta" = "$component_count" ] || report "site.html meta description = ${meta:-absent} (attendu $component_count)"
 
-# --- Footer : version + composants + pages ---
+# --- site.html : footer ---
 footer=$(grep -E '<footer>' "$SITE" || true)
-echo "$footer" | grep -qE "v$version" || report "footer : version v$version absente"
-echo "$footer" | grep -qE "$component_count composants" || report "footer : '$component_count composants' absent"
-echo "$footer" | grep -qE "$page_count pages" || report "footer : '$page_count pages' absent"
+footer_n=$(echo "$footer" | grep -oE '[0-9]+ composants' | grep -oE '[0-9]+' | head -1)
+[ "$footer_n" = "$component_count" ] || report "site.html footer = ${footer_n:-absent} (attendu $component_count)"
 
-# --- Hub-card counts vs sections reelles ---
-mapfile -t hrefs < <(grep -oE '/pages/[a-z-]+\.html" class="hub-card"' "$SITE" | grep -oE 'pages/[a-z-]+\.html' | sed 's#pages/##;s#\.html##')
-mapfile -t counts < <(grep -oE '<span class="hub-card-count">[0-9]+ sections</span>' "$SITE" | grep -oE '[0-9]+')
-
-if [ "${#hrefs[@]}" -ne "${#counts[@]}" ]; then
-  report "hub-cards: ${#hrefs[@]} liens mais ${#counts[@]} compteurs"
-else
-  for i in "${!hrefs[@]}"; do
-    slug="${hrefs[$i]}"
-    declared="${counts[$i]}"
-    real=$(grep -cE '<section[^>]*\bid="[^"]+"' "$PAGES_DIR/$slug.html")
-    [ "$declared" = "$real" ] || report "hub-card $slug = $declared sections (reel $real)"
-  done
-fi
+# --- docs/ARCHITECTURE.md : en-tete ---
+arch=$(grep -oE '\*\*[0-9]+ composants UI\*\*' "$ARCHITECTURE" | grep -oE '[0-9]+' | head -1)
+[ "$arch" = "$component_count" ] || report "docs/ARCHITECTURE.md en-tete = ${arch:-absent} (attendu $component_count)"
 
 if [ "$fail" -eq 0 ]; then
-  echo "OK -- compteurs coherents."
+  echo "OK -- compteur composants coherent (registre <-> site.html <-> ARCHITECTURE.md)."
 else
   echo
-  echo "Compteurs incoherents (voir ci-dessus)."
+  echo "Compteurs incoherents (voir ci-dessus). Lancer : node bin/generate-counters.js"
 fi
 exit "$fail"
