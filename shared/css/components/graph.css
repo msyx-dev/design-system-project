@@ -229,7 +229,7 @@
 
 /* ===== Alternative a11y tabulaire (contrat PRIMAIRE) ===== */
 .graph-a11y {
-    margin-top: var(--space-3, 12px);
+    margin-top: var(--space-2);
 }
 
 .graph-a11y-details summary {
@@ -255,7 +255,7 @@
 .graph-table th,
 .graph-table td {
     text-align: left;
-    padding: var(--space-2, 8px) var(--space-3, 12px);
+    padding: var(--space-2, 8px) var(--space-2);
     border-bottom: 1px solid var(--border);
 }
 

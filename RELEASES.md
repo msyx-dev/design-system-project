@@ -1,5 +1,14 @@
 # Releases
 
+## 2.113.3 — 2026-07-25 — Fix render-risk : import CSS barrel + tokens d'espacement fantômes (#704)
+
+> Deux bugs de rendu affectant les consumers (feedbacks band-aid côté cap-transfo) : la forme `@import url('css/X.css');` du barrel `shared/styles.css` est silencieusement droppée par Tailwind v4 / Lightning CSS (CSS jamais bundlé, sans erreur de build) ; et 3 usages de tokens `--space-1`/`--space-3` jamais définis dans `tokens.css` (échelle réelle : `--space-xs/sm/2/md/5/lg/xl/2xl/3xl/4xl`).
+
+### Fixed
+- **`shared/styles.css`** — les 7 `@import url('css/X.css');` remplacés par la forme string `@import 'css/X.css';`, seule forme fiablement reconnue par les bundlers CSS modernes (Tailwind v4 / Lightning CSS). (#704)
+- **`shared/css/components/forms.css`** — `.password-toggle { right: var(--space-1) }` (token fantôme) → `var(--space-sm)` (0.5rem), cohérent avec `.search-clear` juste au-dessus. (#704)
+- **`shared/css/components/graph.css`** — 2 occurrences `var(--space-3, 12px)` (token fantôme, fallback présent) → `var(--space-2)` (0.75rem = 12px, valeur identique au fallback) : `.graph-a11y` (margin-top) et `.graph-table th/td` (padding horizontal). (#704)
+
 ## 2.113.2 — 2026-07-24 — Fix : version-notes.json réaligné sur le chantier header (#729)
 
 > `shared/version-notes.json` s'arrêtait à 2.112.1 alors que le chantier header (#713-#718/#721/#725/#727) avait livré 2.112.2, 2.113.0, 2.113.1 : le badge de version du header affichait une version périmée et n'annonçait aucune des nouveautés. Réalignement en 3 entrées curées + re-bump.
