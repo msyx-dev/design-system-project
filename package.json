@@ -10,6 +10,7 @@
     "generate-registry": "node bin/generate-registry.js",
     "generate-nav-sections": "node bin/generate-nav-sections.js",
     "generate-version-notes": "node bin/generate-version-notes.js",
+    "generate-counters": "node bin/generate-counters.js",
     "build:graph": "bash shared/graph/build.sh",
     "test:syntax": "node tests/regression/nav-js-syntax.test.js",
     "test:version-notes": "node tests/regression/generate-version-notes.test.js",
