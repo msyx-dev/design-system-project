@@ -382,3 +382,58 @@
         forced-color-adjust: none;
     }
 }
+
+/* ===== IMPRESSION / PRINT-PDF (#664, I6) =====
+   `window.print()` = export PDF a 0 KB de JS (aucune dependance tierce ; le PDF
+   programmatique jsPDF/svg2pdf reste hors perimetre, licences non verifiees).
+   Principe : on retire les affordances INTERACTIVES (inutiles sur papier) et on
+   force un rendu lisible sur fond blanc, quel que soit le theme/mode a l'ecran. */
+@media print {
+    /* Affordances interactives — sans objet sur papier. */
+    .graph-toolbar,
+    .graph-port,
+    .graph-port-link,
+    .graph-inline-edit,
+    .graph-live {
+        display: none !important;
+    }
+
+    /* Le graphe ne doit jamais etre coupe en deux par un saut de page. */
+    .graph {
+        background: var(--graph-print-bg);
+        border: none;
+        box-shadow: none;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Contraste papier : le theme dark rendrait des traits clairs sur blanc.
+       `forced-color-adjust` ne couvre pas l'impression -> valeurs explicites. */
+    .graph-node-bg {
+        fill: var(--graph-print-bg);
+        stroke: var(--graph-print-line);
+    }
+
+    .graph-node-label,
+    .graph-edge-label {
+        fill: var(--graph-print-fg);
+    }
+
+    .graph-edge {
+        stroke: var(--graph-print-line);
+    }
+
+    /* La selection est un etat d'ecran : on ne l'imprime pas comme un halo colore
+       (illisible en niveaux de gris) mais comme un trait plus epais. */
+    .graph-node--selected .graph-node-bg,
+    .graph-edge--selected {
+        stroke: var(--graph-print-fg);
+        stroke-width: 2;
+        filter: none;
+    }
+
+    /* L'alternative tabulaire a11y devient la source lisible si le SVG passe mal. */
+    .graph-a11y {
+        display: block;
+    }
+}
