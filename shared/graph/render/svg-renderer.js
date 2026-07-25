@@ -527,6 +527,10 @@ export class SvgRenderer {
     // #675, I5-3 — historique undo/redo (pile de patches inverses). Observe le modele :
     // toute mutation d'edition (create/delete/inline/lien) est captee automatiquement.
     this.history = new GraphHistory(this.model);
+    // #697 — pilote l'etat disabled des boutons toolbar undo/redo sur l'event DEJA emis
+    // par GraphHistory (aucune re-implementation de la logique canUndo/canRedo ici).
+    this._onHistoryChange = (e) => this._syncHistoryButtons(e && e.detail);
+    this.history.addEventListener('graph:history:change', this._onHistoryChange);
 
     this._buildToolbar();
 
@@ -644,9 +648,44 @@ export class SvgRenderer {
     group.appendChild(deleteBtn);
     bar.appendChild(group);
 
+    // #697 — groupe historique (tactile) : boutons Annuler/Rétablir, seule surface tactile
+    // pour l'undo/redo jusqu'ici clavier-only (Ctrl/Cmd+Z, #675). Meme mecanique que
+    // _undo()/_redo() (clavier) -> focus reste coherent quel que soit le declencheur.
+    const historyGroup = document.createElement('div');
+    historyGroup.className = 'btn-group';
+    const undoBtn = this._toolbarButton('i-undo-2', 'Annuler', () => this._undo());
+    const redoBtn = this._toolbarButton('i-redo-2', 'Rétablir', () => this._redo());
+    historyGroup.appendChild(undoBtn);
+    historyGroup.appendChild(redoBtn);
+    bar.appendChild(historyGroup);
+
     this.el.appendChild(bar);
     this._toolbarEl = bar;
     this._connectBtn = connectBtn;
+    this._undoBtn = undoBtn;
+    this._redoBtn = redoBtn;
+    // etat initial : pile undo/redo vide a la construction (aucun event graph:history:change
+    // n'a encore ete emis) -> synchronise une fois via les getters directement.
+    this._syncHistoryButtons();
+  }
+
+  /**
+   * #697 — synchronise l'etat disabled des boutons toolbar undo/redo. Brancheé sur
+   * `graph:history:change` (detail fourni) ou appelee sans argument (etat initial, lit
+   * `this.history.canUndo/canRedo` directement) — ne reimplemente RIEN de GraphHistory.
+   * `.btn-icon[disabled]` (buttons.css) porte deja opacite/cursor/pointer-events pour TOUS
+   * les `.btn-icon` du DS -> volontairement AUCUN style disabled dedie ici (cf. commentaire
+   * `.graph-toolbar` dans graph.css, anti-override DS-PRINCIPLES). `aria-disabled` pose en
+   * plus du `disabled` natif (redondant mais explicite pour les AT, cf. #697).
+   */
+  _syncHistoryButtons(detail) {
+    if (!this._undoBtn || !this._redoBtn) return;
+    const canUndo = detail ? detail.canUndo : !!(this.history && this.history.canUndo);
+    const canRedo = detail ? detail.canRedo : !!(this.history && this.history.canRedo);
+    this._undoBtn.disabled = !canUndo;
+    this._undoBtn.setAttribute('aria-disabled', String(!canUndo));
+    this._redoBtn.disabled = !canRedo;
+    this._redoBtn.setAttribute('aria-disabled', String(!canRedo));
   }
 
   _toolbarButton(icon, label, onClick) {
@@ -1363,12 +1402,19 @@ export class SvgRenderer {
       this._toolbarEl.remove();
       this._toolbarEl = null;
     }
+    // #697 — boutons toolbar undo/redo : refs nettoyees avec le reste de la toolbar (deja
+    // retiree du DOM ci-dessus, click listeners GC avec les elements)
+    this._undoBtn = null;
+    this._redoBtn = null;
     // #674 — edition inline ouverte : ferme sans mutation (force-close, pas de commit en teardown)
     if (this._inlineEdit) this._closeInlineEdit();
     // #674 — drag de port en vol : retire le fantome + le listener Echap (fuite sinon, window)
     if (this._activePortDragCleanup) this._activePortDragCleanup();
     // #675 — historique undo/redo : detache son listener graph:model:change + vide les piles
+    // #697 — detache d'abord le listener toolbar (this._onHistoryChange) pose sur l'instance
     if (this.history) {
+      if (this._onHistoryChange) this.history.removeEventListener('graph:history:change', this._onHistoryChange);
+      this._onHistoryChange = null;
       this.history.destroy();
       this.history = null;
     }
