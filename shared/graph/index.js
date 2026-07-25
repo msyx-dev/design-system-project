@@ -4,6 +4,13 @@ import { SvgRenderer } from './render/svg-renderer.js';
 
 export { GraphModel, toModel } from './model/index.js';
 export { resolveLayout, registerLayout, hasLayout } from './layout/index.js';
+// Export/import (#664, I6) — round-trip JSON versionne (schemaVersion fige a 1),
+// adaptateurs d'import (Cytoscape JSON, sous-ensemble DOT) et exports DOM (SVG/PNG).
+// Le print-PDF ne passe pas par JS : `@media print` dans components/graph.css.
+export {
+  exportGraphJSON, importGraphJSON, CURRENT_SCHEMA_VERSION,
+  migrateGraphData, fromCytoscape, parseDOT, exportSVG, exportPNG,
+} from './io/index.js';
 
 /**
  * @param {HTMLElement} el - conteneur `.graph[data-graph]`

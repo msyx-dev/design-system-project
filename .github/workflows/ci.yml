@@ -59,6 +59,8 @@ jobs:
         run: npm run test:graph-port-drop
       - name: Graph history (undo/redo) unit tests (#675, I5-3)
         run: npm run test:graph-history
+      - name: Graph IO unit tests — round-trip JSON, Cytoscape/DOT import (#664, I6)
+        run: npm run test:graph-io
       - name: Run hardcoded tokens script tests (anti-regression #279)
         run: |
           chmod +x tests/test-check-hardcoded-tokens.sh
