@@ -10,6 +10,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.114.0] - 2026-07-25 — Graph édition : boutons undo/redo tactiles (toolbar) + glyphes au sprite
+
+### Added
+- **`shared/icons/sprite.svg`** (#697) : glyphes `i-undo-2`/`i-redo-2` ajoutés (Lucide `undo-2`/`redo-2`) via `shared/icons/build-sprite.sh`, régénéré (58 → 60 glyphes).
+- **`.graph-toolbar`** (mode édition du graphe) (#697) : 2 boutons tactiles Annuler/Rétablir (≥44px, 2e `.btn-group`), en complément du raccourci clavier (#675). État `disabled` piloté par l'event `graph:history:change {canUndo,canRedo}` déjà émis par `GraphHistory` — aucune logique dupliquée. `shared/css/components/graph.css` : `.graph-toolbar` passe en `display:flex; gap` pour les 2 groupes.
+
 ## [2.113.4] - 2026-07-25 — Réconciliation des compteurs de la page d'accueil + en-tête ARCHITECTURE.md stale
 
 ### Added
