@@ -495,6 +495,7 @@ const REACT_TO_REGISTRY = {
   UserFeedback: 'user-feedback',
   NotificationBell: 'notification-bell',  // #717 — port du contrat cloche du header vanilla
   SiteHeader: 'site-header',              // #716 — header applicatif composable (compose les briques ci-dessus)
+  Graph: 'graph',                         // #676 — wrapper I6-1 view-only pilotant le moteur bundlé depuis shared/graph/
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

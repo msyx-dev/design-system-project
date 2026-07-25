@@ -8,6 +8,21 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.22 — 2026-07-25 — `<Graph>` : wrapper React du moteur node-link (I6-1, #676)
+
+> Le moteur graph (`shared/graph/`, v2.98→v2.114) n'était pilotable qu'en vanilla. `<Graph>` l'expose en React data-driven, **view-only** — les presets Mindmap/OrgChart/DependencyMap et l'exposition du mode édition sont l'objet de #677 (I6-2).
+
+### Added
+- **`<Graph>` (#676)** : wrapper data-driven qui **pilote le moteur bundlé** (ne le réimplémente pas). Le moteur est **inliné dans le package** par tsup depuis `shared/graph/` — une source, deux cibles (le consumer npm n'a aucune dépendance vers un fichier servi par Caddy).
+- **SSR-safe** (Next 15 App Router) : montage client-only, aucun accès DOM au render server. **Warm-start** : au changement de `nodes`/`edges`, les positions précédentes servent de graine → pas de saut visuel.
+- **Contrôlé / non-contrôlé** : `selectedId` / `defaultSelectedId` (+ miroirs edge), convention alignée sur `<TreeView>`. Génériques `GraphNode<TData>` propagés jusqu'à `onSelect`/`renderNode`. `ariaLabel` **requis** (typecheck).
+- **Teardown** : `destroy()` du moteur appelé au démontage (listeners, ResizeObserver, toolbar) — pas de fuite.
+
+### Notes
+- **Écart spec ↔ moteur documenté** : la spec #663 annonçait des classes d'état `.graph-node.selected` et un `onSelect(node)`. Le moteur réel pose `.graph-node--selected` / `.graph-edge--selected` et émet `{id, kind}`. Le wrapper **traduit** : `onSelect` reçoit bien le nœud complet typé, et les tests assertent les classes réelles (en vérifiant explicitement l'ABSENCE de `.selected`, dont dépendrait à tort le CSS).
+- Registre : `REACT_TO_REGISTRY:{Graph:'graph'}` + entrée `graph` en `react:"ported"` (même PR, DS-PRINCIPLES §8.1).
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
+
 ## v3.0.0-alpha.21 — 2026-07-25 — Fix packaging : directive `"use client"` manquante (#703)
 
 > Bug P1 packaging (#703) — le barrel `dist/index.js`/`dist/index.cjs` genere par tsup n'avait AUCUNE directive `"use client"` en tete. Un consumer Next 15 App Router important un composant de `@msyx-dev/react` depuis un **Server Component** cassait (hooks/etat client non marques comme client boundary). Decouvert sur `<PageHeader>`, alpha.14.

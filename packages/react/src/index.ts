@@ -252,3 +252,14 @@ export type {
   SiteHeaderIdentity,
   SiteHeaderFeedbackConfig,
 } from "./components/SiteHeader/SiteHeader";
+
+// ─── Graph (v3.0.0-alpha.22) — #676, I6-1 view-only ───
+export { Graph } from "./components/Graph/Graph";
+export type {
+  GraphProps,
+  GraphLayout,
+  GraphLayoutOptions,
+  GraphNode,
+  GraphEdge,
+  NodeTypeSpec,
+} from "./components/Graph/Graph";
