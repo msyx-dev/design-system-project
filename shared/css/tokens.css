@@ -1,4 +1,4 @@
-/* @ds-version: 2.114.0 */
+/* @ds-version: 2.115.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -275,6 +275,13 @@
        svg-renderer.js (_readPortRadius, getComputedStyle) pour dimensionner le rayon SVG ->
        une seule source de verite pour la cible tactile WCAG 2.5.5 (44px). */
     --graph-port-size: 44px;
+    /* #664 — impression (print-PDF via window.print()). Valeurs FIXES et volontairement
+       hors theming : le rendu papier ne doit jamais heriter du theme dark (traits clairs
+       sur blanc = illisible). Meme logique que le bloc @media (forced-colors:active) qui
+       sort de la palette pour des couleurs systeme. Tokens = un seul point de reglage. */
+    --graph-print-bg: #ffffff;
+    --graph-print-fg: #000000;
+    --graph-print-line: #333333;
 
     /* === Aliases legacy — deprecated, remove in v3 === */
     --border: var(--border-color); /* deprecated, remove in v3 */
