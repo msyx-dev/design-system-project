@@ -948,6 +948,7 @@ function initCopyButtons() {
         inlineBtn.className = 'copy-btn copy-btn--inline';
         inlineBtn.setAttribute('aria-label', 'Copier le code');
         inlineBtn.setAttribute('title', 'Copier');
+        // ds-allow-innerhtml: SVG_CLIPBOARD est une constante littérale (icône SVG figée, l.~880), jamais une donnée consumer
         inlineBtn.innerHTML = '<span class="copy-icon">' + SVG_CLIPBOARD + '</span><span class="copy-tooltip">Copie !</span>';
         wrap.appendChild(inlineBtn);
         inlineBtn.dataset.copyBound = 'true';
@@ -6542,6 +6543,13 @@ function initHeatmapCalendar() {
 }
 window.__initHeatmapCalendar = initHeatmapCalendar;
 
+// SÉCURITÉ (#758) — contrat d'API assumé, PAS une faille :
+// `window.__vlistRenderRow(index)` retourne du HTML BRUT inséré tel quel
+// (via innerHTML, cf. renderRowContent() ci-dessous). Le consumer est
+// responsable de l'échappement des données qu'il y injecte — utiliser
+// `textContent` côté consumer si le contenu n'est pas de confiance.
+// Voir shared/CONSUMER_GUIDE.md, section « Sécurité : APIs qui acceptent du
+// HTML brut ».
 function initVirtualList() {
     var OVERSCAN = 5;
 
@@ -6562,6 +6570,9 @@ function initVirtualList() {
         var rowH = parseFloat(getComputedStyle(list).getPropertyValue('--vlist-row-h')) || 40;
         var viewportH = parseFloat(getComputedStyle(list).getPropertyValue('--vlist-height')) || 400;
 
+        // window.__vlistRenderRow(index) -> HTML BRUT inséré tel quel (contrat
+        // d'API assumé, cf. JSDoc de initVirtualList ci-dessus). Le fallback
+        // ('Élément #N') est un littéral constant, sûr.
         function renderRowContent(index) {
             if (typeof window.__vlistRenderRow === 'function') {
                 return window.__vlistRenderRow(index);
@@ -6618,6 +6629,7 @@ function initVirtualList() {
                 row.className = 'virtual-list-row';
                 row.setAttribute('role', 'listitem');
                 row.setAttribute('aria-rowindex', String(i + 1));
+                // ds-allow-innerhtml: contrat API assumé window.__vlistRenderRow (HTML brut du consumer), voir JSDoc de initVirtualList
                 row.innerHTML = renderRowContent(i);
                 frag.appendChild(row);
             }
