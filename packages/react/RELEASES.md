@@ -8,6 +8,17 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 _Rien pour l'instant._
 
+## v3.0.0-alpha.24 — 2026-07-26 — Modal aria-labelledby + Input .input-disabled (#613)
+
+> Alignement sur la convention ARIA radiogroup tranchée pour le DS vanilla (#613) : le wrapper `<SegmentedControl>` était déjà conforme, aucun changement fonctionnel n'y est apporté (seules les assertions de test d'absence des conventions abandonnées ont été ajoutées). Les 2 seuls changements de comportement du package concernent `<Modal>` et `<Input>`.
+
+### Changed
+- **`<Modal>`** : le `<dialog>` porte désormais `aria-labelledby` via `useId()`, associé à un `<span id={titleId}>` autour du `title` — accessible name explicite pour les lecteurs d'écran (posé avant `{...rest}`, donc surchargeable par l'appelant).
+- **`<Input>`** : émet la classe `.input-disabled` quand `disabled` est vrai, alignée sur la convention DS.
+
+### Tests
+- **`SegmentedControl.test.tsx`** : ajout d'assertions d'absence des conventions ARIA abandonnées (`aria-pressed`, `role="tablist"`, `aria-selected`) — le wrapper était déjà conforme `radiogroup`/`radio`/`aria-checked`/roving tabindex, aucun changement fonctionnel.
+
 ## v3.0.0-alpha.23 — 2026-07-25 — Presets Graph + mode édition (I6-2, #677)
 
 > Complète `<Graph>` (I6-1, #676, view-only) : presets métier + exposition du mode édition (I5) du moteur.
