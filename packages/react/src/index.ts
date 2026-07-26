@@ -272,3 +272,14 @@ export { OrgChart } from "./components/Graph/OrgChart";
 export type { OrgChartProps } from "./components/Graph/OrgChart";
 export { DependencyMap } from "./components/Graph/DependencyMap";
 export type { DependencyMapProps } from "./components/Graph/DependencyMap";
+
+// ─── Overlays — ContextMenu (#468, milestone #41 « Parité React ») ───
+export { ContextMenu } from "./components/ContextMenu/ContextMenu";
+export type {
+  ContextMenuProps,
+  ContextMenuItem,
+  ContextMenuItemEntry,
+  ContextMenuDividerEntry,
+  ContextMenuSubItem,
+  ContextMenuSubmenu,
+} from "./components/ContextMenu/ContextMenu";
