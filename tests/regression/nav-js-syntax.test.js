@@ -40,9 +40,12 @@ if (!versionConstant) {
 // Note: brand configurable depuis v2.78.0 (#570) — href et logoSrc sont maintenant
 //   des template literals dynamiques (brandHref, brandLogoSrc) avec defaults retro-compat.
 //   On verifie les defauts via les variables brandCfg plutot que les strings literales.
+// Note #758 : brandLogoSrc passe desormais par safeUrl() (neutralise les schemas
+//   executables type javascript:) — le default logoMSYX.png reste inchange,
+//   seul le wrapping a change (regex adaptee au nouveau comportement attendu).
 const requiredPatterns = [
   { pattern: /class="header-logo"/, label: 'header-logo link' },
-  { pattern: /var brandLogoSrc = brandCfg\.logoSrc \|\| '\/assets\/sources\/logoMSYX\.png'/, label: 'logoMSYX.png default (brand configurable #570)' },
+  { pattern: /var brandLogoSrc = safeUrl\(brandCfg\.logoSrc \|\| '\/assets\/sources\/logoMSYX\.png'/, label: 'logoMSYX.png default (brand configurable #570, safeUrl #758)' },
   { pattern: /<span class="header-spacer">/, label: 'header-spacer' },
   { pattern: /<div class="theme-switcher">/, label: 'theme-switcher' },
   { pattern: /<div class="mode-toggle">/, label: 'mode-toggle' },

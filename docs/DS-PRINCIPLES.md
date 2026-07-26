@@ -626,6 +626,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 | `shared/check-components.sh` | Détecte composants custom hors DS sur consumer |
 | `shared/check-diacritics.sh` | Vérifie accents français corrects |
 | `shared/perf-budget.sh` | Mesure budget gzip |
+| `bin/check-innerhtml.js` | Bloque tout `innerHTML =` concaténé à une variable sans dérogation justifiée (#758) |
 | `~/.claude/skills/audit-ds-compliance/scripts/*` | Audit cross-cutting consumer |
 
 ### CI workflows (DS repo)
@@ -639,6 +640,38 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 - `/audit-ds-compliance` — audit complet d'un consumer
 - `/code-review` — review code quality DS et consumer
 - `/ux-review` — review UX/UI mobile-first
+
+---
+
+## Section 11 — Sécurité : innerHTML, attributs, URLs (décision #758)
+
+**Constat** : `escapeHTML()` (échappement via `div.appendChild(createTextNode) → innerHTML`) n'échappe que `&`, `<`, `>` — **jamais les guillemets**. Il protège un contexte **texte** (entre deux balises) mais **ne protège JAMAIS un contexte attribut** : une valeur contenant `"` referme l'attribut en cours et permet d'en injecter un autre (`onerror=`, etc.), même « échappée ».
+
+### Règle
+**Construire les nœuds** (`createElement` + `setAttribute` + `textContent` + `appendChild`), jamais de concaténation de chaînes assignée à `innerHTML`, dès qu'une donnée non fiable (consumer : `data-*`, options JS, réponse réseau) atterrit dans un attribut. `setAttribute()` est sûr par nature vis-à-vis des guillemets : il ne réinterprète jamais la valeur comme du HTML.
+
+❌ **Don't** :
+```js
+el.innerHTML = '<button aria-label="Supprimer ' + escapeHTML(v) + '">×</button>';
+// v = 'x" onerror="alert(1)' → attribut refermé, nouvel attribut injecté
+```
+
+✅ **Do** :
+```js
+var btn = document.createElement('button');
+btn.setAttribute('aria-label', 'Supprimer ' + v);
+btn.textContent = '×';
+el.appendChild(btn);
+```
+
+### URLs consumer (href / action / src)
+`setAttribute()` protège de l'injection d'attribut mais **pas** d'un schéma exécutable (`javascript:`, `vbscript:`). Toute URL d'origine consumer posée en `href`/`action`/`src` doit passer par `safeUrl(url, fallback, allowedSchemes)` (`shared/components.js`) — whitelist `http`/`https`/`mailto` par défaut, `+'data'` pour un `<img src>`.
+
+### Contrats d'API assumés (à ne pas confondre avec une faille)
+Certaines API du DS acceptent **volontairement** du HTML brut ou du JS (ex. `bodyHTML`/`actions[].onClick` de `window.__openModal`, `window.__vlistRenderRow`) : contrat documenté en JSDoc au-dessus de la fonction + dans `shared/CONSUMER_GUIDE.md`, responsabilité d'échappement transférée au consumer. Ne pas les « corriger » silencieusement — les garder visibles comme contrat.
+
+### Garde-fou
+`bin/check-innerhtml.js` (CI bloquant) rejette tout `.innerHTML =` concaténé (`+`) à un identifiant ou en template literal `${}` sans dérogation `// ds-allow-innerhtml: <raison>`. Chaque dérogation doit expliquer **pourquoi** c'est sûr (ex. `// ds-allow-innerhtml: escapeHTML en contexte texte uniquement — aucun attribut interpolé`), jamais un simple « ok » — le relecteur suivant doit pouvoir vérifier la justification sans relire tout le bloc. Une dérogation posée sur du texte aujourd'hui devient un piège si quelqu'un y ajoute un attribut demain en réutilisant `escapeHTML` : c'est exactement l'incident #758.
 
 ---
 

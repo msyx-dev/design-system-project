@@ -438,6 +438,20 @@ Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (sk
 
 `<NotificationBell>` (composé par `<SiteHeader>`), et les composants `@msyx-dev/react` en général, rendent leurs icônes **inline** via le primitif interne `Icon` (#713) — **aucun sprite externe à servir** côté consumer. Contrairement au header vanilla (`shared/nav.js`, cf. section « Header avec utilisateur connecte ») qui dépend de `shared/icons/sprite.svg#i-bell`, la version React est autonome : pas de fichier sprite à copier, pas de chemin à adapter.
 
+## Sécurité : APIs qui acceptent du HTML brut
+
+La plupart des composants DS échappent automatiquement les données que vous leur passez (texte affiché via `textContent`, attributs via `setAttribute`). **Trois API font exception, volontairement** — elles acceptent du HTML/JS brut inséré tel quel, et c'est **vous** (le consumer) qui êtes responsable d'échapper ce que vous y injectez si la donnée n'est pas de confiance :
+
+| API | Champ | Contenu accepté | Recommandation |
+|---|---|---|---|
+| `window.__vlistRenderRow` (virtual-list) | valeur de retour de la fonction | HTML brut inséré tel quel (`row.innerHTML = renderRowContent(i)`) | Si le contenu n'est pas 100% de confiance, renvoyez du texte échappé ou construisez vos propres nœuds côté consumer avant de sérialiser. |
+| `window.__openModal(config)` | `config.bodyHTML` | HTML brut inséré tel quel (à la différence de `config.body`, qui lui est échappé via `escapeHTML`) | N'y passez jamais une donnée utilisateur non échappée — préférez `config.body` (texte) si possible. |
+| `window.__openModal(config)` | `config.actions[].onClick` | Code JS injecté tel quel dans un attribut `onclick` | Réservé aux actions programmatiques définies par votre app, jamais à une donnée saisie par un utilisateur. |
+
+**Changement de contrat (#758, v2.116.2)** : `renderNotifications()` (`shared/nav.js`) rend désormais `notifications.items[].icon` en **texte** (`textContent`), plus en HTML brut. Si vous passiez un fragment HTML (ex. un `<svg>`) dans ce champ, il s'affichera désormais comme texte littéral — utilisez un caractère Unicode ou un glyphe simple à la place.
+
+En dehors de ces 3 cas documentés, si vous constatez qu'une donnée que vous fournissez au DS (texte, URL, nom, avatar…) se retrouve interprétée comme du HTML, c'est un bug côté DS — ouvrez un ticket, ne contournez pas en échappant vous-même en amont (le comportement attendu est l'échappement automatique côté DS).
+
 ## Anti-FOUC
 
 Pour eviter le flash de theme au chargement, ajouter ce script inline dans `<head>` :

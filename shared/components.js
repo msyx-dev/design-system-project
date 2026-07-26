@@ -100,6 +100,39 @@ function highlightMatch(text, query) {
     return span;
 }
 
+// Crée un nœud DOM à partir d'un fragment HTML CONSTANT et LITTÉRAL (jamais
+// concaténé ni interpolé avec une donnée consumer) — réservé à l'injection de
+// petits fragments de markup constant (icônes SVG inline) pour éviter de les
+// dupliquer en concaténation de chaînes à chaque site d'appel. N'appeler
+// qu'avec une chaîne littérale figée dans le code source du DS.
+function constantMarkup(html) {
+    var tpl = document.createElement('template');
+    // ds-allow-innerhtml: fragment toujours littéral (jamais concaténé à une variable), voir JSDoc ci-dessus
+    tpl.innerHTML = html;
+    return tpl.content.firstElementChild;
+}
+
+// Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
+// image, etc.) — setAttribute() pose la valeur telle quelle : il protège de
+// l'injection d'attribut (guillemets) mais PAS d'un schéma hostile dans un
+// href/action/src (#758). N'accepte que les URL relatives, les ancres et les
+// schémas explicitement listés dans `allowedSchemes` (défaut http/https/mailto,
+// passer ['http','https','data'] pour un <img src>) ; retombe sur `fallback`
+// sinon. Neutralise les contournements classiques (caractères de contrôle /
+// espaces insérés dans le schéma type "java\tscript:", casse mixte).
+function safeUrl(url, fallback, allowedSchemes) {
+    if (!url) return fallback;
+    var schemes = allowedSchemes || ['http', 'https', 'mailto'];
+    var cleaned = String(url).replace(/[\x00-\x1f\x7f]/g, '').trim();
+    if (cleaned === '') return fallback;
+    // Relative (chemin, "//host", "?query") ou ancre : pas de schéma, sûr.
+    if (/^[.\/#?]/.test(cleaned)) return cleaned;
+    var schemeMatch = cleaned.match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/);
+    if (!schemeMatch) return cleaned; // pas de "schéma:" détecté — chemin relatif
+    var scheme = schemeMatch[1].toLowerCase();
+    return schemes.indexOf(scheme) !== -1 ? cleaned : fallback;
+}
+
 function initComponents() {
     // Tabs — ARIA role=tablist/tab + navigation clavier flèches
     document.querySelectorAll('.tabs').forEach(g => {
@@ -411,8 +444,13 @@ function initChips() {
             const chip = document.createElement('span');
             chip.className = 'chip chip-input-item';
             chip.dataset.chipBound = '1';
-            chip.innerHTML = escapeHTML(trimmed) + ' <button class="chip-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
-            chip.querySelector('.chip-close').addEventListener('click', () => {
+            chip.appendChild(document.createTextNode(trimmed + ' '));
+            const chipClose = document.createElement('button');
+            chipClose.className = 'chip-close';
+            chipClose.setAttribute('aria-label', 'Supprimer ' + trimmed);
+            chipClose.textContent = '×';
+            chip.appendChild(chipClose);
+            chipClose.addEventListener('click', () => {
                 chip.style.transition = 'opacity var(--duration-base), transform var(--duration-base)';
                 chip.style.opacity = '0';
                 chip.style.transform = 'scale(0.8)';
@@ -620,6 +658,7 @@ function showToast(message, type, duration) {
     var role = (type === 'error' || type === 'warning') ? 'alert' : 'status';
     toast.setAttribute('role', role);
     toast.setAttribute('aria-live', role === 'alert' ? 'assertive' : 'polite');
+    // ds-allow-innerhtml: colors[type]/icons[type] indexent une map interne à 4 clés fixes (whitelist par construction, jamais la valeur brute de `type`) ; message passe par escapeHTML en contexte texte uniquement
     toast.innerHTML = '<span class="toast-message"><span style="color:' + colors[type] + ';font-size:1rem;" aria-hidden="true">' + icons[type] + '</span>' + escapeHTML(message) + '</span><button class="toast-close" aria-label="Fermer">&times;</button>';
     container.appendChild(toast);
     var closeBtn = toast.querySelector('.toast-close');
@@ -804,6 +843,16 @@ function initModals() {
 }
 
 // API programmatique
+//
+// SÉCURITÉ (#758) — contrats d'API assumés, PAS des failles :
+//  - `config.bodyHTML` (si fourni) est du HTML BRUT inséré tel quel (à
+//    l'inverse de `config.body`, qui est du texte échappé via escapeHTML).
+//    Le consumer est responsable de l'échappement des données qu'il y injecte.
+//  - `actions[].onClick` est du CODE JS injecté tel quel dans un attribut
+//    `onclick` — contrat explicite, pas une donnée texte.
+//  Voir shared/CONSUMER_GUIDE.md, section « Sécurité : APIs qui acceptent du
+//  HTML brut ». `actions[].label`, lui, est un texte : construit en DOM
+//  (textContent) ci-dessous, jamais concaténé dans du HTML.
 window.__openModal = function(config) {
     var title = config.title, body = config.body, variant = config.variant, actions = config.actions;
     var dialog = document.getElementById('ds-dynamic-modal');
@@ -817,19 +866,30 @@ window.__openModal = function(config) {
 
     attachFocusRestore(dialog); // a11y WAI APG focus restore (idempotent)
 
-    var actionsHtml = '';
-    if (actions) {
-        actionsHtml = '<div class="modal-actions">' + actions.map(function(a) {
-            return '<button class="btn btn-' + (a.style || 'secondary') + '" data-modal-close' + (a.onClick ? ' onclick="' + a.onClick + '"' : '') + '>' + a.label + '</button>';
-        }).join('') + '</div>';
-    } else if (variant === 'confirm') {
-        actionsHtml = '<div class="modal-actions"><button class="btn btn-secondary" data-modal-close>Annuler</button><button class="btn btn-primary" data-modal-close>Confirmer</button></div>';
-    } else {
-        actionsHtml = '<div class="modal-actions"><button class="btn btn-primary" data-modal-close>Fermer</button></div>';
-    }
-
+    // bodyHTML : contrat d'API assumé (HTML brut du consumer, cf. JSDoc ci-dessus).
     var bodyContent = config.bodyHTML ? config.bodyHTML : escapeHTML(body || '');
-    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + bodyContent + '</div>' + actionsHtml;
+    // ds-allow-innerhtml: bodyHTML est un contrat API assumé (HTML brut du consumer), documenté en JSDoc ci-dessus + CONSUMER_GUIDE.md
+    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + bodyContent + '</div>';
+
+    // Actions : construites en DOM — a.label est un texte (jamais concaténé
+    // dans du HTML), a.onClick reste un contrat assumé posé via setAttribute.
+    var actionsDiv = document.createElement('div');
+    actionsDiv.className = 'modal-actions';
+    if (actions) {
+        actions.forEach(function(a) {
+            var btn = document.createElement('button');
+            btn.className = 'btn btn-' + (a.style || 'secondary');
+            btn.setAttribute('data-modal-close', '');
+            if (a.onClick) btn.setAttribute('onclick', a.onClick);
+            btn.textContent = a.label;
+            actionsDiv.appendChild(btn);
+        });
+    } else if (variant === 'confirm') {
+        actionsDiv.innerHTML = '<button class="btn btn-secondary" data-modal-close>Annuler</button><button class="btn btn-primary" data-modal-close>Confirmer</button>';
+    } else {
+        actionsDiv.innerHTML = '<button class="btn btn-primary" data-modal-close>Fermer</button>';
+    }
+    dialog.appendChild(actionsDiv);
 
     dialog.querySelectorAll('[data-modal-close]').forEach(function(btn) {
         btn.addEventListener('click', function() { dialog.close(); });
@@ -847,9 +907,11 @@ function doCopy(btn, text) {
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(text).then(function() {
         btn.classList.add('copy-btn--success');
+        // ds-allow-innerhtml: SVG_CHECK est une constante littérale (icône SVG figée, l.~880), jamais une donnée consumer
         btn.querySelector('.copy-icon').innerHTML = SVG_CHECK;
         setTimeout(function() {
             btn.classList.remove('copy-btn--success');
+            // ds-allow-innerhtml: SVG_CLIPBOARD est une constante littérale (icône SVG figée, l.~880), jamais une donnée consumer
             btn.querySelector('.copy-icon').innerHTML = SVG_CLIPBOARD;
         }, 2000);
     });
@@ -889,6 +951,7 @@ function initCopyButtons() {
         inlineBtn.className = 'copy-btn copy-btn--inline';
         inlineBtn.setAttribute('aria-label', 'Copier le code');
         inlineBtn.setAttribute('title', 'Copier');
+        // ds-allow-innerhtml: SVG_CLIPBOARD est une constante littérale (icône SVG figée, l.~880), jamais une donnée consumer
         inlineBtn.innerHTML = '<span class="copy-icon">' + SVG_CLIPBOARD + '</span><span class="copy-tooltip">Copie !</span>';
         wrap.appendChild(inlineBtn);
         inlineBtn.dataset.copyBound = 'true';
@@ -1042,7 +1105,11 @@ function initDataGrids() {
         function getStatutBadge(statut) {
             var map = { 'Stable': 'badge-success', 'En cours': 'badge-primary', 'Planifie': 'badge-warning', 'Annule': 'badge-danger' };
             var cls = map[statut] || 'badge-info';
-            return '<span class="badge ' + cls + '" style="font-size:0.68rem;padding:0.15rem 0.5rem;">' + statut + '</span>';
+            var badge = document.createElement('span');
+            badge.className = 'badge ' + cls;
+            badge.style.cssText = 'font-size:0.68rem;padding:0.15rem 0.5rem;';
+            badge.textContent = statut;
+            return badge;
         }
 
         function getSortedFiltered() {
@@ -1076,17 +1143,56 @@ function initDataGrids() {
         function renderRows(data) {
             tbody.innerHTML = '';
             data.forEach(function(row) {
+                // Construction en DOM (jamais d'innerHTML concaténé) — cf. #758.
+                // DATA_GRID_ROWS est un tableau interne hardcodé (risque faible),
+                // mais on ne laisse pas le motif de concaténation subsister.
                 var tr = document.createElement('tr');
-                var cbLabel = 'Selectionner ' + String(row.composant).replace(/"/g, '&quot;');
-                tr.innerHTML =
-                    '<td><input type="checkbox" aria-label="' + cbLabel + '" style="accent-color:var(--accent);cursor:pointer;"></td>' +
-                    '<td style="font-weight:500;">' + row.composant + '</td>' +
-                    '<td>' + row.categorie + '</td>' +
-                    '<td>' + getStatutBadge(row.statut) + '</td>' +
-                    '<td><span class="tag">' + row.sprint + '</span></td>' +
-                    '<td style="font-weight:600;color:var(--accent-light);">' + row.sp + '</td>' +
-                    '<td>' + (row.js ? '<span style="color:var(--warning);font-size:0.8rem;font-weight:600;">JS</span>' : '<span style="color:var(--text-dim);font-size:0.8rem;">—</span>') + '</td>';
-                var cb = tr.querySelector('input[type="checkbox"]');
+
+                var tdCb = document.createElement('td');
+                var cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.setAttribute('aria-label', 'Selectionner ' + row.composant);
+                cb.style.cssText = 'accent-color:var(--accent);cursor:pointer;';
+                tdCb.appendChild(cb);
+                tr.appendChild(tdCb);
+
+                var tdComposant = document.createElement('td');
+                tdComposant.style.fontWeight = '500';
+                tdComposant.textContent = row.composant;
+                tr.appendChild(tdComposant);
+
+                var tdCategorie = document.createElement('td');
+                tdCategorie.textContent = row.categorie;
+                tr.appendChild(tdCategorie);
+
+                var tdStatut = document.createElement('td');
+                tdStatut.appendChild(getStatutBadge(row.statut));
+                tr.appendChild(tdStatut);
+
+                var tdSprint = document.createElement('td');
+                var sprintTag = document.createElement('span');
+                sprintTag.className = 'tag';
+                sprintTag.textContent = row.sprint;
+                tdSprint.appendChild(sprintTag);
+                tr.appendChild(tdSprint);
+
+                var tdSp = document.createElement('td');
+                tdSp.style.cssText = 'font-weight:600;color:var(--accent-light);';
+                tdSp.textContent = row.sp;
+                tr.appendChild(tdSp);
+
+                var tdJs = document.createElement('td');
+                var jsSpan = document.createElement('span');
+                if (row.js) {
+                    jsSpan.style.cssText = 'color:var(--warning);font-size:0.8rem;font-weight:600;';
+                    jsSpan.textContent = 'JS';
+                } else {
+                    jsSpan.style.cssText = 'color:var(--text-dim);font-size:0.8rem;';
+                    jsSpan.textContent = '—';
+                }
+                tdJs.appendChild(jsSpan);
+                tr.appendChild(tdJs);
+
                 cb.addEventListener('change', function() {
                     if (cb.checked) {
                         tr.classList.add('selected');
@@ -1257,6 +1363,7 @@ function initServerDataGrid() {
                     + '<div class="skeleton-table-row"><div class="skeleton-cell"></div></div>'
                     + '</td></tr>';
             }
+            // ds-allow-innerhtml: skeleton de chargement — cols est un compte de colonnes calculé (querySelectorAll().length), aucune donnée consumer
             bodyEl.innerHTML = rows;
         }
 
@@ -1271,6 +1378,7 @@ function initServerDataGrid() {
                 bodyEl.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Aucun résultat</td></tr>';
                 return;
             }
+            // ds-allow-innerhtml: chaque valeur passe par escapeHTML() en contexte texte uniquement (contenu de <td>...</td>) — aucun attribut interpolé
             bodyEl.innerHTML = rows.map(function(r) {
                 return '<tr>'
                     + '<td>' + escapeHTML(r.composant) + '</td>'
@@ -1326,6 +1434,7 @@ function initServerDataGrid() {
             html += '<button class="page-btn" data-page="' + (cur + 1) + '" aria-label="Page suivante"'
                 + (cur === totalPages ? ' disabled' : '') + '>&rsaquo;</button>';
 
+            // ds-allow-innerhtml: html est construit uniquement à partir de numéros de page calculés (entiers), aucune donnée consumer interpolée
             pagerEl.innerHTML = html;
 
             // Délégation clic pager — dataset.bound dédié
@@ -1952,9 +2061,14 @@ function initTagInputs() {
 
             var tag = document.createElement('span');
             tag.className = 'tag-item';
-            tag.innerHTML = escapeHTML(trimmed) + ' <button class="tag-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
+            tag.appendChild(document.createTextNode(trimmed + ' '));
+            var tagClose = document.createElement('button');
+            tagClose.className = 'tag-close';
+            tagClose.setAttribute('aria-label', 'Supprimer ' + trimmed);
+            tagClose.textContent = '×';
+            tag.appendChild(tagClose);
 
-            tag.querySelector('.tag-close').addEventListener('click', function() {
+            tagClose.addEventListener('click', function() {
                 removeTag(tag);
             });
 
@@ -2289,8 +2403,16 @@ function initLightbox() {
             el.className = 'lightbox-img-placeholder';
             el.style.background = bg;
             el.style.borderRadius = 'var(--radius-md)';
-            el.innerHTML = '<div style="font-size:1.4rem;font-weight:600;text-align:center;line-height:1.5;">' + thumbText + '</div>' +
-                '<div style="font-size:0.8rem;opacity:0.6;font-family:var(--font-mono,monospace);">Placeholder — pas de fichier image</div>';
+            // thumbText est un round-trip texte→HTML (textContent d'un nœud du DOM,
+            // cf. #758) : construction en DOM, jamais d'innerHTML concaténé.
+            var thumbLine = document.createElement('div');
+            thumbLine.style.cssText = 'font-size:1.4rem;font-weight:600;text-align:center;line-height:1.5;';
+            thumbLine.textContent = thumbText;
+            var placeholderLine = document.createElement('div');
+            placeholderLine.style.cssText = 'font-size:0.8rem;opacity:0.6;font-family:var(--font-mono,monospace);';
+            placeholderLine.textContent = 'Placeholder — pas de fichier image';
+            el.appendChild(thumbLine);
+            el.appendChild(placeholderLine);
             imgWrap.appendChild(el);
             requestAnimationFrame(function() {
                 requestAnimationFrame(function() { el.classList.add('lb-img-visible'); });
@@ -2487,6 +2609,41 @@ function initPieCharts() {
         return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
     }
 
+    // Légende partagée pie/donut (#758) — construite en DOM : s.label est une
+    // donnée consumer non fiable (data-labels du consumer), jamais d'innerHTML.
+    // s.color vient de resolveColor() (getComputedStyle), pas une donnée
+    // consumer : l'affecter à style.background est sûr.
+    function buildLegend(legendEl, segments) {
+        legendEl.innerHTML = '';
+        segments.forEach((s, i) => {
+            const item = document.createElement('span');
+            item.className = 'pie-legend-item';
+            item.dataset.idx = String(i);
+            const dot = document.createElement('span');
+            dot.className = 'pie-legend-dot';
+            dot.style.background = s.color;
+            item.appendChild(dot);
+            item.appendChild(document.createTextNode(s.label));
+            legendEl.appendChild(item);
+        });
+
+        legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const idx = +item.dataset.idx;
+                segments.forEach((s, i) => {
+                    s.el.style.opacity = i === idx ? '1' : '0.3';
+                });
+                legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
+                    li.classList.toggle('dimmed', i !== idx);
+                });
+            });
+            item.addEventListener('mouseleave', () => {
+                segments.forEach(s => { s.el.style.opacity = '1'; });
+                legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
+            });
+        });
+    }
+
     function buildPieChart(chart, values, labels, colors, isMini) {
         const svg = chart.querySelector('svg');
         const legendEl = chart.querySelector('.pie-legend');
@@ -2517,26 +2674,7 @@ function initPieCharts() {
 
         // Legend
         if (legendEl) {
-            legendEl.innerHTML = segments.map((s, i) =>
-                `<span class="pie-legend-item" data-idx="${i}">` +
-                `<span class="pie-legend-dot" style="background:${s.color};"></span>${s.label}</span>`
-            ).join('');
-
-            legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    const idx = +item.dataset.idx;
-                    segments.forEach((s, i) => {
-                        s.el.style.opacity = i === idx ? '1' : '0.3';
-                    });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
-                        li.classList.toggle('dimmed', i !== idx);
-                    });
-                });
-                item.addEventListener('mouseleave', () => {
-                    segments.forEach(s => { s.el.style.opacity = '1'; });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
-                });
-            });
+            buildLegend(legendEl, segments);
         }
 
         return segments;
@@ -2584,26 +2722,7 @@ function initPieCharts() {
 
         // Legend
         if (legendEl) {
-            legendEl.innerHTML = segments.map((s, i) =>
-                `<span class="pie-legend-item" data-idx="${i}">` +
-                `<span class="pie-legend-dot" style="background:${s.color};"></span>${s.label}</span>`
-            ).join('');
-
-            legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    const idx = +item.dataset.idx;
-                    segments.forEach((s, i) => {
-                        s.el.style.opacity = i === idx ? '1' : '0.3';
-                    });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
-                        li.classList.toggle('dimmed', i !== idx);
-                    });
-                });
-                item.addEventListener('mouseleave', () => {
-                    segments.forEach(s => { s.el.style.opacity = '1'; });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
-                });
-            });
+            buildLegend(legendEl, segments);
         }
 
         return segments;
@@ -3233,10 +3352,20 @@ function initQuiz() {
             labels.forEach((label, i) => {
                 const bar = document.createElement('div');
                 bar.className = 'quiz-poll-bar';
-                bar.innerHTML =
-                    '<div class="quiz-poll-fill" style="width:0%"></div>' +
-                    '<span class="quiz-poll-label">' + label + '</span>' +
-                    '<span class="quiz-poll-pct">' + pcts[i] + '%</span>';
+                // label est un round-trip texte→HTML (textContent d'options de démo,
+                // cf. #758) : construction en DOM, jamais d'innerHTML concaténé.
+                const fill = document.createElement('div');
+                fill.className = 'quiz-poll-fill';
+                fill.style.width = '0%';
+                const labelEl = document.createElement('span');
+                labelEl.className = 'quiz-poll-label';
+                labelEl.textContent = label;
+                const pctEl = document.createElement('span');
+                pctEl.className = 'quiz-poll-pct';
+                pctEl.textContent = pcts[i] + '%';
+                bar.appendChild(fill);
+                bar.appendChild(labelEl);
+                bar.appendChild(pctEl);
                 pollResults.appendChild(bar);
             });
 
@@ -3438,6 +3567,7 @@ function initCommandPalette() {
         }
 
         if (!matched.length) {
+            // ds-allow-innerhtml: q passe par escapeHTML en contexte texte uniquement (contenu de <strong>), aucun attribut interpolé
             results.innerHTML = '<div class="cmd-empty">Aucun résultat pour <strong>' + escapeHTML(q) + '</strong></div>';
             return;
         }
@@ -3467,6 +3597,7 @@ function initCommandPalette() {
                 el.dataset.idx = globalIdx;
                 if (item.href) el.dataset.href = item.href;
                 if (item.action) el.dataset.action = item.action;
+                // ds-allow-innerhtml: item.icon vient de NAV_SECTIONS (manifeste interne du site, jamais une donnée consumer) — label/category passent par escapeHTML en contexte texte uniquement, aucun attribut interpolé
                 el.innerHTML = '<span class="cmd-item-icon" aria-hidden="true">' + item.icon + '</span>'
                     + '<span class="cmd-item-text">' + escapeHTML(item.label) + '</span>'
                     + '<span class="cmd-item-shortcut">' + escapeHTML(item.category || '') + '</span>';
@@ -4018,6 +4149,16 @@ window.__initSidebarRail = initSidebarRail;
 function initRiskMatrix() {
     var LEVEL_LABELS = { low: 'Faible', medium: 'Moyen', high: 'Elev&eacute;', critical: 'Critique' };
 
+    // Contraint `level` (donnée consumer — attribut data-level du .risk-item) à la
+    // whitelist LEVEL_LABELS AVANT tout usage. Sans ça, `lvl` était concaténé
+    // directement dans un attribut class="risk-tooltip-badge <lvl>" et affiché
+    // en HTML brut non échappé si absent de la map — vecteur XSS trouvé lors
+    // de l'audit #758, non couvert par l'inventaire initial (qui ne portait
+    // que sur title/owner via escapeAttr).
+    function normalizeLevel(level) {
+        return Object.prototype.hasOwnProperty.call(LEVEL_LABELS, level) ? level : 'medium';
+    }
+
     function scoreLevel(score, maxScore) {
         var ratio = score / maxScore;
         if (ratio <= 0.16) return 'low';
@@ -4050,7 +4191,7 @@ function initRiskMatrix() {
 
         var size = parseInt(matrix.getAttribute('data-size') || '5', 10);
         var labelX = matrix.getAttribute('data-label-x') || 'Impact';
-        var labelY = matrix.getAttribute('data-label-y') || 'Probabilit&eacute;';
+        var labelY = matrix.getAttribute('data-label-y') || 'Probabilité';
         var maxScore = size * size;
 
         // Collect risk items
@@ -4066,7 +4207,7 @@ function initRiskMatrix() {
             if (!cellMap[key]) cellMap[key] = [];
             cellMap[key].push({
                 label: it.getAttribute('data-label') || 'Risque',
-                level: it.getAttribute('data-level') || 'medium',
+                level: normalizeLevel(it.getAttribute('data-level')),
                 owner: it.getAttribute('data-owner') || '',
                 detail: it.getAttribute('data-detail') || '',
                 prob: prob,
@@ -4081,7 +4222,7 @@ function initRiskMatrix() {
         // Y axis label
         var axisY = document.createElement('div');
         axisY.className = 'risk-axis-y';
-        axisY.innerHTML = labelY + ' &uarr;';
+        axisY.textContent = labelY + ' ↑';
         wrap.appendChild(axisY);
 
         // Inner (grid + x axis)
@@ -4179,7 +4320,7 @@ function initRiskMatrix() {
         // X axis label
         var axisX = document.createElement('div');
         axisX.className = 'risk-axis-x';
-        axisX.innerHTML = labelX + ' &rarr;';
+        axisX.textContent = labelX + ' →';
         inner.appendChild(axisX);
 
         wrap.appendChild(inner);
@@ -4191,6 +4332,7 @@ function initRiskMatrix() {
         function showTooltip(dot, e) {
             var lvl = dot.dataset.riskLevel || 'medium';
             var owner = dot.dataset.riskOwner;
+            // ds-allow-innerhtml: lvl est contraint à la whitelist LEVEL_LABELS par normalizeLevel() en amont (une des 4 clés fixes, jamais la donnée consumer brute) ; title/owner passent par escapeAttr en contexte texte
             tooltip.innerHTML =
                 '<div class="risk-tooltip-title">' + escapeAttr(dot.dataset.riskLabel) + '</div>' +
                 '<div class="risk-tooltip-row">' +
@@ -4220,6 +4362,7 @@ function initRiskMatrix() {
             var lvl = dot.dataset.riskLevel || 'medium';
             var prob = dot.dataset.riskProb;
             var impact = dot.dataset.riskImpact;
+            // ds-allow-innerhtml: lvl est contraint à la whitelist LEVEL_LABELS par normalizeLevel() en amont ; prob/impact/owner/detail passent par escapeAttr en contexte texte
             var bodyHTML =
                 '<table style="width:100%;border-collapse:collapse;font-size:0.85rem;">' +
                   '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted);width:35%">Niveau</td>' +
@@ -4308,6 +4451,7 @@ function initAutoSave() {
             el.className = 'autosave autosave--' + state;
             var iconEl = el.querySelector('.autosave-icon');
             var textEl = el.querySelector('.autosave-text');
+            // ds-allow-innerhtml: icons indexe une map interne à 3 clés fixes ('saving'/'saved'/'unsaved', démo interne states[]), jamais une donnée consumer
             if (iconEl) iconEl.innerHTML = icons[state];
             if (textEl) textEl.textContent = labels[state];
         }
@@ -4812,9 +4956,11 @@ function initUserMenu(rootOrSelector, options) {
         var formId = (root.id ? root.id + '-' : 'user-menu-') + 'logout-form-' + idx;
         var displayName = opts.displayName || root.dataset.displayName || 'Utilisateur';
         var email = opts.email || root.dataset.email || '';
-        var avatarUrl = opts.avatarUrl !== undefined ? opts.avatarUrl : (root.dataset.avatarUrl || '');
-        var authentikUserUrl = opts.authentikUserUrl || root.dataset.authentikUserUrl || '#';
-        var logoutUrl = opts.logoutUrl || root.dataset.logoutUrl || '/auth/logout';
+        // safeUrl() neutralise les schémas exécutables (javascript:, etc.) — setAttribute()
+        // seul ne protège que de l'injection d'attribut, pas d'un schéma hostile (#758).
+        var avatarUrl = safeUrl(opts.avatarUrl !== undefined ? opts.avatarUrl : (root.dataset.avatarUrl || ''), '', ['http', 'https', 'data']);
+        var authentikUserUrl = safeUrl(opts.authentikUserUrl || root.dataset.authentikUserUrl || '#', '#');
+        var logoutUrl = safeUrl(opts.logoutUrl || root.dataset.logoutUrl || '/auth/logout', '#');
 
         // Calcul initiales : 1ère lettre + 1ère lettre du 2e mot, sinon 2 premières lettres
         function getInitials(name) {
@@ -4826,39 +4972,98 @@ function initUserMenu(rootOrSelector, options) {
         }
         var initials = getInitials(displayName);
 
-        // Contenu avatar (img ou initials)
-        function avatarContent(size) {
+        // Contenu avatar (img ou initials) — construit en DOM : avatarUrl et
+        // displayName sont des données consumer non fiables en contexte
+        // attribut, escapeHTML() ne protège pas contre l'injection de
+        // guillemets (cf. #758).
+        function avatarContent() {
             if (avatarUrl) {
-                return '<img src="' + escapeHTML(avatarUrl) + '" alt="' + escapeHTML(displayName) + '">';
+                var img = document.createElement('img');
+                img.setAttribute('src', avatarUrl);
+                img.setAttribute('alt', displayName);
+                return img;
             }
-            return escapeHTML(initials);
+            return document.createTextNode(initials);
         }
 
-        // Construire le HTML du composant
-        root.innerHTML =
-            '<button class="user-menu-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu utilisateur — ' + escapeHTML(displayName) + '">' +
-                '<span class="user-menu-avatar">' + avatarContent(32) + '</span>' +
-                '<svg class="user-menu-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>' +
-            '</button>' +
-            '<div class="user-menu-dropdown" role="menu" aria-label="Menu utilisateur">' +
-                '<div class="user-menu-dropdown-header" role="presentation" aria-hidden="true">' +
-                    '<span class="user-menu-dropdown-avatar">' + avatarContent(48) + '</span>' +
-                    '<div class="user-menu-dropdown-info">' +
-                        '<span class="user-menu-dropdown-name">' + escapeHTML(displayName) + '</span>' +
-                        '<span class="user-menu-dropdown-email">' + escapeHTML(email) + '</span>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="user-menu-divider" role="separator"></div>' +
-                '<a href="' + escapeHTML(authentikUserUrl) + '" class="user-menu-item" role="menuitem" target="_blank" rel="noopener noreferrer">' +
-                    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-                    'Mon compte' +
-                '</a>' +
-                '<form id="' + formId + '" class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '" role="presentation"></form>' +
-                '<button type="submit" form="' + formId + '" class="user-menu-item user-menu-item--danger" role="menuitem">' +
-                    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
-                    'D&eacute;connexion' +
-                '</button>' +
-            '</div>';
+        // Construire le sous-arbre du composant en DOM — jamais via
+        // concaténation de chaînes assignée à innerHTML (#758).
+        root.innerHTML = '';
+
+        var trigger = document.createElement('button');
+        trigger.className = 'user-menu-trigger';
+        trigger.setAttribute('aria-haspopup', 'true');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Menu utilisateur — ' + displayName);
+
+        var triggerAvatar = document.createElement('span');
+        triggerAvatar.className = 'user-menu-avatar';
+        triggerAvatar.appendChild(avatarContent());
+        trigger.appendChild(triggerAvatar);
+        trigger.appendChild(constantMarkup('<svg class="user-menu-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>'));
+
+        var dropdown = document.createElement('div');
+        dropdown.className = 'user-menu-dropdown';
+        dropdown.setAttribute('role', 'menu');
+        dropdown.setAttribute('aria-label', 'Menu utilisateur');
+
+        var header = document.createElement('div');
+        header.className = 'user-menu-dropdown-header';
+        header.setAttribute('role', 'presentation');
+        header.setAttribute('aria-hidden', 'true');
+
+        var headerAvatar = document.createElement('span');
+        headerAvatar.className = 'user-menu-dropdown-avatar';
+        headerAvatar.appendChild(avatarContent());
+        header.appendChild(headerAvatar);
+
+        var info = document.createElement('div');
+        info.className = 'user-menu-dropdown-info';
+        var nameEl = document.createElement('span');
+        nameEl.className = 'user-menu-dropdown-name';
+        nameEl.textContent = displayName;
+        var emailEl = document.createElement('span');
+        emailEl.className = 'user-menu-dropdown-email';
+        emailEl.textContent = email;
+        info.appendChild(nameEl);
+        info.appendChild(emailEl);
+        header.appendChild(info);
+        dropdown.appendChild(header);
+
+        var divider = document.createElement('div');
+        divider.className = 'user-menu-divider';
+        divider.setAttribute('role', 'separator');
+        dropdown.appendChild(divider);
+
+        var accountLink = document.createElement('a');
+        accountLink.setAttribute('href', authentikUserUrl);
+        accountLink.className = 'user-menu-item';
+        accountLink.setAttribute('role', 'menuitem');
+        accountLink.setAttribute('target', '_blank');
+        accountLink.setAttribute('rel', 'noopener noreferrer');
+        accountLink.appendChild(constantMarkup('<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'));
+        accountLink.appendChild(document.createTextNode('Mon compte'));
+        dropdown.appendChild(accountLink);
+
+        var logoutForm = document.createElement('form');
+        logoutForm.id = formId;
+        logoutForm.className = 'user-menu-logout-form';
+        logoutForm.setAttribute('method', 'POST');
+        logoutForm.setAttribute('action', logoutUrl);
+        logoutForm.setAttribute('role', 'presentation');
+        dropdown.appendChild(logoutForm);
+
+        var logoutBtn = document.createElement('button');
+        logoutBtn.setAttribute('type', 'submit');
+        logoutBtn.setAttribute('form', formId);
+        logoutBtn.className = 'user-menu-item user-menu-item--danger';
+        logoutBtn.setAttribute('role', 'menuitem');
+        logoutBtn.appendChild(constantMarkup('<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'));
+        logoutBtn.appendChild(document.createTextNode('Déconnexion'));
+        dropdown.appendChild(logoutBtn);
+
+        root.appendChild(trigger);
+        root.appendChild(dropdown);
 
         var trigger = root.querySelector('.user-menu-trigger');
         var dropdown = root.querySelector('.user-menu-dropdown');
@@ -6296,6 +6501,7 @@ function initHeatmapCalendar() {
 
         function showTooltip(cell, e) {
             var dateObj = parseDate(cell.dataset.date);
+            // ds-allow-innerhtml: les deux valeurs passent par escapeAttr() en contexte texte uniquement, aucun attribut interpolé
             tooltip.innerHTML =
                 '<div class="heatmap-tooltip-title">' + escapeAttr(fmtLabel(dateObj)) + '</div>' +
                 '<div class="heatmap-tooltip-value">' + escapeAttr(cell.dataset.value) + '</div>';
@@ -6359,6 +6565,13 @@ function initHeatmapCalendar() {
 }
 window.__initHeatmapCalendar = initHeatmapCalendar;
 
+// SÉCURITÉ (#758) — contrat d'API assumé, PAS une faille :
+// `window.__vlistRenderRow(index)` retourne du HTML BRUT inséré tel quel
+// (via innerHTML, cf. renderRowContent() ci-dessous). Le consumer est
+// responsable de l'échappement des données qu'il y injecte — utiliser
+// `textContent` côté consumer si le contenu n'est pas de confiance.
+// Voir shared/CONSUMER_GUIDE.md, section « Sécurité : APIs qui acceptent du
+// HTML brut ».
 function initVirtualList() {
     var OVERSCAN = 5;
 
@@ -6379,6 +6592,9 @@ function initVirtualList() {
         var rowH = parseFloat(getComputedStyle(list).getPropertyValue('--vlist-row-h')) || 40;
         var viewportH = parseFloat(getComputedStyle(list).getPropertyValue('--vlist-height')) || 400;
 
+        // window.__vlistRenderRow(index) -> HTML BRUT inséré tel quel (contrat
+        // d'API assumé, cf. JSDoc de initVirtualList ci-dessus). Le fallback
+        // ('Élément #N') est un littéral constant, sûr.
         function renderRowContent(index) {
             if (typeof window.__vlistRenderRow === 'function') {
                 return window.__vlistRenderRow(index);
@@ -6435,6 +6651,7 @@ function initVirtualList() {
                 row.className = 'virtual-list-row';
                 row.setAttribute('role', 'listitem');
                 row.setAttribute('aria-rowindex', String(i + 1));
+                // ds-allow-innerhtml: contrat API assumé window.__vlistRenderRow (HTML brut du consumer), voir JSDoc de initVirtualList
                 row.innerHTML = renderRowContent(i);
                 frag.appendChild(row);
             }

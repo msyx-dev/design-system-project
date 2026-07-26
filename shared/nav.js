@@ -1,5 +1,23 @@
-/* @ds-version 2.116.1 */
-const VERSION = '2.116.1';
+/* @ds-version 2.116.2 */
+const VERSION = '2.116.2';
+
+// Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
+// image, etc.) — setAttribute() pose la valeur telle quelle : il protège de
+// l'injection d'attribut (guillemets) mais PAS d'un schéma hostile dans un
+// href/action/src (#758). Copie volontaire de shared/components.js::safeUrl —
+// nav.js doit rester autonome (pas de dépendance à l'ordre de chargement des
+// scripts). Toute évolution de la logique doit être répercutée dans les 2 copies.
+function safeUrl(url, fallback, allowedSchemes) {
+    if (!url) return fallback;
+    var schemes = allowedSchemes || ['http', 'https', 'mailto'];
+    var cleaned = String(url).replace(/[\x00-\x1f\x7f]/g, '').trim();
+    if (cleaned === '') return fallback;
+    if (/^[.\/#?]/.test(cleaned)) return cleaned;
+    var schemeMatch = cleaned.match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/);
+    if (!schemeMatch) return cleaned;
+    var scheme = schemeMatch[1].toLowerCase();
+    return schemes.indexOf(scheme) !== -1 ? cleaned : fallback;
+}
 
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
@@ -24,7 +42,7 @@ const NAV_PAGES = [
 let scrollSpyObserver = null;
 
 /* AUTO-GENERATED VERSION NOTES START — ne pas éditer à la main (bin/generate-version-notes.js) */
-const VERSION_NOTES = {"model":"dated","next":{"highlights":[]},"released":[{"version":"2.116.1","date":"2026-07-26","titre":"Sécurité : surlignage de suggestions renforcé","highlights":[{"type":"securite","text":"Le texte des suggestions (recherche, mentions) est désormais échappé avant insertion à l'écran, quel que soit son contenu."}]},{"version":"2.116.0","date":"2026-07-26","titre":"Sélecteurs à choix unique plus accessibles","highlights":[{"type":"amelioration","text":"Les sélecteurs à choix unique (segmented control, AM/PM des horaires) s'utilisent désormais entièrement aux flèches du clavier, comme un vrai groupe de choix exclusif."},{"type":"correction","text":"Correction d'un exemple de code du registre de composants qui contenait un attribut inexistant."}]},{"version":"2.115.0","date":"2026-07-25","titre":"Graphes : exporter et importer","highlights":[{"type":"nouveaute","text":"Un graphe peut désormais être exporté en image (SVG ou PNG) ou imprimé en PDF depuis le navigateur, en gardant ses couleurs et ses icônes."},{"type":"nouveaute","text":"Un graphe peut être sauvegardé puis rechargé à l'identique, et des graphes créés ailleurs (formats Cytoscape ou DOT) peuvent être importés."}]},{"version":"2.114.0","date":"2026-07-25","titre":"Annuler/Rétablir accessibles au doigt","highlights":[{"type":"amelioration","text":"En mode édition du graphe, les boutons Annuler et Rétablir sont désormais accessibles au doigt (mobile, tablette) en plus du raccourci clavier — ils se grisent automatiquement quand il n'y a plus rien à annuler ou à rétablir."}]},{"version":"2.113.4","date":"2026-07-25","titre":"Chiffres de la page d'accueil corrigés","highlights":[{"type":"correction","text":"Le nombre de composants affiché sur la page d'accueil est désormais exact et reste à jour automatiquement à chaque nouvelle version."},{"type":"correction","text":"La version affichée et le nombre de sections indiqué sur chaque catégorie de la page d'accueil, qui n'étaient plus à jour, ont été recalculés."}]},{"version":"2.113.3","date":"2026-07-25","titre":"Corrections d'affichage (imports CSS + espacements)","highlights":[{"type":"correction","text":"Correction d'un import CSS interne qui pouvait être ignoré par certains outils de build côté application, entraînant un rendu incomplet du design system."},{"type":"correction","text":"Correction du positionnement de l'icône œil dans le champ mot de passe et d'espacements internes du composant graphe."}]},{"version":"2.113.2","date":"2026-07-24","titre":"Header standard : toggle clair/sombre + doc","highlights":[{"type":"amelioration","text":"Le header standard affiche le toggle clair/sombre par défaut, comme l'en-tête habituel ; le sélecteur de palette (MSYX/ACSSI/Nhood) reste optionnel."},{"type":"amelioration","text":"Guide d'intégration du header standard mis à jour (composants React auto-suffisants, aucune icône à servir côté application)."}]},{"version":"2.113.0","date":"2026-07-24","titre":"Header standard & centre de notifications","highlights":[{"type":"nouveaute","text":"Nouveau header applicatif « standard » prêt à l'emploi (marque, notes de version, cloche de notifications, bouton de retour, zone d'identité) — démo dans la page Navigation."},{"type":"nouveaute","text":"Nouvelle cloche de notifications (panneau, compteur, « tout marquer comme lu ») — démo dans la page Navigation."}]},{"version":"2.112.2","date":"2026-07-24","titre":"Retour : joindre un fichier","highlights":[{"type":"amelioration","text":"Le formulaire de retour propose désormais « Joindre un fichier » (image) au lieu d'un partage d'écran."}]},{"version":"2.112.1","date":"2026-07-23","titre":"Formulaire de retour : e-mail pré-rempli","highlights":[{"type":"amelioration","text":"En mode connecté, le champ e-mail du formulaire de retour est désormais visible et pré-rempli depuis votre session (modifiable), plutôt que masqué."}]},{"version":"2.112.0","date":"2026-07-23","titre":"Header plus soigné","highlights":[{"type":"amelioration","text":"Le bouton de retour du header est à la même taille que la cloche de notifications."},{"type":"correction","text":"Le header ne déborde plus horizontalement sur mobile (compaction sous 640px)."}]},{"version":"2.111.0","date":"2026-07-23","titre":"Bouton de retour dans le header","highlights":[{"type":"nouveaute","text":"Un bouton « Donner un retour » est désormais présent par défaut dans l'en-tête, à côté des notifications : il ouvre un formulaire de feedback qui capture automatiquement le contexte (page, environnement, appareil)."}]},{"version":"2.110.0","date":"2026-07-23","titre":"Retours utilisateurs","highlights":[{"type":"nouveaute","text":"Nouveau parcours « User Feedback » : bouton, fenêtre de retour et capture de contexte, en mode connecté comme anonyme."},{"type":"correction","text":"Le champ e-mail se masque correctement en mode connecté."}]},{"version":"2.109.0","date":"2026-07-20","titre":"Édition de graphes","highlights":[{"type":"nouveaute","text":"Le composant de graphe permet désormais de créer, relier et supprimer des nœuds, avec annuler/refaire au clavier."}]},{"version":"2.100.0","date":"2026-07-19","titre":"Graphes node-link","highlights":[{"type":"nouveaute","text":"Nouveau composant de graphe (organigrammes, arbres, mindmaps, dépendances) : rendu SVG accessible, navigation clavier, zoom et déplacement."}]},{"version":"2.97.2","date":"2026-07-15","titre":"Fenêtres plus accessibles","highlights":[{"type":"amelioration","text":"Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles."}]},{"version":"2.97.1","date":"2026-07-15","titre":"Notes de version plus lisibles","highlights":[{"type":"amelioration","text":"La chronologie met en avant la dernière version et annonce les nouveautés à venir."},{"type":"amelioration","text":"Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne."},{"type":"correction","text":"Correction de puces parasites qui apparaissaient dans la liste des nouveautés."}]},{"version":"2.96.1","date":"2026-07-10","titre":"Catégories dans les notes de version","highlights":[{"type":"amelioration","text":"Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil."}]},{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
+const VERSION_NOTES = {"model":"dated","next":{"highlights":[]},"released":[{"version":"2.116.2","date":"2026-07-26","titre":"Sécurité : header, menus et graphiques renforcés","highlights":[{"type":"securite","text":"Le menu utilisateur, le header, les menus contextuels et les graphiques en secteurs sont désormais construits sans jamais insérer de contenu HTML brut, quelles que soient les données affichées."}]},{"version":"2.116.1","date":"2026-07-26","titre":"Sécurité : surlignage de suggestions renforcé","highlights":[{"type":"securite","text":"Le texte des suggestions (recherche, mentions) est désormais échappé avant insertion à l'écran, quel que soit son contenu."}]},{"version":"2.116.0","date":"2026-07-26","titre":"Sélecteurs à choix unique plus accessibles","highlights":[{"type":"amelioration","text":"Les sélecteurs à choix unique (segmented control, AM/PM des horaires) s'utilisent désormais entièrement aux flèches du clavier, comme un vrai groupe de choix exclusif."},{"type":"correction","text":"Correction d'un exemple de code du registre de composants qui contenait un attribut inexistant."}]},{"version":"2.115.0","date":"2026-07-25","titre":"Graphes : exporter et importer","highlights":[{"type":"nouveaute","text":"Un graphe peut désormais être exporté en image (SVG ou PNG) ou imprimé en PDF depuis le navigateur, en gardant ses couleurs et ses icônes."},{"type":"nouveaute","text":"Un graphe peut être sauvegardé puis rechargé à l'identique, et des graphes créés ailleurs (formats Cytoscape ou DOT) peuvent être importés."}]},{"version":"2.114.0","date":"2026-07-25","titre":"Annuler/Rétablir accessibles au doigt","highlights":[{"type":"amelioration","text":"En mode édition du graphe, les boutons Annuler et Rétablir sont désormais accessibles au doigt (mobile, tablette) en plus du raccourci clavier — ils se grisent automatiquement quand il n'y a plus rien à annuler ou à rétablir."}]},{"version":"2.113.4","date":"2026-07-25","titre":"Chiffres de la page d'accueil corrigés","highlights":[{"type":"correction","text":"Le nombre de composants affiché sur la page d'accueil est désormais exact et reste à jour automatiquement à chaque nouvelle version."},{"type":"correction","text":"La version affichée et le nombre de sections indiqué sur chaque catégorie de la page d'accueil, qui n'étaient plus à jour, ont été recalculés."}]},{"version":"2.113.3","date":"2026-07-25","titre":"Corrections d'affichage (imports CSS + espacements)","highlights":[{"type":"correction","text":"Correction d'un import CSS interne qui pouvait être ignoré par certains outils de build côté application, entraînant un rendu incomplet du design system."},{"type":"correction","text":"Correction du positionnement de l'icône œil dans le champ mot de passe et d'espacements internes du composant graphe."}]},{"version":"2.113.2","date":"2026-07-24","titre":"Header standard : toggle clair/sombre + doc","highlights":[{"type":"amelioration","text":"Le header standard affiche le toggle clair/sombre par défaut, comme l'en-tête habituel ; le sélecteur de palette (MSYX/ACSSI/Nhood) reste optionnel."},{"type":"amelioration","text":"Guide d'intégration du header standard mis à jour (composants React auto-suffisants, aucune icône à servir côté application)."}]},{"version":"2.113.0","date":"2026-07-24","titre":"Header standard & centre de notifications","highlights":[{"type":"nouveaute","text":"Nouveau header applicatif « standard » prêt à l'emploi (marque, notes de version, cloche de notifications, bouton de retour, zone d'identité) — démo dans la page Navigation."},{"type":"nouveaute","text":"Nouvelle cloche de notifications (panneau, compteur, « tout marquer comme lu ») — démo dans la page Navigation."}]},{"version":"2.112.2","date":"2026-07-24","titre":"Retour : joindre un fichier","highlights":[{"type":"amelioration","text":"Le formulaire de retour propose désormais « Joindre un fichier » (image) au lieu d'un partage d'écran."}]},{"version":"2.112.1","date":"2026-07-23","titre":"Formulaire de retour : e-mail pré-rempli","highlights":[{"type":"amelioration","text":"En mode connecté, le champ e-mail du formulaire de retour est désormais visible et pré-rempli depuis votre session (modifiable), plutôt que masqué."}]},{"version":"2.112.0","date":"2026-07-23","titre":"Header plus soigné","highlights":[{"type":"amelioration","text":"Le bouton de retour du header est à la même taille que la cloche de notifications."},{"type":"correction","text":"Le header ne déborde plus horizontalement sur mobile (compaction sous 640px)."}]},{"version":"2.111.0","date":"2026-07-23","titre":"Bouton de retour dans le header","highlights":[{"type":"nouveaute","text":"Un bouton « Donner un retour » est désormais présent par défaut dans l'en-tête, à côté des notifications : il ouvre un formulaire de feedback qui capture automatiquement le contexte (page, environnement, appareil)."}]},{"version":"2.110.0","date":"2026-07-23","titre":"Retours utilisateurs","highlights":[{"type":"nouveaute","text":"Nouveau parcours « User Feedback » : bouton, fenêtre de retour et capture de contexte, en mode connecté comme anonyme."},{"type":"correction","text":"Le champ e-mail se masque correctement en mode connecté."}]},{"version":"2.109.0","date":"2026-07-20","titre":"Édition de graphes","highlights":[{"type":"nouveaute","text":"Le composant de graphe permet désormais de créer, relier et supprimer des nœuds, avec annuler/refaire au clavier."}]},{"version":"2.100.0","date":"2026-07-19","titre":"Graphes node-link","highlights":[{"type":"nouveaute","text":"Nouveau composant de graphe (organigrammes, arbres, mindmaps, dépendances) : rendu SVG accessible, navigation clavier, zoom et déplacement."}]},{"version":"2.97.2","date":"2026-07-15","titre":"Fenêtres plus accessibles","highlights":[{"type":"amelioration","text":"Le bouton de fermeture des fenêtres est plus facile à toucher sur mobile (cible agrandie), et les titres de fenêtre sont plus lisibles."}]},{"version":"2.97.1","date":"2026-07-15","titre":"Notes de version plus lisibles","highlights":[{"type":"amelioration","text":"La chronologie met en avant la dernière version et annonce les nouveautés à venir."},{"type":"amelioration","text":"Le badge de version est désormais accessible sur mobile, avec une typographie plus moderne."},{"type":"correction","text":"Correction de puces parasites qui apparaissaient dans la liste des nouveautés."}]},{"version":"2.96.1","date":"2026-07-10","titre":"Catégories dans les notes de version","highlights":[{"type":"amelioration","text":"Chaque nouveauté est maintenant étiquetée par catégorie (Nouveauté, Amélioration, Correction, Sécurité) pour repérer l'essentiel d'un coup d'œil."}]},{"version":"2.96.0","date":"2026-07-09","titre":"Historique des nouveautés dans le header","highlights":[{"type":"nouveaute","text":"Un badge de version en haut de page ouvre la liste des dernières nouveautés du design system."},{"type":"amelioration","text":"Une pastille signale les nouveautés que vous n'avez pas encore consultées."}]},{"version":"2.95.0","date":"2026-07-07","titre":"Notes de version","highlights":[{"type":"nouveaute","text":"Un nouveau composant présente l'historique des versions sous forme de chronologie."}]},{"version":"2.94.0","date":"2026-06-30","titre":"Comparaison de fichiers","highlights":[{"type":"nouveaute","text":"Un affichage de différences met en évidence les lignes ajoutées et supprimées."}]},{"version":"2.93.0","date":"2026-06-30","titre":"Longues listes plus fluides","highlights":[{"type":"amelioration","text":"Les listes de milliers d'éléments défilent sans ralentir grâce à l'affichage à la demande."}]},{"version":"2.92.0","date":"2026-06-30","titre":"Visualiser l'activité dans le temps","highlights":[{"type":"nouveaute","text":"Une nouvelle vue en calendrier permet de repérer en un coup d'œil les périodes les plus actives."}]},{"version":"2.91.0","date":"2026-06-30","titre":"Explorer des données complexes","highlights":[{"type":"nouveaute","text":"Un nouvel affichage permet de parcourir un contenu structuré en dépliant et repliant chaque section."}]},{"version":"2.90.0","date":"2026-06-30","titre":"Panneaux ajustables","highlights":[{"type":"nouveaute","text":"Deux zones affichées côte à côte peuvent désormais être redimensionnées en faisant glisser la bordure qui les sépare."}]},{"version":"2.88.0","date":"2026-06-30","titre":"Affectation simplifiée entre deux listes","highlights":[{"type":"nouveaute","text":"Un nouvel outil permet de déplacer des éléments d'une liste vers une autre en un clic ou au clavier."}]}]};
 /* AUTO-GENERATED VERSION NOTES END */
 
 function buildHeader() {
@@ -40,47 +58,37 @@ function buildHeader() {
     var themeSwitcherEnabled = !!cfg.themeSwitcher;          // défaut false — opt-in vitrine/multi-thème
 
     // Brand configurable (#570) — défauts rétro-compatibles avec la vitrine DS
+    // safeUrl()/brandHref/brandLogoSrc : #758 — neutralise les schémas exécutables
+    // (javascript:). L'injection d'attribut (guillemets) est traitée séparément
+    // en posant ces valeurs via setAttribute() APRÈS le rendu du template
+    // (jamais interpolées dans la chaîne HTML), cf. plus bas dans cette fonction.
     var brandCfg = cfg.brand || {};
     var brandText = brandCfg.text || 'design-system';
-    var brandHref = brandCfg.href !== undefined ? brandCfg.href : '/site.html';
-    var brandLogoSrc = brandCfg.logoSrc || '/assets/sources/logoMSYX.png';
+    var brandHref = safeUrl(brandCfg.href !== undefined ? brandCfg.href : '/site.html', '#');
+    var brandLogoSrc = safeUrl(brandCfg.logoSrc || '/assets/sources/logoMSYX.png', '', ['http', 'https', 'data']);
 
+    // Icônes en caractères Unicode littéraux (pas d'entités HTML &#...; : elles ne
+    // sont décodées qu'en contexte HTML, pas via textContent — cf. patch DOM plus bas, #758)
     var menuItems = cfg.menu || [
-        { label: 'Profil', icon: '&#128100;', href: '#' },
-        { label: 'Preferences', icon: '&#9881;', href: '#' },
+        { label: 'Profil', icon: '👤', href: '#' },
+        { label: 'Preferences', icon: '⚙', href: '#' },
         { divider: true },
-        { label: 'Deconnexion', icon: '&#128682;', action: 'logout', 'class': 'danger' }
+        { label: 'Deconnexion', icon: '🚪', action: 'logout', 'class': 'danger' }
     ];
 
-    // Construire l'avatar (initiales ou image)
+    // Avatar (initiales ou image) : PAS interpolé dans le template (#758 — user.avatar
+    // et user.name/initials sont des données consumer non fiables en contexte
+    // attribut/texte). Placeholder vide ici, contenu réel posé en DOM après le
+    // rendu du template (cf. patch avatar plus bas).
     var avatarContent = '';
-    if (user.avatar) {
-        avatarContent = `<img src="${user.avatar}" alt="${user.name || 'Utilisateur'}">`;
-    } else {
-        avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
-    }
-
-    // Construire les items du dropdown
-    var dropdownItems = '';
-    if (user.name) {
-        dropdownItems += `<div class="header-dropdown-header"><span class="header-dropdown-name">${user.name}</span></div>`;
-    }
-    menuItems.forEach(function(item) {
-        if (item.divider) {
-            dropdownItems += '<div class="header-dropdown-divider"></div>';
-        } else {
-            var cls = 'header-dropdown-item' + (item['class'] ? ' ' + item['class'] : '');
-            var dataAction = item.action ? ` data-action="${item.action}"` : '';
-            var href = item.href || '#';
-            dropdownItems += `<a href="${href}" class="${cls}"${dataAction}>${item.icon ? `<span>${item.icon}</span>` : ''}${item.label}</a>`;
-        }
-    });
 
     // Cloche notifications : construite UNE SEULE FOIS, hors gate auth (v2.73.0)
     // Masquée uniquement si MSYX_HEADER.notifications.enabled === false
     var notifBellHtml = '';
     if (notifVisible) {
-        var notifCount = notifCfg.count || 0;
+        // Number() : notifCount est interpolé tel quel plus bas — coercion défensive
+        // au cas où notifCfg.count viendrait d'une source consumer non numérique (#758).
+        var notifCount = Number(notifCfg.count) || 0;
         var badgeHtml = (notifCount > 0)
             ? `<span class="header-notification-badge" id="header-notif-badge">${notifCount > 99 ? '99+' : notifCount}</span>`
             : '<span class="header-notification-badge hidden" id="header-notif-badge"></span>';
@@ -96,7 +104,8 @@ function buildHeader() {
     if (authEnabled) {
         if (cfg.user && (cfg.user.name || cfg.user.initials || cfg.user.avatar)) {
             // Mode legacy : MSYX_HEADER.user défini → dropdown legacy (back-compat consumers existants)
-            profileHtml = `<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div>`;
+            // Contenu du dropdown ("" placeholder) construit en DOM après rendu — cf. patch plus bas (#758)
+            profileHtml = `<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu"></div>`;
         } else {
             // Mode M3 : pas de cfg.user → slot UserMenu DS standard
             // L'init script (auth-init inline dans site.html) fetch /me.json depuis Authentik Proxy
@@ -126,13 +135,79 @@ function buildHeader() {
         : '';
 
     // Logo : image si logoSrc défini, sinon texte gradient fallback (#570)
-    var logoImgHtml = `<img src="${brandLogoSrc}" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
+    // src="" placeholder — brandLogoSrc posé via setAttribute() après rendu (#758)
+    var logoImgHtml = `<img src="" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
     // Badge version cliquable — dogfood du composant version-notes (#645, #614, #649).
     // Présentationnel strict : ouverture déléguée à data-modal-trigger + initModals ;
     // pastille « nouveau » gérée par initVersionNotes (égalité de chaîne localStorage).
     // Icône spark (i-sparkles) devant le numéro — .icon = stroke:currentColor;fill:none (_base.css).
     var versionBadgeHtml = `<button class="version-badge header-version-badge" data-version-notes data-modal-trigger="ds-version-notes-modal" data-latest-version="${VERSION}" data-storage-key="ds-version-seen" aria-label="Notes de version, v${VERSION}"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-sparkles"></use></svg>v${VERSION}<span class="version-badge-dot" aria-hidden="true"></span></button>`;
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="${brandHref}" class="header-logo" aria-label="${brandText} — Accueil">${logoImgHtml}<span class="brand-wordmark">${brandText}</span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+    // href="#" aria-label="" placeholder — brandHref/brandText posés via setAttribute()/textContent après rendu (#758)
+    // ds-allow-innerhtml: toutes les sous-chaînes interpolées ici sont désormais sûres par construction — logoImgHtml/versionBadgeHtml (VERSION const + littéraux), themeSwitcherHtml (littéral figé), userZoneHtml (notifBellHtml = compteur numérique + littéraux, feedbackBtnHtml = littéral, profileHtml = placeholders vides patchés en DOM plus bas). Aucune donnée consumer brute interpolée (#758).
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="#" class="header-logo" aria-label="">${logoImgHtml}<span class="brand-wordmark"></span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+
+    // Patch post-rendu (#758) : brandHref/brandText/brandLogoSrc/avatar posés via
+    // setAttribute()/textContent — jamais interpolés dans le template ci-dessus.
+    var logoLink = header.querySelector('.header-logo');
+    if (logoLink) {
+        logoLink.setAttribute('href', brandHref);
+        logoLink.setAttribute('aria-label', brandText + ' — Accueil');
+    }
+    var wordmarkEl = header.querySelector('.brand-wordmark');
+    if (wordmarkEl) wordmarkEl.textContent = brandText;
+    var logoImgEl = header.querySelector('.header-logo-img');
+    if (logoImgEl) logoImgEl.setAttribute('src', brandLogoSrc);
+
+    // Avatar legacy (#758) : construit en DOM, jamais en chaîne concaténée.
+    var avatarBtnEl = document.getElementById('header-avatar-btn');
+    if (avatarBtnEl) {
+        avatarBtnEl.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
+        if (user.avatar) {
+            var avatarImgEl = document.createElement('img');
+            avatarImgEl.setAttribute('src', safeUrl(user.avatar, '', ['http', 'https', 'data']));
+            avatarImgEl.setAttribute('alt', user.name || 'Utilisateur');
+            avatarBtnEl.appendChild(avatarImgEl);
+        } else {
+            avatarBtnEl.textContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
+        }
+    }
+
+    // Dropdown legacy (#758) : construit en DOM — user.name/menuItems[].label/icon/
+    // href/action sont des données consumer non fiables, jamais interpolées en HTML.
+    // CHANGEMENT DE CONTRAT : item.icon est désormais rendu en TEXTE (textContent) —
+    // cf. shared/CONSUMER_GUIDE.md. item.href passe par safeUrl().
+    var dropdownEl = document.getElementById('header-dropdown');
+    if (dropdownEl) {
+        dropdownEl.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
+        if (user.name) {
+            var dropdownHeaderEl = document.createElement('div');
+            dropdownHeaderEl.className = 'header-dropdown-header';
+            var dropdownNameEl = document.createElement('span');
+            dropdownNameEl.className = 'header-dropdown-name';
+            dropdownNameEl.textContent = user.name;
+            dropdownHeaderEl.appendChild(dropdownNameEl);
+            dropdownEl.appendChild(dropdownHeaderEl);
+        }
+        menuItems.forEach(function(item) {
+            if (item.divider) {
+                var dividerEl = document.createElement('div');
+                dividerEl.className = 'header-dropdown-divider';
+                dropdownEl.appendChild(dividerEl);
+                return;
+            }
+            var link = document.createElement('a');
+            link.setAttribute('href', safeUrl(item.href || '#', '#'));
+            link.className = 'header-dropdown-item' + (item['class'] ? ' ' + item['class'] : '');
+            if (item.action) link.setAttribute('data-action', item.action);
+            if (item.icon) {
+                var iconSpanEl = document.createElement('span');
+                iconSpanEl.textContent = item.icon;
+                link.appendChild(iconSpanEl);
+            }
+            link.appendChild(document.createTextNode(item.label));
+            dropdownEl.appendChild(link);
+        });
+    }
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
@@ -244,6 +319,7 @@ function ensureVersionNotesDialog() {
     dialog.className = 'modal-dialog version-notes-dialog';
     dialog.id = 'ds-version-notes-modal';
     dialog.setAttribute('aria-labelledby', 'ds-version-notes-title');
+    // ds-allow-innerhtml: notes = VERSION_NOTES, une constante générée au build (bin/generate-version-notes.js, jamais une donnée consumer/runtime) ; subtitle et tous les champs texte passent par escapeHtml() en contexte texte
     dialog.innerHTML = '<div class="modal-header"><h3 class="modal-title" id="ds-version-notes-title">Notes de version</h3>'
         + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
         + '<div class="modal-body version-notes">'
@@ -279,6 +355,7 @@ function ensureUserFeedbackDialog() {
     dialog.className = 'modal-dialog';
     dialog.id = 'ds-user-feedback-modal';
     dialog.setAttribute('aria-labelledby', 'ds-user-feedback-title');
+    // ds-allow-innerhtml: template de formulaire figé, seules parties variables = isConnected (booléen interne) et les 2 littéraux de hint associés — user.email est posé après coup via la propriété .value (jamais interpolé en attribut), cf. plus bas
     dialog.innerHTML = '<div class="modal-header"><h3 id="ds-user-feedback-title">Votre retour</h3>'
         + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
         + '<div class="modal-body"><form id="ds-user-feedback-form">'
@@ -294,7 +371,7 @@ function ensureUserFeedbackDialog() {
         + '<option value="medium">Moyen</option><option value="high">Fort</option></select></div>'
         + '<div class="input-group mb-md" id="ds-uf-email-group">'
         + '<label class="input-label" for="ds-uf-email">Email</label>'
-        + '<input class="input" type="email" id="ds-uf-email"' + (isConnected ? '' : ' required') + ' value="' + (user.email || '') + '" placeholder="vous@exemple.fr">'
+        + '<input class="input" type="email" id="ds-uf-email"' + (isConnected ? '' : ' required') + ' placeholder="vous@exemple.fr">'
         + '<span class="input-hint" id="ds-uf-email-hint">' + (isConnected ? 'Pré-rempli depuis votre session — modifiable.' : 'Requis pour pouvoir répondre à votre retour.') + '</span></div>'
         + '<div class="input-group mb-md"><span class="input-label">Joindre un fichier</span>'
         + '<div class="file-upload"><div class="file-upload-icon">&#128206;</div>'
@@ -304,6 +381,10 @@ function ensureUserFeedbackDialog() {
         + '<button type="submit" class="btn-primary">Envoyer</button></div>'
         + '</form></div>';
     document.body.appendChild(dialog);
+    // user.email posé via la propriété .value (jamais interpolé en attribut HTML,
+    // #758 — un email contenant un guillemet aurait pu injecter un attribut).
+    var emailInput = dialog.querySelector('#ds-uf-email');
+    if (emailInput) emailInput.value = user.email || '';
 }
 
 // Initialise le dropdown avatar
@@ -430,19 +511,54 @@ function initHeaderNotifications() {
 }
 
 // Rendu de la liste de notifications
+// Construction en DOM (#758) — n.icon/n.title/n.desc/n.time sont des données
+// consumer non fiables. CHANGEMENT DE CONTRAT : n.icon est désormais rendu en
+// TEXTE (textContent), plus en HTML brut — cf. shared/CONSUMER_GUIDE.md.
 function renderNotifications(items) {
     var list = document.getElementById('header-notif-list');
     if (!list) return;
+    list.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
     if (!items || !items.length) {
-        list.innerHTML = '<div class="header-notif-empty">Aucune notification</div>';
+        var empty = document.createElement('div');
+        empty.className = 'header-notif-empty';
+        empty.textContent = 'Aucune notification';
+        list.appendChild(empty);
         return;
     }
-    var html = '';
     items.forEach(function(n) {
-        var unreadCls = n.unread ? ' unread' : '';
-        html += `<div class="header-notif-item${unreadCls}">${n.icon ? `<span class="header-notif-icon">${n.icon}</span>` : ''}<div class="header-notif-body"><div class="header-notif-title">${n.title || ''}</div>${n.desc ? `<div class="header-notif-desc">${n.desc}</div>` : ''}</div>${n.time ? `<span class="header-notif-time">${n.time}</span>` : ''}</div>`;
+        var item = document.createElement('div');
+        item.className = 'header-notif-item' + (n.unread ? ' unread' : '');
+
+        if (n.icon) {
+            var iconEl = document.createElement('span');
+            iconEl.className = 'header-notif-icon';
+            iconEl.textContent = n.icon;
+            item.appendChild(iconEl);
+        }
+
+        var body = document.createElement('div');
+        body.className = 'header-notif-body';
+        var titleEl = document.createElement('div');
+        titleEl.className = 'header-notif-title';
+        titleEl.textContent = n.title || '';
+        body.appendChild(titleEl);
+        if (n.desc) {
+            var descEl = document.createElement('div');
+            descEl.className = 'header-notif-desc';
+            descEl.textContent = n.desc;
+            body.appendChild(descEl);
+        }
+        item.appendChild(body);
+
+        if (n.time) {
+            var timeEl = document.createElement('span');
+            timeEl.className = 'header-notif-time';
+            timeEl.textContent = n.time;
+            item.appendChild(timeEl);
+        }
+
+        list.appendChild(item);
     });
-    list.innerHTML = html;
 }
 
 // Mettre à jour les infos user à la volée (ex: après login)
@@ -472,13 +588,18 @@ function updateHeaderUser(user) {
     updateFeedbackAuthState(user);   // #710 — MAJ modale feedback après résolution async M3
     var btn = document.getElementById('header-avatar-btn');
     if (!btn) return;
-    var avatarContent = '';
+    // Avatar construit en DOM, jamais en chaîne concaténée (#758) — user.avatar/
+    // user.name/user.initials sont des données consumer non fiables ; escapeHtml()
+    // n'aurait pas protégé le contexte attribut src="".
+    btn.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
     if (user.avatar) {
-        avatarContent = `<img src="${user.avatar}" alt="${user.name || 'Utilisateur'}">`;
+        var avatarImgEl = document.createElement('img');
+        avatarImgEl.setAttribute('src', safeUrl(user.avatar, '', ['http', 'https', 'data']));
+        avatarImgEl.setAttribute('alt', user.name || 'Utilisateur');
+        btn.appendChild(avatarImgEl);
     } else {
-        avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
+        btn.textContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
     }
-    btn.innerHTML = avatarContent;
     var nameEl = document.querySelector('.header-dropdown-name');
     if (nameEl && user.name) nameEl.textContent = user.name;
 }
@@ -630,6 +751,7 @@ async function buildSidebar() {
         });
     });
     html += '<div class="sidebar-footer"><p>msyx.fr — 2026</p></div>';
+    // ds-allow-innerhtml: html est construit uniquement depuis NAV_PAGES (constante interne, l.~20) et pageSections (scan DOM des propres pages du DS ou NAV_SECTIONS_MANIFEST généré au build par bin/generate-nav-sections.js) — jamais une donnée consumer/attaquant
     sidebar.innerHTML = html;
 
     updateActiveLink();
@@ -814,6 +936,7 @@ async function navigateTo(url) {
         if (!newMain || !currentMain) { window.location.href = url; return; }
 
         // Swap content
+        // ds-allow-innerhtml: newMain provient d'un fetch same-origin d'une page statique du DS lui-même (SPA nav), jamais une donnée consumer
         currentMain.innerHTML = newMain.innerHTML;
 
         // Fade-in après le swap
@@ -936,6 +1059,7 @@ async function loadSection(container) {
         var doc = parser.parseFromString(html, 'text/html');
         var mainContent = doc.querySelector('.main');
         if (!mainContent) throw new Error('No .main found');
+        // ds-allow-innerhtml: mainContent provient d'un fetch same-origin d'une page statique du DS lui-même (LazyLoader), jamais une donnée consumer
         container.innerHTML = mainContent.innerHTML;
         container.classList.add('lazy-loaded');
         container.classList.remove('lazy-section');
@@ -943,6 +1067,7 @@ async function loadSection(container) {
         if (scrollSpyObserver) { scrollSpyObserver.disconnect(); scrollSpyObserver = null; }
         initScrollSpy();
     } catch (err) {
+        // ds-allow-innerhtml: page vient de container.dataset.page, un attribut data-page="/pages/*.html" hardcodé dans site.html (build-time, DS lui-même) — jamais une donnée consumer/runtime
         container.innerHTML = `<div class="lazy-error"><p>Erreur de chargement — <a href="${page}">ouvrir la page</a></p></div>`;
         container.classList.add('lazy-loaded');
         loadedSections.delete(page);
@@ -1051,7 +1176,8 @@ window.addEventListener('popstate', () => {
         const newMain = doc.querySelector('.main');
         const currentMain = document.querySelector('.main');
         if (newMain && currentMain) {
-            currentMain.innerHTML = newMain.innerHTML;
+            // ds-allow-innerhtml: newMain provient d'un fetch same-origin d'une page statique du DS lui-même (SPA nav), jamais une donnée consumer
+        currentMain.innerHTML = newMain.innerHTML;
             document.title = doc.title;
             updateActiveLink();
             reinitComponents();

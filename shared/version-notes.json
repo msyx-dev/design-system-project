@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.116.2",
+      "date": "2026-07-26",
+      "titre": "Sécurité : header, menus et graphiques renforcés",
+      "highlights": [
+        {
+          "type": "securite",
+          "text": "Le menu utilisateur, le header, les menus contextuels et les graphiques en secteurs sont désormais construits sans jamais insérer de contenu HTML brut, quelles que soient les données affichées."
+        }
+      ]
+    },
+    {
       "version": "2.116.1",
       "date": "2026-07-26",
       "titre": "Sécurité : surlignage de suggestions renforcé",

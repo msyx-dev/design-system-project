@@ -12,6 +12,21 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 - **CI `ci.yml`/`visual.yml`/`a11y.yml`/`perf.yml`** (#745) : déclencheur `pull_request` étendu à `[main, 'integration/**']` — les PR ouvertes vers une branche d'intégration de sprint (batch-merge) déclenchent désormais les 4 workflows, au lieu de n'être validées qu'au merge final sur `main`. Le trigger `push` reste `[main]` seul (pas de run en double, aucun impact sur le coalescing des déploiements Coolify qui n'écoute que `main`).
 
+## [2.116.2] - 2026-07-26 — Correctif de sécurité : audit `innerHTML` de `shared/components.js` (#758)
+
+### Fixed
+- **`shared/components.js` `initUserMenu`** (#758) : menu utilisateur reconstruit intégralement en DOM (`createElement`/`setAttribute`/`textContent`/`appendChild`) au lieu d'une concaténation `escapeHTML` en contexte attribut — exploitable sans interaction via `avatarUrl`/`authentikUserUrl`/`logoutUrl`. Nouveau `safeUrl()` neutralise en plus les schémas exécutables (`javascript:`).
+- **`shared/components.js` `createChip`/`createTag`/`buildPieChart`/`buildDonutChart`** (#758) : boutons de suppression et légendes reconstruits en DOM ; légende pie/donut factorisée en `buildLegend()` partagée (doublon strictement identique).
+- **`shared/components.js` Risk Matrix** (#758) : labels d'axes en `textContent` ; **nouveau vecteur trouvé pendant l'audit** — `data-level` du consumer interpolé sans échappement dans `class="risk-tooltip-badge …"`, corrigé par whitelist `normalizeLevel()`.
+- **`shared/components.js`** (#758) : lightbox placeholder, barres quiz/poll, `initDataGrids` (dont `getStatutBadge`) reconstruits en DOM ; `window.__openModal` — le bouton d'action (`actions[].label`) construit en DOM, `bodyHTML`/`actions[].onClick` documentés comme contrats d'API assumés.
+- **`shared/nav.js` `updateHeaderUser`/`buildHeader`/`renderNotifications`** (#758) : avatar, dropdown legacy, `brandHref`/`brandText`/`brandLogoSrc` reconstruits en DOM/`setAttribute`/`textContent`. Changement de contrat : `n.icon` rendu en texte (`textContent`).
+- **`shared/nav.js` `ensureUserFeedbackDialog`** (#758) : **nouveau vecteur trouvé pendant l'audit** — `user.email` interpolé sans échappement dans `value="…"`, posé désormais via la propriété `.value`.
+
+### Added
+- **`bin/check-innerhtml.js`** (#758) : garde-fou CI anti-XSS, bloquant, testé par `tests/test-check-innerhtml.sh`.
+- **`docs/DS-PRINCIPLES.md`** (#758) : Section 11 — Sécurité : innerHTML, attributs, URLs.
+- **`shared/CONSUMER_GUIDE.md`** (#758) : section « Sécurité : APIs qui acceptent du HTML brut ».
+
 ## [2.116.1] - 2026-07-26 — Correctif de sécurité : surlignage de suggestions sans `innerHTML` (#746)
 
 ### Fixed

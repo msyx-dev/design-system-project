@@ -75,6 +75,12 @@ jobs:
           ./tests/test-check-versions.sh
       - name: nav.js syntax regression (#206, #378)
         run: npm run test:syntax
+      - name: Check innerHTML anti-XSS gate (#758)
+        run: node bin/check-innerhtml.js
+      - name: Run innerHTML gate script tests (#758)
+        run: |
+          chmod +x tests/test-check-innerhtml.sh
+          ./tests/test-check-innerhtml.sh
       # check-components.sh lint le registre / les consommateurs hors DS.
       # Lance sur shared/css (CSS du DS) : 11 warnings de dette preexistante
       # (classes modifier ex: .tooltip--left non enumerees dans le registre).
