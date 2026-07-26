@@ -18,6 +18,7 @@ Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
 - **Pas d'override de classe DS** — customiser via variables CSS, jamais redéfinir
 - **Version bump synchrone** — 5 fichiers (`tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`)
 - **Checklist anti-dette** — 9 dimensions à valider par composant (HTML/CSS/JS/A11y/Perf/Doc/Version/Registre/VR)
+- **Jamais de donnée consumer concaténée dans `innerHTML`** — construire les nœuds (`createElement`/`setAttribute`/`textContent`) ; `escapeHTML` ne protège qu'un contexte texte, jamais un attribut (voir `docs/DS-PRINCIPLES.md` §11)
 
 Si une règle te paraît ambiguë : `docs/DS-PRINCIPLES.md` a un exemple ❌ Don't / ✅ Do pour chaque cas.
 
