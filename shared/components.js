@@ -2509,6 +2509,41 @@ function initPieCharts() {
         return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
     }
 
+    // Légende partagée pie/donut (#758) — construite en DOM : s.label est une
+    // donnée consumer non fiable (data-labels du consumer), jamais d'innerHTML.
+    // s.color vient de resolveColor() (getComputedStyle), pas une donnée
+    // consumer : l'affecter à style.background est sûr.
+    function buildLegend(legendEl, segments) {
+        legendEl.innerHTML = '';
+        segments.forEach((s, i) => {
+            const item = document.createElement('span');
+            item.className = 'pie-legend-item';
+            item.dataset.idx = String(i);
+            const dot = document.createElement('span');
+            dot.className = 'pie-legend-dot';
+            dot.style.background = s.color;
+            item.appendChild(dot);
+            item.appendChild(document.createTextNode(s.label));
+            legendEl.appendChild(item);
+        });
+
+        legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const idx = +item.dataset.idx;
+                segments.forEach((s, i) => {
+                    s.el.style.opacity = i === idx ? '1' : '0.3';
+                });
+                legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
+                    li.classList.toggle('dimmed', i !== idx);
+                });
+            });
+            item.addEventListener('mouseleave', () => {
+                segments.forEach(s => { s.el.style.opacity = '1'; });
+                legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
+            });
+        });
+    }
+
     function buildPieChart(chart, values, labels, colors, isMini) {
         const svg = chart.querySelector('svg');
         const legendEl = chart.querySelector('.pie-legend');
@@ -2539,26 +2574,7 @@ function initPieCharts() {
 
         // Legend
         if (legendEl) {
-            legendEl.innerHTML = segments.map((s, i) =>
-                `<span class="pie-legend-item" data-idx="${i}">` +
-                `<span class="pie-legend-dot" style="background:${s.color};"></span>${s.label}</span>`
-            ).join('');
-
-            legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    const idx = +item.dataset.idx;
-                    segments.forEach((s, i) => {
-                        s.el.style.opacity = i === idx ? '1' : '0.3';
-                    });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
-                        li.classList.toggle('dimmed', i !== idx);
-                    });
-                });
-                item.addEventListener('mouseleave', () => {
-                    segments.forEach(s => { s.el.style.opacity = '1'; });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
-                });
-            });
+            buildLegend(legendEl, segments);
         }
 
         return segments;
@@ -2606,26 +2622,7 @@ function initPieCharts() {
 
         // Legend
         if (legendEl) {
-            legendEl.innerHTML = segments.map((s, i) =>
-                `<span class="pie-legend-item" data-idx="${i}">` +
-                `<span class="pie-legend-dot" style="background:${s.color};"></span>${s.label}</span>`
-            ).join('');
-
-            legendEl.querySelectorAll('.pie-legend-item').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    const idx = +item.dataset.idx;
-                    segments.forEach((s, i) => {
-                        s.el.style.opacity = i === idx ? '1' : '0.3';
-                    });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach((li, i) => {
-                        li.classList.toggle('dimmed', i !== idx);
-                    });
-                });
-                item.addEventListener('mouseleave', () => {
-                    segments.forEach(s => { s.el.style.opacity = '1'; });
-                    legendEl.querySelectorAll('.pie-legend-item').forEach(li => li.classList.remove('dimmed'));
-                });
-            });
+            buildLegend(legendEl, segments);
         }
 
         return segments;
