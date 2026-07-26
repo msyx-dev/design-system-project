@@ -6,7 +6,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## Unreleased (next alpha)
 
-_Rien pour l'instant._
+### Added
+- **`<JsonViewer>` (#596)** : port React de l'arbre JSON repliable en lecture seule (`divers.html` #json-viewer, calque `initJsonViewer` — `shared/components.js:6025-6314`). `data` est une valeur JS **déjà résolue** (pas la chaîne `data-json`/`<script type="application/json">` du vanilla) — normalisée via un aller-retour `JSON.stringify`/`JSON.parse` qui détecte au passage les valeurs non sérialisables (`undefined` racine, référence circulaire, `BigInt`…) et les rend en `.json-viewer-error`, équivalent du bloc `catch` vanilla. Gère les 6 types de valeur (objet, tableau, string, number, boolean, null) ; index de tableau rendu comme une clé **quotée** (`"0"`, `"1"`…), calque exact du vanilla (pas la convention usuelle d'un highlighter JSON). Toolbar « Tout déplier »/« Tout replier » optionnelle (`toolbar`, défaut `true`), « Tout replier » garde la racine ouverte (iso-vanilla). Navigation clavier WAI-ARIA Tree complète (roving tabindex : ↓/↑/→/←/Home/End/Entrée/Espace), déjà présente côté vanilla.
+  - **`.open` va sur `.json-node` (le PARENT)** ; `.json-children` porte la classe `"open"` **en dur** (jamais togglée) — le CSS masque via `.json-node:not(.open) > .json-children { max-height: 0 }`. Poser `.open` sur `.json-children` au lieu du `.json-node` = composant visuellement mort (rejeu de l'incident `<ActionMenu>`). Tests **négatifs** dédiés (assertion `.open` absent à l'état replié, pas seulement `aria-expanded`).
+  - **Trouvaille de parité** : la fonction `isVisible()` du vanilla est en pratique du **code mort** (elle teste que `.json-children` n'a pas la classe `open`, qui — voir ci-dessus — l'a toujours) : la navigation clavier ↓/↑/Home/End traverse donc aussi les sous-arbres visuellement repliés, y compris côté React (comportement copié tel quel, source de vérité = le code vanilla, pas l'intention supposée).
+  - **Expansion** — non contrôlée par défaut, graine `defaultExpandedDepth` (défaut `Infinity`, tout déplié comme le vanilla qui n'a aucune troncature). **Contrôlée** via `expandedPaths`/`onExpandedChange` — convention alignée sur `<Accordion openIds>` (multi-ouverture indépendante), pas sur `<TreeView selectedId>` (sélection unique), car plusieurs nœuds JSON peuvent être ouverts simultanément comme plusieurs items d'accordéon.
+  - **Classes non émises** : `.json-tree`, `.json-node--last`, `.json-close-punct` — grep sur `shared/css/**` confirme qu'aucune des trois n'a de règle CSS (crochets JS morts du vanilla, absentes aussi du registre `cssClasses` de `json-viewer`). Le rôle ARIA `role="tree"` est conservé sur un `<div>` non classé.
+  - Registre : `REACT_TO_REGISTRY:{JsonViewer:'json-viewer'}` + entrée `json-viewer` passée en `react:"ported"` (même PR, DS-PRINCIPLES §8.1).
+  - 100 % `packages/react/` — aucun bump `@ds-version`.
 
 ## v3.0.0-alpha.25 — 2026-07-26 — Sprint 3 « React interactifs » : ContextMenu, Accordion, SplitButton, MentionInput (#468/#461/#600/#594/#743)
 
