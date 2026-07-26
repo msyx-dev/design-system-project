@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.116.1",
+      "date": "2026-07-26",
+      "titre": "Sécurité : surlignage de suggestions renforcé",
+      "highlights": [
+        {
+          "type": "securite",
+          "text": "Le texte des suggestions (recherche, mentions) est désormais échappé avant insertion à l'écran, quel que soit son contenu."
+        }
+      ]
+    },
+    {
       "version": "2.116.0",
       "date": "2026-07-26",
       "titre": "Sélecteurs à choix unique plus accessibles",

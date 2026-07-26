@@ -1,5 +1,12 @@
 # Releases
 
+## 2.116.1 — 2026-07-26 — Correctif de sécurité : surlignage de suggestions sans `innerHTML` (#746)
+
+> Correctif de sécurité (XSS). `initSearchInputs()` et `initMentionInput()` surlignaient les correspondances via `span.innerHTML = text.replace(...)` — le texte de suggestion, une donnée fournie par le consumer, n'était jamais échappé avant insertion. Aucun changement visuel : le surlignage `<mark>` continue de fonctionner à l'identique.
+
+### Fixed
+- **`shared/components.js`** (#746) : les deux implémentations dupliquées de `highlightMatch()` (`initSearchInputs`, `initMentionInput`) remplacées par une unique fonction partagée qui construit les nœuds (`createTextNode`/`createElement('mark')`/`appendChild`) au lieu d'interpréter le texte comme du HTML — échappement du texte de suggestion avant insertion (plus d'`innerHTML`).
+
 ## 2.116.0 — 2026-07-26 — Segmented control : convention ARIA `radiogroup` canonique (#613)
 
 > Decision tranchee (Mike, 2026-07-26) : le DS vanilla exposait 4 conventions ARIA differentes pour le meme composant (`role="button"`+`aria-pressed` dans `initSegmentedControls`, `role="group"` nu dans les demos, `role="tablist"`/`tab` dans le registre, AM/PM du time-picker jamais touche par le JS). Alignement complet sur `role="radiogroup"` + items `role="radio"` + `aria-checked` + roving tabindex + navigation flèches (WAI-ARIA APG « Radio Group »), deja l'implementation du wrapper `@msyx-dev/react` `<SegmentedControl>` — zero regression cote package. Aucun changement visuel (CSS non touche).
