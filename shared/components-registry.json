@@ -681,7 +681,7 @@
       ],
       "jsInit": "initComponents",
       "example": "<div class=\"accordion-item open\">\n  <div class=\"accordion-header\">Section 1 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 1.</div>\n</div>\n<div class=\"accordion-item\">\n  <div class=\"accordion-header\">Section 2 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 2.</div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/lists.css"
       ]

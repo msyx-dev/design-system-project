@@ -283,3 +283,11 @@ export type {
   ContextMenuSubItem,
   ContextMenuSubmenu,
 } from "./components/ContextMenu/ContextMenu";
+
+// ─── Accordion — parité React (#461) ───
+export { Accordion } from "./components/Accordion/Accordion";
+export type {
+  AccordionProps,
+  AccordionItem,
+  AccordionHeadingLevel,
+} from "./components/Accordion/Accordion";
