@@ -1022,7 +1022,7 @@
         ".segmented-item"
       ],
       "jsInit": "initSegmentedControls",
-      "example": "<div class=\"segmented\" role=\"tablist\" data-segmented-id=\"seg-exemple\">\n  <div class=\"segmented-indicator\"></div>\n  <button class=\"segmented-item active\" role=\"tab\" aria-selected=\"true\">Semaine</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Mois</button>\n  <button class=\"segmented-item\" role=\"tab\" aria-selected=\"false\">Année</button>\n</div>",
+      "example": "<div class=\"segmented\" role=\"radiogroup\" aria-label=\"Vue\">\n  <div class=\"segmented-indicator\" aria-hidden=\"true\"></div>\n  <button class=\"segmented-item active\" type=\"button\" role=\"radio\" aria-checked=\"true\" tabindex=\"0\">Semaine</button>\n  <button class=\"segmented-item\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Mois</button>\n  <button class=\"segmented-item\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Année</button>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/buttons.css",
