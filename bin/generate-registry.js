@@ -500,6 +500,7 @@ const REACT_TO_REGISTRY = {
   Accordion: 'accordion',                 // #461 — port du bloc inline d'initComponents (il n'existe PAS d'initAccordion)
   SplitButton: 'split-button',            // #600 — action primaire + caret menu (panneau sur le primitif .menu #520)
   MentionInput: 'mention',                // #594 — dropdown @ au caret (mirror-div réimplémenté côté package)
+  JsonViewer: 'json-viewer',              // #596 — arbre JSON repliable, .json-tree/.json-node--last non émis (dead CSS)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

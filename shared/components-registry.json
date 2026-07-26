@@ -1,7 +1,7 @@
 {
   "version": "2.116.2",
   "generated": {
-    "at": "2026-07-26T18:14:02.889Z",
+    "at": "2026-07-26T22:34:58.406Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3169,7 +3169,7 @@
         ".json-viewer-toolbar"
       ],
       "jsInit": "initJsonViewer",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/json-viewer.css"
       ]

@@ -309,3 +309,12 @@ export type {
   MentionSuggestions,
   MentionSuggestionObject,
 } from "./components/MentionInput/MentionInput";
+
+// ─── JsonViewer — #596 (parité React) ───
+export { JsonViewer } from "./components/JsonViewer/JsonViewer";
+export type {
+  JsonViewerProps,
+  JsonViewerNode,
+  JsonPrimitive,
+  JsonValue,
+} from "./components/JsonViewer/JsonViewer";
