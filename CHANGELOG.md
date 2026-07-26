@@ -10,6 +10,17 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : chaque livraison est **datée directement** ci-dessous — plus d'accumulation sous `[Unreleased]`.
 
+## [2.116.0] - 2026-07-26 — Segmented control : convention ARIA `radiogroup` canonique (#613)
+
+### Changed
+- **`initSegmentedControls`** (#613) : `role="button"`+`aria-pressed` → `role="radiogroup"`/`role="radio"`+`aria-checked` + roving tabindex + navigation flèches (WAI-ARIA APG « Radio Group »), alignement complet sur l'implémentation du wrapper `@msyx-dev/react` `<SegmentedControl>`.
+- **AM/PM du time-picker** (#613) : géré directement dans `initTimePicker` (non couvert par `initSegmentedControls`, absence de `.segmented-indicator`) — même convention.
+- **`pages/composants.html` + `pages/formulaires.html`** (#613) : ARIA posé en dur (anti-FOUC) sur les 4 démos segmented control et l'AM/PM.
+- **`docs/DS-PRINCIPLES.md`** (#613) : nouvelle sous-section §3.2 gravant la convention et les alternatives écartées.
+
+### Fixed
+- **`shared/components-registry.json`** (#613) : exemple `segmented-control` corrigé (rôles + suppression de l'attribut fantôme `data-segmented-id`).
+
 ## [2.115.0] - 2026-07-25 — Graph : export SVG/PNG/print-PDF + round-trip JSON + import Cytoscape/DOT
 
 ### Added
