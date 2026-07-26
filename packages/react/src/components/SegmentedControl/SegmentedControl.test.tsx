@@ -25,10 +25,13 @@ describe("SegmentedControl — structure", () => {
     const group = document.querySelector(".segmented");
     expect(group).toBeInTheDocument();
     expect(group).toHaveAttribute("role", "radiogroup");
+    expect(group).not.toHaveAttribute("role", "tablist");
 
     const items = document.querySelectorAll(".segmented-item");
     expect(items).toHaveLength(3);
     items.forEach((item) => expect(item).toHaveAttribute("role", "radio"));
+    expect(items[0]).not.toHaveAttribute("aria-pressed");
+    expect(items[0]).not.toHaveAttribute("aria-selected");
   });
 
   it("rend l'indicateur .segmented-indicator", () => {
