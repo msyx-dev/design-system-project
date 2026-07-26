@@ -301,3 +301,11 @@ export type {
   SplitButtonItemEntry,
   SplitButtonDividerEntry,
 } from "./components/SplitButton/SplitButton";
+
+// ─── MentionInput — #594 (parité React, epic #396) ───
+export { MentionInput } from "./components/MentionInput/MentionInput";
+export type {
+  MentionInputProps,
+  MentionSuggestions,
+  MentionSuggestionObject,
+} from "./components/MentionInput/MentionInput";
