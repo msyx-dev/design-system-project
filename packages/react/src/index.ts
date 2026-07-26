@@ -291,3 +291,13 @@ export type {
   AccordionItem,
   AccordionHeadingLevel,
 } from "./components/Accordion/Accordion";
+
+// ─── SplitButton — #600 (parité React) ───
+export { SplitButton } from "./components/SplitButton/SplitButton";
+export type {
+  SplitButtonProps,
+  SplitButtonVariant,
+  SplitButtonItem,
+  SplitButtonItemEntry,
+  SplitButtonDividerEntry,
+} from "./components/SplitButton/SplitButton";

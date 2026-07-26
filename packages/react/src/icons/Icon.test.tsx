@@ -7,6 +7,7 @@ afterEach(cleanup);
 const ALL_NAMES: IconName[] = [
   "chevron-left",
   "chevron-right",
+  "chevron-down",
   "check",
   "upload",
   "file",
@@ -61,7 +62,7 @@ describe("Icon — primitif inline auto-contenu (#713)", () => {
     expect(svg).toHaveAttribute("height", "18");
   });
 
-  it("chaque glyphe (12) rend au moins un enfant SVG, sans <use>", () => {
+  it("chaque glyphe (13) rend au moins un enfant SVG, sans <use>", () => {
     ALL_NAMES.forEach((name) => {
       const { container, unmount } = render(<Icon name={name} />);
       const svg = container.querySelector(`svg[data-icon="${name}"]`);
@@ -75,6 +76,16 @@ describe("Icon — primitif inline auto-contenu (#713)", () => {
     const { container } = render(<Icon name="bell" />);
     const svg = container.querySelector('svg[data-icon="bell"]');
     expect(svg?.querySelectorAll("path").length).toBe(2);
+    expect(container.querySelector("use")).toBeNull();
+  });
+
+  it("rend le glyphe chevron-down (#600 — caret du SplitButton, 1 path, sans <use>)", () => {
+    const { container } = render(<Icon name="chevron-down" />);
+    const svg = container.querySelector('svg[data-icon="chevron-down"]');
+    const paths = svg?.querySelectorAll("path");
+    expect(paths?.length).toBe(1);
+    // Copie fidèle de shared/icons/sprite.svg:8 (symbol i-chevron-down).
+    expect(paths?.[0]).toHaveAttribute("d", "m6 9 6 6 6-6");
     expect(container.querySelector("use")).toBeNull();
   });
 });

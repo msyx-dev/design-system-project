@@ -1,7 +1,7 @@
 {
   "version": "2.116.0",
   "generated": {
-    "at": "2026-07-26T16:19:19.137Z",
+    "at": "2026-07-26T18:14:02.889Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3103,7 +3103,7 @@
         ".split-button__menu"
       ],
       "jsInit": "initSplitButton",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/buttons.css"
       ]
