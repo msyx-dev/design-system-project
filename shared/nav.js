@@ -319,6 +319,7 @@ function ensureVersionNotesDialog() {
     dialog.className = 'modal-dialog version-notes-dialog';
     dialog.id = 'ds-version-notes-modal';
     dialog.setAttribute('aria-labelledby', 'ds-version-notes-title');
+    // ds-allow-innerhtml: notes = VERSION_NOTES, une constante générée au build (bin/generate-version-notes.js, jamais une donnée consumer/runtime) ; subtitle et tous les champs texte passent par escapeHtml() en contexte texte
     dialog.innerHTML = '<div class="modal-header"><h3 class="modal-title" id="ds-version-notes-title">Notes de version</h3>'
         + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
         + '<div class="modal-body version-notes">'
@@ -354,6 +355,7 @@ function ensureUserFeedbackDialog() {
     dialog.className = 'modal-dialog';
     dialog.id = 'ds-user-feedback-modal';
     dialog.setAttribute('aria-labelledby', 'ds-user-feedback-title');
+    // ds-allow-innerhtml: template de formulaire figé, seules parties variables = isConnected (booléen interne) et les 2 littéraux de hint associés — user.email est posé après coup via la propriété .value (jamais interpolé en attribut), cf. plus bas
     dialog.innerHTML = '<div class="modal-header"><h3 id="ds-user-feedback-title">Votre retour</h3>'
         + '<button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div>'
         + '<div class="modal-body"><form id="ds-user-feedback-form">'
@@ -369,7 +371,7 @@ function ensureUserFeedbackDialog() {
         + '<option value="medium">Moyen</option><option value="high">Fort</option></select></div>'
         + '<div class="input-group mb-md" id="ds-uf-email-group">'
         + '<label class="input-label" for="ds-uf-email">Email</label>'
-        + '<input class="input" type="email" id="ds-uf-email"' + (isConnected ? '' : ' required') + ' value="' + (user.email || '') + '" placeholder="vous@exemple.fr">'
+        + '<input class="input" type="email" id="ds-uf-email"' + (isConnected ? '' : ' required') + ' placeholder="vous@exemple.fr">'
         + '<span class="input-hint" id="ds-uf-email-hint">' + (isConnected ? 'Pré-rempli depuis votre session — modifiable.' : 'Requis pour pouvoir répondre à votre retour.') + '</span></div>'
         + '<div class="input-group mb-md"><span class="input-label">Joindre un fichier</span>'
         + '<div class="file-upload"><div class="file-upload-icon">&#128206;</div>'
@@ -379,6 +381,10 @@ function ensureUserFeedbackDialog() {
         + '<button type="submit" class="btn-primary">Envoyer</button></div>'
         + '</form></div>';
     document.body.appendChild(dialog);
+    // user.email posé via la propriété .value (jamais interpolé en attribut HTML,
+    // #758 — un email contenant un guillemet aurait pu injecter un attribut).
+    var emailInput = dialog.querySelector('#ds-uf-email');
+    if (emailInput) emailInput.value = user.email || '';
 }
 
 // Initialise le dropdown avatar
