@@ -132,7 +132,7 @@ describe("SplitButton — structure & classes DS", () => {
       />,
     );
 
-    const item = container.querySelector(".menu-item")!;
+    const item = container.querySelector<HTMLElement>(".menu-item")!;
     expect(within(item).getByTestId("icon-x")).toBeInTheDocument();
   });
 

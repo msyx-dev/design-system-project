@@ -3103,7 +3103,7 @@
         ".split-button__menu"
       ],
       "jsInit": "initSplitButton",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/buttons.css"
       ]

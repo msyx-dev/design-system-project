@@ -498,6 +498,7 @@ const REACT_TO_REGISTRY = {
   Graph: 'graph',                         // #676 — wrapper I6-1 view-only pilotant le moteur bundlé depuis shared/graph/
   ContextMenu: 'context-menu',            // #468 — menu clic droit ; classe d'état .show (≠ .open d'ActionMenu)
   Accordion: 'accordion',                 // #461 — port du bloc inline d'initComponents (il n'existe PAS d'initAccordion)
+  SplitButton: 'split-button',            // #600 — action primaire + caret menu (panneau sur le primitif .menu #520)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -518,6 +519,7 @@ const REACT_VARIANT_EXPANSIONS = {
 const REACT_KNOWN_SINGLE = new Set([
   'overline', 'lead', 'subtitle', 'open',
   'dropdown', 'arrow', 'check', 'selected', 'icon',  // #457 — Dropdown
+  'menu',  // #600 — SplitButton : panneau `class="menu split-button__menu"` (primitif canonique menu.css:12)
 ]);
 
 // Whitelist : classes CSS réelles (confirmées par lecture manuelle du CSS
