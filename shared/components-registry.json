@@ -1,7 +1,7 @@
 {
   "version": "2.116.0",
   "generated": {
-    "at": "2026-07-25T18:31:01.905Z",
+    "at": "2026-07-26T16:19:19.137Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1109,7 +1109,7 @@
       ],
       "jsInit": "initContextMenu",
       "example": "<!-- Zone déclenchant le menu contextuel au clic droit -->\n<div data-context-menu=\"ctx-exemple\" style=\"padding:2rem;border:1px dashed var(--border);border-radius:var(--radius-sm);\">\n  Clic droit pour ouvrir le menu\n</div>\n\n<!-- Définition du menu -->\n<div class=\"context-menu\" id=\"ctx-exemple\" hidden>\n  <button class=\"context-menu-item\">&#9998; Renommer</button>\n  <button class=\"context-menu-item\">&#128275; Partager</button>\n  <hr class=\"context-menu-divider\">\n  <button class=\"context-menu-item\" style=\"color:var(--danger);\">&#128465; Supprimer</button>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/menu.css",
         "shared/css/components/overlays.css"
