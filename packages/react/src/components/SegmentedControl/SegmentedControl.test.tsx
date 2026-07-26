@@ -266,3 +266,68 @@ describe("SegmentedControl — navigation clavier WAI-ARIA radiogroup", () => {
     );
   });
 });
+
+describe("SegmentedControl — garde-fou roving tabindex (#743)", () => {
+  it("value ne matche aucune option — la première option non disabled reçoit tabindex=0 sans devenir active", () => {
+    render(
+      <SegmentedControl
+        options={OPTIONS_WITH_DISABLED}
+        value="does-not-exist"
+        onChange={() => {}}
+      />,
+    );
+
+    const first = screen.getByText("A").closest("button") as HTMLElement;
+    expect(first).toHaveAttribute("tabindex", "0");
+    expect(first).toHaveAttribute("aria-checked", "false");
+    expect(first).not.toHaveClass("active");
+
+    const disabledOption = screen
+      .getByText("B")
+      .closest("button") as HTMLElement;
+    const last = screen.getByText("C").closest("button") as HTMLElement;
+    expect(disabledOption).toHaveAttribute("tabindex", "-1");
+    expect(last).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("value ne matche aucune option et la première option est disabled — le fallback saute à la première option activable", () => {
+    const OPTIONS_FIRST_DISABLED: SegmentedControlOption[] = [
+      { value: "a", label: "A", disabled: true },
+      { value: "b", label: "B" },
+      { value: "c", label: "C" },
+    ];
+    render(
+      <SegmentedControl
+        options={OPTIONS_FIRST_DISABLED}
+        value="does-not-exist"
+        onChange={() => {}}
+      />,
+    );
+
+    const disabledFirst = screen
+      .getByText("A")
+      .closest("button") as HTMLElement;
+    const firstEnabled = screen.getByText("B").closest("button") as HTMLElement;
+    expect(disabledFirst).toHaveAttribute("tabindex", "-1");
+    expect(firstEnabled).toHaveAttribute("tabindex", "0");
+    expect(firstEnabled).toHaveAttribute("aria-checked", "false");
+  });
+
+  it("toutes les options sont disabled — aucun tabindex=0, groupe inerte", () => {
+    const ALL_DISABLED: SegmentedControlOption[] = [
+      { value: "a", label: "A", disabled: true },
+      { value: "b", label: "B", disabled: true },
+    ];
+    render(
+      <SegmentedControl
+        options={ALL_DISABLED}
+        value="does-not-exist"
+        onChange={() => {}}
+      />,
+    );
+
+    document.querySelectorAll(".segmented-item").forEach((item) => {
+      expect(item).toHaveAttribute("tabindex", "-1");
+    });
+  });
+});

@@ -6,7 +6,8 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## Unreleased (next alpha)
 
-_Rien pour l'instant._
+### Fixed
+- **`<SegmentedControl>`** : garde-fou roving tabindex (#743, review adversariale F4 de #613/#742) — si `value` ne correspond à aucune `option.value`, tous les boutons tombaient à `tabIndex={-1}` et le `radiogroup` devenait inatteignable au clavier. Désormais la première option non `disabled` reçoit `tabIndex={0}` (`aria-checked` reste `false`) ; si toutes les options sont `disabled`, aucun `tabIndex={0}` n'est posé (groupe inerte). Aligné sur le garde-fou déjà présent côté vanilla (`initSegmentedControls`, `shared/components.js`).
 
 ## v3.0.0-alpha.24 — 2026-07-26 — Modal aria-labelledby + Input .input-disabled (#613)
 
