@@ -149,8 +149,12 @@ function hasDerogation(lines, lineNo) {
 
 // ─── Scan d'un fichier ──────────────────────────────────────────────────────
 
+function resolvePath(relPath) {
+  return path.isAbsolute(relPath) ? relPath : path.join(ROOT, relPath);
+}
+
 function scanFile(relPath) {
-  const abs = path.join(ROOT, relPath);
+  const abs = resolvePath(relPath);
   const src = fs.readFileSync(abs, 'utf8');
   const lines = src.split('\n');
   const violations = [];
@@ -220,14 +224,21 @@ function main() {
 
   let totalViolations = 0;
   let totalAllow = 0;
+  let missingCount = 0;
+  let scannedCount = 0;
 
   files.forEach((relPath) => {
-    const abs = path.join(ROOT, relPath);
+    const abs = resolvePath(relPath);
     if (!fs.existsSync(abs)) {
-      console.error('[check-innerhtml] Fichier introuvable : ' + relPath);
-      process.exitCode = 1;
+      // Fail-closed (pas fail-open) : un garde-fou de sécurité qui ne trouve
+      // pas le fichier à scanner doit ÉCHOUER, pas rendre [OK] silencieusement
+      // (cf. review #758 — sinon un renommage/déplacement de fichier fait
+      // passer le gate CI au vert sans avoir rien scanné).
+      console.error('[check-innerhtml] ERREUR : fichier introuvable : ' + relPath);
+      missingCount++;
       return;
     }
+    scannedCount++;
     const { violations, allowCount } = scanFile(relPath);
     totalAllow += allowCount;
     if (violations.length) {
@@ -244,9 +255,22 @@ function main() {
 
   console.log('[check-innerhtml] Dérogations `ds-allow-innerhtml` justifiées : ' + totalAllow);
 
+  if (missingCount > 0) {
+    console.error(
+      '\n[ÉCHEC] ' + missingCount + ' fichier(s) attendu(s) introuvable(s) — scan incomplet, ' +
+      'impossible de garantir l\'absence de vecteur XSS. Corrigez le chemin ou la liste DEFAULT_FILES.'
+    );
+    process.exit(1);
+  }
+
+  if (scannedCount === 0) {
+    console.error('\n[ÉCHEC] Aucun fichier scanné — la liste de fichiers est vide.');
+    process.exit(1);
+  }
+
   if (totalViolations > 0) {
     console.error(
-      '[ERREUR] ' + totalViolations + ' affectation(s) innerHTML/constantMarkup non sûre(s) détectée(s).\n' +
+      '[ÉCHEC] ' + totalViolations + ' affectation(s) innerHTML/constantMarkup non sûre(s) détectée(s).\n' +
       'Corrigez en construisant les nœuds (createElement/setAttribute/textContent/appendChild),\n' +
       'ou posez une dérogation justifiée `// ds-allow-innerhtml: <raison>` si le cas est réellement sûr\n' +
       '(cf. docs/DS-PRINCIPLES.md §11).'
@@ -254,7 +278,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log('[OK] Aucune affectation innerHTML/constantMarkup non sûre détectée.');
+  console.log('[OK] ' + scannedCount + ' fichier(s) scanné(s), aucune affectation innerHTML/constantMarkup non sûre détectée.');
   process.exit(0);
 }
 
