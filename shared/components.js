@@ -1776,9 +1776,12 @@ function initSegmentedControls() {
         var activeItem = seg.querySelector('.segmented-item.active') || items[0];
         if (activeItem) {
             // Aucun item .active au chargement : eviter un groupe inatteignable au Tab
-            // (APG impose tabindex=0 sur le premier item, aria-checked reste false)
+            // (APG impose tabindex=0 sur le premier item FOCALISABLE, aria-checked reste
+            // false). Ne pas se fier a items[0] : si ce premier item est disabled, un
+            // tabindex pose dessus ne le rend pas focalisable pour autant (review #613).
             if (!activeItem.classList.contains('active')) {
-                activeItem.setAttribute('tabindex', '0');
+                var firstFocusable = enabledItems()[0];
+                if (firstFocusable) firstFocusable.setAttribute('tabindex', '0');
             }
             // Attendre que le layout soit pret (requestAnimationFrame)
             requestAnimationFrame(function() {

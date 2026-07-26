@@ -13,8 +13,8 @@ _Rien pour l'instant._ Le DS ne vit qu'en préprod (pas de promotion prod) : cha
 ## [2.116.0] - 2026-07-26 — Segmented control : convention ARIA `radiogroup` canonique (#613)
 
 ### Changed
-- **`initSegmentedControls`** (#613) : `role="button"`+`aria-pressed` → `role="radiogroup"`/`role="radio"`+`aria-checked` + roving tabindex + navigation flèches (WAI-ARIA APG « Radio Group »), alignement complet sur l'implémentation du wrapper `@msyx-dev/react` `<SegmentedControl>`.
-- **AM/PM du time-picker** (#613) : géré directement dans `initTimePicker` (non couvert par `initSegmentedControls`, absence de `.segmented-indicator`) — même convention.
+- **`initSegmentedControls`** (#613) : `role="button"`+`aria-pressed` → `role="radiogroup"`/`role="radio"`+`aria-checked` + roving tabindex (premier item **non `disabled`** si aucun `.active` au chargement) + navigation flèches (WAI-ARIA APG « Radio Group », « selection follows focus »), alignement complet sur l'implémentation du wrapper `@msyx-dev/react` `<SegmentedControl>`. ⚠️ `segmented:change` est désormais émis à chaque déplacement de focus flèche/Home/End, pas seulement au clic/Enter.
+- **AM/PM du time-picker** (#613) : géré directement dans `initTimePicker` (non couvert par `initSegmentedControls`, absence de `.segmented-indicator`) — même convention, même changement de fréquence sur `time:change`.
 - **`pages/composants.html` + `pages/formulaires.html`** (#613) : ARIA posé en dur (anti-FOUC) sur les 4 démos segmented control et l'AM/PM.
 - **`docs/DS-PRINCIPLES.md`** (#613) : nouvelle sous-section §3.2 gravant la convention et les alternatives écartées.
 

@@ -228,7 +228,7 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 </div>
 ```
 - `.segmented-indicator` (élément décoratif, l'indicateur slide animé) porte `aria-hidden="true"`.
-- Roving tabindex : un seul item à `tabindex="0"` (l'actif), tous les autres à `-1`. Si aucun item n'est `.active` au chargement, le **premier** item reçoit quand même `tabindex="0"` (sinon le groupe devient inatteignable au Tab) — son `aria-checked` reste `false`.
+- Roving tabindex : un seul item à `tabindex="0"` (l'actif), tous les autres à `-1`. Si aucun item n'est `.active` au chargement, le **premier item non `disabled`** reçoit quand même `tabindex="0"` (sinon le groupe devient inatteignable au Tab, ou pire, inatteignable *et* invisible si on cible naïvement le tout premier item du DOM alors qu'il est désactivé) — son `aria-checked` reste `false`. Si tous les items sont `disabled`, aucun `tabindex="0"` n'est posé (groupe inerte, comportement attendu).
 - Sélection suit le focus (« selection follows focus », pattern APG) : les flèches déplacent le focus **et** sélectionnent l'item cible.
 - Contrat public JS inchangé : `dataset.bound` (anti-double-bind) et l'événement `segmented:change` avec `detail { value, index }`.
 
