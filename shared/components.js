@@ -907,9 +907,11 @@ function doCopy(btn, text) {
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(text).then(function() {
         btn.classList.add('copy-btn--success');
+        // ds-allow-innerhtml: SVG_CHECK est une constante littérale (icône SVG figée, l.~880), jamais une donnée consumer
         btn.querySelector('.copy-icon').innerHTML = SVG_CHECK;
         setTimeout(function() {
             btn.classList.remove('copy-btn--success');
+            // ds-allow-innerhtml: SVG_CLIPBOARD est une constante littérale (icône SVG figée, l.~880), jamais une donnée consumer
             btn.querySelector('.copy-icon').innerHTML = SVG_CLIPBOARD;
         }, 2000);
     });
@@ -4449,6 +4451,7 @@ function initAutoSave() {
             el.className = 'autosave autosave--' + state;
             var iconEl = el.querySelector('.autosave-icon');
             var textEl = el.querySelector('.autosave-text');
+            // ds-allow-innerhtml: icons indexe une map interne à 3 clés fixes ('saving'/'saved'/'unsaved', démo interne states[]), jamais une donnée consumer
             if (iconEl) iconEl.innerHTML = icons[state];
             if (textEl) textEl.textContent = labels[state];
         }
