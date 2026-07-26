@@ -143,7 +143,7 @@ describe("MentionInput — filtrage", () => {
       />,
     );
 
-    await user.type(getTextarea(), "@a");
+    await user.type(getTextarea(), "@ar");
 
     const items = Array.from(document.querySelectorAll(".search-item"));
     expect(items.map((i) => i.textContent)).toEqual([
@@ -363,6 +363,8 @@ describe("MentionInput — blur différé (timers)", () => {
       />,
     );
     const textarea = getTextarea();
+    textarea.focus();
+    textarea.setSelectionRange(3, 3);
 
     fireEvent.keyUp(textarea, { key: "a" });
     expect(getDropdown()).toHaveClass("open");
