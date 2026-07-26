@@ -1080,7 +1080,11 @@ function initDataGrids() {
         function getStatutBadge(statut) {
             var map = { 'Stable': 'badge-success', 'En cours': 'badge-primary', 'Planifie': 'badge-warning', 'Annule': 'badge-danger' };
             var cls = map[statut] || 'badge-info';
-            return '<span class="badge ' + cls + '" style="font-size:0.68rem;padding:0.15rem 0.5rem;">' + statut + '</span>';
+            var badge = document.createElement('span');
+            badge.className = 'badge ' + cls;
+            badge.style.cssText = 'font-size:0.68rem;padding:0.15rem 0.5rem;';
+            badge.textContent = statut;
+            return badge;
         }
 
         function getSortedFiltered() {
@@ -1114,17 +1118,56 @@ function initDataGrids() {
         function renderRows(data) {
             tbody.innerHTML = '';
             data.forEach(function(row) {
+                // Construction en DOM (jamais d'innerHTML concaténé) — cf. #758.
+                // DATA_GRID_ROWS est un tableau interne hardcodé (risque faible),
+                // mais on ne laisse pas le motif de concaténation subsister.
                 var tr = document.createElement('tr');
-                var cbLabel = 'Selectionner ' + String(row.composant).replace(/"/g, '&quot;');
-                tr.innerHTML =
-                    '<td><input type="checkbox" aria-label="' + cbLabel + '" style="accent-color:var(--accent);cursor:pointer;"></td>' +
-                    '<td style="font-weight:500;">' + row.composant + '</td>' +
-                    '<td>' + row.categorie + '</td>' +
-                    '<td>' + getStatutBadge(row.statut) + '</td>' +
-                    '<td><span class="tag">' + row.sprint + '</span></td>' +
-                    '<td style="font-weight:600;color:var(--accent-light);">' + row.sp + '</td>' +
-                    '<td>' + (row.js ? '<span style="color:var(--warning);font-size:0.8rem;font-weight:600;">JS</span>' : '<span style="color:var(--text-dim);font-size:0.8rem;">—</span>') + '</td>';
-                var cb = tr.querySelector('input[type="checkbox"]');
+
+                var tdCb = document.createElement('td');
+                var cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.setAttribute('aria-label', 'Selectionner ' + row.composant);
+                cb.style.cssText = 'accent-color:var(--accent);cursor:pointer;';
+                tdCb.appendChild(cb);
+                tr.appendChild(tdCb);
+
+                var tdComposant = document.createElement('td');
+                tdComposant.style.fontWeight = '500';
+                tdComposant.textContent = row.composant;
+                tr.appendChild(tdComposant);
+
+                var tdCategorie = document.createElement('td');
+                tdCategorie.textContent = row.categorie;
+                tr.appendChild(tdCategorie);
+
+                var tdStatut = document.createElement('td');
+                tdStatut.appendChild(getStatutBadge(row.statut));
+                tr.appendChild(tdStatut);
+
+                var tdSprint = document.createElement('td');
+                var sprintTag = document.createElement('span');
+                sprintTag.className = 'tag';
+                sprintTag.textContent = row.sprint;
+                tdSprint.appendChild(sprintTag);
+                tr.appendChild(tdSprint);
+
+                var tdSp = document.createElement('td');
+                tdSp.style.cssText = 'font-weight:600;color:var(--accent-light);';
+                tdSp.textContent = row.sp;
+                tr.appendChild(tdSp);
+
+                var tdJs = document.createElement('td');
+                var jsSpan = document.createElement('span');
+                if (row.js) {
+                    jsSpan.style.cssText = 'color:var(--warning);font-size:0.8rem;font-weight:600;';
+                    jsSpan.textContent = 'JS';
+                } else {
+                    jsSpan.style.cssText = 'color:var(--text-dim);font-size:0.8rem;';
+                    jsSpan.textContent = '—';
+                }
+                tdJs.appendChild(jsSpan);
+                tr.appendChild(tdJs);
+
                 cb.addEventListener('change', function() {
                     if (cb.checked) {
                         tr.classList.add('selected');
