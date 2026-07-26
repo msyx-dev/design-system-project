@@ -6498,6 +6498,7 @@ function initHeatmapCalendar() {
 
         function showTooltip(cell, e) {
             var dateObj = parseDate(cell.dataset.date);
+            // ds-allow-innerhtml: les deux valeurs passent par escapeAttr() en contexte texte uniquement, aucun attribut interpolé
             tooltip.innerHTML =
                 '<div class="heatmap-tooltip-title">' + escapeAttr(fmtLabel(dateObj)) + '</div>' +
                 '<div class="heatmap-tooltip-value">' + escapeAttr(cell.dataset.value) + '</div>';
