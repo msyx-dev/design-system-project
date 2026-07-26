@@ -1713,13 +1713,24 @@ function initSegmentedControls() {
             indicator.style.transform = 'translateX(' + item.offsetLeft + 'px)';
         }
 
-        function selectItem(item) {
+        // Convention ARIA canonique : radiogroup (cf. DS-PRINCIPLES.md §3.2, #613)
+        if (!seg.getAttribute('role')) seg.setAttribute('role', 'radiogroup');
+        indicator.setAttribute('aria-hidden', 'true');
+
+        function enabledItems() {
+            return Array.from(items).filter(function(i) { return !i.disabled; });
+        }
+
+        function selectItem(item, focusIt) {
             items.forEach(function(i) {
                 i.classList.remove('active');
-                i.setAttribute('aria-pressed', 'false');
+                i.setAttribute('aria-checked', 'false');
+                i.setAttribute('tabindex', '-1');
             });
             item.classList.add('active');
-            item.setAttribute('aria-pressed', 'true');
+            item.setAttribute('aria-checked', 'true');
+            item.setAttribute('tabindex', '0');
+            if (focusIt) item.focus();
             moveIndicator(item);
             seg.dispatchEvent(new CustomEvent('segmented:change', {
                 detail: { value: item.textContent.trim(), index: Array.from(items).indexOf(item) },
@@ -1728,8 +1739,10 @@ function initSegmentedControls() {
         }
 
         items.forEach(function(item) {
-            item.setAttribute('role', 'button');
-            item.setAttribute('aria-pressed', item.classList.contains('active') ? 'true' : 'false');
+            item.setAttribute('role', 'radio');
+            var isActive = item.classList.contains('active');
+            item.setAttribute('aria-checked', isActive ? 'true' : 'false');
+            item.setAttribute('tabindex', isActive ? '0' : '-1');
             item.addEventListener('click', function() {
                 selectItem(item);
             });
@@ -1737,13 +1750,36 @@ function initSegmentedControls() {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     selectItem(item);
+                    return;
                 }
+                var list = enabledItems();
+                var idx = list.indexOf(item);
+                if (idx === -1) return;
+                var target = null;
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    target = list[(idx + 1) % list.length];
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    target = list[(idx - 1 + list.length) % list.length];
+                } else if (e.key === 'Home') {
+                    target = list[0];
+                } else if (e.key === 'End') {
+                    target = list[list.length - 1];
+                } else {
+                    return;
+                }
+                e.preventDefault();
+                if (target) selectItem(target, true);  // selection follows focus (APG)
             });
         });
 
         // Init indicator sur l'item actif
         var activeItem = seg.querySelector('.segmented-item.active') || items[0];
         if (activeItem) {
+            // Aucun item .active au chargement : eviter un groupe inatteignable au Tab
+            // (APG impose tabindex=0 sur le premier item, aria-checked reste false)
+            if (!activeItem.classList.contains('active')) {
+                activeItem.setAttribute('tabindex', '0');
+            }
             // Attendre que le layout soit pret (requestAnimationFrame)
             requestAnimationFrame(function() {
                 moveIndicator(activeItem);
@@ -5242,14 +5278,36 @@ function initTimePicker() {
       if (btnInc) btnInc.disabled = initVal >= max;
     });
 
-    // Segmented AM/PM
-    wrap.querySelectorAll('[data-ampm]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        period = btn.dataset.ampm;
-        wrap.querySelectorAll('[data-ampm]').forEach(function(b){
-          b.classList.toggle('active', b.dataset.ampm === period);
-        });
-        sync();
+    // Segmented AM/PM — radiogroup (DS-PRINCIPLES §3.2). Cette instance n'a pas de
+    // .segmented-indicator : initSegmentedControls la saute (return), l'ARIA est donc
+    // géré ici.
+    var ampmBtns = Array.from(wrap.querySelectorAll('[data-ampm]'));
+    function setPeriod(btn, focusIt) {
+      period = btn.dataset.ampm;
+      ampmBtns.forEach(function(b){
+        var on = b.dataset.ampm === period;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+        b.setAttribute('tabindex', on ? '0' : '-1');
+      });
+      if (focusIt) btn.focus();
+      sync();
+    }
+    ampmBtns.forEach(function(btn, i) {
+      btn.setAttribute('role', 'radio');
+      var on = btn.classList.contains('active');
+      btn.setAttribute('aria-checked', on ? 'true' : 'false');
+      btn.setAttribute('tabindex', on ? '0' : '-1');
+      btn.addEventListener('click', function() { setPeriod(btn); });
+      btn.addEventListener('keydown', function(e) {
+        var t = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') t = ampmBtns[(i + 1) % ampmBtns.length];
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') t = ampmBtns[(i - 1 + ampmBtns.length) % ampmBtns.length];
+        else if (e.key === 'Home') t = ampmBtns[0];
+        else if (e.key === 'End') t = ampmBtns[ampmBtns.length - 1];
+        else return;
+        e.preventDefault();
+        if (t) setPeriod(t, true);
       });
     });
 
