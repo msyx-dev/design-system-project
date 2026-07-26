@@ -53,6 +53,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       "input",
       error ? "input-error" : null,
       !error && success ? "input-success" : null,
+      rest.disabled ? "input-disabled" : null,
     ]
       .filter(Boolean)
       .join(" ");

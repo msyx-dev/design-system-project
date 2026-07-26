@@ -3,6 +3,7 @@ import {
   MouseEvent,
   ReactNode,
   useEffect,
+  useId,
   useRef,
 } from "react";
 
@@ -118,6 +119,7 @@ export function Modal({
     }
   };
 
+  const titleId = useId();
   const classes = ["modal-dialog", className].filter(Boolean).join(" ");
 
   return (
@@ -125,10 +127,11 @@ export function Modal({
       ref={dialogRef}
       className={classes}
       onClick={handleDialogClick}
+      aria-labelledby={title ? titleId : undefined}
       {...rest}
     >
       <header className="modal-header">
-        {title}
+        {title ? <span id={titleId}>{title}</span> : null}
         <button
           type="button"
           className="modal-close"

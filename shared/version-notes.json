@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.116.0",
+      "date": "2026-07-26",
+      "titre": "Sélecteurs à choix unique plus accessibles",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Les sélecteurs à choix unique (segmented control, AM/PM des horaires) s'utilisent désormais entièrement aux flèches du clavier, comme un vrai groupe de choix exclusif."
+        },
+        {
+          "type": "correction",
+          "text": "Correction d'un exemple de code du registre de composants qui contenait un attribut inexistant."
+        }
+      ]
+    },
+    {
       "version": "2.115.0",
       "date": "2026-07-25",
       "titre": "Graphes : exporter et importer",

@@ -448,9 +448,9 @@
             <input type="number" min="0" max="59" step="5" value="30" aria-label="Minutes">
             <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
           </div>
-          <div class="segmented" role="group" aria-label="AM ou PM">
-            <button type="button" class="segmented-item active" data-ampm="AM">AM</button>
-            <button type="button" class="segmented-item" data-ampm="PM">PM</button>
+          <div class="segmented" role="radiogroup" aria-label="AM ou PM">
+            <button type="button" class="segmented-item active" data-ampm="AM" role="radio" aria-checked="true" tabindex="0">AM</button>
+            <button type="button" class="segmented-item" data-ampm="PM" role="radio" aria-checked="false" tabindex="-1">PM</button>
           </div>
         </div>
         <div class="date-input-wrap" style="margin-top:var(--space-sm)">

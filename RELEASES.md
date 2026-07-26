@@ -1,5 +1,19 @@
 # Releases
 
+## 2.116.0 — 2026-07-26 — Segmented control : convention ARIA `radiogroup` canonique (#613)
+
+> Decision tranchee (Mike, 2026-07-26) : le DS vanilla exposait 4 conventions ARIA differentes pour le meme composant (`role="button"`+`aria-pressed` dans `initSegmentedControls`, `role="group"` nu dans les demos, `role="tablist"`/`tab` dans le registre, AM/PM du time-picker jamais touche par le JS). Alignement complet sur `role="radiogroup"` + items `role="radio"` + `aria-checked` + roving tabindex + navigation flèches (WAI-ARIA APG « Radio Group »), deja l'implementation du wrapper `@msyx-dev/react` `<SegmentedControl>` — zero regression cote package. Aucun changement visuel (CSS non touche).
+
+### Changed
+- **`shared/components.js` `initSegmentedControls`** (#613) : `role="button"`+`aria-pressed` → `role="radiogroup"`/`role="radio"`+`aria-checked`, roving tabindex (`0` sur l'actif, `-1` sinon — le premier item **non `disabled`** si aucun `.active` au chargement, pour rester atteignable au Tab), navigation ←/→/↑/↓/`Home`/`End` avec bouclage et saut des items `disabled` (« selection follows focus »). Contrat public inchange : `dataset.bound`, evenement `segmented:change` + `detail { value, index }`. ⚠️ Frequence de l'evenement : `segmented:change` est desormais emis a chaque deplacement de focus flèche/Home/End (pas seulement au clic/Enter), consequence directe de « selection follows focus ». Aucun consumer interne au DS n'ecoute cet evenement — a verifier cote apps consommatrices (`cap-transfo`, `feedbacks`, etc.) si elles debouncent/logguent ce signal.
+- **`shared/components.js` `initTimePicker`** (#613) : le bloc AM/PM (non couvert par `initSegmentedControls`, absence de `.segmented-indicator`) recoit desormais la meme convention `radiogroup`/`radio`/`aria-checked`/roving tabindex/fleches, geree localement — meme changement de frequence sur `time:change`.
+- **`pages/composants.html`** (#613) : les 4 demos segmented control passent en `role="radiogroup"` + `role="radio"`/`aria-checked`/`tabindex` poses en dur dans le HTML (anti-FOUC).
+- **`pages/formulaires.html`** (#613) : AM/PM du time-picker 12h aligne sur la meme convention.
+- **`docs/DS-PRINCIPLES.md`** (#613) : nouvelle ligne « Choix exclusif (segmented) » dans le tableau §3 + nouvelle sous-section **§3.2** documentant le pattern retenu et les deux alternatives ecartees (`group`+`aria-pressed`, `tablist`/`tab`) avec leur motif.
+
+### Fixed
+- **`shared/components-registry.json`** (#613) : l'exemple `segmented-control` utilisait `role="tablist"`/`aria-selected` (convention abandonnee) et portait `data-segmented-id`, un attribut fantome sans aucune occurrence dans le repo — corrige et supprime.
+
 ## 2.115.0 — 2026-07-25 — Graph : export SVG/PNG/print-PDF + round-trip JSON + import Cytoscape/DOT (#664)
 
 > Dernier lot du moteur graph (Epic #656, milestone #45). Un graphe se sortait de l'écran uniquement par capture d'écran, et rien ne permettait de le recharger. Cette version ferme la boucle : sortie fidèle (SVG/PNG/papier) et entrée depuis des formats tiers. **Zéro dépendance ajoutée.**
