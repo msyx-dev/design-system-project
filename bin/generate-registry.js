@@ -501,6 +501,7 @@ const REACT_TO_REGISTRY = {
   SplitButton: 'split-button',            // #600 — action primaire + caret menu (panneau sur le primitif .menu #520)
   MentionInput: 'mention',                // #594 — dropdown @ au caret (mirror-div réimplémenté côté package)
   JsonViewer: 'json-viewer',              // #596 — arbre JSON repliable, .json-tree/.json-node--last non émis (dead CSS)
+  SplitPane: 'splitter',                  // #595 — panneaux redimensionnables, drag Pointer Events réimplémenté (window.__pointerDrag non disponible côté React)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -537,6 +538,7 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.risk-dot-visible',     // data.css compound .risk-dot.risk-dot-visible
   '.selected',       // forms.css:53 .dropdown-option.selected (compound, non capturé)
   '.dropdown-value', // formulaires.html / components.js — span JS-hook sans règle CSS dédiée (hérite .dropdown-trigger)
+  '.split-pane--dragging', // splitter.css — AUCUNE règle CSS aujourd'hui (bug DS suivi séparément, #763). Émise quand même côté React pour la parité vanilla ; #763 la rendra visible des deux côtés simultanément.
 ]);
 
 /**

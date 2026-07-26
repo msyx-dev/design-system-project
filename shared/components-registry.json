@@ -1,7 +1,7 @@
 {
   "version": "2.116.2",
   "generated": {
-    "at": "2026-07-26T22:34:58.406Z",
+    "at": "2026-07-26T23:22:37.299Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1217,7 +1217,7 @@
       ],
       "jsInit": "initSplitPane",
       "example": "<div class=\"split-pane\" data-split-persist-key=\"my-key\">\n  <div class=\"split-panel\" style=\"flex-basis:35%\">Liste</div>\n  <div class=\"split-gutter\" data-split-min=\"15\" data-split-max=\"85\"></div>\n  <div class=\"split-panel split-panel--fluid\">Détail</div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/splitter.css"
       ]
