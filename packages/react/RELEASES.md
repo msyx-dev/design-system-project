@@ -6,7 +6,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## Unreleased (next alpha)
 
-_Rien pour l'instant._
+### Added
+- **`<ContextMenu>` (#468)** : port du menu contextuel (clic droit) `initContextMenu`. Zone cible via `onContextMenu` ; panneau `.context-menu` TOUJOURS monté, visibilité pilotée par la classe **`.show`** (≠ `.open` d'`<ActionMenu>`) — `overlays.css` base `display:none` → `.show{display:block}`. Positionnement `position:fixed` + bornage 8px du viewport reproduit fidèlement (`clampToViewport()`, fonction pure co-localisée, testée isolément — jsdom renvoie `offsetWidth`/`offsetHeight` à 0). Fermeture : clic gauche hors du panneau, clic droit hors de la zone (une seule instance ouverte à la fois), `Escape` (+ restauration focus). **Au-delà du vanilla** (DS-PRINCIPLES §3.2 / #613) : navigation clavier WAI-ARIA APG Menu (↑/↓ bouclants, `Home`/`End`, `Entrée`/`Espace`). Items feuilles = `<button role="menuitem">` (focus natif `:focus-visible`) ; item parent de sous-menu = `<div role="menuitem" aria-haspopup="true" tabIndex={-1}>` (contrainte HTML : un `<button>` ne peut pas contenir de contenu interactif, et le CSS DS exige que `.context-submenu` soit un enfant direct du `.context-menu-item`).
+
+### Notes
+- **Limite assumée** : sous-menu ouvert au survol CSS uniquement — `overlays.css` n'expose aucune règle d'état sur `.context-submenu` (seulement `:hover >`), l'ouverture clavier du sous-menu est donc hors périmètre (CSS nouveau interdit dans ce ticket). Ticket de suite à créer côté DS CSS.
+- Pas de portal : rendu in-place, `position:fixed` peut être décalé par un ancêtre `transform`/`filter`/`contain` (comportement CSS standard).
+- Registre : `REACT_TO_REGISTRY:{ContextMenu:'context-menu'}` + entrée `context-menu` passée en `react:"ported"` (même PR, DS-PRINCIPLES §8.1).
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
 
 ## v3.0.0-alpha.24 — 2026-07-26 — Modal aria-labelledby + Input .input-disabled (#613)
 
