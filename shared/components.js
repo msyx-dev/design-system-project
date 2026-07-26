@@ -112,6 +112,27 @@ function constantMarkup(html) {
     return tpl.content.firstElementChild;
 }
 
+// Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
+// image, etc.) — setAttribute() pose la valeur telle quelle : il protège de
+// l'injection d'attribut (guillemets) mais PAS d'un schéma hostile dans un
+// href/action/src (#758). N'accepte que les URL relatives, les ancres et les
+// schémas explicitement listés dans `allowedSchemes` (défaut http/https/mailto,
+// passer ['http','https','data'] pour un <img src>) ; retombe sur `fallback`
+// sinon. Neutralise les contournements classiques (caractères de contrôle /
+// espaces insérés dans le schéma type "java\tscript:", casse mixte).
+function safeUrl(url, fallback, allowedSchemes) {
+    if (!url) return fallback;
+    var schemes = allowedSchemes || ['http', 'https', 'mailto'];
+    var cleaned = String(url).replace(/[\x00-\x1f\x7f]/g, '').trim();
+    if (cleaned === '') return fallback;
+    // Relative (chemin, "//host", "?query") ou ancre : pas de schéma, sûr.
+    if (/^[.\/#?]/.test(cleaned)) return cleaned;
+    var schemeMatch = cleaned.match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/);
+    if (!schemeMatch) return cleaned; // pas de "schéma:" détecté — chemin relatif
+    var scheme = schemeMatch[1].toLowerCase();
+    return schemes.indexOf(scheme) !== -1 ? cleaned : fallback;
+}
+
 function initComponents() {
     // Tabs — ARIA role=tablist/tab + navigation clavier flèches
     document.querySelectorAll('.tabs').forEach(g => {
@@ -4831,9 +4852,11 @@ function initUserMenu(rootOrSelector, options) {
         var formId = (root.id ? root.id + '-' : 'user-menu-') + 'logout-form-' + idx;
         var displayName = opts.displayName || root.dataset.displayName || 'Utilisateur';
         var email = opts.email || root.dataset.email || '';
-        var avatarUrl = opts.avatarUrl !== undefined ? opts.avatarUrl : (root.dataset.avatarUrl || '');
-        var authentikUserUrl = opts.authentikUserUrl || root.dataset.authentikUserUrl || '#';
-        var logoutUrl = opts.logoutUrl || root.dataset.logoutUrl || '/auth/logout';
+        // safeUrl() neutralise les schémas exécutables (javascript:, etc.) — setAttribute()
+        // seul ne protège que de l'injection d'attribut, pas d'un schéma hostile (#758).
+        var avatarUrl = safeUrl(opts.avatarUrl !== undefined ? opts.avatarUrl : (root.dataset.avatarUrl || ''), '', ['http', 'https', 'data']);
+        var authentikUserUrl = safeUrl(opts.authentikUserUrl || root.dataset.authentikUserUrl || '#', '#');
+        var logoutUrl = safeUrl(opts.logoutUrl || root.dataset.logoutUrl || '/auth/logout', '#');
 
         // Calcul initiales : 1ère lettre + 1ère lettre du 2e mot, sinon 2 premières lettres
         function getInitials(name) {
