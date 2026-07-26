@@ -19,6 +19,7 @@ import type { ReactElement, SVGProps } from "react";
 export type IconName =
   | "chevron-left"
   | "chevron-right"
+  | "chevron-down"
   | "check"
   | "upload"
   | "file"
@@ -38,6 +39,7 @@ export type IconName =
 const ICON_CHILDREN: Record<IconName, ReactElement> = {
   "chevron-left": <path d="m15 18-6-6 6-6" />,
   "chevron-right": <path d="m9 18 6-6-6-6" />,
+  "chevron-down": <path d="m6 9 6 6 6-6" />,
   check: <path d="M20 6 9 17l-5-5" />,
   upload: (
     <>
