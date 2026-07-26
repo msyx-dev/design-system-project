@@ -1,5 +1,26 @@
 # Releases
 
+## 2.116.2 — 2026-07-26 — Correctif de sécurité : audit `innerHTML` de `shared/components.js` (#758)
+
+> Audit systématique de tous les `innerHTML =` concaténés de `shared/components.js` et `shared/nav.js` — suite à #746. Cause racine : `escapeHTML()` n'échappe que `& < >`, jamais les guillemets, donc tout usage en contexte **attribut** reste exploitable (`avatarUrl = 'x" onerror="alert(1)'`). Le vecteur le plus grave : `initUserMenu()` construisait le menu utilisateur (avatar, liens, formulaire de déconnexion) par concaténation de chaînes, exploitable sans aucune interaction utilisateur via les attributs `data-*`/options JS du composant. Même classe de faille dans `shared/nav.js` (`updateHeaderUser`, `buildHeader`, dropdown legacy, champ email du formulaire de retour). Tous les sites identifiés sont reconstruits en DOM (`createElement`/`setAttribute`/`textContent`/`appendChild`), jamais via `escapeHTML` renforcé — un échappement manuel se recontourne dès qu'un futur appel change de contexte. Aucun changement visuel.
+
+### Fixed
+- **`shared/components.js` `initUserMenu`** (#758) : menu utilisateur (avatar, aria-label, lien compte, formulaire de déconnexion) entièrement reconstruit en DOM. Nouveau helper `safeUrl()` neutralise en plus les schémas exécutables (`javascript:`) sur `authentikUserUrl`/`logoutUrl`/`avatarUrl`.
+- **`shared/components.js` `createChip`/`createTag`** : bouton de suppression (`aria-label` dynamique) reconstruit en DOM au lieu d'une concaténation `escapeHTML` en contexte attribut.
+- **`shared/components.js` `buildPieChart`/`buildDonutChart`** : légende factorisée en une fonction partagée `buildLegend()` construite en DOM (le doublon était strictement identique dans les deux fonctions).
+- **`shared/components.js` Risk Matrix** : labels d'axes en `textContent` ; **nouveau vecteur trouvé pendant l'audit** — le niveau de risque (`data-level` du consumer) était interpolé sans échappement dans un attribut `class="risk-tooltip-badge …"` des tooltips/modale de détail, contourné par `normalizeLevel()` (whitelist des 4 niveaux connus).
+- **`shared/components.js`** : placeholder lightbox, barres quiz/poll, lignes d'`initDataGrids` (dont `getStatutBadge`) reconstruits en DOM.
+- **`shared/components.js` `window.__openModal`** : le bouton d'action (`actions[].label`) est construit en DOM (`textContent`) ; `bodyHTML`/`actions[].onClick` restent des contrats d'API assumés (HTML/JS brut), désormais documentés en JSDoc.
+- **`shared/nav.js` `updateHeaderUser`/`buildHeader`** : avatar (legacy + slot M3), dropdown legacy (menu utilisateur), `brandHref`/`brandText`/`brandLogoSrc` reconstruits en DOM/`setAttribute`/`textContent` — plus aucune interpolation directe dans le template. `safeUrl()` dupliquée dans `nav.js` (fichier autonome, pas de dépendance à l'ordre de chargement des scripts).
+- **`shared/nav.js` `renderNotifications`** : liste de notifications reconstruite en DOM. **Changement de contrat** : `n.icon` est désormais rendu en texte (`textContent`), plus en HTML brut.
+- **`shared/nav.js` `ensureUserFeedbackDialog`** : **nouveau vecteur trouvé pendant l'audit** — `user.email` était interpolé sans échappement dans un attribut `value="…"` du formulaire de retour ; posé désormais via la propriété `.value` (jamais réinterprété comme du HTML).
+- **`bin/check-innerhtml.js`** (nouveau) : garde-fou CI — échoue sur tout `innerHTML =` concaténé à une variable (ou `constantMarkup(...)` non littéral) sans dérogation justifiée `// ds-allow-innerhtml: <raison>`. Câblé en bloquant dans `.github/workflows/ci.yml`, testé par `tests/test-check-innerhtml.sh`.
+
+### Docs
+- **`docs/DS-PRINCIPLES.md`** : nouvelle **Section 11 — Sécurité : innerHTML, attributs, URLs** (règle, anti-pattern, contrats d'API assumés, garde-fou).
+- **`CLAUDE.md`** : rappel condensé ajouté (jamais de donnée consumer concaténée dans `innerHTML`).
+- **`shared/CONSUMER_GUIDE.md`** : nouvelle section « Sécurité : APIs qui acceptent du HTML brut » (`window.__vlistRenderRow`, `bodyHTML`, `actions[].onClick`, changement de contrat `n.icon`).
+
 ## 2.116.1 — 2026-07-26 — Correctif de sécurité : surlignage de suggestions sans `innerHTML` (#746)
 
 > Correctif de sécurité (XSS). `initSearchInputs()` et `initMentionInput()` surlignaient les correspondances via `span.innerHTML = text.replace(...)` — le texte de suggestion, une donnée fournie par le consumer, n'était jamais échappé avant insertion. Aucun changement visuel : le surlignage `<mark>` continue de fonctionner à l'identique.
