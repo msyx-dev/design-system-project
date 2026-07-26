@@ -411,8 +411,13 @@ function initChips() {
             const chip = document.createElement('span');
             chip.className = 'chip chip-input-item';
             chip.dataset.chipBound = '1';
-            chip.innerHTML = escapeHTML(trimmed) + ' <button class="chip-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
-            chip.querySelector('.chip-close').addEventListener('click', () => {
+            chip.appendChild(document.createTextNode(trimmed + ' '));
+            const chipClose = document.createElement('button');
+            chipClose.className = 'chip-close';
+            chipClose.setAttribute('aria-label', 'Supprimer ' + trimmed);
+            chipClose.textContent = '×';
+            chip.appendChild(chipClose);
+            chipClose.addEventListener('click', () => {
                 chip.style.transition = 'opacity var(--duration-base), transform var(--duration-base)';
                 chip.style.opacity = '0';
                 chip.style.transform = 'scale(0.8)';
@@ -1952,9 +1957,14 @@ function initTagInputs() {
 
             var tag = document.createElement('span');
             tag.className = 'tag-item';
-            tag.innerHTML = escapeHTML(trimmed) + ' <button class="tag-close" aria-label="Supprimer ' + escapeHTML(trimmed) + '">&times;</button>';
+            tag.appendChild(document.createTextNode(trimmed + ' '));
+            var tagClose = document.createElement('button');
+            tagClose.className = 'tag-close';
+            tagClose.setAttribute('aria-label', 'Supprimer ' + trimmed);
+            tagClose.textContent = '×';
+            tag.appendChild(tagClose);
 
-            tag.querySelector('.tag-close').addEventListener('click', function() {
+            tagClose.addEventListener('click', function() {
                 removeTag(tag);
             });
 
