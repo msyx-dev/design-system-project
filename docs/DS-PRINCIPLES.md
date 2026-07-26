@@ -153,6 +153,7 @@ Conventions localStorage **obligatoires** : `msyx-theme` (palette) + `msyx-mode`
 | Icon-only buttons | `aria-label` obligatoire |
 | Form inputs | `<label>` associé OU `aria-labelledby` |
 | Switch/Toggle | `role="switch"` + `aria-checked` |
+| Choix exclusif (segmented) | `role="radiogroup"` + items `role="radio"` + `aria-checked` + roving tabindex + ←/→/↑/↓/Home/End |
 | Dialog/Modal | `role="dialog"` + `aria-modal="true"` + focus trap + restore on close |
 | Keyboard | Tout interactif doit être navigable au clavier (Tab, Enter, Esc) |
 | Click target | 44×44px minimum sur mobile (WCAG 2.5.5) — appliqué v2.55.0 sur mode-switch |
@@ -194,6 +195,44 @@ Conventions localStorage **obligatoires** : `msyx-theme` (palette) + `msyx-mode`
 **Anti-pattern** : `placeholder="…"` comme unique label — disparaît au focus, contraste insuffisant, pas annoncé par les SR. Toujours combiner avec `<label>` ou `aria-label`.
 
 **Référence** : décision capitalisée dans Lot 3 a11y (#340, v2.64.5). Audit baseline : `docs/audit-a11y-2026-05-15.md`.
+
+### 3.2 — Choix exclusif : radiogroup (décision #613)
+
+**Convention retenue** : conteneur `role="radiogroup"`, items `role="radio"` + `aria-checked`, roving tabindex (`0` sur l'item actif, `-1` sur les autres) + navigation clavier ←/→/↑/↓/Home/End avec bouclage (pattern WAI-ARIA APG « Radio Group »). C'est le seul pattern qui exprime l'exclusivité du choix : un lecteur d'écran annonce « Semaine, sélectionné, 1 sur 3 ». C'est déjà l'implémentation du wrapper `@msyx-dev/react` `<SegmentedControl>` → zéro régression côté package.
+
+❌ **Don't** — `group` + `aria-pressed` :
+```html
+<div class="segmented" role="group" aria-label="Vue">
+  <button class="segmented-item active" aria-pressed="true">Semaine</button>
+  <button class="segmented-item" aria-pressed="false">Mois</button>
+</div>
+```
+N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed` est sémantiquement un bouton bascule indépendant (toggle button), pas un choix radio-like au sein d'un groupe. L'adopter comme convention canonique aurait imposé de **dégrader** le wrapper React (retrait du roving tabindex et des flèches) pour rester cohérent avec le vanilla — inacceptable.
+
+❌ **Don't** — `tablist` / `tab` :
+```html
+<div class="segmented" role="tablist">
+  <button class="segmented-item active" role="tab" aria-selected="true">Semaine</button>
+  <button class="segmented-item" role="tab" aria-selected="false">Mois</button>
+</div>
+```
+`role="tab"` implique par contrat ARIA un `aria-controls` vers un `role="tabpanel"` associé. Le segmented control pilote un filtre ou une vue, pas un panneau de contenu — et le DS a déjà un composant `Tabs` distinct pour ce cas d'usage. Réutiliser `tablist`/`tab` ici est une usurpation de rôle relevable par `axe-core`.
+
+✅ **Do** :
+```html
+<div class="segmented" role="radiogroup" aria-label="Vue">
+  <div class="segmented-indicator" aria-hidden="true"></div>
+  <button class="segmented-item active" type="button" role="radio" aria-checked="true" tabindex="0">Semaine</button>
+  <button class="segmented-item" type="button" role="radio" aria-checked="false" tabindex="-1">Mois</button>
+  <button class="segmented-item" type="button" role="radio" aria-checked="false" tabindex="-1">Annee</button>
+</div>
+```
+- `.segmented-indicator` (élément décoratif, l'indicateur slide animé) porte `aria-hidden="true"`.
+- Roving tabindex : un seul item à `tabindex="0"` (l'actif), tous les autres à `-1`. Si aucun item n'est `.active` au chargement, le **premier** item reçoit quand même `tabindex="0"` (sinon le groupe devient inatteignable au Tab) — son `aria-checked` reste `false`.
+- Sélection suit le focus (« selection follows focus », pattern APG) : les flèches déplacent le focus **et** sélectionnent l'item cible.
+- Contrat public JS inchangé : `dataset.bound` (anti-double-bind) et l'événement `segmented:change` avec `detail { value, index }`.
+
+**Référence** : décision Mike 2026-07-26, issue #613, v2.116.0.
 
 ### Garde-fou
 - Audit `@axe-core/playwright` sur 54 pages × 6 themes (cf `docs/audit-a11y-*.md`)
