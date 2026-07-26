@@ -79,6 +79,27 @@ function escapeHTML(str) {
     return div.innerHTML;
 }
 
+// Surligne `query` dans `text` via <mark>, sans jamais interpréter `text`
+// comme du HTML (le texte est une donnée consumer non fiable — construction
+// de nœuds via createTextNode/createElement, jamais d'innerHTML).
+// Partagée par initSearchInputs() et initMentionInput() (#746).
+function highlightMatch(text, query) {
+    if (!query) return document.createTextNode(text);
+    var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    var span = document.createElement('span');
+    text.split(regex).forEach(function(part, i) {
+        if (part === '') return;
+        if (i % 2 === 1) {
+            var mark = document.createElement('mark');
+            mark.appendChild(document.createTextNode(part));
+            span.appendChild(mark);
+        } else {
+            span.appendChild(document.createTextNode(part));
+        }
+    });
+    return span;
+}
+
 function initComponents() {
     // Tabs — ARIA role=tablist/tab + navigation clavier flèches
     document.querySelectorAll('.tabs').forEach(g => {
@@ -437,14 +458,6 @@ function initSearchInputs() {
         const suggestionsEl = isSuggestions ? wrap.querySelector('.search-suggestions') : null;
         const rawSuggestions = isSuggestions ? (wrap.dataset.suggestions || '').split(',').map(s => s.trim()).filter(Boolean) : [];
         let activeIndex = -1;
-
-        function highlightMatch(text, query) {
-            if (!query) return document.createTextNode(text);
-            const regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-            const span = document.createElement('span');
-            span.innerHTML = text.replace(regex, '<mark>$1</mark>');
-            return span;
-        }
 
         function openSuggestions(items, query) {
             if (!suggestionsEl) return;
@@ -5672,14 +5685,6 @@ function initMentionInput() {
 
         var activeIndex = -1;
         var currentMatch = null; // { start, end, query }
-
-        function highlightMatch(text, query) {
-            if (!query) return document.createTextNode(text);
-            var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-            var span = document.createElement('span');
-            span.innerHTML = text.replace(regex, '<mark>$1</mark>');
-            return span;
-        }
 
         function closeDropdown() {
             dropdown.classList.remove('open');
