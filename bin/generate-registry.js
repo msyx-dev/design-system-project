@@ -499,6 +499,7 @@ const REACT_TO_REGISTRY = {
   ContextMenu: 'context-menu',            // #468 — menu clic droit ; classe d'état .show (≠ .open d'ActionMenu)
   Accordion: 'accordion',                 // #461 — port du bloc inline d'initComponents (il n'existe PAS d'initAccordion)
   SplitButton: 'split-button',            // #600 — action primaire + caret menu (panneau sur le primitif .menu #520)
+  MentionInput: 'mention',                // #594 — dropdown @ au caret (mirror-div réimplémenté côté package)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

@@ -1608,7 +1608,7 @@
       ],
       "jsInit": "initMentionInput",
       "example": "<div class=\"mention-input-wrap\">\n  <textarea class=\"input\" data-mention-source=\"Alice Martin,Bob Durand,Carla Nguyen\" placeholder=\"Tapez @ pour mentionner…\"></textarea>\n  <ul class=\"mention-dropdown\" role=\"listbox\" aria-label=\"Suggestions de mention\"></ul>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]
