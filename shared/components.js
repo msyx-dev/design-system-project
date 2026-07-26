@@ -842,6 +842,16 @@ function initModals() {
 }
 
 // API programmatique
+//
+// SÉCURITÉ (#758) — contrats d'API assumés, PAS des failles :
+//  - `config.bodyHTML` (si fourni) est du HTML BRUT inséré tel quel (à
+//    l'inverse de `config.body`, qui est du texte échappé via escapeHTML).
+//    Le consumer est responsable de l'échappement des données qu'il y injecte.
+//  - `actions[].onClick` est du CODE JS injecté tel quel dans un attribut
+//    `onclick` — contrat explicite, pas une donnée texte.
+//  Voir shared/CONSUMER_GUIDE.md, section « Sécurité : APIs qui acceptent du
+//  HTML brut ». `actions[].label`, lui, est un texte : construit en DOM
+//  (textContent) ci-dessous, jamais concaténé dans du HTML.
 window.__openModal = function(config) {
     var title = config.title, body = config.body, variant = config.variant, actions = config.actions;
     var dialog = document.getElementById('ds-dynamic-modal');
@@ -855,19 +865,30 @@ window.__openModal = function(config) {
 
     attachFocusRestore(dialog); // a11y WAI APG focus restore (idempotent)
 
-    var actionsHtml = '';
-    if (actions) {
-        actionsHtml = '<div class="modal-actions">' + actions.map(function(a) {
-            return '<button class="btn btn-' + (a.style || 'secondary') + '" data-modal-close' + (a.onClick ? ' onclick="' + a.onClick + '"' : '') + '>' + a.label + '</button>';
-        }).join('') + '</div>';
-    } else if (variant === 'confirm') {
-        actionsHtml = '<div class="modal-actions"><button class="btn btn-secondary" data-modal-close>Annuler</button><button class="btn btn-primary" data-modal-close>Confirmer</button></div>';
-    } else {
-        actionsHtml = '<div class="modal-actions"><button class="btn btn-primary" data-modal-close>Fermer</button></div>';
-    }
-
+    // bodyHTML : contrat d'API assumé (HTML brut du consumer, cf. JSDoc ci-dessus).
     var bodyContent = config.bodyHTML ? config.bodyHTML : escapeHTML(body || '');
-    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + bodyContent + '</div>' + actionsHtml;
+    // ds-allow-innerhtml: bodyHTML est un contrat API assumé (HTML brut du consumer), documenté en JSDoc ci-dessus + CONSUMER_GUIDE.md
+    dialog.innerHTML = '<div class="modal-header"><h3>' + escapeHTML(title || 'Modal') + '</h3><button class="modal-close" data-modal-close aria-label="Fermer">&times;</button></div><div class="modal-body">' + bodyContent + '</div>';
+
+    // Actions : construites en DOM — a.label est un texte (jamais concaténé
+    // dans du HTML), a.onClick reste un contrat assumé posé via setAttribute.
+    var actionsDiv = document.createElement('div');
+    actionsDiv.className = 'modal-actions';
+    if (actions) {
+        actions.forEach(function(a) {
+            var btn = document.createElement('button');
+            btn.className = 'btn btn-' + (a.style || 'secondary');
+            btn.setAttribute('data-modal-close', '');
+            if (a.onClick) btn.setAttribute('onclick', a.onClick);
+            btn.textContent = a.label;
+            actionsDiv.appendChild(btn);
+        });
+    } else if (variant === 'confirm') {
+        actionsDiv.innerHTML = '<button class="btn btn-secondary" data-modal-close>Annuler</button><button class="btn btn-primary" data-modal-close>Confirmer</button>';
+    } else {
+        actionsDiv.innerHTML = '<button class="btn btn-primary" data-modal-close>Fermer</button>';
+    }
+    dialog.appendChild(actionsDiv);
 
     dialog.querySelectorAll('[data-modal-close]').forEach(function(btn) {
         btn.addEventListener('click', function() { dialog.close(); });
