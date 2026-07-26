@@ -6,6 +6,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## Unreleased (next alpha)
 
+_Rien pour l'instant._
+
+## v3.0.0-alpha.25 — 2026-07-26 — Sprint 3 « React interactifs » : ContextMenu, Accordion, SplitButton, MentionInput (#468/#461/#600/#594/#743)
+
+> 4 nouveaux composants interactifs portés + 1 correctif a11y. Aucun bump `@ds-version` : le DS CSS n'a pas été modifié (le sprint est 100 % `packages/react/`, hors outillage CI #745).
+>
+> **Note de sécurité** : `<MentionInput>` **ne reproduit pas** la faille XSS du vanilla ([#746](https://github.com/msyx-dev/design-system-project/issues/746)) — le surlignage est construit en JSX (échappé par React), là où `highlightMatch` de `shared/components.js` injecte via `innerHTML`. Le wrapper React est donc, sur ce point, plus sûr que le composant vanilla qu'il porte, jusqu'à correction de #746.
+
 ### Added
 - **`<ContextMenu>` (#468)** : port du menu contextuel (clic droit) `initContextMenu`. Zone cible via `onContextMenu` ; panneau `.context-menu` TOUJOURS monté, visibilité pilotée par la classe **`.show`** (≠ `.open` d'`<ActionMenu>`) — `overlays.css` base `display:none` → `.show{display:block}`. Positionnement `position:fixed` + bornage 8px du viewport reproduit fidèlement (`clampToViewport()`, fonction pure co-localisée, testée isolément — jsdom renvoie `offsetWidth`/`offsetHeight` à 0). Fermeture : clic gauche hors du panneau, clic droit hors de la zone (une seule instance ouverte à la fois), `Escape` (+ restauration focus). **Au-delà du vanilla** (DS-PRINCIPLES §3.2 / #613) : navigation clavier WAI-ARIA APG Menu (↑/↓ bouclants, `Home`/`End`, `Entrée`/`Espace`). Items feuilles = `<button role="menuitem">` (focus natif `:focus-visible`) ; item parent de sous-menu = `<div role="menuitem" aria-haspopup="true" tabIndex={-1}>` (contrainte HTML : un `<button>` ne peut pas contenir de contenu interactif, et le CSS DS exige que `.context-submenu` soit un enfant direct du `.context-menu-item`).
 - **`<Accordion>` (#461)** : port React des sections repliables (`divers.html` #accordion). Calque de la logique **inline d'`initComponents`** (`shared/components.js:121-140`) — il n'existe PAS de fonction `initAccordion`, le titre de l'issue vient d'un audit automatique. Data-driven (`items: {id,title,content,defaultOpen}[]`), **multi-ouverture indépendante** (iso-vanilla : rien ne ferme les frères, aucune prop d'exclusivité), ouverture **non contrôlée** par défaut (graine `item.defaultOpen`) ou **contrôlée** via `openIds` + `onOpenChange` (convention alignée sur `<TreeView selectedId>`).
