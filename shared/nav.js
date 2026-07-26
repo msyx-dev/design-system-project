@@ -1,6 +1,24 @@
 /* @ds-version 2.116.1 */
 const VERSION = '2.116.1';
 
+// Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
+// image, etc.) — setAttribute() pose la valeur telle quelle : il protège de
+// l'injection d'attribut (guillemets) mais PAS d'un schéma hostile dans un
+// href/action/src (#758). Copie volontaire de shared/components.js::safeUrl —
+// nav.js doit rester autonome (pas de dépendance à l'ordre de chargement des
+// scripts). Toute évolution de la logique doit être répercutée dans les 2 copies.
+function safeUrl(url, fallback, allowedSchemes) {
+    if (!url) return fallback;
+    var schemes = allowedSchemes || ['http', 'https', 'mailto'];
+    var cleaned = String(url).replace(/[\x00-\x1f\x7f]/g, '').trim();
+    if (cleaned === '') return fallback;
+    if (/^[.\/#?]/.test(cleaned)) return cleaned;
+    var schemeMatch = cleaned.match(/^([a-zA-Z][a-zA-Z0-9+.\-]*):/);
+    if (!schemeMatch) return cleaned;
+    var scheme = schemeMatch[1].toLowerCase();
+    return schemes.indexOf(scheme) !== -1 ? cleaned : fallback;
+}
+
 // Manifeste des pages showcase — SEULE liste maintenue à la main.
 // Les sections (liens enfants) sont scannées depuis le DOM au runtime, jamais hardcodées.
 // Avantage : divergence impossible par construction (ancre morte = impossible).
@@ -40,10 +58,14 @@ function buildHeader() {
     var themeSwitcherEnabled = !!cfg.themeSwitcher;          // défaut false — opt-in vitrine/multi-thème
 
     // Brand configurable (#570) — défauts rétro-compatibles avec la vitrine DS
+    // safeUrl()/brandHref/brandLogoSrc : #758 — neutralise les schémas exécutables
+    // (javascript:). L'injection d'attribut (guillemets) est traitée séparément
+    // en posant ces valeurs via setAttribute() APRÈS le rendu du template
+    // (jamais interpolées dans la chaîne HTML), cf. plus bas dans cette fonction.
     var brandCfg = cfg.brand || {};
     var brandText = brandCfg.text || 'design-system';
-    var brandHref = brandCfg.href !== undefined ? brandCfg.href : '/site.html';
-    var brandLogoSrc = brandCfg.logoSrc || '/assets/sources/logoMSYX.png';
+    var brandHref = safeUrl(brandCfg.href !== undefined ? brandCfg.href : '/site.html', '#');
+    var brandLogoSrc = safeUrl(brandCfg.logoSrc || '/assets/sources/logoMSYX.png', '', ['http', 'https', 'data']);
 
     var menuItems = cfg.menu || [
         { label: 'Profil', icon: '&#128100;', href: '#' },
@@ -52,13 +74,11 @@ function buildHeader() {
         { label: 'Deconnexion', icon: '&#128682;', action: 'logout', 'class': 'danger' }
     ];
 
-    // Construire l'avatar (initiales ou image)
+    // Avatar (initiales ou image) : PAS interpolé dans le template (#758 — user.avatar
+    // et user.name/initials sont des données consumer non fiables en contexte
+    // attribut/texte). Placeholder vide ici, contenu réel posé en DOM après le
+    // rendu du template (cf. patch avatar plus bas).
     var avatarContent = '';
-    if (user.avatar) {
-        avatarContent = `<img src="${user.avatar}" alt="${user.name || 'Utilisateur'}">`;
-    } else {
-        avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
-    }
 
     // Construire les items du dropdown
     var dropdownItems = '';
@@ -126,13 +146,41 @@ function buildHeader() {
         : '';
 
     // Logo : image si logoSrc défini, sinon texte gradient fallback (#570)
-    var logoImgHtml = `<img src="${brandLogoSrc}" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
+    // src="" placeholder — brandLogoSrc posé via setAttribute() après rendu (#758)
+    var logoImgHtml = `<img src="" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img">`;
     // Badge version cliquable — dogfood du composant version-notes (#645, #614, #649).
     // Présentationnel strict : ouverture déléguée à data-modal-trigger + initModals ;
     // pastille « nouveau » gérée par initVersionNotes (égalité de chaîne localStorage).
     // Icône spark (i-sparkles) devant le numéro — .icon = stroke:currentColor;fill:none (_base.css).
     var versionBadgeHtml = `<button class="version-badge header-version-badge" data-version-notes data-modal-trigger="ds-version-notes-modal" data-latest-version="${VERSION}" data-storage-key="ds-version-seen" aria-label="Notes de version, v${VERSION}"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-sparkles"></use></svg>v${VERSION}<span class="version-badge-dot" aria-hidden="true"></span></button>`;
-    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="${brandHref}" class="header-logo" aria-label="${brandText} — Accueil">${logoImgHtml}<span class="brand-wordmark">${brandText}</span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+    // href="#" aria-label="" placeholder — brandHref/brandText posés via setAttribute()/textContent après rendu (#758)
+    header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="#" class="header-logo" aria-label="">${logoImgHtml}<span class="brand-wordmark"></span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
+
+    // Patch post-rendu (#758) : brandHref/brandText/brandLogoSrc/avatar posés via
+    // setAttribute()/textContent — jamais interpolés dans le template ci-dessus.
+    var logoLink = header.querySelector('.header-logo');
+    if (logoLink) {
+        logoLink.setAttribute('href', brandHref);
+        logoLink.setAttribute('aria-label', brandText + ' — Accueil');
+    }
+    var wordmarkEl = header.querySelector('.brand-wordmark');
+    if (wordmarkEl) wordmarkEl.textContent = brandText;
+    var logoImgEl = header.querySelector('.header-logo-img');
+    if (logoImgEl) logoImgEl.setAttribute('src', brandLogoSrc);
+
+    // Avatar legacy (#758) : construit en DOM, jamais en chaîne concaténée.
+    var avatarBtnEl = document.getElementById('header-avatar-btn');
+    if (avatarBtnEl) {
+        avatarBtnEl.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
+        if (user.avatar) {
+            var avatarImgEl = document.createElement('img');
+            avatarImgEl.setAttribute('src', safeUrl(user.avatar, '', ['http', 'https', 'data']));
+            avatarImgEl.setAttribute('alt', user.name || 'Utilisateur');
+            avatarBtnEl.appendChild(avatarImgEl);
+        } else {
+            avatarBtnEl.textContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
+        }
+    }
 
     var burger = document.getElementById('header-burger');
     var sidebar = document.getElementById('sidebar');
@@ -472,13 +520,18 @@ function updateHeaderUser(user) {
     updateFeedbackAuthState(user);   // #710 — MAJ modale feedback après résolution async M3
     var btn = document.getElementById('header-avatar-btn');
     if (!btn) return;
-    var avatarContent = '';
+    // Avatar construit en DOM, jamais en chaîne concaténée (#758) — user.avatar/
+    // user.name/user.initials sont des données consumer non fiables ; escapeHtml()
+    // n'aurait pas protégé le contexte attribut src="".
+    btn.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
     if (user.avatar) {
-        avatarContent = `<img src="${user.avatar}" alt="${user.name || 'Utilisateur'}">`;
+        var avatarImgEl = document.createElement('img');
+        avatarImgEl.setAttribute('src', safeUrl(user.avatar, '', ['http', 'https', 'data']));
+        avatarImgEl.setAttribute('alt', user.name || 'Utilisateur');
+        btn.appendChild(avatarImgEl);
     } else {
-        avatarContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
+        btn.textContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
     }
-    btn.innerHTML = avatarContent;
     var nameEl = document.querySelector('.header-dropdown-name');
     if (nameEl && user.name) nameEl.textContent = user.name;
 }
