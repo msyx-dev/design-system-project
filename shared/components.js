@@ -2332,8 +2332,16 @@ function initLightbox() {
             el.className = 'lightbox-img-placeholder';
             el.style.background = bg;
             el.style.borderRadius = 'var(--radius-md)';
-            el.innerHTML = '<div style="font-size:1.4rem;font-weight:600;text-align:center;line-height:1.5;">' + thumbText + '</div>' +
-                '<div style="font-size:0.8rem;opacity:0.6;font-family:var(--font-mono,monospace);">Placeholder — pas de fichier image</div>';
+            // thumbText est un round-trip texte→HTML (textContent d'un nœud du DOM,
+            // cf. #758) : construction en DOM, jamais d'innerHTML concaténé.
+            var thumbLine = document.createElement('div');
+            thumbLine.style.cssText = 'font-size:1.4rem;font-weight:600;text-align:center;line-height:1.5;';
+            thumbLine.textContent = thumbText;
+            var placeholderLine = document.createElement('div');
+            placeholderLine.style.cssText = 'font-size:0.8rem;opacity:0.6;font-family:var(--font-mono,monospace);';
+            placeholderLine.textContent = 'Placeholder — pas de fichier image';
+            el.appendChild(thumbLine);
+            el.appendChild(placeholderLine);
             imgWrap.appendChild(el);
             requestAnimationFrame(function() {
                 requestAnimationFrame(function() { el.classList.add('lb-img-visible'); });
@@ -3273,10 +3281,20 @@ function initQuiz() {
             labels.forEach((label, i) => {
                 const bar = document.createElement('div');
                 bar.className = 'quiz-poll-bar';
-                bar.innerHTML =
-                    '<div class="quiz-poll-fill" style="width:0%"></div>' +
-                    '<span class="quiz-poll-label">' + label + '</span>' +
-                    '<span class="quiz-poll-pct">' + pcts[i] + '%</span>';
+                // label est un round-trip texte→HTML (textContent d'options de démo,
+                // cf. #758) : construction en DOM, jamais d'innerHTML concaténé.
+                const fill = document.createElement('div');
+                fill.className = 'quiz-poll-fill';
+                fill.style.width = '0%';
+                const labelEl = document.createElement('span');
+                labelEl.className = 'quiz-poll-label';
+                labelEl.textContent = label;
+                const pctEl = document.createElement('span');
+                pctEl.className = 'quiz-poll-pct';
+                pctEl.textContent = pcts[i] + '%';
+                bar.appendChild(fill);
+                bar.appendChild(labelEl);
+                bar.appendChild(pctEl);
                 pollResults.appendChild(bar);
             });
 
@@ -4090,7 +4108,7 @@ function initRiskMatrix() {
 
         var size = parseInt(matrix.getAttribute('data-size') || '5', 10);
         var labelX = matrix.getAttribute('data-label-x') || 'Impact';
-        var labelY = matrix.getAttribute('data-label-y') || 'Probabilit&eacute;';
+        var labelY = matrix.getAttribute('data-label-y') || 'Probabilité';
         var maxScore = size * size;
 
         // Collect risk items
@@ -4121,7 +4139,7 @@ function initRiskMatrix() {
         // Y axis label
         var axisY = document.createElement('div');
         axisY.className = 'risk-axis-y';
-        axisY.innerHTML = labelY + ' &uarr;';
+        axisY.textContent = labelY + ' ↑';
         wrap.appendChild(axisY);
 
         // Inner (grid + x axis)
@@ -4219,7 +4237,7 @@ function initRiskMatrix() {
         // X axis label
         var axisX = document.createElement('div');
         axisX.className = 'risk-axis-x';
-        axisX.innerHTML = labelX + ' &rarr;';
+        axisX.textContent = labelX + ' →';
         inner.appendChild(axisX);
 
         wrap.appendChild(inner);
