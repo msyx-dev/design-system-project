@@ -67,11 +67,13 @@ function buildHeader() {
     var brandHref = safeUrl(brandCfg.href !== undefined ? brandCfg.href : '/site.html', '#');
     var brandLogoSrc = safeUrl(brandCfg.logoSrc || '/assets/sources/logoMSYX.png', '', ['http', 'https', 'data']);
 
+    // Icônes en caractères Unicode littéraux (pas d'entités HTML &#...; : elles ne
+    // sont décodées qu'en contexte HTML, pas via textContent — cf. patch DOM plus bas, #758)
     var menuItems = cfg.menu || [
-        { label: 'Profil', icon: '&#128100;', href: '#' },
-        { label: 'Preferences', icon: '&#9881;', href: '#' },
+        { label: 'Profil', icon: '👤', href: '#' },
+        { label: 'Preferences', icon: '⚙', href: '#' },
         { divider: true },
-        { label: 'Deconnexion', icon: '&#128682;', action: 'logout', 'class': 'danger' }
+        { label: 'Deconnexion', icon: '🚪', action: 'logout', 'class': 'danger' }
     ];
 
     // Avatar (initiales ou image) : PAS interpolé dans le template (#758 — user.avatar
@@ -80,27 +82,13 @@ function buildHeader() {
     // rendu du template (cf. patch avatar plus bas).
     var avatarContent = '';
 
-    // Construire les items du dropdown
-    var dropdownItems = '';
-    if (user.name) {
-        dropdownItems += `<div class="header-dropdown-header"><span class="header-dropdown-name">${user.name}</span></div>`;
-    }
-    menuItems.forEach(function(item) {
-        if (item.divider) {
-            dropdownItems += '<div class="header-dropdown-divider"></div>';
-        } else {
-            var cls = 'header-dropdown-item' + (item['class'] ? ' ' + item['class'] : '');
-            var dataAction = item.action ? ` data-action="${item.action}"` : '';
-            var href = item.href || '#';
-            dropdownItems += `<a href="${href}" class="${cls}"${dataAction}>${item.icon ? `<span>${item.icon}</span>` : ''}${item.label}</a>`;
-        }
-    });
-
     // Cloche notifications : construite UNE SEULE FOIS, hors gate auth (v2.73.0)
     // Masquée uniquement si MSYX_HEADER.notifications.enabled === false
     var notifBellHtml = '';
     if (notifVisible) {
-        var notifCount = notifCfg.count || 0;
+        // Number() : notifCount est interpolé tel quel plus bas — coercion défensive
+        // au cas où notifCfg.count viendrait d'une source consumer non numérique (#758).
+        var notifCount = Number(notifCfg.count) || 0;
         var badgeHtml = (notifCount > 0)
             ? `<span class="header-notification-badge" id="header-notif-badge">${notifCount > 99 ? '99+' : notifCount}</span>`
             : '<span class="header-notification-badge hidden" id="header-notif-badge"></span>';
@@ -116,7 +104,8 @@ function buildHeader() {
     if (authEnabled) {
         if (cfg.user && (cfg.user.name || cfg.user.initials || cfg.user.avatar)) {
             // Mode legacy : MSYX_HEADER.user défini → dropdown legacy (back-compat consumers existants)
-            profileHtml = `<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu">${dropdownItems}</div>`;
+            // Contenu du dropdown ("" placeholder) construit en DOM après rendu — cf. patch plus bas (#758)
+            profileHtml = `<button class="header-avatar-trigger" id="header-avatar-btn" aria-label="Menu utilisateur" aria-expanded="false" aria-haspopup="true">${avatarContent}</button><div class="header-dropdown" id="header-dropdown" role="menu"></div>`;
         } else {
             // Mode M3 : pas de cfg.user → slot UserMenu DS standard
             // L'init script (auth-init inline dans site.html) fetch /me.json depuis Authentik Proxy
@@ -154,6 +143,7 @@ function buildHeader() {
     // Icône spark (i-sparkles) devant le numéro — .icon = stroke:currentColor;fill:none (_base.css).
     var versionBadgeHtml = `<button class="version-badge header-version-badge" data-version-notes data-modal-trigger="ds-version-notes-modal" data-latest-version="${VERSION}" data-storage-key="ds-version-seen" aria-label="Notes de version, v${VERSION}"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-sparkles"></use></svg>v${VERSION}<span class="version-badge-dot" aria-hidden="true"></span></button>`;
     // href="#" aria-label="" placeholder — brandHref/brandText posés via setAttribute()/textContent après rendu (#758)
+    // ds-allow-innerhtml: toutes les sous-chaînes interpolées ici sont désormais sûres par construction — logoImgHtml/versionBadgeHtml (VERSION const + littéraux), themeSwitcherHtml (littéral figé), userZoneHtml (notifBellHtml = compteur numérique + littéraux, feedbackBtnHtml = littéral, profileHtml = placeholders vides patchés en DOM plus bas). Aucune donnée consumer brute interpolée (#758).
     header.innerHTML = `<button class="header-burger" id="header-burger" aria-label="Ouvrir le menu">&#9776;</button><a href="#" class="header-logo" aria-label="">${logoImgHtml}<span class="brand-wordmark"></span></a>${versionBadgeHtml}<span class="header-spacer"></span><div class="header-controls">${themeSwitcherHtml}<div class="mode-toggle"><span class="mode-toggle-label">Mode</span><button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre"><span class="mode-switch-track"><svg class="mode-switch-icon mode-switch-icon--sun" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-sun"></use></svg><svg class="mode-switch-icon mode-switch-icon--moon" aria-hidden="true" width="14" height="14"><use href="/shared/icons/sprite.svg#i-moon"></use></svg><span class="mode-switch-thumb"></span></span></button></div></div>${userZoneHtml}`;
 
     // Patch post-rendu (#758) : brandHref/brandText/brandLogoSrc/avatar posés via
@@ -180,6 +170,43 @@ function buildHeader() {
         } else {
             avatarBtnEl.textContent = user.initials || (user.name ? user.name.charAt(0).toUpperCase() : 'U');
         }
+    }
+
+    // Dropdown legacy (#758) : construit en DOM — user.name/menuItems[].label/icon/
+    // href/action sont des données consumer non fiables, jamais interpolées en HTML.
+    // CHANGEMENT DE CONTRAT : item.icon est désormais rendu en TEXTE (textContent) —
+    // cf. shared/CONSUMER_GUIDE.md. item.href passe par safeUrl().
+    var dropdownEl = document.getElementById('header-dropdown');
+    if (dropdownEl) {
+        dropdownEl.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
+        if (user.name) {
+            var dropdownHeaderEl = document.createElement('div');
+            dropdownHeaderEl.className = 'header-dropdown-header';
+            var dropdownNameEl = document.createElement('span');
+            dropdownNameEl.className = 'header-dropdown-name';
+            dropdownNameEl.textContent = user.name;
+            dropdownHeaderEl.appendChild(dropdownNameEl);
+            dropdownEl.appendChild(dropdownHeaderEl);
+        }
+        menuItems.forEach(function(item) {
+            if (item.divider) {
+                var dividerEl = document.createElement('div');
+                dividerEl.className = 'header-dropdown-divider';
+                dropdownEl.appendChild(dividerEl);
+                return;
+            }
+            var link = document.createElement('a');
+            link.setAttribute('href', safeUrl(item.href || '#', '#'));
+            link.className = 'header-dropdown-item' + (item['class'] ? ' ' + item['class'] : '');
+            if (item.action) link.setAttribute('data-action', item.action);
+            if (item.icon) {
+                var iconSpanEl = document.createElement('span');
+                iconSpanEl.textContent = item.icon;
+                link.appendChild(iconSpanEl);
+            }
+            link.appendChild(document.createTextNode(item.label));
+            dropdownEl.appendChild(link);
+        });
     }
 
     var burger = document.getElementById('header-burger');
@@ -478,19 +505,54 @@ function initHeaderNotifications() {
 }
 
 // Rendu de la liste de notifications
+// Construction en DOM (#758) — n.icon/n.title/n.desc/n.time sont des données
+// consumer non fiables. CHANGEMENT DE CONTRAT : n.icon est désormais rendu en
+// TEXTE (textContent), plus en HTML brut — cf. shared/CONSUMER_GUIDE.md.
 function renderNotifications(items) {
     var list = document.getElementById('header-notif-list');
     if (!list) return;
+    list.innerHTML = ''; // ds-allow-innerhtml: wipe avant reconstruction en DOM
     if (!items || !items.length) {
-        list.innerHTML = '<div class="header-notif-empty">Aucune notification</div>';
+        var empty = document.createElement('div');
+        empty.className = 'header-notif-empty';
+        empty.textContent = 'Aucune notification';
+        list.appendChild(empty);
         return;
     }
-    var html = '';
     items.forEach(function(n) {
-        var unreadCls = n.unread ? ' unread' : '';
-        html += `<div class="header-notif-item${unreadCls}">${n.icon ? `<span class="header-notif-icon">${n.icon}</span>` : ''}<div class="header-notif-body"><div class="header-notif-title">${n.title || ''}</div>${n.desc ? `<div class="header-notif-desc">${n.desc}</div>` : ''}</div>${n.time ? `<span class="header-notif-time">${n.time}</span>` : ''}</div>`;
+        var item = document.createElement('div');
+        item.className = 'header-notif-item' + (n.unread ? ' unread' : '');
+
+        if (n.icon) {
+            var iconEl = document.createElement('span');
+            iconEl.className = 'header-notif-icon';
+            iconEl.textContent = n.icon;
+            item.appendChild(iconEl);
+        }
+
+        var body = document.createElement('div');
+        body.className = 'header-notif-body';
+        var titleEl = document.createElement('div');
+        titleEl.className = 'header-notif-title';
+        titleEl.textContent = n.title || '';
+        body.appendChild(titleEl);
+        if (n.desc) {
+            var descEl = document.createElement('div');
+            descEl.className = 'header-notif-desc';
+            descEl.textContent = n.desc;
+            body.appendChild(descEl);
+        }
+        item.appendChild(body);
+
+        if (n.time) {
+            var timeEl = document.createElement('span');
+            timeEl.className = 'header-notif-time';
+            timeEl.textContent = n.time;
+            item.appendChild(timeEl);
+        }
+
+        list.appendChild(item);
     });
-    list.innerHTML = html;
 }
 
 // Mettre à jour les infos user à la volée (ex: après login)
@@ -683,6 +745,7 @@ async function buildSidebar() {
         });
     });
     html += '<div class="sidebar-footer"><p>msyx.fr — 2026</p></div>';
+    // ds-allow-innerhtml: html est construit uniquement depuis NAV_PAGES (constante interne, l.~20) et pageSections (scan DOM des propres pages du DS ou NAV_SECTIONS_MANIFEST généré au build par bin/generate-nav-sections.js) — jamais une donnée consumer/attaquant
     sidebar.innerHTML = html;
 
     updateActiveLink();
@@ -867,6 +930,7 @@ async function navigateTo(url) {
         if (!newMain || !currentMain) { window.location.href = url; return; }
 
         // Swap content
+        // ds-allow-innerhtml: newMain provient d'un fetch same-origin d'une page statique du DS lui-même (SPA nav), jamais une donnée consumer
         currentMain.innerHTML = newMain.innerHTML;
 
         // Fade-in après le swap
@@ -989,6 +1053,7 @@ async function loadSection(container) {
         var doc = parser.parseFromString(html, 'text/html');
         var mainContent = doc.querySelector('.main');
         if (!mainContent) throw new Error('No .main found');
+        // ds-allow-innerhtml: mainContent provient d'un fetch same-origin d'une page statique du DS lui-même (LazyLoader), jamais une donnée consumer
         container.innerHTML = mainContent.innerHTML;
         container.classList.add('lazy-loaded');
         container.classList.remove('lazy-section');
@@ -996,6 +1061,7 @@ async function loadSection(container) {
         if (scrollSpyObserver) { scrollSpyObserver.disconnect(); scrollSpyObserver = null; }
         initScrollSpy();
     } catch (err) {
+        // ds-allow-innerhtml: page vient de container.dataset.page, un attribut data-page="/pages/*.html" hardcodé dans site.html (build-time, DS lui-même) — jamais une donnée consumer/runtime
         container.innerHTML = `<div class="lazy-error"><p>Erreur de chargement — <a href="${page}">ouvrir la page</a></p></div>`;
         container.classList.add('lazy-loaded');
         loadedSections.delete(page);
@@ -1104,7 +1170,8 @@ window.addEventListener('popstate', () => {
         const newMain = doc.querySelector('.main');
         const currentMain = document.querySelector('.main');
         if (newMain && currentMain) {
-            currentMain.innerHTML = newMain.innerHTML;
+            // ds-allow-innerhtml: newMain provient d'un fetch same-origin d'une page statique du DS lui-même (SPA nav), jamais une donnée consumer
+        currentMain.innerHTML = newMain.innerHTML;
             document.title = doc.title;
             updateActiveLink();
             reinitComponents();
