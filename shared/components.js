@@ -100,6 +100,18 @@ function highlightMatch(text, query) {
     return span;
 }
 
+// Crée un nœud DOM à partir d'un fragment HTML CONSTANT et LITTÉRAL (jamais
+// concaténé ni interpolé avec une donnée consumer) — réservé à l'injection de
+// petits fragments de markup constant (icônes SVG inline) pour éviter de les
+// dupliquer en concaténation de chaînes à chaque site d'appel. N'appeler
+// qu'avec une chaîne littérale figée dans le code source du DS.
+function constantMarkup(html) {
+    var tpl = document.createElement('template');
+    // ds-allow-innerhtml: fragment toujours littéral (jamais concaténé à une variable), voir JSDoc ci-dessus
+    tpl.innerHTML = html;
+    return tpl.content.firstElementChild;
+}
+
 function initComponents() {
     // Tabs — ARIA role=tablist/tab + navigation clavier flèches
     document.querySelectorAll('.tabs').forEach(g => {
@@ -4836,39 +4848,98 @@ function initUserMenu(rootOrSelector, options) {
         }
         var initials = getInitials(displayName);
 
-        // Contenu avatar (img ou initials)
-        function avatarContent(size) {
+        // Contenu avatar (img ou initials) — construit en DOM : avatarUrl et
+        // displayName sont des données consumer non fiables en contexte
+        // attribut, escapeHTML() ne protège pas contre l'injection de
+        // guillemets (cf. #758).
+        function avatarContent() {
             if (avatarUrl) {
-                return '<img src="' + escapeHTML(avatarUrl) + '" alt="' + escapeHTML(displayName) + '">';
+                var img = document.createElement('img');
+                img.setAttribute('src', avatarUrl);
+                img.setAttribute('alt', displayName);
+                return img;
             }
-            return escapeHTML(initials);
+            return document.createTextNode(initials);
         }
 
-        // Construire le HTML du composant
-        root.innerHTML =
-            '<button class="user-menu-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu utilisateur — ' + escapeHTML(displayName) + '">' +
-                '<span class="user-menu-avatar">' + avatarContent(32) + '</span>' +
-                '<svg class="user-menu-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>' +
-            '</button>' +
-            '<div class="user-menu-dropdown" role="menu" aria-label="Menu utilisateur">' +
-                '<div class="user-menu-dropdown-header" role="presentation" aria-hidden="true">' +
-                    '<span class="user-menu-dropdown-avatar">' + avatarContent(48) + '</span>' +
-                    '<div class="user-menu-dropdown-info">' +
-                        '<span class="user-menu-dropdown-name">' + escapeHTML(displayName) + '</span>' +
-                        '<span class="user-menu-dropdown-email">' + escapeHTML(email) + '</span>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="user-menu-divider" role="separator"></div>' +
-                '<a href="' + escapeHTML(authentikUserUrl) + '" class="user-menu-item" role="menuitem" target="_blank" rel="noopener noreferrer">' +
-                    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-                    'Mon compte' +
-                '</a>' +
-                '<form id="' + formId + '" class="user-menu-logout-form" method="POST" action="' + escapeHTML(logoutUrl) + '" role="presentation"></form>' +
-                '<button type="submit" form="' + formId + '" class="user-menu-item user-menu-item--danger" role="menuitem">' +
-                    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
-                    'D&eacute;connexion' +
-                '</button>' +
-            '</div>';
+        // Construire le sous-arbre du composant en DOM — jamais via
+        // concaténation de chaînes assignée à innerHTML (#758).
+        root.innerHTML = '';
+
+        var trigger = document.createElement('button');
+        trigger.className = 'user-menu-trigger';
+        trigger.setAttribute('aria-haspopup', 'true');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.setAttribute('aria-label', 'Menu utilisateur — ' + displayName);
+
+        var triggerAvatar = document.createElement('span');
+        triggerAvatar.className = 'user-menu-avatar';
+        triggerAvatar.appendChild(avatarContent());
+        trigger.appendChild(triggerAvatar);
+        trigger.appendChild(constantMarkup('<svg class="user-menu-caret" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>'));
+
+        var dropdown = document.createElement('div');
+        dropdown.className = 'user-menu-dropdown';
+        dropdown.setAttribute('role', 'menu');
+        dropdown.setAttribute('aria-label', 'Menu utilisateur');
+
+        var header = document.createElement('div');
+        header.className = 'user-menu-dropdown-header';
+        header.setAttribute('role', 'presentation');
+        header.setAttribute('aria-hidden', 'true');
+
+        var headerAvatar = document.createElement('span');
+        headerAvatar.className = 'user-menu-dropdown-avatar';
+        headerAvatar.appendChild(avatarContent());
+        header.appendChild(headerAvatar);
+
+        var info = document.createElement('div');
+        info.className = 'user-menu-dropdown-info';
+        var nameEl = document.createElement('span');
+        nameEl.className = 'user-menu-dropdown-name';
+        nameEl.textContent = displayName;
+        var emailEl = document.createElement('span');
+        emailEl.className = 'user-menu-dropdown-email';
+        emailEl.textContent = email;
+        info.appendChild(nameEl);
+        info.appendChild(emailEl);
+        header.appendChild(info);
+        dropdown.appendChild(header);
+
+        var divider = document.createElement('div');
+        divider.className = 'user-menu-divider';
+        divider.setAttribute('role', 'separator');
+        dropdown.appendChild(divider);
+
+        var accountLink = document.createElement('a');
+        accountLink.setAttribute('href', authentikUserUrl);
+        accountLink.className = 'user-menu-item';
+        accountLink.setAttribute('role', 'menuitem');
+        accountLink.setAttribute('target', '_blank');
+        accountLink.setAttribute('rel', 'noopener noreferrer');
+        accountLink.appendChild(constantMarkup('<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'));
+        accountLink.appendChild(document.createTextNode('Mon compte'));
+        dropdown.appendChild(accountLink);
+
+        var logoutForm = document.createElement('form');
+        logoutForm.id = formId;
+        logoutForm.className = 'user-menu-logout-form';
+        logoutForm.setAttribute('method', 'POST');
+        logoutForm.setAttribute('action', logoutUrl);
+        logoutForm.setAttribute('role', 'presentation');
+        dropdown.appendChild(logoutForm);
+
+        var logoutBtn = document.createElement('button');
+        logoutBtn.setAttribute('type', 'submit');
+        logoutBtn.setAttribute('form', formId);
+        logoutBtn.className = 'user-menu-item user-menu-item--danger';
+        logoutBtn.setAttribute('role', 'menuitem');
+        logoutBtn.appendChild(constantMarkup('<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'));
+        logoutBtn.appendChild(document.createTextNode('Déconnexion'));
+        dropdown.appendChild(logoutBtn);
+
+        root.appendChild(trigger);
+        root.appendChild(dropdown);
 
         var trigger = root.querySelector('.user-menu-trigger');
         var dropdown = root.querySelector('.user-menu-dropdown');
