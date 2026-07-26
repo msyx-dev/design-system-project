@@ -63,6 +63,13 @@ export interface SegmentedControlProps {
  * bouclant, sautent les options `disabled`. Activation automatique (la
  * flèche sélectionne directement la nouvelle option et lui donne le focus).
  *
+ * **Garde-fou roving tabindex** (#743, aligné sur `initSegmentedControls`
+ * côté vanilla `shared/components.js`) : si `value` ne correspond à aucune
+ * `option.value`, la première option non `disabled` reçoit `tabIndex={0}`
+ * (son `aria-checked` reste `false`) pour que le `radiogroup` reste
+ * atteignable au clavier. Si toutes les options sont `disabled`, aucun
+ * `tabIndex={0}` n'est posé — groupe inerte, comportement attendu.
+ *
  * SSR-safe : aucun accès à `document`/`window` en dehors des effets
  * (`useLayoutEffect`/refs), qui ne s'exécutent que côté client.
  */
@@ -80,6 +87,15 @@ export function SegmentedControl({
   const [indicatorStyle, setIndicatorStyle] = useState<CSSProperties>({});
 
   const enabledOptions = options.filter((option) => !option.disabled);
+
+  // Garde-fou roving tabindex (#743) : si `value` ne matche aucune option
+  // (ex. mismatch appelant), la première option activable reste ciblable au
+  // clavier plutôt que de laisser tout le groupe à tabIndex=-1. Si toutes les
+  // options sont disabled, aucun fallback — groupe inerte (aligné vanilla).
+  const hasActiveMatch = options.some((option) => option.value === value);
+  const fallbackFocusValue = hasActiveMatch
+    ? null
+    : (enabledOptions[0]?.value ?? null);
 
   useLayoutEffect(() => {
     const activeEl = itemRefs.current[value];
@@ -160,6 +176,9 @@ export function SegmentedControl({
       />
       {options.map((option) => {
         const isActive = option.value === value;
+        const isRovingFocus =
+          isActive ||
+          (fallbackFocusValue !== null && option.value === fallbackFocusValue);
         return (
           <button
             key={option.value}
@@ -172,7 +191,7 @@ export function SegmentedControl({
               .join(" ")}
             role="radio"
             aria-checked={isActive}
-            tabIndex={isActive ? 0 : -1}
+            tabIndex={isRovingFocus ? 0 : -1}
             disabled={option.disabled}
             onClick={() => !option.disabled && onChange(option.value)}
             onKeyDown={(event) => handleKeyDown(event, option.value)}
