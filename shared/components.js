@@ -658,6 +658,7 @@ function showToast(message, type, duration) {
     var role = (type === 'error' || type === 'warning') ? 'alert' : 'status';
     toast.setAttribute('role', role);
     toast.setAttribute('aria-live', role === 'alert' ? 'assertive' : 'polite');
+    // ds-allow-innerhtml: colors[type]/icons[type] indexent une map interne à 4 clés fixes (whitelist par construction, jamais la valeur brute de `type`) ; message passe par escapeHTML en contexte texte uniquement
     toast.innerHTML = '<span class="toast-message"><span style="color:' + colors[type] + ';font-size:1rem;" aria-hidden="true">' + icons[type] + '</span>' + escapeHTML(message) + '</span><button class="toast-close" aria-label="Fermer">&times;</button>';
     container.appendChild(toast);
     var closeBtn = toast.querySelector('.toast-close');
@@ -1360,6 +1361,7 @@ function initServerDataGrid() {
                     + '<div class="skeleton-table-row"><div class="skeleton-cell"></div></div>'
                     + '</td></tr>';
             }
+            // ds-allow-innerhtml: skeleton de chargement — cols est un compte de colonnes calculé (querySelectorAll().length), aucune donnée consumer
             bodyEl.innerHTML = rows;
         }
 
@@ -1374,6 +1376,7 @@ function initServerDataGrid() {
                 bodyEl.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Aucun résultat</td></tr>';
                 return;
             }
+            // ds-allow-innerhtml: chaque valeur passe par escapeHTML() en contexte texte uniquement (contenu de <td>...</td>) — aucun attribut interpolé
             bodyEl.innerHTML = rows.map(function(r) {
                 return '<tr>'
                     + '<td>' + escapeHTML(r.composant) + '</td>'
@@ -1429,6 +1432,7 @@ function initServerDataGrid() {
             html += '<button class="page-btn" data-page="' + (cur + 1) + '" aria-label="Page suivante"'
                 + (cur === totalPages ? ' disabled' : '') + '>&rsaquo;</button>';
 
+            // ds-allow-innerhtml: html est construit uniquement à partir de numéros de page calculés (entiers), aucune donnée consumer interpolée
             pagerEl.innerHTML = html;
 
             // Délégation clic pager — dataset.bound dédié
@@ -3561,6 +3565,7 @@ function initCommandPalette() {
         }
 
         if (!matched.length) {
+            // ds-allow-innerhtml: q passe par escapeHTML en contexte texte uniquement (contenu de <strong>), aucun attribut interpolé
             results.innerHTML = '<div class="cmd-empty">Aucun résultat pour <strong>' + escapeHTML(q) + '</strong></div>';
             return;
         }
@@ -3590,6 +3595,7 @@ function initCommandPalette() {
                 el.dataset.idx = globalIdx;
                 if (item.href) el.dataset.href = item.href;
                 if (item.action) el.dataset.action = item.action;
+                // ds-allow-innerhtml: item.icon vient de NAV_SECTIONS (manifeste interne du site, jamais une donnée consumer) — label/category passent par escapeHTML en contexte texte uniquement, aucun attribut interpolé
                 el.innerHTML = '<span class="cmd-item-icon" aria-hidden="true">' + item.icon + '</span>'
                     + '<span class="cmd-item-text">' + escapeHTML(item.label) + '</span>'
                     + '<span class="cmd-item-shortcut">' + escapeHTML(item.category || '') + '</span>';
@@ -4141,6 +4147,16 @@ window.__initSidebarRail = initSidebarRail;
 function initRiskMatrix() {
     var LEVEL_LABELS = { low: 'Faible', medium: 'Moyen', high: 'Elev&eacute;', critical: 'Critique' };
 
+    // Contraint `level` (donnée consumer — attribut data-level du .risk-item) à la
+    // whitelist LEVEL_LABELS AVANT tout usage. Sans ça, `lvl` était concaténé
+    // directement dans un attribut class="risk-tooltip-badge <lvl>" et affiché
+    // en HTML brut non échappé si absent de la map — vecteur XSS trouvé lors
+    // de l'audit #758, non couvert par l'inventaire initial (qui ne portait
+    // que sur title/owner via escapeAttr).
+    function normalizeLevel(level) {
+        return Object.prototype.hasOwnProperty.call(LEVEL_LABELS, level) ? level : 'medium';
+    }
+
     function scoreLevel(score, maxScore) {
         var ratio = score / maxScore;
         if (ratio <= 0.16) return 'low';
@@ -4189,7 +4205,7 @@ function initRiskMatrix() {
             if (!cellMap[key]) cellMap[key] = [];
             cellMap[key].push({
                 label: it.getAttribute('data-label') || 'Risque',
-                level: it.getAttribute('data-level') || 'medium',
+                level: normalizeLevel(it.getAttribute('data-level')),
                 owner: it.getAttribute('data-owner') || '',
                 detail: it.getAttribute('data-detail') || '',
                 prob: prob,
@@ -4314,6 +4330,7 @@ function initRiskMatrix() {
         function showTooltip(dot, e) {
             var lvl = dot.dataset.riskLevel || 'medium';
             var owner = dot.dataset.riskOwner;
+            // ds-allow-innerhtml: lvl est contraint à la whitelist LEVEL_LABELS par normalizeLevel() en amont (une des 4 clés fixes, jamais la donnée consumer brute) ; title/owner passent par escapeAttr en contexte texte
             tooltip.innerHTML =
                 '<div class="risk-tooltip-title">' + escapeAttr(dot.dataset.riskLabel) + '</div>' +
                 '<div class="risk-tooltip-row">' +
@@ -4343,6 +4360,7 @@ function initRiskMatrix() {
             var lvl = dot.dataset.riskLevel || 'medium';
             var prob = dot.dataset.riskProb;
             var impact = dot.dataset.riskImpact;
+            // ds-allow-innerhtml: lvl est contraint à la whitelist LEVEL_LABELS par normalizeLevel() en amont ; prob/impact/owner/detail passent par escapeAttr en contexte texte
             var bodyHTML =
                 '<table style="width:100%;border-collapse:collapse;font-size:0.85rem;">' +
                   '<tr><td style="padding:0.4rem 0.6rem;color:var(--text-muted);width:35%">Niveau</td>' +
