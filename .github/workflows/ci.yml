@@ -102,9 +102,11 @@ jobs:
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
   # Le chemin corepack + pnpm install --frozen-lockfile sur Node 24 est
   # confirme vert : il s'execute et rapporte ses resultats a chaque PR.
-  # Bloquant depuis #745 — le check `react` doit refleter un vrai echec
-  # de test (l'ancienne tolerance continue-on-error masquait des tests
-  # rouges, cf. #613/PR #742).
+  # Bloquant depuis #745 — avant ça, continue-on-error faisait que le
+  # check `react` affichait `pass` quel que soit le resultat des tests :
+  # aucune garantie reelle (risque identifie au groom de #600), seule
+  # l'execution manuelle de `pnpm test` validait effectivement les
+  # wrappers.
   react:
     runs-on: ubuntu-latest
     steps:

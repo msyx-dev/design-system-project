@@ -9,7 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Changed
-- **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée et masquait un vrai échec de test derrière un check `pass`. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
+- **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 
 ## [2.116.0] - 2026-07-26 — Segmented control : convention ARIA `radiogroup` canonique (#613)
 
