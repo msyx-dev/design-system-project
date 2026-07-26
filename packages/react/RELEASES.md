@@ -14,6 +14,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
   - **Classes non émises** : `.json-tree`, `.json-node--last`, `.json-close-punct` — grep sur `shared/css/**` confirme qu'aucune des trois n'a de règle CSS (crochets JS morts du vanilla, absentes aussi du registre `cssClasses` de `json-viewer`). Le rôle ARIA `role="tree"` est conservé sur un `<div>` non classé.
   - Registre : `REACT_TO_REGISTRY:{JsonViewer:'json-viewer'}` + entrée `json-viewer` passée en `react:"ported"` (même PR, DS-PRINCIPLES §8.1).
   - 100 % `packages/react/` — aucun bump `@ds-version`.
+- **`<SplitPane>` (#595)** : port React des panneaux redimensionnables (`divers.html` #splitter, calque `initSplitPane` — `shared/components.js:5713-5799`). Émet `.split-pane`/`.split-panel`/`.split-panel--fluid`/`.split-gutter`, panneau `first` seul piloté par `flex-basis: {ratio}%` (le second, `.split-panel--fluid`, absorbe le reste — iso-vanilla).
+  - **Drag réimplémenté en Pointer Events** : le vanilla délègue à `window.__pointerDrag()`/`window.__registerInstance()`, primitives globales du DS **non disponibles** côté React. Comportement reproduit à l'identique (`setPointerCapture`/`releasePointerCapture` sur le gutter, axe contraint par `orientation`, ratio recalculé depuis `getBoundingClientRect()` du conteneur), sans importer les globals.
+  - **`aria-orientation` — piège volontaire conservé** : pour un split **vertical**, `aria-orientation` vaut `"horizontal"` (et inversement) — l'attribut décrit l'orientation du **séparateur**, pas celle du split (`vertical ? 'horizontal' : 'vertical'`, calque exact). Test dédié + commentaire pour ne pas l'inverser plus tard.
+  - **Classe d'état `.split-pane--dragging`** : posée sur `.split-pane` pendant le drag, retirée à la fin (iso-vanilla). Cette classe n'a **aucune règle CSS** dans le DS aujourd'hui (bug suivi séparément, **#763**) — émise quand même côté React (parité), `.split-pane--dragging` ajoutée à `REACT_CSS_UNDETECTABLE` (`bin/generate-registry.js`) avec référence explicite à #763.
+  - **Ratio** — non contrôlé par défaut (`defaultRatio`, @default 50) + contrôlé via `ratio`/`onResize` (convention alignée sur `<Accordion openIds>`). Clavier : `ArrowLeft`/`ArrowRight` (horizontal) ou `ArrowUp`/`ArrowDown` (vertical) par pas de 2, `Home`→`min`, `End`→`max` (défauts 15/85).
+  - **Persistance `persistKey`** : restaurée dans un `useEffect` de montage (mode non contrôlé uniquement, SSR-safe — calque `VersionBadge`), réécrite à chaque déplacement ; la restauration initiale ne réécrit pas `localStorage` (iso-vanilla `persist:false`).
+  - Registre : `REACT_TO_REGISTRY:{SplitPane:'splitter'}` + entrée `splitter` passée en `react:"ported"` (même PR, DS-PRINCIPLES §8.1).
+  - 100 % `packages/react/` — aucun bump `@ds-version`.
 
 ## v3.0.0-alpha.25 — 2026-07-26 — Sprint 3 « React interactifs » : ContextMenu, Accordion, SplitButton, MentionInput (#468/#461/#600/#594/#743)
 

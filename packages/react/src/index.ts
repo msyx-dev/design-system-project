@@ -318,3 +318,10 @@ export type {
   JsonPrimitive,
   JsonValue,
 } from "./components/JsonViewer/JsonViewer";
+
+// ─── SplitPane — #595 (parité React) ───
+export { SplitPane } from "./components/SplitPane/SplitPane";
+export type {
+  SplitPaneProps,
+  SplitPaneOrientation,
+} from "./components/SplitPane/SplitPane";
