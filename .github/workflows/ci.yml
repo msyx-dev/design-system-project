@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, 'integration/**']
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -100,11 +100,13 @@ jobs:
       - name: Counters generator validation (#707)
         run: node bin/generate-counters.js --check
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
-  # 136 tests valides localement via vitest (npm). Le chemin exact
-  # corepack + pnpm install --frozen-lockfile sur Node 24 n'a PAS pu
-  # etre verifie localement (env local = Node 20, corepack resout pnpm
-  # vers une version requierant Node 22+). continue-on-error: true tant
-  # que le chemin CI n'est pas confirme vert (cf. #378).
+  # Le chemin corepack + pnpm install --frozen-lockfile sur Node 24 est
+  # confirme vert : il s'execute et rapporte ses resultats a chaque PR.
+  # Bloquant depuis #745 — avant ça, continue-on-error faisait que le
+  # check `react` affichait `pass` quel que soit le resultat des tests :
+  # aucune garantie reelle (risque identifie au groom de #600), seule
+  # l'execution manuelle de `pnpm test` validait effectivement les
+  # wrappers.
   react:
     runs-on: ubuntu-latest
     steps:
@@ -123,7 +125,6 @@ jobs:
         run: |
           cd packages/react
           pnpm test
-        continue-on-error: true
   perf-budget:
     runs-on: ubuntu-latest
     steps:
