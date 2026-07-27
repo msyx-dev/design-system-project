@@ -2,6 +2,16 @@
 // Exposes window.__initComponents() pour la re-init SPA après swap de page
 //
 // ─── Catalogue des fonctions init* ────────────────────────────────────────
+// (#789 : audit complet 2026-07-27 -- 13 mentions périmées corrigées, dont
+//  la colonne "Sélecteur principal" décrivait soit une classe inexistante
+//  dans tout le dépôt (ex. .context-menu-trigger, .segmented-control,
+//  .otp-input, .tree-view, .decision-tree, .command-palette-trigger,
+//  .notification-center, .inline-edit, .sidebar-rail, [data-tooltip],
+//  .modal-trigger/.modal, .copy-btn), soit un élément homonyme sans lien
+//  avec le JS réel (#theme-switcher = id de section doc, pas l'élément
+//  interrogé par initThemeSwitcher()). Tenir cette colonne à jour au
+//  prochain renommage de classe -- c'est un catalogue lu en premier par
+//  quiconque cherche « quel sélecteur active ce composant ? ».
 //
 //  Composant                    Fonction                     Sélecteur principal
 //  ──────────────────────────   ──────────────────────────   ───────────────────
@@ -11,9 +21,9 @@
 //  Chips (ajout/suppression)    initChips()                  .chip-group / .chip-input-wrapper (@deprecated → tag-input)
 //  Search inputs                initSearchInputs()           .search-input
 //  Range sliders                initSliders()                .slider-track
-//  Modals (open/close)          initModals()                 .modal-trigger, .modal
-//  Copy buttons                 initCopyButtons()            .copy-btn
-//  Theme switcher (select)      initThemeSwitcher()          #theme-switcher
+//  Modals (open/close)          initModals()                 [data-modal-trigger], dialog.modal-dialog
+//  Copy buttons                 initCopyButtons()            [data-copy]
+//  Theme switcher (select)      initThemeSwitcher()          #theme-select
 //  Mode switcher (sun/moon)     initModeSwitcher()           .mode-toggle
 //  Data grids (tri, filtre)     initDataGrids()              .data-grid
 //  Carousel                     initCarousel()               .carousel
@@ -21,13 +31,13 @@
 //  Bottom navigation            initBottomNav()              .bottom-nav
 //  Number inputs (+/-)          initNumberInputs()           .number-input
 //  FAB (floating action button) initFAB()                    .fab
-//  Segmented controls           initSegmentedControls()      .segmented-control
-//  OTP inputs                   initOTPInputs()              .otp-input
+//  Segmented controls           initSegmentedControls()      .segmented
+//  OTP inputs                   initOTPInputs()              .otp-group
 //  Tag inputs                   initTagInputs()              .tag-input
-//  Tree view                    initTreeView()               .tree-view
+//  Tree view                    initTreeView()               .tree[role="tree"]
 //  Bottom sheet                 initBottomSheet()            .bottom-sheet-trigger
 //  Lightbox                     initLightbox()               .lightbox-trigger
-//  Context menu                 initContextMenu()            .context-menu-trigger
+//  Context menu                 initContextMenu()            .context-target
 //  Pie charts (SVG)             initPieCharts()              .pie-chart
 //  Gauges (jauge circulaire)    initGauges()                 .gauge
 //  Animated counters            initAnimatedCounters()       .counter
@@ -36,16 +46,16 @@
 //  Video embeds                 initVideoEmbeds()            .video-embed
 //  Before / after slider        initBeforeAfter()            .before-after
 //  Quiz / poll                  initQuiz()                   .quiz
-//  Decision tree                initDecisionTree()           .decision-tree
-//  Command palette              initCommandPalette()         .command-palette-trigger
+//  Decision tree                initDecisionTree()           .dtree
+//  Command palette              initCommandPalette()         Ctrl/Cmd+K (raccourci clavier, aucun trigger cliquable)
 //  Pricing toggle               initPricing()                .pricing-toggle
-//  Notification center          initNotificationCenter()     .notification-center
+//  Notification center          initNotificationCenter()     .notif-center
 //  Activity feed                initActivityFeed()           .activity-feed
 //  Wizard / stepper interactif  initWizard()                 .wizard
-//  Inline edit                  initInlineEdit()             .inline-edit
+//  Inline edit                  initInlineEdit()             .editable-field[data-editable]
 //  Action menu                  initActionMenu()             .action-menu
-//  Sidebar rail                 initSidebarRail()            .sidebar-rail
-//  Tooltips ARIA                initTooltipsARIA()           [data-tooltip]
+//  Sidebar rail                 initSidebarRail()            .rail-sidebar (dans .rail-demo)
+//  Tooltips ARIA                initTooltipsARIA()           .tooltip-wrap
 //  Auto-save indicator          initAutoSave()               .autosave[data-autosave-demo]
 //  Comments / Thread            initComments()               .comment-action-btn[data-reply-trigger]
 //  Auth Flows                   initAuthFlows()              .login-strength[data-strength-target]
