@@ -6216,7 +6216,6 @@ function initJsonViewer() {
 
         var tree = document.createElement('div');
         tree.setAttribute('role', 'tree');
-        tree.className = 'json-tree';
 
         var rootNode = buildNode('$', data, true);
         tree.appendChild(rootNode);
@@ -6305,14 +6304,13 @@ function initJsonViewer() {
                 children.className = 'json-children open';
                 children.setAttribute('role', 'group');
 
-                entries.forEach(function(entry, idx) {
+                entries.forEach(function(entry) {
                     var childNode = buildNode(entry[0], entry[1], false);
-                    if (idx === entries.length - 1) childNode.classList.add('json-node--last');
                     children.appendChild(childNode);
                 });
 
                 var closeLine = document.createElement('div');
-                closeLine.className = 'json-punct json-close-punct';
+                closeLine.className = 'json-punct';
                 closeLine.textContent = type === 'array' ? ']' : '}';
                 children.appendChild(closeLine);
 
@@ -6755,7 +6753,6 @@ function initVirtualList() {
         topSpacer.setAttribute('aria-hidden', 'true');
 
         var rowsContainer = document.createElement('div');
-        rowsContainer.className = 'virtual-list-rows';
 
         var bottomSpacer = document.createElement('div');
         bottomSpacer.className = 'virtual-spacer';
