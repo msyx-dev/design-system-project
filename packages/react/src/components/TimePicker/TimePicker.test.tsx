@@ -238,8 +238,10 @@ describe("TimePicker — mode contrôlé (value/onChange)", () => {
     fireEvent.click(inc);
 
     expect(handleChange).toHaveBeenCalledWith("10:30");
-    // Le parent n'a pas encore répercuté onChange → l'affichage reste sur 09.
-    expect(hourInput().value).toBe("09");
+    // Le parent n'a pas encore répercuté onChange → l'affichage reste sur 9
+    // (valeur BRUTE du <input type="number">, pas le format zero-paddé qui
+    // n'existe que côté `onChange`).
+    expect(hourInput().value).toBe("9");
   });
 
   it("l'affichage suit `value` quand le parent répercute (rerender)", () => {
@@ -258,20 +260,20 @@ describe("TimePicker — mode contrôlé (value/onChange)", () => {
         onChange={() => {}}
       />,
     );
-    expect(hourInput().value).toBe("08");
+    expect(hourInput().value).toBe("8");
   });
 });
 
 describe("TimePicker — valeurs par défaut sans defaultValue/value", () => {
   it("24h : 00:00 par défaut", () => {
     render(<TimePicker format="24" />);
-    expect(hourInput().value).toBe("00");
-    expect(minuteInput().value).toBe("00");
+    expect(hourInput().value).toBe("0");
+    expect(minuteInput().value).toBe("0");
   });
 
   it("12h : 01:00 AM par défaut (borne min = 1)", () => {
     render(<TimePicker format="12" />);
-    expect(hourInput().value).toBe("01");
+    expect(hourInput().value).toBe("1");
     const [am] = document.querySelectorAll(".segmented-item");
     expect(am).toHaveClass("active");
   });
