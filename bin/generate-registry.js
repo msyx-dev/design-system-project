@@ -25,6 +25,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { extractReactClasses } = require('./lib/extract-react-classes');
 
 // ─── Chemins ──────────────────────────────────────────────────────────────────
 
@@ -545,75 +546,9 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.cal-next', // idem .cal-prev — #760
 ]);
 
-/**
- * Extrait les classes CSS émises par un fichier .tsx (parsing statique).
- * Stratégie ciblée : on cherche uniquement les valeurs de className=
- *   - className="literal classes"
- *   - className={`template ${expr} classes`}
- *   - className={["cls1","cls2",...].filter(...).join(" ")} (tableaux de littéraux)
- * Puis on expanse les segments dynamiques connus via REACT_VARIANT_EXPANSIONS.
- * @param {string} tsx   contenu du fichier .tsx
- * @returns {Set<string>} classes avec le point (ex. '.btn-primary')
- */
-function extractReactClasses(tsx) {
-  const set = new Set();
-
-  /**
-   * Traite une valeur brute de className (littérale ou template) :
-   * extrait les tokens kebab ou mono-mots whitelist, et expanse les segments dynamiques connus.
-   */
-  function processClassValue(raw) {
-    // a) tokens littéraux kebab ou mono-mots whitelist
-    for (const tok of raw.split(/[\s${}()`]+/).filter(Boolean)) {
-      // Ignorer les tokens qui ressemblent à du JS (contiennent [, ", etc.)
-      if (tok.includes('"') || tok.includes('[') || tok.includes('.')) continue;
-      if (REACT_KNOWN_SINGLE.has(tok)) {
-        set.add('.' + tok);
-      } else if (/^[a-z][a-z0-9-]*$/.test(tok) && tok.includes('-') && !tok.endsWith('-')) {
-        // Filtre : un token se terminant par '-' ou '--' est un préfixe partiel
-        // (ex. "login-card--" avant le ${variant}) → pas une classe valide.
-        set.add('.' + tok);
-      }
-    }
-    // b) variants dynamiques `prefix-${expr}` → expansion via table
-    const DYN_RE = /([a-z][a-z0-9-]*-)\$\{([^}]+)\}/g;
-    let d;
-    while ((d = DYN_RE.exec(raw)) !== null) {
-      const key = d[1] + '${' + d[2].trim() + '}';
-      const values = REACT_VARIANT_EXPANSIONS[key];
-      if (values) {
-        for (const v of values) set.add('.' + d[1] + v);
-      }
-    }
-  }
-
-  // 1. className="literal string"
-  const LITERAL_RE = /className="([^"]*)"/g;
-  let m;
-  while ((m = LITERAL_RE.exec(tsx)) !== null) {
-    processClassValue(m[1]);
-  }
-
-  // 2. className={`template string`}  (backtick à l'intérieur de className={...})
-  const TEMPLATE_RE = /className=\{`([^`]*)`\}/g;
-  while ((m = TEMPLATE_RE.exec(tsx)) !== null) {
-    processClassValue(m[1]);
-  }
-
-  // 3. className={[...].filter(...).join(...)} — tableaux de littéraux de chaînes
-  //    On extrait tous les "string literals" entre crochets qui suivent className={
-  const ARRAY_RE = /className=\{\[([^\]]*)\]/g;
-  while ((m = ARRAY_RE.exec(tsx)) !== null) {
-    const arrayContent = m[1];
-    const STR_INSIDE_RE = /"([^"]+)"|'([^']+)'|`([^`]+)`/g;
-    let s;
-    while ((s = STR_INSIDE_RE.exec(arrayContent)) !== null) {
-      processClassValue(s[1] ?? s[2] ?? s[3] ?? '');
-    }
-  }
-
-  return set;
-}
+// extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
+// (#747, testable en isolation). Voir ce fichier pour la doc + la cause racine
+// du bug BEM (classe de caractères sans `_`).
 
 const reactPhantoms = [];   // classe React absente du CSS réel
 const reactDrift   = [];    // composant ported dont le marquage est incohérent
@@ -629,7 +564,8 @@ if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) 
       .filter(f => f.endsWith('.tsx') && !f.endsWith('.test.tsx'));
     const emitted = new Set();
     for (const f of tsxFiles) {
-      for (const c of extractReactClasses(fs.readFileSync(path.join(compDir, f), 'utf8'))) {
+      const reactClassOpts = { knownSingle: REACT_KNOWN_SINGLE, variantExpansions: REACT_VARIANT_EXPANSIONS };
+      for (const c of extractReactClasses(fs.readFileSync(path.join(compDir, f), 'utf8'), reactClassOpts)) {
         emitted.add(c);
       }
     }
