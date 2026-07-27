@@ -4,6 +4,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## Unreleased (next alpha)
+
+### Added
+- **`<ContextMenu>` : navigation clavier du sous-menu, parité #750 (#773)** — la limite « sous-menu au survol uniquement, ouverture clavier impossible » (#468) est **levée** : `.context-submenu` a désormais une classe d'état **`.show`** côté vanilla (`initContextMenu`, #750) et le wrapper React la reproduit à l'identique. Roving tabindex par niveau de menu (un seul item du niveau courant à `tabindex=0`, racine et sous-menu indépendants) ; `ArrowRight`/`Entrée`/`Espace` sur un item porteur d'un sous-menu (`aria-haspopup="menu"`, était `"true"`) **ouvre systématiquement** le sous-menu — pose `.show` sur `.context-submenu` + `aria-expanded="true"` sur l'item parent — et focus impérativement son premier item (**jamais** d'activation directe de `onSelect` au clavier pour un item porteur d'un sous-menu, calque exact `initContextMenu` qui n'appelle `item.click()` que pour les items SANS sous-menu) ; `ArrowLeft` referme le sous-menu et rend le focus à l'item parent ; `Escape` referme d'abord le sous-menu ouvert le plus profond (le menu racine reste `.show`), sinon tout le menu (cascade, calque `initContextMenu`).
+  - **`stopPropagation()` obligatoire** sur les handlers de sous-menu : `.context-submenu` est un descendant DOM du `.context-menu-item` parent (contrainte HTML — un `<button>` ne peut pas contenir de contenu interactif), donc un `keydown` sur un sous-item remonte AUSSI au `onKeyDown` du parent sans elle, provoquant une double navigation (bug intercepté par les tests avant merge, pas en prod).
+  - Tests dédiés assertant `.show` **dans les deux sens** (présente à l'ouverture clavier, absente à la fermeture `ArrowLeft`/`Escape`) — pas seulement l'ARIA, rejeu du principe anti-`<ActionMenu>`/`<Graph>`.
+  - 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
+
 ## v3.0.0-alpha.26 — 2026-07-27 — Sprint 4 « Parité React — fin de milestone » : JsonViewer, SplitPane, Calendar, TimePicker (#596/#595/#760/#761)
 
 > 4 nouveaux composants portés, release consolidée en fin de sprint (versionnage volontairement différé ticket par ticket, cf. #314). **Ce lot solde le milestone « Parité React » (Epic #396, 78/78 sous-issues).**
@@ -69,7 +77,7 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 - **`<SegmentedControl>`** : garde-fou roving tabindex (#743, review adversariale F4 de #613/#742) — si `value` ne correspond à aucune `option.value`, tous les boutons tombaient à `tabIndex={-1}` et le `radiogroup` devenait inatteignable au clavier. Désormais la première option non `disabled` reçoit `tabIndex={0}` (`aria-checked` reste `false`) ; si toutes les options sont `disabled`, aucun `tabIndex={0}` n'est posé (groupe inerte). Aligné sur le garde-fou déjà présent côté vanilla (`initSegmentedControls`, `shared/components.js`).
 
 ### Notes
-- **Limite assumée** : sous-menu ouvert au survol CSS uniquement — `overlays.css` n'expose aucune règle d'état sur `.context-submenu` (seulement `:hover >`), l'ouverture clavier du sous-menu est donc hors périmètre (CSS nouveau interdit dans ce ticket). Ticket de suite à créer côté DS CSS.
+- ~~**Limite assumée** : sous-menu ouvert au survol CSS uniquement — `overlays.css` n'expose aucune règle d'état sur `.context-submenu` (seulement `:hover >`), l'ouverture clavier du sous-menu est donc hors périmètre (CSS nouveau interdit dans ce ticket). Ticket de suite à créer côté DS CSS.~~ **Levée** : `overlays.css` expose désormais `.context-submenu.show` (#750, DS 2.117.0) et le wrapper React porte la navigation clavier correspondante — voir « Unreleased (next alpha) » ci-dessus (#773). `aria-haspopup` du parent est passé de `"true"` à `"menu"` à cette occasion (parité vanilla).
 - Pas de portal : rendu in-place, `position:fixed` peut être décalé par un ancêtre `transform`/`filter`/`contain` (comportement CSS standard).
 - Registre : `REACT_TO_REGISTRY:{ContextMenu:'context-menu'}` + entrée `context-menu` passée en `react:"ported"` (même PR, DS-PRINCIPLES §8.1).
 - 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
