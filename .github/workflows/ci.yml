@@ -90,6 +90,17 @@ jobs:
           chmod +x shared/check-components.sh
           ./shared/check-components.sh shared/css
         continue-on-error: true
+      # Garde-fou « classe posee par le JS mais absente du CSS partage » (#765).
+      # warn-only pour cette 1ere version (objectif = produire l'inventaire,
+      # pas bloquer) — un passage --strict bloquant viendra une fois la dette
+      # resorbee (cf. #749/#763/#596, meme defaut recurrent).
+      - name: Check dead classes -- JS pose une classe absente du CSS (#765, warn-only)
+        run: node bin/check-dead-classes.js
+        continue-on-error: true
+      - name: Run dead classes gate script tests (#765)
+        run: |
+          chmod +x tests/test-check-dead-classes.sh
+          ./tests/test-check-dead-classes.sh
       - name: Registry validation — phantoms (#516) + React parity (#523) + frontière (#511)
         run: node bin/generate-registry.js --check
       # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
