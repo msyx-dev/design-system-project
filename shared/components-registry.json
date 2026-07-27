@@ -1,7 +1,7 @@
 {
   "version": "2.118.0",
   "generated": {
-    "at": "2026-07-27T12:14:48.987Z",
+    "at": "2026-07-27T12:16:29.488Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -505,7 +505,7 @@
         ".tab"
       ],
       "jsInit": "initComponents",
-      "example": "<div class=\"tabs\" role=\"tablist\">\n  <button class=\"tab active\" role=\"tab\" aria-selected=\"true\" data-tab=\"tab-1\">Aperçu</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-2\">Détails</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tab-3\">Historique</button>\n</div>\n<div id=\"tab-1\" role=\"tabpanel\">Contenu de l'aperçu</div>\n<div id=\"tab-2\" role=\"tabpanel\" hidden>Contenu des détails</div>",
+      "example": "<div class=\"tabs\" role=\"tablist\">\n  <button class=\"tab active\" role=\"tab\" aria-selected=\"true\">Aperçu</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\">Détails</button>\n  <button class=\"tab\" role=\"tab\" aria-selected=\"false\">Historique</button>\n</div>\n<div id=\"tab-1\" role=\"tabpanel\">Contenu de l'aperçu</div>\n<div id=\"tab-2\" role=\"tabpanel\" hidden>Contenu des détails</div>",
       "react": "ported",
       "module": [
         "shared/css/components/navigation.css",
@@ -599,7 +599,7 @@
         ".copy-btn"
       ],
       "jsInit": "initCopyButtons",
-      "example": "<button class=\"copy-btn\" data-copy-target=\"texte-a-copier\" aria-label=\"Copier\">Copier</button>\n<span id=\"texte-a-copier\" style=\"display:none\">Texte copié dans le presse-papiers</span>",
+      "example": "<button class=\"copy-btn\" data-copy=\"Texte à copier\" aria-label=\"Copier\">\n  <span class=\"copy-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"2\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"></rect><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path></svg></span>\n  Copier\n  <span class=\"copy-tooltip\">Copie !</span>\n</button>",
       "react": "pending",
       "module": [
         "shared/css/components/interactive.css"
@@ -629,7 +629,7 @@
         ".rating-star"
       ],
       "jsInit": "initRating",
-      "example": "<div class=\"rating\" data-rating=\"4\" data-max=\"5\" aria-label=\"Note : 4 sur 5\">\n  <span class=\"rating-star\" data-value=\"1\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"2\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"3\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"4\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"5\">&#9733;</span>\n</div>",
+      "example": "<div class=\"rating\" data-value=\"4\" data-max=\"5\" aria-label=\"Note : 4 sur 5\">\n  <span class=\"rating-star\" data-value=\"1\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"2\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"3\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"4\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"5\">&#9733;</span>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/feedback.css"
@@ -949,7 +949,7 @@
         ".carousel-dot"
       ],
       "jsInit": "initCarousel",
-      "example": "<div class=\"carousel\">\n  <div class=\"carousel-track\">\n    <div class=\"carousel-slide\">Diapo 1</div>\n    <div class=\"carousel-slide\">Diapo 2</div>\n    <div class=\"carousel-slide\">Diapo 3</div>\n  </div>\n  <button class=\"carousel-btn\" data-dir=\"prev\" aria-label=\"Précédent\">&#8592;</button>\n  <button class=\"carousel-btn\" data-dir=\"next\" aria-label=\"Suivant\">&#8594;</button>\n  <div class=\"carousel-dots\">\n    <button class=\"carousel-dot active\" aria-label=\"Diapo 1\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 2\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 3\"></button>\n  </div>\n</div>",
+      "example": "<div class=\"carousel\">\n  <div class=\"carousel-track\">\n    <div class=\"carousel-slide\">Diapo 1</div>\n    <div class=\"carousel-slide\">Diapo 2</div>\n    <div class=\"carousel-slide\">Diapo 3</div>\n  </div>\n  <button class=\"carousel-btn carousel-btn-prev\" aria-label=\"Précédent\">&#8592;</button>\n  <button class=\"carousel-btn carousel-btn-next\" aria-label=\"Suivant\">&#8594;</button>\n  <div class=\"carousel-dots\">\n    <button class=\"carousel-dot active\" aria-label=\"Diapo 1\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 2\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 3\"></button>\n  </div>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/media.css",
@@ -1093,7 +1093,7 @@
         ".counter-label"
       ],
       "jsInit": "initAnimatedCounters",
-      "example": "<div class=\"counter\" data-counter-target=\"2847\" data-counter-duration=\"1200\">\n  <span class=\"counter-prefix\">+</span>\n  <span class=\"counter-value\">0</span>\n  <span class=\"counter-suffix\"> utilisateurs</span>\n  <div class=\"counter-label\">Inscrits ce mois</div>\n</div>",
+      "example": "<div class=\"counter\" data-target=\"2847\">\n  <span class=\"counter-prefix\">+</span>\n  <span class=\"counter-value\">0</span>\n  <span class=\"counter-suffix\"> utilisateurs</span>\n  <div class=\"counter-label\">Inscrits ce mois</div>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/data.css"
@@ -1109,7 +1109,7 @@
         ".context-menu-divider"
       ],
       "jsInit": "initContextMenu",
-      "example": "<!-- Zone déclenchant le menu contextuel au clic droit -->\n<div data-context-menu=\"ctx-exemple\" style=\"padding:2rem;border:1px dashed var(--border);border-radius:var(--radius-sm);\">\n  Clic droit pour ouvrir le menu\n</div>\n\n<!-- Définition du menu -->\n<div class=\"context-menu\" id=\"ctx-exemple\" hidden>\n  <button class=\"context-menu-item\">&#9998; Renommer</button>\n  <button class=\"context-menu-item\">&#128275; Partager</button>\n  <hr class=\"context-menu-divider\">\n  <button class=\"context-menu-item\" style=\"color:var(--danger);\">&#128465; Supprimer</button>\n</div>",
+      "example": "<!-- Zone déclenchant le menu contextuel au clic droit -->\n<div class=\"context-target\" style=\"padding:2rem;border:1px dashed var(--border);border-radius:var(--radius-sm);\">\n  Clic droit pour ouvrir le menu\n</div>\n\n<!-- Définition du menu -->\n<div class=\"context-menu\" id=\"ctx-exemple\" hidden>\n  <button class=\"context-menu-item\">&#9998; Renommer</button>\n  <button class=\"context-menu-item\">&#128275; Partager</button>\n  <hr class=\"context-menu-divider\">\n  <button class=\"context-menu-item\" style=\"color:var(--danger);\">&#128465; Supprimer</button>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/menu.css",
@@ -1161,7 +1161,7 @@
         ".video-card"
       ],
       "jsInit": "initVideoEmbeds",
-      "example": "<div class=\"video-card\">\n  <div class=\"video-embed\" data-video-id=\"dQw4w9WgXcQ\" data-video-provider=\"youtube\">\n    <img src=\"https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg\" alt=\"Aperçu de la vidéo\">\n    <div class=\"video-embed-overlay\">\n      <button class=\"video-embed-play\" aria-label=\"Lire la vidéo\">&#9654;</button>\n    </div>\n  </div>\n</div>",
+      "example": "<div class=\"video-card\">\n  <div class=\"video-embed\" data-src=\"https://www.youtube.com/embed/dQw4w9WgXcQ\" aria-label=\"Lecteur vidéo\">\n    <img src=\"https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg\" alt=\"Aperçu de la vidéo\">\n    <div class=\"video-embed-overlay\">\n      <button class=\"video-embed-play\" aria-label=\"Lire la vidéo\">&#9654;</button>\n    </div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/media.css"
