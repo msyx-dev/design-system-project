@@ -1,5 +1,17 @@
 # Releases
 
+## 2.119.1 — 2026-07-27 — `--example-strict` bloquant + résiduels du registre et du catalogue (#789)
+
+> Suite directe de #781 (registre) et #748 (validateur warn-only) : une fois l'inventaire retombé à 0 défaut, la validation `example` du registre bascule en bloquant. Deux résiduels trouvés au passage — un exemple `fab` cassant et deux `cssClasses` incomplètes — et une correction plus large du catalogue `init*` de `shared/components.js`, qui sert de table des matières au fichier et avait dérivé sur près d'un quart de ses entrées.
+
+### Changed
+- **`bin/generate-registry.js`** (#789) : validation `example` du registre bascule de warn-only à **bloquante** via `--example-strict`, câblé en CI. Vérifié vert avant bascule (0 défaut restant depuis #781). Limite documentée : le validateur vérifie que les classes citées *existent* dans le DS, pas qu'elles *suffisent* à faire fonctionner le composant — une détection des classes réellement requises a été étudiée puis écartée (analyse statique non fiable : ~175 sites `querySelector`, faux positifs sur le `jsInit` umbrella, faux négatifs sur `carousel`).
+
+### Fixed
+- **`shared/components-registry.json` — `fab`** (#789) : `example` corrigé, il ne référençait pas `.fab-trigger` — sans cette classe, `initFAB()` sort silencieusement et le composant reste inerte pour le consumer qui copie l'exemple tel quel.
+- **`shared/components-registry.json` — `cssClasses` complétées** (#789) : `context-menu` (`.context-target`, le sélecteur d'accroche réel consommé par `initContextMenu()`) et `carousel` (`.carousel-btn-prev`/`.carousel-btn-next`).
+- **`shared/components.js` (catalogue `init*` en tête de fichier) / `tests/test-validate-example.sh`** (#789) : 13 mentions périmées sur les 58 que compte le catalogue corrigées (22 %), dont 11 classes qui n'existaient nulle part ailleurs dans le dépôt (`.modal-trigger`, `.copy-btn`, `.segmented-control`, `.otp-input`, `.tree-view`, `.decision-tree`, `.notification-center`, `.inline-edit`, `.sidebar-rail`, `.context-menu-trigger`, `.command-palette-trigger`…). Ce bloc sert de table des matières au fichier ; sa dérive avait déjà produit deux specs erronées. Même correction propagée à `tests/test-validate-example.sh`.
+
 ## 2.119.0 — 2026-07-27 — Documentation boutons + registre fiabilisé + amorce de tests vanilla (#777, #781, #744)
 
 > Sprint 7. Deux corrections documentaires qui referment de la dette identifiée par les garde-fous des sprints précédents (`.btn` sans règle CSS, exemples de code du registre fautifs), et l'amorce d'un chantier attendu de longue date : une première couverture de test pour le JS vanilla, jusqu'ici entièrement non testé.
