@@ -337,3 +337,11 @@ export type {
   CalendarReferenceMonth,
   CalendarLegendItem,
 } from "./components/Calendar/Calendar";
+
+// ─── TimePicker — #761 (parité React) ───
+export { TimePicker } from "./components/TimePicker/TimePicker";
+export type {
+  TimePickerProps,
+  TimePickerFormat,
+  TimePickerPeriod,
+} from "./components/TimePicker/TimePicker";

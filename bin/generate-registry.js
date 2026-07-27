@@ -502,7 +502,8 @@ const REACT_TO_REGISTRY = {
   MentionInput: 'mention',                // #594 — dropdown @ au caret (mirror-div réimplémenté côté package)
   JsonViewer: 'json-viewer',              // #596 — arbre JSON repliable, .json-tree/.json-node--last non émis (dead CSS)
   SplitPane: 'splitter',                  // #595 — panneaux redimensionnables, drag Pointer Events réimplémenté (window.__pointerDrag non disponible côté React)
-  Calendar: 'calendar',                   // #760 — date-picker INLINE single/range ; le time-picker (initTimePicker) n'est PAS couvert (#761, ticket séparé)
+  Calendar: 'calendar',                   // #760 — date-picker INLINE single/range ; le time-picker (initTimePicker) EST couvert par la clé TimePicker ci-dessous (#761), même entrée registre (dette de granularité suivie en #770)
+  TimePicker: 'calendar',                 // #761 — time-picker 24h/12h, co-localisé avec Calendar (#760) dans l'entrée registre 'calendar' (même page/section vanilla, cf. pattern ThemeToggle/ThemeSwitcher ; #770)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
