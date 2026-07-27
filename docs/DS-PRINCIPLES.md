@@ -321,11 +321,17 @@ Dépassement = warn, devient block après stabilisation (post-S31 plan).
 
 Exemples observés cohérents :
 ```
-.btn               .btn-primary        .btn-sm
 .card              .card-icon          .card-link
 .mode-switch       .mode-switch-track  .mode-switch-thumb
 .header-dropdown   .header-dropdown-header  .header-dropdown-item
 ```
+
+**Exception boutons (#777)** : pas de classe root `.btn`. Les variantes de forme
+(`.btn-primary`, `.btn-secondary`, `.btn-ghost`) sont autonomes — chacune porte
+l'intégralité de ses règles (display/padding/radius/typo/transition), et se
+combinent avec des modificateurs de couleur (`.btn-danger`, `.btn-success`,
+`.btn-warning`) et de taille (`.btn-sm`, `.btn-xs`, `.btn-lg`). Cf.
+`shared/CONSUMER_GUIDE.md` § Boutons pour le détail.
 
 ### Modules CSS — un composant = un fichier
 Dans `shared/css/components/` :

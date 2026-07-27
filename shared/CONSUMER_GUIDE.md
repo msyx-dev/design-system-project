@@ -477,7 +477,7 @@ Utility pour SVG inline dans conteneur flex. Empêche l'écrasement du SVG par l
 
 Exemple :
 ```html
-<button class="btn btn-primary">
+<button class="btn-primary">
   <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24">...</svg>
   <span>Ajouter</span>
 </button>
@@ -495,6 +495,42 @@ Cas d'usage typiques : bouton avec icône + texte, cellule de tableau avec icôn
 ```
 
 > Note : `.icon-svg` ne définit pas de taille — toujours spécifier `width` et `height` sur le `<svg>` pour éviter le layout shift.
+
+---
+
+## Boutons — structure des classes (#777)
+
+**Pas de classe root `.btn`.** Chaque variante de forme est autonome et porte
+l'intégralité de ses propres règles (display/padding/radius/typo/transition) —
+il n'existe aucune classe de base à ajouter en plus de la variante.
+
+```html
+<!-- Correct -->
+<button class="btn-primary">Valider</button>
+
+<!-- Incorrect — .btn n'a aucune règle CSS -->
+<button class="btn btn-primary">Valider</button>
+```
+
+Trois familles de classes, combinables :
+
+| Famille | Classes | Rôle |
+|---|---|---|
+| Forme (autonome, une seule à la fois) | `.btn-primary`, `.btn-secondary`, `.btn-ghost` | Porte display/padding/radius/typo/transition — base visuelle du bouton |
+| Couleur (modificateur) | `.btn-danger`, `.btn-success`, `.btn-warning`, `.btn-outline-danger` | Change la couleur/le gradient — se combine avec `.btn-primary`/`.btn-secondary`/`.btn-ghost` |
+| Taille (modificateur) | `.btn-sm`, `.btn-xs`, `.btn-lg` | Ajuste padding/font-size/border-radius |
+
+Autres classes du même module (`buttons.css`), hors ces trois familles :
+- `.btn-icon` (+ `.btn-icon--danger`) — bouton icône seule, 44×44 minimum
+- `.btn-icon-left` / `.btn-icon-right` — wrapper icône dans un bouton icône+texte
+- `.btn-loading` — état chargement (spinner `currentColor`)
+- `.btn-group` — conteneur CSS-only qui accole des `.btn-*` horizontalement
+- `.split-button` / `.split-button__caret` / `.split-button__menu` — bouton d'action + menu caret
+
+**Exemple combiné** (forme + couleur + taille) :
+```html
+<button class="btn-primary btn-danger btn-sm">Supprimer</button>
+```
 
 ---
 
