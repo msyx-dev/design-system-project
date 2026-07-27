@@ -502,6 +502,7 @@ const REACT_TO_REGISTRY = {
   MentionInput: 'mention',                // #594 — dropdown @ au caret (mirror-div réimplémenté côté package)
   JsonViewer: 'json-viewer',              // #596 — arbre JSON repliable, .json-tree/.json-node--last non émis (dead CSS)
   SplitPane: 'splitter',                  // #595 — panneaux redimensionnables, drag Pointer Events réimplémenté (window.__pointerDrag non disponible côté React)
+  Calendar: 'calendar',                   // #760 — date-picker INLINE single/range ; le time-picker (initTimePicker) n'est PAS couvert (#761, ticket séparé)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -539,6 +540,8 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.selected',       // forms.css:53 .dropdown-option.selected (compound, non capturé)
   '.dropdown-value', // formulaires.html / components.js — span JS-hook sans règle CSS dédiée (hérite .dropdown-trigger)
   '.split-pane--dragging', // splitter.css — AUCUNE règle CSS aujourd'hui (bug DS suivi séparément, #763). Émise quand même côté React pour la parité vanilla ; #763 la rendra visible des deux côtés simultanément.
+  '.cal-prev', // templates.css:84 — hook JS query-selector du vanilla (initCalendar), AUCUNE règle .cal-prev dédiée : le style vient de .cal-nav button (descendant, sans classe). Émise côté React pour parité markup (#760).
+  '.cal-next', // idem .cal-prev — #760
 ]);
 
 /**
