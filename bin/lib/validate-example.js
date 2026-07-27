@@ -15,6 +15,19 @@
  *       autre composant, ou cssClasses obsolètes).
  *   (B) findPhantomDataAttrs() — tout data-* cité dans l'example doit être
  *       lu par le JS du DS (littéral ou dataset.xCamel).
+ *
+ * LIMITE CONNUE, évaluée et NON implémentée (#789) : (C) détecter les
+ * sélecteurs que `jsInit` interroge de façon OBLIGATOIRE (absence => sortie
+ * de fonction) et exiger leur présence dans `example` — aurait attrapé
+ * `fab` (`.fab-trigger` manquant) automatiquement. Non fiable en pratique :
+ * `jsInit` umbrella partagé (`initComponents`, 6 entrées) rend l'attribution
+ * impossible, ET l'idiome de garde (`if (!x) return`) est absent pour des
+ * sélecteurs pourtant réellement importants (ex. `.carousel-btn-prev`,
+ * défaut réel trouvé en #789 mais que cette règle n'aurait PAS détecté).
+ * Signal syntaxique trop faible pour discriminer requis/optionnel de façon
+ * fiable sur ~60 fonctions `init*` hétérogènes → volontairement absent.
+ * Détail complet : bin/generate-registry.js, section « Validation du champ
+ * example (#748) », paragraphe (C).
  */
 
 'use strict';

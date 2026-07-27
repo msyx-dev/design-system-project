@@ -12,9 +12,11 @@
 #           absent du JS (ni litteral, ni dataset.xCamel) est signale ; un
 #           data-* reellement lu (litteral OU dataset.xCamel) ne l'est pas.
 #   Run C : reproduction du cas reel #468 (context-menu) -- data-context-menu
-#           fantome, confirmee par une fixture JS qui n'y fait AUCUNE
-#           reference (contrairement au vrai shared/components.js qui, lui,
-#           utilise .context-menu-trigger, jamais data-context-menu).
+#           fantome, confirmee par une fixture JS isolee qui n'y fait AUCUNE
+#           reference (le vrai shared/components.js n'a jamais lu
+#           data-context-menu non plus -- son vrai selecteur d'accroche est
+#           .context-target, cf. #789 qui a corrige la mention perimee
+#           .context-menu-trigger portee par ce meme commentaire jusque-la).
 
 set -uo pipefail
 
@@ -87,7 +89,7 @@ echo "Test C: reproduction du cas reel #468 (context-menu, data-context-menu fan
 run_case "data-context-menu absent d une fixture JS qui ne le lit jamais -> signale" '
 const { extractDataAttrsFromHtml, findPhantomDataAttrs } = require("./bin/lib/validate-example.js");
 const example = "<div data-context-menu=\"ctx-exemple\">Clic droit</div>";
-const jsFixture = "document.querySelectorAll(\".context-menu-trigger\").forEach(function(el){});";
+const jsFixture = "document.querySelectorAll(\".context-target\").forEach(function(el){});";
 const cited = extractDataAttrsFromHtml(example);
 const phantoms = findPhantomDataAttrs(cited, jsFixture);
 console.log(phantoms.length === 1 && phantoms[0] === "data-context-menu" ? "OK" : "ECHEC : " + JSON.stringify(phantoms));
