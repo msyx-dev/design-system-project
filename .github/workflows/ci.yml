@@ -103,6 +103,19 @@ jobs:
           ./tests/test-check-dead-classes.sh
       - name: Registry validation — phantoms (#516) + React parity (#523) + frontière (#511)
         run: node bin/generate-registry.js --check
+      - name: extractReactClasses BEM classes unit tests (#747)
+        run: |
+          chmod +x tests/test-extract-react-classes-bem.sh
+          ./tests/test-extract-react-classes-bem.sh
+      # Validation du champ `example` du registre (#748) -- warn-only pour
+      # cette 1ere version (objectif = produire l'inventaire des `example`
+      # fautifs, pas bloquer -- meme defaut recurrent que #765/#511).
+      # La bascule bloquante est --example-strict (node bin/generate-registry.js
+      # --check --example-strict), a activer une fois l'inventaire trie.
+      - name: Registry example field validation unit tests (#748)
+        run: |
+          chmod +x tests/test-validate-example.sh
+          ./tests/test-validate-example.sh
       # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
       - name: Nav sections manifest validation (#528)
         run: node bin/generate-nav-sections.js --check
