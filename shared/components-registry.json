@@ -1,7 +1,7 @@
 {
   "version": "2.118.0",
   "generated": {
-    "at": "2026-07-27T12:12:43.606Z",
+    "at": "2026-07-27T12:14:48.987Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -263,7 +263,7 @@
       ],
       "jsInit": "initDataGrids",
       "notes": "Tri : appliquer .data-grid-sortable sur <th> + .data-grid-sort-icon sur l'icone enfant. Le JS gere aria-sort=ascending|descending|none au clic. Convention canonique DS — ne pas utiliser de classe non-prefixee comme .sort-icon. | Sticky col : appliquer .data-grid-col-sticky-end sur le <th> ET tous les <td> de la colonne a pinner (typiquement la derniere colonne Actions).",
-      "example": "<div class=\"data-grid-wrap\">\n  <table class=\"data-grid\" data-grid-id=\"exemple\">\n    <thead>\n      <tr class=\"data-grid-header-row\">\n        <th class=\"data-grid-sortable\">Nom <span class=\"data-grid-sort-icon\">&#8597;</span></th>\n        <th>Statut</th>\n        <th class=\"data-grid-col-sticky-end\">Actions</th>\n      </tr>\n      <tr class=\"data-grid-filter-row\">\n        <th><input class=\"data-grid-filter\" type=\"text\" placeholder=\"Filtrer...\"></th>\n        <th></th>\n        <th class=\"data-grid-col-sticky-end\"></th>\n      </tr>\n    </thead>\n    <tbody class=\"data-grid-body\">\n      <tr>\n        <td>Exemple</td>\n        <td><span class=\"badge badge-success\">Actif</span></td>\n        <td class=\"data-grid-col-sticky-end\"><button class=\"btn-icon btn-icon--danger\" aria-label=\"Supprimer\">&#128465;</button></td>\n      </tr>\n    </tbody>\n    <tfoot class=\"data-grid-footer\">\n      <tr><td colspan=\"3\" class=\"pagination-info\">1 résultat</td></tr>\n    </tfoot>\n  </table>\n</div>",
+      "example": "<div class=\"data-grid-wrap\">\n  <table class=\"data-grid\">\n    <thead>\n      <tr class=\"data-grid-header-row\">\n        <th class=\"data-grid-sortable\">Nom <span class=\"data-grid-sort-icon\">&#8597;</span></th>\n        <th>Statut</th>\n        <th class=\"data-grid-col-sticky-end\">Actions</th>\n      </tr>\n      <tr class=\"data-grid-filter-row\">\n        <th><input class=\"data-grid-filter\" type=\"text\" placeholder=\"Filtrer...\"></th>\n        <th></th>\n        <th class=\"data-grid-col-sticky-end\"></th>\n      </tr>\n    </thead>\n    <tbody class=\"data-grid-body\">\n      <tr>\n        <td>Exemple</td>\n        <td><span class=\"badge badge-success\">Actif</span></td>\n        <td class=\"data-grid-col-sticky-end\"><button class=\"btn-icon btn-icon--danger\" aria-label=\"Supprimer\">&#128465;</button></td>\n      </tr>\n    </tbody>\n    <tfoot class=\"data-grid-footer\">\n      <tr><td colspan=\"3\" class=\"pagination-info\">1 résultat</td></tr>\n    </tfoot>\n  </table>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/tables.css",
@@ -720,7 +720,7 @@
         ".dropdown-tag"
       ],
       "jsInit": "initComponents",
-      "example": "<div class=\"dropdown\" data-dropdown-id=\"dd-exemple\">\n  <button class=\"dropdown-trigger btn-secondary\" type=\"button\">Sélectionner...</button>\n  <div class=\"dropdown-menu\">\n    <div class=\"dropdown-search\"><input type=\"text\" placeholder=\"Filtrer...\"></div>\n    <div class=\"dropdown-option\" data-value=\"opt1\">Option 1</div>\n    <div class=\"dropdown-option\" data-value=\"opt2\">Option 2</div>\n    <div class=\"dropdown-option\" data-value=\"opt3\">Option 3</div>\n  </div>\n</div>",
+      "example": "<div class=\"dropdown\">\n  <button class=\"dropdown-trigger btn-secondary\" type=\"button\">Sélectionner...</button>\n  <div class=\"dropdown-menu\">\n    <div class=\"dropdown-search\"><input type=\"text\" placeholder=\"Filtrer...\"></div>\n    <div class=\"dropdown-option\" data-value=\"opt1\">Option 1</div>\n    <div class=\"dropdown-option\" data-value=\"opt2\">Option 2</div>\n    <div class=\"dropdown-option\" data-value=\"opt3\">Option 3</div>\n  </div>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/forms.css",
@@ -759,7 +759,7 @@
         ".slider-disabled"
       ],
       "jsInit": "initSliders",
-      "example": "<div class=\"slider-group\" data-slider-id=\"slider-exemple\">\n  <div class=\"slider-header\">\n    <label class=\"input-label\">Opacité</label>\n    <span class=\"slider-value-display\">75%</span>\n  </div>\n  <div class=\"slider-track\">\n    <input class=\"slider-value\" type=\"range\" min=\"0\" max=\"100\" value=\"75\" aria-label=\"Opacité\">\n  </div>\n</div>",
+      "example": "<div class=\"slider-group\">\n  <div class=\"slider-header\">\n    <label class=\"input-label\">Opacité</label>\n    <span class=\"slider-value-display\">75%</span>\n  </div>\n  <div class=\"slider-track\">\n    <input class=\"slider-value\" type=\"range\" min=\"0\" max=\"100\" value=\"75\" aria-label=\"Opacité\">\n  </div>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
@@ -796,7 +796,7 @@
         ".search-compact"
       ],
       "jsInit": "initSearchInputs",
-      "example": "<div class=\"search-input-wrap\" data-search-id=\"search-exemple\">\n  <span class=\"search-icon\" aria-hidden=\"true\">&#128269;</span>\n  <input class=\"search-input\" type=\"search\" placeholder=\"Rechercher...\" aria-label=\"Recherche\">\n  <button class=\"search-clear\" aria-label=\"Effacer la recherche\" hidden>&#10005;</button>\n  <div class=\"search-suggestions\" hidden role=\"listbox\">\n    <div class=\"search-item\" role=\"option\">Résultat 1</div>\n    <div class=\"search-item\" role=\"option\">Résultat 2</div>\n  </div>\n</div>",
+      "example": "<div class=\"search-input-wrap\">\n  <span class=\"search-icon\" aria-hidden=\"true\">&#128269;</span>\n  <input class=\"search-input\" type=\"search\" placeholder=\"Rechercher...\" aria-label=\"Recherche\">\n  <button class=\"search-clear\" aria-label=\"Effacer la recherche\" hidden>&#10005;</button>\n  <div class=\"search-suggestions\" hidden role=\"listbox\">\n    <div class=\"search-item\" role=\"option\">Résultat 1</div>\n    <div class=\"search-item\" role=\"option\">Résultat 2</div>\n  </div>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
@@ -949,7 +949,7 @@
         ".carousel-dot"
       ],
       "jsInit": "initCarousel",
-      "example": "<div class=\"carousel\" data-carousel-id=\"carousel-exemple\">\n  <div class=\"carousel-track\">\n    <div class=\"carousel-slide\">Diapo 1</div>\n    <div class=\"carousel-slide\">Diapo 2</div>\n    <div class=\"carousel-slide\">Diapo 3</div>\n  </div>\n  <button class=\"carousel-btn\" data-dir=\"prev\" aria-label=\"Précédent\">&#8592;</button>\n  <button class=\"carousel-btn\" data-dir=\"next\" aria-label=\"Suivant\">&#8594;</button>\n  <div class=\"carousel-dots\">\n    <button class=\"carousel-dot active\" aria-label=\"Diapo 1\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 2\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 3\"></button>\n  </div>\n</div>",
+      "example": "<div class=\"carousel\">\n  <div class=\"carousel-track\">\n    <div class=\"carousel-slide\">Diapo 1</div>\n    <div class=\"carousel-slide\">Diapo 2</div>\n    <div class=\"carousel-slide\">Diapo 3</div>\n  </div>\n  <button class=\"carousel-btn\" data-dir=\"prev\" aria-label=\"Précédent\">&#8592;</button>\n  <button class=\"carousel-btn\" data-dir=\"next\" aria-label=\"Suivant\">&#8594;</button>\n  <div class=\"carousel-dots\">\n    <button class=\"carousel-dot active\" aria-label=\"Diapo 1\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 2\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 3\"></button>\n  </div>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/media.css",
@@ -1007,7 +1007,7 @@
         ".fab-action-btn"
       ],
       "jsInit": "initFAB",
-      "example": "<button class=\"fab\" aria-label=\"Créer\" data-fab-id=\"fab-exemple\">&#43;</button>\n\n<!-- FAB avec menu d'actions -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\" hidden>\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>",
+      "example": "<button class=\"fab\" aria-label=\"Créer\">&#43;</button>\n\n<!-- FAB avec menu d'actions -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\" hidden>\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>",
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
@@ -1144,7 +1144,7 @@
         ".sortable-handle"
       ],
       "jsInit": "initSortableLists",
-      "example": "<ul class=\"sortable-list\" data-sortable-id=\"sort-exemple\">\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 1\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 2\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 3\n  </li>\n</ul>",
+      "example": "<ul class=\"sortable-list\">\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 1\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 2\n  </li>\n  <li class=\"sortable-item\">\n    <span class=\"sortable-handle\" aria-hidden=\"true\">&#8801;</span>\n    Élément 3\n  </li>\n</ul>",
       "react": "pending",
       "module": [
         "shared/css/components/lists.css"
@@ -1181,7 +1181,7 @@
         ".quiz-poll-results"
       ],
       "jsInit": "initQuiz",
-      "example": "<div class=\"quiz\" data-quiz-id=\"quiz-exemple\">\n  <div class=\"quiz-progress\">\n    <div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:33%\"></div></div>\n  </div>\n  <p class=\"quiz-question\">Quel token utiliser pour la couleur d'accent ?</p>\n  <div class=\"quiz-option\" data-correct=\"true\">var(--accent)</div>\n  <div class=\"quiz-option\">#3b82f6</div>\n  <div class=\"quiz-option\">rgb(59, 130, 246)</div>\n  <div class=\"quiz-feedback\" hidden></div>\n</div>",
+      "example": "<div class=\"quiz\">\n  <div class=\"quiz-progress\">\n    <div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:33%\"></div></div>\n  </div>\n  <p class=\"quiz-question\">Quel token utiliser pour la couleur d'accent ?</p>\n  <div class=\"quiz-option\" data-correct=\"true\">var(--accent)</div>\n  <div class=\"quiz-option\">#3b82f6</div>\n  <div class=\"quiz-option\">rgb(59, 130, 246)</div>\n  <div class=\"quiz-feedback\" hidden></div>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/quiz.css"
@@ -1199,7 +1199,7 @@
         ".before-after-handle"
       ],
       "jsInit": "initBeforeAfter",
-      "example": "<div class=\"before-after\" data-before-after-id=\"ba-exemple\">\n  <div class=\"before-after-before\">\n    <span class=\"before-after-label\">Avant</span>\n    <img src=\"before.jpg\" alt=\"Avant\">\n  </div>\n  <div class=\"before-after-after\">\n    <span class=\"before-after-label\">Après</span>\n    <img src=\"after.jpg\" alt=\"Après\">\n  </div>\n  <div class=\"before-after-handle\" aria-label=\"Glisser pour comparer\"></div>\n</div>",
+      "example": "<div class=\"before-after\">\n  <div class=\"before-after-before\">\n    <span class=\"before-after-label\">Avant</span>\n    <img src=\"before.jpg\" alt=\"Avant\">\n  </div>\n  <div class=\"before-after-after\">\n    <span class=\"before-after-label\">Après</span>\n    <img src=\"after.jpg\" alt=\"Après\">\n  </div>\n  <div class=\"before-after-handle\" aria-label=\"Glisser pour comparer\"></div>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/media.css"
@@ -1257,7 +1257,7 @@
         ".dtree-connector"
       ],
       "jsInit": "initDecisionTree",
-      "example": "<div class=\"dtree\" data-dtree-id=\"dtree-exemple\">\n  <div class=\"dtree-node\" id=\"dtree-root\">\n    <p>Ce projet a-t-il un backend ?</p>\n    <div class=\"dtree-choices\">\n      <button class=\"dtree-choice\" data-next=\"node-yes\">Oui</button>\n      <button class=\"dtree-choice\" data-next=\"node-no\">Non</button>\n    </div>\n  </div>\n  <div class=\"dtree-node\" id=\"node-yes\" hidden>\n    <p>Utiliser FastAPI + PostgreSQL + Prisma.</p>\n  </div>\n  <div class=\"dtree-node\" id=\"node-no\" hidden>\n    <p>Servir avec Caddy file_server statique.</p>\n  </div>\n</div>",
+      "example": "<div class=\"dtree\">\n  <div class=\"dtree-node\" id=\"dtree-root\">\n    <p>Ce projet a-t-il un backend ?</p>\n    <div class=\"dtree-choices\">\n      <button class=\"dtree-choice\" data-next=\"node-yes\">Oui</button>\n      <button class=\"dtree-choice\" data-next=\"node-no\">Non</button>\n    </div>\n  </div>\n  <div class=\"dtree-node\" id=\"node-yes\" hidden>\n    <p>Utiliser FastAPI + PostgreSQL + Prisma.</p>\n  </div>\n  <div class=\"dtree-node\" id=\"node-no\" hidden>\n    <p>Servir avec Caddy file_server statique.</p>\n  </div>\n</div>",
       "react": "pending",
       "module": [
         "shared/css/components/tracker.css"
