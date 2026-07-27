@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.119.0",
+      "date": "2026-07-27",
+      "titre": "Documentation des boutons et exemples du registre fiabilisés",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "La documentation des boutons ne fait plus référence à une classe « .btn » inexistante : les classes .btn-primary, .btn-secondary, .btn-ghost… se suffisent déjà à elles-mêmes."
+        },
+        {
+          "type": "correction",
+          "text": "21 exemples de code du registre de composants pointaient vers des classes ou attributs obsolètes ou inexistants — corrigés, dont celui du bouton de copie qui provoquait une erreur au clic."
+        }
+      ]
+    },
+    {
       "version": "2.118.0",
       "date": "2026-07-27",
       "titre": "Fil d'activité : bouton « Charger plus » corrigé",

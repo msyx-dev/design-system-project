@@ -4,6 +4,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.28 — 2026-07-27 — Correctif critique : `useTheme` perdait le mode clair à chaque rechargement (#785, #783)
+
+> Sprint 7. Un seul correctif fonctionnel, mais un **bug de production** rapporté par un utilisateur externe (cap-transfo, préprod) — traité en priorité. Ce lot ne touche que `packages/react/`, donc aucun bump `@ds-version` de son fait ; le DS CSS a par ailleurs été publié en **2.119.0** dans ce même sprint (#777/#781/#744), voir `../../RELEASES.md`.
+
+### Fixed
+- **`useTheme` : le mode (et le thème) n'étaient jamais appliqués au DOM au montage (#785)** — bug de production. L'effet de montage lisait `localStorage` et mettait à jour l'état React (`setThemeState`/`setModeState`), mais n'appelait jamais `applyThemeAttr`/`applyModeAttr`. React réconciliant les attributs de `<html>` à l'hydratation, le `data-mode` posé par le script anti-FOUC (avant paint) était systématiquement effacé et jamais reposé : **le mode clair était perdu à chaque rechargement de page, dans toutes les apps consommatrices**. Correctif appliqué symétriquement au thème ET au mode (le rapport ne mentionnait que le mode, mais l'omission était identique sur les deux). SSR-safety préservée, défaut implicite conservé (`dark`/`msyx` → attribut absent). Reproduction prouvée avant correctif (version pré-fix restaurée → 2 tests rouges), 15/15 verts après. Nouveaux tests dédiés dans `useTheme.test.tsx`.
+- **`<VirtualList>` : JSDoc corrigée (#783)** — la prémisse du ticket d'origine était fausse (JSDoc prise pour du code) : le composant n'émettait déjà plus le wrapper `.virtual-list-rows` (retiré côté vanilla en #776), seule la documentation en ligne décrivait encore ce markup obsolète. Doc alignée sur le comportement réel, aucun changement de code.
+
 ## v3.0.0-alpha.27 — 2026-07-27 — `<ContextMenu>` : navigation clavier du sous-menu (#773)
 
 > Sprint 6 « Fin de backlog ». Un seul port : la limite a11y assumée du sous-menu contextuel (« ouverture clavier impossible », #468) est levée, en parité avec le correctif vanilla #750 livré en DS 2.117.0. Ce lot ne touche que `packages/react/`, donc aucun bump `@ds-version` de son fait — le DS CSS a par ailleurs été publié en **2.118.0** dans ce même sprint (#775/#776/#770), voir `../../RELEASES.md`.
