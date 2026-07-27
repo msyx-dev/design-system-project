@@ -4,7 +4,9 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
-## Unreleased (next alpha)
+## v3.0.0-alpha.26 — 2026-07-27 — Sprint 4 « Parité React — fin de milestone » : JsonViewer, SplitPane, Calendar, TimePicker (#596/#595/#760/#761)
+
+> 4 nouveaux composants portés, release consolidée en fin de sprint (versionnage volontairement différé ticket par ticket, cf. #314). **Ce lot solde le milestone « Parité React » (Epic #396, 78/78 sous-issues).**
 
 ### Added
 - **`<Calendar>` (#760)** : port React du date-picker INLINE, modes `single` et `range` (`formulaires.html` #calendar, calque `initCalendar` — `shared/components.js:5151-5424`). Le time-picker (`initTimePicker`) n'est **pas** couvert ici (#761, ticket séparé, scindés depuis #628). Émet `.cal-wrap`/`.cal-header`/`.cal-nav`/`.cal-weekdays`/`.cal-grid` (`role="grid"`/`"row"`/`"gridcell"`), grille 42 cellules (6×7, lundi en 1re colonne) construite à la main — **zéro dépendance** (pas de `date-fns`/`dayjs`, comme le vanilla).
@@ -40,6 +42,10 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
   - **Contrôlé/non contrôlé** : `value`/`onChange` vs `defaultValue`, convention alignée sur `<SplitPane ratio/defaultRatio>`. Contrairement au vanilla (`sync()` appelée une fois au montage), `onChange` ne fire qu'après interaction utilisateur — convention du package, le consumer connaît déjà la valeur initiale via `value`/`defaultValue`.
   - Registre : `REACT_TO_REGISTRY:{TimePicker:'calendar'}` — **co-localisé** avec `<Calendar>` (#760) dans la MÊME entrée registre `calendar` (le vanilla ne fait qu'une section pour date-picker + time-picker), pattern déjà établi par `ThemeToggle`/`ThemeSwitcher` et `VersionBadge`/`VersionNotes`. Entrée `calendar` passée en `react:"ported"`.
   - 100 % `packages/react/` — aucun bump `@ds-version`.
+
+### Notes
+- **Milestone « Parité React » soldé** (Epic #396, 78/78 sous-issues fermées) — ce lot de 4 ports clôt le dernier lot restant de la roadmap de parité CSS↔React.
+- 100 % `packages/react/` — aucun bump `@ds-version`, aucune entrée `RELEASES.md`/`CHANGELOG.md` racine (convention #314).
 
 ## v3.0.0-alpha.25 — 2026-07-26 — Sprint 3 « React interactifs » : ContextMenu, Accordion, SplitButton, MentionInput (#468/#461/#600/#594/#743)
 
