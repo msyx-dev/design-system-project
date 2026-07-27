@@ -1314,7 +1314,7 @@
         ".filter-bar-actions"
       ],
       "jsInit": null,
-      "example": "<div class=\"filter-bar\">\n  <select class=\"input\" aria-label=\"Statut\"><option>Statut — Tous</option></select>\n  <input type=\"search\" class=\"input filter-bar-search\" placeholder=\"Rechercher…\" aria-label=\"Recherche\">\n  <div class=\"filter-bar-actions\">\n    <button class=\"btn btn-ghost btn-sm\" type=\"button\">Réinitialiser</button>\n    <button class=\"btn btn-secondary btn-sm\" type=\"button\">Exporter</button>\n  </div>\n</div>",
+      "example": "<div class=\"filter-bar\">\n  <select class=\"input\" aria-label=\"Statut\"><option>Statut — Tous</option></select>\n  <input type=\"search\" class=\"input filter-bar-search\" placeholder=\"Rechercher…\" aria-label=\"Recherche\">\n  <div class=\"filter-bar-actions\">\n    <button class=\"btn-ghost btn-sm\" type=\"button\">Réinitialiser</button>\n    <button class=\"btn-secondary btn-sm\" type=\"button\">Exporter</button>\n  </div>\n</div>",
       "react": "n-a",
       "module": [
         "shared/css/components/forms.css"
