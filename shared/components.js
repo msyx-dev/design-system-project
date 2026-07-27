@@ -2504,9 +2504,81 @@ window.__initLightbox = initLightbox;
 function initContextMenu() {
     var activeMenu = null;
 
+    // Items directs d'un niveau de menu (racine ou sous-menu), sans descendre
+    // dans un sous-menu imbriqué — #750.
+    function getItems(menuEl) {
+        return Array.prototype.filter.call(menuEl.children, function(el) {
+            return el.classList.contains('context-menu-item');
+        });
+    }
+
+    // Sous-menu direct porté par un item (ou null) — #750.
+    function getSubmenu(item) {
+        var found = null;
+        Array.prototype.forEach.call(item.children, function(el) {
+            if (!found && el.classList.contains('context-submenu')) found = el;
+        });
+        return found;
+    }
+
+    // Roving tabindex : un seul item du niveau courant est tabbable — #750.
+    function setRoving(items, activeItem) {
+        items.forEach(function(item) {
+            item.setAttribute('tabindex', item === activeItem ? '0' : '-1');
+        });
+    }
+
+    function focusItem(menuEl, item) {
+        if (!item) return;
+        setRoving(getItems(menuEl), item);
+        item.focus();
+    }
+
+    // Referme un sous-menu (cascade sur ses propres sous-menus imbriqués) et
+    // reinitialise aria-expanded — #750.
+    function closeSubmenu(item, restoreFocus) {
+        if (!item) return;
+        var submenu = getSubmenu(item);
+        if (!submenu) return;
+        submenu.classList.remove('show');
+        item.setAttribute('aria-expanded', 'false');
+        submenu.querySelectorAll('.context-submenu.show').forEach(function(sm) {
+            sm.classList.remove('show');
+        });
+        submenu.querySelectorAll('.context-menu-item[aria-expanded="true"]').forEach(function(it) {
+            it.setAttribute('aria-expanded', 'false');
+        });
+        if (restoreFocus) focusItem(item.parentElement, item);
+    }
+
+    // Ouvre le sous-menu porté par l'item et focus son premier item — #750.
+    function openSubmenu(item) {
+        var submenu = getSubmenu(item);
+        if (!submenu) return null;
+        submenu.classList.add('show');
+        item.setAttribute('aria-expanded', 'true');
+        var items = getItems(submenu);
+        if (items.length) focusItem(submenu, items[0]);
+        return submenu;
+    }
+
+    // Sous-menu ouvert le plus profond d'un menu (au plus 1 dans la vitrine
+    // actuelle, mais generique en cas de niveaux additionnels) — #750.
+    function findOpenSubmenu(menu) {
+        var open = menu.querySelectorAll('.context-submenu.show');
+        return open.length ? open[open.length - 1] : null;
+    }
+
     function hideMenu(menu) {
         if (!menu) return;
         menu.classList.remove('show');
+        // Cascade : referme aussi tout sous-menu reste ouvert + reset aria-expanded — #750
+        menu.querySelectorAll('.context-submenu.show').forEach(function(sm) {
+            sm.classList.remove('show');
+        });
+        menu.querySelectorAll('.context-menu-item[aria-expanded="true"]').forEach(function(it) {
+            it.setAttribute('aria-expanded', 'false');
+        });
         activeMenu = null;
     }
 
@@ -2536,6 +2608,68 @@ function initContextMenu() {
 
         menu.style.left = left + 'px';
         menu.style.top = top + 'px';
+
+        // Focus le premier item du niveau racine (pattern WAI-ARIA APG « Menu ») — #750
+        var items = getItems(menu);
+        if (items.length) focusItem(menu, items[0]);
+    }
+
+    // Navigation clavier au sein d'un niveau de menu (racine ou sous-menu),
+    // pattern WAI-ARIA APG « Menu » — #750.
+    function bindMenuKeydown(menuEl) {
+        if (menuEl.dataset.ctxKeyBound) return;
+        menuEl.dataset.ctxKeyBound = '1';
+        menuEl.addEventListener('keydown', function(e) {
+            var items = getItems(menuEl);
+            if (!items.length) return;
+            var idx = items.indexOf(document.activeElement);
+            if (idx === -1) return;
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    focusItem(menuEl, items[(idx + 1) % items.length]);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    focusItem(menuEl, items[(idx - 1 + items.length) % items.length]);
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    focusItem(menuEl, items[0]);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    focusItem(menuEl, items[items.length - 1]);
+                    break;
+                case 'ArrowRight':
+                case 'Enter':
+                case ' ':
+                    if (getSubmenu(items[idx])) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openSubmenu(items[idx]);
+                    } else if (e.key !== 'ArrowRight') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        items[idx].click();
+                    }
+                    break;
+                case 'ArrowLeft':
+                    // Ferme le sous-menu courant et rend le focus au parent
+                    // (no-op au niveau racine : rien à fermer localement).
+                    if (menuEl.classList.contains('context-submenu')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeSubmenu(menuEl.closest('.context-menu-item'), true);
+                    }
+                    break;
+            }
+        });
     }
 
     // Bind each context target
@@ -2562,6 +2696,12 @@ function initContextMenu() {
         });
     });
 
+    // Navigation clavier : racine + sous-menus imbriqués — #750
+    document.querySelectorAll('.context-menu').forEach(function(menu) {
+        bindMenuKeydown(menu);
+        menu.querySelectorAll('.context-submenu').forEach(bindMenuKeydown);
+    });
+
     // Close on outside click
     if (!document.body.dataset.ctxOutsideBound) {
         document.body.dataset.ctxOutsideBound = '1';
@@ -2570,9 +2710,14 @@ function initContextMenu() {
                 hideMenu(activeMenu);
             }
         });
-        // Close on Escape
+        // Close on Escape — referme d'abord le sous-menu ouvert le plus
+        // profond (s'il y en a un), sinon referme tout le menu — #750
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && activeMenu) {
+            if (e.key !== 'Escape' || !activeMenu) return;
+            var openSubmenu = findOpenSubmenu(activeMenu);
+            if (openSubmenu) {
+                closeSubmenu(openSubmenu.closest('.context-menu-item'), true);
+            } else {
                 hideMenu(activeMenu);
             }
         });

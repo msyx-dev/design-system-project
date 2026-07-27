@@ -271,19 +271,19 @@
     <div class="section-header"><span class="overline">Avancé</span><h2>Accordion</h2><p>Sections repliables pour FAQ ou documentation.</p></div>
     <div style="max-width:600px;">
         <div class="accordion-item open">
-            <div class="accordion-header"><span>Quelle stack est utilisee ?</span><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
+            <div class="accordion-header"><span>Quelle stack est utilisee ?</span><svg class="icon icon--sm accordion-arrow" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
             <div class="accordion-body">Next.js 14 (App Router) + TypeScript en frontend, FastAPI en backend, PostgreSQL + Prisma pour la base de donnees, Caddy en reverse proxy et Docker pour l'isolation.</div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header"><span>Comment deployer un projet ?</span><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
+            <div class="accordion-header"><span>Comment deployer un projet ?</span><svg class="icon icon--sm accordion-arrow" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
             <div class="accordion-body">Utilisez la commande <span class="code-inline">/deploy</span> dans Claude Code. Le skill deploy-caddy configure automatiquement le sous-domaine, le certificat HTTPS et l'auth gate.</div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header"><span>Comment personnaliser la charte ?</span><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
+            <div class="accordion-header"><span>Comment personnaliser la charte ?</span><svg class="icon icon--sm accordion-arrow" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
             <div class="accordion-body">Modifiez les variables CSS dans le bloc <span class="code-inline">:root</span>. Les couleurs, gradients, rayons et ombres sont tous parametrables via ces tokens.</div>
         </div>
         <div class="accordion-item">
-            <div class="accordion-header"><span>L'auth gate est-elle obligatoire ?</span><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
+            <div class="accordion-header"><span>L'auth gate est-elle obligatoire ?</span><svg class="icon icon--sm accordion-arrow" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-down"/></svg></div>
             <div class="accordion-body">Oui, par defaut tous les projets deployes sur *.msyx.fr sont proteges. Pour la desactiver, retirez le bloc basic_auth du Caddyfile et rechargez Caddy.</div>
         </div>
     </div>
@@ -352,7 +352,7 @@
                     Selectionner tout
                 </div>
                 <div class="context-menu-divider"></div>
-                <div class="context-menu-item" role="menuitem" aria-haspopup="true">
+                <div class="context-menu-item" role="menuitem" aria-haspopup="menu" aria-expanded="false">
                     <span class="icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-arrow-left"/></svg></span>
                     Partager
                     <span class="context-arrow"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></span>
@@ -379,10 +379,11 @@
             <ul style="display:flex;flex-direction:column;gap:0.55rem;list-style:none;padding:0;margin:0;">
                 <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Clic droit sur zone cible</li>
                 <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Items avec icones</li>
-                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Sous-menu Partager (hover)</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Sous-menu Partager (hover ou clavier)</li>
                 <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Positionnement adaptatif (bords viewport)</li>
                 <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Fermeture clic exterieur</li>
                 <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Fermeture touche Echap</li>
+                <li style="display:flex;align-items:center;gap:0.6rem;font-size:0.875rem;color:var(--text-muted);"><span style="color:var(--success);"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Navigation clavier &#8593;&#8595; entre items, &#8594;/Entree ouvre le sous-menu, &#8592;/Echap le referme</li>
             </ul>
         </div>
 
