@@ -142,7 +142,8 @@
     transition: opacity var(--duration-fast);
 }
 .activity-item:last-child { border-bottom: none; }
-.activity-item.hidden { display: none; }
+.activity-item.hidden,
+.activity-item.initially-hidden { display: none; }
 .activity-avatar-wrap {
     position: relative;
     flex-shrink: 0;
