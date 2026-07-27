@@ -26,6 +26,11 @@
 const fs = require('fs');
 const path = require('path');
 const { extractReactClasses } = require('./lib/extract-react-classes');
+const {
+  extractDataAttrsFromHtml,
+  hasMainClassCitation,
+  findPhantomDataAttrs,
+} = require('./lib/validate-example');
 
 // ─── Chemins ──────────────────────────────────────────────────────────────────
 
@@ -407,6 +412,96 @@ if (!process.argv.includes('--skip-validate')) {
   }
 }
 
+// ─── Validation du champ `example` (#748) ─────────────────────────────────────
+// Le champ `example` n'était validé par rien : 3 composants audités (#613
+// segmented-control, #468 context-menu, #594 mention), 3 exemples faux ou
+// incomplets. Un `example` faux est copié-collé tel quel par les consumers
+// et par les agents qui portent le composant en React (mode de défaillance
+// identique à l'incident <ActionMenu> `.open`, côté vanilla cette fois).
+//
+// Règle retenue -- pragmatique, 2 contrôles, chacun attrape un défaut
+// RÉELLEMENT constaté (validation manuelle des 3 audits + mesure d'impact
+// sur les 138 entrées du registre, cf. RESULT #748) :
+//
+//   (A) Classe principale absente -- aucune des `cssClasses` du composant
+//       n'apparaît parmi les classes citées par l'`example`. Signal fort
+//       d'un copier-coller depuis un autre composant, ou de `cssClasses`
+//       devenues obsolètes (ex. renommage `.zone-banner` → `.alert--kpi`
+//       non répercuté). Exempté si l'`example` ne cite AUCUNE classe (cas
+//       des composants pilotés 100% par JS, ex. `toast` : uniquement des
+//       appels `showToast(...)`, aucun markup statique à montrer -- rien à
+//       comparer, pas un défaut).
+//   (B) Attribut `data-*` fantôme -- tout `data-*` cité dans l'`example`
+//       doit être lu par le JS du DS (`shared/components.js` +
+//       `shared/nav.js`), sous forme littérale (`'data-x'`/`"data-x"`) OU
+//       `dataset.xCamel`. Restreint aux entrées AVEC `jsInit` non-null : si
+//       `jsInit` est absent, aucun JS du DS ne peut lire quoi que ce soit --
+//       l'attribut est alors un simple hook documentaire pour le gabarit du
+//       consommateur (ex. `access-denied`), pas un contrat DS. C'est cette
+//       règle qui aurait attrapé les 2 défauts constatés (#613
+//       `data-segmented-id`, #468 `data-context-menu`) -- « le point le
+//       plus rentable et le plus simple » (texte de l'issue).
+//
+// Hors périmètre assumé (documenté, pas implémenté) : la cohérence de la
+// « classe d'état » posée par le JS après `jsInit` (3e contrôle suggéré par
+// l'issue). Non généralisable de façon fiable : la majorité des entrées
+// partagent le même `jsInit` umbrella (`initComponents`), qui ne permet pas
+// de corréler une entrée à UNE classe d'état précise sans heuristique
+// fragile (source de faux positifs). Laissé pour un ticket dédié si le
+// besoin se confirme.
+//
+// Mode --check (CI) : WARN-ONLY par défaut (objectif = produire l'inventaire,
+// pas bloquer -- même défaut que check-dead-classes.js #765). Bascule
+// bloquante : --example-strict.
+//
+// Fail-closed : shared/components.js ou shared/nav.js introuvable → erreur
+// explicite + exit 1, jamais un inventaire silencieusement incomplet.
+
+const DS_JS_FILES_FOR_EXAMPLE = ['shared/components.js', 'shared/nav.js'];
+let dsJsBlobForExample = '';
+for (const relJs of DS_JS_FILES_FOR_EXAMPLE) {
+  const absJs = path.join(ROOT, relJs);
+  if (!fs.existsSync(absJs)) {
+    console.error(`[generate-registry] ERREUR : fichier JS introuvable pour la validation du champ example (#748) : ${relJs}`);
+    process.exit(1);
+  }
+  dsJsBlobForExample += fs.readFileSync(absJs, 'utf8') + '\n';
+}
+
+// toCamelCase / extractDataAttrsFromHtml / hasMainClassCitation /
+// findPhantomDataAttrs — extraites dans bin/lib/validate-example.js (#748,
+// testables en isolation, même principe que bin/lib/extract-react-classes.js
+// pour #747).
+
+const exampleIssues = []; // { component, problem }
+
+if (!process.argv.includes('--skip-validate')) {
+  for (const comp of newComponents) {
+    if (!comp.example) continue;
+
+    // (A) classe principale absente de l'example
+    const compClassesForExample = expandCssClasses(comp.cssClasses);
+    const citedClassesForExample = extractClassesFromHtml(comp.example);
+    if (!hasMainClassCitation(compClassesForExample, citedClassesForExample)) {
+      exampleIssues.push({
+        component: comp.name,
+        problem: `aucune classe de cssClasses (${[...compClassesForExample].slice(0, 3).join(', ')}…) citée dans l'example`,
+      });
+    }
+
+    // (B) attribut data-* fantôme (uniquement si un jsInit existe réellement)
+    if (comp.jsInit) {
+      const dataAttrs = extractDataAttrsFromHtml(comp.example);
+      for (const attr of findPhantomDataAttrs(dataAttrs, dsJsBlobForExample)) {
+        exampleIssues.push({
+          component: comp.name,
+          problem: `attribut ${attr} cité dans l'example mais absent de shared/components.js et shared/nav.js (jsInit="${comp.jsInit}")`,
+        });
+      }
+    }
+  }
+}
+
 // ─── Normalisation du champ react (#523) ─────────────────────────────────────
 // Règle : kind:module → n-a forcé ; kind:component sans react → pending ;
 // valeur existante ported/pending/n-a préservée (merge).
@@ -705,6 +800,12 @@ const frontierLine = frontierErrors.length === 0
   ? 'Frontière page↔registre : OK (0 violation)'
   : `Frontière page↔registre : ⚠ ${frontierErrors.length} violation(s) (warn-only — bascule bloquante après #508)`;
 
+// ─── Validation du champ example (#748) — ligne de rapport ───────────────────
+const exampleStrict = process.argv.includes('--example-strict');
+const exampleLine = exampleIssues.length === 0
+  ? 'Validation example      : OK (0 défaut)'
+  : `Validation example      : ⚠ ${exampleIssues.length} défaut(s) (warn-only — bascule bloquante via --example-strict)`;
+
 // ─── Mode --check (CI) ────────────────────────────────────────────────────────
 // En mode --check, on valide sans écrire (idéal pour le step CI).
 
@@ -751,6 +852,19 @@ if (process.argv.includes('--check')) {
     console.error('Bascule bloquante : --frontier-strict (activer après #508 livré). Cf. DS-PRINCIPLES §6.1.');
     if (frontierStrict) {
       console.error('\n❌ Mode --frontier-strict actif : violations bloquantes.');
+      process.exit(1);
+    }
+    // warn-only : on continue sans exit(1)
+  }
+  // Validation du champ example (#748)
+  console.log(exampleLine);
+  if (exampleIssues.length > 0) {
+    console.error('\n⚠ Champ example (#748) — défauts détectés (inventaire) :');
+    for (const e of exampleIssues) console.error(`   - ${e.component} → ${e.problem}`);
+    console.error('\nCorrection : mettre à jour l\'example dans shared/components-registry.json (classes/attributs réels).');
+    console.error('Bascule bloquante : --example-strict (après triage de l\'inventaire, cf. #748).');
+    if (exampleStrict) {
+      console.error('\n❌ Mode --example-strict actif : défauts bloquants.');
       process.exit(1);
     }
     // warn-only : on continue sans exit(1)
