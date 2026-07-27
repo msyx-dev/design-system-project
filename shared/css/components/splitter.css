@@ -89,3 +89,23 @@
     width: 24px;
     height: 3px;
 }
+
+/* Etat drag (#763) : classe posee/retiree par initSplitPane sur .split-pane (pointer
+   capture fait sortir le curseur du gutter -> :hover/:active decrochent, d'ou la classe
+   sur le conteneur plutot que des pseudo-classes sur .split-gutter). */
+.split-pane--dragging {
+    cursor: col-resize;
+    user-select: none;
+}
+
+.split-pane--dragging.split-pane--vertical {
+    cursor: row-resize;
+}
+
+.split-pane--dragging .split-gutter {
+    background: var(--split-gutter-hover);
+}
+
+.split-pane--dragging .split-gutter::after {
+    background: var(--text-on-accent);
+}

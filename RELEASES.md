@@ -1,5 +1,13 @@
 # Releases
 
+## 2.116.3 — 2026-07-27 — Deux correctifs d'hygiène : `.gitignore` artefacts de build + retour visuel `.split-pane--dragging` (#762, #763)
+
+> Deux fixes courts trouvés pendant le sprint en cours : un `.gitignore` qui n'ignorait plus rien pour `shared/dist/` (annulation par `!shared/dist/`), et une classe d'état posée par le JS du splitter sans aucune règle CSS pour la styliser.
+
+### Fixed
+- **`.gitignore`** (#762) : `!shared/dist/` ré-incluait le dossier entier ré-annulant l'ignore de `shared/dist/` — un `!` ne peut pas réinclure un fichier dont le dossier parent est exclu, il faut exclure le *contenu*. Remplacé par `shared/dist/*` + exceptions `!shared/dist/graph-lib.global.js` / `!shared/dist/graph.global.js` (ce dernier n'avait aucune exception explicite et ne survivait que parce que `.gitignore` ne s'applique pas aux fichiers déjà suivis). Les 6 artefacts `*.min.css`/`*.min.js` de `shared/build.sh` redeviennent correctement ignorés.
+- **`shared/css/components/splitter.css`** (#763) : ajout des règles manquantes pour `.split-pane--dragging` (posée/retirée par `initSplitPane` dans `shared/components.js` au début/fin du drag) — `user-select: none` (empêche la sélection de texte parasite pendant le drag), curseur `col-resize` (horizontal, défaut) / `row-resize` (`.split-pane--dragging.split-pane--vertical`) maintenu tout le long du drag, et surbrillance du `.split-gutter` (réutilise `--split-gutter-hover`/`--text-on-accent`, déjà utilisés par l'état `:hover`/`:focus-visible`). Classe sur le conteneur plutôt que pseudo-classes sur le gutter : `setPointerCapture` fait sortir le pointeur du gutter pendant le drag, ce qui décrocherait `:hover`/`:active`.
+
 ## 2.116.2 — 2026-07-26 — Correctif de sécurité : audit `innerHTML` de `shared/components.js` (#758)
 
 > Audit systématique de tous les `innerHTML =` concaténés de `shared/components.js` et `shared/nav.js` — suite à #746. Cause racine : `escapeHTML()` n'échappe que `& < >`, jamais les guillemets, donc tout usage en contexte **attribut** reste exploitable (`avatarUrl = 'x" onerror="alert(1)'`). Le vecteur le plus grave : `initUserMenu()` construisait le menu utilisateur (avatar, liens, formulaire de déconnexion) par concaténation de chaînes, exploitable sans aucune interaction utilisateur via les attributs `data-*`/options JS du composant. Même classe de faille dans `shared/nav.js` (`updateHeaderUser`, `buildHeader`, dropdown legacy, champ email du formulaire de retour). Tous les sites identifiés sont reconstruits en DOM (`createElement`/`setAttribute`/`textContent`/`appendChild`), jamais via `escapeHTML` renforcé — un échappement manuel se recontourne dès qu'un futur appel change de contexte. Aucun changement visuel.
