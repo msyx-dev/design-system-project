@@ -878,16 +878,16 @@ window.__openModal = function(config) {
     if (actions) {
         actions.forEach(function(a) {
             var btn = document.createElement('button');
-            btn.className = 'btn btn-' + (a.style || 'secondary');
+            btn.className = 'btn-' + (a.style || 'secondary');
             btn.setAttribute('data-modal-close', '');
             if (a.onClick) btn.setAttribute('onclick', a.onClick);
             btn.textContent = a.label;
             actionsDiv.appendChild(btn);
         });
     } else if (variant === 'confirm') {
-        actionsDiv.innerHTML = '<button class="btn btn-secondary" data-modal-close>Annuler</button><button class="btn btn-primary" data-modal-close>Confirmer</button>';
+        actionsDiv.innerHTML = '<button class="btn-secondary" data-modal-close>Annuler</button><button class="btn-primary" data-modal-close>Confirmer</button>';
     } else {
-        actionsDiv.innerHTML = '<button class="btn btn-primary" data-modal-close>Fermer</button>';
+        actionsDiv.innerHTML = '<button class="btn-primary" data-modal-close>Fermer</button>';
     }
     dialog.appendChild(actionsDiv);
 
