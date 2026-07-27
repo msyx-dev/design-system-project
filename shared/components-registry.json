@@ -1,7 +1,7 @@
 {
   "version": "2.116.3",
   "generated": {
-    "at": "2026-07-27T01:26:18.236Z",
+    "at": "2026-07-27T05:42:35.726Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2476,7 +2476,8 @@
         ".context-hint-icon",
         ".context-submenu",
         ".context-target",
-        ".danger"
+        ".danger",
+        ".show"
       ],
       "jsInit": null,
       "generated": true,
