@@ -69,16 +69,24 @@ export interface CalendarRangeProps extends CalendarSharedProps {
   /** Plage sélectionnée initiale en mode non contrôlé. @default `{ start: null, end: null }` */
   defaultValue?: CalendarDateRange;
   /**
-   * Appelé UNIQUEMENT quand une plage est COMPLÈTE (2e clic valide) — calque
-   * exact de la condition de `wrap.dispatchEvent(new CustomEvent('calendar:change', …))`
-   * côté vanilla, qui ne dispatch JAMAIS l'événement pour un simple clic de
-   * démarrage (`rangeStart` seul). Conséquence assumée : en mode **contrôlé**,
-   * le 1er clic (qui amorce `start`) ne modifie ni l'état interne (ignoré,
-   * comme tout composant contrôlé du package) ni la prop `value` — il ne sera
-   * donc visuellement reflété qu'en mode NON contrôlé. Aligné sur la
-   * sémantique réelle de l'événement DS, pas une extension inventée.
+   * Appelé à CHAQUE étape de la sélection — 1er clic (`start` seul), clic
+   * complétant la plage, OU clic de reset (avant `start`/3e clic) — avec
+   * `{ start, end }` où `end` vaut `null` tant que la plage n'est pas
+   * complète.
+   *
+   * Le `CustomEvent('calendar:change')` DOM du vanilla n'est dispatché QUE
+   * pour une plage complète (branche `else` finale de `selectDate()`) — MAIS
+   * le vanilla `render(viewYear, viewMonth)` la grille (et met à jour
+   * `rangeStartEl`/`rangeEndEl`) à **chaque** clic, y compris le 1er :
+   * l'absence d'événement DOM ne signifie pas absence de retour visuel,
+   * l'état vit dans le composant. En React **contrôlé**, `value` appartient
+   * au parent — si `onChange` ne fire qu'à la complétion, le parent ne sait
+   * rien du 1er clic et rien ne s'affiche, ce qui romprait la parité
+   * visuelle avec le vanilla. `onChange` fire donc à chaque clic pour que le
+   * mode contrôlé reste visuellement fidèle ; un consumer qui ne veut que
+   * les plages complètes filtre simplement sur `end !== null`.
    */
-  onChange?: (range: { start: Date; end: Date }) => void;
+  onChange?: (range: { start: Date; end: Date | null }) => void;
 }
 
 export type CalendarProps = CalendarSingleProps | CalendarRangeProps;
@@ -286,9 +294,12 @@ function computeNextRange(
  *
  * **Machine range 2-clics** : voir `computeNextRange` — reset si clic avant
  * `start` ou si la plage est déjà complète, sinon complète la plage.
- * `onChange` (range) n'est appelé QUE pour une plage complète, jamais pour un
- * simple clic de démarrage — calque exact du `dispatchEvent` vanilla (voir
- * JSDoc `CalendarRangeProps.onChange` pour la conséquence en mode contrôlé).
+ * `onChange` (range) est appelé à CHAQUE clic (1er clic, complétion, reset)
+ * avec `{ start, end }`, `end` valant `null` tant que la plage n'est pas
+ * complète — calque du fait que le vanilla `render()` sa grille (retour
+ * visuel immédiat) à chaque clic, même si le `CustomEvent('calendar:change')`
+ * DOM n'est dispatché QUE pour une plage complète (voir JSDoc
+ * `CalendarRangeProps.onChange`).
  *
  * **Clavier** (grille, calque exact) : `←/→/↑/↓` déplacent d'un jour/semaine,
  * `Home`/`End` vont au 1er/dernier jour de la semaine (lundi–dimanche),
@@ -383,9 +394,14 @@ export function Calendar(props: CalendarProps) {
   }
 
   function selectRange(date: Date): void {
-    const { next, complete } = computeNextRange(currentRange, date);
+    const { next } = computeNextRange(currentRange, date);
     if (!isRangeControlled) setInternalRange(next);
-    if (complete && props.mode === "range" && next.start && next.end) {
+    // `onChange` fire à CHAQUE clic (1er clic, complétion, reset) — voir
+    // JSDoc `CalendarRangeProps.onChange` : le vanilla re-render sa grille à
+    // chaque clic (retour visuel immédiat), pas seulement au dispatch du
+    // `CustomEvent`. `next.start` est toujours défini ici (computeNextRange
+    // ne renvoie jamais `start: null`).
+    if (props.mode === "range" && next.start) {
       props.onChange?.({ start: next.start, end: next.end });
     }
   }

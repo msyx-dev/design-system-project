@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   Calendar,
   CalendarDateRange,
-  CalendarProps,
   CalendarReferenceMonth,
 } from "./Calendar";
 
@@ -17,20 +16,19 @@ function cell(container: HTMLElement, date: string): HTMLElement | null {
   return container.querySelector(`[data-date="${date}"]`);
 }
 
-function ControlledCalendarRange(
-  props: Partial<Omit<CalendarProps, "mode" | "value" | "onChange">> & {
-    onChange?: (range: { start: Date; end: Date }) => void;
-    initialValue?: CalendarDateRange;
-  },
-) {
-  const { initialValue, onChange, ...rest } = props;
+function ControlledCalendarRange(props: {
+  referenceMonth?: CalendarReferenceMonth;
+  onChange?: (range: { start: Date; end: Date | null }) => void;
+  initialValue?: CalendarDateRange;
+}) {
+  const { referenceMonth, initialValue, onChange } = props;
   const [value, setValue] = useState<CalendarDateRange>(
     initialValue ?? { start: null, end: null },
   );
   return (
     <Calendar
-      {...rest}
       mode="range"
+      referenceMonth={referenceMonth}
       value={value}
       onChange={(next) => {
         setValue(next);
@@ -40,18 +38,17 @@ function ControlledCalendarRange(
   );
 }
 
-function ControlledCalendarSingle(
-  props: Partial<Omit<CalendarProps, "mode" | "value" | "onChange">> & {
-    onChange?: (date: Date) => void;
-    initialValue?: Date | null;
-  },
-) {
-  const { initialValue = null, onChange, ...rest } = props;
+function ControlledCalendarSingle(props: {
+  referenceMonth?: CalendarReferenceMonth;
+  onChange?: (date: Date) => void;
+  initialValue?: Date | null;
+}) {
+  const { referenceMonth, initialValue = null, onChange } = props;
   const [value, setValue] = useState<Date | null>(initialValue);
   return (
     <Calendar
-      {...rest}
       mode="single"
+      referenceMonth={referenceMonth}
       value={value}
       onChange={(next) => {
         setValue(next);
@@ -181,15 +178,21 @@ describe("Calendar — sélection single", () => {
 });
 
 describe("Calendar — sélection range : extrémités + entre-deux", () => {
-  it("2 clics valides posent .range-start+.selected / .range-end+.selected simultanément, .range sur l'entre-deux, onChange({start,end}) une seule fois", () => {
+  it("2 clics valides posent .range-start+.selected / .range-end+.selected simultanément, .range sur l'entre-deux, onChange appelé à chaque clic", () => {
     const onChange = vi.fn();
     const { container } = render(
       <Calendar mode="range" referenceMonth={MARCH_2026} onChange={onChange} />,
     );
 
     fireEvent.click(cell(container, "2026-03-10") as HTMLElement);
-    // 1er clic : pas encore de plage complète → onChange PAS appelé.
-    expect(onChange).not.toHaveBeenCalled();
+    // 1er clic : pas encore de plage complète, MAIS onChange fire quand même
+    // — le vanilla `render()` sa grille (retour visuel) à chaque clic, pas
+    // seulement au dispatch du CustomEvent (correction post-review #760).
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenNthCalledWith(1, {
+      start: expect.any(Date),
+      end: null,
+    });
     const startAfterFirstClick = cell(container, "2026-03-10") as HTMLElement;
     expect(startAfterFirstClick).toHaveClass("range-start", "selected");
 
@@ -210,8 +213,8 @@ describe("Calendar — sélection range : extrémités + entre-deux", () => {
     expect(midCell).not.toHaveClass("selected");
     expect(midCell).not.toHaveAttribute("aria-selected");
 
-    expect(onChange).toHaveBeenCalledTimes(1);
-    const [{ start, end }] = onChange.mock.calls[0];
+    expect(onChange).toHaveBeenCalledTimes(2);
+    const [{ start, end }] = onChange.mock.calls[1];
     expect((start as Date).getDate()).toBe(10);
     expect((end as Date).getDate()).toBe(20);
   });
@@ -229,15 +232,15 @@ describe("Calendar — sélection range : extrémités + entre-deux", () => {
     expect(single).toHaveClass("range-start", "selected");
     expect(single).not.toHaveClass("range-end");
 
-    expect(onChange).toHaveBeenCalledTimes(1);
-    const [{ start, end }] = onChange.mock.calls[0];
+    expect(onChange).toHaveBeenCalledTimes(2);
+    const [{ start, end }] = onChange.mock.calls[1];
     expect((start as Date).getDate()).toBe(12);
     expect((end as Date).getDate()).toBe(12);
   });
 });
 
 describe("Calendar — machine range 2-clics : les 3 cas de reset", () => {
-  it("cas 1 — clic AVANT start : reset, la nouvelle date devient start, onChange pas appelé", () => {
+  it("cas 1 — clic AVANT start : reset, la nouvelle date devient start, onChange rappelé avec {start, end: null}", () => {
     const onChange = vi.fn();
     const { container } = render(
       <Calendar mode="range" referenceMonth={MARCH_2026} onChange={onChange} />,
@@ -253,10 +256,14 @@ describe("Calendar — machine range 2-clics : les 3 cas de reset", () => {
     expect(cell(container, "2026-03-20")).not.toHaveClass("range-start");
     expect(cell(container, "2026-03-20")).not.toHaveClass("range-end");
     expect(cell(container, "2026-03-20")).not.toHaveClass("selected");
-    expect(onChange).not.toHaveBeenCalled();
+
+    expect(onChange).toHaveBeenCalledTimes(2);
+    const [{ start, end }] = onChange.mock.calls[1];
+    expect((start as Date).getDate()).toBe(10);
+    expect(end).toBeNull();
   });
 
-  it("cas 2 — 3e clic après une plage déjà complète : reset, nouveau start, ancienne plage effacée", () => {
+  it("cas 2 — 3e clic après une plage déjà complète : reset, nouveau start, ancienne plage effacée, onChange rappelé avec {start, end: null}", () => {
     const onChange = vi.fn();
     const { container } = render(
       <Calendar mode="range" referenceMonth={MARCH_2026} onChange={onChange} />,
@@ -264,7 +271,7 @@ describe("Calendar — machine range 2-clics : les 3 cas de reset", () => {
 
     fireEvent.click(cell(container, "2026-03-10") as HTMLElement); // start
     fireEvent.click(cell(container, "2026-03-20") as HTMLElement); // end, complet
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledTimes(2);
 
     fireEvent.click(cell(container, "2026-03-25") as HTMLElement); // 3e clic → reset
 
@@ -276,8 +283,11 @@ describe("Calendar — machine range 2-clics : les 3 cas de reset", () => {
     expect(cell(container, "2026-03-10")).not.toHaveClass("selected");
     expect(cell(container, "2026-03-20")).not.toHaveClass("range-end");
     expect(cell(container, "2026-03-20")).not.toHaveClass("selected");
-    // Le reset (3e clic) n'est PAS une plage complète : pas de 2e appel.
-    expect(onChange).toHaveBeenCalledTimes(1);
+
+    expect(onChange).toHaveBeenCalledTimes(3);
+    const [{ start, end }] = onChange.mock.calls[2];
+    expect((start as Date).getDate()).toBe(25);
+    expect(end).toBeNull();
   });
 
   it("cas 3 — 2e clic APRÈS start (date postérieure) : complète la plage normalement (non-reset, cas de référence)", () => {
@@ -294,10 +304,13 @@ describe("Calendar — machine range 2-clics : les 3 cas de reset", () => {
       "selected",
     );
     expect(cell(container, "2026-03-18")).toHaveClass("range-end", "selected");
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledTimes(2);
+    const [{ start, end }] = onChange.mock.calls[1];
+    expect((start as Date).getDate()).toBe(5);
+    expect((end as Date).getDate()).toBe(18);
   });
 
-  it("mode contrôlé range : le clic de démarrage seul ne déclenche pas onChange (fidèle à calendar:change vanilla)", () => {
+  it("mode contrôlé range : le clic de démarrage seul déclenche onChange({start, end:null}) et se reflète visuellement (.range-start+.selected)", () => {
     const onChange = vi.fn();
     const { container } = render(
       <ControlledCalendarRange
@@ -306,7 +319,58 @@ describe("Calendar — machine range 2-clics : les 3 cas de reset", () => {
       />,
     );
     fireEvent.click(cell(container, "2026-03-10") as HTMLElement);
-    expect(onChange).not.toHaveBeenCalled();
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const [{ start, end }] = onChange.mock.calls[0];
+    expect((start as Date).getDate()).toBe(10);
+    expect(end).toBeNull();
+
+    // `value` mis à jour par le parent (ControlledCalendarRange) → la
+    // cellule affiche bien la sélection en cours, PAS uniquement au clic
+    // complétant la plage.
+    expect(cell(container, "2026-03-10")).toHaveClass(
+      "range-start",
+      "selected",
+    );
+  });
+
+  it("mode contrôlé range : les 3 cas de reset répercutent aussi {start, end:null} et se reflètent visuellement", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <ControlledCalendarRange
+        referenceMonth={MARCH_2026}
+        onChange={onChange}
+      />,
+    );
+
+    // Cas 1 — clic avant start.
+    fireEvent.click(cell(container, "2026-03-20") as HTMLElement);
+    fireEvent.click(cell(container, "2026-03-10") as HTMLElement);
+    expect(cell(container, "2026-03-10")).toHaveClass(
+      "range-start",
+      "selected",
+    );
+    expect(cell(container, "2026-03-20")).not.toHaveClass("range-start");
+
+    // Cas 3 — complète la plage (référence, avant le 3e clic de reset).
+    fireEvent.click(cell(container, "2026-03-15") as HTMLElement);
+    expect(cell(container, "2026-03-10")).toHaveClass(
+      "range-start",
+      "selected",
+    );
+    expect(cell(container, "2026-03-15")).toHaveClass("range-end", "selected");
+
+    // Cas 2 — 3e clic après plage complète → reset.
+    fireEvent.click(cell(container, "2026-03-25") as HTMLElement);
+    expect(cell(container, "2026-03-25")).toHaveClass(
+      "range-start",
+      "selected",
+    );
+    expect(cell(container, "2026-03-10")).not.toHaveClass("selected");
+    expect(cell(container, "2026-03-15")).not.toHaveClass("selected");
+
+    expect(onChange).toHaveBeenCalledTimes(4);
+    expect(onChange.mock.calls[3][0].end).toBeNull();
   });
 });
 
