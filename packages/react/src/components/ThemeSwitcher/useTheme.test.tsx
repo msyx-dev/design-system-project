@@ -37,6 +37,40 @@ describe("useTheme — état initial (SSR-safe)", () => {
     });
   });
 
+  it("applique data-mode au DOM au montage depuis le localStorage (#785)", async () => {
+    localStorage.setItem("msyx-mode", "light");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.mode).toBe("light"));
+    // Sans le correctif #785, l'état React est bien "light" mais l'attribut
+    // DOM n'est jamais posé — c'est précisément ce que ce test vérifie.
+    expect(document.documentElement.getAttribute("data-mode")).toBe("light");
+  });
+
+  it("n'ajoute pas data-mode au montage pour le défaut implicite dark", async () => {
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.mode).toBe("dark"));
+    expect(document.documentElement.hasAttribute("data-mode")).toBe(false);
+  });
+
+  it("applique data-theme au DOM au montage depuis le localStorage", async () => {
+    localStorage.setItem("msyx-theme", "acssi");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("acssi"));
+    expect(document.documentElement.getAttribute("data-theme")).toBe("acssi");
+  });
+
+  it("n'ajoute pas data-theme au montage pour le défaut implicite msyx", async () => {
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("msyx"));
+    expect(document.documentElement.hasAttribute("data-theme")).toBe(false);
+  });
+
   it("réconcilie le mode si incompatible avec le thème stocké (config mono-mode)", async () => {
     const config: ThemeConfig = {
       msyx: { modes: ["dark", "light"], defaultMode: "dark" },

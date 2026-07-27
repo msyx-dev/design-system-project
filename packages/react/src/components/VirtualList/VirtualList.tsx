@@ -63,10 +63,8 @@ const defaultRenderRow = (index: number): ReactNode => `Élément #${index + 1}`
  *      style="--vlist-row-h:40px;--vlist-height:400px">
  *   <div class="virtual-list-viewport" role="list" aria-rowcount="1000">
  *     <div class="virtual-spacer" aria-hidden="true" style="height:0px"></div>
- *     <div class="virtual-list-rows">
- *       <div class="virtual-list-row" role="listitem" aria-rowindex="1">…</div>
- *       …
- *     </div>
+ *     <div class="virtual-list-row" role="listitem" aria-rowindex="1">…</div>
+ *     …
  *     <div class="virtual-spacer" aria-hidden="true" style="height:39200px"></div>
  *   </div>
  * </div>
