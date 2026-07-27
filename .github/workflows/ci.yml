@@ -129,6 +129,28 @@ jobs:
           ./shared/check-counters.sh
       - name: Counters generator validation (#707)
         run: node bin/generate-counters.js --check
+  # shared/components.js — suite vitest (jsdom) sur composants vanilla (#744).
+  # Reutilise Vitest (deja devDependency de packages/react, hoiste au root
+  # node_modules via les workspaces npm) plutot que d'introduire un 2e outil.
+  # shared/components.js n'est pas un module ES (fonctions globales exposees
+  # via window.__initX) : les tests le chargent via jsdom + dom.window.eval()
+  # pour executer le VRAI script dans le contexte d'une fenetre (voir
+  # tests/vanilla/helpers/load-components.js). Amorce = 3 composants critiques
+  # (initContextMenu #750, initCalendar, initJsonViewer) — les ~37 autres
+  # restent a decouper par famille (cf. #744). Bloquant pour la partie couverte.
+  vanilla-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Vanilla components unit tests (jsdom, #744)
+        run: npm run test:vanilla
   # @msyx-dev/react (packages/react) — suite vitest (jsdom).
   # Le chemin corepack + pnpm install --frozen-lockfile sur Node 24 est
   # confirme vert : il s'execute et rapporte ses resultats a chaque PR.

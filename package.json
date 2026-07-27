@@ -25,6 +25,7 @@
     "test:graph-port-drop": "node tests/regression/graph-port-drop.test.js",
     "test:graph-history": "node tests/regression/graph-history.test.js",
     "test:graph-io": "node tests/regression/graph-io.test.js",
+    "test:vanilla": "vitest run --config tests/vanilla/vitest.config.js",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
     "test:visual:report": "playwright show-report",
@@ -37,6 +38,8 @@
     "@playwright/test": "^1.48.0",
     "esbuild": "^0.28.1",
     "http-server": "^14.1.1",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.6",
     "wait-on": "^9.0.5"
   },
   "engines": {
