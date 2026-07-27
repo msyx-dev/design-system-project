@@ -1,7 +1,7 @@
 {
   "version": "2.119.0",
   "generated": {
-    "at": "2026-07-27T12:16:29.488Z",
+    "at": "2026-07-27T13:45:34.674Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -945,6 +945,8 @@
         ".carousel-track",
         ".carousel-slide",
         ".carousel-btn",
+        ".carousel-btn-prev",
+        ".carousel-btn-next",
         ".carousel-dots",
         ".carousel-dot"
       ],
@@ -1007,7 +1009,7 @@
         ".fab-action-btn"
       ],
       "jsInit": "initFAB",
-      "example": "<button class=\"fab\" aria-label=\"Créer\">&#43;</button>\n\n<!-- FAB avec menu d'actions -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\" hidden>\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>",
+      "example": "<button class=\"fab\" aria-label=\"Créer\">&#43;</button>\n\n<!-- FAB avec menu d'actions -- .fab-trigger est l'ancre requise par initFAB() (querySelector, sort silencieusement si absente) -->\n<div class=\"fab-menu\" id=\"fab-exemple-menu\">\n  <div class=\"fab-actions\">\n    <div class=\"fab-action\">\n      <span>Nouveau projet</span>\n      <button class=\"fab-action-btn\" aria-label=\"Nouveau projet\">&#128193;</button>\n    </div>\n  </div>\n  <button class=\"fab fab-trigger\" aria-haspopup=\"true\" aria-expanded=\"false\" aria-label=\"Ouvrir les actions\">&#43;</button>\n</div>\n\n<!-- FAB étendu -->\n<button class=\"fab fab-extended\" aria-label=\"Ajouter une tâche\">\n  <span aria-hidden=\"true\">&#43;</span> Nouvelle tâche\n</button>",
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
@@ -1106,7 +1108,8 @@
       "cssClasses": [
         ".context-menu",
         ".context-menu-item",
-        ".context-menu-divider"
+        ".context-menu-divider",
+        ".context-target"
       ],
       "jsInit": "initContextMenu",
       "example": "<!-- Zone déclenchant le menu contextuel au clic droit -->\n<div class=\"context-target\" style=\"padding:2rem;border:1px dashed var(--border);border-radius:var(--radius-sm);\">\n  Clic droit pour ouvrir le menu\n</div>\n\n<!-- Définition du menu -->\n<div class=\"context-menu\" id=\"ctx-exemple\" hidden>\n  <button class=\"context-menu-item\">&#9998; Renommer</button>\n  <button class=\"context-menu-item\">&#128275; Partager</button>\n  <hr class=\"context-menu-divider\">\n  <button class=\"context-menu-item\" style=\"color:var(--danger);\">&#128465; Supprimer</button>\n</div>",
