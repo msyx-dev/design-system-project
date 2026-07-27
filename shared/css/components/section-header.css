@@ -97,3 +97,25 @@
         justify-content: flex-end;
     }
 }
+
+/* ===== STICKY MODIFIER — .section-header--sticky (#795) =====
+   Colle le PageHeader sous le site-header au scroll (pages de détail 2
+   colonnes, cf. .detail-grid). Nécessite le fix socle #795
+   (body{overflow-x:clip}, shared/css/base.css) : sans lui, body devient
+   conteneur de défilement et neutralise tout sticky de niveau page.
+   z-index : var(--z-sticky) (100) < var(--z-header) (150) — reste sous
+   .site-header (position:fixed, z-index:150).
+   Usage : <PageHeader className="section-header--sticky" ... /> (le
+   composant React expose déjà `className`, aucune modif de PageHeader.tsx
+   nécessaire) ou <section class="section-header section-header--sticky">
+   en HTML direct. */
+.section-header--sticky {
+    position: sticky;
+    top: var(--header-h);
+    z-index: var(--z-sticky);
+    background: var(--primary);
+    padding-block: var(--space-sm) var(--space-md);
+    min-height: var(--page-header-sticky-h);
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--border-color);
+}

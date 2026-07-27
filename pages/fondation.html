@@ -646,6 +646,46 @@
         </div>
     </div>
 
+    <!-- Detail grid 2 colonnes (#795) -->
+    <div class="subsection mt-lg">
+        <span class="demo-label">Detail grid 2 colonnes — .detail-grid / .detail-grid-main / .detail-grid-aside</span>
+        <div class="demo-box">
+            <p class="text-muted text-sm mb-md">Primitif « contenu + colonne latérale » pour les pages de détail (ex. ticketing). Bascule 1→2 colonnes à <code>min-width:1024px</code> (<code>--bp-lg</code>). Distinct de <code>.split-pane</code> (poignée JS redimensionnable, jamais empilé), <code>.sidebar</code> (rail de navigation <code>position:fixed</code>) et <code>.content-grid</code> (conteneur large sans <code>display:grid</code>). <strong>Redimensionner la fenêtre &lt; 1024px</strong> pour voir l'empilement mobile.</p>
+            <div class="detail-grid">
+                <div class="detail-grid-main" style="background:var(--surface-solid);border:1px solid var(--border-color);border-radius:var(--radius-sm);">
+                    <div class="section-header section-header--sticky" style="padding-inline:var(--space-lg);">
+                        <span class="overline">Ticket #1234</span>
+                        <h3>En-tête sticky — .section-header--sticky</h3>
+                    </div>
+                    <div style="padding:0 var(--space-lg) var(--space-lg);">
+                        <p class="text-sm text-muted">Contenu principal (<code>.detail-grid-main</code>). Dans un conteneur réellement scrollable, cet en-tête colle sous le header au scroll (fix socle #795 : <code>body{overflow-x:clip}</code>).</p>
+                    </div>
+                </div>
+                <aside class="detail-grid-aside" tabindex="0" aria-label="Informations complémentaires du ticket" style="background:var(--surface-solid);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:var(--space-lg);">
+                    <span class="demo-label text-xs">Aside — .detail-grid-aside</span>
+                    <p class="text-sm text-muted mt-sm"><code>align-self:start</code> (ne s'étire pas), <code>max-height</code> + <code>overflow-y:auto</code> ≥1024px, <code>tabindex="0"</code> + <code>aria-label</code> requis (a11y <code>scrollable-region-focusable</code>).</p>
+                </aside>
+            </div>
+            <div class="demo-box mt-sm">
+                <span class="demo-label text-xs">Usage</span>
+                <pre class="code-block text-xs mt-sm">&lt;div class="detail-grid"&gt;
+  &lt;div class="detail-grid-main"&gt;
+    &lt;div class="section-header section-header--sticky"&gt;…&lt;/div&gt;
+    &lt;!-- contenu --&gt;
+  &lt;/div&gt;
+  &lt;aside class="detail-grid-aside" tabindex="0" aria-label="…"&gt;…&lt;/aside&gt;
+&lt;/div&gt;</pre>
+            </div>
+            <div class="demo-box mt-sm">
+                <span class="demo-label text-xs">Tokens concernés</span>
+                <div class="token-list mt-sm">
+                    <div class="flex-center-gap"><code class="text-xs">--z-sticky</code><span class="text-muted text-xs">100 — reste sous --z-header (150)</span></div>
+                    <div class="flex-center-gap"><code class="text-xs">--page-header-sticky-h</code><span class="text-muted text-xs">hauteur réservée par .section-header--sticky, pour les calculs de décalage (scroll-margin-top, padding)</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Border-radius -->
     <div class="subsection mt-lg">
         <span class="demo-label">Border-radius</span>

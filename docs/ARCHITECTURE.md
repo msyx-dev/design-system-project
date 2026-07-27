@@ -44,7 +44,7 @@ shared/
     themes.css          # AUTOGÉNÉRÉ depuis themes/*.json par `node shared/build-themes.js` — blocs [data-theme] acssi/nhood (NE PAS éditer à la main)
     base.css            # Socle global (reset, focus accessible, body, texture grain) — synchronisé vers consumers en ds-base.css
     utilities.css       # Classes utilitaires couleur, backgrounds, bordures, espacement, display, radius, shadows, typographie
-    layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides
+    layout.css          # Layout shell — header, sidebar, main, section patterns, responsive/theming overrides, + .detail-grid 2 colonnes contenu/aside sticky (#795)
     components.css      # Barrel pur (v2.36.0) — 33 @import vers shared/css/components/ dans l'ordre cascade. < 1.5 KB. Remplace le monolithique 175 KB.
     components-core.css # Barrel essentiel (v2.36.0) — 10 modules pour consumers légers (menu.css ajouté v2.77.0 #520 — requis par les alias forms/navigation).
     components/         # 33 modules CSS par affinité fonctionnelle (v2.77.0, +menu.css #520, +prose.css #439, +orb.css #357) :

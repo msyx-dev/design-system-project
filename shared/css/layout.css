@@ -1,4 +1,4 @@
-/* @ds-version: 2.119.1 */
+/* @ds-version: 2.120.0 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -167,6 +167,41 @@
 @media (min-width: 1280px) {
     .content-grid {
         padding-inline: var(--space-2xl);
+    }
+}
+
+/* ===== DETAIL GRID — primitif layout 2 colonnes contenu + aside (#795) =====
+   Cas d'usage : pages de détail (ex. ticketing). Distinct de .split-pane
+   (poignée JS redimensionnable, ne s'empile jamais), .sidebar (rail de
+   navigation position:fixed) et .content-grid (conteneur large SANS
+   display:grid). Mobile-first : 1 colonne < 1024px (--bp-lg), 2 colonnes
+   >= 1024px — cf. docs/DS-PRINCIPLES.md §4.
+   Usage :
+   <div class="detail-grid">
+     <div class="detail-grid-main">…</div>
+     <aside class="detail-grid-aside" tabindex="0" aria-label="…">…</aside>
+   </div> */
+.detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+}
+.detail-grid-main { min-width: 0; }
+.detail-grid-aside { min-width: 0; }
+
+@media (min-width: 1024px) { /* --bp-lg (docs/DS-PRINCIPLES.md §4) */
+    .detail-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    }
+    .detail-grid-aside {
+        /* Obligatoire : sans align-self:start, l'item de grille est étiré
+           en hauteur (stretch, défaut) et position:sticky n'a aucun jeu
+           pour s'activer (#795). */
+        align-self: start;
+        position: sticky;
+        top: calc(var(--header-h) + var(--space-lg));
+        max-height: calc(100vh - var(--header-h) - var(--space-2xl));
+        overflow-y: auto;
     }
 }
 

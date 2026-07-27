@@ -22,7 +22,10 @@ body {
     background: var(--primary);
     color: var(--text);
     line-height: 1.6;
-    overflow-x: hidden;
+    overflow-x: clip; /* #795 : hidden forçait overflow-y:auto (CSS Overflow §3.5 —
+       propagation body→viewport exige html visible sur les 2 axes ; html est déjà
+       clip depuis #530), body devenait conteneur de défilement et neutralisait tout
+       sticky de niveau page chez TOUS les consumers. clip ne crée pas de scroll box. */
 }
 
 /* Texture grain — motif de marque (token-driven, decoratif, ne capte aucun clic) */

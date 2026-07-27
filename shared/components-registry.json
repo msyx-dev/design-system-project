@@ -1,7 +1,7 @@
 {
-  "version": "2.119.1",
+  "version": "2.120.0",
   "generated": {
-    "at": "2026-07-27T13:45:34.674Z",
+    "at": "2026-07-27T21:15:30.913Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -362,6 +362,7 @@
       "module": [
         "shared/css/components/brand.css",
         "shared/css/components/feedback.css",
+        "shared/css/components/section-header.css",
         "shared/css/layout.css"
       ]
     },
@@ -1224,7 +1225,8 @@
       "example": "<div class=\"split-pane\" data-split-persist-key=\"my-key\">\n  <div class=\"split-panel\" style=\"flex-basis:35%\">Liste</div>\n  <div class=\"split-gutter\" data-split-min=\"15\" data-split-max=\"85\"></div>\n  <div class=\"split-panel split-panel--fluid\">Détail</div>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/splitter.css"
+        "shared/css/components/splitter.css",
+        "shared/css/layout.css"
       ]
     },
     {
@@ -2961,7 +2963,8 @@
         ".section-header-text",
         ".section-header-actions",
         ".overline",
-        ".lead"
+        ".lead",
+        ".section-header--sticky"
       ],
       "jsInit": null,
       "reactComponent": "PageHeader",
@@ -3092,6 +3095,19 @@
       "jsInit": null,
       "react": "pending",
       "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53"
+    },
+    {
+      "name": "detail-grid",
+      "kind": "layout",
+      "page": "fondation",
+      "cssClasses": [
+        ".detail-grid",
+        ".detail-grid-main",
+        ".detail-grid-aside"
+      ],
+      "jsInit": null,
+      "react": "pending",
+      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (--bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795)."
     },
     {
       "name": "hidden-mobile",

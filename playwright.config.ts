@@ -40,6 +40,7 @@ export default defineConfig({
     "**/graph-keyboard.spec.ts",
     "**/graph-a11y.spec.ts",
     "**/graph-edit.spec.ts",
+    "**/sticky-regression.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
