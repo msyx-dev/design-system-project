@@ -163,7 +163,7 @@ describe("ContextMenu — structure DS", () => {
     expect(zoneEl()).toHaveAttribute("tabindex", "0");
   });
 
-  it("item parent de sous-menu = <div role=menuitem aria-haspopup> avec .context-arrow et .context-submenu enfant direct", () => {
+  it("item parent de sous-menu = <div role=menuitem aria-haspopup=menu> avec .context-arrow et .context-submenu enfant direct", () => {
     render(
       <ContextMenu className="test-zone" items={makeSubmenuItems()}>
         <span>Zone cible</span>
@@ -173,7 +173,10 @@ describe("ContextMenu — structure DS", () => {
 
     const parent = screen.getByRole("menuitem", { name: /Partager/ });
     expect(parent.tagName).toBe("DIV");
-    expect(parent).toHaveAttribute("aria-haspopup", "true");
+    expect(parent).toHaveAttribute("aria-haspopup", "menu");
+    expect(parent).toHaveAttribute("aria-expanded", "false");
+    // "Copier" (1er item) est le focus initial ⇒ "Partager" n'est pas encore
+    // l'item roving-actif de son niveau.
     expect(parent).toHaveAttribute("tabindex", "-1");
     expect(parent.querySelector(".context-arrow")).toBeInTheDocument();
 
@@ -181,6 +184,8 @@ describe("ContextMenu — structure DS", () => {
     expect(sub).toHaveAttribute("role", "menu");
     expect(sub).toHaveAttribute("aria-label", "Partager via");
     expect(sub.parentElement).toHaveClass("context-menu-item");
+    // Sous-menu non ouvert : pas de .show (#750/#773).
+    expect(sub).not.toHaveClass("show");
 
     const subItems = sub.querySelectorAll("button.context-menu-item");
     expect(subItems.length).toBe(2);
@@ -519,7 +524,7 @@ describe("ContextMenu — navigation clavier", () => {
     expect(menuEl()).not.toHaveClass("show");
   });
 
-  it("les flèches atteignent l'item parent de sous-menu (div tabIndex=-1)", async () => {
+  it("les flèches atteignent l'item parent de sous-menu (roving tabindex → 0 une fois focus)", async () => {
     const user = userEvent.setup();
     render(
       <ContextMenu className="test-zone" items={makeSubmenuItems()}>
@@ -529,10 +534,16 @@ describe("ContextMenu — navigation clavier", () => {
     fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
 
     await user.keyboard("{ArrowDown}");
-    expect(screen.getByRole("menuitem", { name: /Partager/ })).toHaveFocus();
+    const parent = screen.getByRole("menuitem", { name: /Partager/ });
+    expect(parent).toHaveFocus();
+    expect(parent).toHaveAttribute("tabindex", "0");
+    expect(screen.getByRole("menuitem", { name: "Copier" })).toHaveAttribute(
+      "tabindex",
+      "-1",
+    );
   });
 
-  it("Entrée sur l'item parent AVEC onSelect l'appelle une fois", async () => {
+  it("Entrée sur l'item parent porteur d'un sous-menu OUVRE le sous-menu (jamais onSelect, même s'il est fourni) — parité #750/#773", async () => {
     const user = userEvent.setup();
     const shareOnSelect = vi.fn();
     render(
@@ -547,11 +558,18 @@ describe("ContextMenu — navigation clavier", () => {
 
     await user.keyboard("{ArrowDown}{Enter}");
 
-    expect(shareOnSelect).toHaveBeenCalledTimes(1);
-    expect(menuEl()).not.toHaveClass("show");
+    expect(shareOnSelect).not.toHaveBeenCalled();
+    expect(menuEl()).toHaveClass("show");
+    const submenu = document.querySelector(".context-submenu") as HTMLElement;
+    expect(submenu).toHaveClass("show");
+    expect(screen.getByRole("menuitem", { name: /Partager/ })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveFocus();
   });
 
-  it("Entrée sur l'item parent SANS onSelect ne l'appelle jamais et laisse le menu ouvert", async () => {
+  it("Espace sur l'item parent porteur d'un sous-menu l'ouvre également", async () => {
     const user = userEvent.setup();
     render(
       <ContextMenu className="test-zone" items={makeSubmenuItems()}>
@@ -560,8 +578,133 @@ describe("ContextMenu — navigation clavier", () => {
     );
     fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
 
-    await user.keyboard("{ArrowDown}{Enter}");
+    await user.keyboard("{ArrowDown} ");
 
+    const submenu = document.querySelector(".context-submenu") as HTMLElement;
+    expect(submenu).toHaveClass("show");
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveFocus();
+  });
+
+  it("ArrowRight sur l'item parent ouvre le sous-menu et focus son 1er item", async () => {
+    const user = userEvent.setup();
+    render(
+      <ContextMenu className="test-zone" items={makeSubmenuItems()}>
+        <span>Zone cible</span>
+      </ContextMenu>,
+    );
+    fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
+
+    await user.keyboard("{ArrowDown}{ArrowRight}");
+
+    const submenu = document.querySelector(".context-submenu") as HTMLElement;
+    expect(submenu).toHaveClass("show");
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveFocus();
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveAttribute(
+      "tabindex",
+      "0",
+    );
+    expect(screen.getByRole("menuitem", { name: "Lien" })).toHaveAttribute(
+      "tabindex",
+      "-1",
+    );
+  });
+
+  it("ArrowRight sur un item SANS sous-menu est un no-op", async () => {
+    const user = userEvent.setup();
+    renderMenu();
+    fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
+
+    await user.keyboard("{ArrowRight}");
+
+    expect(screen.getByRole("menuitem", { name: "Copier" })).toHaveFocus();
+    expect(document.querySelector(".context-submenu")).toBeNull();
+  });
+
+  it("ArrowDown/ArrowUp/Home/End naviguent (bouclant) dans le sous-menu ouvert", async () => {
+    const user = userEvent.setup();
+    render(
+      <ContextMenu className="test-zone" items={makeSubmenuItems()}>
+        <span>Zone cible</span>
+      </ContextMenu>,
+    );
+    fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
+    await user.keyboard("{ArrowDown}{ArrowRight}");
+
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(screen.getByRole("menuitem", { name: "Lien" })).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveFocus();
+    await user.keyboard("{ArrowUp}");
+    expect(screen.getByRole("menuitem", { name: "Lien" })).toHaveFocus();
+    await user.keyboard("{Home}");
+    expect(screen.getByRole("menuitem", { name: "Email" })).toHaveFocus();
+    await user.keyboard("{End}");
+    expect(screen.getByRole("menuitem", { name: "Lien" })).toHaveFocus();
+  });
+
+  it("ArrowLeft dans le sous-menu le referme et rend le focus à l'item parent", async () => {
+    const user = userEvent.setup();
+    render(
+      <ContextMenu className="test-zone" items={makeSubmenuItems()}>
+        <span>Zone cible</span>
+      </ContextMenu>,
+    );
+    fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
+    await user.keyboard("{ArrowDown}{ArrowRight}");
+
+    const submenu = document.querySelector(".context-submenu") as HTMLElement;
+    expect(submenu).toHaveClass("show");
+
+    await user.keyboard("{ArrowLeft}");
+
+    expect(submenu).not.toHaveClass("show");
+    const parent = screen.getByRole("menuitem", { name: /Partager/ });
+    expect(parent).toHaveFocus();
+    expect(parent).toHaveAttribute("aria-expanded", "false");
+    // Le menu racine, lui, reste ouvert.
     expect(menuEl()).toHaveClass("show");
+  });
+
+  it("Escape referme d'abord le sous-menu ouvert le plus profond (le menu racine reste show)", async () => {
+    const user = userEvent.setup();
+    render(
+      <ContextMenu className="test-zone" items={makeSubmenuItems()}>
+        <span>Zone cible</span>
+      </ContextMenu>,
+    );
+    fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
+    await user.keyboard("{ArrowDown}{ArrowRight}");
+
+    const submenu = document.querySelector(".context-submenu") as HTMLElement;
+    expect(submenu).toHaveClass("show");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(submenu).not.toHaveClass("show");
+    expect(menuEl()).toHaveClass("show");
+    expect(screen.getByRole("menuitem", { name: /Partager/ })).toHaveFocus();
+
+    // 2e Escape : referme tout le menu, restaure le focus sur la zone.
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(menuEl()).not.toHaveClass("show");
+    expect(zoneEl()).toHaveFocus();
+  });
+
+  it("fermer le menu racine (Escape direct, sans sous-menu ouvert) referme aussi tout sous-menu résiduel", async () => {
+    const user = userEvent.setup();
+    render(
+      <ContextMenu className="test-zone" items={makeSubmenuItems()}>
+        <span>Zone cible</span>
+      </ContextMenu>,
+    );
+    fireEvent.contextMenu(zoneEl(), { clientX: 10, clientY: 10 });
+    await user.keyboard("{ArrowDown}{ArrowRight}{ArrowLeft}");
+
+    const submenu = document.querySelector(".context-submenu") as HTMLElement;
+    expect(submenu).not.toHaveClass("show");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(menuEl()).not.toHaveClass("show");
   });
 });

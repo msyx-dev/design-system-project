@@ -32,7 +32,11 @@ export interface ContextMenuSubmenu {
 
 /** Item de premier niveau : item feuille + sous-menu optionnel. */
 export interface ContextMenuItemEntry extends ContextMenuSubItem {
-  /** Sous-menu au survol → item rendu en `<div role="menuitem" aria-haspopup="true">`. */
+  /**
+   * Sous-menu au survol (CSS) OU au clavier (`ArrowRight`/`Entrée`/`Espace`,
+   * parité #750/#773) → item rendu en
+   * `<div role="menuitem" aria-haspopup="menu" aria-expanded>`.
+   */
   submenu?: ContextMenuSubmenu;
 }
 
@@ -91,11 +95,12 @@ const useIsoLayoutEffect =
  *       <span class="icon">…</span> Copier
  *     </button>
  *     <div class="context-menu-divider" role="separator"></div>
- *     <div class="context-menu-item" role="menuitem" aria-haspopup="true" tabindex="-1">
+ *     <div class="context-menu-item" role="menuitem" aria-haspopup="menu"
+ *          aria-expanded="false" tabindex="-1">
  *       <span class="icon">…</span> Partager
  *       <span class="context-arrow">…</span>
  *       <div class="context-submenu" role="menu" aria-label="Partager via">
- *         <button class="context-menu-item" role="menuitem">Email</button>
+ *         <button class="context-menu-item" role="menuitem" tabindex="-1">Email</button>
  *       </div>
  *     </div>
  *   </div>
@@ -124,12 +129,18 @@ const useIsoLayoutEffect =
  * - **au-delà du vanilla** (DS-PRINCIPLES §3.2 / #613) : navigation clavier
  *   WAI-ARIA APG Menu — focus posé sur le premier item à l'ouverture, ↑/↓
  *   bouclants, `Home`/`End`, `Entrée`/`Espace` pour activer.
+ * - **sous-menu clavier** (parité #750/#773 — la limite « hover pur » du
+ *   #468 est levée) : roving tabindex par niveau de menu (un seul item du
+ *   niveau courant à `tabindex=0`) ; `ArrowRight`/`Entrée`/`Espace` sur un
+ *   item porteur d'un sous-menu (`aria-haspopup="menu"`) ouvre le sous-menu
+ *   — pose la classe **`.show`** sur `.context-submenu` (c'est elle que le
+ *   CSS consomme, jamais l'ARIA seule — piège `<ActionMenu>`/`<Graph>`) — et
+ *   focus impérativement son premier item ; `ArrowLeft` referme le
+ *   sous-menu et rend le focus à l'item parent ; `Escape` referme d'abord
+ *   le sous-menu ouvert le plus profond, sinon tout le menu (cascade, calque
+ *   `initContextMenu`) ; `aria-expanded` synchronisé sur l'item parent.
  *
  * **Limites connues** (assumées, cf. spec #468) :
- * - **sous-menus au survol uniquement** : le CSS DS n'expose aucune règle
- *   d'état sur `.context-submenu` (`.context-menu-item:hover > .context-submenu`
- *   seulement) → l'ouverture au clavier est impossible sans CSS nouveau. Ticket
- *   de suite côté DS CSS ;
  * - **pas de portal** : le panneau est rendu en place. `position: fixed` étant
  *   résolu par rapport au plus proche ancêtre porteur de `transform`, `filter`,
  *   `perspective`, `backdrop-filter` ou `contain: paint`, un tel ancêtre décale
@@ -154,6 +165,14 @@ export function ContextMenu({
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState({ left: 0, top: 0 });
+  // Roving tabindex racine : id de l'entrée à tabindex=0 (#750/#773).
+  const [activeRootId, setActiveRootId] = useState<string | null>(null);
+  // Sous-menu ouvert au clavier : id de l'entrée PARENTE porteuse du
+  // sous-menu (au plus 1 à la fois, un seul niveau imbriqué possible dans ce
+  // modèle de données) — pose `.show` + `aria-expanded="true"` — #750/#773.
+  const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
+  // Roving tabindex du sous-menu ouvert : id du sous-item à tabindex=0.
+  const [activeSubId, setActiveSubId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -175,8 +194,28 @@ export function ContextMenu({
 
   const close = (restoreFocus: boolean) => {
     setOpen(false);
+    setOpenSubmenuId(null);
+    setActiveSubId(null);
     onOpenChange?.(false);
     if (restoreFocus) containerRef.current?.focus();
+  };
+
+  // Ferme le sous-menu ouvert (cascade `Escape`/`ArrowLeft`, #750/#773) —
+  // ne referme QUE le sous-menu, jamais le menu racine.
+  const closeSubmenu = (restoreFocus: boolean) => {
+    const parentId = openSubmenuId;
+    setOpenSubmenuId(null);
+    setActiveSubId(null);
+    if (restoreFocus && parentId) itemRefs.current.get(parentId)?.focus();
+  };
+
+  // Ouvre le sous-menu porté par `entry` et focus (impérativement) son
+  // premier item — `ArrowRight`/`Entrée`/`Espace`, #750/#773.
+  const openSubmenu = (entry: ContextMenuItemEntry) => {
+    if (!entry.submenu) return;
+    setOpenSubmenuId(entry.id);
+    const first = entry.submenu.items[0];
+    setActiveSubId(first ? first.id : null);
   };
 
   // Bornage au viewport — mesure APRÈS l'application de `.show` (sinon
@@ -198,13 +237,27 @@ export function ContextMenu({
     );
   }, [open, anchor.x, anchor.y]);
 
-  // Focus du premier item à l'ouverture (WAI-ARIA APG Menu).
+  // Focus du premier item à l'ouverture (WAI-ARIA APG Menu). Réinitialise
+  // aussi tout état de sous-menu résiduel (roving racine + sous-niveau).
   useEffect(() => {
     if (!open) return;
     const first = entries[0];
+    setActiveRootId(first ? first.id : null);
+    setOpenSubmenuId(null);
+    setActiveSubId(null);
     if (first) itemRefs.current.get(first.id)?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  // Focus (impératif) du premier item du sous-menu à son ouverture au
+  // clavier — #750/#773.
+  useEffect(() => {
+    if (!openSubmenuId) return;
+    const parent = entries.find((entry) => entry.id === openSubmenuId);
+    const first = parent?.submenu?.items[0];
+    if (first) itemRefs.current.get(first.id)?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openSubmenuId]);
 
   // Écoutes globales pendant l'ouverture (calquées sur le vanilla).
   useEffect(() => {
@@ -216,7 +269,11 @@ export function ContextMenu({
       if (!menuRef.current?.contains(event.target as Node)) close(false);
     };
     const handleDocumentKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") close(true);
+      if (event.key !== "Escape") return;
+      // Cascade (#750/#773) : referme d'abord le sous-menu ouvert le plus
+      // profond s'il y en a un, sinon tout le menu.
+      if (openSubmenuId) closeSubmenu(true);
+      else close(true);
     };
     const handleDocumentContextMenu = (event: MouseEvent) => {
       // Clic droit hors de CETTE zone (ailleurs, ou sur une autre instance)
@@ -233,7 +290,7 @@ export function ContextMenu({
       document.removeEventListener("contextmenu", handleDocumentContextMenu);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, openSubmenuId]);
 
   const handleContextMenu = (event: ReactMouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -242,12 +299,31 @@ export function ContextMenu({
     openAt(event.clientX, event.clientY);
   };
 
+  // Activation par CLIC (souris) uniquement — le clavier passe par
+  // `openSubmenu()` (#750/#773), jamais par `activate()`, pour un item
+  // porteur d'un sous-menu.
   const activate = (entry: ContextMenuSubItem | ContextMenuItemEntry) => {
-    // Un item parent de sous-menu SANS action est inerte (son rôle est
-    // d'ouvrir le sous-menu, ce que seul le hover CSS fait).
+    // Un clic sur un item parent de sous-menu SANS action est inerte (son
+    // rôle est d'ouvrir le sous-menu, ce que le hover CSS fait déjà).
     if (!entry.onSelect && "submenu" in entry && entry.submenu) return;
     entry.onSelect?.();
     close(true);
+  };
+
+  // Focus (impératif) + roving tabindex d'un item de premier niveau.
+  const focusRootAt = (index: number) => {
+    const target = entries[index];
+    if (!target) return;
+    setActiveRootId(target.id);
+    itemRefs.current.get(target.id)?.focus();
+  };
+
+  // Focus (impératif) + roving tabindex d'un item du sous-menu ouvert.
+  const focusSubAt = (subItems: ContextMenuSubItem[], index: number) => {
+    const target = subItems[index];
+    if (!target) return;
+    setActiveSubId(target.id);
+    itemRefs.current.get(target.id)?.focus();
   };
 
   const handleItemKeyDown = (
@@ -257,37 +333,103 @@ export function ContextMenu({
     const currentIndex = entries.findIndex((item) => item.id === entry.id);
     if (currentIndex === -1) return;
 
-    let targetIndex: number | null = null;
     switch (event.key) {
       case "ArrowDown":
-        targetIndex = (currentIndex + 1) % entries.length;
-        break;
+        event.preventDefault();
+        event.stopPropagation();
+        focusRootAt((currentIndex + 1) % entries.length);
+        return;
       case "ArrowUp":
-        targetIndex = (currentIndex - 1 + entries.length) % entries.length;
-        break;
+        event.preventDefault();
+        event.stopPropagation();
+        focusRootAt((currentIndex - 1 + entries.length) % entries.length);
+        return;
       case "Home":
-        targetIndex = 0;
-        break;
+        event.preventDefault();
+        event.stopPropagation();
+        focusRootAt(0);
+        return;
       case "End":
-        targetIndex = entries.length - 1;
-        break;
-      case "Enter":
-      case " ":
-        // Les items feuilles sont des <button> : Entrée/Espace déclenchent
-        // nativement le clic → NE PAS activer ici (double appel garanti).
-        // Seul l'item parent de sous-menu est un <div> : activation manuelle.
+        event.preventDefault();
+        event.stopPropagation();
+        focusRootAt(entries.length - 1);
+        return;
+      case "ArrowRight":
+        // Parité `initContextMenu` (#750/#773) : ouvre le sous-menu s'il y
+        // en a un. Sans sous-menu, ArrowRight est un no-op (calque vanilla).
         if (entry.submenu) {
           event.preventDefault();
-          activate(entry);
+          event.stopPropagation();
+          openSubmenu(entry);
+        }
+        return;
+      case "Enter":
+      case " ":
+        // Parité `initContextMenu` (#750/#773) : un item porteur d'un
+        // sous-menu OUVRE TOUJOURS le sous-menu au clavier — jamais
+        // d'activation directe de `onSelect` (le vanilla n'appelle
+        // `item.click()` QUE pour les items SANS sous-menu). Les items
+        // feuilles sont des <button> natifs : Entrée/Espace y déclenchent
+        // déjà nativement le clic → rien à faire ici pour eux.
+        if (entry.submenu) {
+          event.preventDefault();
+          event.stopPropagation();
+          openSubmenu(entry);
         }
         return;
       default:
         return;
     }
+  };
 
-    event.preventDefault();
-    const target = entries[targetIndex];
-    if (target) itemRefs.current.get(target.id)?.focus();
+  const handleSubItemKeyDown = (
+    event: ReactKeyboardEvent<HTMLElement>,
+    parent: ContextMenuItemEntry,
+    subEntry: ContextMenuSubItem,
+  ) => {
+    const subItems = parent.submenu?.items ?? [];
+    const currentIndex = subItems.findIndex((item) => item.id === subEntry.id);
+    if (currentIndex === -1) return;
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        // stopPropagation() OBLIGATOIRE : `.context-submenu` est un
+        // descendant DOM de `.context-menu-item` parent (contrainte HTML,
+        // cf. commentaire de rendu plus bas) → sans ça l'événement remonte
+        // et re-déclenche AUSSI `handleItemKeyDown` du parent (double
+        // navigation, calque `e.stopPropagation()` d'`initContextMenu`).
+        event.stopPropagation();
+        focusSubAt(subItems, (currentIndex + 1) % subItems.length);
+        return;
+      case "ArrowUp":
+        event.preventDefault();
+        event.stopPropagation();
+        focusSubAt(
+          subItems,
+          (currentIndex - 1 + subItems.length) % subItems.length,
+        );
+        return;
+      case "Home":
+        event.preventDefault();
+        event.stopPropagation();
+        focusSubAt(subItems, 0);
+        return;
+      case "End":
+        event.preventDefault();
+        event.stopPropagation();
+        focusSubAt(subItems, subItems.length - 1);
+        return;
+      case "ArrowLeft":
+        // Ferme le sous-menu et rend le focus à l'item parent — #750/#773.
+        event.preventDefault();
+        event.stopPropagation();
+        closeSubmenu(true);
+        return;
+      default:
+        // Enter/Espace : sub-items = <button> natifs, clic déjà déclenché.
+        return;
+    }
   };
 
   const registerItem = (id: string) => (node: HTMLElement | null) => {
@@ -346,8 +488,9 @@ export function ContextMenu({
                 ref={registerItem(item.id)}
                 className="context-menu-item"
                 role="menuitem"
-                aria-haspopup="true"
-                tabIndex={-1}
+                aria-haspopup="menu"
+                aria-expanded={openSubmenuId === item.id ? "true" : "false"}
+                tabIndex={activeRootId === item.id ? 0 : -1}
                 onClick={() => activate(item)}
                 onKeyDown={(event) => handleItemKeyDown(event, item)}
               >
@@ -360,7 +503,12 @@ export function ContextMenu({
                   />
                 </span>
                 <div
-                  className="context-submenu"
+                  className={[
+                    "context-submenu",
+                    openSubmenuId === item.id ? "show" : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   role="menu"
                   aria-label={item.submenu.label}
                 >
@@ -368,9 +516,14 @@ export function ContextMenu({
                     <button
                       key={sub.id}
                       type="button"
+                      ref={registerItem(sub.id)}
                       className="context-menu-item"
                       role="menuitem"
+                      tabIndex={activeSubId === sub.id ? 0 : -1}
                       onClick={() => activate(sub)}
+                      onKeyDown={(event) =>
+                        handleSubItemKeyDown(event, item, sub)
+                      }
                     >
                       {sub.icon && <span className="icon">{sub.icon}</span>}
                       {sub.label}
@@ -388,6 +541,7 @@ export function ContextMenu({
               ref={registerItem(item.id)}
               className="context-menu-item"
               role="menuitem"
+              tabIndex={activeRootId === item.id ? 0 : -1}
               onClick={() => activate(item)}
               onKeyDown={(event) => handleItemKeyDown(event, item)}
             >
