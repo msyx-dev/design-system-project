@@ -450,6 +450,43 @@ if (!process.argv.includes('--skip-validate')) {
 // fragile (source de faux positifs). Laissé pour un ticket dédié si le
 // besoin se confirme.
 //
+// (C) Évalué et NON implémenté (#789 -- suite de #781/#748) : détecter les
+// sélecteurs `querySelector`/`querySelectorAll` que `jsInit` interroge de
+// façon OBLIGATOIRE (absence => sortie de fonction ou exception), et exiger
+// leur présence dans `example` -- ce qui aurait attrapé `fab` (`.fab-trigger`
+// manquant, cf. #789) de façon automatique plutôt que manuelle.
+//
+// Analyse menée : sur les ~175 sites `querySelector()` (hors `*All`) de
+// `shared/components.js`, seuls ~22 suivent un idiome de garde détectable
+// mécaniquement (`var/let/const X = ...querySelector(...); if (!X) return`).
+// Croisement de ces 22 avec le registre : un seul défaut réel trouvé
+// (`.fab-trigger`, corrigé dans #789) -- tous les autres sont soit sans
+// `example` du tout (règle inapplicable), soit portés par le `jsInit`
+// umbrella `initComponents` (partagé par 6 entrées -- tabs/accordion/
+// dropdown/kanban/backlog/charts -- impossible d'attribuer un sélecteur
+// requis à UNE entrée précise sans heuristique fragile), soit déjà cités
+// correctement.
+//
+// Faille structurelle qui condamne l'inverse aussi : le défaut RÉEL trouvé
+// pendant #789 sur `carousel` (`.carousel-btn-prev`/`.carousel-btn-next`
+// absentes des `cssClasses`) N'AURAIT PAS été détecté par cette règle --
+// ces deux sélecteurs sont interrogés SANS garde de retour anticipé (seul
+// `!track || !slides.length` déclenche un `return`), exactement comme
+// d'autres sélecteurs authentiquement optionnels (`.carousel-dots`). Un
+// idiome de garde absent ne veut donc pas dire « non requis » : le signal
+// syntaxique est trop faible pour discriminer fiablement requis/optionnel
+// à travers ~60 fonctions `init*` de styles hétérogènes (var/let/const,
+// retours anticipés à une ou plusieurs lignes, conditions composées,
+// sélecteurs construits dynamiquement type `'#' + id`).
+//
+// Conclusion : garder cette règle en dehors de generate-registry.js. Elle
+// produirait soit des faux positifs non actionnables (umbrella), soit une
+// fausse sécurité sur les cas qu'elle rate silencieusement (carousel). Un
+// check à faux positifs/négatifs significatifs finit désactivé par le
+// premier qui s'y heurte -- pire que pas de check. Les défauts de ce type
+// restent capturés par audit manuel ciblé (cf. #781, #789), pas par un
+// gate automatique.
+//
 // Mode --check (CI) : WARN-ONLY par défaut (objectif = produire l'inventaire,
 // pas bloquer -- même défaut que check-dead-classes.js #765). Bascule
 // bloquante : --example-strict.
