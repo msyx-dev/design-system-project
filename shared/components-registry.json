@@ -1,7 +1,7 @@
 {
   "version": "2.117.0",
   "generated": {
-    "at": "2026-07-27T05:42:35.726Z",
+    "at": "2026-07-27T10:35:54.188Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3012,20 +3012,43 @@
       "page": "formulaires",
       "cssClasses": [
         ".cal-wrap",
+        ".cal-header",
+        ".cal-nav",
+        ".cal-weekdays",
         ".cal-grid",
         ".cal-day",
-        ".cal-nav",
-        ".cal-header",
-        ".time-input-wrap"
+        ".cal-mini",
+        ".cal-dots",
+        ".cal-dot",
+        ".cal-legend",
+        ".cal-legend-item",
+        ".cal-legend-dot"
       ],
       "jsInit": "initCalendar",
-      "description": "Date-picker INLINE single/range (initCalendar) : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement calendar:change. Time-picker initTimePicker() 24h/12h (#436) mutualisant .number-input-wrap + .segmented, événement time:change. JS Date natif, zéro dépendance.",
+      "description": "Date-picker INLINE single/range (initCalendar) : single + range 2-bornes (1 calendrier, 2 clics), navigation mois, grille a11y clavier complète (roving tabindex, role grid/row/gridcell, aria-live mois), événement calendar:change. JS Date natif, zéro dépendance.",
+      "example": "<div class=\"cal-wrap\" data-calendar=\"single\" data-cal-ref=\"2026-03\" data-target=\"#cal-single-out\">\n  <div class=\"cal-header\">\n    <h4 aria-live=\"polite\"></h4>\n    <div class=\"cal-nav\">\n      <button type=\"button\" class=\"cal-prev\" aria-label=\"Mois précédent\">&#8249;</button>\n      <button type=\"button\" class=\"cal-next\" aria-label=\"Mois suivant\">&#8250;</button>\n    </div>\n  </div>\n  <div class=\"cal-weekdays\"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>\n  <div class=\"cal-grid\" role=\"grid\"></div>\n</div>",
       "react": "ported",
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/theming.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_responsive.css"
+      ]
+    },
+    {
+      "name": "time-picker",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".time-input-wrap",
+        ".time-sep"
+      ],
+      "jsInit": "initTimePicker",
+      "description": "Time-picker 24h/12h (#436) mutualisant .number-input-wrap + .segmented AM/PM (radiogroup ARIA), événement time:change. JS Date natif, zéro dépendance.",
+      "example": "<div class=\"time-input-wrap\" data-time data-format=\"24\" data-target=\"#time-24-out\">\n  <div class=\"number-input-wrap\" data-time-part=\"hh\">\n    <button type=\"button\" class=\"number-dec\" aria-label=\"Diminuer les heures\">&#8722;</button>\n    <input type=\"number\" min=\"0\" max=\"23\" value=\"9\" aria-label=\"Heures\">\n    <button type=\"button\" class=\"number-inc\" aria-label=\"Augmenter les heures\">+</button>\n  </div>\n  <span class=\"time-sep\">:</span>\n  <div class=\"number-input-wrap\" data-time-part=\"mm\">\n    <button type=\"button\" class=\"number-dec\" aria-label=\"Diminuer les minutes\">&#8722;</button>\n    <input type=\"number\" min=\"0\" max=\"59\" step=\"5\" value=\"30\" aria-label=\"Minutes\">\n    <button type=\"button\" class=\"number-inc\" aria-label=\"Augmenter les minutes\">+</button>\n  </div>\n</div>",
+      "react": "ported",
+      "module": [
+        "shared/css/components/templates.css"
       ]
     },
     {
