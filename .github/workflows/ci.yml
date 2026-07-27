@@ -103,6 +103,10 @@ jobs:
           ./tests/test-check-dead-classes.sh
       - name: Registry validation — phantoms (#516) + React parity (#523) + frontière (#511)
         run: node bin/generate-registry.js --check
+      - name: extractReactClasses BEM classes unit tests (#747)
+        run: |
+          chmod +x tests/test-extract-react-classes-bem.sh
+          ./tests/test-extract-react-classes-bem.sh
       # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
       - name: Nav sections manifest validation (#528)
         run: node bin/generate-nav-sections.js --check
