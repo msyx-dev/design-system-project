@@ -129,6 +129,11 @@ export function useTheme(
       ? requestedMode
       : themeConfig.defaultMode;
 
+    // Applique au DOM en plus de l'état React — sans ça, React réconcilie
+    // `data-theme`/`data-mode` à l'hydratation et efface ce que le script
+    // anti-FOUC avait posé avant paint (#785).
+    applyThemeAttr(nextTheme);
+    applyModeAttr(reconciledMode);
     setThemeState(nextTheme);
     setModeState(reconciledMode);
     // Ne tourne qu'une fois, après le montage — pas de resync continue sur `config`/`theme`/`mode`.
