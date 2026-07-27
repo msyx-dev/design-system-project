@@ -12,6 +12,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 - **CI `ci.yml`/`visual.yml`/`a11y.yml`/`perf.yml`** (#745) : déclencheur `pull_request` étendu à `[main, 'integration/**']` — les PR ouvertes vers une branche d'intégration de sprint (batch-merge) déclenchent désormais les 4 workflows, au lieu de n'être validées qu'au merge final sur `main`. Le trigger `push` reste `[main]` seul (pas de run en double, aucun impact sur le coalescing des déploiements Coolify qui n'écoute que `main`).
 
+## [2.116.3] - 2026-07-27 — `.gitignore` artefacts de build + CSS `.split-pane--dragging` (#762, #763)
+
+### Fixed
+- **`.gitignore`** (#762) : `shared/dist/` ignoré puis ré-inclus par `!shared/dist/` (le `!` annulait l'ignore du dossier entier) — les 6 artefacts de build locaux (`*.min.css`/`*.min.js`) réapparaissaient en non-suivis et étaient exposés à un `git add` accidentel. Remplacé par l'exclusion du contenu (`shared/dist/*`) + exceptions fichier par fichier ; `graph-lib.global.js` et `graph.global.js` restent commités.
+- **`shared/css/components/splitter.css`** (#763) : aucune règle ne ciblait `.split-pane--dragging`, posée/retirée par `initSplitPane` (`shared/components.js`) pendant le drag — le redimensionnement n'avait aucun retour visuel et le texte des panneaux se sélectionnait pendant le glissement. Ajout de `user-select: none`, curseur `col-resize`/`row-resize` maintenu (classe sur le conteneur, pas de pseudo-classes sur `.split-gutter` qui décrochent sous `setPointerCapture`), et surbrillance du gutter — tokens existants (`--split-gutter-hover`, `--text-on-accent`) uniquement, zéro valeur hardcodée.
+
 ## [2.116.2] - 2026-07-26 — Correctif de sécurité : audit `innerHTML` de `shared/components.js` (#758)
 
 ### Fixed
