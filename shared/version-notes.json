@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.116.3",
+      "date": "2026-07-27",
+      "titre": "Redimensionnement des panneaux : retour visuel corrigé",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le glissement de la poignée entre deux panneaux redimensionnables affiche désormais un retour visuel (curseur, surbrillance de la poignée) et empêche la sélection de texte parasite pendant le déplacement."
+        }
+      ]
+    },
+    {
       "version": "2.116.2",
       "date": "2026-07-26",
       "titre": "Sécurité : header, menus et graphiques renforcés",
