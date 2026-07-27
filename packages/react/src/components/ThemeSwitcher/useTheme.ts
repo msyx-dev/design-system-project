@@ -134,7 +134,10 @@ export function useTheme(
       storedTheme = window.localStorage.getItem(STORAGE_KEY_THEME);
       storedMode = window.localStorage.getItem(STORAGE_KEY_MODE);
     } catch {
-      return;
+      // Storage indisponible (mode privé strict, quota…) : on ne sort PAS — un storage
+      // qui lève est un storage muet, donc le DOM du consumer doit faire foi comme dans
+      // le cas « clés absentes ». Sortir ici laissait l'état React sur `msyx`/`dark`
+      // alors que `<html>` portait le vrai thème (divergence état/DOM, review #794).
     }
 
     // Priorité d'initialisation : localStorage > attribut déjà porté par <html> > défaut.
