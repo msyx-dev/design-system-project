@@ -4,7 +4,9 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
-## Unreleased (next alpha)
+## v3.0.0-alpha.27 — 2026-07-27 — `<ContextMenu>` : navigation clavier du sous-menu (#773)
+
+> Sprint 6 « Fin de backlog ». Un seul port : la limite a11y assumée du sous-menu contextuel (« ouverture clavier impossible », #468) est levée, en parité avec le correctif vanilla #750 livré en DS 2.117.0. Aucun bump `@ds-version` : le DS CSS n'a pas été modifié par ce lot (hors #745, outillage CI pur).
 
 ### Added
 - **`<ContextMenu>` : navigation clavier du sous-menu, parité #750 (#773)** — la limite « sous-menu au survol uniquement, ouverture clavier impossible » (#468) est **levée** : `.context-submenu` a désormais une classe d'état **`.show`** côté vanilla (`initContextMenu`, #750) et le wrapper React la reproduit à l'identique. Roving tabindex par niveau de menu (un seul item du niveau courant à `tabindex=0`, racine et sous-menu indépendants) ; `ArrowRight`/`Entrée`/`Espace` sur un item porteur d'un sous-menu (`aria-haspopup="menu"`, était `"true"`) **ouvre systématiquement** le sous-menu — pose `.show` sur `.context-submenu` + `aria-expanded="true"` sur l'item parent — et focus impérativement son premier item (**jamais** d'activation directe de `onSelect` au clavier pour un item porteur d'un sous-menu, calque exact `initContextMenu` qui n'appelle `item.click()` que pour les items SANS sous-menu) ; `ArrowLeft` referme le sous-menu et rend le focus à l'item parent ; `Escape` referme d'abord le sous-menu ouvert le plus profond (le menu racine reste `.show`), sinon tout le menu (cascade, calque `initContextMenu`).

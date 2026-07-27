@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.118.0",
+      "date": "2026-07-27",
+      "titre": "Fil d'activité : bouton « Charger plus » corrigé",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le bouton « Charger plus » du fil d'activité masque désormais réellement les éléments repliés, au lieu de rester sans effet visuel."
+        },
+        {
+          "type": "correction",
+          "text": "L'entrée « calendrier » du registre de composants a été scindée en deux entrées distinctes (calendrier et horaire), le sélecteur d'heure n'étant pas référencé correctement."
+        }
+      ]
+    },
+    {
       "version": "2.117.0",
       "date": "2026-07-27",
       "titre": "Sous-menus contextuels accessibles au clavier",

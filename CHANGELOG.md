@@ -12,6 +12,18 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 - **CI `ci.yml`/`visual.yml`/`a11y.yml`/`perf.yml`** (#745) : déclencheur `pull_request` étendu à `[main, 'integration/**']` — les PR ouvertes vers une branche d'intégration de sprint (batch-merge) déclenchent désormais les 4 workflows, au lieu de n'être validées qu'au merge final sur `main`. Le trigger `push` reste `[main]` seul (pas de run en double, aucun impact sur le coalescing des déploiements Coolify qui n'écoute que `main`).
 
+## [2.118.0] - 2026-07-27 — Fin de backlog assainissement : classes mortes, registre BEM, scission calendrier (#775, #776, #747, #748, #770)
+
+### Added
+- **`bin/lib/extract-react-classes.js`** (#747) : fonctions pures de `bin/generate-registry.js` extraites pour être testables isolément (effets de bord au chargement du script principal).
+
+### Fixed
+- **`shared/css/components/lists.css`** (#775) : `.initially-hidden` (posée par `initActivityFeed`/`shared/components.js` sur les items non chargés du fil d'activité) n'avait aucune règle CSS — le bouton « Charger plus » ne masquait rien, les items étaient visibles dès le chargement. Règle dédiée `.activity-item.hidden, .activity-item.initially-hidden` — classes orthogonales, `.hidden` seule aurait cassé le filtre par type (`classList.remove('hidden')` inconditionnel sur `filter === 'all'`, qui aurait révélé prématurément les items non chargés).
+- **`shared/components.js`** (#776) : retrait de 4 classes posées par le JS sans aucune règle CSS, détectées par le garde-fou `check-dead-classes.js` (#765) — `.json-tree`, `.json-node--last`, `.json-close-punct` (le port React #596 les avait déjà auditées et choisi de ne pas les émettre) et `.virtual-list-rows` (conteneur de regroupement pur, jamais sélectionné par classe). `role="tree"` vérifié intact sur le nœud qui portait `.json-tree`.
+- **`bin/generate-registry.js`** (#747) : `extractReactClasses` n'incluait pas `_` dans sa classe de caractères et exigeait un tiret — tout token BEM (ex. `SplitButton`) échouait silencieusement au test et disparaissait du `Set`, rendant le détecteur anti-fantôme aveugle par construction sur ces classes. Corrigé + couverture de test dédiée.
+- **`bin/generate-registry.js`** (#748) : nouvelle validation **warn-only** du champ `example` du registre (classes citées cohérentes avec `cssClasses`, `data-*` réellement lus par le JS). Inventaire initial : 21 entrées fautives sur 138 — traitement ticketé en #781, hors scope de cette version.
+- **`shared/components-registry.json`** (#770) : l'entrée `calendar` lumpait deux composants distincts (`initTimePicker` n'y était déclaré nulle part) — scindée en deux entrées, `calendar` (`.cal-*`, `initCalendar`) et `time-picker` (`.time-input-wrap`/`.time-sep`, `initTimePicker`), `REACT_TO_REGISTRY` passé en mapping 1:1. Compteur de composants **109 → 110** (`site.html`/`docs/ARCHITECTURE.md` régénérés).
+
 ## [2.117.0] - 2026-07-27 — Garde-fou classes mortes + accordéon/sous-menu contextuel accessibles (#765, #749, #750)
 
 ### Added
