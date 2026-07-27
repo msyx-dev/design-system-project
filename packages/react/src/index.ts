@@ -325,3 +325,15 @@ export type {
   SplitPaneProps,
   SplitPaneOrientation,
 } from "./components/SplitPane/SplitPane";
+
+// ─── Calendar — #760 (parité React) ───
+export { Calendar } from "./components/Calendar/Calendar";
+export type {
+  CalendarProps,
+  CalendarSingleProps,
+  CalendarRangeProps,
+  CalendarMode,
+  CalendarDateRange,
+  CalendarReferenceMonth,
+  CalendarLegendItem,
+} from "./components/Calendar/Calendar";
