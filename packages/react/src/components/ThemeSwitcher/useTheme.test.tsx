@@ -88,6 +88,80 @@ describe("useTheme — état initial (SSR-safe)", () => {
       expect(result.current.isModeLocked).toBe(true);
     });
   });
+
+  it("préserve le data-theme posé par un consumer mono-thème sans localStorage (#793)", async () => {
+    document.documentElement.setAttribute("data-theme", "nhood");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("nhood"));
+    expect(document.documentElement.getAttribute("data-theme")).toBe("nhood");
+  });
+
+  it("préserve un data-theme consumer absent de la config par défaut (#793)", async () => {
+    document.documentElement.setAttribute("data-theme", "captransfo");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("captransfo"));
+    expect(document.documentElement.getAttribute("data-theme")).toBe(
+      "captransfo",
+    );
+  });
+
+  it("préserve le data-mode posé par un consumer sans localStorage (#793)", async () => {
+    document.documentElement.setAttribute("data-mode", "light");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.mode).toBe("light"));
+    expect(document.documentElement.getAttribute("data-mode")).toBe("light");
+  });
+
+  it("le localStorage reste prioritaire sur l'attribut déjà porté par <html> (#793)", async () => {
+    document.documentElement.setAttribute("data-theme", "nhood");
+    localStorage.setItem("msyx-theme", "acssi");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("acssi"));
+    expect(document.documentElement.getAttribute("data-theme")).toBe("acssi");
+  });
+
+  it("aucun attribut posé au montage quand le DOM est nu et le storage vide (#793)", async () => {
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => {
+      expect(result.current.theme).toBe("msyx");
+      expect(result.current.mode).toBe("dark");
+    });
+    expect(document.documentElement.hasAttribute("data-theme")).toBe(false);
+    expect(document.documentElement.hasAttribute("data-mode")).toBe(false);
+  });
+
+  it("retombe sur l'attribut du DOM quand localStorage lève une exception (#793)", async () => {
+    document.documentElement.setAttribute("data-theme", "nhood");
+    document.documentElement.setAttribute("data-mode", "light");
+    const getItem = Storage.prototype.getItem;
+    Storage.prototype.getItem = () => {
+      throw new Error("SecurityError: storage indisponible");
+    };
+
+    try {
+      const { result } = renderHook(() => useTheme());
+
+      // Un storage qui lève est un storage muet : le DOM du consumer fait foi,
+      // et l'état React ne doit pas diverger de ce que porte <html>.
+      await waitFor(() => {
+        expect(result.current.theme).toBe("nhood");
+        expect(result.current.mode).toBe("light");
+      });
+      expect(document.documentElement.getAttribute("data-theme")).toBe("nhood");
+      expect(document.documentElement.getAttribute("data-mode")).toBe("light");
+    } finally {
+      Storage.prototype.getItem = getItem;
+    }
+  });
 });
 
 describe("useTheme — setTheme", () => {

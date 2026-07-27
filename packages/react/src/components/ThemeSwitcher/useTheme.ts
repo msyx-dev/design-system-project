@@ -78,6 +78,19 @@ function applyModeAttr(mode: ThemeMode) {
   }
 }
 
+/** Attribut porté par `<html>` — source d'initialisation quand le storage est muet (#793). */
+function readThemeAttr(): string | null {
+  if (typeof document === "undefined") return null;
+  // `getAttribute` rend "" pour `data-theme=""` — traité comme absent.
+  return document.documentElement.getAttribute("data-theme") || null;
+}
+
+function readModeAttr(): ThemeMode | null {
+  if (typeof document === "undefined") return null;
+  const value = document.documentElement.getAttribute("data-mode");
+  return value === "dark" || value === "light" ? value : null;
+}
+
 function persist(key: string, value: string) {
   if (typeof window === "undefined") return;
   try {
@@ -99,7 +112,10 @@ function persist(key: string, value: string) {
  *
  * SSR-safe : aucun accès `window`/`document`/`localStorage` pendant le rendu —
  * l'état initial est celui des defaults (`msyx`/`dark`), puis un `useEffect`
- * relit le localStorage après montage pour se resynchroniser côté client.
+ * se resynchronise après montage selon la priorité
+ * `localStorage` > attribut déjà porté par `<html>` > défaut (#793).
+ * Un consumer mono-thème qui pose son `data-theme`/`data-mode` au boot sans
+ * jamais écrire les clés de storage garde donc son thème après hydratation.
  */
 export function useTheme(
   config: ThemeConfig = DEFAULT_THEME_CONFIG,
@@ -118,13 +134,26 @@ export function useTheme(
       storedTheme = window.localStorage.getItem(STORAGE_KEY_THEME);
       storedMode = window.localStorage.getItem(STORAGE_KEY_MODE);
     } catch {
-      return;
+      // Storage indisponible (mode privé strict, quota…) : on ne sort PAS — un storage
+      // qui lève est un storage muet, donc le DOM du consumer doit faire foi comme dans
+      // le cas « clés absentes ». Sortir ici laissait l'état React sur `msyx`/`dark`
+      // alors que `<html>` portait le vrai thème (divergence état/DOM, review #794).
     }
 
-    const nextTheme = storedTheme && config[storedTheme] ? storedTheme : theme;
+    // Priorité d'initialisation : localStorage > attribut déjà porté par <html> > défaut.
+    // Le DOM fait foi quand le storage est muet : un consumer mono-thème pose son
+    // `data-theme` au boot et n'écrit jamais `msyx-theme` (pas de sélecteur de palette).
+    // Sans ça, l'état initial `msyx` était appliqué au DOM depuis #785 et effaçait le
+    // thème du consumer à l'hydratation (#793).
+    const nextTheme =
+      storedTheme && config[storedTheme]
+        ? storedTheme
+        : (readThemeAttr() ?? theme);
     const themeConfig = resolveThemeConfig(config, nextTheme);
     const requestedMode: ThemeMode =
-      storedMode === "dark" || storedMode === "light" ? storedMode : mode;
+      storedMode === "dark" || storedMode === "light"
+        ? storedMode
+        : (readModeAttr() ?? mode);
     const reconciledMode = themeConfig.modes.includes(requestedMode)
       ? requestedMode
       : themeConfig.defaultMode;
