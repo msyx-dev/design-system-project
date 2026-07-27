@@ -12,6 +12,17 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 - **CI `ci.yml`/`visual.yml`/`a11y.yml`/`perf.yml`** (#745) : déclencheur `pull_request` étendu à `[main, 'integration/**']` — les PR ouvertes vers une branche d'intégration de sprint (batch-merge) déclenchent désormais les 4 workflows, au lieu de n'être validées qu'au merge final sur `main`. Le trigger `push` reste `[main]` seul (pas de run en double, aucun impact sur le coalescing des déploiements Coolify qui n'écoute que `main`).
 
+## [2.117.0] - 2026-07-27 — Garde-fou classes mortes + accordéon/sous-menu contextuel accessibles (#765, #749, #750)
+
+### Added
+- **`bin/check-dead-classes.js`** (#765) : garde-fou CI, scanner Node zéro dépendance — extrait les classes posées par `shared/components.js`/`shared/nav.js`, les compare aux sélecteurs de `shared/css/**`, signale les classes orphelines. Warn-only par défaut (`--strict` pour un passage bloquant), fail-closed si un fichier scanné est manquant, ignore les classes construites dynamiquement. Testé par `tests/test-check-dead-classes.sh`, câblé dans `.github/workflows/ci.yml`. Inventaire initial : 6 classes mortes sur 156 analysées → traitement ticketé en #775/#776/#777 (dette, hors scope de cette version).
+
+### Fixed
+- **`pages/divers.html`** (#749) : les 4 chevrons d'accordéon n'avaient pas la classe `accordion-arrow` — la rotation à l'ouverture d'un panneau était morte (le chevron ne pointait jamais vers le haut). Classe restaurée sur les 4 démos.
+- **`shared/components.js` `initContextMenu`** (#750) : `.context-submenu` n'avait aucune règle d'état — le sous-menu n'était atteignable qu'au survol souris. Ajout de `.context-submenu.show` (aligné sur `.context-menu.show` du menu racine) + navigation clavier WAI-ARIA APG (roving tabindex, flèches/`Home`/`End`, `ArrowRight`/`Entrée` ouvre le sous-menu, `ArrowLeft`/`Échap` referme), `aria-haspopup`/`aria-expanded` posés dynamiquement.
+- **`shared/css/components/overlays.css`** (#750) : règles CSS de `.context-submenu.show`.
+- **VR** (#749, #750) : 55 baselines harvestées depuis les actuals CI (`divers.html` — la démo context-menu gagne une ligne, cascade de décalage sur les sections suivantes de la page).
+
 ## [2.116.3] - 2026-07-27 — `.gitignore` artefacts de build + CSS `.split-pane--dragging` (#762, #763)
 
 ### Fixed

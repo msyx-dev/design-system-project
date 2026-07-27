@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.117.0",
+      "date": "2026-07-27",
+      "titre": "Sous-menus contextuels accessibles au clavier",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Les sous-menus des menus contextuels sont désormais utilisables entièrement au clavier (flèches, Origine/Fin, Entrée pour ouvrir, Échap pour refermer), comme le menu principal."
+        },
+        {
+          "type": "correction",
+          "text": "Le chevron des panneaux d'accordéon pivote à nouveau correctement lorsqu'un panneau est ouvert."
+        }
+      ]
+    },
+    {
       "version": "2.116.3",
       "date": "2026-07-27",
       "titre": "Redimensionnement des panneaux : retour visuel corrigé",

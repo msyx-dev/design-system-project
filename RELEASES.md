@@ -1,5 +1,20 @@
 # Releases
 
+## 2.117.0 — 2026-07-27 — Garde-fou classes mortes + accordéon/sous-menu contextuel accessibles (#765, #749, #750)
+
+> Sprint 5 « Assainissement ». Un nouvel outillage CI (#765) referme la boucle ouverte par les audits récents : détecter les classes posées par le JS mais jamais stylées (l'inverse du dead-code CSS classique). Deux correctifs d'accessibilité/état trouvés en cours de sprint (#749, #750) : un chevron d'accordéon dont la rotation était morte depuis l'oubli d'une classe, et un sous-menu contextuel qui n'existait tout simplement pas au clavier.
+
+### Added
+- **`bin/check-dead-classes.js`** (#765) : garde-fou CI, scanner Node zéro dépendance — extrait les classes posées par `shared/components.js`/`shared/nav.js` (`className=`, `classList.add/toggle`), les compare à l'ensemble des sélecteurs présents dans `shared/css/**`, et signale les orphelines. Warn-only par défaut (mode par défaut de la CI) ; `--strict` bascule en passage bloquant — réservé à une activation future une fois la dette résorbée. Fail-closed sur fichier scanné manquant (mieux vaut casser la CI que scanner silencieusement zéro fichier). Les classes construites dynamiquement (concaténation de variables) sont ignorées, hors de portée d'une analyse statique fiable. Testé par `tests/test-check-dead-classes.sh`, câblé (non bloquant) dans `.github/workflows/ci.yml`.
+- **Inventaire initial** (#765) : 6 classes mortes détectées sur 156 analysées (`.btn`, `.initially-hidden`, `.json-close-punct`, `.json-node--last`, `.json-tree`, `.virtual-list-rows`) — dette actée et ticketée en #775/#776/#777, traitement volontairement hors scope de cette version (l'outil est livré en warn-only précisément pour ne pas bloquer sur un inventaire pré-existant).
+
+### Fixed
+- **`pages/divers.html`** (#749) : les 4 chevrons d'accordéon de la démo n'avaient pas la classe `accordion-arrow` posée par `initAccordions` (`shared/components.js`) — la règle CSS de rotation à l'ouverture (`components/interactive.css`) ne s'appliquait donc jamais, le chevron du panneau ouvert restait figé au lieu de pointer vers le haut. Classe restaurée sur les 4 démos, zéro changement JS/CSS.
+- **`shared/components.js` `initContextMenu`** (#750) : `.context-submenu` (survol d'un item avec sous-menu) n'avait aucune règle CSS d'état — le sous-menu n'était donc atteignable qu'à la souris, aucun moyen de l'ouvrir ni de le parcourir au clavier. Ajout d'une navigation clavier complète alignée WAI-ARIA APG « Menu » : roving tabindex sur les items, flèches haut/bas + `Home`/`End` pour parcourir, `ArrowRight`/`Entrée` ouvre le sous-menu et y place le focus, `ArrowLeft`/`Échap` le referme et rend le focus à l'item parent. `aria-haspopup="true"`/`aria-expanded` posés/mis à jour dynamiquement sur les items concernés.
+- **`shared/css/components/overlays.css`** (#750) : règles manquantes pour `.context-submenu.show` (alignées sur `.context-menu.show` du menu racine — même mécanique d'affichage), sans quoi le nouvel état clavier n'aurait eu aucune traduction visuelle.
+- **`shared/components-registry.json`** (#750) : entrée `context-menu` mise à jour (classes d'état, comportement clavier).
+- **VR** (#749, #750) : 55 baselines harvestées depuis les actuals CI — la démo context-menu de `divers.html` gagne une ligne (aria-haspopup rendu visible dans l'exemple de code), ce qui décale toutes les sections suivantes de la page (cascade de décalage par hauteur, cf. précédent M#44).
+
 ## 2.116.3 — 2026-07-27 — Deux correctifs d'hygiène : `.gitignore` artefacts de build + retour visuel `.split-pane--dragging` (#762, #763)
 
 > Deux fixes courts trouvés pendant le sprint en cours : un `.gitignore` qui n'ignorait plus rien pour `shared/dist/` (annulation par `!shared/dist/`), et une classe d'état posée par le JS du splitter sans aucune règle CSS pour la styliser.
