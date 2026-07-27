@@ -112,7 +112,10 @@ function persist(key: string, value: string) {
  *
  * SSR-safe : aucun accès `window`/`document`/`localStorage` pendant le rendu —
  * l'état initial est celui des defaults (`msyx`/`dark`), puis un `useEffect`
- * relit le localStorage après montage pour se resynchroniser côté client.
+ * se resynchronise après montage selon la priorité
+ * `localStorage` > attribut déjà porté par `<html>` > défaut (#793).
+ * Un consumer mono-thème qui pose son `data-theme`/`data-mode` au boot sans
+ * jamais écrire les clés de storage garde donc son thème après hydratation.
  */
 export function useTheme(
   config: ThemeConfig = DEFAULT_THEME_CONFIG,
@@ -134,10 +137,20 @@ export function useTheme(
       return;
     }
 
-    const nextTheme = storedTheme && config[storedTheme] ? storedTheme : theme;
+    // Priorité d'initialisation : localStorage > attribut déjà porté par <html> > défaut.
+    // Le DOM fait foi quand le storage est muet : un consumer mono-thème pose son
+    // `data-theme` au boot et n'écrit jamais `msyx-theme` (pas de sélecteur de palette).
+    // Sans ça, l'état initial `msyx` était appliqué au DOM depuis #785 et effaçait le
+    // thème du consumer à l'hydratation (#793).
+    const nextTheme =
+      storedTheme && config[storedTheme]
+        ? storedTheme
+        : (readThemeAttr() ?? theme);
     const themeConfig = resolveThemeConfig(config, nextTheme);
     const requestedMode: ThemeMode =
-      storedMode === "dark" || storedMode === "light" ? storedMode : mode;
+      storedMode === "dark" || storedMode === "light"
+        ? storedMode
+        : (readModeAttr() ?? mode);
     const reconciledMode = themeConfig.modes.includes(requestedMode)
       ? requestedMode
       : themeConfig.defaultMode;
