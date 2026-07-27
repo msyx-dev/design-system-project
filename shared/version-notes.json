@@ -5,6 +5,25 @@
   },
   "released": [
     {
+      "version": "2.119.1",
+      "date": "2026-07-27",
+      "titre": "Registre de composants : exemples et repères encore plus fiables",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "L'exemple de code du bouton flottant (FAB) ne référençait pas son lanceur : le copier-coller ne produisait plus aucun effet au clic — corrigé."
+        },
+        {
+          "type": "correction",
+          "text": "Le registre de composants documente désormais la classe qui déclenche réellement le menu contextuel et les boutons de navigation du carrousel."
+        },
+        {
+          "type": "correction",
+          "text": "13 repères périmés sur les 58 que compte le catalogue interne des composants interactifs ont été corrigés, dont plusieurs qui ne correspondaient à aucune classe existante dans le design system."
+        }
+      ]
+    },
+    {
       "version": "2.119.0",
       "date": "2026-07-27",
       "titre": "Documentation des boutons et exemples du registre fiabilisés",

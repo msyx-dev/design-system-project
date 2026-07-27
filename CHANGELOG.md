@@ -12,6 +12,15 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 - **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 - **CI `ci.yml`/`visual.yml`/`a11y.yml`/`perf.yml`** (#745) : déclencheur `pull_request` étendu à `[main, 'integration/**']` — les PR ouvertes vers une branche d'intégration de sprint (batch-merge) déclenchent désormais les 4 workflows, au lieu de n'être validées qu'au merge final sur `main`. Le trigger `push` reste `[main]` seul (pas de run en double, aucun impact sur le coalescing des déploiements Coolify qui n'écoute que `main`).
 
+## [2.119.1] - 2026-07-27 — `--example-strict` bloquant + résiduels du registre et du catalogue (#789)
+
+### Changed
+- **`bin/generate-registry.js`** (#789) : la validation du champ `example` du registre bascule de warn-only à **bloquante** (`--example-strict` câblé en CI) — les 21 défauts identifiés en #781 étant retombés à 0, la tolérance n'était plus justifiée. Limite documentée : le validateur vérifie que les classes citées *existent* dans le DS, pas qu'elles *suffisent* à faire fonctionner le composant (détection des classes réellement requises étudiée puis écartée : analyse statique non fiable sur ~175 sites `querySelector`).
+
+### Fixed
+- **`shared/components-registry.json`** (#789) : `example` de `fab` corrigé — il ne référençait pas `.fab-trigger`, sans lequel `initFAB()` sort silencieusement et rend le composant inerte pour qui copie l'exemple tel quel. `cssClasses` complétées pour `context-menu` (`.context-target`, le sélecteur d'accroche réel) et `carousel` (`.carousel-btn-prev`/`.carousel-btn-next`).
+- **`shared/components.js` (catalogue `init*` en tête de fichier) / `tests/test-validate-example.sh`** (#789) : 13 repères périmés sur les 58 que compte le catalogue ont été corrigés, dont 11 classes qui n'existaient nulle part ailleurs dans le dépôt (`.modal-trigger`, `.copy-btn`, `.segmented-control`, `.otp-input`, `.tree-view`, `.decision-tree`, `.notification-center`, `.inline-edit`, `.sidebar-rail`, `.context-menu-trigger`, `.command-palette-trigger`…). Ce bloc sert de table des matières au fichier ; sa dérive avait déjà produit deux specs erronées.
+
 ## [2.119.0] - 2026-07-27 — Documentation boutons + registre fiabilisé + amorce de tests vanilla (#777, #781, #744)
 
 ### Added
