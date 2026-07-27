@@ -257,22 +257,23 @@ function findJsClasses(relPath, src) {
 }
 
 // ─── Extraction des sélecteurs de classe CSS ───────────────────────────────
-// Même règle que bin/generate-registry.js::extractClasses (cohérence outillage) :
-// un `.classname` précédé d'une frontière de sélecteur (espace, virgule,
-// `{`, `>`, `;`, `+`, `~`, `(`, ou début de ligne), lettre initiale, suivi de
-// lettres/chiffres/tirets/underscores. Exclut pseudo-classes/éléments et
-// sélecteurs d'attribut embarqués.
-const CSS_CLASS_RE = /(?:^|[\s,{>;+~(])(\.[a-zA-Z][a-zA-Z0-9_-]*)/gm;
+// Inspiré de bin/generate-registry.js::extractClasses, MAIS sans exiger de
+// frontière avant le `.` : les sélecteurs composés (`.step-dot.completed`,
+// `.rail-sidebar.collapsed`) enchaînent plusieurs classes SANS séparateur —
+// une frontière stricte les ferait passer sous le radar (faux positif « classe
+// morte » alors qu'elle est bien stylée en combinaison). On matche donc tout
+// `.classname` (lettre initiale, puis lettres/chiffres/tirets/underscores) où
+// il apparaît, et on exclut les faux amis via `cls` lui-même (pseudo-classes/
+// éléments et sélecteurs d'attribut embarqués ne peuvent pas apparaître ici
+// car `:`/`[`/`)` ne font pas partie de la classe de caractères capturée).
+const CSS_CLASS_RE = /\.([a-zA-Z][a-zA-Z0-9_-]*)/g;
 
 function extractCssClasses(content) {
   const found = new Set();
   let m;
   CSS_CLASS_RE.lastIndex = 0;
   while ((m = CSS_CLASS_RE.exec(content))) {
-    const cls = m[1].slice(1); // enleve le '.'
-    if (!cls.includes(':') && !cls.includes('[') && !cls.includes(')')) {
-      found.add(cls);
-    }
+    found.add(m[1]);
   }
   return found;
 }
