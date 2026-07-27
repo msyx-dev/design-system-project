@@ -78,6 +78,19 @@ function applyModeAttr(mode: ThemeMode) {
   }
 }
 
+/** Attribut porté par `<html>` — source d'initialisation quand le storage est muet (#793). */
+function readThemeAttr(): string | null {
+  if (typeof document === "undefined") return null;
+  // `getAttribute` rend "" pour `data-theme=""` — traité comme absent.
+  return document.documentElement.getAttribute("data-theme") || null;
+}
+
+function readModeAttr(): ThemeMode | null {
+  if (typeof document === "undefined") return null;
+  const value = document.documentElement.getAttribute("data-mode");
+  return value === "dark" || value === "light" ? value : null;
+}
+
 function persist(key: string, value: string) {
   if (typeof window === "undefined") return;
   try {
