@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Fixed
+- **`@msyx-dev/react` `useTheme` v3.0.0-alpha.29** (#793) : correction d'une régression introduite par #785 (alpha.28) — l'effet de montage écrasait le `data-theme`/`data-mode` posé par un consumer mono-thème (ex. cap-transfo, thème NHOOD) quand `localStorage` était vide. Ordre de priorité désormais `localStorage` > attribut déjà porté par `<html>` > défaut, appliqué symétriquement thème + mode. 100 % `packages/react/`, aucun bump `@ds-version` (convention #314) — détail dans `packages/react/RELEASES.md`.
+
 ### Changed
 - **CI `.github/workflows/ci.yml`** (#745) : retrait du `continue-on-error: true` sur le step « Run react tests (vitest) » du job `react` — le chemin corepack + pnpm sur Node 24 tourne et rapporte ses résultats à chaque PR depuis un moment, la tolérance n'était plus justifiée : elle rendait le check incapable de signaler un échec, quel que soit le résultat réel des tests. Commentaire du job mis à jour en conséquence. Le second `continue-on-error` (step `check-components registry lint`, dette #378) n'est pas concerné. Changement d'outillage CI pur, aucun bump de version DS ni React.
 - **CI `ci.yml`/`visual.yml`/`a11y.yml`/`perf.yml`** (#745) : déclencheur `pull_request` étendu à `[main, 'integration/**']` — les PR ouvertes vers une branche d'intégration de sprint (batch-merge) déclenchent désormais les 4 workflows, au lieu de n'être validées qu'au merge final sur `main`. Le trigger `push` reste `[main]` seul (pas de run en double, aucun impact sur le coalescing des déploiements Coolify qui n'écoute que `main`).
