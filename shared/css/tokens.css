@@ -1,4 +1,4 @@
-/* @ds-version: 2.119.1 */
+/* @ds-version: 2.120.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -77,6 +77,10 @@
     --info-rgb: 6, 182, 212;
     --sidebar-w: 260px;
     --header-h: 56px;
+    --page-header-sticky-h: 96px; /* hauteur réservée par .section-header--sticky (#795) —
+       à combiner avec --header-h pour les offsets (scroll-margin-top, padding) du
+       contenu qui suit un PageHeader sticky. Estimation overline+titre ; ajuster
+       localement si lead/actions/breadcrumb alourdissent le header. */
     --bottom-nav-h: 60px;  /* hauteur de .bottom-nav fixe (#567/#568) */
     --content-max: 72ch;   /* mesure typo optimale .page-content (#567) */
     --content-grid-max: 1200px; /* largeur max d'un fil de cartes .content-grid (#53) */

@@ -4,6 +4,7 @@
     "highlights": []
   },
   "released": [
+    {"version":"2.120.0","date":"2026-07-27","titre":"Éléments collés (sticky) réparés + nouvelle mise en page 2 colonnes","highlights":[{"type":"correction","text":"Les éléments « collés » à l'écran (barre d'en-tête, panneau latéral) fonctionnent de nouveau correctement au défilement, sur toutes les applications qui utilisent le design system."},{"type":"nouveaute","text":"Nouveau modèle de mise en page à deux colonnes pour les pages de détail (ex. tickets), avec colonne latérale qui reste visible pendant le défilement du contenu principal."}]},
     {
       "version": "2.119.1",
       "date": "2026-07-27",

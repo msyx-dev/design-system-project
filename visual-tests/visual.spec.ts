@@ -159,12 +159,18 @@ test.describe("Visual regression — full matrix (par section)", () => {
           await page.waitForTimeout(120);
         }
 
-        await expect(section).toHaveScreenshot(`${slug}__${sectionId}.png`, {
-          // Marge de temps pour les sections denses (le défaut 5s peut être
-          // juste sur une section très haute) — pas un élargissement de
-          // tolérance de diff, juste un budget de retry réaliste.
-          timeout: 15_000,
-        });
+        // #795 : expect.soft (pas expect dur) — la modif de pages/fondation.html
+        // #utilities change sa hauteur de baseline ; un expect dur interromprait
+        // la boucle et empêcherait la vérification des sections suivantes de
+        // cette page sur ce run (cascade documentée dans le runbook VR du repo).
+        await expect
+          .soft(section)
+          .toHaveScreenshot(`${slug}__${sectionId}.png`, {
+            // Marge de temps pour les sections denses (le défaut 5s peut être
+            // juste sur une section très haute) — pas un élargissement de
+            // tolérance de diff, juste un budget de retry réaliste.
+            timeout: 15_000,
+          });
       }
     });
   }

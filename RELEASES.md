@@ -1,5 +1,21 @@
 # Releases
 
+## 2.120.0 — 2026-07-27 — Sticky corrigé (socle) + primitif detail-grid 2 colonnes + PageHeader sticky (#795)
+
+> Bloqueur amont de `msyx-dev/feedbacks#42` (layout détail 2 colonnes). Le groom de feedbacks#42 a établi factuellement (Playwright/Chromium 1280×800, CSS du socle reproduit) qu'aucun `position:sticky` ne fonctionnait chez aucun consumer du DS : `body{overflow-x:hidden}` force `overflow-y:auto` (la propagation `body`→`viewport` de `overflow` exige `html` visible sur les 2 axes, CSS Overflow §3.5 ; `html` vaut `clip` depuis #530), transformant `body` en conteneur de défilement qui neutralise tout sticky de niveau page — un bug latent affectant tout le parc, pas seulement feedbacks. Corrigé, plus le primitif de layout 2 colonnes qui en avait besoin.
+
+### Fixed
+- **`shared/css/base.css`** (#795) : `body{overflow-x:hidden}` → `body{overflow-x:clip}`. `clip` ne crée pas de boîte de défilement (contrairement à `hidden`), préservant la propagation d'overflow vers le viewport et donc tout `position:sticky` de niveau page. Non-régression : `visual-tests/fixtures/sticky-regression.html` + `visual-tests/sticky-regression.spec.ts` (scroll jusqu'en bas de page, vérifie que l'élément sticky reste épinglé à `top:56px` au lieu de défiler avec la page).
+
+### Added
+- **`.detail-grid` / `.detail-grid-main` / `.detail-grid-aside`** (`shared/css/layout.css`, #795) : primitif de layout « contenu + colonne latérale » pour les pages de détail (ex. ticketing), absent du DS (`.split-pane` = maître-détail JS non empilable, `.sidebar` = rail de nav `position:fixed`, `.content-grid` = pas de `display:grid`). Bascule 1→2 colonnes à `min-width:1024px` (`--bp-lg`, docs/DS-PRINCIPLES.md §4 — premier `min-width:1024px` mobile-first du CSS distribué à ce palier, cohérent avec la doctrine). Aside : `align-self:start` + sticky (`top`, `max-height`, `overflow-y:auto`) — nécessite le fix ci-dessus pour fonctionner. Vitrine : `pages/fondation.html` §Classes utilitaires.
+- **`.section-header--sticky`** (`shared/css/components/section-header.css`, #795) : modificateur sticky consommable par `PageHeader` (`className="section-header--sticky"`, aucune modif de `PageHeader.tsx` nécessaire). `z-index: var(--z-sticky)` (100) < `var(--z-header)` (150) — reste sous `.site-header`. Nouveau token `--page-header-sticky-h` (hauteur réservée, pour les calculs d'offset du contenu suivant).
+
+### Registre & tests
+- `shared/components-registry.json` : nouvelle entrée `detail-grid` (`kind:layout`) + `.section-header--sticky` ajoutée à l'entrée `page-header` existante.
+- `visual-tests/sticky-regression.spec.ts` (nouveau) : non-régression sticky dédiée, découplée du contenu des pages showcase.
+- VR : `pages/fondation.html` §utilities modifié (nouvelle démo `.detail-grid`) — `visual.spec.ts` bascule en `expect.soft` pour cette assertion (évite le whack-a-mole documenté dans le runbook VR). Baselines `fondation-utilities.png` (12 combos theme/mode/viewport) à harvester depuis le 1er run CI (recette dans la mémoire projet, hors scope de ce /dev — c'est le parent qui régénère, jamais en local).
+
 ## 2.119.1 — 2026-07-27 — `--example-strict` bloquant + résiduels du registre et du catalogue (#789)
 
 > Suite directe de #781 (registre) et #748 (validateur warn-only) : une fois l'inventaire retombé à 0 défaut, la validation `example` du registre bascule en bloquant. Deux résiduels trouvés au passage — un exemple `fab` cassant et deux `cssClasses` incomplètes — et une correction plus large du catalogue `init*` de `shared/components.js`, qui sert de table des matières au fichier et avait dérivé sur près d'un quart de ses entrées.
