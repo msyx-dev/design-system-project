@@ -1,4 +1,4 @@
-/* @ds-version: 2.120.0 */
+/* @ds-version: 2.120.1 */
 /* layout.css — Layout shell (header, sidebar, main) du design system msyx.design
    Import : @import url('css/layout.css'); */
 
@@ -185,6 +185,15 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-xl);
+    /* Offset local, 0px par défaut (préserve le comportement des pages SANS
+       en-tête sticky). Sans elle, .detail-grid-aside s'ancre à --header-h
+       (56px) et passe sous .section-header--sticky, qui descend lui jusqu'à
+       --header-h + --page-header-sticky-h (152px) — soit 72px de
+       recouvrement. --page-header-sticky-h a justement été créé pour ces
+       offsets (#795) ; c'est cette liaison qui manquait (#797). Consumer :
+       style="--detail-grid-offset: var(--page-header-sticky-h)" quand la
+       page porte un .section-header--sticky. */
+    --detail-grid-offset: 0px;
 }
 .detail-grid-main { min-width: 0; }
 .detail-grid-aside { min-width: 0; }
@@ -199,8 +208,9 @@
            pour s'activer (#795). */
         align-self: start;
         position: sticky;
-        top: calc(var(--header-h) + var(--space-lg));
-        max-height: calc(100vh - var(--header-h) - var(--space-2xl));
+        top: calc(var(--header-h) + var(--detail-grid-offset) + var(--space-lg));
+        /* max-height a le même défaut que top — ne pas corriger l'un sans l'autre (#797). */
+        max-height: calc(100vh - var(--header-h) - var(--detail-grid-offset) - var(--space-2xl));
         overflow-y: auto;
     }
 }
