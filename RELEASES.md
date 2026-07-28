@@ -1,5 +1,14 @@
 # Releases
 
+## 2.120.1 — 2026-07-28 — `.detail-grid-aside` recouvert par `.section-header--sticky` (#797)
+
+> Régression de conception introduite par #795 (v2.120.0), trouvée à la première consommation réelle du pattern (`msyx-dev/feedbacks#42`). `.detail-grid-aside` et `.section-header--sticky` ont été livrés ensemble pour le même cas d'usage, mais l'aside ignorait la hauteur de l'en-tête sticky : `top: calc(var(--header-h) + var(--space-lg))` = 80px, alors que `.section-header--sticky` (`top: var(--header-h)` = 56px, `min-height: var(--page-header-sticky-h)` = 96px) occupe l'écran jusqu'à 152px — soit 72px de recouvrement. `--page-header-sticky-h` avait justement été créé pour ces offsets ; la liaison manquait.
+
+### Fixed
+- **`.detail-grid` / `.detail-grid-aside`** (`shared/css/layout.css`, #797) : nouvelle variable locale `--detail-grid-offset` sur `.detail-grid`, défaut `0px` (comportement inchangé pour toute page sans en-tête sticky). `.detail-grid-aside` : `top` et `max-height` intègrent désormais `var(--detail-grid-offset)`. Consumer avec `.section-header--sticky` : `<div class="detail-grid" style="--detail-grid-offset: var(--page-header-sticky-h)">`.
+- **`pages/fondation.html`** (#797) : la démo `.detail-grid` (qui combine déjà `.section-header--sticky`) pose désormais l'offset et documente le pattern par l'exemple ; tokens concernés mis à jour.
+- **`shared/components-registry.json`** (#797) : `description` de l'entrée `detail-grid` complétée pour citer `--detail-grid-offset`.
+
 ## 2.120.0 — 2026-07-27 — Sticky corrigé (socle) + primitif detail-grid 2 colonnes + PageHeader sticky (#795)
 
 > Bloqueur amont de `msyx-dev/feedbacks#42` (layout détail 2 colonnes). Le groom de feedbacks#42 a établi factuellement (Playwright/Chromium 1280×800, CSS du socle reproduit) qu'aucun `position:sticky` ne fonctionnait chez aucun consumer du DS : `body{overflow-x:hidden}` force `overflow-y:auto` (la propagation `body`→`viewport` de `overflow` exige `html` visible sur les 2 axes, CSS Overflow §3.5 ; `html` vaut `clip` depuis #530), transformant `body` en conteneur de défilement qui neutralise tout sticky de niveau page — un bug latent affectant tout le parc, pas seulement feedbacks. Corrigé, plus le primitif de layout 2 colonnes qui en avait besoin.

@@ -651,7 +651,8 @@
         <span class="demo-label">Detail grid 2 colonnes — .detail-grid / .detail-grid-main / .detail-grid-aside</span>
         <div class="demo-box">
             <p class="text-muted text-sm mb-md">Primitif « contenu + colonne latérale » pour les pages de détail (ex. ticketing). Bascule 1→2 colonnes à <code>min-width:1024px</code> (<code>--bp-lg</code>). Distinct de <code>.split-pane</code> (poignée JS redimensionnable, jamais empilé), <code>.sidebar</code> (rail de navigation <code>position:fixed</code>) et <code>.content-grid</code> (conteneur large sans <code>display:grid</code>). <strong>Redimensionner la fenêtre &lt; 1024px</strong> pour voir l'empilement mobile.</p>
-            <div class="detail-grid">
+            <p class="text-muted text-sm mb-md">Cette démo combine <code>.detail-grid-aside</code> avec un <code>.section-header--sticky</code> : sans l'offset <code>--detail-grid-offset: var(--page-header-sticky-h)</code> posé ci-dessous, l'aside s'ancrerait à <code>--header-h</code> seul et passerait 72px sous l'en-tête sticky (recouvrement, fix #797).</p>
+            <div class="detail-grid" style="--detail-grid-offset: var(--page-header-sticky-h)">
                 <div class="detail-grid-main" style="background:var(--surface-solid);border:1px solid var(--border-color);border-radius:var(--radius-sm);">
                     <div class="section-header section-header--sticky" style="padding-inline:var(--space-lg);">
                         <span class="overline">Ticket #1234</span>
@@ -668,19 +669,21 @@
             </div>
             <div class="demo-box mt-sm">
                 <span class="demo-label text-xs">Usage</span>
-                <pre class="code-block text-xs mt-sm">&lt;div class="detail-grid"&gt;
+                <pre class="code-block text-xs mt-sm">&lt;div class="detail-grid" style="--detail-grid-offset: var(--page-header-sticky-h)"&gt;
   &lt;div class="detail-grid-main"&gt;
     &lt;div class="section-header section-header--sticky"&gt;…&lt;/div&gt;
     &lt;!-- contenu --&gt;
   &lt;/div&gt;
   &lt;aside class="detail-grid-aside" tabindex="0" aria-label="…"&gt;…&lt;/aside&gt;
 &lt;/div&gt;</pre>
+                <p class="text-muted text-xs mt-sm">Sans page avec en-tête sticky, ne pas poser <code>--detail-grid-offset</code> : la valeur par défaut (<code>0px</code>) convient.</p>
             </div>
             <div class="demo-box mt-sm">
                 <span class="demo-label text-xs">Tokens concernés</span>
                 <div class="token-list mt-sm">
                     <div class="flex-center-gap"><code class="text-xs">--z-sticky</code><span class="text-muted text-xs">100 — reste sous --z-header (150)</span></div>
                     <div class="flex-center-gap"><code class="text-xs">--page-header-sticky-h</code><span class="text-muted text-xs">hauteur réservée par .section-header--sticky, pour les calculs de décalage (scroll-margin-top, padding)</span></div>
+                    <div class="flex-center-gap"><code class="text-xs">--detail-grid-offset</code><span class="text-muted text-xs">0px par défaut ; à poser sur <code>.detail-grid</code> (= <code>var(--page-header-sticky-h)</code>) quand <code>.detail-grid-main</code> contient un <code>.section-header--sticky</code> (fix #797)</span></div>
                 </div>
             </div>
         </div>

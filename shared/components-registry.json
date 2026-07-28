@@ -1,7 +1,7 @@
 {
-  "version": "2.120.0",
+  "version": "2.120.1",
   "generated": {
-    "at": "2026-07-27T21:15:30.913Z",
+    "at": "2026-07-28T09:13:59.969Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3107,7 +3107,7 @@
       ],
       "jsInit": null,
       "react": "pending",
-      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (--bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795)."
+      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (--bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795). Variable --detail-grid-offset (0px par défaut) sur .detail-grid, à poser à var(--page-header-sticky-h) quand la page combine un .section-header--sticky, sinon l'aside passe sous l'en-tête (#797)."
     },
     {
       "name": "hidden-mobile",
