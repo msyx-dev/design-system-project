@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { UserFeedbackProvider, useUserFeedback } from "./UserFeedbackProvider";
 import type { UserFeedbackProviderProps } from "./UserFeedbackProvider";
@@ -300,6 +300,28 @@ describe("UserFeedbackProvider — route", () => {
     });
 
     expect(result.current.context.route).toBe("/settings?tab=notifications");
+  });
+});
+
+describe("UserFeedbackProvider — passthrough normalizeScreenshot (#803)", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("22. transmet normalizeScreenshot à la Modal — assertée via le hint rendu, pas via une inspection de props", () => {
+    const { result } = renderHook(() => useUserFeedback(), {
+      wrapper: wrapperFor({ normalizeScreenshot: { maxBytes: 1024 } }),
+    });
+
+    act(() => {
+      result.current.openFeedback();
+    });
+
+    expect(screen.getByText(/≤ 1 Ko/)).toBeInTheDocument();
   });
 });
 
