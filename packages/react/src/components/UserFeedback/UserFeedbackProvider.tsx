@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { UserFeedbackModal } from "./UserFeedbackModal";
+import type { ScreenshotNormalizeConfig } from "./normalizeScreenshot";
 import type {
   FeedbackDevice,
   FeedbackEnv,
@@ -42,6 +43,8 @@ export interface UserFeedbackProviderProps {
   onSubmit?: FeedbackSubmitHandler;
   /** Affiche le bouton de capture d'écran opt-in de la Modal. Défaut `true`. */
   allowScreenshot?: boolean;
+  /** Transmis tel quel à `<UserFeedbackModal>` (#803). */
+  normalizeScreenshot?: false | ScreenshotNormalizeConfig;
   children: ReactNode;
 }
 
@@ -166,6 +169,7 @@ export function UserFeedbackProvider({
   tenant = null,
   onSubmit,
   allowScreenshot = true,
+  normalizeScreenshot,
   children,
 }: UserFeedbackProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -227,6 +231,7 @@ export function UserFeedbackProvider({
           context={context}
           onSubmit={onSubmit ?? noopSubmit}
           allowScreenshot={allowScreenshot}
+          normalizeScreenshot={normalizeScreenshot}
         />
       )}
     </UserFeedbackContext.Provider>

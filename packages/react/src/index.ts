@@ -232,6 +232,18 @@ export type {
   FeedbackUser,
   FeedbackSubmitHandler,
 } from "./components/UserFeedback/types";
+// #803 — réutilisable hors Modal (un consumer qui a son propre parcours d'upload
+// n'a pas à réécrire le downscale + ré-encodage WebP : c'est le motif du ticket).
+export {
+  normalizeScreenshot,
+  ScreenshotNormalizeError,
+  DEFAULT_MAX_BYTES,
+  DEFAULT_MAX_DIMENSION,
+} from "./components/UserFeedback/normalizeScreenshot";
+export type {
+  ScreenshotNormalizeConfig,
+  ScreenshotFailureReason,
+} from "./components/UserFeedback/normalizeScreenshot";
 export { DataGrid } from "./components/DataGrid/DataGrid";
 export type {
   DataGridProps,

@@ -12,6 +12,13 @@ import { Button } from "../Button/Button";
 import { FileUpload } from "../FileUpload/FileUpload";
 import { FormErrorSummary } from "../FormValidation/FormErrorSummary";
 import { useFormValidation } from "../../hooks/useFormValidation";
+import {
+  normalizeScreenshot as normalizeScreenshotFile,
+  ScreenshotNormalizeError,
+  DEFAULT_MAX_BYTES,
+  type ScreenshotFailureReason,
+  type ScreenshotNormalizeConfig,
+} from "./normalizeScreenshot";
 import type {
   FeedbackFormValues,
   FeedbackImpact,
@@ -49,6 +56,28 @@ function formatFileSize(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / 1024))} Ko`;
 }
 
+/** Message utilisateur par cause d'échec — non bloquants, alignés sur `:182`/`:189`. */
+const ATTACHMENT_FAILURE_MESSAGES: Record<ScreenshotFailureReason, string> = {
+  decode:
+    "Image illisible — essayez un autre fichier. Vous pouvez continuer sans.",
+  unsupported:
+    "Votre navigateur ne sait pas convertir cette image en WebP. Vous pouvez continuer sans la capture.",
+  "too-large":
+    "Image encore trop lourde après compression — essayez une capture plus petite. Vous pouvez continuer sans.",
+};
+
+function attachmentFailureMessage(err: unknown): string {
+  if (err instanceof ScreenshotNormalizeError) {
+    return ATTACHMENT_FAILURE_MESSAGES[err.reason];
+  }
+  return "La conversion de l'image a échoué. Vous pouvez continuer sans.";
+}
+
+// Littéral au niveau module : un `{}` en défaut de props change d'identité à
+// chaque rendu et invaliderait le `useCallback` de `handleAttachFiles` à
+// chaque frappe (#803).
+const EMPTY_NORMALIZE_CONFIG: ScreenshotNormalizeConfig = {};
+
 export interface UserFeedbackModalProps {
   /** Contrôle l'ouverture — délégué tel quel à `<Modal>`. */
   open: boolean;
@@ -60,6 +89,14 @@ export interface UserFeedbackModalProps {
   onSubmit: FeedbackSubmitHandler;
   /** Affiche la zone de pièce jointe (image) opt-in. Défaut `true`. */
   allowScreenshot?: boolean;
+  /**
+   * Normalisation de la pièce jointe avant `onSubmit` (#803). Omis → WebP
+   * ≤ 512 Ko, plus grand côté ≤ 1600 px. Objet → réglages partiels.
+   * `false` → aucune conversion, le fichier brut est transmis tel quel
+   * (comportement d'avant #803).
+   * @default {}
+   */
+  normalizeScreenshot?: false | ScreenshotNormalizeConfig;
 }
 
 /**
@@ -85,6 +122,7 @@ export function UserFeedbackModal({
   context,
   onSubmit,
   allowScreenshot = true,
+  normalizeScreenshot = EMPTY_NORMALIZE_CONFIG,
 }: UserFeedbackModalProps) {
   const isAnonymous = context.user === null;
 
@@ -94,9 +132,17 @@ export function UserFeedbackModal({
   const [impact, setImpact] = useState<FeedbackImpact | "">("");
   const [email, setEmail] = useState("");
   const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [screenshotOriginal, setScreenshotOriginal] = useState<File | null>(
+    null,
+  );
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+  const [converting, setConverting] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Deux dépôts rapprochés : la conversion du 1er peut résoudre APRÈS celle du
+  // 2e et écraser la bonne pièce jointe. Seul le jeton courant a le droit d'écrire.
+  const attachmentTokenRef = useRef(0);
 
   // `onSubmit` peut être asynchrone (POST réseau) : si la modale se démonte
   // (fermeture) pendant l'attente, les callbacks ne doivent PAS appeler
@@ -116,7 +162,9 @@ export function UserFeedbackModal({
     setImpact("");
     setEmail("");
     setScreenshot(null);
+    setScreenshotOriginal(null);
     setAttachmentError(null);
+    setConverting(false);
     setSubmitting(false);
     setSubmitError(null);
   }, []);
@@ -139,6 +187,7 @@ export function UserFeedbackModal({
         impact: impact || undefined,
         email: isAnonymous ? email : undefined,
         screenshot,
+        screenshotOriginal,
       };
       await onSubmit(values, context);
       if (!mountedRef.current) return;
@@ -159,6 +208,7 @@ export function UserFeedbackModal({
     impact,
     email,
     screenshot,
+    screenshotOriginal,
     isAnonymous,
     onSubmit,
     context,
@@ -176,32 +226,80 @@ export function UserFeedbackModal({
     onClose();
   }, [onClose]);
 
-  const handleAttachFiles = useCallback((files: File[]) => {
-    const file = files[0] ?? null;
-    if (!file) return;
-    if (!file.type.startsWith(ACCEPTED_TYPE_PREFIX)) {
-      setAttachmentError(
-        "Format non pris en charge — choisissez une image. Vous pouvez continuer sans.",
-      );
-      return;
-    }
-    if (file.size > MAX_ATTACHMENT_BYTES) {
-      setAttachmentError(
-        "Fichier trop volumineux (max 5 Mo). Vous pouvez continuer sans.",
-      );
-      return;
-    }
-    setAttachmentError(null);
-    setScreenshot(file);
-  }, []);
+  const handleAttachFiles = useCallback(
+    async (files: File[]) => {
+      const file = files[0] ?? null;
+      if (!file) return;
+      if (!file.type.startsWith(ACCEPTED_TYPE_PREFIX)) {
+        setAttachmentError(
+          "Format non pris en charge — choisissez une image. Vous pouvez continuer sans.",
+        );
+        return;
+      }
+      if (file.size > MAX_ATTACHMENT_BYTES) {
+        setAttachmentError(
+          "Fichier trop volumineux (max 5 Mo). Vous pouvez continuer sans.",
+        );
+        return;
+      }
+      setAttachmentError(null);
+
+      // Opt-out explicite : comportement d'avant #803 (brut transmis tel quel).
+      if (normalizeScreenshot === false) {
+        setScreenshotOriginal(file);
+        setScreenshot(file);
+        return;
+      }
+
+      const token = ++attachmentTokenRef.current;
+      setConverting(true);
+      try {
+        const normalized = await normalizeScreenshotFile(
+          file,
+          normalizeScreenshot,
+        );
+        if (!mountedRef.current || token !== attachmentTokenRef.current) {
+          return;
+        }
+        setScreenshotOriginal(file);
+        setScreenshot(normalized);
+      } catch (err) {
+        if (!mountedRef.current || token !== attachmentTokenRef.current) {
+          return;
+        }
+        // Fail-closed : la pièce jointe est abandonnée, JAMAIS remplacée par le
+        // brut — sinon un PNG partirait dans un champ `screenshotWebp` (#803).
+        setScreenshot(null);
+        setScreenshotOriginal(null);
+        setAttachmentError(attachmentFailureMessage(err));
+      } finally {
+        if (mountedRef.current && token === attachmentTokenRef.current) {
+          setConverting(false);
+        }
+      }
+    },
+    [normalizeScreenshot],
+  );
 
   const handleRemoveAttachment = useCallback(() => {
+    attachmentTokenRef.current++; // annule une conversion encore en vol
     setScreenshot(null);
+    setScreenshotOriginal(null);
+    setConverting(false);
     setAttachmentError(null);
   }, []);
 
   const descriptionField = getFieldProps("description");
   const descriptionHasError = Boolean(fieldErrors.description);
+
+  const maxBytes =
+    normalizeScreenshot === false
+      ? null
+      : (normalizeScreenshot.maxBytes ?? DEFAULT_MAX_BYTES);
+  const attachmentHint =
+    maxBytes === null
+      ? "Image jusqu'à 5 Mo (PNG, JPG, WebP…)"
+      : `Image jusqu'à 5 Mo (PNG, JPG, WebP…) — convertie en WebP ≤ ${formatFileSize(maxBytes)}`;
 
   return (
     <Modal
@@ -213,7 +311,14 @@ export function UserFeedbackModal({
           <Button type="button" variant="ghost" onClick={handleClose}>
             Annuler
           </Button>
-          <Button type="submit" form={FORM_ID} loading={submitting}>
+          {/* Bloqué pendant la conversion : un envoi déclenché à cet instant
+              partirait SANS la pièce jointe, silencieusement. */}
+          <Button
+            type="submit"
+            form={FORM_ID}
+            loading={submitting}
+            disabled={converting}
+          >
             Envoyer
           </Button>
         </>
@@ -312,7 +417,8 @@ export function UserFeedbackModal({
             <FileUpload
               accept="image/*"
               multiple={false}
-              hint="Image jusqu'à 5 Mo (PNG, JPG, WebP…)"
+              hint={attachmentHint}
+              disabled={converting}
               onFiles={handleAttachFiles}
               files={
                 screenshot
@@ -326,11 +432,13 @@ export function UserFeedbackModal({
               }
               onRemove={handleRemoveAttachment}
             />
-            {attachmentError && (
-              <span className="input-hint" role="status">
-                {attachmentError}
-              </span>
-            )}
+            {/* Région live PERSISTANTE : un `role="status"` monté en même temps
+                que son texte n'est pas annoncé de façon fiable par tous les
+                lecteurs d'écran. Toujours présente, elle réserve aussi sa place
+                → aucun saut de mise en page quand le message apparaît. */}
+            <span className="input-hint" role="status">
+              {converting ? "Conversion de l'image…" : (attachmentError ?? "")}
+            </span>
           </div>
         )}
       </form>
