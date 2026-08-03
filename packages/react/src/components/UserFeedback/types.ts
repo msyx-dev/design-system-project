@@ -5,6 +5,9 @@
 // ré-exportés depuis l'index public par #695. Contrat figé en groom parent,
 // NE PAS modifier la forme des types ici sans re-ouvrir le groom (#692 issue
 // comment "🔒 Contrat figé").
+// AMENDÉ #803 (groom ré-ouvert, décision 2) : `screenshot` porte désormais la
+// pièce jointe NORMALISÉE (WebP ≤ plafond) ; le fichier brut reste accessible en
+// `screenshotOriginal`.
 
 /** Environnement d'exécution, dérivé automatiquement du hostname courant. */
 export type FeedbackEnv = "preprod" | "prod" | "dev" | "unknown";
@@ -59,8 +62,20 @@ export interface FeedbackFormValues {
   impact?: FeedbackImpact;
   /** Requis si `context.user === null` (mode anonyme). */
   email?: string;
-  /** Pièce jointe optionnelle (image ≤5 Mo). Un `File` est accepté (`File extends Blob`). */
+  /**
+   * Pièce jointe **normalisée** — `File` WebP renommé `.webp`, redimensionné et
+   * sous le plafond configuré (défaut 512 Ko), prêt à poster vers un backend
+   * strict (#803). `.name`/`.type` restent exploitables (c'est un `File`, pas un
+   * `Blob` nu). Absente si la conversion a échoué — jamais remplacée par le brut.
+   * Identique à `screenshotOriginal` si `normalizeScreenshot={false}`.
+   */
   screenshot?: Blob | null;
+  /**
+   * Fichier **brut** tel que déposé par l'utilisateur, pour les consumers qui
+   * veulent leur propre traitement (#803). `null`/absent quand aucune pièce
+   * jointe n'est retenue.
+   */
+  screenshotOriginal?: File | null;
 }
 
 /** Handler de soumission — reçoit les valeurs saisies + le contexte capturé. */
