@@ -42,6 +42,14 @@ export interface SiteHeaderIdentity {
   logoutUrl?: string;
   /** Badge de rôle dans l'en-tête du dropdown (ex. "Admin"). */
   roleBadge?: ReactNode;
+  /**
+   * Entrées additionnelles injectées dans une section dédiée du dropdown
+   * `<UserMenu>` (ex. lien « retour à l'accueil »). Passe-plat direct vers
+   * `UserMenuProps.extraItems` — voir `UserMenu.tsx` pour le comportement
+   * (séparateur additionnel, navigation clavier). N'a de sens qu'en mode
+   * CONNECTÉ (`identity` objet) : ignoré si `identity` est `null`/`undefined`.
+   */
+  extraItems?: ReactNode;
 }
 
 /** Config du feedback header. `boolean` = raccourci (bouton par défaut, Provider ambiant). */
@@ -120,6 +128,7 @@ function renderIdentity(identity: SiteHeaderProps["identity"]): ReactNode {
       authentikUserUrl={identity.authentikUserUrl ?? "#"}
       logoutUrl={identity.logoutUrl ?? "#"}
       roleBadge={identity.roleBadge}
+      extraItems={identity.extraItems}
     />
   );
 }
