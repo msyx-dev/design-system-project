@@ -108,7 +108,9 @@ export interface UserFeedbackModalProps {
  * Champs : `type`/`title`/`description` requis, `impact` optionnel, `email`
  * requis uniquement si `context.user === null` (mode anonyme), `screenshot`
  * opt-in (pièce jointe image ≤5 Mo via `<FileUpload>` DS — drag & drop +
- * parcourir, validation type/taille non bloquante, sans re-encodage, #714).
+ * parcourir, validation type/taille non bloquante, #714). Normalisée en WebP
+ * ≤ 512 Ko par défaut avant `onSubmit` (`normalizeScreenshot`, #803) — le
+ * fichier brut reste transmis dans `values.screenshotOriginal`.
  *
  * Contrôlée par le parent (`open`/`onClose`), sans état de session propre :
  * l'état local du formulaire est réinitialisé quand `open` redevient `false`
