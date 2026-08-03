@@ -80,6 +80,75 @@ describe("SiteHeader — identité", () => {
   });
 });
 
+// --- identity.extraItems : passe-plat vers UserMenu (#802) ---
+describe("SiteHeader — identity.extraItems", () => {
+  it("connecté + extraItems fourni → l'entrée est rendue dans le dropdown", () => {
+    render(
+      <SiteHeader
+        identity={{
+          ...identity,
+          extraItems: (
+            <a className="user-menu-item" role="menuitem" href="/">
+              Retour à l'accueil
+            </a>
+          ),
+        }}
+      />,
+    );
+    fireEvent.click(document.querySelector(".user-menu-trigger")!);
+    expect(
+      screen.getByRole("menuitem", { name: "Retour à l'accueil" }),
+    ).toBeInTheDocument();
+  });
+
+  it("connecté sans extraItems → aucune entrée ni séparateur supplémentaire (non-régression)", () => {
+    render(<SiteHeader identity={identity} />);
+    fireEvent.click(document.querySelector(".user-menu-trigger")!);
+    // Sans extraItems : 2 menuitems de base (Mon compte + Déconnexion), 1 seul separator.
+    expect(screen.getAllByRole("menuitem").length).toBe(2);
+    expect(screen.getAllByRole("separator").length).toBe(1);
+  });
+
+  it("l'entrée injectée participe à la navigation clavier du menu (passe-plat bout en bout)", () => {
+    render(
+      <SiteHeader
+        identity={{
+          ...identity,
+          extraItems: (
+            <a className="user-menu-item" role="menuitem" href="/">
+              Retour à l'accueil
+            </a>
+          ),
+        }}
+      />,
+    );
+    fireEvent.click(document.querySelector(".user-menu-trigger")!);
+    const items = screen.getAllByRole("menuitem");
+    // extraItems est injecté en premier dans le dropdown (avant "Mon compte").
+    expect(items[0]).toHaveTextContent("Retour à l'accueil");
+    items[0].focus();
+    fireEvent.keyDown(document.querySelector(".user-menu-dropdown")!, {
+      key: "ArrowDown",
+    });
+    expect(document.activeElement).toBe(items[1]);
+    fireEvent.keyDown(document.querySelector(".user-menu-dropdown")!, {
+      key: "Home",
+    });
+    expect(document.activeElement).toBe(items[0]);
+  });
+
+  it("identity={null} (anonyme) → extraItems sans effet, pas de UserMenu", () => {
+    render(<SiteHeader identity={null} />);
+    expect(document.querySelector(".user-menu")).toBeNull();
+  });
+
+  it("identity={undefined} (loading) → extraItems sans effet, skeleton inchangé", () => {
+    render(<SiteHeader identity={undefined} />);
+    expect(document.querySelector(".skeleton.skeleton-avatar")).not.toBeNull();
+    expect(document.querySelector(".user-menu")).toBeNull();
+  });
+});
+
 // --- Opt-out par feature ---
 describe("SiteHeader — notifications opt-out", () => {
   it("absent → pas de cloche", () => {
