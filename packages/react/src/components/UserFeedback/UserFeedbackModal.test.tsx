@@ -248,3 +248,85 @@ describe("UserFeedbackModal — pièce jointe fichier (#714)", () => {
     expect(screen.queryByText("capture.png")).not.toBeInTheDocument();
   });
 });
+
+describe("UserFeedbackModal — erreur de soumission (#799)", () => {
+  const GENERIC_ERROR_MESSAGE =
+    "L'envoi du retour a échoué. Vérifiez votre connexion et réessayez.";
+
+  async function submitValidForm(user: ReturnType<typeof userEvent.setup>) {
+    await user.type(screen.getByLabelText("Titre"), "Titre");
+    await user.type(
+      screen.getByLabelText("Description"),
+      "Description suffisamment détaillée.",
+    );
+    await user.click(screen.getByRole("button", { name: "Envoyer" }));
+  }
+
+  it("affiche le message de l'Error levée par onSubmit quand il est non vide", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi
+      .fn()
+      .mockRejectedValue(new Error("Fichier trop volumineux (max 2 Mo)"));
+    const onClose = vi.fn();
+    render(
+      <UserFeedbackModal
+        open
+        onClose={onClose}
+        context={baseContext}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    await submitValidForm(user);
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveClass("alert-danger");
+    expect(alert.textContent).toContain("Fichier trop volumineux (max 2 Mo)");
+    expect(alert.textContent).not.toContain(GENERIC_ERROR_MESSAGE);
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("conserve le message générique si l'erreur n'est pas une Error ou a un message vide", async () => {
+    // Cas 1 : rejet avec une valeur non-Error (ex. `throw "boom"`).
+    const user1 = userEvent.setup();
+    const onSubmitNonError = vi.fn().mockRejectedValue("boom");
+    render(
+      <UserFeedbackModal
+        open
+        onClose={vi.fn()}
+        context={baseContext}
+        onSubmit={onSubmitNonError}
+      />,
+    );
+    await submitValidForm(user1);
+    const alert1 = await screen.findByRole("alert");
+    expect(alert1.textContent).toContain(GENERIC_ERROR_MESSAGE);
+    cleanup();
+
+    // Cas 2 : rejet avec une Error au message vide.
+    const user2 = userEvent.setup();
+    const onSubmitEmptyMessage = vi.fn().mockRejectedValue(new Error(""));
+    render(
+      <UserFeedbackModal
+        open
+        onClose={vi.fn()}
+        context={baseContext}
+        onSubmit={onSubmitEmptyMessage}
+      />,
+    );
+    await submitValidForm(user2);
+    const alert2 = await screen.findByRole("alert");
+    expect(alert2.textContent).toContain(GENERIC_ERROR_MESSAGE);
+  });
+
+  it("non-régression : soumission réussie n'affiche aucune alerte d'erreur", async () => {
+    const user = userEvent.setup();
+    const { onSubmit, onClose } = renderModal();
+
+    await submitValidForm(user);
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+});

@@ -143,10 +143,12 @@ export function UserFeedbackModal({
       await onSubmit(values, context);
       if (!mountedRef.current) return;
       onClose();
-    } catch {
+    } catch (err) {
       if (!mountedRef.current) return;
       setSubmitError(
-        "L'envoi du retour a échoué. Vérifiez votre connexion et réessayez.",
+        err instanceof Error && err.message
+          ? err.message
+          : "L'envoi du retour a échoué. Vérifiez votre connexion et réessayez.",
       );
       setSubmitting(false);
     }
