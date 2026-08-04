@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.121.0",
+      "date": "2026-08-04",
+      "titre": "Une palette pour coder des catégories, lisible dans tous les thèmes",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Huit couleurs prêtes à l'emploi pour distinguer des catégories (jalons, tags, séries, légendes) sans leur donner de sens d'état : elles restent différenciables les unes des autres, et lisibles sur le fond, dans les six combinaisons de thème et de mode."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Des classes utilitaires pour appliquer ces couleurs en fond ou en bordure, documentées dans la page Fondation."
+        }
+      ]
+    },
+    {
       "version": "2.120.1",
       "date": "2026-07-28",
       "titre": "Pages de détail : la colonne latérale ne passe plus sous l'en-tête",
@@ -15,7 +30,21 @@
         }
       ]
     },
-    {"version":"2.120.0","date":"2026-07-27","titre":"Éléments collés (sticky) réparés + nouvelle mise en page 2 colonnes","highlights":[{"type":"correction","text":"Les éléments « collés » à l'écran (barre d'en-tête, panneau latéral) fonctionnent de nouveau correctement au défilement, sur toutes les applications qui utilisent le design system."},{"type":"nouveaute","text":"Nouveau modèle de mise en page à deux colonnes pour les pages de détail (ex. tickets), avec colonne latérale qui reste visible pendant le défilement du contenu principal."}]},
+    {
+      "version": "2.120.0",
+      "date": "2026-07-27",
+      "titre": "Éléments collés (sticky) réparés + nouvelle mise en page 2 colonnes",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Les éléments « collés » à l'écran (barre d'en-tête, panneau latéral) fonctionnent de nouveau correctement au défilement, sur toutes les applications qui utilisent le design system."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Nouveau modèle de mise en page à deux colonnes pour les pages de détail (ex. tickets), avec colonne latérale qui reste visible pendant le défilement du contenu principal."
+        }
+      ]
+    },
     {
       "version": "2.119.1",
       "date": "2026-07-27",
