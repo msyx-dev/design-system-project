@@ -20,7 +20,7 @@
     --chart-2: #38bdf8;
     --chart-3: #4ade80;
     --chart-4: #f97316;
-    --chart-5: #00457a;
+    --chart-5: #5b9bd5;
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239eb3c8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --code-comment: #a8bdd2;
     --code-function: #38bdf8;
@@ -202,7 +202,7 @@
     --chart-2: #73c69c;
     --chart-3: #38bdf8;
     --chart-4: #f97316;
-    --chart-5: #7c3aed;
+    --chart-5: #8b5cf6;
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a9e7a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --code-comment: #7daa8a;
     --code-function: #38bdf8;
@@ -291,6 +291,11 @@
     --cat-6: #fc0059;
     --cat-7: #874800;
     --cat-8: #918600;
+    --chart-1: #006e2c;
+    --chart-2: #2f8a5f;
+    --chart-3: #0e7490;
+    --chart-4: #ea580c;
+    --chart-5: #7c3aed;
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a7a58' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --code-comment: #4a6a80;
     --code-function: #2563eb;
