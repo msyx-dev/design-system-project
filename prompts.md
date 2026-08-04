@@ -14,7 +14,7 @@ Réutilisables tel quel dans les prompts ou les spécifications.
 
 ## Thèmes & modes
 
-- « Toujours tester les 5 combinaisons : MSYX dark/light, ACSSI dark/light, Nhood dark/light. »
+- « Toujours tester les 6 combinaisons : MSYX dark/light, ACSSI dark/light, Nhood dark/light. »
 - « Anti-FOUC : script inline `<head>` synchrone obligatoire avant `<link rel="stylesheet">`. »
 
 ## Voix

@@ -44,7 +44,7 @@ Source de vérité UI pour tous les projets msyx.fr.
 
 ## Thèmes et modes
 
-3 thèmes (MSYX, ACSSI, Nhood) × 2 modes (dark, light). Toujours tester les 5 combinaisons valides.
+3 thèmes (MSYX, ACSSI, Nhood) × 2 modes (dark, light). Toujours tester les 6 combinaisons valides.
 Anti-FOUC obligatoire : script inline synchrone dans `<head>` avant `<link rel="stylesheet">`.
 
 ## Workflow — pattern d'absorption d'issue
