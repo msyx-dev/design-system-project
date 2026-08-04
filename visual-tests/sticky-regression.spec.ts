@@ -28,11 +28,18 @@ test.describe("Sticky de niveau page — non-régression #795", () => {
     expect(before).toBeGreaterThan(56);
 
     // Scroll jusqu'en bas de page (robuste aux différences de hauteur de viewport
-    // entre projets desktop/mobile — pas besoin de calculer un offset exact)
+    // entre projets desktop/mobile — pas besoin de calculer un offset exact).
+    // behavior:"instant" (#809) : html{scroll-behavior:smooth} (base.css:18) rend
+    // sinon ce scroll animé ; c'est la position finale qui est vérifiée, pas
+    // l'animation. Un waitForTimeout fixe est une hypothèse sur sa durée — sous
+    // charge CI la mesure tombait pendant l'animation (top intermédiaire ~101px
+    // au lieu de 56px), d'où le flake intermittent.
     await page.evaluate(() =>
-      window.scrollTo(0, document.documentElement.scrollHeight),
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "instant",
+      }),
     );
-    await page.waitForTimeout(100);
 
     const after = await target.evaluate((el) => el.getBoundingClientRect().top);
 
