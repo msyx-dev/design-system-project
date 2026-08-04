@@ -3,6 +3,8 @@
 # Run A : repo reel -> versions alignees -> exit 0 attendu
 # Run B : copie temp avec 1 version desync -> exit 1 attendu
 # Run C : copie temp avec une version manquante -> exit 1 attendu
+# Run D : copie temp avec entrypoint.sh a version figee en dur -> exit 1 attendu (issue #811)
+# Run E : copie temp avec entrypoint.sh derive (pas de valeur figee) -> exit 0 attendu (issue #811)
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -65,6 +67,35 @@ else
   FAIL=$((FAIL+1))
 fi
 rm -rf "$TMP_C"
+
+# --- Run D : entrypoint.sh avec version figee en dur -> exit 1 (issue #811) ---
+echo "Test D: entrypoint.sh avec version figee en dur (exit 1 attendu)..."
+TMP_D="$(mktemp -d)"
+build_fixture "$TMP_D"
+printf 'VERSION="2.94.0"\n' > "$TMP_D/entrypoint.sh"
+if bash shared/check-versions.sh "$TMP_D" > /dev/null 2>&1; then
+  echo "  FAIL: le script aurait du retourner exit 1 sur un entrypoint.sh a version figee"
+  FAIL=$((FAIL+1))
+else
+  echo "  PASS (exit 1 detecte comme attendu)"
+  PASS=$((PASS+1))
+fi
+rm -rf "$TMP_D"
+
+# --- Run E : entrypoint.sh derive dynamiquement (pas de valeur figee) -> exit 0 (issue #811) ---
+echo "Test E: entrypoint.sh derive de package.json, sans valeur figee (exit 0 attendu)..."
+TMP_E="$(mktemp -d)"
+build_fixture "$TMP_E"
+printf 'VERSION=$(grep -oE "[0-9]+\\.[0-9]+\\.[0-9]+" package.json | head -1)\n' > "$TMP_E/entrypoint.sh"
+if bash shared/check-versions.sh "$TMP_E" > /dev/null 2>&1; then
+  echo "  PASS"
+  PASS=$((PASS+1))
+else
+  echo "  FAIL: un entrypoint.sh derive (sans version figee) aurait du passer (exit 0)"
+  bash shared/check-versions.sh "$TMP_E" || true
+  FAIL=$((FAIL+1))
+fi
+rm -rf "$TMP_E"
 
 echo ""
 echo "Resultats : $PASS PASS, $FAIL FAIL"

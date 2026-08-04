@@ -103,12 +103,15 @@ dans l'image elle-même, reconstruite à chaque déploiement. Rien n'est écrit 
 
 - `GET /health.json` → `{"status":"ok"}` (fichier statique — c'est aussi la sonde du `HEALTHCHECK`
   Docker interne à l'image, cf. `Dockerfile`)
-- `GET /version.json` → `{"version":"<figée dans entrypoint.sh>","sha":"<SOURCE_COMMIT ou "unknown">","built_at":"<figé au build>"}`,
-  généré par `entrypoint.sh` à chaque démarrage du container. `version` est une chaîne codée en dur
-  (`VERSION=` dans `entrypoint.sh`), indépendante de `package.json` — testé en local (`docker
-  build`/`docker run` sans `SOURCE_COMMIT`) : `{"version":"2.94.0","sha":"unknown","built_at":"…"}`,
-  alors que `package.json` racine est en `2.120.1`. Dérive existante, hors périmètre de ce ticket
-  (auth), nommée plutôt que passée sous silence.
+- `GET /version.json` → `{"version":"<dérivée de package.json>","sha":"<SOURCE_COMMIT ou "unknown">","built_at":"<figé au build>"}`,
+  généré par `entrypoint.sh` à chaque démarrage du container. `version` est **extraite de
+  `/srv/package.json`** (déjà copié dans l'image par `COPY . /srv`, non exclu par
+  `.dockerignore`) au démarrage — jamais saisie en dur (issue #811 ; avant correctif, `VERSION=`
+  était une chaîne codée en dur dans `entrypoint.sh`, indépendante de `package.json`, et avait
+  dérivé de 26 versions mineures). Testé en local (`docker build`/`docker run` sans
+  `SOURCE_COMMIT`) : `{"version":"2.121.0","sha":"unknown","built_at":"…"}`, alignée sur
+  `package.json` racine. `shared/check-versions.sh` garantit l'absence de récidive (contrôle
+  dédié, cf. commentaire du script).
 
 **Écart de nommage à connaître** : les chemins réels sont `/health.json` et `/version.json` (avec
 extension), pas `/health`/`/version` nus. Ces derniers ne sont **pas** des routes dédiées dans

@@ -9,8 +9,11 @@ FROM caddy:2-alpine
 COPY . /srv
 
 # Freeze BUILT_AT au build (date UTC ISO 8601, immutable au runtime).
-# SOURCE_COMMIT est injecte par Coolify v4 au RUNTIME via env var (pas au build),
-# l'entrypoint.sh genere /srv/version.json au demarrage avec les 2 valeurs.
+# SOURCE_COMMIT est injecte par Coolify v4 au RUNTIME via env var (pas au build).
+# VERSION n'est PAS un ARG de build : entrypoint.sh la derive au demarrage de
+# /srv/package.json (deja copie ci-dessus par COPY . /srv, cf. issue #811 —
+# aucune version ne doit etre saisie en dur dans l'image). entrypoint.sh genere
+# /srv/version.json au demarrage avec les 3 valeurs (VERSION/SHA/BUILT_AT).
 RUN date -u +%Y-%m-%dT%H:%M:%SZ > /built_at
 
 COPY Caddyfile.container /etc/caddy/Caddyfile
