@@ -8,6 +8,13 @@
 #   - "version" (top-level) dans package.json
 # Si une seule diverge -> affiche le detail et exit 1, sinon exit 0.
 #
+# Garde-fou complementaire (issue #811) : entrypoint.sh ne doit JAMAIS
+# contenir de version figee en dur (VERSION="X.Y.Z"). Elle est deliberement
+# EXCLUE des 8 sources ci-dessus : depuis #811 elle est derivee au demarrage
+# du container (package.json deja copie dans l'image), donc n'a plus de
+# valeur figee a comparer — seule son ABSENCE de valeur codee en dur est
+# verifiee.
+#
 # Usage : check-versions.sh [ROOT]
 #   ROOT (optionnel) = racine du repo a verifier (defaut : racine deduite du script).
 #   Permet aux tests de pointer sur un repertoire temporaire.
@@ -77,6 +84,22 @@ else
   EXIT=1
 fi
 
+# --- entrypoint.sh : garde de non-recidive (issue #811) ---
+# Pas de comparaison de valeur (elle n'en porte plus) : on verifie uniquement
+# l'ABSENCE d'une assignation VERSION=X.Y.Z codee en dur — quotee ("X.Y.Z" /
+# 'X.Y.Z') ou non (X.Y.Z est une assignation sh valide sans espace). Le motif
+# exclut deliberement VERSION=$(...) (derivation dynamique attendue).
+# Fichier absent (ex. fixtures de test qui ne modelisent que les 8 sources
+# ci-dessus) -> check ignore, ce n'est pas son role.
+ENTRYPOINT_EXIT=0
+ENTRYPOINT_SH="$ROOT/entrypoint.sh"
+if [ -f "$ENTRYPOINT_SH" ] && grep -qE 'VERSION=["'"'"']?[0-9]+\.[0-9]+\.[0-9]+' "$ENTRYPOINT_SH"; then
+  echo "ERREUR : entrypoint.sh contient une version figee en dur (issue #811)."
+  echo "VERSION doit etre derivee de package.json au demarrage, jamais ressaisie a la main."
+  echo ""
+  ENTRYPOINT_EXIT=1
+fi
+
 # --- Comparaison : toutes les versions doivent etre identiques et non vides ---
 REF="${VERSIONS[0]}"
 MISMATCH=0
@@ -99,5 +122,9 @@ if [ "$MISMATCH" -eq 1 ] || [ "$EXIT" -ne 0 ]; then
   exit 1
 fi
 
-echo "OK : 8 sources de version alignees sur $REF"
+if [ "$ENTRYPOINT_EXIT" -ne 0 ]; then
+  exit 1
+fi
+
+echo "OK : 8 sources de version alignees sur $REF ; entrypoint.sh sans version figee (issue #811)"
 exit 0
