@@ -62,6 +62,52 @@
     </div>
 </section>
 
+<section id="palette-categorielle">
+    <div class="section-header"><span class="overline">Fondation</span><h2>Palette categorielle</h2><p>Huit teintes garanties separables, pour coder des categories libres : jalons, series, tags, legendes. A ne pas confondre avec les roles semantiques.</p></div>
+
+    <div class="subsection">
+        <span class="demo-label">Categoriel n'est pas semantique</span>
+        <div class="demo-box">
+            <p class="typo-small"><span class="code-inline">--success</span>, <span class="code-inline">--warning</span>, <span class="code-inline">--danger</span> et <span class="code-inline">--info</span> portent un <strong>etat</strong> : les employer pour coder des categories fait mentir l'interface (un jalon « violet » n'est ni un succes ni une alerte). <span class="code-inline">--cat-1</span> a <span class="code-inline">--cat-8</span> ne veulent rien dire d'autre que « pas la meme que la precedente ».</p>
+        </div>
+    </div>
+
+    <div class="subsection">
+        <span class="demo-label">Les 8 entrees — changez de theme, elles suivent</span>
+        <div class="color-grid color-grid--compact">
+            <div class="color-swatch"><div class="color-preview bg-cat-1"></div><div class="color-info"><div class="color-name">Cat 1</div><div class="color-hex">--cat-1</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-2"></div><div class="color-info"><div class="color-name">Cat 2</div><div class="color-hex">--cat-2</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-3"></div><div class="color-info"><div class="color-name">Cat 3</div><div class="color-hex">--cat-3</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-4"></div><div class="color-info"><div class="color-name">Cat 4</div><div class="color-hex">--cat-4</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-5"></div><div class="color-info"><div class="color-name">Cat 5</div><div class="color-hex">--cat-5</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-6"></div><div class="color-info"><div class="color-name">Cat 6</div><div class="color-hex">--cat-6</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-7"></div><div class="color-info"><div class="color-name">Cat 7</div><div class="color-hex">--cat-7</div></div></div>
+            <div class="color-swatch"><div class="color-preview bg-cat-8"></div><div class="color-info"><div class="color-name">Cat 8</div><div class="color-hex">--cat-8</div></div></div>
+        </div>
+    </div>
+
+    <div class="subsection">
+        <span class="demo-label">Le contrat</span>
+        <div class="demo-box">
+            <p class="typo-small">Verifie en CI par <span class="code-inline">bin/check-categorical-palette.js</span> sur les <strong>6 combinaisons</strong> theme/mode :</p>
+            <ul class="typo-small">
+                <li>ecart de teinte <strong>&ge; 30&deg;</strong> (OKLCh) entre deux entrees quelconques ;</li>
+                <li>distance perceptuelle <strong>&ge; 0,12</strong> (&Delta;E OKLab) entre deux entrees quelconques ;</li>
+                <li>contraste <strong>&ge; 3:1</strong> avec <span class="code-inline">--surface-solid</span> (WCAG 2.1 SC 1.4.11, objet graphique).</li>
+            </ul>
+            <p class="typo-xs text-muted">Au-dela de 8 categories, le DS ne garantit plus la separabilite : ajoutez un second canal d'encodage (forme, motif, libelle) ou regroupez.</p>
+        </div>
+    </div>
+
+    <div class="subsection">
+        <span class="demo-label">Usage</span>
+        <div class="demo-box">
+            <div class="code-block text-xs-lh"><span class="cm">/* Utilitaires — remplissage et bordure uniquement */</span><br><span class="kw">&lt;span</span> <span class="fn">class</span>=<span class="str">"bg-cat-3"</span><span class="kw">&gt;&lt;/span&gt;</span><br><br><span class="cm">/* Index dynamique cote consumer */</span><br><span class="fn">style</span>=<span class="str">"background: var(--cat-3)"</span><br><br><span class="cm">/* Declinaison douce — pas de --cat-N-rgb */</span><br><span class="fn">background</span>: <span class="str">color-mix(in srgb, var(--cat-3) 12%, transparent)</span>;</div>
+            <p class="typo-xs text-muted">Pas de <span class="code-inline">.text-cat-N</span> : le contrat garantit 3:1 (objet graphique), pas les 4,5:1 exiges pour du texte. Une couleur categorielle ne doit jamais porter seule l'information — toujours l'accompagner d'un libelle.</p>
+        </div>
+    </div>
+</section>
+
 <section id="typography">
     <div class="section-header"><span class="overline">Fondation</span><h2>Typographie</h2><p>Space Grotesk pour les titres, Inter pour le body, Fira Code pour le code.</p></div>
     <div class="demo-grid demo-grid-2">

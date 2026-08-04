@@ -1,5 +1,21 @@
 # Releases
 
+## 2.121.0 — 2026-08-04 — Échelle catégorielle `--cat-1..8` (#800)
+
+> Le thème NHOOD ne permettait pas de coder 8 catégories distinctes (jalons, séries, tags, légendes) sans détourner les rôles sémantiques `--success`/`--warning`/`--danger`/`--info` : `--accent`/`--accent-light` littéralement identiques en NHOOD light, `--info`/`--deco-cyan` indistinguables. Le DS avait déjà une échelle catégorielle de fait (`--chart-1..5`) mais non contractuelle et effectivement en défaut sur 4 des 6 combos (`--chart-5` = `--surface-solid` en ACSSI dark, invisible). Plutôt que de raccommoder `--chart-*` (Task de suite #812, hors périmètre ici), le DS expose une nouvelle échelle dédiée avec un contrat vérifié en CI.
+
+### Added
+- **`--cat-1` à `--cat-8`** (`shared/css/tokens.css` + `themes/{acssi,nhood}.json` dark/light + `themes/msyx.json` miroir dark) : palette catégorielle, garantie séparable et lisible sur les **6 combos** theme/mode (MSYX/ACSSI/NHOOD × dark/light) par 3 critères chiffrés — C1 écart de teinte ΔH(OKLCh) ≥ 30°, C2 distance perceptuelle ΔE(OKLab) ≥ 0,12 (ferme le trou de C1 pour deux teintes lointaines à faible chroma), C3 contraste ≥ 3:1 vs `--surface-solid` (WCAG 2.1 SC 1.4.11, objet graphique non-textuel). 48 déclarations explicites dans les 4 couches de cascade (`:root`, `[data-mode="light"]`, `[data-theme="X"]`, `[data-theme="X"][data-mode="light"]`) — aucune omission « parce que ça hérite », piège qui affecte aujourd'hui `--chart-*` en NHOOD light. Hex littéral obligatoire (jamais `var()`/`color-mix()`).
+- **`bin/check-categorical-palette.js`** (#800) : gate CI bloquant dès la 1ère version — parse `tokens.css`/`themes.css` en Node pur (zéro dépendance, zéro navigateur), résout la cascade, vérifie complétude/forme puis C1/C2/C3 sur les 6 combos. Conçu extensible : tokens à vérifier + seuils passés en paramètres (`SCALES`) — la Task de suite #812 (réparer `--chart-1..5`, **non touché** dans cette version) réutilisera le même moteur sans second contrôleur. Testé par `tests/regression/categorical-palette.test.js` (calcul pur : hex→OKLab, contraste WCAG, cascade) et `tests/test-check-categorical-palette.sh` (codes de sortie 0/1/2).
+- **16 utilitaires** `.bg-cat-1..8` + `.border-cat-1..8` (`shared/css/utilities.css`) — remplissage/bordure uniquement. **Pas de `.text-cat-N`** : le contrat garantit 3:1 (non-textuel), pas les 4,5:1 requis pour du texte.
+- **Vitrine** `pages/fondation.html#palette-categorielle` : 8 pastilles theme-aware, contrat documenté, exemples d'usage (classes utilitaires, index dynamique `var(--cat-N)`, déclinaison `color-mix()`).
+
+### Docs
+- **`docs/DS-PRINCIPLES.md`** : nouvelle sous-section « Catégoriel ≠ sémantique » (Section 2) + correction du chiffre stale « 5 combos » → **6 combos** (`THEME_CONFIG` de `shared/components.js` donne `['dark','light']` aux 3 thèmes, `playwright.config.ts` génère 12 projets, `visual-tests/baseline/` a 12 dossiers) et correction du pas-à-pas « Ajouter un theme » (les thèmes vivent dans `themes/*.json`, pas `tokens.css`).
+- **`CLAUDE.md`** : même correction 5→6 combos + description de `pages/fondation.html` mise à jour.
+- **`docs/ARCHITECTURE.md`** : nouveau gate listé, tokens `--cat-1..8` décrits.
+- **`shared/CONSUMER_GUIDE.md`** : section « Coder des catégories » (ce que le DS garantit, ce qu'il ne garantit pas au-delà de 8, interdiction des rôles sémantiques).
+
 ## 2.120.1 — 2026-07-28 — `.detail-grid-aside` recouvert par `.section-header--sticky` (#797)
 
 > Régression de conception introduite par #795 (v2.120.0), trouvée à la première consommation réelle du pattern (`msyx-dev/feedbacks#42`). `.detail-grid-aside` et `.section-header--sticky` ont été livrés ensemble pour le même cas d'usage, mais l'aside ignorait la hauteur de l'en-tête sticky : `top: calc(var(--header-h) + var(--space-lg))` = 80px, alors que `.section-header--sticky` (`top: var(--header-h)` = 56px, `min-height: var(--page-header-sticky-h)` = 96px) occupe l'écran jusqu'à 152px — soit 72px de recouvrement. `--page-header-sticky-h` avait justement été créé pour ces offsets ; la liaison manquait.

@@ -1,4 +1,4 @@
-/* @ds-version: 2.120.1 */
+/* @ds-version: 2.121.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -167,6 +167,33 @@
     --chart-3: #06b6d4;
     --chart-4: #ec4899;
     --chart-5: #22c55e;
+
+    /* ===== ECHELLE CATEGORIELLE (#800, v2.121.0) =====
+       CATEGORIEL != SEMANTIQUE. --success/--warning/--danger/--info portent un ETAT.
+       --cat-N ne veut rien dire d'autre que « pas la meme que la precedente » :
+       coder des categories libres (jalons, series, tags, legendes) sans detourner
+       un role semantique.
+       CONTRAT (garanti par bin/check-categorical-palette.js sur les 6 combos) :
+         C1  ΔH(OKLCh) >= 30 deg pour toute paire
+         C2  ΔE(OKLab) >= 0.12 pour toute paire
+         C3  contraste >= 3:1 vs --surface-solid (WCAG 2.1 SC 1.4.11, non-textuel)
+       DEUX REGLES DURES :
+         - hex LITTERAL uniquement (jamais var(), jamais color-mix()) — le gate parse ce fichier
+         - les 8 entrees sont redeclarees dans LES 4 COUCHES. [data-theme="X"] et
+           [data-mode="light"] ont la MEME specificite et themes.css est importe APRES
+           tokens.css : sans redeclaration en [data-theme="X"][data-mode="light"], le
+           mode clair sert les valeurs DARK du theme (defaut avere de --chart-* en nhood-light).
+       Au-dela de 8 categories, le DS ne garantit RIEN : ajouter un 2e canal
+       d'encodage (forme, motif, libelle) ou regrouper.
+       Declinaisons : color-mix(in srgb, var(--cat-3) 12%, transparent) — pas de --cat-N-rgb. */
+    --cat-1: #2f7fff;
+    --cat-2: #c599f8;
+    --cat-3: #ff00aa;
+    --cat-4: #ec3c00;
+    --cat-5: #d7a447;
+    --cat-6: #bdf600;
+    --cat-7: #009d7a;
+    --cat-8: #00dbfe;
 
     /* Z-index scale */
     --z-dropdown: 50;
@@ -362,4 +389,14 @@
     --btn-on-success: #ffffff;      /* AA — 4.85:1 sur #15803d */
     --btn-on-warning: #ffffff;      /* AA — 4.71:1 sur #c2410c */
     --btn-shadow-alpha: 22%;        /* ombres adoucies en light */
+
+    /* Echelle categorielle — MSYX light (#800). Contraste vs --surface-solid #ffffff. */
+    --cat-1: #056eff;
+    --cat-2: #a200fe;
+    --cat-3: #ff00aa;
+    --cat-4: #ff4408;
+    --cat-5: #704e00;
+    --cat-6: #769c00;
+    --cat-7: #007f62;
+    --cat-8: #004e5c;
 }

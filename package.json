@@ -1,6 +1,6 @@
 {
   "name": "msyx-design-system",
-  "version": "2.120.1",
+  "version": "2.121.0",
   "private": true,
   "description": "Design system msyx.fr — visual regression tooling",
   "workspaces": [
@@ -13,6 +13,7 @@
     "generate-counters": "node bin/generate-counters.js",
     "build:graph": "bash shared/graph/build.sh",
     "test:syntax": "node tests/regression/nav-js-syntax.test.js",
+    "test:categorical": "node tests/regression/categorical-palette.test.js",
     "test:version-notes": "node tests/regression/generate-version-notes.test.js",
     "test:graph-lib": "node tests/regression/graph-lib.test.js",
     "test:graph-model": "node tests/regression/graph-model.test.js",
