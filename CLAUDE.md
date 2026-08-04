@@ -10,7 +10,7 @@ Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abo
 
 Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
 - **Aucune valeur hardcodée** (hex/rgb/px/font) — toujours `var(--token)` depuis `tokens.css`
-- **5 combos theme/mode à tester** — MSYX/ACSSI/Nhood × dark/light
+- **6 combos theme/mode à tester** — MSYX/ACSSI/Nhood × dark/light (3 × 2, `THEME_CONFIG` de `shared/components.js`)
 - **Mobile-first uniquement** — `@media (min-width: ...)`, jamais `max-width`
 - **A11y baseline** — `aria-label` sur icon-only, `:focus-visible`, contraste 4.5:1, target 44px mobile
 - **Anti-FOUC** — script synchrone inline `<head>`, lit `msyx-theme` + `msyx-mode` (jamais de naming divergent)
@@ -40,7 +40,7 @@ index.html          # Page login auth gate
 site.html           # Hub principal + lazy-loader des 8 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques
-  fondation.html    # Couleurs, typographie, espacements, ombres, theming (+ .theme-card / .color-grid--compact v2.54.7), theme switcher (v2.47.0), mode-switch iOS-style (v2.55.0), brand identity (wordmark + mark DS, v2.56.0), classes utilitaires (+ .hidden-mobile/.hidden-desktop responsive v2.78.0 #568, + .page-content/.main--no-rail consumers sans sidebar v2.78.0 #567), iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0), + .orb ambient primitif (orb.css, modifs couleur/taille + --float opt-in, v2.86.0 #357) + Motion : durations, easings, 6 patterns canoniques (#514), + .detail-grid 2 colonnes + .section-header--sticky (#795)
+  fondation.html    # Couleurs, typographie, espacements, ombres, theming (+ .theme-card / .color-grid--compact v2.54.7), theme switcher (v2.47.0), mode-switch iOS-style (v2.55.0), brand identity (wordmark + mark DS, v2.56.0), classes utilitaires (+ .hidden-mobile/.hidden-desktop responsive v2.78.0 #568, + .page-content/.main--no-rail consumers sans sidebar v2.78.0 #567), iconographie (Lucide sprite, v2.33.0), performance (glass vs solid, v2.33.0), + .orb ambient primitif (orb.css, modifs couleur/taille + --float opt-in, v2.86.0 #357) + Motion : durations, easings, 6 patterns canoniques (#514), + .detail-grid 2 colonnes + .section-header--sticky (#795), + palette categorielle (#palette-categorielle, 8 teintes --cat-1..8 separables jalons/series/tags/legendes, categoriel != semantique, contrat C1 ΔH(OKLCh)>=30°/C2 ΔE(OKLab)>=0.12/C3 contraste>=3:1 verifie par bin/check-categorical-palette.js sur les 6 combos, utilitaires .bg-cat-*/.border-cat-* — pas de .text-cat-N, v2.121.0 #800)
   composants.html   # Cards (+ card-link a11y v2.49.0, + card-muted WCAG-safe v2.78.0 #569, + card-media vignette bleed v2.79.0 #37), badges (+ badge-nav compact v2.49.0), boutons (+ polish sémantique theme-aware v2.54.11 : tokens fg dédiés --btn-on-*, shadow alpha --btn-shadow-alpha, border subtil, + .btn-group attaché v2.83.0 #451, + .split-button caret menu v2.84.0 #438), chips, dividers, rating, avatars, alertes, modals (+ focus restore WAI APG v2.41.0), toasts (+ toast-message v2.49.0), segmented control (ARIA `role="radiogroup"`/`role="radio"` + roving tabindex + flèches, décision #613 v2.116.0), achievement badges, popovers, reset natif (a + :focus-visible, v2.31.0), disabled global (éléments natifs hors .btn-*/.input, v2.40.2)
   navigation.html   # Header user zone (avatar, dropdown, notifications, brand configurable window.MSYX_HEADER.brand v2.78.0 #570), Tabs, breadcrumbs, stepper, bottom navigation, action-menu (v2.47.0)
   formulaires.html  # Inputs, selects, checkboxes, file upload, login, login-screen (3 variants Authentik + slots providers, v2.57.0), calendrier interactif single/range INLINE + time-picker 24h/12h (#432/#436), slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar, password-toggle (show/hide œil, v2.72.0), validation-formulaires (initFormValidation a11y v2.82.0 #433), color-picker (.color-input <input type=color> natif v2.87.0 #448), transfer-list (.transfer-list disponibles↔assignés + initTransferList v2.88.0 #444)
@@ -153,7 +153,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Section dediee avec commentaire `/* ===== NOM COMPOSANT ===== */`
    - Variables CSS uniquement (jamais de hex/rgb hardcode)
    - Mobile-first : media queries co-localisees avec le composant
-   - Tester les 5 combinaisons theme/mode (MSYX dark/light, ACSSI dark, Nhood dark/light)
+   - Tester les 6 combinaisons theme/mode (MSYX dark/light, ACSSI dark/light, Nhood dark/light)
 3. **JS** (si interactif) : ajouter dans `shared/components.js`
    - Fonction `initNomComposant()` exportee
    - Pattern `dataset.bound` anti-double-bind sur les event listeners

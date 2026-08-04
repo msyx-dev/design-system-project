@@ -96,12 +96,12 @@ Trois categories de valeurs hardcodees **legitimement tokenisees** sans lien au 
 
 ---
 
-## Section 2 — Theming (3 themes × 2 modes = 5 combos à tester)
+## Section 2 — Theming (3 themes × 2 modes = 6 combos à tester)
 
 ### Règle
 - 2 attributs HTML : `data-theme` (palette : msyx / acssi / nhood) + `data-mode` (dark / light).
 - Cascade CSS 4 couches : `:root` → `[data-theme]` → `[data-mode="light"]` → `[data-theme][data-mode]`.
-- Tout composant doit être **testable** sur les 5 combos (MSYX dark+light, ACSSI dark+light, Nhood dark+light → certaines combos peuvent être restrictes selon `THEME_CONFIG`).
+- Tout composant doit être **testable** sur les **6 combos** (MSYX dark+light, ACSSI dark+light, Nhood dark+light — `THEME_CONFIG` de `shared/components.js` donne bien `['dark','light']` aux 3 themes ; `playwright.config.ts` génère 3×2×2=12 projets et `visual-tests/baseline/` contient 12 dossiers, cf. correction #800 — l'ancien chiffre « 5 combos » était stale).
 
 ### Variables RGB pour rgba()
 Pour les declinaisons opaques :
@@ -133,11 +133,42 @@ Pattern requis (script synchrone inline dans `<head>`) :
 Conventions localStorage **obligatoires** : `msyx-theme` (palette) + `msyx-mode` (dark/light). **Pas** de divergence avec des clés project-specific (anti-pattern observé sur aksyva : `aksyva-theme` stockait le mode 🤦).
 
 ### Ajouter un nouveau theme
-1. Bloc CSS `[data-theme="X"]` dans `tokens.css`
+1. Bloc `modes.dark`/`modes.light` dans `themes/{nom}.json`, puis `node shared/build-themes.js` (régénère `shared/css/themes.css` — **AUTOGÉNÉRÉ, ne jamais l'éditer à la main**). MSYX seul reste dans `:root`/`[data-mode="light"]` de `tokens.css` (miroir non autoritatif dans `themes/msyx.json`, skippé par le build).
 2. Variable `--accent-rgb: R, G, B` (triplet sans virgule entre var)
 3. Entrée dans `THEME_CONFIG` de `components.js`
 4. Option `<option>` dans le selector header
 5. Test visuel sur toutes les pages avec dark + light
+
+### Catégoriel ≠ sémantique (#800)
+
+`--success` / `--warning` / `--danger` / `--info` portent un **état** — les employer pour coder une catégorie libre (jalon, série, tag, légende) fait mentir l'interface (un jalon « violet » n'est ni un succès ni une alerte).
+
+Le DS expose une échelle dédiée `--cat-1` à `--cat-8` : elle ne veut rien dire d'autre que « pas la même que la précédente ».
+
+❌ **Don't** :
+```css
+/* Coder la catégorie "Livraison" avec un rôle sémantique — mensonge d'état */
+.milestone-livraison { background: var(--success); }
+```
+
+✅ **Do** :
+```css
+/* Catégorie libre — index arbitraire, aucune sémantique d'état */
+.milestone-livraison { background: var(--cat-4); }
+```
+
+**Contrat vérifié par `bin/check-categorical-palette.js`** (CI, bloquant) sur les 6 combos theme/mode :
+- **C1** — écart de teinte ΔH(OKLCh) ≥ 30° entre deux entrées quelconques.
+- **C2** — distance perceptuelle ΔE(OKLab) ≥ 0,12 entre deux entrées quelconques (ferme le trou de C1 : deux teintes lointaines à faible chroma restent confondues).
+- **C3** — contraste ≥ 3:1 vs `--surface-solid` (WCAG 2.1 SC 1.4.11, objet graphique non-textuel — **pas** 4,5:1).
+
+**Règle des 4 couches** : `[data-theme="X"]` et `[data-mode="light"]` ont la même spécificité, et `themes.css` est importé après `tokens.css` → un token présent en couche 3 mais absent de la couche 4 garde sa valeur **dark** en mode clair. Les 8 entrées sont donc **redéclarées explicitement** dans les 4 couches (`:root`, `[data-mode="light"]`, `[data-theme="X"]`, `[data-theme="X"][data-mode="light"]`) — jamais d'omission « parce que ça hérite ».
+
+**Hex littéral obligatoire** pour `--cat-N` : jamais `var()`, jamais `color-mix()` — le gate est un parseur Node qui ne reproduit pas la cascade du navigateur, la forme littérale est ce qui rend ce parsing honnête. Déclinaisons douces via `color-mix(in srgb, var(--cat-3) 12%, transparent)` — pas de `--cat-N-rgb`.
+
+**Utilitaires** : `.bg-cat-1..8` + `.border-cat-1..8` uniquement. **Pas de `.text-cat-N`** — le contrat garantit 3:1 (non-textuel), pas les 4,5:1 requis pour du texte ; l'exposer inviterait silencieusement à une violation WCAG.
+
+**Au-delà de 8 catégories, le DS ne garantit rien** : ajouter un second canal d'encodage (forme, motif, libellé) ou regrouper. Ce n'est pas un manque, c'est une position assumée (12 entrées ramènerait l'espacement idéal à 30°, exactement le plancher du contrat, marge nulle).
 
 ---
 
@@ -462,7 +493,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 - [ ] Commentaire en-tête `/* ===== NOM COMPOSANT ===== */`
 - [ ] Aucune valeur hardcodée (cf Section 1)
 - [ ] Mobile-first (cf Section 4)
-- [ ] Testé sur les 5 combos theme/mode (cf Section 2)
+- [ ] Testé sur les 6 combos theme/mode (cf Section 2)
 
 ### JS (si interactif)
 - [ ] Fonction `init<NomComposant>()` exportée
@@ -500,7 +531,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 
 ### Tests visuels (Visual Regression)
 - [ ] Nouvelle baseline VR générée pour la page concernée
-- [ ] Tests sur les 5 combos theme/mode (où applicable)
+- [ ] Tests sur les 6 combos theme/mode (où applicable)
 
 ---
 
