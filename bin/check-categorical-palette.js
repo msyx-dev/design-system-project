@@ -21,9 +21,11 @@
 // aucun second controleur a ecrire.
 //
 // Usage :
-//   node bin/check-categorical-palette.js              # verifie la config "cat" (defaut)
-//   node bin/check-categorical-palette.js --scale=cat   # idem, explicite
-//   node bin/check-categorical-palette.js --json        # sortie JSON (CI)
+//   node bin/check-categorical-palette.js                       # verifie la config "cat" (defaut)
+//   node bin/check-categorical-palette.js --scale=cat            # idem, explicite
+//   node bin/check-categorical-palette.js --json                 # sortie JSON (CI)
+//   node bin/check-categorical-palette.js --tokens=<path> --themes=<path>
+//                                                                 # fixtures (tests uniquement)
 //
 // Exit 0 = contrat tenu · exit 1 = violation C1/C2/C3 · exit 2 = erreur de
 // parsing/completude (forme invalide, declaration manquante).
@@ -89,9 +91,11 @@ function parseBlocks(css) {
   return blocks;
 }
 
-function loadBlocks() {
-  const tokensCss = fs.readFileSync(TOKENS_CSS_PATH, 'utf8');
-  const themesCss = fs.readFileSync(THEMES_CSS_PATH, 'utf8');
+// tokensPath/themesPath overridables (tests uniquement — cf. tests/test-check-categorical-palette.sh
+// qui pointe des fixtures adverses sans toucher au vrai CSS du repo).
+function loadBlocks(tokensPath, themesPath) {
+  const tokensCss = fs.readFileSync(tokensPath || TOKENS_CSS_PATH, 'utf8');
+  const themesCss = fs.readFileSync(themesPath || THEMES_CSS_PATH, 'utf8');
   return {
     tokens: parseBlocks(tokensCss),
     themes: parseBlocks(themesCss),
@@ -369,6 +373,8 @@ function main() {
   const asJson = args.includes('--json');
   const scaleArg = args.find((a) => a.startsWith('--scale='));
   const scaleName = scaleArg ? scaleArg.split('=')[1] : 'cat';
+  const tokensArg = args.find((a) => a.startsWith('--tokens='));
+  const themesArg = args.find((a) => a.startsWith('--themes='));
 
   const scale = SCALES[scaleName];
   if (!scale) {
@@ -378,7 +384,10 @@ function main() {
 
   let blocks;
   try {
-    blocks = loadBlocks();
+    blocks = loadBlocks(
+      tokensArg ? tokensArg.split('=').slice(1).join('=') : undefined,
+      themesArg ? themesArg.split('=').slice(1).join('=') : undefined
+    );
   } catch (err) {
     console.error(`Erreur de lecture/parsing CSS : ${err.message}`);
     process.exit(2);
