@@ -86,12 +86,14 @@ fi
 
 # --- entrypoint.sh : garde de non-recidive (issue #811) ---
 # Pas de comparaison de valeur (elle n'en porte plus) : on verifie uniquement
-# l'ABSENCE d'une assignation VERSION="X.Y.Z" codee en dur. Fichier absent
-# (ex. fixtures de test qui ne modelisent que les 8 sources ci-dessus) ->
-# check ignore, ce n'est pas son role.
+# l'ABSENCE d'une assignation VERSION=X.Y.Z codee en dur — quotee ("X.Y.Z" /
+# 'X.Y.Z') ou non (X.Y.Z est une assignation sh valide sans espace). Le motif
+# exclut deliberement VERSION=$(...) (derivation dynamique attendue).
+# Fichier absent (ex. fixtures de test qui ne modelisent que les 8 sources
+# ci-dessus) -> check ignore, ce n'est pas son role.
 ENTRYPOINT_EXIT=0
 ENTRYPOINT_SH="$ROOT/entrypoint.sh"
-if [ -f "$ENTRYPOINT_SH" ] && grep -qE 'VERSION="[0-9]+\.[0-9]+\.[0-9]+"' "$ENTRYPOINT_SH"; then
+if [ -f "$ENTRYPOINT_SH" ] && grep -qE 'VERSION=["'"'"']?[0-9]+\.[0-9]+\.[0-9]+' "$ENTRYPOINT_SH"; then
   echo "ERREUR : entrypoint.sh contient une version figee en dur (issue #811)."
   echo "VERSION doit etre derivee de package.json au demarrage, jamais ressaisie a la main."
   echo ""

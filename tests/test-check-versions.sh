@@ -3,8 +3,9 @@
 # Run A : repo reel -> versions alignees -> exit 0 attendu
 # Run B : copie temp avec 1 version desync -> exit 1 attendu
 # Run C : copie temp avec une version manquante -> exit 1 attendu
-# Run D : copie temp avec entrypoint.sh a version figee en dur -> exit 1 attendu (issue #811)
+# Run D : copie temp avec entrypoint.sh a version figee en dur (guillemetee) -> exit 1 attendu (issue #811)
 # Run E : copie temp avec entrypoint.sh derive (pas de valeur figee) -> exit 0 attendu (issue #811)
+# Run F : copie temp avec entrypoint.sh a version figee sans guillemets -> exit 1 attendu (issue #811)
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -96,6 +97,22 @@ else
   FAIL=$((FAIL+1))
 fi
 rm -rf "$TMP_E"
+
+# --- Run F : entrypoint.sh avec version figee SANS guillemets -> exit 1 (issue #811) ---
+# VERSION=2.94.0 est une assignation sh valide (pas d'espace) : le motif doit
+# la detecter au meme titre que la forme guillemetee.
+echo "Test F: entrypoint.sh avec version figee sans guillemets (exit 1 attendu)..."
+TMP_F="$(mktemp -d)"
+build_fixture "$TMP_F"
+printf 'VERSION=2.94.0\n' > "$TMP_F/entrypoint.sh"
+if bash shared/check-versions.sh "$TMP_F" > /dev/null 2>&1; then
+  echo "  FAIL: le script aurait du retourner exit 1 sur un entrypoint.sh a version figee sans guillemets"
+  FAIL=$((FAIL+1))
+else
+  echo "  PASS (exit 1 detecte comme attendu)"
+  PASS=$((PASS+1))
+fi
+rm -rf "$TMP_F"
 
 echo ""
 echo "Resultats : $PASS PASS, $FAIL FAIL"
