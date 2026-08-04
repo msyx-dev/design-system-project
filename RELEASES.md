@@ -1,5 +1,24 @@
 # Releases
 
+## 2.121.1 — 2026-08-04 — `--chart-1..5` réparée sur les 6 combos (#812)
+
+> Suite directe de #800 : le groom avait relevé que l'échelle de séries de graphiques `--chart-1..5` (consommée par `pages/data.html`) échouait le seuil de contraste 3:1 vs `--surface-solid` sur 4 combos sur 6 — le cas le plus grave, `--chart-5` littéralement identique à `--surface-solid` en ACSSI dark (contraste 1,00:1, série invisible). Décision Mike (2026-08-04) : réparer `--chart-*` sans la fusionner avec `--cat-1..8` — les deux échelles coexistent avec des usages et contrats distincts (`--cat-*` = catégoriel générique séparable ; `--chart-*` = séries de graphiques, seul C3 non négociable).
+
+### Fixed
+- **`--chart-1` à `--chart-5`** (`shared/css/tokens.css` + `themes/{acssi,nhood}.json`) : les 5 tokens sont désormais déclarés explicitement dans les 4 couches de cascade pour les 3 thèmes (`:root`/`[data-mode="light"]` pour MSYX qui vit hors `[data-theme]`, `[data-theme="X"]`/`[data-theme="X"][data-mode="light"]` pour ACSSI/NHOOD) et passent ≥3:1 vs `--surface-solid` sur les **6 combos**. Avant/après par combo (min contraste série vs `--surface-solid`) :
+
+  | Combo | Avant | Après | Détail |
+  |---|---|---|---|
+  | msyx-dark | 3,45:1 (déjà conforme) | 3,45:1 | inchangé |
+  | msyx-light | 2,28:1 (`--chart-5` hérité dark, absent en propre) | 3,53:1 | `--chart-3` `#06b6d4`→`#0e7490`, `--chart-5` `#22c55e`→`#15803d` (réutilisation des valeurs light déjà établies `--deco-cyan`/`--success-light` — pas de nouvelle teinte) ; `--chart-1/2/4` inchangés |
+  | acssi-dark | 1,00:1 (`--chart-5` = `--surface-solid`, série invisible) | 3,51:1 | `--chart-5` `#00457a`→`#a78bfa` — **teinte déplacée**, voir note ci-dessous ; `--chart-1/2/3/4` inchangés |
+  | acssi-light | 3,30:1 (déjà conforme) | 3,30:1 | inchangé |
+  | nhood-dark | 2,87:1 (`--chart-5` sous le seuil) | 3,86:1 | `--chart-5` `#7c3aed`→`#8b5cf6` (éclairci, même teinte à 0,3° près) ; `--chart-1/2/3/4` inchangés |
+  | nhood-light | 2,04:1 (`--chart-*` absent en propre, hérité dark) | 3,56:1 | 5 valeurs déclarées pour la première fois, réutilisant des tons déjà établis ailleurs dans le DS (`--accent` light NHOOD, `--deco-cyan` light, `#ea580c` déjà utilisé en ACSSI light `--chart-4`, `#7c3aed` = l'ancien `--chart-5` dark NHOOD, qui contraste suffisamment aussi sur blanc) |
+
+  **Note teinte déplacée (ACSSI dark `--chart-5`)** : l'ancienne valeur (`#00457a`) était simultanément `--surface-solid` et `--primary-light` du thème — un doublon de token de fond, pas une couleur de série choisie. Elle est en outre à 4° de teinte de `--chart-2` (`#38bdf8`) : aucun ajustement de luminosité/chroma dans cette même famille de bleu marine n'aurait pu la rendre distincte à la fois du fond et de `--chart-2`. Violet choisi car c'est la seule famille de teinte absente des 4 autres entrées ACSSI dark (jaune/bleu/vert/orange), cohérent avec MSYX (`--chart-2` violet) et NHOOD (`--chart-5` violet).
+- **`bin/check-categorical-palette.js`** (#800 → #812) : nouvelle entrée `SCALES.chart` (`varPrefix:'chart', count:5`) — aucun second contrôleur écrit, réutilisation intégrale du moteur `parseBlocks`/`resolve`/`checkStructure`/`checkContract`/`checkScale` de #800. C3 (contraste ≥ 3:1) identique à `--cat-*`, non négociable. C1/C2 (séparabilité) avec des seuils **propres à `chart`** : ΔH(OKLCh) ≥ 6° et ΔE(OKLab) ≥ 0,08 (vs 30°/0,12 pour `--cat-*`) — `--chart-*` n'a jamais porté de contrat de séparabilité avant ce ticket, et le périmètre explicite est de réparer le contraste sans re-hue les teintes existantes ; les 6 combos, une fois réparés, contiennent encore des paires proches en teinte par design assumé (accent + déclinaison du même accent, ex. ACSSI light `--chart-1`/`--chart-2`). Ces seuils rejettent toujours les vrais doublons/quasi-doublons (le défaut d'origine de ce ticket) sans forcer une redécoration de la palette. Câblé en CI (`.github/workflows/ci.yml`, job `lint`, step dédié `--scale=chart`) et testé (`tests/regression/categorical-palette.test.js` : config `SCALES.chart` + sanity check sur le vrai `shared/css`).
+
 ## 2.121.0 — 2026-08-04 — Échelle catégorielle `--cat-1..8` (#800)
 
 > Le thème NHOOD ne permettait pas de coder 8 catégories distinctes (jalons, séries, tags, légendes) sans détourner les rôles sémantiques `--success`/`--warning`/`--danger`/`--info` : `--accent`/`--accent-light` littéralement identiques en NHOOD light, `--info`/`--deco-cyan` indistinguables. Le DS avait déjà une échelle catégorielle de fait (`--chart-1..5`) mais non contractuelle et effectivement en défaut sur 4 des 6 combos (`--chart-5` = `--surface-solid` en ACSSI dark, invisible). Plutôt que de raccommoder `--chart-*` (Task de suite #812, hors périmètre ici), le DS expose une nouvelle échelle dédiée avec un contrat vérifié en CI.
