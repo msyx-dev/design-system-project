@@ -53,6 +53,21 @@ export function loadComponentsWindow(bodyHtml = '') {
       pretendToBeVisual: true, // requestAnimationFrame + window.innerWidth/Height fiables
     }
   );
+  // jsdom ne fournit pas IntersectionObserver (pretendToBeVisual ne couvre que
+  // rAF/dimensions). components.js l'utilise sans garde en tete de
+  // initComponents() (animations de charts). Le fichier attache aussi
+  // `document.addEventListener('DOMContentLoaded', reinitAll)` en derniere
+  // ligne -- cet evenement se produit de facon asynchrone une fois le
+  // document jsdom "charge", potentiellement APRES la fin (synchrone) d'un
+  // test, et fait alors planter reinitAll() en arriere-plan (ReferenceError
+  // non liee au composant sous test, juste du bruit stderr / risque de
+  // flake inter-tests). Stub minimal, suffisant pour que reinitAll() ne
+  // crashe jamais silencieusement en tache de fond.
+  dom.window.IntersectionObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
   dom.window.eval(COMPONENTS_SOURCE);
   return dom;
 }
