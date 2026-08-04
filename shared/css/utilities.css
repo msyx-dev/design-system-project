@@ -1,4 +1,4 @@
-/* @ds-version: 2.120.1 */
+/* @ds-version: 2.121.0 */
 /* utilities.css — Classes utilitaires design system msyx.design
    Couleurs, backgrounds, bordures, accessibilité, espacement, layout, typographie.
    Import : @import url('css/utilities.css'); */
@@ -35,6 +35,28 @@
 /* ===== Bordures ===== */
 .border-default { border: 1px solid var(--border-color); }
 .border-accent { border-color: var(--accent); }
+
+/* ===== Echelle categorielle (#800, v2.121.0) =====
+   Remplissage et bordure UNIQUEMENT. Pas de .text-cat-N : le contrat garantit
+   3:1 (objet graphique non-textuel, WCAG 2.1 SC 1.4.11), PAS les 4.5:1 exiges
+   pour du texte. Une couleur categorielle ne doit jamais porter seule
+   l'information — toujours l'accompagner d'un libelle ou d'une legende. */
+.bg-cat-1 { background: var(--cat-1); }
+.bg-cat-2 { background: var(--cat-2); }
+.bg-cat-3 { background: var(--cat-3); }
+.bg-cat-4 { background: var(--cat-4); }
+.bg-cat-5 { background: var(--cat-5); }
+.bg-cat-6 { background: var(--cat-6); }
+.bg-cat-7 { background: var(--cat-7); }
+.bg-cat-8 { background: var(--cat-8); }
+.border-cat-1 { border-color: var(--cat-1); }
+.border-cat-2 { border-color: var(--cat-2); }
+.border-cat-3 { border-color: var(--cat-3); }
+.border-cat-4 { border-color: var(--cat-4); }
+.border-cat-5 { border-color: var(--cat-5); }
+.border-cat-6 { border-color: var(--cat-6); }
+.border-cat-7 { border-color: var(--cat-7); }
+.border-cat-8 { border-color: var(--cat-8); }
 
 /* ===== Spacing — margin ===== */
 .m-xs  { margin: var(--space-xs); }

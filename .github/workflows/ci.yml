@@ -81,6 +81,17 @@ jobs:
         run: |
           chmod +x tests/test-check-innerhtml.sh
           ./tests/test-check-innerhtml.sh
+      # Contrat de l'echelle categorielle (#800) : separabilite + lisibilite
+      # de --cat-1..8 sur les 6 combos theme/mode. BLOQUANT des la 1re version :
+      # le gate nait avec sa palette, il n'y a aucune dette preexistante a resorber.
+      - name: Check categorical palette contract (#800)
+        run: node bin/check-categorical-palette.js
+      - name: Categorical palette gate script tests (#800)
+        run: |
+          chmod +x tests/test-check-categorical-palette.sh
+          ./tests/test-check-categorical-palette.sh
+      - name: Categorical palette unit tests (#800)
+        run: npm run test:categorical
       # check-components.sh lint le registre / les consommateurs hors DS.
       # Lance sur shared/css (CSS du DS) : 11 warnings de dette preexistante
       # (classes modifier ex: .tooltip--left non enumerees dans le registre).
