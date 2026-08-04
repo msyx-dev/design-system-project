@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.121.1",
+      "date": "2026-08-04",
+      "titre": "Graphiques : la 5e série est désormais toujours visible",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Dans les graphiques, les 5 couleurs de série restent maintenant lisibles sur le fond dans les six combinaisons de thème et de mode — l'une d'elles pouvait auparavant se confondre exactement avec l'arrière-plan."
+        }
+      ]
+    },
+    {
       "version": "2.121.0",
       "date": "2026-08-04",
       "titre": "Une palette pour coder des catégories, lisible dans tous les thèmes",

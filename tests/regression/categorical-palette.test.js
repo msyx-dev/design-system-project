@@ -196,6 +196,11 @@ assertEqual('checkScale violation C1 -> exitCode 1', gate.checkScale(closeHueBlo
 assertTrue('SCALES expose une config "cat" avec seuils en parametres (pas de constante enfouie)', gate.SCALES.cat && gate.SCALES.cat.varPrefix === 'cat' && gate.SCALES.cat.count === 8);
 assertTrue('SCALES.cat seuils = ceux de la spec #800 (30deg / 0.12 / 3:1)', gate.SCALES.cat.minHueDeg === 30 && gate.SCALES.cat.minDeltaE === 0.12 && gate.SCALES.cat.minContrast === 3.0);
 
+// SCALES.chart (#812) — extension officialisee, MEME moteur, seuils propres.
+assertTrue('SCALES expose une config "chart" (5 entrees, aucun 2e controleur)', gate.SCALES.chart && gate.SCALES.chart.varPrefix === 'chart' && gate.SCALES.chart.count === 5);
+assertTrue('SCALES.chart C3 non negociable = 3:1, comme --cat-*', gate.SCALES.chart.minContrast === 3.0 && gate.SCALES.chart.surfaceToken === '--surface-solid');
+assertTrue('SCALES.chart C1/C2 : seuils propres, plus bas que --cat-* (perimetre #812 : pas de re-hue)', gate.SCALES.chart.minHueDeg < gate.SCALES.cat.minHueDeg && gate.SCALES.chart.minDeltaE < gate.SCALES.cat.minDeltaE);
+
 // ─── Sanity check final : le vrai CSS du repo doit etre conforme ───────────
 // (regression : si une valeur est modifiee sans relancer le gate, ce test le
 // detecte aussi, en plus de node bin/check-categorical-palette.js en CI)
@@ -206,7 +211,9 @@ try {
     themes: gate.parseBlocks(fs.readFileSync(path.join(__dirname, '..', '..', 'shared', 'css', 'themes.css'), 'utf8')),
   };
   const realResult = gate.checkScale(realBlocks, gate.SCALES.cat);
-  assertEqual('sanity check : shared/css reel conforme au contrat (exitCode 0)', realResult.exitCode, 0);
+  assertEqual('sanity check : shared/css reel conforme au contrat --cat-* (exitCode 0)', realResult.exitCode, 0);
+  const realChartResult = gate.checkScale(realBlocks, gate.SCALES.chart);
+  assertEqual('sanity check : shared/css reel conforme au contrat --chart-* (exitCode 0, #812)', realChartResult.exitCode, 0);
 } catch (err) {
   ko('sanity check shared/css reel', err.message);
 }

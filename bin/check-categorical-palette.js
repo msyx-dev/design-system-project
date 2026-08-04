@@ -60,6 +60,23 @@ const SCALES = {
     minContrast: 3.0,
     surfaceToken: '--surface-solid',
   },
+  // #812 — echelle de SERIES DE GRAPHIQUES (data.html), distincte de --cat-* (categoriel
+  // generique). Memes 3 criteres, memes 6 combos, MEME moteur (aucune ligne de
+  // parsing/verification specifique a --chart-* : c'est la preuve d'extensibilite promise
+  // par #800). Seul C3 (contraste >= 3:1) est non negociable pour cette echelle (arbitrage
+  // Mike 2026-08-04) ; C1/C2 sont verifies avec des seuils PROPRES, plus bas que ceux de
+  // --cat-* : --chart-* n'a jamais porte de contrat de separabilite avant ce ticket et son
+  // perimetre est de reparer le defaut de contraste SANS re-hue les teintes existantes
+  // ("teintes proches des actuelles") — hors quelques exceptions documentees dans la PR.
+  // Voir le tableau avant/apres complet dans la PR #812.
+  chart: {
+    varPrefix: 'chart',
+    count: 5,
+    minHueDeg: 6,
+    minDeltaE: 0.08,
+    minContrast: 3.0,
+    surfaceToken: '--surface-solid',
+  },
 };
 
 // ─── 1. Parsing ─────────────────────────────────────────────────────────────

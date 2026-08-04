@@ -1,4 +1,4 @@
-/* @ds-version: 2.121.0 */
+/* @ds-version: 2.121.1 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -161,7 +161,24 @@
     --overlay-control-border: rgba(255,255,255,0.2);
     --overlay-control-hover: rgba(255,255,255,0.22);
 
-    /* Chart palette */
+    /* ===== ECHELLE --chart-1..5 (#812) =====
+       Series de graphiques (data.html) — DISTINCTE de --cat-* (categoriel generique,
+       contrat de separabilite fort). --chart-* garantit uniquement :
+         C3  contraste >= 3:1 vs --surface-solid sur les 6 combos (WCAG 2.1 SC 1.4.11,
+             NON NEGOCIABLE — verifie par bin/check-categorical-palette.js --scale=chart)
+         C1/C2 (separabilite) : seuils PROPRES a chart (ΔH >= 6°, ΔE >= 0.08), plus bas
+             que ceux de --cat-* (30°/0.12). Raison : --chart-* n'a jamais eu de contrat
+             de separabilite avant #812 et contient deja, par design assume, des paires
+             proches en teinte (accent + declinaison du meme accent) — les reproduire a
+             l'identique est le perimetre du ticket ("teintes proches des actuelles"),
+             pas les re-hue. #812 documente cette valeur dans la PR.
+       DEUX REGLES DURES (identiques a --cat-*) :
+         - hex LITTERAL uniquement (jamais var(), jamais color-mix())
+         - les 5 entrees sont redeclarees dans LES 4 COUCHES applicables (msyx : :root +
+           [data-mode="light"] ; acssi/nhood : [data-theme=X] + [data-theme=X][data-mode=light]
+           dans themes/*.json) — sans quoi le mode clair herite des valeurs DARK
+           (defaut d'origine de ce ticket : --chart-5 == --surface-solid en acssi dark,
+           --chart-* absent de nhood-light). */
     --chart-1: #3b82f6;
     --chart-2: #8b5cf6;
     --chart-3: #06b6d4;
@@ -399,4 +416,14 @@
     --cat-6: #769c00;
     --cat-7: #007f62;
     --cat-8: #004e5c;
+
+    /* Echelle --chart-* — MSYX light (#812). Contraste vs --surface-solid #ffffff.
+       chart-1/2/4 inchanges (deja >= 3:1 sur blanc) ; chart-3/chart-5 assombris
+       (memes valeurs que --deco-cyan et --success-light deja etablies en light mode
+       ailleurs dans ce fichier — reutilisation, pas de nouvelle teinte). */
+    --chart-1: #3b82f6;
+    --chart-2: #8b5cf6;
+    --chart-3: #0e7490;
+    --chart-4: #ec4899;
+    --chart-5: #15803d;
 }

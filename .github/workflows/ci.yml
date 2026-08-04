@@ -86,11 +86,16 @@ jobs:
       # le gate nait avec sa palette, il n'y a aucune dette preexistante a resorber.
       - name: Check categorical palette contract (#800)
         run: node bin/check-categorical-palette.js
+      # Extension officialisee (#812) : meme gate, meme moteur, echelle --chart-1..5
+      # (series de graphiques data.html) — seuils C1/C2 propres, C3 (contraste >= 3:1)
+      # non negociable comme --cat-*. Cf. bin/check-categorical-palette.js SCALES.chart.
+      - name: Check chart palette contract (#812)
+        run: node bin/check-categorical-palette.js --scale=chart
       - name: Categorical palette gate script tests (#800)
         run: |
           chmod +x tests/test-check-categorical-palette.sh
           ./tests/test-check-categorical-palette.sh
-      - name: Categorical palette unit tests (#800)
+      - name: Categorical palette unit tests (#800, #812)
         run: npm run test:categorical
       # check-components.sh lint le registre / les consommateurs hors DS.
       # Lance sur shared/css (CSS du DS) : 11 warnings de dette preexistante
