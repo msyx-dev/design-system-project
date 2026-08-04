@@ -498,6 +498,38 @@ Cas d'usage typiques : bouton avec icône + texte, cellule de tableau avec icôn
 
 ---
 
+## Coder des catégories — `--cat-1..8` (#800)
+
+**Ne réinventez pas une palette maison** (ex. `src/lib/timeline-colors.ts`) : le DS expose une échelle catégorielle dédiée, garantie séparable et lisible sur les 6 combos theme/mode (MSYX/ACSSI/NHOOD × dark/light).
+
+### Ce que le DS garantit
+8 tokens `--cat-1` à `--cat-8`, vérifiés en CI par `bin/check-categorical-palette.js` :
+- écart de teinte ΔH(OKLCh) ≥ 30° entre deux entrées quelconques ;
+- distance perceptuelle ΔE(OKLab) ≥ 0,12 entre deux entrées quelconques ;
+- contraste ≥ 3:1 vs `--surface-solid` (WCAG 2.1 SC 1.4.11 — objet graphique, pas du texte).
+
+### Ce que le DS ne garantit PAS
+- **Au-delà de 8 catégories** : aucune garantie de séparabilité. Ajoutez un second canal d'encodage (forme, motif, libellé) ou regroupez.
+- **Le texte** : pas de `.text-cat-N`. Une couleur catégorielle ne doit jamais porter seule l'information — accompagnez-la toujours d'un libellé.
+
+### Interdit
+N'utilisez **jamais** `--success`/`--warning`/`--danger`/`--info` pour coder une catégorie libre : ces tokens portent un **état**, pas un simple index. Un jalon « violet » n'est ni un succès ni une alerte.
+
+### Usage
+```css
+/* Utilitaires — remplissage et bordure uniquement */
+.milestone--cat-3 { background: var(--cat-3); }
+
+/* Index dynamique côté consumer */
+element.style.background = `var(--cat-${(index % 8) + 1})`;
+
+/* Déclinaison douce — pas de --cat-N-rgb */
+background: color-mix(in srgb, var(--cat-3) 12%, transparent);
+```
+Ou directement les classes utilitaires : `.bg-cat-1`…`.bg-cat-8`, `.border-cat-1`…`.border-cat-8`.
+
+---
+
 ## Boutons — structure des classes (#777)
 
 **Pas de classe root `.btn`.** Chaque variante de forme est autonome et porte
