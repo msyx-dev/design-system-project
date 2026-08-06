@@ -144,3 +144,49 @@ export function fireClick(win, el, extra = {}) {
   el.dispatchEvent(evt);
   return evt;
 }
+
+/**
+ * Dispatch un evenement 'paste' porteur d'un `clipboardData` minimal
+ * ({ getData(type) }), dans le realm de la fenetre fournie.
+ *
+ * jsdom n'implemente NI `ClipboardEvent` NI `DataTransfer` (verifie #744
+ * vague 4 : `'ClipboardEvent' in window` et `'DataTransfer' in window`
+ * renvoient tous deux `false`) -- `new win.ClipboardEvent(...)` leve donc
+ * une TypeError. Le code sous test (`initOTPInputs`, digit.addEventListener
+ * ('paste', ...)) ne lit que `(e.clipboardData || window.clipboardData)
+ * .getData('text')` : on construit un Event generique et on POSE la
+ * propriete `clipboardData` dessus a la main (assignation directe -- un
+ * Event brut n'a pas de getter existant sur ce nom, contrairement a
+ * `HTMLDialogElement.open` par exemple, donc aucun defineProperty requis).
+ * Ce n'est pas un stub global (rien n'est touche sur les prototypes window) :
+ * comme fireClick/fireKeydown, c'est un dispatch cible sur UN evenement,
+ * scope au test qui l'appelle.
+ */
+export function firePaste(win, el, text, extra = {}) {
+  const evt = new win.Event('paste', { bubbles: true, cancelable: true, ...extra });
+  evt.clipboardData = { getData: () => text };
+  el.dispatchEvent(evt);
+  return evt;
+}
+
+/**
+ * Dispatch un evenement tactile (touchstart/touchmove/touchend) avec un seul
+ * point de contact `{ clientY }`, dans le realm de la fenetre fournie.
+ *
+ * jsdom expose `TouchEvent` mais PAS `Touch` (`'Touch' in window` est
+ * `false`, verifie #744 vague 4) -- `new win.Touch(...)` leve. Le
+ * constructeur `TouchEvent` accepte neanmoins `touches` comme un tableau
+ * quelconque sans validation de type : un objet litteral `{ clientY }`
+ * suffit, car `initBottomSheet` (seul consommateur) ne lit que
+ * `e.touches[0].clientY`.
+ */
+export function fireTouch(win, el, type, clientY, extra = {}) {
+  const evt = new win.TouchEvent(type, {
+    touches: [{ clientY }],
+    bubbles: true,
+    cancelable: true,
+    ...extra,
+  });
+  el.dispatchEvent(evt);
+  return evt;
+}
