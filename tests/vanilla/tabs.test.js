@@ -1,4 +1,4 @@
-// Tests -- Tabs (#744, vague 4/N infra tests vanilla)
+// Tests -- Tabs (#744 infra tests vanilla + #826 Home/End)
 //
 // Contrairement aux autres composants de ce fichier, "Tabs" n'a PAS de
 // fonction initTabs() dediee -- le bloc est inline dans initComponents()
@@ -6,7 +6,7 @@
 // initComponents() .tabs"). initComponents() lui-meme n'est pas expose
 // individuellement (contrairement a initTreeView/initOTPInputs/
 // initBottomSheet) : seul reinitAll(), alias window.__initComponents(),
-// l'appelle -- meme chemin que initModals()/initCommandPalette() en vague 3.
+// l'appelle -- meme chemin que initModals()/initCommandPalette().
 // Markup repris de pages/navigation.html#tabs (classes reelles).
 import { describe, it, expect, beforeEach } from 'vitest';
 import { loadComponentsWindow, fireClick, fireKeydown } from './helpers/load-components.js';
@@ -116,5 +116,35 @@ describe('Tabs (initComponents)', () => {
     expect(selected).toHaveLength(1);
     expect(selected[0]).toBe(securite);
     expect(document.activeElement).toBe(securite);
+  });
+
+  // --- #826 : Home/End, meme famille d'interaction que initSegmentedControls (#613) ---
+
+  it('Home depuis un tab quelconque active + focalise le premier tab', () => {
+    const { window, document, tabs } = ctx;
+    const [general, , notifications] = tabs;
+    fireKeydown(window, notifications, 'Home');
+    expect(document.activeElement).toBe(general);
+    expect(general.classList.contains('active')).toBe(true);
+    expect(general.getAttribute('aria-selected')).toBe('true');
+    expect(general.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('End depuis un tab quelconque active + focalise le dernier tab', () => {
+    const { window, document, tabs } = ctx;
+    const [general, , , api] = tabs;
+    fireKeydown(window, general, 'End');
+    expect(document.activeElement).toBe(api);
+    expect(api.classList.contains('active')).toBe(true);
+    expect(api.getAttribute('aria-selected')).toBe('true');
+    expect(api.getAttribute('tabindex')).toBe('0');
+  });
+
+  it("Home sur le premier tab (deja actif) reste un no-op d'etat (idempotent)", () => {
+    const { window, document, tabs } = ctx;
+    const [general] = tabs;
+    fireKeydown(window, general, 'Home');
+    expect(document.activeElement).toBe(general);
+    expect(general.classList.contains('active')).toBe(true);
   });
 });

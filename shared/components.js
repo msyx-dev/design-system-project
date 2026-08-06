@@ -177,6 +177,12 @@ function initComponents() {
                     e.preventDefault();
                     const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
                     prev.click();
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    tabs[0].click();
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    tabs[tabs.length - 1].click();
                 }
             });
         });
@@ -684,6 +690,28 @@ function showToast(message, type, duration) {
 }
 window.__showToast = showToast;
 
+// Focus restoration generique (WAI APG) — capture le declencheur au moment
+// de l'ouverture (document.activeElement), le restaure au moment de la
+// fermeture. Coeur partage par attachFocusRestore (dialogs, via
+// showModal/close natifs) et initBottomSheet (#825 : un <div>, pas de
+// showModal/close a hooker, open/close sont des fonctions maison).
+function createFocusRestore() {
+    var _trigger = null;
+    return {
+        capture: function() {
+            _trigger = (document.activeElement instanceof HTMLElement)
+                ? document.activeElement
+                : null;
+        },
+        restore: function() {
+            if (_trigger && document.contains(_trigger)) {
+                _trigger.focus();
+            }
+            _trigger = null;
+        }
+    };
+}
+
 // Modal focus restoration (WAI APG)
 // Ref: aksy modal-focus.js (UC-288, Sprint 14) — integre directement dans DS (issue #174, v2.41.0)
 // Helper prive, non expose sur window (cablage automatique via initModals + __openModal)
@@ -692,20 +720,15 @@ function attachFocusRestore(dialog) {
     if (dialog.__focusRestoreAttached) return; // idempotent
     dialog.__focusRestoreAttached = true;
 
-    var _trigger = null;
+    var focusRestore = createFocusRestore();
     var _origShowModal = dialog.showModal.bind(dialog);
     dialog.showModal = function() {
-        _trigger = (document.activeElement instanceof HTMLElement)
-            ? document.activeElement
-            : null;
+        focusRestore.capture();
         return _origShowModal();
     };
 
     dialog.addEventListener('close', function() {
-        if (_trigger && document.contains(_trigger)) {
-            _trigger.focus();
-        }
-        _trigger = null;
+        focusRestore.restore();
     });
 }
 
@@ -2224,11 +2247,48 @@ function initBottomSheet() {
         if (overlay) overlay.removeAttribute('inert');
     }
 
+    // Elements consideres par le piege de focus ci-dessous (#825) — meme
+    // liste que les focus traps usuels du pattern WAI APG dialog.
+    var FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    // Piege le focus (Tab/Shift+Tab) a l'interieur du panneau tant qu'il est
+    // ouvert. role="dialog"+aria-modal="true" annoncaient deja l'inertie du
+    // reste de la page a la SR, mais rien ne l'appliquait reellement : Tab
+    // continuait de parcourir l'arriere-plan malgre l'annonce (#825).
+    function trapTabKey(panel, e) {
+        if (e.key !== 'Tab') return;
+        var focusables = panel.querySelectorAll(FOCUSABLE_SELECTOR);
+        if (!focusables.length) return;
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        var active = document.activeElement;
+        if (e.shiftKey) {
+            if (active === first || active === panel) {
+                e.preventDefault();
+                last.focus();
+            }
+        } else if (active === last || active === panel) {
+            e.preventDefault();
+            first.focus();
+        }
+    }
+
     // Normalise l'etat initial de chaque panneau (le markup demo porte
     // role/aria-modal statiquement et pas de classe .open par defaut => ferme).
     // Idempotent, sans danger si re-execute (SPA reinit).
     document.querySelectorAll('.bottom-sheet').forEach(function(panel) {
         var overlay = document.querySelector('[data-bs-overlay="' + panel.id + '"]');
+        // Focus restore + trap (#825) : le panneau devient reellement
+        // focusable. `tabindex="-1"` est pose ICI par le JS plutot que dans
+        // le markup de la vitrine : le DS distribue ce markup a des
+        // consumers, un attribut que seul le JS pose est plus sur qu'un
+        // attribut que chaque consumer devrait penser a recopier.
+        if (!panel.hasAttribute('tabindex')) panel.setAttribute('tabindex', '-1');
+        if (!panel.__focusRestore) panel.__focusRestore = createFocusRestore();
+        if (!panel.dataset.trapBound) {
+            panel.dataset.trapBound = '1';
+            panel.addEventListener('keydown', function(e) { trapTabKey(panel, e); });
+        }
         if (panel.classList.contains('open')) {
             applyOpenA11y(panel, overlay);
         } else {
@@ -2241,19 +2301,22 @@ function initBottomSheet() {
         var panel = document.getElementById(panelId);
         var overlay = document.querySelector('[data-bs-overlay="' + panelId + '"]');
         if (!panel || !overlay) return;
+        if (panel.__focusRestore) panel.__focusRestore.capture();
         panel.classList.add('open');
         overlay.classList.add('open');
         applyOpenA11y(panel, overlay);
-        panel.focus && panel.focus();
+        panel.focus();
     }
 
     function closeSheet(panelId) {
         var panel = document.getElementById(panelId);
         var overlay = document.querySelector('[data-bs-overlay="' + panelId + '"]');
         if (!panel || !overlay) return;
+        var wasOpen = panel.classList.contains('open');
         panel.classList.remove('open');
         overlay.classList.remove('open');
         applyClosedA11y(panel, overlay);
+        if (wasOpen && panel.__focusRestore) panel.__focusRestore.restore();
     }
 
     // Trigger buttons
