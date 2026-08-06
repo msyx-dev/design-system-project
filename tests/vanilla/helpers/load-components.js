@@ -68,6 +68,62 @@ export function loadComponentsWindow(bodyHtml = '') {
     unobserve() {}
     disconnect() {}
   };
+  // jsdom n'implemente pas Element.scrollIntoView (#744 vague 3). Utilise
+  // sans garde par initCommandPalette.setActive() pour amener l'item actif
+  // dans le viewport -- un pur effet de scroll, jamais une donnee sous
+  // assertion. No-op volontaire : aucun test ne doit dependre de son effet.
+  dom.window.Element.prototype.scrollIntoView = function () {};
+  // jsdom n'implemente ni HTMLDialogElement.showModal() ni close() (#744
+  // vague 3). Polyfill minimal qui reflete fidelement l'attribut/propriete
+  // `open` (deja gere nativement par jsdom en reflection IDL <-> attribut) :
+  // c'est CET etat que le CSS du DS utilise (dialog:not([open]) { display:
+  // none }) et que les tests d'initModals/initCommandPalette assertent.
+  // close() emet un vrai evenement 'close' (non-bubbling, comme le natif)
+  // pour que attachFocusRestore() -- qui ecoute 'close' sur la dialog --
+  // se declenche exactement comme dans un navigateur, quel que soit le
+  // declencheur de la fermeture (bouton, backdrop, ou Echap ci-dessous).
+  //
+  // Echap ferme nativement la dialog modale la plus recemment ouverte --
+  // c'est un comportement du navigateur, PAS du JS de initModals() (aucun
+  // listener Escape n'existe dans shared/components.js pour les modals :
+  // verifie, grep "Escape" autour de initModals/attachFocusRestore). On le
+  // reproduit ici pour que le chemin de fermeture "Echap" exerce le VRAI
+  // listener 'close' de attachFocusRestore(), au meme titre que les autres
+  // chemins de fermeture.
+  // Le natif deplace aussi le focus A L'INTERIEUR de la dialog a l'ouverture
+  // ("dialog focusing steps" du HTML Living Standard : 1er descendant
+  // focusable, sinon la dialog elle-meme). Sans ce deplacement, le
+  // declencheur resterait actif tout du long dans jsdom (voir plus haut :
+  // dispatchEvent('click') ne focus rien) et une restauration de focus
+  // cassee dans attachFocusRestore() serait indetectable -- l'assertion
+  // resterait vraie par accident. On reproduit donc ce comportement pour
+  // que la restauration de focus soit une garantie testee, pas un hasard.
+  const openModalDialogs = [];
+  dom.window.HTMLDialogElement.prototype.showModal = function () {
+    this.setAttribute('open', '');
+    if (openModalDialogs.indexOf(this) === -1) openModalDialogs.push(this);
+    const focusable = this.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable && typeof focusable.focus === 'function') {
+      focusable.focus();
+    } else {
+      if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '-1');
+      this.focus();
+    }
+  };
+  dom.window.HTMLDialogElement.prototype.close = function (returnValue) {
+    if (!this.hasAttribute('open')) return;
+    if (returnValue !== undefined) this.returnValue = returnValue;
+    this.removeAttribute('open');
+    const idx = openModalDialogs.indexOf(this);
+    if (idx !== -1) openModalDialogs.splice(idx, 1);
+    this.dispatchEvent(new dom.window.Event('close'));
+  };
+  dom.window.document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !openModalDialogs.length) return;
+    openModalDialogs[openModalDialogs.length - 1].close();
+  });
   dom.window.eval(COMPONENTS_SOURCE);
   return dom;
 }
