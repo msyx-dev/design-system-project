@@ -182,6 +182,18 @@ describe('initCommandPalette', () => {
     expect(overlay.classList.contains('open')).toBe(true);
   });
 
+  it("aria-expanded sur .cmd-palette suit l'etat reel (false au repos, true ouvert, false apres fermeture)", () => {
+    const { window, overlay } = ctx;
+    const palette = overlay.querySelector('.cmd-palette');
+    expect(palette.getAttribute('aria-expanded')).toBe('false');
+
+    openViaShortcut(window);
+    expect(palette.getAttribute('aria-expanded')).toBe('true');
+
+    openViaShortcut(window); // toggle -> ferme
+    expect(palette.getAttribute('aria-expanded')).toBe('false');
+  });
+
   it('reste un singleton : un 2e __initComponents() ne cree pas un second overlay et le toggle marche toujours', () => {
     const { window, document, overlay } = ctx;
     window.__initComponents(); // 2e appel (simule une re-init SPA)
