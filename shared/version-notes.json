@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.121.2",
+      "date": "2026-08-06",
+      "titre": "Palette de commandes : l'état ouvert/fermé annoncé aux lecteurs d'écran",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "La palette de commandes (Ctrl/Cmd+K) annonce désormais correctement aux lecteurs d'écran si elle est ouverte ou repliée — cette information restait figée sur « repliée » même une fois ouverte."
+        }
+      ]
+    },
+    {
       "version": "2.121.1",
       "date": "2026-08-04",
       "titre": "Graphiques : la 5e série est désormais toujours visible",

@@ -3676,6 +3676,7 @@ function initCommandPalette() {
         + '</div>';
     document.body.appendChild(overlay);
 
+    var palette = overlay.querySelector('.cmd-palette');
     var input = overlay.querySelector('.cmd-input');
     var results = overlay.querySelector('.cmd-results');
     var activeIdx = -1;
@@ -3796,6 +3797,7 @@ function initCommandPalette() {
 
     function openOverlay() {
         overlay.classList.add('open');
+        palette.setAttribute('aria-expanded', 'true');
         input.value = '';
         renderResults('');
         input.focus();
@@ -3803,6 +3805,7 @@ function initCommandPalette() {
 
     function closeOverlay() {
         overlay.classList.remove('open');
+        palette.setAttribute('aria-expanded', 'false');
     }
 
     // Clic sur fond

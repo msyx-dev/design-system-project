@@ -1,5 +1,13 @@
 # Releases
 
+## 2.121.2 — 2026-08-06 — Palette de commandes : `aria-expanded` désynchronisé (#821)
+
+> Trouvé en écrivant la couverture de test d'`initCommandPalette` (#744, vague 3) : `aria-expanded="false"` était écrit en dur dans le markup injecté par `initCommandPalette()`, et ni `openOverlay()` ni `closeOverlay()` ne le mettaient à jour. Un changement de comportement méritant son propre ticket plutôt qu'un correctif furtif dans une PR de tests — ticketé séparément à l'époque, corrigé ici.
+
+### Fixed
+- **`shared/components.js` `initCommandPalette`** : `.cmd-palette` porte `role="combobox"`, où `aria-expanded` est une propriété **requise**, pas décorative. La valeur figée à `"false"` était pire qu'une absence d'attribut : un lecteur d'écran l'interprète comme une information fiable, et annonçait donc la palette repliée en permanence — y compris grande ouverte avec le focus dedans. `openOverlay()` pose désormais `aria-expanded="true"`, `closeOverlay()` `"false"`. Nouveau test dans `tests/vanilla/command-palette.test.js` (suite existante de 14 tests, non réécrite) : état repos → ouverture (Ctrl+K) → fermeture (Ctrl+K, toggle), 3 assertions sur `aria-expanded`. Preuve par mutation (exécutée puis restaurée avant commit) : retrait des deux `setAttribute` → exactement 1 test rouge sur 15, les 14 autres inchangés.
+- **Audit du contrat `combobox`** (demandé par l'issue, sans dérive de périmètre) : le reste du câblage ARIA était déjà correct (`aria-controls`, `aria-autocomplete="list"`, `role="listbox"`). Point ouvert par l'issue — l'option active pendant la navigation `ArrowUp`/`ArrowDown` (classe `.active`) doit aussi être désignée pour un lecteur d'écran (`aria-activedescendant` sur le combobox et/ou `aria-selected` sur l'option). Vérification faite : `setActive()` posait déjà les deux, avant ce ticket — `aria-selected="true"/"false"` sur chaque option et `aria-activedescendant` sur l'input, synchronisés à chaque déplacement. Aucun écart réel : rien à corriger, aucun ticket de suite à ouvrir sur ce point.
+
 ## 2.121.1 — 2026-08-04 — `--chart-1..5` réparée sur les 6 combos (#812)
 
 > Suite directe de #800 : le groom avait relevé que l'échelle de séries de graphiques `--chart-1..5` (consommée par `pages/data.html`) échouait le seuil de contraste 3:1 vs `--surface-solid` sur 4 combos sur 6 — le cas le plus grave, `--chart-5` littéralement identique à `--surface-solid` en ACSSI dark (contraste 1,00:1, série invisible). Décision Mike (2026-08-04) : réparer `--chart-*` sans la fusionner avec `--cat-1..8` — les deux échelles coexistent avec des usages et contrats distincts (`--cat-*` = catégoriel générique séparable ; `--chart-*` = séries de graphiques, seul C3 non négociable).
