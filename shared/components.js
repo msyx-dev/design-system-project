@@ -1701,6 +1701,11 @@ function initBottomNav() {
         nav.dataset.bound = '1';
 
         nav.querySelectorAll('.bottom-nav-item').forEach(function(item) {
+            // Sync initiale : sans ca, l'item .active au chargement n'a
+            // aria-selected="true" qu'apres un premier clic -- incoherence
+            // entre l'etat visuel et l'etat annonce (memes motif/fix deja
+            // en place pour Tabs, cf. initComponents() plus haut).
+            item.setAttribute('aria-selected', item.classList.contains('active') ? 'true' : 'false');
             item.addEventListener('click', function() {
                 nav.querySelectorAll('.bottom-nav-item').forEach(function(i) {
                     i.classList.remove('active');
@@ -1823,12 +1828,18 @@ function initFAB() {
             if (menu.classList.contains('open')) {
                 closeMenu();
             } else {
-                // Fermer les autres menus FAB ouverts
+                // Fermer les autres menus FAB ouverts. Repose `inert` sur
+                // leurs .fab-actions comme closeMenu() le ferait -- sans
+                // ca, les boutons d'action d'un menu visuellement referme
+                // restaient focusables/annonces (meme risque a11y que le
+                // commentaire en tete d'initFAB decrit pour l'etat initial).
                 document.querySelectorAll('.fab-menu.open').forEach(function(m) {
                     if (m !== menu) {
                         m.classList.remove('open');
                         var t = m.querySelector('.fab-trigger');
                         if (t) t.setAttribute('aria-expanded', 'false');
+                        var a = m.querySelector('.fab-actions');
+                        if (a) a.setAttribute('inert', '');
                     }
                 });
                 openMenu();
