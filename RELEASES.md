@@ -1,5 +1,13 @@
 # Releases
 
+## 2.122.8 — 2026-08-07 — Liste virtualisée : viewport injoignable au clavier (#744 vague 11)
+
+### Fixed
+- **`initVirtualList` — `.virtual-list-viewport` n'avait aucun `tabindex`.** Le viewport est `overflow-y:auto` (défilement réel) mais n'exposait aucun point de focus : impossible pour un utilisateur clavier de l'atteindre ou de le faire défiler, malgré `role="list"`/`aria-rowcount` déjà en place. Même règle a11y déjà appliquée ailleurs dans le DS pour les régions scrollables (« scrollable-region-focusable »). Corrigé par un `tabindex="0"` posé à l'init, sans écraser un tabindex déjà choisi par le consumer.
+
+### Added
+- **`tests/vanilla/virtual-list.test.js` (#744, vague 11)** — 15 tests sur `initVirtualList` : rendu initial (ARIA, tabindex, fallback dimensionnel, contenu par défaut vs renderer consumer, structure des spacers), scroll (re-render différé au prochain frame, fenêtre visible réellement déplacée, clamp de fin de liste), idempotence. Chaque comportement prouvé par mutation. Vague 11/N du chantier #744.
+
 ## 2.122.7 — 2026-08-07 — Édition en ligne : le focus ne revenait pas au déclencheur (#744 vague 10)
 
 ### Fixed

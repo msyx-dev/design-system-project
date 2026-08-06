@@ -6967,6 +6967,11 @@ function initVirtualList() {
 
         viewport.setAttribute('role', 'list');
         viewport.setAttribute('aria-rowcount', String(total));
+        // scrollable-region-focusable (#744 vague 11) : le viewport est
+        // overflow-y:auto (shared/css/components/virtual-list.css) mais
+        // n'avait aucun moyen d'etre atteint au clavier -- meme regle deja
+        // documentee/appliquee pour .detail-grid-aside (pages/fondation.html).
+        if (!viewport.hasAttribute('tabindex')) viewport.setAttribute('tabindex', '0');
 
         var topSpacer = document.createElement('div');
         topSpacer.className = 'virtual-spacer';

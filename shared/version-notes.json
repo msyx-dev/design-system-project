@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.8",
+      "date": "2026-08-07",
+      "titre": "Liste virtualisée enfin atteignable au clavier",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "La liste à défilement virtualisé (fenêtrée), qui défile bien à la souris, ne pouvait pas être atteinte au clavier faute d'un point de focus — corrigé."
+        }
+      ]
+    },
+    {
       "version": "2.122.7",
       "date": "2026-08-07",
       "titre": "L'édition en ligne rend le focus au texte modifié",
