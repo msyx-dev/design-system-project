@@ -7,6 +7,7 @@
 
 ### Added
 - **`tests/vanilla/virtual-list.test.js` (#744, vague 11)** — 15 tests sur `initVirtualList` : rendu initial (ARIA, tabindex, fallback dimensionnel, contenu par défaut vs renderer consumer, structure des spacers), scroll (re-render différé au prochain frame, fenêtre visible réellement déplacée, clamp de fin de liste), idempotence. Chaque comportement prouvé par mutation. Vague 11/N du chantier #744.
+- **`tests/vanilla/server-data-grid.test.js` (#744, vague 11)** — 17 tests sur `initServerDataGrid` : contrat testé sans jamais toucher au réseau (`fetchPage()` est un mock local `setTimeout`, pas un vrai fetch) — état de chargement (squelette, `aria-busy`, asynchronicité vérifiée), rendu (page pleine vs reliquat, compteur, annonce live), pagination par clic (bornes, page active, événement `dg:page-change`, garde anti-double-requête), algorithme d'ellipsis du pager sur plus de 7 pages, idempotence. Aucun défaut trouvé.
 
 ## 2.122.7 — 2026-08-07 — Édition en ligne : le focus ne revenait pas au déclencheur (#744 vague 10)
 
