@@ -1035,7 +1035,15 @@ function initThemeSwitcher() {
             } else {
                 document.documentElement.setAttribute('data-theme', theme);
             }
-            localStorage.setItem('msyx-theme', theme);
+            // localStorage.setItem peut lever (mode prive strict / quota) --
+            // deja rencontre cote React (#793). Sans ce try/catch, l'exception
+            // remonte a travers applyThemeTransition() et coupe le reste de
+            // la fonction : le check de compat de mode + updateModeSwitch()
+            // ne s'executent jamais ET le setTimeout qui retire
+            // 'theme-transitioning' n'est jamais programme (classe bloquee
+            // en !important sur TOUT le DOM indefiniment). La persistance
+            // est un best-effort, jamais un pre-requis a l'effet visuel.
+            try { localStorage.setItem('msyx-theme', theme); } catch (err) { /* localStorage indisponible — ignore */ }
             // Check if current mode is compatible with new theme
             var config = THEME_CONFIG[theme] || THEME_CONFIG.msyx;
             var currentMode = document.documentElement.getAttribute('data-mode') || 'dark';
@@ -1057,7 +1065,7 @@ function applyMode(mode) {
     } else {
         document.documentElement.setAttribute('data-mode', mode);
     }
-    localStorage.setItem('msyx-mode', mode);
+    try { localStorage.setItem('msyx-mode', mode); } catch (err) { /* localStorage indisponible — ignore */ }
 }
 
 function updateModeSwitch() {

@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.10",
+      "date": "2026-08-07",
+      "titre": "Sélecteurs thème/mode robustes au stockage local indisponible",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le sélecteur de thème et le bouton clair/sombre appliquaient bien le changement visuellement mais restaient bloqués en transition (et sans confirmation) quand le navigateur refuse l'écriture en stockage local (navigation privée stricte)."
+        }
+      ]
+    },
+    {
       "version": "2.122.8",
       "date": "2026-08-07",
       "titre": "Liste virtualisée enfin atteignable au clavier",
