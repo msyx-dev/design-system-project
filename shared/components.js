@@ -2161,6 +2161,16 @@ function initTagInputs() {
 window.__initTagInputs = initTagInputs;
 
 // Tree View
+// Navigation clavier WAI-ARIA APG Tree View (#824) — pattern repris
+// d'initJsonViewer (#446, cf. shared/components.js ~L6440) : c'est le DOM
+// statique le plus proche (role=treeitem imbriques dans role=group,
+// visibilite pilotee par une classe .open sur l'ancetre conteneur), pas le
+// moteur graph (svg-renderer.js #671) dont la structure SVG plate + arbre
+// couvrant RECALCULE depuis un GraphModel n'a rien a voir avec un DOM
+// imbrique statique existant. Roving tabindex + helpers ci-dessous adaptes
+// 1:1 au vocabulaire tree-view (.tree-item/.tree-branch/.tree-leaf/
+// .tree-children) a la place de (.json-node/.json-node--expandable/
+// .json-children) de json-viewer.
 function initTreeView() {
     document.querySelectorAll('.tree[role="tree"]').forEach(function(root) {
         if (root.dataset.bound) return;
@@ -2169,16 +2179,7 @@ function initTreeView() {
         // Init open/closed state from aria-expanded attributes
         root.querySelectorAll('.tree-branch').forEach(function(branch) {
             var expanded = branch.getAttribute('aria-expanded') === 'true';
-            var children = branch.querySelector('.tree-children');
-            if (children) {
-                if (expanded) {
-                    branch.classList.add('open');
-                    children.classList.add('open');
-                } else {
-                    branch.classList.remove('open');
-                    children.classList.remove('open');
-                }
-            }
+            setBranchOpen(branch, expanded);
 
             var toggle = branch.querySelector(':scope > .tree-toggle');
             if (!toggle || toggle.dataset.bound) return;
@@ -2186,16 +2187,7 @@ function initTreeView() {
 
             toggle.addEventListener('click', function(e) {
                 e.stopPropagation();
-                var isOpen = branch.classList.contains('open');
-                if (isOpen) {
-                    branch.classList.remove('open');
-                    branch.setAttribute('aria-expanded', 'false');
-                    if (children) children.classList.remove('open');
-                } else {
-                    branch.classList.add('open');
-                    branch.setAttribute('aria-expanded', 'true');
-                    if (children) children.classList.add('open');
-                }
+                setBranchOpen(branch, !branch.classList.contains('open'));
                 // Select the branch item itself on toggle click
                 selectItem(root, branch);
             });
@@ -2210,7 +2202,110 @@ function initTreeView() {
                 selectItem(root, leaf);
             });
         });
+
+        // ─── Roving tabindex initial ────────────────────────────────────
+        // Un seul .tree-item a tabindex="0" (le 1er visible), tous les
+        // autres a "-1" — le Tab n'arrete qu'une fois sur l'arbre entier.
+        root.querySelectorAll('.tree-item').forEach(function(item) {
+            item.setAttribute('tabindex', '-1');
+        });
+        var firstVisible = getVisibleItems(root)[0];
+        if (firstVisible) firstVisible.setAttribute('tabindex', '0');
+
+        // ─── Navigation clavier WAI-ARIA Tree ───────────────────────────
+        // ↓/↑ : item visible suivant/precedent · → : deplie ou descend au 1er enfant
+        // ← : replie ou remonte au parent · Home/End : premier/dernier visible
+        // Enter/Espace : active (toggle si branche, selection dans tous les cas)
+        root.addEventListener('keydown', function(e) {
+            var current = e.target.closest('.tree-item');
+            if (!current || !root.contains(current)) return;
+            var visible = getVisibleItems(root);
+            var idx = visible.indexOf(current);
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (idx < visible.length - 1) focusItem(root, visible[idx + 1]);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (idx > 0) focusItem(root, visible[idx - 1]);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (current.classList.contains('tree-branch')) {
+                    if (!current.classList.contains('open')) {
+                        setBranchOpen(current, true);
+                    } else {
+                        var firstChild = getFirstChildItem(current);
+                        if (firstChild) focusItem(root, firstChild);
+                    }
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (current.classList.contains('tree-branch') && current.classList.contains('open')) {
+                    setBranchOpen(current, false);
+                } else {
+                    var parentItem = getParentItem(current);
+                    if (parentItem) focusItem(root, parentItem);
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                if (visible.length) focusItem(root, visible[0]);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                if (visible.length) focusItem(root, visible[visible.length - 1]);
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (current.classList.contains('tree-branch')) {
+                    setBranchOpen(current, !current.classList.contains('open'));
+                }
+                selectItem(root, current);
+            }
+        });
     });
+
+    function setBranchOpen(branch, open) {
+        var children = branch.querySelector(':scope > .tree-children');
+        branch.classList.toggle('open', open);
+        branch.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (children) children.classList.toggle('open', open);
+    }
+
+    function getAllItems(root) {
+        return Array.prototype.slice.call(root.querySelectorAll('.tree-item'));
+    }
+
+    function isVisible(root, item) {
+        var current = item;
+        while (current && current !== root) {
+            var parent = current.parentElement;
+            if (parent && parent.classList.contains('tree-children') && !parent.classList.contains('open')) {
+                return false;
+            }
+            current = parent;
+        }
+        return true;
+    }
+
+    function getVisibleItems(root) {
+        return getAllItems(root).filter(function(item) { return isVisible(root, item); });
+    }
+
+    function focusItem(root, item) {
+        getAllItems(root).forEach(function(i) { i.setAttribute('tabindex', '-1'); });
+        item.setAttribute('tabindex', '0');
+        item.focus();
+    }
+
+    function getParentItem(item) {
+        var group = item.parentElement;
+        if (!group || !group.classList.contains('tree-children')) return null;
+        return group.closest('.tree-item');
+    }
+
+    function getFirstChildItem(item) {
+        var group = item.querySelector(':scope > .tree-children');
+        if (!group) return null;
+        return group.querySelector(':scope > .tree-item');
+    }
 
     function selectItem(root, item) {
         // Remove selection from all items in this tree
@@ -6241,8 +6336,9 @@ window.__initMentionInput = initMentionInput;
 // Arbre JSON repliable, lecture seule. Zéro dépendance (JSON.parse + DOM natifs).
 // Sélecteur : .json-viewer[data-json] OU .json-viewer contenant un
 // <script type="application/json">. Navigation clavier WAI-ARIA Tree Pattern
-// (roving tabindex) écrite from-scratch — distincte de initTreeView (statique, sans repli
-// clavier). Grands payloads / virtualisation : hors scope (cf. limite documentée ci-dessous).
+// (roving tabindex) écrite from-scratch pour un DOM data-driven — initTreeView
+// (#824) reprend le même pattern côté DOM statique (.tree-item/.tree-children).
+// Grands payloads / virtualisation : hors scope (cf. limite documentée ci-dessous).
 function initJsonViewer() {
     document.querySelectorAll('.json-viewer').forEach(function(root) {
         if (root.dataset.bound) return;

@@ -325,7 +325,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **FAB** (`initFAB()`) : menu radial toggle, rotation icone, fermeture clic exterieur/Escape, stagger animation
 - **OTP Inputs** (`initOTPInputs()`) : auto-focus next, backspace previous, paste split, inputmode numeric
 - **Tag Inputs** (`initTagInputs()`) : ajout Enter/virgule, suppression X/Backspace, anti-doublon, max tags, disable input at limit
-- **Tree View** (`initTreeView()`) : expand/collapse branches, selection item, icones dossier/fichier
+- **Tree View** (`initTreeView()`) : expand/collapse branches, selection item, icones dossier/fichier, nav clavier WAI-ARIA APG Tree (roving tabindex ↑↓←→/Home/End/Enter/Espace, pattern repris d'initJsonViewer, #824)
 - **Bottom Sheet** (`initBottomSheet()`) : slide-up/down, handle drag, swipe-to-close (seuil 100px), overlay, contenu scrollable
 - **Lightbox** (`initLightbox()`) : overlay plein ecran, navigation fleches/clavier, compteur, caption, galerie groupee
 - **Context Menu** (`initContextMenu()`) : clic droit custom, positionnement viewport-aware, sous-menus, icones, separateurs
