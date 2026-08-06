@@ -1,5 +1,13 @@
 # Releases
 
+## 2.122.7 — 2026-08-07 — Édition en ligne : le focus ne revenait pas au déclencheur (#744 vague 10)
+
+### Fixed
+- **`initInlineEdit` ne restaurait pas le focus sur `.editable-text` après Sauvegarder, Annuler ou Échap** — l'input masqué à la fermeture emportait le focus avec lui, ramenant un utilisateur au clavier au début du document à chaque édition. Correctif aligné sur le pattern déjà en place dans `initActionMenu` (`trigger.focus()`), sans introduire de second mécanisme. Trouvé en écrivant la couverture de test du composant, corrigé dans la même passe.
+
+### Added
+- **Couverture de test `initInlineEdit` (#744, vague 10)** — 11 tests, comportement prouvé par mutation (6/11 tests rouges sans le correctif).
+
 ## 2.122.6 — 2026-08-07 — Data Grid : tri annoncé avec des valeurs ARIA invalides (#744 vague 9)
 
 ### Fixed

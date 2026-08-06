@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.7",
+      "date": "2026-08-07",
+      "titre": "L'édition en ligne rend le focus au texte modifié",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Après avoir modifié un texte en ligne — en validant, en annulant ou avec la touche Échap —, le focus revient sur le texte concerné au lieu de repartir en haut de la page."
+        }
+      ]
+    },
+    {
       "version": "2.122.6",
       "date": "2026-08-07",
       "titre": "Le tri des tableaux de données est enfin annoncé correctement",
