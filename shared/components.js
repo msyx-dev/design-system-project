@@ -4314,9 +4314,14 @@ function initActionMenu() {
             menu.classList.add('open');
             trigger.setAttribute('aria-expanded', 'true');
         }
-        function closeMenu() {
+        // restoreFocus : WAI-ARIA APG Menu Button -- selection d'un item ou
+        // Echap doivent rendre le focus au declencheur (#744, deja le cas
+        // pour split-button/notification-center/user-menu : seul action-menu
+        // laissait le focus sur un item devenu invisible/hors flux).
+        function closeMenu(restoreFocus) {
             menu.classList.remove('open');
             trigger.setAttribute('aria-expanded', 'false');
+            if (restoreFocus) trigger.focus();
         }
 
         trigger.addEventListener('click', function(e) {
@@ -4329,7 +4334,15 @@ function initActionMenu() {
         });
 
         menu.querySelectorAll('.action-menu-item').forEach(function(item) {
-            item.addEventListener('click', function() { closeMenu(); });
+            item.addEventListener('click', function() { closeMenu(true); });
+        });
+
+        // Echap referme et restaure le focus sur le declencheur (#744).
+        wrap.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && menu.classList.contains('open')) {
+                e.preventDefault();
+                closeMenu(true);
+            }
         });
     });
 

@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.1",
+      "date": "2026-08-07",
+      "titre": "Le menu d'actions rend le focus au bouton qui l'a ouvert",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "À la fermeture d'un menu d'actions — après un choix ou avec la touche Échap —, le focus revient sur le bouton qui l'avait ouvert, au lieu de repartir en haut de la page. Les autres menus du système le faisaient déjà."
+        }
+      ]
+    },
+    {
       "version": "2.122.0",
       "date": "2026-08-07",
       "titre": "Arborescence enfin utilisable au clavier",

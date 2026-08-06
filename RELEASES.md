@@ -1,5 +1,13 @@
 # Releases
 
+## 2.122.1 — 2026-08-07 — Menu d'actions : le focus ne revenait pas au déclencheur (#744 vague 5)
+
+### Fixed
+- **`initActionMenu` ne restaurait pas le focus sur le bouton déclencheur** — ni après un clic sur une entrée, ni à la fermeture par `Échap`. Le focus repartait au début du document, obligeant un utilisateur au clavier à retraverser la page pour revenir là où il était. Les composants frères du même fichier (`initSplitButton`, `initUserMenu`, `initNotificationCenter`) le faisaient déjà : c'était une omission isolée, pas un choix. Correctif aligné sur le pattern de `initSplitButton` (paramètre `restoreFocus` sur `closeMenu()` + écouteur `Échap` local), sans introduire de second mécanisme. Trouvé en écrivant la couverture de test du composant, corrigé dans la même passe.
+
+### Added
+- **Couverture de test de 4 composants de menus et surfaces flottantes (#744, vague 5)** — `initActionMenu` (7 tests), `initUserMenu` (11), `initNotificationCenter` (9), `initConfirmPopover` (9). Chaque comportement est prouvé par mutation : neutraliser le code réel rend les tests rouges (ex. retirer l'affectation du compteur de non-lus → 5 tests rouges). Suite vanilla à 147 tests, 15 composants couverts.
+
 ## 2.122.0 — 2026-08-07 — Tree View : navigation clavier WAI-ARIA APG (#824)
 
 ### Fixed
