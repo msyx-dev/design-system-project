@@ -1,7 +1,7 @@
 {
-  "version": "2.121.2",
+  "version": "2.121.3",
   "generated": {
-    "at": "2026-07-28T09:13:59.969Z",
+    "at": "2026-08-06T21:44:26.334Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2946,7 +2946,24 @@
         ".typo-h2",
         ".typo-h3",
         ".typo-overline",
-        ".uppercase"
+        ".uppercase",
+        ".bg-cat-1",
+        ".bg-cat-2",
+        ".bg-cat-3",
+        ".bg-cat-4",
+        ".bg-cat-5",
+        ".bg-cat-6",
+        ".bg-cat-7",
+        ".bg-cat-8",
+        ".border-cat-1",
+        ".border-cat-2",
+        ".border-cat-3",
+        ".border-cat-4",
+        ".border-cat-5",
+        ".border-cat-6",
+        ".border-cat-7",
+        ".border-cat-8",
+        ".text-cat-N"
       ],
       "jsInit": null,
       "generated": true,
