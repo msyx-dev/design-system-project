@@ -1,5 +1,16 @@
 # Releases
 
+## 2.122.0 — 2026-08-07 — Tree View : navigation clavier WAI-ARIA APG (#824)
+
+### Fixed
+- **`initTreeView` — aucune navigation clavier malgré `role="tree"`/`role="treeitem"`** (`shared/components.js`) : le composant annonçait un arbre WAI-ARIA à la technologie d'assistance mais n'attachait aucun listener clavier (`keydown` absent, seul le `click` du toggle/de la feuille était géré) — un utilisateur clavier ne pouvait ni parcourir, ni déplier, ni replier.
+
+  Pattern retenu : celui d'`initJsonViewer` (#446), pas celui du moteur graph (`svg-renderer.js` #671). Le DS a déjà implémenté le pattern WAI-ARIA APG Tree View deux fois — la structure de `initJsonViewer` (DOM statique imbriqué : `role=treeitem` dans `role=group`, visibilité pilotée par une classe `.open` sur l'ancêtre conteneur) est celle qui colle au marquage réel de `initTreeView` (`.tree-item`/`.tree-branch`/`.tree-leaf` dans `.tree-children`) ; celle du graph (structure SVG plate + arbre couvrant `buildSpanningTree()` recalculé depuis un `GraphModel`) n'a rien à voir avec un DOM imbriqué statique existant — inventer une 3e variante aurait été injustifié.
+
+  Implémenté : roving tabindex (un seul `.tree-item` à `tabindex="0"`, tous les autres `-1`, le 1er visible au chargement) ; `↑`/`↓` déplacent le focus vers l'item visible précédent/suivant (les enfants d'une branche fermée sont sautés) ; `→` déplie une branche fermée sans déplacer le focus, ou descend au 1er enfant si déjà ouverte ; `←` replie une branche ouverte sans déplacer le focus, ou remonte à la branche parente sinon ; `Home`/`End` vont au premier/dernier item visible de tout l'arbre ; `Enter`/`Espace` activent le nœud (toggle si branche, sélection dans tous les cas — même comportement que le clic sur le toggle). Le toggle click a été refactoré pour partager `setBranchOpen()` avec le clavier au lieu de dupliquer la logique classe/`aria-expanded`.
+
+  Tests : `tests/vanilla/tree-view.test.js` +14 tests de navigation clavier (roving tabindex initial, chaque touche, saut des enfants cachés, non-régression sur les 7 tests clic existants — inchangés). Preuve par mutation (chaque touche neutralisée individuellement, restaurée avant commit) : `ArrowDown` → 2/21 rouges, `ArrowUp` → 1/21, `ArrowRight` → 2/21, `ArrowLeft` → 2/21, `Home` → 1/21, `End` → 1/21, `Enter` → 2/21, `Espace` → 1/21.
+
 ## 2.121.3 — 2026-08-06 — Bottom sheet : focus WAI APG + Tabs Home/End (#825, #826)
 
 ### Fixed

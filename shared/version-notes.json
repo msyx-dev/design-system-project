@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.0",
+      "date": "2026-08-07",
+      "titre": "Arborescence enfin utilisable au clavier",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "L'arborescence (tree view) se parcourt désormais entièrement au clavier : flèches pour naviguer et déplier/replier une branche, Origine/Fin pour aller au premier ou dernier élément visible, Entrée/Espace pour activer."
+        }
+      ]
+    },
+    {
       "version": "2.121.3",
       "date": "2026-08-06",
       "titre": "Panneaux glissants et onglets plus accessibles au clavier",
