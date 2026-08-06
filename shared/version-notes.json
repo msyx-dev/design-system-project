@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.12",
+      "date": "2026-08-07",
+      "titre": "Commentaires : « Répondre » enfin annoncé aux lecteurs d'écran",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le bouton « Répondre » d'un commentaire n'annonçait jamais aux lecteurs d'écran si le formulaire de réponse était ouvert ou fermé — corrigé."
+        }
+      ]
+    },
+    {
       "version": "2.122.10",
       "date": "2026-08-07",
       "titre": "Sélecteurs thème/mode robustes au stockage local indisponible",
