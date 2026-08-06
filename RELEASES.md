@@ -1,5 +1,16 @@
 # Releases
 
+## 2.122.12 — 2026-08-07 — Commentaires : « Répondre » muet pour les lecteurs d'écran (#744 vague 15)
+
+### Fixed
+- **`initComments` — le bouton « Répondre » n'exposait aucun `aria-expanded`.** Widget de disclosure (`[data-reply-trigger]` bascule l'ouverture du formulaire de réponse) qui n'annonçait jamais son état ouvert/fermé aux technologies d'assistance — même motif déjà corrigé ailleurs dans le DS (`.accordion-header`). Corrigé en alignant sur ce pattern existant : `aria-expanded="false"` posé à l'init, resynchronisé à chaque clic.
+
+### Added
+- **`tests/vanilla/copy-buttons.test.js` (#744, vague 15)** — 7 tests sur `initCopyButtons` : bouton explicite `[data-copy]` (texte transmis au presse-papiers, feedback visuel temporisé — timers fake), injection automatique sur `.code-block` (wrap, texte extrait, non-double-wrap), absence de `navigator.clipboard` gérée sans exception, idempotence. `navigator.clipboard` stubé (absent sous jsdom) — seul le texte transmis est vérifié. Aucun défaut trouvé.
+- **`tests/vanilla/auto-save.test.js` (#744, vague 15)** — 6 tests sur `initAutoSave` : cycle complet des 3 états au clic, gardes d'absence, idempotence, isolation multi-blocs. Aucune minuterie dans ce composant (100% synchrone au clic). Aucun défaut trouvé.
+- **`tests/vanilla/comments.test.js` (#744, vague 15)** — 10 tests sur `initComments` : toggle du formulaire de réponse (`aria-expanded` — cf. correctif ci-dessus), toggle « J'aime » (compteur clampé à 0), idempotence. Vérifié qu'aucun sink n'existe pour le texte saisi dans le formulaire de réponse (« Envoyer » non câblé) — capacité absente signalée pour #836, pas implémentée ici.
+- **`tests/vanilla/version-notes.test.js` (#744, vague 15)** — 9 tests sur `initVersionNotes` : pastille "nouveau" (égalité de chaîne stricte, pas de comparateur semver, #445), mémorisation `localStorage` au clic, isolation entre badges indépendants, idempotence. L'ouverture de la modale reste déléguée à `initModals()` (déjà couvert par `modals.test.js`). Aucun défaut trouvé sur ce composant.
+
 ## 2.122.10 — 2026-08-07 — Sélecteurs thème/mode : stockage local qui lève (#744 vague 13)
 
 ### Fixed

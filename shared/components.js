@@ -4841,13 +4841,16 @@ function initComments() {
     document.querySelectorAll('.comment-action-btn[data-reply-trigger]').forEach(function(btn) {
         if (btn.dataset.bound) return;
         btn.dataset.bound = '1';
+        btn.setAttribute('aria-expanded', 'false');
         btn.addEventListener('click', function() {
             var comment = btn.closest('.comment');
             if (!comment) return;
             var form = comment.querySelector('.comment-reply-form');
             if (!form) return;
             form.classList.toggle('open');
-            if (form.classList.contains('open')) {
+            var isOpen = form.classList.contains('open');
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if (isOpen) {
                 var inp = form.querySelector('.comment-reply-input');
                 if (inp) inp.focus();
             }
