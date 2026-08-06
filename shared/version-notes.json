@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.122.6",
+      "date": "2026-08-07",
+      "titre": "Le tri des tableaux de données est enfin annoncé correctement",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Dans les tableaux de données triables, l'état de tri d'une colonne (croissant/décroissant) n'était pas annoncé correctement aux lecteurs d'écran, alors que le tri lui-même fonctionnait bien."
+        },
+        {
+          "type": "correction",
+          "text": "Une démonstration statique du tableau de données perdait son contenu d'exemple au chargement de la page."
+        }
+      ]
+    },
+    {
       "version": "2.122.4",
       "date": "2026-08-07",
       "titre": "Les tags déjà présents peuvent enfin être supprimés",

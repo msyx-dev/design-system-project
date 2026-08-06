@@ -162,6 +162,26 @@ export function fireClick(win, el, extra = {}) {
  * comme fireClick/fireKeydown, c'est un dispatch cible sur UN evenement,
  * scope au test qui l'appelle.
  */
+/**
+ * Dispatch un evenement HTML5 Drag & Drop (dragstart/dragover/drop/dragend/
+ * dragleave) porteur d'un `dataTransfer` minimal ({ effectAllowed,
+ * dropEffect }), dans le realm de la fenetre fournie.
+ *
+ * jsdom n'implemente NI `DragEvent` NI `DataTransfer` (verifie #744 vague 9 :
+ * `'DragEvent' in window` et `'DataTransfer' in window` renvoient tous deux
+ * `false`, et `new win.DragEvent(...)` leve une TypeError -- meme motif que
+ * `firePaste`/ClipboardEvent ci-dessus). Le code sous test (`initSortableLists`)
+ * ne fait que LIRE/ECRIRE `e.dataTransfer.effectAllowed` et
+ * `e.dataTransfer.dropEffect` : un Event generique + une propriete posee a la
+ * main suffit.
+ */
+export function fireDrag(win, el, type, extra = {}) {
+  const evt = new win.Event(type, { bubbles: true, cancelable: true, ...extra });
+  evt.dataTransfer = { effectAllowed: null, dropEffect: null };
+  el.dispatchEvent(evt);
+  return evt;
+}
+
 export function firePaste(win, el, text, extra = {}) {
   const evt = new win.Event('paste', { bubbles: true, cancelable: true, ...extra });
   evt.clipboardData = { getData: () => text };

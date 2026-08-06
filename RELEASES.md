@@ -1,5 +1,14 @@
 # Releases
 
+## 2.122.6 — 2026-08-07 — Data Grid : tri annoncé avec des valeurs ARIA invalides (#744 vague 9)
+
+### Fixed
+- **`initDataGrids` — `aria-sort` posait `"asc"`/`"desc"` au lieu de `"ascending"`/`"descending"`.** La spec WAI-ARIA n'autorise que `ascending|descending|none|other` pour cet attribut : un lecteur d'écran ne reconnaît pas les valeurs raccourcies et n'annonce donc jamais l'état de tri réel, alors que le tri sous-jacent fonctionnait correctement (le bug est purement dans la valeur exposée à l'assistance technique). La démo statique voisine « État initial trié » de la même page affichait déjà la bonne valeur (`aria-sort="ascending"`) — l'intention documentée divergeait du code. Corrigé aux 3 endroits concernés (calcul du prochain état, comparateur de tri, choix d'icône).
+- **`pages/data.html#data-grid` — la démo « Colonne actions sticky end » perdait son contenu au chargement.** Il lui manquait l'attribut `data-bound="1"` (présent sur la démo voisine « État initial trié ») : `initDataGrids()` la traitait comme un grid interactif et remplaçait ses 5 lignes illustratives par les 12 lignes génériques internes du composant, dont la structure ne correspond même pas aux colonnes affichées. Reproduit en chargeant la vraie page dans jsdom avant correction.
+
+### Added
+- **`tests/vanilla/data-grid.test.js` (#744, vague 9)** — 21 tests sur `initDataGrids` : rendu initial, cycle de tri complet (valeurs ARIA + tri réel + icône), filtre par colonne, sélection (case à cocher, tout-sélectionner, indeterminate), protection des démos statiques via `data-bound`, idempotence. Chaque comportement prouvé par mutation. Vague 9/N du chantier #744 (couverture des composants de données : data grid, server data grid, sortable list, virtual list).
+
 ## 2.122.4 — 2026-08-07 — Champ de tags : la croix des tags pré-remplis ne faisait rien (#744 vague 6)
 
 ### Fixed
