@@ -4290,6 +4290,15 @@ function initInlineEdit() {
         function stopEdit() {
             textEl.classList.remove('hidden');
             inputWrap.classList.remove('active');
+            // Restauration de focus WAI-ARIA (#744 vague 10) : textEl porte
+            // role="button"/tabindex="0" -- c'est LE declencheur unique de
+            // l'edition (meme role qu'un trigger de menu). Sans ce .focus(),
+            // l'input qui vient d'etre masque (.editable-input-wrap.active
+            // retiree -> display:none) emporte le focus avec lui : le
+            // navigateur le reinitialise au document (perte totale de
+            // contexte clavier). Meme mecanisme que initActionMenu()
+            // (trigger.focus() dans closeMenu) -- pas de 3e pattern.
+            textEl.focus();
         }
 
         function saveEdit() {
