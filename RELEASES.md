@@ -1,5 +1,14 @@
 # Releases
 
+## 2.122.10 — 2026-08-07 — Sélecteurs thème/mode : stockage local qui lève (#744 vague 13)
+
+### Fixed
+- **`initThemeSwitcher`/`applyMode` — `localStorage.setItem` non protégé (cf. #793 côté React).** En navigation privée stricte, `localStorage.setItem` lève une exception. Elle remontait à travers `applyThemeTransition()` et coupait le reste du gestionnaire de `change` : le check de compatibilité de mode, `updateModeSwitch()` et le toast de confirmation ne s'exécutaient jamais, et surtout le `setTimeout` retirant la classe `theme-transitioning` n'était jamais programmé — elle restait posée en `!important` sur tout le DOM indéfiniment. Corrigé par `try/catch` autour des deux appels `localStorage.setItem` (`msyx-theme`/`msyx-mode`), même convention déjà en place pour `.split-pane`. Trouvé en écrivant la couverture de test du composant, corrigé dans la même passe.
+
+### Added
+- **`tests/vanilla/theme-switcher.test.js` (#744, vague 13)** — 12 tests sur `initThemeSwitcher` : synchronisation initiale du select, garde d'absence, changement de thème (attribut + persistance + classe de transition + toast), idempotence, bascule automatique du mode incompatible, comportement avec `localStorage` qui lève. Chaque comportement prouvé par mutation.
+- **`tests/vanilla/mode-switcher.test.js` (#744, vague 13)** — 14 tests sur `initModeSwitcher` : synchronisation initiale, garde d'absence, clic + clavier (Espace/Enter), idempotence, neutralisation du toggle pour un thème sans mode clair (`aria-disabled`/`title`), comportement avec `localStorage` qui lève. Chaque comportement prouvé par mutation.
+
 ## 2.122.8 — 2026-08-07 — Liste virtualisée : viewport injoignable au clavier (#744 vague 11)
 
 ### Fixed
