@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.121.3",
+      "date": "2026-08-06",
+      "titre": "Panneaux glissants et onglets plus accessibles au clavier",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Les panneaux glissants (bottom sheet) capturent désormais réellement le focus clavier à l'ouverture, le gardent à l'intérieur du panneau tant qu'il est ouvert, et le rendent au bouton qui a servi à l'ouvrir une fois refermés."
+        },
+        {
+          "type": "amelioration",
+          "text": "Dans les onglets, les touches Origine et Fin permettent désormais d'aller directement au premier ou au dernier onglet."
+        }
+      ]
+    },
+    {
       "version": "2.121.2",
       "date": "2026-08-06",
       "titre": "Palette de commandes : l'état ouvert/fermé annoncé aux lecteurs d'écran",
