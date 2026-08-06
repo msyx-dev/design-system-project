@@ -1167,7 +1167,7 @@ function initDataGrids() {
                     var cmp = typeof av === 'number'
                         ? av - bv
                         : String(av).localeCompare(String(bv), 'fr');
-                    return sortState.dir === 'asc' ? cmp : -cmp;
+                    return sortState.dir === 'ascending' ? cmp : -cmp;
                 });
             }
             return rows;
@@ -1283,7 +1283,11 @@ function initDataGrids() {
             th.addEventListener('click', function() {
                 var col = parseInt(th.dataset.col, 10);
                 var currentDir = th.getAttribute('aria-sort');
-                var nextDir = currentDir === 'none' ? 'asc' : currentDir === 'asc' ? 'desc' : 'none';
+                // ds-fix(#744 vague 9) : aria-sort n'accepte QUE ascending|descending|none|other
+                // (WAI-ARIA spec) -- "asc"/"desc" etaient poses ici (valeurs invalides pour un
+                // lecteur d'ecran) alors que la demo statique "presort" du meme fichier
+                // (data.html#data-grid) montre bien aria-sort="ascending" au repos.
+                var nextDir = currentDir === 'none' ? 'ascending' : currentDir === 'ascending' ? 'descending' : 'none';
                 // Reset all
                 sortHeaders.forEach(function(h) {
                     h.setAttribute('aria-sort', 'none');
@@ -1292,7 +1296,7 @@ function initDataGrids() {
                 });
                 th.setAttribute('aria-sort', nextDir);
                 var icon = th.querySelector('.data-grid-sort-icon');
-                if (icon) icon.textContent = nextDir === 'asc' ? '↑' : nextDir === 'desc' ? '↓' : '↕';
+                if (icon) icon.textContent = nextDir === 'ascending' ? '↑' : nextDir === 'descending' ? '↓' : '↕';
                 sortState = { col: nextDir === 'none' ? null : col, dir: nextDir };
                 refresh();
             });
