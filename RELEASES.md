@@ -1,5 +1,13 @@
 # Releases
 
+## 2.122.4 — 2026-08-07 — Champ de tags : la croix des tags pré-remplis ne faisait rien (#744 vague 6)
+
+### Fixed
+- **`initTagInputs` : les tags présents dans le markup avaient un bouton de fermeture inerte.** Seuls les tags créés dynamiquement par `createTag()` recevaient un écouteur de clic individuel ; ceux écrits directement dans le HTML — le cas des démos « Pré-rempli », « Max 5 tags » et « Limite atteinte », et surtout le cas d'un formulaire pré-rempli côté consumer — n'en avaient aucun. Leur croix était décorative. Correctif par délégation sur le conteneur, qui couvre statique et dynamique d'un seul mécanisme ; l'écouteur individuel est retiré pour éviter une double suppression. Trouvé en écrivant la couverture de test du composant, corrigé dans la même passe.
+
+### Added
+- **Couverture de test de 4 composants de saisie (#744, vague 6)** — `initChips` (12 tests), `initTagInputs` (16), `initSearchInputs` (15), `initNumberInputs` (11). Chaque comportement est prouvé par mutation. Le cas de `initSearchInputs` mérite d'être noté : la mutation rejoue la régression XSS de #746 en remplaçant la construction de nœuds par `innerHTML`, et le test attrape bien une balise `<img>` injectée — la protection est donc verrouillée, pas seulement présente.
+
 ## 2.122.3 — 2026-08-07 — Bottom nav + FAB : ARIA et `inert` désynchronisés (#744 vague 7)
 
 ### Fixed

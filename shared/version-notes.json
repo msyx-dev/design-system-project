@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.122.4",
+      "date": "2026-08-07",
+      "titre": "Les tags déjà présents peuvent enfin être supprimés",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Dans un champ de saisie de tags, la croix des tags déjà présents à l'ouverture de la page ne faisait rien. Seuls les tags ajoutés à la main pouvaient être retirés. Les deux se suppriment désormais de la même façon."
+        }
+      ]
+    },
+    {
       "version": "2.122.3",
       "date": "2026-08-07",
       "titre": "Barre de navigation basse et menu flottant plus fiables",
