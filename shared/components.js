@@ -5928,6 +5928,20 @@ function initTransferList() {
         var targetBody = targetPanel.querySelector('.transfer-body');
         if (!sourceBody || !targetBody) return;
 
+        // bindOption() pose role="option" sur chaque .transfer-option SANS parent
+        // role="listbox" -- ARIA invalide (un option doit avoir un listbox pour
+        // parent). Corrige a la volee (#744 vague 14).
+        [[sourceBody, sourcePanel], [targetBody, targetPanel]].forEach(function(pair) {
+            var body = pair[0];
+            var panel = pair[1];
+            body.setAttribute('role', 'listbox');
+            body.setAttribute('aria-multiselectable', 'true');
+            var title = panel.querySelector('.transfer-panel-title');
+            if (title && title.textContent.trim()) {
+                body.setAttribute('aria-label', title.textContent.trim());
+            }
+        });
+
         // Region aria-live dediee aux annonces de transfert
         var liveRegion = list.querySelector('[data-transfer-live]');
         if (!liveRegion) {

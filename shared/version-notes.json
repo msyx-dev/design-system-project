@@ -16,6 +16,17 @@
       ]
     },
     {
+      "version": "2.122.11",
+      "date": "2026-08-07",
+      "titre": "Liste de transfert : structure de liste enfin valide",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Dans la liste de transfert (double liste avec boutons de déplacement), les colonnes d'éléments sélectionnables n'étaient pas identifiées comme des listes pour les technologies d'assistance, malgré des éléments correctement marqués comme options."
+        }
+      ]
+    },
+    {
       "version": "2.122.10",
       "date": "2026-08-07",
       "titre": "Sélecteurs thème/mode robustes au stockage local indisponible",
