@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.122.3",
+      "date": "2026-08-07",
+      "titre": "Barre de navigation basse et menu flottant plus fiables",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Dans la barre de navigation basse, l'onglet actif au chargement de la page est désormais correctement annoncé aux lecteurs d'écran, sans attendre un premier clic."
+        },
+        {
+          "type": "correction",
+          "text": "Ouvrir un second menu d'actions flottant (FAB) referme désormais proprement le premier : ses boutons masqués ne restent plus accessibles au clavier."
+        }
+      ]
+    },
+    {
       "version": "2.122.1",
       "date": "2026-08-07",
       "titre": "Le menu d'actions rend le focus au bouton qui l'a ouvert",

@@ -1,5 +1,14 @@
 # Releases
 
+## 2.122.3 — 2026-08-07 — Bottom nav + FAB : ARIA et `inert` désynchronisés (#744 vague 7)
+
+### Fixed
+- **`initBottomNav` — `aria-selected` absent tant qu'aucun clic n'avait eu lieu** : l'item `.active` au chargement n'était jamais annoncé comme sélectionné à un lecteur d'écran avant une première interaction. Même motif déjà géré pour Tabs — appliqué à l'identique en sync d'init.
+- **`initFAB` — `inert` non réappliqué en fermant les autres menus FAB** : ouvrir un 2e menu fermait les autres à la main (classe + `aria-expanded`) sans repasser par `closeMenu()`, laissant leurs boutons d'action focusables/annoncés malgré la fermeture visuelle. Réapplication de `inert` alignée sur `closeMenu()`.
+
+### Added
+- **Couverture de test de 4 composants d'affichage/navigation (#744, vague 7)** — `initCarousel` (15 tests), `initLightbox` (10), `initBottomNav` (5), `initFAB` (9). Chaque comportement prouvé par mutation (neutralisation temporaire + restauration avant commit). Suite vanilla : 199 tests, 19 composants couverts.
+
 ## 2.122.1 — 2026-08-07 — Menu d'actions : le focus ne revenait pas au déclencheur (#744 vague 5)
 
 ### Fixed
