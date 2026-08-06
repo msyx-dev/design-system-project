@@ -1,5 +1,15 @@
 # Releases
 
+## 2.122.8 — 2026-08-07 — Liste virtualisée : viewport injoignable au clavier (#744 vague 11)
+
+### Fixed
+- **`initVirtualList` — `.virtual-list-viewport` n'avait aucun `tabindex`.** Le viewport est `overflow-y:auto` (défilement réel) mais n'exposait aucun point de focus : impossible pour un utilisateur clavier de l'atteindre ou de le faire défiler, malgré `role="list"`/`aria-rowcount` déjà en place. Même règle a11y déjà appliquée ailleurs dans le DS pour les régions scrollables (« scrollable-region-focusable »). Corrigé par un `tabindex="0"` posé à l'init, sans écraser un tabindex déjà choisi par le consumer.
+
+### Added
+- **`tests/vanilla/virtual-list.test.js` (#744, vague 11)** — 15 tests sur `initVirtualList` : rendu initial (ARIA, tabindex, fallback dimensionnel, contenu par défaut vs renderer consumer, structure des spacers), scroll (re-render différé au prochain frame, fenêtre visible réellement déplacée, clamp de fin de liste), idempotence. Chaque comportement prouvé par mutation. Vague 11/N du chantier #744.
+- **`tests/vanilla/server-data-grid.test.js` (#744, vague 11)** — 17 tests sur `initServerDataGrid` : contrat testé sans jamais toucher au réseau (`fetchPage()` est un mock local `setTimeout`, pas un vrai fetch) — état de chargement (squelette, `aria-busy`, asynchronicité vérifiée), rendu (page pleine vs reliquat, compteur, annonce live), pagination par clic (bornes, page active, événement `dg:page-change`, garde anti-double-requête), algorithme d'ellipsis du pager sur plus de 7 pages, idempotence. Aucun défaut trouvé.
+- **`tests/vanilla/sortable-list.test.js` (#744, vague 11)** — 16 tests sur `initSortableLists` : HTML5 Drag & Drop souris (déplacement réel dans les deux sens, `.dragging`/`.drag-over`/`aria-grabbed`, no-op sur drop-sur-soi ou sans dragstart) et pointer events tactiles (glisser-relâcher avec géométrie forcée par ligne — jsdom ne calcule aucun layout — reproduisant le même résultat que le DnD souris), renumérotation de la variante numérotée, idempotence. Écart signalé (non testé, non corrigé ici) : aucune navigation clavier implémentée malgré `role="listbox"`/`role="option"`. Aucun défaut trouvé.
+
 ## 2.122.7 — 2026-08-07 — Édition en ligne : le focus ne revenait pas au déclencheur (#744 vague 10)
 
 ### Fixed
