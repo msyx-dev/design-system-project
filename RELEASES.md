@@ -11,6 +11,14 @@
 - **`tests/vanilla/comments.test.js` (#744, vague 15)** — 10 tests sur `initComments` : toggle du formulaire de réponse (`aria-expanded` — cf. correctif ci-dessus), toggle « J'aime » (compteur clampé à 0), idempotence. Vérifié qu'aucun sink n'existe pour le texte saisi dans le formulaire de réponse (« Envoyer » non câblé) — capacité absente signalée pour #836, pas implémentée ici.
 - **`tests/vanilla/version-notes.test.js` (#744, vague 15)** — 9 tests sur `initVersionNotes` : pastille "nouveau" (égalité de chaîne stricte, pas de comparateur semver, #445), mémorisation `localStorage` au clic, isolation entre badges indépendants, idempotence. L'ouverture de la modale reste déléguée à `initModals()` (déjà couvert par `modals.test.js`). Aucun défaut trouvé sur ce composant.
 
+## 2.122.11 — 2026-08-07 — Liste de transfert : structure ARIA invalide (#744 vague 14)
+
+### Fixed
+- **`initTransferList` — `.transfer-body` n'avait pas `role="listbox"`.** `bindOption()` pose `role="option"` sur chaque `.transfer-option`, mais aucun conteneur ne portait `role="listbox"` — un `option` WAI-ARIA doit obligatoirement avoir un `listbox` pour parent, sinon un lecteur d'écran ne le reconnaît pas comme faisant partie d'une liste sélectionnable. Corrigé par l'ajout de `role="listbox"` + `aria-multiselectable="true"` + `aria-label` (titre du panel) sur chaque `.transfer-body`, posé une seule fois à l'init. Trouvé en écrivant la couverture de test du composant, corrigé dans la même passe.
+
+### Added
+- **`tests/vanilla/transfer-list.test.js` (#744, vague 14)** — 22 tests sur `initTransferList` : structure ARIA (cf. correctif ci-dessus), sélection (clic, clavier, flèches entre options visibles), filtre par panneau, transfert (sélection uniquement, tout-transférer, no-op sans crash, événement `transfer:change`, annonce `aria-live`), idempotence. Chaque comportement prouvé par mutation.
+
 ## 2.122.10 — 2026-08-07 — Sélecteurs thème/mode : stockage local qui lève (#744 vague 13)
 
 ### Fixed
