@@ -2112,9 +2112,9 @@ function initTagInputs() {
             tagClose.textContent = '×';
             tag.appendChild(tagClose);
 
-            tagClose.addEventListener('click', function() {
-                removeTag(tag);
-            });
+            // Suppression geree par la delegation sur `wrap` ci-dessous (#744
+            // vague 6) -- couvre aussi bien ce tag cree dynamiquement que les
+            // tags statiques du markup source.
 
             // Inserer avant le champ input
             wrap.insertBefore(tag, input);
@@ -2159,9 +2159,20 @@ function initTagInputs() {
             }
         });
 
-        // Clic sur le wrap focus l'input
+        // Suppression (delegation -- couvre les tags statiques du markup ET
+        // ceux crees dynamiquement par createTag(), #744 vague 6 : avant ce
+        // correctif, seul un tag cree via createTag() recevait un listener
+        // individuel -- les tag-close deja presents dans le markup source
+        // (demos "Pre-rempli", "Max 5 tags", "Limite atteinte") etaient
+        // inertes au clic) ; sinon, clic sur le wrap focus l'input.
         wrap.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('tag-close') && !e.target.classList.contains('tag-item')) {
+            var closeBtn = e.target.closest('.tag-close');
+            if (closeBtn) {
+                var tag = closeBtn.closest('.tag-item');
+                if (tag) removeTag(tag);
+                return;
+            }
+            if (!e.target.classList.contains('tag-item')) {
                 input.focus();
             }
         });
