@@ -1,5 +1,14 @@
 # Releases
 
+## 2.122.14 — 2026-08-07 — Heatmap : les noms de mois s'affichaient en entités HTML · Jauges : libellé figé (#744 vague 17)
+
+### Fixed
+- **`initHeatmapCalendar` : les noms de mois accentués s'affichaient littéralement (`F&eacute;vrier`, `Ao&ucirc;t`, `D&eacute;cembre`).** `MONTH_LABELS` contenait des entités HTML brutes, jamais décodées : ni `setAttribute('aria-label', …)` (qui traite sa valeur comme du texte) ni le chemin `escapeAttr()` + `innerHTML` (qui ré-échappe le `&`, produisant `&amp;eacute;`) ne pouvaient les résoudre. Remplacées par les vrais caractères UTF-8.
+- **`initGauges` : l'`aria-label` ne suivait pas la valeur.** Écrit une fois dans le HTML par l'auteur de la page, il n'était jamais resynchronisé avec `data-value`/`data-max` — une jauge pouvait donc annoncer « 45 % » à un lecteur d'écran tout en affichant 80. Le libellé est désormais dérivé de `.gauge-label` et du pourcentage réel ; les deux démos de `pages/data.html` sont corrigées en cohérence.
+
+### Added
+- **Couverture de test de 4 composants de visualisation (#744, vague 17)** — `initPieCharts` (14 tests, dont la vérification que les couleurs de série viennent bien des tokens et non de valeurs en dur), `initGauges` (20), `initAnimatedCounters` (10, minuteries simulées, valeur finale exacte), `initHeatmapCalendar` (19).
+
 ## 2.122.12 — 2026-08-07 — Commentaires : « Répondre » muet pour les lecteurs d'écran (#744 vague 15)
 
 ### Fixed
