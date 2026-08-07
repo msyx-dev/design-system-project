@@ -1,5 +1,16 @@
 # Releases
 
+## 2.123.2 — 2026-08-07 — Sortable list + Rating utilisables entièrement au clavier (#836)
+
+### Added
+- **`initSortableLists` — alternative clavier au glisser-déposer.** Pattern APG « Listbox with rearrangeable options », roving tabindex (même structure qu'`initTreeView` #824) : `↑`/`↓` parcourent le focus, `Home`/`End` aux extrémités, `Ctrl`+`↑`/`↓` déplace l'option elle-même (combinaison distincte du parcours). Une région live dédiée (`.sortable-live`, même pattern que `.graph-live` #672) annonce la nouvelle position à chaque déplacement clavier.
+- **`initRating` — sélection au clavier.** Pattern APG « Radio Group », même structure qu'`initSegmentedControls` (#613) : `←`/`→`/`↑`/`↓` déplacent la sélection et la valeur (avec bouclage aux extrémités), `Home`/`End` aux extrémités, jamais actif en lecture seule.
+
+### Fixed
+- **`aria-grabbed` (déprécié ARIA 1.1)** : conservé sur les chemins DnD/pointer existants d'`initSortableLists` (non-régression des tests déjà en place), mais le nouveau chemin clavier ne l'utilise jamais — il s'appuie exclusivement sur la région live.
+
+Tests : `tests/vanilla/sortable-list.test.js` +18, `tests/vanilla/rating.test.js` +13 (26 tests existants inchangés, toujours verts). Détail complet et preuve par mutation : voir `CHANGELOG.md` [Unreleased]. Preuve par mutation partielle dans cette PR (`ArrowDown`/`ArrowUp` du sortable, 1 rouge chacune) — le reste des touches reste à couvrir par le parent avant fermeture de #836.
+
 ## 2.123.1 — 2026-08-07 — Comparateur avant/après et jauge d'usage accessibles au clavier (#836)
 
 ### Fixed

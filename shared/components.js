@@ -1682,23 +1682,68 @@ function initRating() {
             });
         }
 
+        // Roving tabindex (#836) : une seule etoile a tabindex="0" a la fois
+        // -- celle qui correspond a la valeur courante (la 1ere si aucune
+        // note). Meme convention que initSegmentedControls() (#613).
+        function setRoving(activeIdx) {
+            stars.forEach(function(star, i) {
+                star.setAttribute('tabindex', i === activeIdx ? '0' : '-1');
+            });
+        }
+
+        // Deplace la selection ET la valeur vers l'etoile n (1..N) -- pattern
+        // APG Radio Group (#836) : "selection follows focus", meme convention
+        // que initSegmentedControls(). focusIt=true pour un deplacement
+        // clavier (le focus doit suivre la selection) ; false pour un clic
+        // (le navigateur pose deja le focus nativement, pas besoin de forcer).
+        function selectValue(n, focusIt) {
+            currentValue = n;
+            widget.dataset.value = n;
+            updateStars();
+            setRoving(n - 1);
+            if (focusIt) stars[n - 1].focus();
+            widget.dispatchEvent(new CustomEvent('rating:change', { detail: { value: n } }));
+        }
+
         if (!isReadonly) {
             stars.forEach(function(star, i) {
                 var n = i + 1;
                 star.addEventListener('mouseover', function() { updateStars(n); });
                 star.addEventListener('mouseout', function() { updateStars(); });
-                star.addEventListener('click', function() {
-                    currentValue = n;
-                    widget.dataset.value = n;
-                    updateStars();
-                    widget.dispatchEvent(new CustomEvent('rating:change', { detail: { value: n } }));
-                });
+                star.addEventListener('click', function() { selectValue(n, false); });
                 star.setAttribute('aria-label', 'Note ' + n + ' sur 5');
                 star.setAttribute('role', 'radio');
                 star.setAttribute('aria-checked', 'false'); // a11y: init required for role=radio
             });
             widget.setAttribute('role', 'radiogroup');
             widget.setAttribute('aria-label', 'Notation');
+            setRoving(currentValue > 0 ? currentValue - 1 : 0);
+
+            // Navigation clavier (#836, pattern APG Radio Group) : ←/→ (et
+            // ↑/↓, meme convention que initSegmentedControls) deplacent LA
+            // SELECTION (pas seulement le focus), Home/End aux extremites.
+            // N'est jamais attache en lecture seule (isReadonly ci-dessus).
+            widget.addEventListener('keydown', function(e) {
+                var current = e.target.closest('.rating-star');
+                if (!current || !widget.contains(current)) return;
+                var list = Array.from(stars);
+                var idx = list.indexOf(current);
+                if (idx === -1) return;
+                var target = null;
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    target = list[(idx + 1) % list.length];
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    target = list[(idx - 1 + list.length) % list.length];
+                } else if (e.key === 'Home') {
+                    target = list[0];
+                } else if (e.key === 'End') {
+                    target = list[list.length - 1];
+                } else {
+                    return;
+                }
+                e.preventDefault();
+                selectValue(list.indexOf(target) + 1, true);
+            });
         }
 
         updateStars();
@@ -3511,6 +3556,107 @@ function initSortableLists() {
             pointerDragSrc.setAttribute('aria-grabbed', 'false');
             pointerDragSrc = null;
             updateNumbers();
+        });
+
+        // ─── Region live (#836) — canal d'annonce fiable pour le clavier.
+        // aria-grabbed (ci-dessus, DnD souris/tactile) est deprecie depuis
+        // ARIA 1.1 : conserve tel quel sur les chemins DnD/pointer existants
+        // (non-regression des tests deja pinnes dessus, cf. PR), mais le
+        // NOUVEAU chemin clavier ci-dessous ne s'appuie jamais dessus — il
+        // utilise exclusivement cette region live, comme le fait deja le
+        // moteur graph (.graph-live, #672). sr-only : masquee visuellement,
+        // lue par les lecteurs d'ecran (classe .sr-only du barrel, cf.
+        // shared/css/components/_a11y.css).
+        var live = document.createElement('div');
+        live.className = 'sortable-live sr-only';
+        live.setAttribute('aria-live', 'polite');
+        live.setAttribute('aria-atomic', 'true');
+        list.insertAdjacentElement('afterend', live);
+
+        // Texte accessible d'un item : le DOM reel (pages/composants.html)
+        // n'utilise pas de classe ".sortable-label" dediee (juste un <span>
+        // libre) — on cle sur le contenu textuel de l'item MOINS la poignee
+        // (aria-hidden, glyphes decoratifs) et le numero (deja porte par
+        // l'annonce de position), plutot que sur une classe qui n'existe pas
+        // toujours dans le markup distribue.
+        function itemLabel(item) {
+            var clone = item.cloneNode(true);
+            var handle = clone.querySelector('.sortable-handle');
+            if (handle) handle.remove();
+            var num = clone.querySelector('.sortable-num');
+            if (num) num.remove();
+            return clone.textContent.replace(/\s+/g, ' ').trim();
+        }
+
+        function announceMove(item) {
+            var all = getItems();
+            var pos = all.indexOf(item) + 1;
+            var label = itemLabel(item);
+            live.textContent = (label ? label + ' déplacé' : 'Élément déplacé') +
+                ' en position ' + pos + ' sur ' + all.length;
+        }
+
+        // ─── Roving tabindex + clavier (#836, pattern APG « Listbox with
+        // rearrangeable options ») ────────────────────────────────────────
+        // ↑/↓ deplacent le FOCUS (parcours, comme initTreeView #824 /
+        // initJsonViewer) ; Home/End aux extremites ; Ctrl+↑/↓ deplace
+        // l'OPTION elle-meme — combinaison DISTINCTE du simple parcours (une
+        // meme touche pour les deux aurait empeche l'utilisateur de
+        // simplement lire la liste au clavier).
+        function setRoving(item) {
+            getItems().forEach(function(i) { i.setAttribute('tabindex', '-1'); });
+            item.setAttribute('tabindex', '0');
+        }
+
+        function focusItem(item) {
+            setRoving(item);
+            item.focus();
+        }
+
+        function moveItem(item, dir) {
+            var all = getItems();
+            var idx = all.indexOf(item);
+            var targetIdx = idx + dir;
+            if (targetIdx < 0 || targetIdx >= all.length) return;
+            if (dir < 0) {
+                list.insertBefore(item, all[targetIdx]);
+            } else {
+                list.insertBefore(item, all[targetIdx].nextSibling);
+            }
+            updateNumbers();
+            setRoving(item);
+            item.focus();
+            announceMove(item);
+        }
+
+        getItems().forEach(function(item) { item.setAttribute('tabindex', '-1'); });
+        var firstItem = getItems()[0];
+        if (firstItem) firstItem.setAttribute('tabindex', '0');
+
+        list.addEventListener('keydown', function(e) {
+            var current = e.target.closest('.sortable-item');
+            if (!current || !list.contains(current)) return;
+            var all = getItems();
+            var idx = all.indexOf(current);
+
+            if (e.ctrlKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+                e.preventDefault();
+                moveItem(current, e.key === 'ArrowUp' ? -1 : 1);
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (idx < all.length - 1) focusItem(all[idx + 1]);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (idx > 0) focusItem(all[idx - 1]);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                if (all.length) focusItem(all[0]);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                if (all.length) focusItem(all[all.length - 1]);
+            }
         });
     });
 }
