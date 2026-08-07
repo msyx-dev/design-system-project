@@ -11,14 +11,13 @@
 // d-entete de split-pane.test.js pour le detail de la resolution : on evalue
 // le VRAI fichier distribue via installPointerDragLib()).
 //
-// Contrairement a split-pane, le handle ici n-a NI role, NI tabindex, NI
-// listener keydown (verifie -- grep "keydown" autour d-initBeforeAfter :
-// aucun). Le curseur n-est donc utilisable qu-a la souris/tactile. C-est un
-// ecart d-accessibilite reel (WCAG 2.1.1 Keyboard) mais implementer une
-// navigation clavier serait une CAPACITE ENTIEREMENT ABSENTE (pas un bug
-// borne) -- signale en PR/ticket #836 plutot que teste ou "corrige" ici.
+// #836 -- le handle recoit desormais role="separator" + tabindex + clavier
+// (fleches gauche/droite pas de 2, Home/End sur les bornes 5-95%), calque a
+// l'identique sur le gutter d'initSplitPane voisin dans ce fichier. Les
+// blocs ci-dessous couvrent l'ARIA pose au bind + le clavier ; les tests
+// pointeur/idempotence au-dessus restent inchanges (non-regression).
 import { describe, it, expect } from 'vitest';
-import { loadComponentsWindow, installPointerDragLib, firePointer } from './helpers/load-components.js';
+import { loadComponentsWindow, installPointerDragLib, firePointer, fireKeydown } from './helpers/load-components.js';
 
 function beforeAfterHtml() {
   return `
@@ -125,5 +124,98 @@ describe('initBeforeAfter -- idempotence', () => {
     // seul dernier pourcentage applique.
     expect(handle.style.left).toBe('20%');
     expect(before.style.clipPath).toBe('inset(0 80% 0 0)');
+  });
+});
+
+describe('initBeforeAfter -- ARIA (#836)', () => {
+  it('le handle recoit role=separator, tabindex=0, aria-orientation=vertical', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    expect(handle.getAttribute('role')).toBe('separator');
+    expect(handle.getAttribute('tabindex')).toBe('0');
+    expect(handle.getAttribute('aria-orientation')).toBe('vertical');
+  });
+
+  it('aria-valuemin/valuemax refletent le bornage existant 5-95%', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    expect(handle.getAttribute('aria-valuemin')).toBe('5');
+    expect(handle.getAttribute('aria-valuemax')).toBe('95');
+  });
+
+  it('aria-valuenow demarre a 50 (position CSS initiale) sans poser de clip-path/left', () => {
+    const { window, before, handle } = setup();
+    window.__initBeforeAfter();
+    expect(handle.getAttribute('aria-valuenow')).toBe('50');
+    // Non-regression du test "etat initial" existant : l'ajout de l'ARIA ne
+    // doit pas declencher applyPercent() au bind.
+    expect(before.style.clipPath).toBe('');
+    expect(handle.style.left).toBe('');
+  });
+});
+
+describe('initBeforeAfter -- clavier (fleches + Home/End, #836)', () => {
+  it('ArrowRight augmente le pourcentage de 2 points depuis 50%', () => {
+    const { window, before, handle } = setup();
+    window.__initBeforeAfter();
+    fireKeydown(window, handle, 'ArrowRight');
+    expect(handle.style.left).toBe('52%');
+    expect(handle.getAttribute('aria-valuenow')).toBe('52');
+    expect(before.style.clipPath).toBe('inset(0 48% 0 0)');
+  });
+
+  it('ArrowLeft diminue le pourcentage de 2 points depuis 50%', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    fireKeydown(window, handle, 'ArrowLeft');
+    expect(handle.style.left).toBe('48%');
+    expect(handle.getAttribute('aria-valuenow')).toBe('48');
+  });
+
+  it('Home descend a 5%, End monte a 95% (bornes)', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    fireKeydown(window, handle, 'Home');
+    expect(handle.style.left).toBe('5%');
+    expect(handle.getAttribute('aria-valuenow')).toBe('5');
+    fireKeydown(window, handle, 'End');
+    expect(handle.style.left).toBe('95%');
+    expect(handle.getAttribute('aria-valuenow')).toBe('95');
+  });
+
+  it('le clavier ne depasse jamais 95% meme avec des ArrowRight repetes', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    for (let i = 0; i < 30; i++) fireKeydown(window, handle, 'ArrowRight');
+    expect(handle.style.left).toBe('95%');
+  });
+
+  it('le clavier ne descend jamais sous 5% meme avec des ArrowLeft repetes', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    for (let i = 0; i < 30; i++) fireKeydown(window, handle, 'ArrowLeft');
+    expect(handle.style.left).toBe('5%');
+  });
+
+  it('une touche non geree (ex ArrowUp) ne modifie rien', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    fireKeydown(window, handle, 'ArrowUp');
+    expect(handle.getAttribute('aria-valuenow')).toBe('50');
+    expect(handle.style.left).toBe('');
+  });
+});
+
+describe('initBeforeAfter -- idempotence clavier (#836)', () => {
+  it('un second appel initBeforeAfter() ne double-bind pas le clavier', () => {
+    const { window, handle } = setup();
+    window.__initBeforeAfter();
+    window.__initBeforeAfter();
+    fireKeydown(window, handle, 'ArrowRight');
+    // Si double-bind : 2 handlers -> +4 points (52 puis 54 dans le meme
+    // dispatch synchrone). Un seul bind -> +2 exactement (meme raisonnement
+    // que le test equivalent de split-pane.test.js).
+    expect(handle.getAttribute('aria-valuenow')).toBe('52');
+    expect(handle.style.left).toBe('52%');
   });
 });
