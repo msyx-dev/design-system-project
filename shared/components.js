@@ -3160,6 +3160,20 @@ function initGauges() {
         if (gauge.dataset.bound) return;
         gauge.dataset.bound = '1';
 
+        // A11y (#744 vague 17) : aria-label figé une fois par l'auteur HTML
+        // ne suit jamais data-value -- si le gauge est régénéré/mis à jour
+        // dynamiquement avec une autre valeur, le lecteur d'écran annonce
+        // un pourcentage périmé. JS devient la source de vérité pour la
+        // partie numérique, calculée avec le même pct que animateGauge()
+        // (posé synchronement, indépendamment de l'IntersectionObserver :
+        // l'accessibilité ne doit pas dépendre du défilement).
+        const initialValue = parseFloat(gauge.dataset.value) || 0;
+        const initialMax = parseFloat(gauge.dataset.max) || 100;
+        const initialPct = Math.round(Math.min(Math.max(initialValue / initialMax, 0), 1) * 100);
+        const labelEl = gauge.querySelector('.gauge-label');
+        const labelText = labelEl ? labelEl.textContent.trim() : '';
+        gauge.setAttribute('aria-label', (labelText ? labelText + ' — ' : '') + initialPct + '%');
+
         // Set initial hidden state
         const fill = gauge.querySelector('.gauge-fill');
         if (fill) {
@@ -6707,8 +6721,17 @@ window.__initJsonViewer = initJsonViewer;
 // Binning value→level (0..4) trivial O(n) dérivé du max des valeurs.
 function initHeatmapCalendar() {
     var DAY_LABELS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-    var MONTH_LABELS = ['Janvier', 'F&eacute;vrier', 'Mars', 'Avril', 'Mai', 'Juin',
-        'Juillet', 'Ao&ucirc;t', 'Septembre', 'Octobre', 'Novembre', 'D&eacute;cembre'];
+    // #744 vague 17 : ces libellés étaient en entités HTML brutes
+    // ('F&eacute;vrier'). fmtLabel() les consomme dans DEUX contextes qui ne
+    // décodent JAMAIS d'entité : setAttribute('aria-label', ...) (attribut —
+    // aucun parsing HTML) ET escapeAttr() + innerHTML (escapeAttr échappe le
+    // '&' EN PREMIER, donc '&eacute;' devient '&amp;eacute;', qui s'affiche
+    // tel quel). Dans les deux cas, l'utilisateur voit/entend littéralement
+    // "F&eacute;vrier" au lieu de "Février". Le fichier est UTF-8 et utilise
+    // déjà des caractères accentués directement ailleurs (ex. commentaire
+    // "Légende" plus bas) — mêmes caractères réels ici, pas d'entités.
+    var MONTH_LABELS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
     function escapeAttr(s) {
         return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
