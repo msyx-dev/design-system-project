@@ -1,5 +1,20 @@
 # Releases
 
+## 2.122.15 — 2026-08-07 — Auth flows : étape blanche · Video embeds : iframe dupliquée (#744 vague 18/18 — DERNIÈRE vague)
+
+### Fixed
+- **`initAuthFlows` — navigation par étapes videait tout avant de vérifier la cible.** Cas réel : sur `pages/formulaires.html`, le bouton « Retour à la connexion » pose `data-auth-step-to="0"` sans `.login-step[data-step="0"]` correspondante — un clic laissait le `.login-card` entièrement blanc. Corrigé en vérifiant l'existence de l'étape cible avant de toucher aux classes `.active`.
+- **`initVideoEmbeds` — `activate()` non protégée contre un second déclenchement.** Clavier puis clic (ou double-déclenchement) empilait un second `<iframe>` autoplay sur le premier. Corrigé par un garde sur la classe `.loaded`.
+
+### Added
+- **`tests/vanilla/activity-feed.test.js` (#744, vague 18)** — 10 tests sur `initActivityFeed` : filtre par chip (exclusif, y compris items initialement masqués), « Charger plus », et surtout une donnée porteuse de balisage (`<script>...</script>` en texte) qui traverse un cycle complet de filtrage avec un `innerHTML` byte-identique — le composant ne construit jamais de DOM à partir de données, il ne fait que (dis)basculer des classes sur du markup déjà rendu par le consumer. Idempotence. Aucun défaut.
+- **`tests/vanilla/auth-flows.test.js` (#744, vague 18)** — 12 tests sur `initAuthFlows` : force du mot de passe (5 niveaux, chaque critère compte indépendamment de la longueur), navigation par étapes (cf. correctif ci-dessus), idempotence.
+- **`tests/vanilla/pricing.test.js` (#744, vague 18)** — 10 tests sur `initPricing` : toggle mensuel/annuel au clic et au clavier (Espace/Entrée), `aria-checked`, isolation entre deux `.pricing-section` indépendantes sur la même page, idempotence. Aucun défaut.
+- **`tests/vanilla/video-embeds.test.js` (#744, vague 18)** — 11 tests sur `initVideoEmbeds` : activation clic/clavier, attributs de l'iframe (`allowfullscreen`, `allow`, `title` avec repli sur « Video »), gardes d'absence (`data-src` manquant, overlay manquant sur un embed n'empêche pas les autres), non-double-activation (cf. correctif ci-dessus).
+- **Vérification `initNomComposant` (#744, vague 18)** : ce n'est pas une fonction réelle du DS — uniquement le nom d'exemple utilisé par le gabarit documentaire « comment ajouter un nouveau composant » en tête de `shared/components.js` (lignes 79-84 : `Créer function initNomComposant()...`). Aucun code mort à supprimer.
+
+**Chantier #744 (couverture tests vanilla) : 18/18 vagues livrées.** Reste au parent la vérification globale avant fermeture de l'issue.
+
 ## 2.122.14 — 2026-08-07 — Heatmap : les noms de mois s'affichaient en entités HTML · Jauges : libellé figé (#744 vague 17)
 
 ### Fixed

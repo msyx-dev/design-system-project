@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.122.15",
+      "date": "2026-08-07",
+      "titre": "Connexion et vidéos : deux écrans qui restaient coincés",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Sur l'écran « Mot de passe oublié », le lien « Retour à la connexion » pouvait laisser la carte de connexion entièrement vide au lieu de revenir à l'écran précédent."
+        },
+        {
+          "type": "correction",
+          "text": "Une vidéo intégrée pouvait se lancer deux fois (deux lecteurs superposés) si elle était activée deux fois de suite au clavier puis à la souris."
+        }
+      ]
+    },
+    {
       "version": "2.122.14",
       "date": "2026-08-07",
       "titre": "Jauges et calendrier heatmap : annonces enfin fiables",

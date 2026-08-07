@@ -3526,6 +3526,13 @@ function initVideoEmbeds() {
         if (!overlay) return;
 
         const activate = () => {
+            // FIX (#744 vague 18) : sans ce garde, un clavier (Entree/Espace)
+            // suivi d'un clic -- ou un simple double-declenchement avant que
+            // le CSS `.loaded .video-embed-overlay { display:none }` ne
+            // masque effectivement l'overlay -- creait un DEUXIEME <iframe>
+            // empile sur le premier (chacun avec autoplay=1). Idempotent des
+            // la premiere activation, meme pattern que dataset.bound.
+            if (embed.classList.contains('loaded')) return;
             const src = embed.dataset.src;
             if (!src) return;
             embed.classList.add('loaded');
@@ -4928,9 +4935,16 @@ function initAuthFlows() {
             var container = btn.closest('.login-card, .login-preview, [data-auth-container]');
             if (!container) return;
             var target = btn.dataset.authStepTo;
-            container.querySelectorAll('.login-step').forEach(function(s) { s.classList.remove('active'); });
             var next = container.querySelector('.login-step[data-step="' + target + '"]');
-            if (next) next.classList.add('active');
+            // FIX (#744 vague 18) : si l'etape cible n'existe pas dans ce
+            // container (ex. data-auth-step-to="0" sans .login-step[data-
+            // step="0"] correspondant -- cas reel de la demo "Retour a la
+            // connexion"), ne PAS vider .active de toutes les etapes : ca
+            // laissait le login-card entierement blanc (.login-step {
+            // display:none } sans classe .active pour aucune d'entre elles).
+            if (!next) return;
+            container.querySelectorAll('.login-step').forEach(function(s) { s.classList.remove('active'); });
+            next.classList.add('active');
         });
     });
 }
