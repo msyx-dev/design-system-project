@@ -3160,6 +3160,20 @@ function initGauges() {
         if (gauge.dataset.bound) return;
         gauge.dataset.bound = '1';
 
+        // A11y (#744 vague 17) : aria-label figé une fois par l'auteur HTML
+        // ne suit jamais data-value -- si le gauge est régénéré/mis à jour
+        // dynamiquement avec une autre valeur, le lecteur d'écran annonce
+        // un pourcentage périmé. JS devient la source de vérité pour la
+        // partie numérique, calculée avec le même pct que animateGauge()
+        // (posé synchronement, indépendamment de l'IntersectionObserver :
+        // l'accessibilité ne doit pas dépendre du défilement).
+        const initialValue = parseFloat(gauge.dataset.value) || 0;
+        const initialMax = parseFloat(gauge.dataset.max) || 100;
+        const initialPct = Math.round(Math.min(Math.max(initialValue / initialMax, 0), 1) * 100);
+        const labelEl = gauge.querySelector('.gauge-label');
+        const labelText = labelEl ? labelEl.textContent.trim() : '';
+        gauge.setAttribute('aria-label', (labelText ? labelText + ' — ' : '') + initialPct + '%');
+
         // Set initial hidden state
         const fill = gauge.querySelector('.gauge-fill');
         if (fill) {
