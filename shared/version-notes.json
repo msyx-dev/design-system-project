@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.123.2",
+      "date": "2026-08-07",
+      "titre": "Liste réordonnable et notation utilisables entièrement au clavier",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "La liste réordonnable se pilote désormais entièrement au clavier : flèches pour parcourir, Origine/Fin pour aller aux extrémités, Ctrl+flèches pour déplacer un élément — une annonce précise sa nouvelle position."
+        },
+        {
+          "type": "nouveaute",
+          "text": "La notation par étoiles se sélectionne désormais au clavier (flèches, Origine/Fin), en plus de la souris."
+        }
+      ]
+    },
+    {
       "version": "2.123.1",
       "date": "2026-08-07",
       "titre": "Comparateur avant/après et jauge d'usage accessibles au clavier",

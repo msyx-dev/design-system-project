@@ -5,13 +5,14 @@
 // > .rating-star (interactif) ou .rating.rating--readonly > .rating-star
 // (lecture seule, aucun listener attache).
 //
-// Comportement clavier NON teste ici (#744 vague 12) : grep "ArrowLeft\|
-// ArrowRight" autour de initRating() -- aucun keydown listener n'est attache
-// aux .rating-star. role="radio"/aria-checked sont poses (a11y statique
-// correcte pour un lecteur d'ecran au survol/clic souris), mais AUCUNE
-// navigation clavier par fleches n'existe : ne pas inventer ce test.
+// Navigation clavier (#836) : initRating() attache desormais un listener
+// 'keydown' sur le widget (jamais en lecture seule) -- pattern WAI-ARIA APG
+// Radio Group, meme structure de roving tabindex + "selection follows
+// focus" qu'initSegmentedControls() (#613, decision ARIA deja actee pour ce
+// pattern dans le DS). ←/→ et ↑/↓ deplacent la selection ET la valeur,
+// Home/End aux extremites. Couvert plus bas.
 import { describe, it, expect } from 'vitest';
-import { loadComponentsWindow, fireClick } from './helpers/load-components.js';
+import { loadComponentsWindow, fireClick, fireKeydown } from './helpers/load-components.js';
 
 function ratingHtml(id, value, extraClass = '', readonly = false) {
   const stars = Array.from({ length: 5 })
@@ -182,5 +183,137 @@ describe('initRating -- isolation multi-widget et idempotence', () => {
     // serait emis 2x pour un seul clic utilisateur.
     expect(changeCount).toBe(1);
     expect(root.dataset.value).toBe('3');
+  });
+});
+
+// ─── Navigation clavier (#836) — pattern WAI-ARIA APG Radio Group, meme
+// structure ("selection follows focus", roving tabindex, wrap aux extremites
+// des fleches, Home/End) qu'initSegmentedControls() (#613).
+describe('initRating -- navigation clavier : pattern APG Radio Group (#836)', () => {
+  it('roving tabindex initial : l etoile a tabindex=0 correspond a la valeur courante (data-value=3 -> 3e etoile)', () => {
+    const { document } = setup(ratingHtml('rl', 3));
+    const { stars } = widget(document, 'rl');
+    stars.forEach((star, i) => {
+      expect(star.getAttribute('tabindex')).toBe(i === 2 ? '0' : '-1');
+    });
+  });
+
+  it('roving tabindex initial : data-value=0 -> la 1re etoile a tabindex=0 (repli)', () => {
+    const { document } = setup(ratingHtml('rm', 0));
+    const { stars } = widget(document, 'rm');
+    stars.forEach((star, i) => {
+      expect(star.getAttribute('tabindex')).toBe(i === 0 ? '0' : '-1');
+    });
+  });
+
+  it('ArrowRight deplace LA SELECTION (et la valeur) vers l etoile suivante, le focus suit', () => {
+    const { window, document } = setup(ratingHtml('rn', 2));
+    const { root, stars } = widget(document, 'rn');
+    stars[1].setAttribute('tabindex', '0');
+    stars[1].focus();
+    fireKeydown(window, stars[1], 'ArrowRight');
+    expect(root.dataset.value).toBe('3');
+    expect(window.document.activeElement).toBe(stars[2]);
+    expect(stars[2].getAttribute('aria-checked')).toBe('true');
+    expect(stars[2].getAttribute('tabindex')).toBe('0');
+    expect(stars[1].getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('ArrowDown se comporte comme ArrowRight (meme convention qu initSegmentedControls)', () => {
+    const { window, document } = setup(ratingHtml('ro', 2));
+    const { root, stars } = widget(document, 'ro');
+    stars[1].setAttribute('tabindex', '0');
+    stars[1].focus();
+    fireKeydown(window, stars[1], 'ArrowDown');
+    expect(root.dataset.value).toBe('3');
+  });
+
+  it('ArrowLeft deplace la selection vers l etoile precedente', () => {
+    const { window, document } = setup(ratingHtml('rp', 3));
+    const { root, stars } = widget(document, 'rp');
+    stars[2].setAttribute('tabindex', '0');
+    stars[2].focus();
+    fireKeydown(window, stars[2], 'ArrowLeft');
+    expect(root.dataset.value).toBe('2');
+    expect(window.document.activeElement).toBe(stars[1]);
+  });
+
+  it('ArrowUp se comporte comme ArrowLeft', () => {
+    const { window, document } = setup(ratingHtml('rq', 3));
+    const { root, stars } = widget(document, 'rq');
+    stars[2].setAttribute('tabindex', '0');
+    stars[2].focus();
+    fireKeydown(window, stars[2], 'ArrowUp');
+    expect(root.dataset.value).toBe('2');
+  });
+
+  it('ArrowRight sur la derniere etoile boucle vers la 1re (wrap, meme convention que le segmented control)', () => {
+    const { window, document } = setup(ratingHtml('rr', 5));
+    const { root, stars } = widget(document, 'rr');
+    stars[4].setAttribute('tabindex', '0');
+    stars[4].focus();
+    fireKeydown(window, stars[4], 'ArrowRight');
+    expect(root.dataset.value).toBe('1');
+    expect(window.document.activeElement).toBe(stars[0]);
+  });
+
+  it('ArrowLeft sur la 1re etoile boucle vers la derniere', () => {
+    const { window, document } = setup(ratingHtml('rs', 1));
+    const { root, stars } = widget(document, 'rs');
+    stars[0].setAttribute('tabindex', '0');
+    stars[0].focus();
+    fireKeydown(window, stars[0], 'ArrowLeft');
+    expect(root.dataset.value).toBe('5');
+    expect(window.document.activeElement).toBe(stars[4]);
+  });
+
+  it('Home selectionne la 1re etoile', () => {
+    const { window, document } = setup(ratingHtml('rt', 4));
+    const { root, stars } = widget(document, 'rt');
+    stars[3].setAttribute('tabindex', '0');
+    stars[3].focus();
+    fireKeydown(window, stars[3], 'Home');
+    expect(root.dataset.value).toBe('1');
+    expect(window.document.activeElement).toBe(stars[0]);
+  });
+
+  it('End selectionne la derniere etoile', () => {
+    const { window, document } = setup(ratingHtml('ru', 1));
+    const { root, stars } = widget(document, 'ru');
+    stars[0].setAttribute('tabindex', '0');
+    stars[0].focus();
+    fireKeydown(window, stars[0], 'End');
+    expect(root.dataset.value).toBe('5');
+    expect(window.document.activeElement).toBe(stars[4]);
+  });
+
+  it('un deplacement clavier emet rating:change avec la nouvelle valeur', () => {
+    const { window, document } = setup(ratingHtml('rv', 1));
+    const { root, stars } = widget(document, 'rv');
+    let detail = null;
+    root.addEventListener('rating:change', e => { detail = e.detail; });
+    stars[0].setAttribute('tabindex', '0');
+    stars[0].focus();
+    fireKeydown(window, stars[0], 'ArrowRight');
+    expect(detail).toEqual({ value: 2 });
+  });
+
+  it("touche non geree ('a') n affecte ni la selection ni le focus", () => {
+    const { window, document } = setup(ratingHtml('rw', 2));
+    const { root, stars } = widget(document, 'rw');
+    stars[1].setAttribute('tabindex', '0');
+    stars[1].focus();
+    fireKeydown(window, stars[1], 'a');
+    expect(root.dataset.value).toBe('2');
+    expect(window.document.activeElement).toBe(stars[1]);
+  });
+});
+
+describe('initRating -- readonly : le clavier est totalement ignore (#836)', () => {
+  it('aucun listener keydown n est attache sur un widget readonly (aucune erreur, valeur inchangee)', () => {
+    const { window, document } = setup(ratingHtml('rx', 4, 'rating--readonly', true));
+    const { root, stars } = widget(document, 'rx');
+    expect(() => fireKeydown(window, stars[0], 'ArrowRight')).not.toThrow();
+    expect(root.dataset.value).toBe('4');
   });
 });

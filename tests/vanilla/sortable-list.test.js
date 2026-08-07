@@ -26,15 +26,21 @@
 //     forcer la geometrie plutot que pretendre la mesurer) -- assume et
 //     documente ligne par ligne dans la section de tests concernee.
 //
-// Navigation clavier : le composant N'IMPLEMENTE AUCUN listener 'keydown'
-// (grep verifie sur toute la fonction) malgre role="listbox"/role="option"
-// dans le markup -- seuls la souris (DnD) et le tactile (pointer) permettent
-// de reordonner. Il n'y a donc RIEN a tester honnetement sur ce point : un
-// test qui appuierait sur une fleche et verifierait l'ordre inchange ne
-// prouverait rien (le composant n'a jamais pretendu gerer le clavier). Ecart
-// signale en commentaire de la PR plutot que teste ici.
+// Navigation clavier (#836) : initSortableLists() attache desormais un
+// listener 'keydown' sur la liste -- pattern WAI-ARIA APG "Listbox with
+// rearrangeable options", meme structure de roving tabindex qu'initTreeView
+// (#824) / initJsonViewer (#446). ↑/↓ deplacent le FOCUS (parcours),
+// Home/End aux extremites, Ctrl+↑/↓ deplace l'OPTION elle-meme (combinaison
+// DISTINCTE du simple parcours). aria-grabbed (deprecie ARIA 1.1) reste posE
+// SUR LES CHEMINS DnD/pointer PRE-EXISTANTS ci-dessus, non touches (4
+// assertions les pinnent deja, cf. describe "drag & drop souris" / "pointer
+// events" plus haut -- les retirer aurait fait regresser cette suite sans la
+// modifier, contradictoire avec la consigne de non-regression) ; LE CHEMIN
+// CLAVIER, lui, n'utilise JAMAIS aria-grabbed -- il annonce exclusivement via
+// une region live dediee (.sortable-live, meme pattern que .graph-live #672),
+// couverte plus bas.
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { loadComponentsWindow, fireDrag } from './helpers/load-components.js';
+import { loadComponentsWindow, fireDrag, fireKeydown } from './helpers/load-components.js';
 
 function itemHtml(label, num) {
   const numSpan = num != null ? `<span class="sortable-num">${num}</span>` : '';
@@ -262,5 +268,200 @@ describe('initSortableLists -- divers', () => {
     // qu'un seul deplacement net a lieu et que l'ordre reste previsible.
     drag(window, a, c);
     expect(labels(list)).toEqual(['B', 'C', 'A', 'D']);
+  });
+});
+
+// ─── Navigation clavier (#836) — pattern APG "Listbox with rearrangeable
+// options". Roving tabindex sur les .sortable-item : ↑/↓ deplacent le FOCUS
+// (parcours, meme structure qu'initTreeView #824), Home/End aux extremites.
+// Ctrl+↑/↓ deplace l'OPTION elle-meme -- combinaison DISTINCTE du simple
+// parcours (verifie explicitement plus bas : une fleche seule ne bouge rien).
+describe('initSortableLists -- navigation clavier : parcours du focus (#836)', () => {
+  it('roving tabindex initial : le 1er item a tabindex=0, tous les autres -1', () => {
+    const { list } = setup();
+    const all = items(list);
+    expect(all[0].getAttribute('tabindex')).toBe('0');
+    all.slice(1).forEach(li => expect(li.getAttribute('tabindex')).toBe('-1'));
+  });
+
+  it('ArrowDown deplace le FOCUS vers l item suivant sans changer l ordre', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[0].setAttribute('tabindex', '0');
+    all[0].focus();
+    fireKeydown(window, all[0], 'ArrowDown');
+    expect(window.document.activeElement).toBe(all[1]);
+    expect(all[1].getAttribute('tabindex')).toBe('0');
+    expect(all[0].getAttribute('tabindex')).toBe('-1');
+    expect(labels(list)).toEqual(['A', 'B', 'C', 'D']); // ordre inchange
+  });
+
+  it('ArrowUp deplace le focus vers l item precedent', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[2].setAttribute('tabindex', '0');
+    all[2].focus();
+    fireKeydown(window, all[2], 'ArrowUp');
+    expect(window.document.activeElement).toBe(all[1]);
+    expect(all[1].getAttribute('tabindex')).toBe('0');
+    expect(all[2].getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('ArrowDown sur le dernier item est un no-op (pas d erreur, focus inchange)', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    const last = all[all.length - 1];
+    last.setAttribute('tabindex', '0');
+    last.focus();
+    fireKeydown(window, last, 'ArrowDown');
+    expect(window.document.activeElement).toBe(last);
+    expect(last.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('ArrowUp sur le premier item est un no-op', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[0].setAttribute('tabindex', '0');
+    all[0].focus();
+    fireKeydown(window, all[0], 'ArrowUp');
+    expect(window.document.activeElement).toBe(all[0]);
+  });
+
+  it('Home deplace le focus au 1er item', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[2].setAttribute('tabindex', '0');
+    all[2].focus();
+    fireKeydown(window, all[2], 'Home');
+    expect(window.document.activeElement).toBe(all[0]);
+    expect(all[0].getAttribute('tabindex')).toBe('0');
+  });
+
+  it('End deplace le focus au dernier item', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[0].setAttribute('tabindex', '0');
+    all[0].focus();
+    fireKeydown(window, all[0], 'End');
+    const last = items(list)[items(list).length - 1];
+    expect(window.document.activeElement).toBe(last);
+    expect(last.getAttribute('tabindex')).toBe('0');
+  });
+
+  it("touche non geree ('a') n affecte ni le focus ni l ordre", () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[0].setAttribute('tabindex', '0');
+    all[0].focus();
+    fireKeydown(window, all[0], 'a');
+    expect(window.document.activeElement).toBe(all[0]);
+    expect(labels(list)).toEqual(['A', 'B', 'C', 'D']);
+  });
+});
+
+describe('initSortableLists -- navigation clavier : Ctrl+fleche deplace l option (#836)', () => {
+  it('Ctrl+ArrowDown deplace l item vers le bas (echange avec le suivant), garde le focus dessus', () => {
+    const { window, list } = setup();
+    const [a] = items(list);
+    a.setAttribute('tabindex', '0');
+    a.focus();
+    fireKeydown(window, a, 'ArrowDown', { ctrlKey: true });
+    expect(labels(list)).toEqual(['B', 'A', 'C', 'D']);
+    expect(window.document.activeElement).toBe(a);
+    expect(a.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('Ctrl+ArrowUp deplace l item vers le haut (echange avec le precedent)', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    const c = all[2]; // "C"
+    c.setAttribute('tabindex', '0');
+    c.focus();
+    fireKeydown(window, c, 'ArrowUp', { ctrlKey: true });
+    expect(labels(list)).toEqual(['A', 'C', 'B', 'D']);
+    expect(window.document.activeElement).toBe(c);
+  });
+
+  it('Ctrl+ArrowDown sur le dernier item est un no-op (deja en bout de liste)', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    const last = all[all.length - 1];
+    last.setAttribute('tabindex', '0');
+    last.focus();
+    fireKeydown(window, last, 'ArrowDown', { ctrlKey: true });
+    expect(labels(list)).toEqual(['A', 'B', 'C', 'D']);
+  });
+
+  it('Ctrl+ArrowUp sur le premier item est un no-op', () => {
+    const { window, list } = setup();
+    const all = items(list);
+    all[0].setAttribute('tabindex', '0');
+    all[0].focus();
+    fireKeydown(window, all[0], 'ArrowUp', { ctrlKey: true });
+    expect(labels(list)).toEqual(['A', 'B', 'C', 'D']);
+  });
+
+  it('un deplacement Ctrl+fleche renumerote une liste numerotee (meme logique que le DnD)', () => {
+    const { window, list } = setup({ numbered: true });
+    const [a] = items(list);
+    a.setAttribute('tabindex', '0');
+    a.focus();
+    fireKeydown(window, a, 'ArrowDown', { ctrlKey: true });
+    expect(labels(list)).toEqual(['B', 'A', 'C', 'D']);
+    expect(nums(list)).toEqual(['1', '2', '3', '4']);
+  });
+
+  it('simple ArrowDown (sans Ctrl) ne deplace PAS l option -- combinaison distincte du parcours', () => {
+    const { window, list } = setup();
+    const [a] = items(list);
+    a.setAttribute('tabindex', '0');
+    a.focus();
+    fireKeydown(window, a, 'ArrowDown'); // sans ctrlKey
+    expect(labels(list)).toEqual(['A', 'B', 'C', 'D']); // ordre inchange, seul le focus bouge
+  });
+});
+
+// ─── Region live (#836) — remplace aria-grabbed comme canal d'annonce
+// FIABLE sur le chemin clavier (aria-grabbed est deprecie ARIA 1.1, cf. l'en
+// -tete de ce fichier : conserve tel quel sur les chemins DnD/pointer
+// existants pour la non-regression, mais jamais pose par le clavier).
+describe('initSortableLists -- region live (#836)', () => {
+  it('une region .sortable-live sr-only aria-live=polite est creee juste apres la liste', () => {
+    const { list } = setup();
+    const live = list.nextElementSibling;
+    expect(live.classList.contains('sortable-live')).toBe(true);
+    expect(live.classList.contains('sr-only')).toBe(true);
+    expect(live.getAttribute('aria-live')).toBe('polite');
+    expect(live.getAttribute('aria-atomic')).toBe('true');
+    expect(live.textContent).toBe(''); // rien annonce avant un deplacement clavier
+  });
+
+  it('Ctrl+ArrowDown annonce le libelle + la nouvelle position sur la region live', () => {
+    const { window, list } = setup();
+    const [a] = items(list);
+    a.setAttribute('tabindex', '0');
+    a.focus();
+    fireKeydown(window, a, 'ArrowDown', { ctrlKey: true });
+    const live = list.nextElementSibling;
+    expect(live.textContent).toBe('A déplacé en position 2 sur 4');
+  });
+
+  it('un simple parcours (ArrowDown sans Ctrl) n annonce RIEN sur la region live', () => {
+    const { window, list } = setup();
+    const [a] = items(list);
+    a.setAttribute('tabindex', '0');
+    a.focus();
+    fireKeydown(window, a, 'ArrowDown');
+    const live = list.nextElementSibling;
+    expect(live.textContent).toBe('');
+  });
+
+  it('un deplacement clavier NE POSE PAS aria-grabbed (reserve au DnD/pointer, remplace par la region live ici)', () => {
+    const { window, list } = setup();
+    const [a] = items(list);
+    a.setAttribute('tabindex', '0');
+    a.focus();
+    fireKeydown(window, a, 'ArrowDown', { ctrlKey: true });
+    expect(a.getAttribute('aria-grabbed')).toBe('false');
   });
 });
