@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.122.14",
+      "date": "2026-08-07",
+      "titre": "Jauges et calendrier heatmap : annonces enfin fiables",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Les jauges (gauge) annoncent maintenant aux lecteurs d'écran le pourcentage réellement affiché, au lieu d'un texte figé une fois pour toutes qui pouvait ne plus correspondre à la donnée."
+        },
+        {
+          "type": "correction",
+          "text": "Dans le calendrier heatmap, les mois accentués (février, août, décembre) s'affichaient mal — à la fois dans l'infobulle et pour les lecteurs d'écran — au lieu du nom du mois correctement accentué."
+        }
+      ]
+    },
+    {
       "version": "2.122.12",
       "date": "2026-08-07",
       "titre": "Commentaires : « Répondre » enfin annoncé aux lecteurs d'écran",
