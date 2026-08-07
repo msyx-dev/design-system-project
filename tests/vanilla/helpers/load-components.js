@@ -30,6 +30,51 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const COMPONENTS_JS_PATH = path.resolve(__dirname, '../../../shared/components.js');
 const COMPONENTS_SOURCE = readFileSync(COMPONENTS_JS_PATH, 'utf8');
 
+// shared/dist/graph-lib.global.js — IIFE COMPILE (esbuild) qui assigne
+// window.__pointerDrag / window.__svg (#657, I1a -- cf. shared/graph/lib/
+// global-entry.js). Sur les vraies pages, ce <script> est charge AVANT
+// components.js (cf. pages/divers.html:775-776, pages/fondation.html:1336-
+// 1337) : initSplitPane()/initBeforeAfter() appellent window.__pointerDrag()
+// sans le definir eux-memes -- une dependance reelle et deliberee, pas un
+// defaut. loadComponentsWindow() seule NE charge PAS ce fichier (les 44
+// composants precedents n'en ont pas besoin) : installPointerDragLib() est
+// un opt-in explicite, appele par les tests de initSplitPane/initBeforeAfter
+// APRES loadComponentsWindow() et AVANT window.__initX() -- le VRAI fichier
+// distribue est evalue (pas une reimplementation maison), meme esprit que
+// COMPONENTS_SOURCE ci-dessus.
+const GRAPH_LIB_JS_PATH = path.resolve(__dirname, '../../../shared/dist/graph-lib.global.js');
+const GRAPH_LIB_SOURCE = readFileSync(GRAPH_LIB_JS_PATH, 'utf8');
+
+/**
+ * Evalue le vrai shared/dist/graph-lib.global.js dans le realm de `win`,
+ * ce qui pose window.__pointerDrag (+ window.__svg, inutilise ici). A
+ * appeler apres loadComponentsWindow() et avant window.__initSplitPane()/
+ * window.__initBeforeAfter().
+ */
+export function installPointerDragLib(win) {
+  win.eval(GRAPH_LIB_SOURCE);
+}
+
+/**
+ * Dispatch un PointerEvent (pointerdown/pointermove/pointerup/pointercancel)
+ * dans le realm de la fenetre fournie. jsdom EXPOSE PointerEvent nativement
+ * (verifie empiriquement, contrairement a DragEvent/Touch -- meme constat
+ * que tests/vanilla/sortable-list.test.js #744 vague 11) : pas besoin de
+ * fabriquer un Event generique + propriete posee a la main comme
+ * fireDrag/firePaste. pointerId par defaut a 1 (constant, suffisant : un
+ * seul point de contact simule par test).
+ */
+export function firePointer(win, el, type, extra = {}) {
+  const evt = new win.PointerEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    pointerId: 1,
+    ...extra,
+  });
+  el.dispatchEvent(evt);
+  return evt;
+}
+
 /**
  * Cree une fenetre jsdom fraiche, y injecte `bodyHtml`, puis EXECUTE le vrai
  * shared/components.js dans le contexte de cette fenetre (dom.window.eval).
