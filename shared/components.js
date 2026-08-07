@@ -3564,10 +3564,33 @@ function initBeforeAfter() {
         const handle = container.querySelector('.before-after-handle');
         if (!before || !handle) return;
 
+        const MIN = 5;
+        const MAX = 95;
+
+        // A11y (#836) : meme pattern que le gutter d'initSplitPane (voisin dans
+        // ce fichier) -- role="separator", tabindex, aria-orientation/valuemin/
+        // valuemax poses une fois au bind. aria-orientation="vertical" car le
+        // trait separateur est une ligne verticale (axe de deplacement 'x'),
+        // cf. initSplitPane : aria-orientation=vertical quand axis==='x'.
+        handle.setAttribute('role', 'separator');
+        handle.setAttribute('tabindex', '0');
+        handle.setAttribute('aria-orientation', 'vertical');
+        handle.setAttribute('aria-valuemin', String(MIN));
+        handle.setAttribute('aria-valuemax', String(MAX));
+        // 50% = position initiale reelle posee par le CSS (media.css :
+        // .before-after-handle{left:50%} + .before-after-before{clip-path:
+        // inset(0 50% 0 0)}) -- on ne rejoue PAS applyPercent() ici pour ne
+        // pas poser de style inline avant le premier drag/clavier (le
+        // positionnement initial reste delegue au CSS, comportement existant
+        // teste par ailleurs).
+        handle.setAttribute('aria-valuenow', '50');
+
         function applyPercent(percent) {
-            const clamped = Math.min(95, Math.max(5, percent));
+            const clamped = Math.min(MAX, Math.max(MIN, percent));
             before.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
             handle.style.left = clamped + '%';
+            handle.setAttribute('aria-valuenow', String(Math.round(clamped)));
+            return clamped;
         }
 
         function getPercent(clientX) {
@@ -3584,6 +3607,30 @@ function initBeforeAfter() {
             axis: 'x',
         });
         window.__registerInstance(container, destroyDrag);
+
+        // Clavier (#836) — alternative au drag pointeur, alignee sur
+        // initSplitPane : fleches gauche/droite ajustent par pas de 2 points,
+        // Home/End vont aux bornes MIN/MAX. Pas de variante inventee : meme
+        // geste, meme step, meme lecture d'aria-valuenow courant que le
+        // gutter de split-pane.
+        handle.addEventListener('keydown', function(e) {
+            const step = 2;
+            const current = parseFloat(handle.getAttribute('aria-valuenow') || '50');
+
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                applyPercent(current - step);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                applyPercent(current + step);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                applyPercent(MIN);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                applyPercent(MAX);
+            }
+        });
     });
 }
 window.__initBeforeAfter = initBeforeAfter;
@@ -5211,6 +5258,22 @@ function initFormValidation() {
 window.__initFormValidation = initFormValidation;
 
 // ===== USAGE METER =====
+// Seuils (#836) -- warnAt=50, dangerAt=90 : bornes retro-deduites des 7
+// instances demo reelles de pages/data.html#usage-meter (30/45/12 -> ok,
+// 60/72/82 -> warn, 95 -> danger), pas inventees. Meme semantique de bornes
+// (inclusive cote warn, strictement superieur cote danger) que le
+// resolveVariant() de @msyx-dev/react UsageMeter (packages/react/src/
+// components/UsageMeter/UsageMeter.tsx) afin que vanilla et React restent
+// alignes sur la meme regle metier.
+var USAGE_METER_WARN_AT = 50;
+var USAGE_METER_DANGER_AT = 90;
+
+function usageMeterThresholdClass(pct) {
+    if (pct > USAGE_METER_DANGER_AT) return 'usage-fill--danger';
+    if (pct >= USAGE_METER_WARN_AT) return 'usage-fill--warn';
+    return 'usage-fill--ok';
+}
+
 function initUsageMeter() {
     var obs = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
@@ -5227,7 +5290,47 @@ function initUsageMeter() {
     document.querySelectorAll('.usage-meter[data-value]').forEach(function(meter) {
         if (meter.dataset.bound) return;
         meter.dataset.bound = '1';
+
+        // A11y (#836) : role=progressbar + aria-valuemin/max/now poses
+        // synchronement sur .usage-meter-track (deja present dans le markup
+        // canonique, cf. pages/data.html#usage-meter), independamment de
+        // l'IntersectionObserver qui ne pilote QUE l'animation visuelle de la
+        // largeur -- meme principe que le fix aria-label du gauge (#842) :
+        // l'accessibilite ne doit jamais dependre du defilement. role=
+        // "progressbar" (pas "meter", support AT inegal) aligne sur le seul
+        // precedent existant dans le DS pour ce pattern (barre lineaire avec
+        // min/max/now) : .quiz-progress dans initQuiz(), pages/formulaires.html.
+        // aria-label/aria-valuetext calques sur @msyx-dev/react UsageMeter
+        // (packages/react/src/components/UsageMeter/UsageMeter.tsx) qui
+        // documentait deja ce gap vanilla (#613).
+        var rawValue = parseFloat(meter.dataset.value) || 0;
+        var clampedValue = Math.min(100, Math.max(0, rawValue));
+        var track = meter.querySelector('.usage-meter-track');
+        if (track) {
+            track.setAttribute('role', 'progressbar');
+            track.setAttribute('aria-valuemin', '0');
+            track.setAttribute('aria-valuemax', '100');
+            track.setAttribute('aria-valuenow', String(Math.round(clampedValue)));
+            var labelEl = meter.querySelector('.usage-meter-label');
+            if (labelEl && labelEl.textContent.trim()) {
+                track.setAttribute('aria-label', labelEl.textContent.trim());
+            }
+            var valueEl = meter.querySelector('.usage-meter-value');
+            if (valueEl && valueEl.textContent.trim()) {
+                track.setAttribute('aria-valuetext', valueEl.textContent.trim());
+            }
+        }
+
         var fill = meter.querySelector('.usage-fill');
+        if (fill) {
+            // Seuil (#836) : la classe --ok/--warn/--danger n'est plus figee
+            // dans le markup consumer -- elle est desormais DERIVEE de la
+            // valeur reelle a chaque bind, pour ne jamais afficher une
+            // couleur de seuil qui contredit son propre chiffre.
+            fill.classList.remove('usage-fill--ok', 'usage-fill--warn', 'usage-fill--danger');
+            fill.classList.add(usageMeterThresholdClass(rawValue));
+        }
+
         if (!fill) return;
         fill.style.width = '0';
         if (obs) {

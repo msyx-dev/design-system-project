@@ -5,6 +5,21 @@
   },
   "released": [
     {
+      "version": "2.123.1",
+      "date": "2026-08-07",
+      "titre": "Comparateur avant/après et jauge d'usage accessibles au clavier",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Le curseur du comparateur avant/après (before/after) se déplace désormais entièrement au clavier (flèches, Origine/Fin), comme les autres séparateurs redimensionnables du design system."
+        },
+        {
+          "type": "correction",
+          "text": "La jauge d'usage (quota) annonce désormais sa valeur aux lecteurs d'écran, et sa couleur de seuil (normal/attention/critique) est recalculée depuis la valeur réelle au lieu de rester figée dans le code de la page — elle ne pouvait auparavant afficher une couleur en contradiction avec son propre chiffre."
+        }
+      ]
+    },
+    {
       "version": "2.122.15",
       "date": "2026-08-07",
       "titre": "Connexion et vidéos : deux écrans qui restaient coincés",

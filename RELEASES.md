@@ -1,5 +1,17 @@
 # Releases
 
+## 2.123.1 — 2026-08-07 — Comparateur avant/après et jauge d'usage accessibles au clavier (#836)
+
+### Fixed
+- **`initBeforeAfter` — poignée de comparaison inaccessible au clavier.** Ni `role`, ni `tabindex`, ni `keydown` : le curseur ne se déplaçait qu'au pointeur (WCAG 2.1.1). Aligné sur `initSplitPane` (même fichier, même défaut déjà résolu) : `role="separator"` + `tabindex="0"` + `aria-orientation="vertical"` + `aria-valuemin`/`aria-valuemax` (bornage 5-95 % inchangé), flèches gauche/droite + `Home`/`End`, `aria-valuenow` synchronisé au pointeur comme au clavier.
+- **`initUsageMeter` — aucun ARIA, classe de seuil figée dans le markup.** La valeur n'était jamais annoncée, et la couleur de seuil (`--ok`/`--warn`/`--danger`) pouvait contredire le chiffre affiché. `role="progressbar"` + `aria-valuemin`/`max`/`now` posés sur `.usage-meter-track` (synchronement, indépendamment de l'animation d'entrée), `aria-label`/`aria-valuetext` depuis le header — calqué sur `@msyx-dev/react` `UsageMeter` qui documentait déjà ce gap (#613). La classe de seuil est désormais **dérivée de `data-value`** (`warnAt=50`, `dangerAt=90`, bornes retro-déduites des démos réelles de `pages/data.html`) au lieu d'être recopiée telle quelle.
+
+### Added
+- **`tests/vanilla/before-after.test.js`** — 10 tests ajoutés (18 au total) : ARIA au bind, clavier (flèches, `Home`/`End`, bornage, touche non gérée), idempotence.
+- **`tests/vanilla/usage-meter.test.js`** — 19 tests ajoutés (26 au total) : ARIA sur `.usage-meter-track` (label/valuetext, cas limites), dérivation des seuils (bornes inclusive/stricte, correction d'une classe statique erronée dans les deux sens), idempotence.
+
+Traite la moitié `initBeforeAfter`/`initUsageMeter` de l'issue #836 (l'autre moitié — `initSortableLists`/`initRating` — est traitée en parallèle, l'issue reste ouverte jusqu'à livraison des deux).
+
 ## 2.122.15 — 2026-08-07 — Auth flows : étape blanche · Video embeds : iframe dupliquée (#744 vague 18/18 — DERNIÈRE vague)
 
 ### Fixed
