@@ -1,4 +1,4 @@
-/* @ds-version 2.123.2 */
+/* @ds-version 2.124.0 */
 const VERSION = '2.123.2';
 
 // Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
