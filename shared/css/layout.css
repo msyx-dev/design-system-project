@@ -355,6 +355,11 @@
 }
 [data-theme="nhood"][data-mode="light"] .site-header { border-bottom-color: color-mix(in srgb, var(--accent) 12%, transparent); }
 
+[data-theme="auchan"][data-mode="light"] .sidebar {
+    border-inline-end-color: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+[data-theme="auchan"][data-mode="light"] .site-header { border-bottom-color: color-mix(in srgb, var(--accent) 12%, transparent); }
+
 
 /* ===== HEADER USER ZONE ===== */
 .header-user-zone {
