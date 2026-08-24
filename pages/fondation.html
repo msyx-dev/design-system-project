@@ -271,6 +271,13 @@
                     </div>
                     <span class="typo-xs">Palette bleu marine/or — fix de cascade applique en v2.54.x (#251).</span>
                 </div>
+                <div class="theme-card">
+                    <div class="theme-card-head">
+                        <span class="typo-small fw-600">Auchan</span>
+                        <span class="badge badge-success text-2xs">dark + light</span>
+                    </div>
+                    <span class="typo-xs">Palette rouge de marque/ambre/teal — accent et danger separes par teinte+luminance (#849).</span>
+                </div>
                 <div class="theme-card theme-card--future">
                     <div class="theme-card-head">
                         <span class="typo-small fw-600">Futur theme</span>
@@ -366,6 +373,43 @@
                 </div>
             </div>
             <div class="code-block text-xs-lh"><span class="cm">/* Activer Nhood dark */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'nhood'</span>;<br><br><span class="cm">/* Activer Nhood light */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'nhood'</span>;<br><span class="fn">document.documentElement.dataset.mode</span> = <span class="str">'light'</span>;</div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-2 mt-lg">
+        <div class="demo-box grid-full">
+            <span class="demo-label">Theme Auchan (#849)</span>
+            <p class="typo-body mb-md">Theme corporate inspire de <strong>auchan.fr</strong> — rouge de marque, ambre, teal. <span class="code-inline">--danger</span> decale vers l'orange pour rester distinguable de <span class="code-inline">--accent</span> (ΔH ≥ 13° / ΔE ≥ 0.12). Supporte dark et light.</p>
+            <div class="color-grid color-grid--compact">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#e0001a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Accent (rouge)</div>
+                        <div class="color-hex">#e0001a</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#946200;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Warning (ambre)</div>
+                        <div class="color-hex">#946200</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#a33b0e;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Danger (orange)</div>
+                        <div class="color-hex">#a33b0e</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#fffaef;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface light</div>
+                        <div class="color-hex">#fffaef</div>
+                    </div>
+                </div>
+            </div>
+            <div class="code-block text-xs-lh"><span class="cm">/* Activer Auchan dark */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'auchan'</span>;<br><br><span class="cm">/* Activer Auchan light */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'auchan'</span>;<br><span class="fn">document.documentElement.dataset.mode</span> = <span class="str">'light'</span>;</div>
         </div>
     </div>
 </section>
