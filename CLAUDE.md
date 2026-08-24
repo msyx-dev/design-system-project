@@ -16,7 +16,7 @@ Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
 - **Anti-FOUC** — script synchrone inline `<head>`, lit `msyx-theme` + `msyx-mode` (jamais de naming divergent)
 - **Anti-double-bind JS** — pattern `dataset.bound` sur tous les event listeners
 - **Pas d'override de classe DS** — customiser via variables CSS, jamais redéfinir
-- **Version bump synchrone** — 5 fichiers (`tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js`)
+- **Version bump synchrone** — 8 sources verifiees par `shared/check-versions.sh` (`@ds-version` dans `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js` + `const VERSION` de `nav.js` + `version` de `shared/components-registry.json` + `version` de `package.json` racine)
 - **Checklist anti-dette** — 9 dimensions à valider par composant (HTML/CSS/JS/A11y/Perf/Doc/Version/Registre/VR)
 - **Jamais de donnée consumer concaténée dans `innerHTML`** — construire les nœuds (`createElement`/`setAttribute`/`textContent`) ; `escapeHTML` ne protège qu'un contexte texte, jamais un attribut (voir `docs/DS-PRINCIPLES.md` §11)
 
@@ -164,10 +164,11 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Pattern `dataset.bound` anti-double-bind sur les event listeners
    - Appel dans le bloc `reinitAll()` pour compatibilite SPA
 4. **Compteur** : mettre a jour le nombre dans `site.html` (hero + hub cards si applicable)
-5. **Version** : bumper `@ds-version` dans **5 fichiers** : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/nav.js` (header-version)
+5. **Version** : bumper `@ds-version`/`version` sur les **8 sources** verifiees par `shared/check-versions.sh` : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/nav.js` (le commentaire `@ds-version` **et** `const VERSION`), `shared/components-registry.json` (`version`), `package.json` racine (`version`)
    - Feature : minor (2.31 → 2.32)
    - Fix : patch (2.31.0 → 2.31.1)
-   - Convention validee Sprint 16 + 17 (memory.md 2026-05-01)
+   - Convention validee Sprint 16 + 17 (memory.md 2026-05-01), gate `shared/check-versions.sh` (issue #377)
+   - `bash shared/check-versions.sh` doit sortir `rc=0` avant de commiter le bump
    - **Pre-allocation des versions** : pour les sprints multi-bumps (>2 issues touchant @ds-version), le parent /sprint pre-alloue les versions et les injecte dans le prompt /dev de chaque issue (« Ta version cible : v2.X.Y »). Garantit zero conflit git sur les bumps. Valide Sprint 17 (0 conflit vs 2 attendus en S16).
 6. **Docs** :
    - `docs/ARCHITECTURE.md` : ajouter dans la structure + section composants JS si init*

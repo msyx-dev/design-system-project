@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.124.0",
+      "date": "2026-08-24",
+      "titre": "Un nouveau thème : Auchan",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Un nouveau thème Auchan est disponible, en clair et en sombre, aux couleurs de la marque."
+        }
+      ]
+    },
+    {
       "version": "2.123.2",
       "date": "2026-08-07",
       "titre": "Liste réordonnable et notation utilisables entièrement au clavier",
