@@ -46,7 +46,9 @@ export default defineConfig({
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  // SOFT-HARVEST TEMPORAIRE (#849) — retries:0 le temps de capturer les 492
+  // actuals des 4 projets auchan-* en un seul run. A REMETTRE A 2 avant merge.
+  retries: 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
