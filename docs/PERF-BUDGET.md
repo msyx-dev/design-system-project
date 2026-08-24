@@ -63,7 +63,7 @@ Note : `components.css` est un barrel de @import — la taille des modules resol
 ### Perimetre
 
 Page de reference : `pages/composants.html` (la plus lourde en composants JS).
-Matrice : **3 themes × 2 modes = 6 runs** par cycle CI.
+Matrice : **4 themes × 2 modes = 8 runs** par cycle CI (+auchan, #849).
 
 ### Mecanisme query param → localStorage (anti-FOUC)
 
@@ -98,9 +98,11 @@ http://localhost:3001/pages/composants.html?theme=acssi&mode=dark
 http://localhost:3001/pages/composants.html?theme=acssi&mode=light
 http://localhost:3001/pages/composants.html?theme=nhood&mode=dark
 http://localhost:3001/pages/composants.html?theme=nhood&mode=light
+http://localhost:3001/pages/composants.html?theme=auchan&mode=dark
+http://localhost:3001/pages/composants.html?theme=auchan&mode=light
 ```
 
-Themes valides conformes a `THEME_CONFIG` dans `shared/components.js` : tous les 3 themes supportent `['dark', 'light']`.
+Themes valides conformes a `THEME_CONFIG` dans `shared/components.js` : tous les 4 themes supportent `['dark', 'light']`.
 
 ### Seuils (warn-only)
 
@@ -123,10 +125,12 @@ Mesure : local `npx serve -s . -l 3001`, Playwright Chromium 1217, preset deskto
 | acssi | light | 251 | 0 | 0 | 1.0 |
 | nhood | dark | 292 | 0 | 0 | 1.0 |
 | nhood | light | 265 | 0 | 0 | 1.0 |
+| auchan | dark | *pending* | — | — | — |
+| auchan | light | *pending* | — | — | — |
 
 Fichier source : `lhci-baseline.json`
 
-Observations : toutes les combinaisons sont tres en dessous des seuils. LCP autour de 250-292 ms (seuil 2 500 ms). TBT quasi-nul. CLS nul. Score parfait sur les 6 runs.
+Observations : toutes les combinaisons mesurees sont tres en dessous des seuils. LCP autour de 250-292 ms (seuil 2 500 ms). TBT quasi-nul. CLS nul. Score parfait sur les 6 runs historiques. Auchan (#849) est ajoute a la matrice `lighthouserc.cjs`/`lhci-baseline.json` mais **pas encore mesure** dans cette PR (pas de run `lhci autorun` lance ici) — a completer au prochain cycle CI/`Mise a jour de la baseline` ci-dessous. Rien n'indique a priori un ecart : `themes/auchan.json` n'ajoute que des variables CSS (`shared/css/tokens.css`/`themes.css`), pas de JS ni d'asset supplementaire charge au runtime.
 
 ### Mise a jour de la baseline
 

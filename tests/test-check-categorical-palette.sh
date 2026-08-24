@@ -46,7 +46,7 @@ check() {
 FIXTURE_TOKENS_OK="$TMPDIR_CP/tokens-ok.css"
 FIXTURE_THEMES_OK="$TMPDIR_CP/themes-ok.css"
 
-# Palette de reference complete (8 entrees x 6 combos) — spec #800 §4.
+# Palette de reference complete (8 entrees x 8 combos) — spec #800 §4 + #849.
 write_fixture_ok() {
   cat > "$FIXTURE_TOKENS_OK" <<'EOF'
 :root {
@@ -116,6 +116,28 @@ EOF
     --cat-6: #fc0059;
     --cat-7: #874800;
     --cat-8: #918600;
+}
+[data-theme="auchan"] {
+    --surface-solid: #241416;
+    --cat-1: #ee6d63;
+    --cat-2: #b86614;
+    --cat-3: #f1d17e;
+    --cat-4: #23e7a7;
+    --cat-5: #91e5f3;
+    --cat-6: #1876dc;
+    --cat-7: #9988f2;
+    --cat-8: #ca16c7;
+}
+[data-theme="auchan"][data-mode="light"] {
+    --surface-solid: #ffffff;
+    --cat-1: #7e070d;
+    --cat-2: #c2690a;
+    --cat-3: #614b05;
+    --cat-4: #078861;
+    --cat-5: #054d57;
+    --cat-6: #0a5fb8;
+    --cat-7: #2c066b;
+    --cat-8: #a509a3;
 }
 EOF
 }

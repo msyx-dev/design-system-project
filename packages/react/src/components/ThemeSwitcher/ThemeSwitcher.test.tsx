@@ -31,7 +31,7 @@ describe("ThemeSwitcher — rendu", () => {
     ).toBeInTheDocument();
   });
 
-  it("le select expose les 3 options MSYX/ACSSI/Nhood par défaut", async () => {
+  it("le select expose les 4 options MSYX/ACSSI/Nhood/Auchan par défaut", async () => {
     render(<ThemeSwitcher />);
     const select = await screen.findByRole("combobox");
     const options = Array.from(select.querySelectorAll("option")).map((o) => ({
@@ -42,6 +42,7 @@ describe("ThemeSwitcher — rendu", () => {
       { value: "msyx", label: "MSYX" },
       { value: "acssi", label: "ACSSI" },
       { value: "nhood", label: "Nhood" },
+      { value: "auchan", label: "Auchan" },
     ]);
   });
 
@@ -133,6 +134,21 @@ describe("ThemeSwitcher — changement de thème", () => {
       expect(document.documentElement.getAttribute("data-theme")).toBe("acssi");
     });
     expect(localStorage.getItem("msyx-theme")).toBe("acssi");
+  });
+
+  it("sélectionner auchan pose data-theme=auchan et persiste (#849)", async () => {
+    render(<ThemeSwitcher />);
+    const select = await screen.findByRole("combobox");
+    await waitFor(() => expect(select).toHaveValue("msyx"));
+
+    fireEvent.change(select, { target: { value: "auchan" } });
+
+    await waitFor(() => {
+      expect(document.documentElement.getAttribute("data-theme")).toBe(
+        "auchan",
+      );
+    });
+    expect(localStorage.getItem("msyx-theme")).toBe("auchan");
   });
 
   it("revenir à msyx retire data-theme (défaut implicite)", async () => {

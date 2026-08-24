@@ -28,7 +28,7 @@ const PAGES = [
 // Le titre attendu sert de garde-fou anti-régression Bug 1 (#286) : si le
 // harness retombe sur index.html, l'assertion de titre echoue immediatement.
 
-type Theme = "msyx" | "acssi" | "nhood";
+type Theme = "msyx" | "acssi" | "nhood" | "auchan";
 type Mode = "dark" | "light";
 
 const parseProjectName = (name: string): { theme: Theme; mode: Mode } => {

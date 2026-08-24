@@ -14,6 +14,7 @@ const THEME_LABELS: Record<string, string> = {
   msyx: "MSYX",
   acssi: "ACSSI",
   nhood: "Nhood",
+  auchan: "Auchan",
 };
 
 /**

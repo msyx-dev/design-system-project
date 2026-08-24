@@ -2,7 +2,7 @@
 // check-categorical-palette.js — gate du contrat de(s) echelle(s) categorielle(s) (#800)
 //
 // Le DS garantit qu'une echelle de tokens categoriels (--cat-1..N par defaut)
-// est SEPARABLE et LISIBLE dans les 6 combos theme/mode (MSYX/ACSSI/NHOOD x
+// est SEPARABLE et LISIBLE dans les 8 combos theme/mode (MSYX/ACSSI/NHOOD/AUCHAN x
 // dark/light). Ce gate le VERIFIE en parsant le CSS source (zero navigateur,
 // zero dependance npm) — il ne le suppose pas.
 //
@@ -39,11 +39,11 @@ const TOKENS_CSS_PATH = path.join(ROOT, 'shared', 'css', 'tokens.css');
 const THEMES_CSS_PATH = path.join(ROOT, 'shared', 'css', 'themes.css');
 
 // THEMES/MODES decrivent la structure de theming du DS (THEME_CONFIG de
-// shared/components.js) — 6 combos, communs a TOUTES les echelles verifiees
+// shared/components.js) — 8 combos, communs a TOUTES les echelles verifiees
 // par ce gate. Ce ne sont pas des parametres de contrat (contrairement a
 // SCALES ci-dessous) : ajouter un theme est un changement structurel du DS,
 // pas une variation de seuils.
-const THEMES = ['acssi', 'nhood']; // + 'msyx' traite a part (vit dans :root, pas de [data-theme])
+const THEMES = ['acssi', 'nhood', 'auchan']; // + 'msyx' traite a part (vit dans :root, pas de [data-theme])
 const MSYX = 'msyx';
 
 // ─── Configuration des echelles verifiees (parametres, pas des constantes) ─
@@ -61,7 +61,7 @@ const SCALES = {
     surfaceToken: '--surface-solid',
   },
   // #812 — echelle de SERIES DE GRAPHIQUES (data.html), distincte de --cat-* (categoriel
-  // generique). Memes 3 criteres, memes 6 combos, MEME moteur (aucune ligne de
+  // generique). Memes 3 criteres, memes 8 combos, MEME moteur (aucune ligne de
   // parsing/verification specifique a --chart-* : c'est la preuve d'extensibilite promise
   // par #800). Seul C3 (contraste >= 3:1) est non negociable pour cette echelle (arbitrage
   // Mike 2026-08-04) ; C1/C2 sont verifies avec des seuils PROPRES, plus bas que ceux de
@@ -376,7 +376,7 @@ function checkScale(blocks, scale) {
 // ─── CLI ────────────────────────────────────────────────────────────────────
 
 function printTable(scaleName, table) {
-  console.log(`\nEchelle --${scaleName}-* — recapitulatif des 6 combos :`);
+  console.log(`\nEchelle --${scaleName}-* — recapitulatif des 8 combos :`);
   console.log('  combo        minΔH(OKLCh)  minΔE(OKLab)  min contraste');
   for (const row of table) {
     console.log(
@@ -430,7 +430,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`OK — echelle --${scale.varPrefix}-* : contrat tenu sur les 6 combos (C1 >= ${scale.minHueDeg}°, C2 >= ${scale.minDeltaE}, C3 >= ${scale.minContrast}:1).`);
+  console.log(`OK — echelle --${scale.varPrefix}-* : contrat tenu sur les 8 combos (C1 >= ${scale.minHueDeg}°, C2 >= ${scale.minDeltaE}, C3 >= ${scale.minContrast}:1).`);
   printTable(scale.varPrefix, result.table);
   process.exit(0);
 }

@@ -151,6 +151,9 @@ const completeBlocks = {
     '[data-theme="acssi"][data-mode="light"]': { '--surface-solid': '#ffffff', '--cat-1': '#0092fa', '--cat-2': '#8200fc' },
     '[data-theme="nhood"]': { '--surface-solid': '#0f2415', '--cat-1': '#00e05f', '--cat-2': '#00fdfb' },
     '[data-theme="nhood"][data-mode="light"]': { '--surface-solid': '#ffffff', '--cat-1': '#004b1b', '--cat-2': '#2c7372' },
+    // Auchan (#849) — 8 combos desormais couverts par combosFor()/THEMES.
+    '[data-theme="auchan"]': { '--surface-solid': '#241416', '--cat-1': '#ee6d63', '--cat-2': '#b86614' },
+    '[data-theme="auchan"][data-mode="light"]': { '--surface-solid': '#ffffff', '--cat-1': '#7e070d', '--cat-2': '#c2690a' },
   },
 };
 

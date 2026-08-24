@@ -28,6 +28,7 @@ function headerHtml() {
         <option value="msyx">MSYX</option>
         <option value="acssi">ACSSI</option>
         <option value="nhood">Nhood</option>
+        <option value="auchan">Auchan</option>
       </select>
     </div>
     <button id="mode-switch" class="mode-switch" role="switch" aria-checked="false" aria-label="Basculer mode clair/sombre">
@@ -92,6 +93,16 @@ describe('initThemeSwitcher -- changement de theme', () => {
     select.dispatchEvent(new window.Event('change'));
     expect(document.documentElement.getAttribute('data-theme')).toBe('acssi');
     expect(window.localStorage.getItem('msyx-theme')).toBe('acssi');
+  });
+
+  it('#849 -- theme "auchan" (dark+light) : cycle + persistance identiques a acssi/nhood', () => {
+    const { window, document, select } = setup();
+    window.__initThemeSwitcher();
+    expect(window.THEME_CONFIG.auchan.modes).toEqual(['dark', 'light']);
+    select.value = 'auchan';
+    select.dispatchEvent(new window.Event('change'));
+    expect(document.documentElement.getAttribute('data-theme')).toBe('auchan');
+    expect(window.localStorage.getItem('msyx-theme')).toBe('auchan');
   });
 
   it('retour vers "msyx" (theme par defaut) RETIRE l\'attribut data-theme, ne le pose pas a "msyx"', () => {

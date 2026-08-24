@@ -4,6 +4,11 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.31 — 2026-08-24 — 4e thème Auchan dans `<ThemeSwitcher>` (#849)
+
+### Added
+- **`<ThemeSwitcher>`/`useTheme()` : thème `auchan` (dark+light)** — `DEFAULT_THEME_CONFIG.auchan = { modes: ["dark", "light"], defaultMode: "dark" }` et libellé `THEME_LABELS.auchan = "Auchan"`. Réplique côté React le 4e thème ajouté au DS CSS (`themes/auchan.json`, tokens `--accent`/`--danger`/`--warning`/`--info`/`--cat-*`/`--chart-*` dédiés, cf. `RELEASES.md` racine). Le select du switcher expose désormais 4 options (MSYX/ACSSI/Nhood/Auchan) par défaut ; les tests existants sur le nombre d'options ont été adaptés en conséquence.
+
 ## v3.0.0-alpha.30 — 2026-08-04 — Fiabilisation consumers : erreurs parlantes, screenshot normalisé, parité `SiteHeader` (#799, #803, #802)
 
 > Milestone #47 « Fiabilisation consumers ». Les trois défauts ont été remontés par des consumers réels (`feedbacks`, `cap-transfo`) en migrant vers `SiteHeader`/`UserFeedback` — aucun n'avait été vu par la CI du DS. Ce lot ne touche que `packages/react/`, donc aucun bump `@ds-version` de son fait (cf. #314).

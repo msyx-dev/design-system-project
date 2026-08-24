@@ -28,9 +28,13 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .toggle-slider::before { content: ''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: var(--text-on-accent); border-radius: 50%; transition: 0.3s; }
 .toggle input:checked + .toggle-slider { background: var(--accent); }
 .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
-/* ACSSI dark : knob du toggle forcé blanc — text-on-accent est marine en ACSSI dark (token thème-aware)
-   mais le knob est décoratif (forme, pas texte) et doit rester blanc sur surface-light foncé */
-[data-theme="acssi"] .toggle-slider::before { background: var(--overlay-text); }
+/* ACSSI dark + Auchan dark : knob du toggle forcé blanc — --text-on-accent est sombre dans ces
+   deux thèmes en mode dark (token thème-aware, choisi pour rester AA sur l'accent clair/vif), mais
+   le knob est décoratif (forme, pas texte) et doit rester visible sur --surface-light foncé — sinon
+   knob quasi invisible à l'état off (#849 : 1,34:1 sur --surface-light Auchan dark, même défaut
+   qu'ACSSI dark) */
+[data-theme="acssi"] .toggle-slider::before,
+[data-theme="auchan"] .toggle-slider::before { background: var(--overlay-text); }
 .checkbox { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.88rem; }
 .checkbox input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 .radio { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.88rem; }

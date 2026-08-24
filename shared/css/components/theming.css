@@ -34,7 +34,7 @@ footer { padding: var(--space-xl) var(--space-2xl); text-align: center; }
 footer p { color: var(--text-dim); font-size: 0.78rem; }
 
 /* ===== THEMING ===== */
-/* data-theme = palette (msyx, acssi, nhood...) */
+/* data-theme = palette (msyx, acssi, nhood, auchan...) */
 /* data-mode = dark | light */
 /* Cascade : :root → [data-theme] → [data-mode="light"] → [data-theme][data-mode] */
 /* Voir fondation.html#theming pour la documentation complete */

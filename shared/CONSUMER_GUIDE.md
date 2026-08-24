@@ -14,7 +14,7 @@ Si un composant dont vous avez besoin n'existe pas encore dans le DS :
 
 - **Coherence** : tous les projets msyx.fr partagent le meme langage visuel
 - **Maintenance** : corriger un bug ou changer un style se fait en un seul endroit
-- **Theming** : les composants DS respectent automatiquement tous les themes (MSYX, ACSSI, Nhood)
+- **Theming** : les composants DS respectent automatiquement tous les themes (MSYX, ACSSI, Nhood, Auchan)
 
 ### Registre des composants
 
@@ -287,6 +287,8 @@ Mettre `data-theme` sur `<html>` pour changer la palette :
 <html data-theme="acssi" data-mode="dark">  <!-- corporate or -->
 <html data-theme="nhood" data-mode="dark">  <!-- corporate vert -->
 <html data-theme="nhood" data-mode="light"> <!-- nhood clair -->
+<html data-theme="auchan" data-mode="dark">  <!-- corporate rouge (#849) -->
+<html data-theme="auchan" data-mode="light"> <!-- auchan clair -->
 ```
 
 | Theme | Modes | Accent |
@@ -294,6 +296,7 @@ Mettre `data-theme` sur `<html>` pour changer la palette :
 | MSYX | dark, light | `#3b82f6` bleu |
 | ACSSI | dark | `#e0cd1e` or |
 | Nhood | dark, light | `#008837` vert |
+| Auchan | dark, light | `#ff3427`/`#e0001a` rouge |
 
 Les variables se mettent a jour automatiquement — aucun changement CSS necessaire.
 
@@ -306,7 +309,7 @@ Le header DS fournit les elements suivants par defaut (v2.73.0) :
 | Toggle dark/light (`.mode-switch`) | **Toujours present** | — |
 | Cloche notifications | **Present par defaut** (independant de l'auth) | `notifications: { enabled: false }` pour masquer |
 | Profil (avatar/dropdown) | Absent par defaut | `auth: true` pour activer |
-| Switcher theme (dropdown MSYX/ACSSI/Nhood) | **Absent par defaut** (consumer mono-theme) | `themeSwitcher: true` pour activer |
+| Switcher theme (dropdown MSYX/ACSSI/Nhood/Auchan) | **Absent par defaut** (consumer mono-theme) | `themeSwitcher: true` pour activer |
 
 Le theme est fixe via l'attribut `data-theme` sur `<html>` — un consumer mono-theme n'a pas besoin du switcher.
 La cloche est independante de l'auth : un consumer sans session peut afficher des alertes systeme.
@@ -319,7 +322,7 @@ Definir cet objet **avant** le chargement de `nav.js` :
 ```html
 <script>
 window.MSYX_HEADER = {
-  themeSwitcher: false,          // true = dropdown MSYX/ACSSI/Nhood (defaut false, opt-in vitrine/multi-theme)
+  themeSwitcher: false,          // true = dropdown MSYX/ACSSI/Nhood/Auchan (defaut false, opt-in vitrine/multi-theme)
   auth: true,                    // false = pas de profil (defaut false)
   user: {
     name: 'Mike',
@@ -375,7 +378,7 @@ Le theme est immediatement actif via `data-theme`, sans JavaScript ni dropdown.
 window.MSYX_HEADER = { themeSwitcher: true, auth: true, ... };
 ```
 
-Active le dropdown MSYX/ACSSI/Nhood. Recommande uniquement pour les pages de documentation ou les apps multi-tenant.
+Active le dropdown MSYX/ACSSI/Nhood/Auchan. Recommande uniquement pour les pages de documentation ou les apps multi-tenant.
 
 ### Mises a jour dynamiques
 
@@ -421,7 +424,7 @@ Pour une app React, le header standard est le composant `<SiteHeader>` (`@msyx-d
 Chaque feature n'est rendue que si sa prop/donnée est fournie :
 - `notifications` (array) → `<NotificationBell>` (masqué si `undefined`)
 - `feedback` (`true` ou config) → `<UserFeedbackButton>` (+ `<UserFeedbackProvider>` si `feedback.provider` fourni)
-- `versionNotes` → `<VersionNotes>` ; toggle clair/sombre **toujours présent** (standard), `paletteSwitch` → ajoute le `<select>` palette MSYX/ACSSI/Nhood ; `onMenuToggle` → burger mobile
+- `versionNotes` → `<VersionNotes>` ; toggle clair/sombre **toujours présent** (standard), `paletteSwitch` → ajoute le `<select>` palette MSYX/ACSSI/Nhood/Auchan ; `onMenuToggle` → burger mobile
 
 ### Mapping M3 — résolution de l'identité
 
@@ -500,7 +503,7 @@ Cas d'usage typiques : bouton avec icône + texte, cellule de tableau avec icôn
 
 ## Coder des catégories — `--cat-1..8` (#800)
 
-**Ne réinventez pas une palette maison** (ex. `src/lib/timeline-colors.ts`) : le DS expose une échelle catégorielle dédiée, garantie séparable et lisible sur les 6 combos theme/mode (MSYX/ACSSI/NHOOD × dark/light).
+**Ne réinventez pas une palette maison** (ex. `src/lib/timeline-colors.ts`) : le DS expose une échelle catégorielle dédiée, garantie séparable et lisible sur les 8 combos theme/mode (MSYX/ACSSI/NHOOD/AUCHAN × dark/light).
 
 ### Ce que le DS garantit
 8 tokens `--cat-1` à `--cat-8`, vérifiés en CI par `bin/check-categorical-palette.js` :
@@ -576,7 +579,7 @@ Les variantes destructives suivantes utilisees en aksy sont couvertes par le DS 
 | `.btn-primary.btn-danger` | `.btn-primary.btn-danger` (gradient) | DS expose `.btn-danger` en gradient (style charte msyx). Si flat strict requis, override projet (DS-EXCEPTION acceptee). |
 | `.btn-icon--danger` | `.btn-icon.btn-icon--danger` | Disponible depuis v2.27.0 (#156). Combine `.btn-icon` (taille 44x44, forme) et `.btn-icon--danger` (couleur rouge). |
 
-Les projets consumers SHOULD migrer leurs overrides custom vers les classes DS pour profiter du theming automatique (3 themes x 2 modes).
+Les projets consumers SHOULD migrer leurs overrides custom vers les classes DS pour profiter du theming automatique (4 themes x 2 modes).
 
 **Exemple d'usage :**
 ```html
@@ -862,7 +865,7 @@ Apres chaque modification de theme, lancer les tests visuels de reference pour s
 npm run test:visual
 ```
 
-Les 108 baselines (3 themes × 2 modes × 9 pages × 2 viewports) doivent passer sans `--update-snapshots`. Si un diff est detecte :
+Les 144 baselines (4 themes × 2 modes × 9 pages × 2 viewports, +auchan #849) doivent passer sans `--update-snapshots`. Si un diff est detecte :
 1. Lire le rapport Playwright pour identifier le theme/mode/viewport touche
 2. Comparer les valeurs dans le fichier JSON vs les blocs CSS originaux
 3. Corriger la valeur incorrecte dans le JSON et relancer `node shared/build-themes.js`
@@ -874,6 +877,7 @@ themes/
   msyx.json       # Theme MSYX (reference — msyx reste dans :root de tokens.css)
   acssi.json      # Theme ACSSI (bleu marine / or)
   nhood.json      # Theme Nhood (vert foret / menthe)
+  auchan.json     # Theme Auchan (rouge de marque / ambre / teal, #849)
   <custom>.json   # Vos themes additionnels
 shared/
   build-themes.js   # Compilateur JSON → CSS (no deps, deterministe)

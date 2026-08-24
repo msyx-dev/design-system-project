@@ -26,6 +26,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
   msyx: { modes: ["dark", "light"], defaultMode: "dark" },
   acssi: { modes: ["dark", "light"], defaultMode: "dark" },
   nhood: { modes: ["dark", "light"], defaultMode: "dark" },
+  auchan: { modes: ["dark", "light"], defaultMode: "dark" },
 };
 
 /** Nom de thème dérivé des clés de la config par défaut (msyx/acssi/nhood). */

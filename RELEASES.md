@@ -1,5 +1,27 @@
 # Releases
 
+## 2.124.0 — 2026-08-24 — 4e thème « Auchan » (#849)
+
+### Added
+- **Thème `auchan` (dark + light)** — 4e palette du DS, `themes/auchan.json` (91 tokens dark / 85 light, couverture alignée sur `themes/acssi.json`). Rouge de marque relevé sur auchan.fr comme `--accent`, ambre Auchan comme `--warning`, teal Auchan comme `--info`. `--danger` **reste rouge** (convention DS non négociée) mais décalé vers l'orangé pour rester distinguable de `--accent` (arbitrage Mike 6-A — deux rouges ne se séparent pas par la teinte seule, ΔH plafonne à ~10° ; la séparation retenue combine teinte et luminance) :
+
+  | Combo | `--accent` | `--danger` | ΔH(OKLCh) | ΔE(OKLab) | Seuil C2 (≥0.12) |
+  |---|---|---|---|---|---|
+  | light | `#e0001a` | `#a33b0e` | 13,1° | 0,122 | ✔ |
+  | dark | `#ff3427` | `#ff8a4c` | 17,6° | 0,141 | ✔ |
+
+  Échelles `--cat-1..8`/`--chart-1..5` construites depuis 8 teintes « univers » relevées sur auchan.fr (rouge/teal/ambre/vert/bleu/violet/violet-bleu/brun), vérifiées vertes par `bin/check-categorical-palette.js --scale=cat|chart` sur les 8 combos désormais couverts (`THEMES=['acssi','nhood','auchan']`) — `cat` : minΔH ≥ 30,5°, minΔE ≥ 0,127, minContraste ≥ 3,75:1 ; `chart` : minΔH ≥ 13,1°, minΔE ≥ 0,094, minContraste ≥ 4,86:1.
+  - `shared/components.js` (`THEME_CONFIG`/`THEME_LABELS`), `shared/nav.js` (`<option value="auchan">`), overrides `layout.css`/`forms.css` (knob de toggle — même correctif que celui déjà en place pour ACSSI dark).
+  - `pages/fondation.html` (`.theme-card` + bloc démo) et `pages/getting-started.html` (exemples `data-theme`).
+  - `playwright.config.ts` : +4 projets `auchan-{dark,light}-{desktop,mobile}` — **rouges par construction** à ce stade (492 baselines produites par soft-harvest CI par la session parente, pas générées localement).
+  - Perf : `lighthouserc.cjs`/`lhci-baseline.json` étendus à la matrice 4 thèmes (les 2 runs `auchan-*` sont ajoutés mais pas encore mesurés).
+  - Docs : `CLAUDE.md` (dont la procédure d'ajout de thème, corrigée pour refléter `themes/*.json` + `build-themes.js` au lieu de l'édition manuelle d'un bloc CSS), `DS-PRINCIPLES.md`, `ARCHITECTURE.md`, `CONSUMER_GUIDE.md`, `README.md` — « 3 thèmes / 6 combos » → « 4 thèmes / 8 combos » partout où c'était écrit en dur.
+
+### Fixed
+- **Knob de toggle invisible en Auchan dark** — `.toggle-slider::before` (état off) utilisait `var(--text-on-accent)`, sombre (`#1a0a0b`) en Auchan dark ; contraste 1,34:1 sur `--surface-light` (quasi invisible). Même correctif que celui déjà en place pour ACSSI dark : `background: var(--overlay-text)` (blanc, non thémé) étendu à `[data-theme="auchan"]`.
+
+Voir `packages/react/RELEASES.md` pour le port `@msyx-dev/react` (`<ThemeSwitcher>`, alpha séparée, cf. #314).
+
 ## 2.123.2 — 2026-08-07 — Sortable list + Rating utilisables entièrement au clavier (#836)
 
 ### Added
