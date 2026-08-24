@@ -998,7 +998,8 @@ window.__initCopyButtons = initCopyButtons;
 var THEME_CONFIG = {
     msyx:  { modes: ['dark', 'light'], defaultMode: 'dark' },
     acssi: { modes: ['dark', 'light'], defaultMode: 'dark' },
-    nhood: { modes: ['dark', 'light'], defaultMode: 'dark' }
+    nhood: { modes: ['dark', 'light'], defaultMode: 'dark' },
+    auchan: { modes: ['dark', 'light'], defaultMode: 'dark' }
 };
 
 // Transition douce sur changement theme/mode
@@ -1011,7 +1012,7 @@ function applyThemeTransition(callback) {
 }
 
 // Noms lisibles des themes/modes pour le toast
-var THEME_LABELS = { msyx: 'MSYX', acssi: 'ACSSI', nhood: 'Nhood' };
+var THEME_LABELS = { msyx: 'MSYX', acssi: 'ACSSI', nhood: 'Nhood', auchan: 'Auchan' };
 var MODE_LABELS  = { dark: 'Dark', light: 'Light' };
 
 function initThemeSwitcher() {

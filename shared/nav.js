@@ -131,7 +131,7 @@ function buildHeader() {
 
     // Switcher thème : derrière flag themeSwitcher (défaut false — opt-in vitrine/multi-thème)
     var themeSwitcherHtml = themeSwitcherEnabled
-        ? `<div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option></select></div>`
+        ? `<div class="theme-switcher"><label class="theme-switcher-label" for="theme-select">Theme</label><select id="theme-select" class="theme-switcher-select" aria-label="Choisir le theme"><option value="msyx">MSYX</option><option value="acssi">ACSSI</option><option value="nhood">Nhood</option><option value="auchan">Auchan</option></select></div>`
         : '';
 
     // Logo : image si logoSrc défini, sinon texte gradient fallback (#570)
