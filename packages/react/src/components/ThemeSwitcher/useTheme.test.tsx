@@ -283,4 +283,23 @@ describe("useTheme — config par défaut", () => {
     expect(result.current.isModeLocked).toBe(false);
     expect(result.current.config).toBe(DEFAULT_THEME_CONFIG);
   });
+
+  it("expose auchan (dark+light) dans DEFAULT_THEME_CONFIG (#849)", async () => {
+    localStorage.clear();
+    cleanDom();
+    localStorage.setItem("msyx-theme", "auchan");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("auchan"));
+    expect(DEFAULT_THEME_CONFIG.auchan).toEqual({
+      modes: ["dark", "light"],
+      defaultMode: "dark",
+    });
+    expect(result.current.availableModes).toEqual(["dark", "light"]);
+    expect(result.current.isModeLocked).toBe(false);
+
+    localStorage.clear();
+    cleanDom();
+  });
 });
