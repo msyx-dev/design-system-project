@@ -3,13 +3,15 @@
   "measured_at": "2026-05-09",
   "page": "composants.html",
   "preset": "desktop",
-  "notes": "6 runs (3 themes × 2 modes) — local serve, Playwright Chromium 1217, 1 run/URL, warn-only assertions. Seuils: LCP<2500ms, TBT<300ms, CLS<0.1, Perf>=0.85.",
+  "notes": "6 runs mesures (3 themes x 2 modes) + 2 runs auchan ajoutes a la matrice (#849) mais pas encore mesures (measured:false, pas de run lhci autorun lance dans cette PR) — local serve, Playwright Chromium 1217, 1 run/URL, warn-only assertions. Seuils: LCP<2500ms, TBT<300ms, CLS<0.1, Perf>=0.85.",
   "runs": {
     "msyx-dark":  { "lcp_ms": 291, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 273 },
     "msyx-light": { "lcp_ms": 290, "tbt_ms": 49, "cls": 0, "performance_score": 1.0, "fcp_ms": 232 },
     "acssi-dark": { "lcp_ms": 253, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 245 },
     "acssi-light":{ "lcp_ms": 251, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 251 },
     "nhood-dark": { "lcp_ms": 292, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 249 },
-    "nhood-light":{ "lcp_ms": 265, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 265 }
+    "nhood-light":{ "lcp_ms": 265, "tbt_ms":  0, "cls": 0, "performance_score": 1.0, "fcp_ms": 265 },
+    "auchan-dark":  { "measured": false, "note": "ajoute a la matrice #849, pas encore mesure" },
+    "auchan-light": { "measured": false, "note": "ajoute a la matrice #849, pas encore mesure" }
   }
 }

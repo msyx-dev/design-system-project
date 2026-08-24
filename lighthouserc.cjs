@@ -1,20 +1,22 @@
 // lighthouserc.cjs — Lighthouse CI config (DS v2.54.0)
-// Scope: 1 page × 3 themes × 2 modes = 6 runs, warn-only mode
-// THEME_CONFIG (components.js): msyx/acssi/nhood — modes: ['dark','light'] pour les 3
-// Multi-themes extension: #241
+// Scope: 1 page × 4 themes × 2 modes = 8 runs, warn-only mode
+// THEME_CONFIG (components.js): msyx/acssi/nhood/auchan — modes: ['dark','light'] pour les 4
+// Multi-themes extension: #241, +auchan #849
 
 'use strict';
 
 const BASE_URL = 'http://localhost:3001/pages/composants.html';
 
-// 3 themes × 2 modes = 6 runs (tous valides d'après THEME_CONFIG)
+// 4 themes × 2 modes = 8 runs (tous valides d'après THEME_CONFIG)
 const THEME_MODES = [
-  { theme: 'msyx',  mode: 'dark'  },
-  { theme: 'msyx',  mode: 'light' },
-  { theme: 'acssi', mode: 'dark'  },
-  { theme: 'acssi', mode: 'light' },
-  { theme: 'nhood', mode: 'dark'  },
-  { theme: 'nhood', mode: 'light' },
+  { theme: 'msyx',   mode: 'dark'  },
+  { theme: 'msyx',   mode: 'light' },
+  { theme: 'acssi',  mode: 'dark'  },
+  { theme: 'acssi',  mode: 'light' },
+  { theme: 'nhood',  mode: 'dark'  },
+  { theme: 'nhood',  mode: 'light' },
+  { theme: 'auchan', mode: 'dark'  },
+  { theme: 'auchan', mode: 'light' },
 ];
 
 const urls = THEME_MODES.map(
