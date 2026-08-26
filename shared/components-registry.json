@@ -1,7 +1,7 @@
 {
-  "version": "2.124.0",
+  "version": "2.125.0",
   "generated": {
-    "at": "2026-08-06T22:50:45.484Z",
+    "at": "2026-08-26T17:39:19.922Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -685,7 +685,8 @@
       "example": "<div class=\"accordion-item open\">\n  <div class=\"accordion-header\">Section 1 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 1.</div>\n</div>\n<div class=\"accordion-item\">\n  <div class=\"accordion-header\">Section 2 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 2.</div>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/lists.css"
+        "shared/css/components/lists.css",
+        "shared/css/components/navigation.css"
       ]
     },
     {
@@ -1293,7 +1294,34 @@
       "example": "<nav>\n  <a href=\"#section-1\">Section 1</a>\n  <div class=\"sidebar-sublinks\">\n    <a href=\"#sub-1\">Sous-section 1.1</a>\n    <a href=\"#sub-2\">Sous-section 1.2</a>\n  </div>\n  <a href=\"#section-2\">Section 2</a>\n</nav>",
       "react": "n-a",
       "module": [
+        "shared/css/components/navigation.css",
         "shared/css/layout.css"
+      ]
+    },
+    {
+      "name": "sidebar-rail",
+      "kind": "component",
+      "page": "navigation",
+      "cssClasses": [
+        ".rail-sidebar",
+        ".rail-sidebar--fixed",
+        ".rail-header",
+        ".rail-logo",
+        ".rail-toggle",
+        ".rail-nav",
+        ".rail-item",
+        ".rail-item-icon",
+        ".rail-item-label",
+        ".rail-item-caret",
+        ".rail-tooltip",
+        ".rail-subnav",
+        ".rail-footer"
+      ],
+      "jsInit": "initSidebarRail",
+      "example": "<div class=\"rail-sidebar\"><div class=\"rail-header\"><span class=\"rail-logo\">msyx.design</span><button class=\"rail-toggle\" aria-label=\"Reduire la sidebar\" aria-expanded=\"true\"><svg class=\"icon icon--sm\"><use href=\"/shared/icons/sprite.svg#i-chevron-left\"/></svg></button></div><nav class=\"rail-nav\" aria-label=\"Navigation principale\"><a class=\"rail-item active\" href=\"#\" aria-current=\"page\"><span class=\"rail-item-icon\">...</span><span class=\"rail-item-label\">Dashboard</span><span class=\"rail-tooltip\">Dashboard</span></a></nav></div>",
+      "react": "ported",
+      "module": [
+        "shared/css/components/navigation.css"
       ]
     },
     {
