@@ -1,5 +1,17 @@
 # Releases
 
+## 2.125.0 — 2026-08-26 — Nav rail : sous-entrées, zone basse, a11y clavier du tooltip (#857)
+
+### Added
+- **`.rail-subnav` + `.rail-item-caret`** (`navigation.css`) — sous-entrées imbriquées (1 niveau) sous un `.rail-item`, calquées sur `.sidebar-sublinks` (indentation + réduction de taille) mais compatibles avec la géométrie rail. Cachées automatiquement en mode replié (`.rail-sidebar.collapsed .rail-subnav`).
+- **`.rail-footer`** (`navigation.css`) — zone basse pour accès secondaires (ex. Paramètres), calque de `.sidebar-footer` (`margin-top:auto` + séparateur).
+- **`.rail-sidebar--fixed`** (`navigation.css`) — modifieur structurel `position:fixed` pour un usage réel en page (le showcase `.rail-demo` reste inchangé, opt-in comme `--fullscreen` sur `<Drawer>`).
+- **Entrée registre `sidebar-rail`** (`kind:component`, page `navigation`) — comblait un vide de réciprocité section↔registre (`<section id="sidebar-rail">` de `navigation.html` n'avait aucune entrée `kind:component`, cf. DS-PRINCIPLES §6.1) ; `react: "ported"` (voir `packages/react/RELEASES.md`).
+
+### Fixed
+- **`.rail-tooltip` : `:focus-within` ajouté à côté de `:hover`** — un utilisateur clavier seul (Tab, sans souris) en mode rail replié ne voyait jamais le libellé de l'item survolé. Trou a11y indépendant du point suivant.
+- **`.rail-sidebar` : retrait de l'`overflow:hidden`** — redondant (`.rail-item-label`/`.rail-logo` s'auto-clippent déjà) et double-clippait `.rail-tooltip` en plus de `.rail-nav`. Limite résiduelle documentée et signalée sur #856 : `.rail-nav` garde `overflow-y:auto` pour son propre scroll, donc un tooltip tout en bas d'une longue liste peut encore être rogné — même cause que #856 (panneau `position:absolute` dans un ancêtre `overflow`), correctif de fond hors scope de cette entrée.
+
 ## 2.124.0 — 2026-08-24 — 4e thème « Auchan » (#849)
 
 ### Added

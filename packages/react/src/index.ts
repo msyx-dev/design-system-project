@@ -357,3 +357,7 @@ export type {
   TimePickerFormat,
   TimePickerPeriod,
 } from "./components/TimePicker/TimePicker";
+
+// ─── Rail — #857 (nav verticale rétractable, .rail-* + .sidebar-link-disabled) ───
+export { Rail } from "./components/Rail/Rail";
+export type { RailProps, RailItem } from "./components/Rail/Rail";

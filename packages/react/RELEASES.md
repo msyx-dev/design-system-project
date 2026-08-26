@@ -4,6 +4,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.32 — 2026-08-26 — `<Rail>` : nav verticale rétractable (#857)
+
+> Touche `packages/react/**` ET `shared/css/components/navigation.css` (2 entrées, cf. `../../RELEASES.md` racine v2.125.0).
+
+### Added
+- **`<Rail>`** — premier wrapper React des familles CSS `.rail-*` (`navigation.css`) et `.sidebar-link-disabled` (`layout.css`), jusqu'ici sans portage (`react: "n-a"`/absentes du registre). **Un seul composant, deux états** — rail compact (64px, icônes + tooltip) et sidebar déployée (260px) sont le même arbre DOM, `.rail-sidebar.collapsed` togglé (voir JSDoc `Rail.tsx` pour la justification complète face à l'alternative « deux composants »). Couvre : items de premier niveau (icône/libellé/actif), sous-entrées imbriquées sur 1 niveau (disclosure `aria-expanded`/`aria-controls`, jamais un lien — ambiguïté clavier navigation-vs-dépli), état désactivé (`aria-disabled` + retiré du tab order, réutilise `.sidebar-link-disabled` telle quelle), zone basse `footerItems` (ex. Paramètres), en-tête de marque, repli/dépli avec tooltip. Contrôlé/non contrôlé sur `collapsed` et `expandedIds` (convention `<Accordion>`/`<TreeView>`). Limite connue documentée en JSDoc et sur #856 (tooltip potentiellement clippé par `.rail-nav` en très longue liste). 24 tests.
+- **`sidebar-rail` ajouté à `REACT_TO_REGISTRY`** (`bin/generate-registry.js`) — `react: "ported"`.
+
 ## v3.0.0-alpha.31 — 2026-08-24 — 4e thème Auchan dans `<ThemeSwitcher>` (#849)
 
 ### Added

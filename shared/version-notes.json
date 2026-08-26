@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "nouveaute",
+        "text": "Un nouveau composant de navigation verticale retractable (rail compact avec info-bulles, sidebar depliee, sous-entrees imbriquees, zone Parametres en pied) est disponible en React."
+      }
+    ]
   },
   "released": [
     {
