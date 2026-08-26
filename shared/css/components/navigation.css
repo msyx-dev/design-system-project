@@ -185,11 +185,31 @@
     display: flex;
     flex-direction: column;
     transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
     flex-shrink: 0;
 }
 .rail-sidebar.collapsed {
     width: 64px;
+}
+/* Pas d'overflow:hidden ici (#857) : .rail-item-label/.rail-logo s'auto-clippent
+   deja (overflow:hidden pose sur eux-memes). Le laisser au niveau .rail-sidebar
+   double-clippait .rail-tooltip en plus de .rail-nav (meme cause que #856 —
+   panneau position:absolute dans un ancetre overflow — un descendant absolu
+   n'echappe jamais a un ancetre clippant, quel qu'il soit). .rail-nav garde
+   overflow-y:auto pour son propre scroll et reste donc un point de clip
+   restant pour .rail-tooltip en survol tres bas de liste : limite connue,
+   signalee sur #856 (le correctif de fond — portail/position:fixed — est
+   du ressort de cette issue, pas de celle-ci). */
+/* Variante page reelle (#857) : le showcase (.rail-demo) reste en position
+   statique dans son flex-row de demo ; une vraie app fixe le rail en bord
+   d'ecran. Opt-in via le modifieur structurel --fixed (calque du pattern
+   Drawer --fullscreen) plutot qu'impose par defaut, pour ne pas casser le
+   rendu du showcase existant. */
+.rail-sidebar--fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
 }
 .rail-header {
     display: flex;
@@ -280,6 +300,22 @@
     opacity: 0;
     pointer-events: none;
 }
+/* Chevron d'un item porteur de sous-entrees (#857) — analogue .accordion-arrow,
+   pousse a droite via margin-inline-start:auto (le tooltip est position:absolute,
+   ne participe pas au flex donc n'interfere pas avec cet ordre). Cache en mode
+   rail replie : la sous-nav elle-meme est cachee (.rail-subnav ci-dessous), le
+   chevron n'a plus de role tant que .rail-item-label n'est pas visible non plus. */
+.rail-item-caret {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+.rail-item[aria-expanded="true"] .rail-item-caret {
+    transform: rotate(90deg);
+}
+.rail-sidebar.collapsed .rail-item-caret {
+    display: none;
+}
 .rail-tooltip {
     position: absolute;
     left: 64px;
@@ -298,8 +334,36 @@
     z-index: 100;
     box-shadow: var(--shadow);
 }
-.rail-sidebar.collapsed .rail-item:hover .rail-tooltip {
+/* :focus-within ajoute (#857) : la navigation clavier seule (Tab, sans survol
+   souris) n'affichait jamais le tooltip en mode replie — un utilisateur clavier
+   perdait le seul indice du libelle de l'item. :hover seul etait donc un trou
+   a11y (DS-PRINCIPLES section 3), independant du clip #856 documente plus haut. */
+.rail-sidebar.collapsed .rail-item:hover .rail-tooltip,
+.rail-sidebar.collapsed .rail-item:focus-within .rail-tooltip {
     opacity: 1;
+}
+/* Sous-entrees imbriquees (#857) — un seul niveau, calque .sidebar-sublinks
+   (layout.css) adapte a la geometrie rail (indentation + reduction de taille
+   plutot que le retrait par bordure de .sidebar-link). Entierement cachees en
+   mode replie : pas de place, et l'affordance de depli n'a de sens qu'a plein
+   format. */
+.rail-subnav {
+    padding-inline-start: var(--space-lg);
+}
+.rail-subnav .rail-item {
+    font-size: 0.82rem;
+}
+.rail-sidebar.collapsed .rail-subnav {
+    display: none;
+}
+/* Zone basse pour acces secondaires (#857, ex. Parametres) — calque
+   .sidebar-footer (layout.css) : meme margin-top:auto pour se plaquer en bas
+   de la colonne flex, meme separateur. Contient des .rail-item ordinaires. */
+.rail-footer {
+    margin-top: auto;
+    padding: var(--space-sm) 0;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 .rail-content {
     flex: 1;
