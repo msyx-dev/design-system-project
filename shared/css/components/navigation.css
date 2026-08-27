@@ -602,11 +602,32 @@
     padding: 3px;
     gap: 0;
     border: 1px solid var(--border-color);
-    max-width: 100%;       /* #530 : ne dépasse jamais le conteneur */
-    overflow-x: auto;      /* #530 : scroll interne si trop d'items <375 (ex. segmented--lg) */
-    scrollbar-width: none; /* masque la scrollbar (esthétique pill) */
+    max-width: 100%;        /* #530 : ne dépasse jamais le conteneur */
+    overflow-x: auto;       /* #530 : scroll interne si trop d'items <375 (ex. segmented--lg) */
+    scrollbar-width: thin;  /* #866 : fine mais VISIBLE -- #530 la masquait entierement
+                                (scrollbar-width:none), ne laissant plus aucune affordance
+                                souris pour atteindre les segments hors champ dans un
+                                conteneur etroit (drawer, panneau lateral) ; seul le clavier
+                                restait une porte de sortie, non decouvrable. N'apparait que
+                                si le contenu deborde reellement (overflow-x:auto natif) --
+                                aucun changement visuel pour les instances qui tiennent deja
+                                dans leur conteneur (ex. AM/PM du time-picker). */
+    scrollbar-color: var(--border-color) transparent; /* #866 : Firefox */
 }
-.segmented::-webkit-scrollbar { display: none; }
+.segmented::-webkit-scrollbar {
+    height: 4px; /* #866 : fine, compatible esthetique pill -- Chromium/Safari n'ont pas
+                    de scrollbar-width, styling manuel du thumb/track ci-dessous */
+}
+.segmented::-webkit-scrollbar-track {
+    background: transparent;
+}
+.segmented::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 50px;
+}
+.segmented::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
 .segmented-indicator {
     position: absolute;
     top: 3px;

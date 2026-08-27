@@ -1,5 +1,10 @@
 # Releases
 
+## 2.125.2 — 2026-08-27 — SegmentedControl : scrollbar visible sur débordement (#866)
+
+### Fixed
+- **`.segmented` (`navigation.css`) masquait la scrollbar inconditionnellement** — `overflow-x: auto` (#530) gère bien le débordement horizontal, mais `scrollbar-width: none` + `::-webkit-scrollbar { display: none }` supprimaient la seule affordance souris permettant de découvrir et d'atteindre les segments hors champ, dans un conteneur réel plus étroit que les pages de démo visées par #530 (drawer, panneau latéral, carte compacte). Mesuré en recette `keepthread` v0.4.0/v0.4.1 (drawer ~269px, 5 Natures) : `scrollWidth` 423px contre `clientWidth` 269px, 2 options sur 5 inatteignables à la souris — dont l'option par défaut (`keepthread#118`). `size="sm"` réduisait le débordement (362px) sans le résorber, le défaut persistait à l'identique. Seul le clavier (`radiogroup` natif, flèches) restait une porte de sortie, non découvrable pour un utilisateur qui n'en avait jamais eu besoin jusque-là. Correctif : `scrollbar-width: thin` + `scrollbar-color` (Firefox) et un styling manuel fin de `::-webkit-scrollbar` (Chromium/Safari, track transparent, thumb `var(--border-color)`) — la scrollbar ne s'affiche que si le contenu déborde réellement (comportement natif du navigateur), donc aucun changement visuel pour les instances qui tiennent déjà dans leur conteneur (AM/PM du time-picker, démos `composants.html`). Purement CSS : aucun JS touché, navigation clavier et roving tabindex inchangés. `@msyx-dev/react` hérite du correctif sans modification (le composant React consomme le même CSS DS, rien à porter côté package).
+
 ## 2.125.1 — 2026-08-27 — Calendar React : grille transposée (#864)
 
 > Touche `shared/css/components/templates.css` ET `packages/react/**` (test de régression, 2 entrées, cf. `packages/react/RELEASES.md` v3.0.0-alpha.33).
