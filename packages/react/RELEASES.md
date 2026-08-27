@@ -4,6 +4,13 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.33 — 2026-08-27 — Test de régression : grille `<Calendar>` transposée (#864)
+
+> Touche `packages/react/**` (test uniquement) ET `shared/css/components/templates.css` (2 entrées, cf. `../../RELEASES.md` racine v2.125.1). Le correctif lui-même vit côté DS CSS ; `Calendar.tsx` n'est pas modifié.
+
+### Fixed
+- **`<Calendar>` : régression de test couvrant la grille transposée #864** — le composant émettait déjà le bon markup (`<div role="row">` par semaine, calque JSDoc), mais aucun test ne contrôlait la disposition VISUELLE réelle de la grille CSS ; le défaut (semaines en colonnes au lieu de jours) a donc survécu jusqu'en recette applicative (`keepthread` v0.4.0). Nouveau test `Calendar.test.tsx` : charge le vrai `templates.css` du repo dans jsdom (jamais dupliqué à la main) et vérifie via `getComputedStyle` que chaque `[role="row"]` résout en `display: contents`, puis que le 27 août 2026 (jeudi) atterrit en 4e colonne / 5e ligne d'une grille aplatie à 42 items — pas 6. Confirmé rouge sur `templates.css` d'origine (sans le correctif DS), vert après.
+
 ## v3.0.0-alpha.32 — 2026-08-26 — `<Rail>` : nav verticale rétractable (#857)
 
 > Touche `packages/react/**` ET `shared/css/components/navigation.css` (2 entrées, cf. `../../RELEASES.md` racine v2.125.0).

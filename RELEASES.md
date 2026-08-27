@@ -1,5 +1,12 @@
 # Releases
 
+## 2.125.1 — 2026-08-27 — Calendar React : grille transposée (#864)
+
+> Touche `shared/css/components/templates.css` ET `packages/react/**` (test de régression, 2 entrées, cf. `packages/react/RELEASES.md` v3.0.0-alpha.33).
+
+### Fixed
+- **`.cal-grid` (`templates.css`) supposait 42 items enfants directs, calque du rendu vanilla** — le composant React `<Calendar>` insère un `<div role="row">` par semaine pour l'a11y (grille ARIA), qui devenait lui-même un item de la grille CSS faute de règle pour le neutraliser : chaque semaine s'affichait dans une colonne, ses 7 jours empilés verticalement (constaté en recette `keepthread` v0.4.0 le 27/08/2026 — un jeudi s'affichait sous `VEN`). `.cal-grid > [role="row"] { display: contents }` retire les lignes du modèle de boîte sans les retirer de l'arbre d'accessibilité (rôle/navigation clavier intacts) ; sans effet sur le rendu vanilla (`ds-components.js` n'a pas de `[role="row"]`). Défaut purement visuel jamais attrapé par un test avant ce correctif — voir le test de régression ajouté côté `@msyx-dev/react`.
+
 ## 2.125.0 — 2026-08-26 — Nav rail : sous-entrées, zone basse, a11y clavier du tooltip (#857)
 
 ### Added
