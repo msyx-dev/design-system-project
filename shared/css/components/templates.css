@@ -86,6 +86,10 @@
 .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px; }
 .cal-weekdays span { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; padding: 0.3rem 0; }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+/* #864 — le wrapper <div role="row"> par semaine (React, a11y) devient sinon lui-même
+   un item de grille (semaines en colonnes) ; display:contents le retire du modèle de
+   boîte sans le retirer de l'arbre a11y — sans effet sur le rendu vanilla (pas de role="row"). */
+.cal-grid > [role="row"] { display: contents; }
 .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.82rem; color: var(--text); cursor: pointer; transition: background 0.15s; position: relative; gap: 2px; }
 .cal-day:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .cal-day.today { background: var(--accent); color: var(--text-on-accent); font-weight: 600; }

@@ -1,6 +1,17 @@
 import { useState } from "react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { render, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+} from "vitest";
 import {
   Calendar,
   CalendarDateRange,
@@ -620,5 +631,98 @@ describe("Calendar — defaultValue non contrôlé", () => {
     );
     expect(cell(container, "2026-03-06")).toHaveClass("range-end", "selected");
     expect(cell(container, "2026-03-04")).toHaveClass("range");
+  });
+});
+
+/**
+ * #864 — la grille `.cal-grid` (`templates.css`, CSS Grid `repeat(7, 1fr)`)
+ * suppose 42 items enfants DIRECTS — calque exact du rendu vanilla, qui pose
+ * ses 42 `.cal-day` à plat. Mais le composant React insère un
+ * `<div role="row">` par semaine pour l'a11y (l.528-531) : sans
+ * `.cal-grid > [role="row"] { display: contents }` dans `templates.css`, ce
+ * sont CES lignes qui deviennent les 6 items de la grille — chaque semaine
+ * occupe une colonne et ses jours s'y empilent, transposant tout le mois
+ * (régression constatée en recette `keepthread` le 27/08/2026 : ce jeudi
+ * s'affichait sous `VEN`).
+ *
+ * jsdom ne calcule aucune mise en page réelle (`getBoundingClientRect` reste
+ * à zéro), mais résout correctement les VALEURS de propriété calculées
+ * (`getComputedStyle`) depuis une feuille de style chargée en `<style>` — le
+ * vrai `templates.css` du repo est injecté ici (jamais dupliqué à la main,
+ * pour ne jamais diverger de la source). C'est suffisant pour rejouer
+ * MÉCANIQUEMENT la résolution CSS Display Level 3 de `display: contents`
+ * (« l'élément est remplacé par ses enfants dans le modèle de boîte, ses
+ * enfants deviennent les items du parent grid ») et vérifier quels éléments
+ * participeraient réellement à la grille dans un vrai navigateur, sans
+ * dépendre d'un moteur de layout complet (Playwright).
+ */
+function getGridItems(gridEl: Element): Element[] {
+  const items: Element[] = [];
+  for (const child of Array.from(gridEl.children)) {
+    if (getComputedStyle(child).display === "contents") {
+      items.push(...getGridItems(child));
+    } else {
+      items.push(child);
+    }
+  }
+  return items;
+}
+
+describe("Calendar — disposition CSS de la grille (#864, régression grille transposée)", () => {
+  let styleEl: HTMLStyleElement;
+
+  beforeAll(() => {
+    const cssPath = resolve(
+      __dirname,
+      "../../../../../shared/css/components/templates.css",
+    );
+    styleEl = document.createElement("style");
+    styleEl.textContent = readFileSync(cssPath, "utf-8");
+    document.head.appendChild(styleEl);
+  });
+
+  afterAll(() => {
+    styleEl.remove();
+  });
+
+  it('les 6 <div role="row"> passent en display:contents — retirées du flux de la grille, PAS de l\'arbre a11y', () => {
+    const { container } = render(
+      <Calendar referenceMonth={{ year: 2026, month: 7 }} />,
+    ); // août 2026
+
+    const rows = container.querySelectorAll('.cal-grid > [role="row"]');
+    expect(rows).toHaveLength(6);
+    rows.forEach((row) => {
+      expect(getComputedStyle(row).display).toBe("contents");
+      // Le rôle reste posé — navigation clavier/lecteur d'écran intacts.
+      expect(row).toHaveAttribute("role", "row");
+    });
+  });
+
+  it("le 27 août 2026 (jeudi) atterrit dans la 4e colonne de la 5e ligne de la grille — pas transposé en colonne", () => {
+    const { container } = render(
+      <Calendar referenceMonth={{ year: 2026, month: 7 }} />,
+    ); // août 2026
+
+    const grid = container.querySelector(".cal-grid") as HTMLElement;
+    const items = getGridItems(grid);
+
+    // 42 items DIRECTS attendus (6 semaines × 7 jours) — pas 6 (un par
+    // `[role="row"]`), qui serait le symptôme exact de la régression #864 :
+    // la grille se placerait alors sur les lignes elles-mêmes.
+    expect(items).toHaveLength(42);
+
+    const target = cell(container, "2026-08-27") as HTMLElement;
+    const flatIndex = items.indexOf(target);
+    expect(flatIndex).toBeGreaterThanOrEqual(0);
+
+    // Colonnes/lignes CSS Grid 0-indexées ici : auto-placement row-major
+    // d'une grille `repeat(7, 1fr)` sur les 42 items flattenés ci-dessus.
+    const columnIndex = flatIndex % 7; // 0 = lundi … 6 = dimanche
+    const rowIndex = Math.floor(flatIndex / 7);
+
+    // Jeudi = 4e jour de la semaine (index 3), 5e ligne du mois (index 4).
+    expect(columnIndex).toBe(3);
+    expect(rowIndex).toBe(4);
   });
 });
