@@ -361,3 +361,12 @@ export type {
 // ─── Rail — #857 (nav verticale rétractable, .rail-* + .sidebar-link-disabled) ───
 export { Rail } from "./components/Rail/Rail";
 export type { RailProps, RailItem } from "./components/Rail/Rail";
+
+// ─── Timeline — #852 (fil vertical à deux niveaux, entièrement contrôlé) ───
+export { Timeline } from "./components/Timeline/Timeline";
+export type {
+  TimelineProps,
+  TimelineGroup,
+  TimelineGroupCount,
+  TimelineItem,
+} from "./components/Timeline/Timeline";

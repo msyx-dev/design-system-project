@@ -41,6 +41,26 @@
 .timeline-content h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.15rem; }
 .timeline-content p { font-size: 0.82rem; color: var(--text-muted); }
 
+/* --- Timeline — regroupement a deux niveaux (portage React #852) ---
+   Un `.timeline-group` est un <li> direct de `.timeline` : meme gabarit qu'un
+   `.timeline-item` a plat (position relative, meme `.timeline-dot` sur le fil
+   principal), avec en plus son propre sous-fil `.timeline-group-items` pour
+   les items qu'il regroupe (deux niveaux, pas une liste plate — cf. challenge
+   de conception #852). Le vocabulaire de rendu des items (`.activity-*`) est
+   repris tel quel d'ActivityFeed, pas reinvente a cote (lists.css:105-215). */
+.timeline-group { position: relative; padding-bottom: var(--space-xl); }
+.timeline-group:last-child { padding-bottom: 0; }
+.timeline-group-header { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-sm); }
+.timeline-group-title { font-size: 0.92rem; font-weight: var(--fw-semibold); color: var(--text); }
+.timeline-group-items { position: relative; list-style: none; margin: var(--space-sm) 0 0 var(--space-md); padding-left: var(--space-xl); }
+.timeline-group-items::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: color-mix(in srgb, var(--accent) 20%, transparent); }
+
+/* Separateur de date ("AUJOURD'HUI", "HIER", puis dates) affiche avant un
+   groupe. Le calcul (aujourd'hui/hier/date) reste cote consumer — le DS ne
+   fait qu'afficher le libelle fourni. */
+.timeline-date-separator { display: flex; align-items: center; gap: var(--space-sm); margin: 0 0 var(--space-md); font-size: 0.7rem; font-weight: var(--fw-semibold); color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.timeline-date-separator::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
 /* ===== ACCORDION ===== */
 .accordion-item { border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 0.5rem; overflow: hidden; }
 .accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.3rem; cursor: pointer; font-weight: 500; font-size: 0.9rem; background: var(--surface); transition: background 0.2s; }

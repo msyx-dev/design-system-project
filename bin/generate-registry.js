@@ -638,6 +638,7 @@ const REACT_TO_REGISTRY = {
   Calendar: 'calendar',                   // #760 — date-picker INLINE single/range
   TimePicker: 'time-picker',              // #761 — time-picker 24h/12h ; entrée registre dédiée (scission #770, ex-lumpée dans 'calendar')
   Rail: 'sidebar-rail',                   // #857 — rail compact + sidebar déployée (2 états d'1 composant), réutilise .sidebar-link-disabled (layout.css)
+  Timeline: 'timeline',                   // #852 — fil vertical à deux niveaux, entièrement contrôlé, réutilise le vocabulaire .activity-* d'ActivityFeed (lists.css)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
