@@ -5,6 +5,10 @@
       {
         "type": "nouveaute",
         "text": "Un nouveau composant de navigation verticale retractable (rail compact avec info-bulles, sidebar depliee, sous-entrees imbriquees, zone Parametres en pied) est disponible en React."
+      },
+      {
+        "type": "nouveaute",
+        "text": "Un nouveau composant de fil chronologique (Timeline), avec regroupement des evenements et mode compact, est disponible en React."
       }
     ]
   },
