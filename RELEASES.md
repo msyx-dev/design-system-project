@@ -1,5 +1,15 @@
 # Releases
 
+## 2.126.0 — 2026-08-28 — Timeline : regroupement à deux niveaux + mode compact (#852)
+
+> Touche `shared/css/components/lists.css` ET `packages/react/**` (portage `<Timeline>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.34).
+
+### Added
+- **`.timeline-group` / `.timeline-group-header` / `.timeline-group-title` / `.timeline-group-items`** (`lists.css`) — regroupement à deux niveaux pour `.timeline` : un `.timeline-group` (même gabarit qu'un `.timeline-item` à plat, même `.timeline-dot` sur le fil principal) porte son propre sous-fil `.timeline-group-items` pour les items qu'il regroupe. Le vocabulaire de rendu des items reste celui d'`ActivityFeed` (`.activity-type-icon`/`.activity-meta`/`.activity-time`/`.activity-tag`, `.activity-load-more`) — aucune classe dupliquée pour le même besoin dans le même DS.
+- **`.timeline-date-separator`** (`lists.css`) — séparateur de date (« AUJOURD'HUI », « HIER », puis dates) affiché avant un groupe ; le calcul de relativité reste côté consumer.
+- **`pages/divers.html` #timeline** — 2e démo montrant le regroupement à deux niveaux + mode compact (compteurs, aperçu, bascule « Afficher les N autres ») ; la démo plate historique reste inchangée.
+- **`timeline` passé à `react: "ported"`** dans le registre (voir `packages/react/RELEASES.md` v3.0.0-alpha.34 pour le wrapper React).
+
 ## 2.125.2 — 2026-08-27 — SegmentedControl : scrollbar visible sur débordement (#866)
 
 ### Fixed

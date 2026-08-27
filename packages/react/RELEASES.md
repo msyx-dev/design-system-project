@@ -4,6 +4,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.34 — 2026-08-28 — `<Timeline>` : fil vertical à deux niveaux, entièrement contrôlé (#852)
+
+> Touche `packages/react/**` ET `shared/css/components/lists.css` (5 nouvelles classes, cf. `../../RELEASES.md` racine v2.126.0).
+
+### Added
+- **`<Timeline>`** — premier wrapper React de `.timeline*` (`lists.css`), demandé par KeepThread (msyx-dev/keepthread#32) dont le Journal est cette timeline. Conception tranchée par le challenge de l'issue #852, contre `ActivityFeed` comme socle possible (liste plate, filtrage interne non contrôlé, `load-more` révélant du DOM déjà chargé, `avatar` obligatoire — quatre traits disqualifiants) : **(1)** reprend tel quel le vocabulaire de rendu d'`ActivityFeed` pour les items (`.activity-type-icon`/`.activity-meta`/`.activity-time`/`.activity-tag`, déjà des classes de premier niveau dans `lists.css` — aucune extraction de primitive n'a été nécessaire) ; **(2)** entièrement contrôlé — `compact`/`previewCount` sont des props, aucun état de filtre ni d'expansion interne, le clic sur « Afficher les N autres » ne fait QUE remonter `onExpandGroup` (les items au-delà de `previewCount` ne sont jamais montés dans le DOM, contrairement au `load-more` d'`ActivityFeed`) ; **(3)** regroupement à deux niveaux `groups[].items[]` (un en-tête d'événement porte N items, chacun sur son propre sous-fil). Pas d'`avatar` imposé — `children` est un slot libre. Séparateurs de date (`dateSeparator`) au choix du consumer. 23 tests.
+- **`timeline` passé à `react: "ported"`** dans le registre (`shared/components-registry.json`) + `Timeline` ajouté à `REACT_TO_REGISTRY` (`bin/generate-registry.js`).
+
 ## v3.0.0-alpha.33 — 2026-08-27 — Test de régression : grille `<Calendar>` transposée (#864)
 
 > Touche `packages/react/**` (test uniquement) ET `shared/css/components/templates.css` (2 entrées, cf. `../../RELEASES.md` racine v2.125.1). Le correctif lui-même vit côté DS CSS ; `Calendar.tsx` n'est pas modifié.
