@@ -151,8 +151,9 @@
 /* position:fixed + top/right poses inline par le JS a l'ouverture (initActionMenu vanilla /
    <ActionMenu> React, #856) : le panneau est deplace dans document.body pour echapper au
    containing-block que `.card` (will-change:transform) impose a un `position:absolute`/`fixed`
-   *non deplace*, et a l'`overflow:hidden` qui le clippait — meme mecanisme que .dropdown-menu.
-   Constate en recette KeepThread : menu Actions du panneau Perimetre incliquable a la souris. */
+   *non deplace*, et a l'`overflow:hidden` qui le clippait — meme mecanisme que le panneau
+   Dropdown (forms.css). Constate en recette KeepThread : menu Actions du panneau Perimetre
+   incliquable a la souris. */
 .action-menu {
     position: fixed;
     border-color: var(--border-hover); /* override border plus marquée */

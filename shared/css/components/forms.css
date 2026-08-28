@@ -52,8 +52,8 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
    <Dropdown> React, #856) : le panneau est deplace dans document.body pour echapper au
    containing-block que `.card` (will-change:transform) impose a un `position:absolute`/`fixed`
    *non deplace*, et a l'`overflow:hidden` qui le clippait. z-index releve 50->200 (aligne sur
-   .action-menu) car le panneau rivalise desormais avec le header/sidebar au niveau racine, plus
-   seulement avec ses freres locaux. */
+   celui du menu Actions, overlays.css) car le panneau rivalise desormais avec le header/sidebar
+   au niveau racine, plus seulement avec ses freres locaux. */
 .dropdown-menu { position: fixed; border-radius: var(--radius-md); padding: 0.3rem; max-height: 220px; overflow-y: auto; z-index: 200; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 0.2s var(--ease-standard), transform 0.2s var(--ease-standard); }
 .dropdown-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .dropdown-search { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.3rem; }
