@@ -2,11 +2,21 @@ import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4173;
 
-// Matrice complete : 4 themes x 2 modes x 2 viewports = 16 projects (#849 : +auchan)
-// 16 projects x 9 pages, capture PAR SECTION depuis #286 (v2.56.1)
-// → 1 baseline par <section id> de chaque page (voir visual.spec.ts)
-// auchan-{dark,light}-{desktop,mobile} : baselines produites par soft-harvest
-// CI (session parente), PAS generees localement — rouges par construction ici.
+// Matrice reduite (#851, 2026-08-28) : le job `visual` (16 projects x 123
+// sections = 1968 captures, workers:1) depassait son timeout-minutes:60 sur
+// TOUS les runs depuis le 2026-08-27 18h28 — plus aucune PR n'etait validee
+// visuellement. Arbitrage applique retroactivement aux 3 themes secondaires :
+// - MSYX (theme de reference) : matrice complete conservee, 2 modes x 2
+//   viewports = 4 projects, TOUTES les sections (aucune perte de couverture).
+// - ACSSI / Nhood / Auchan : desktop uniquement (2 projects au lieu de 4),
+//   ET sections "sentinelles" uniquement filtrees dans visual.spec.ts
+//   (SENTINEL_SECTIONS). La mobile n'ajoute aucun risque structurel
+//   supplementaire par rapport au desktop pour ces themes (memes tokens,
+//   memes breakpoints) — voir docs/DS-PRINCIPLES.md §VR pour la regle
+//   complete et comment l'appliquer a un futur theme.
+// Sharding et workers>1 ecartes (tranche par l'arbitrage #851) : le
+// parallelisme rendait les captures instables sous charge (deja tranche
+// dans le ticket), et le sharding traite la duree, pas le volume/stockage.
 const THEMES = ["msyx", "acssi", "nhood", "auchan"] as const;
 const MODES = ["dark", "light"] as const;
 const VIEWPORTS = [
@@ -14,9 +24,14 @@ const VIEWPORTS = [
   { name: "mobile", width: 375, height: 667 },
 ] as const;
 
+const viewportsForTheme = (theme: (typeof THEMES)[number]) =>
+  theme === "msyx"
+    ? VIEWPORTS
+    : VIEWPORTS.filter((vp) => vp.name === "desktop");
+
 const projects = THEMES.flatMap((theme) =>
   MODES.flatMap((mode) =>
-    VIEWPORTS.map((vp) => ({
+    viewportsForTheme(theme).map((vp) => ({
       name: `${theme}-${mode}-${vp.name}`,
       use: {
         ...devices["Desktop Chrome"],

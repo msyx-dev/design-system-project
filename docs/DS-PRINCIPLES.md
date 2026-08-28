@@ -616,6 +616,82 @@ Lors de l'ajout d'un composant (Section 8 checklist) : renseigner `cssClasses` c
 
 ---
 
+## Section 8.3 — Visual Regression : matrice réduite pour thèmes secondaires (#851)
+
+Le job `visual` (Playwright, `workers: 1` — le parallélisme rend les captures
+instables sous charge, choix délibéré) a dépassé son `timeout-minutes` sur
+tous les runs à partir du 2026-08-27 : 4 thèmes × 2 modes × 2 viewports ×
+~123 sections = 1968 captures, c'est trop pour un run linéaire. **Sharding et
+`workers > 1` sont écartés** (ADR implicite #851) : ils traitent la durée,
+pas le volume ni le coût de stockage des baselines.
+
+### Règle : MSYX = référence, thèmes secondaires = sentinelles desktop
+
+- **MSYX** conserve la **matrice complète** : 2 modes × 2 viewports (desktop +
+  mobile) × **toutes** les sections de toutes les pages. C'est le thème de
+  référence — aucune perte de couverture n'est acceptable dessus.
+- **Tout thème secondaire** (ACSSI, Nhood, Auchan, et tout thème futur ajouté
+  via `shared/scaffold-theme.sh`, cf. Section 2) : **desktop uniquement**
+  (pas de projet `*-mobile` dans `playwright.config.ts` — `viewportsForTheme()`
+  ne garde le mobile que pour `msyx`) et **sections sentinelles uniquement**
+  (`SENTINEL_SECTIONS` dans `visual-tests/visual.spec.ts`).
+
+### Critère de sentinelle (ce qui rentre dans `SENTINEL_SECTIONS`, et ce qui n'y rentre pas)
+
+Une section est sentinelle si un token de thème peut s'y exprimer
+**structurellement** : un token qui change une **taille**, une **bordure**
+ou un **espacement**, et pas seulement une couleur. C'est le seul risque que
+la VR couvre et que rien d'autre ne couvre.
+
+**Ne sont PAS des critères de sélection** (déjà couverts ailleurs, ne pas les
+invoquer pour ajouter une section) :
+- le **contraste** → `axe-core` (CI a11y) ;
+- la **complétude des tokens** d'un thème → `shared/check-sync.sh` /
+  scaffold + revue manuelle du JSON ;
+- la **séparabilité des teintes catégorielles** → `bin/check-categorical-palette.js`.
+
+### Liste actuelle (à ajuster sur pièce, pas figée)
+
+| Page (`slug`) | Sections sentinelles | Pourquoi |
+|---|---|---|
+| `fondation` | `colors`, `palette-categorielle`, `theming` | expriment directement la palette du thème (swatches, 8 teintes `--cat-*`, switcher) |
+| `composants` | `buttons`, `split-button`, `badges`, `chips`, `cards`, `card-media`, `segmented-control` | bordures/ombres/pill-shape pilotées par tokens (`--btn-shadow-alpha`, `--border`, radius) |
+| `navigation` | `action-menu` | dropdown avec bordure token (`menu.css`) |
+| `formulaires` | `inputs`, `controls`, `calendar` | `controls` a un override per-thème réel (`forms.css` : `.toggle-slider::before` différent sur ACSSI/Auchan) ; `calendar` = grille dense forte densité de bordures/espacements |
+| `data` | `charts`, `pie-donut` | consomment directement `--chart-*`/`--cat-*` |
+| `templates` | `pricing` | plan mis en avant = bordure/emphase token-dépendante |
+| `feedback` | `alerts` | bordures/fond par statut (`--danger`, `--warning`…) |
+| `overlays` | `modals` | bordure + ombre de surface flottante |
+| `divers` | `diff-viewer` | lignes ±  avec indicateur de bordure gauche coloré |
+| `user-feedback` | *(aucune)* | 2 sections seulement, déjà couvertes ailleurs (`inputs`, `modals`) |
+
+### Ajouter un futur thème (checklist)
+
+1. Suivre Section 2 (`scaffold-theme.sh` + `build-themes.js`) — inchangé.
+2. L'ajouter à `THEMES` dans `playwright.config.ts` (`shared/nav.js` /
+   `components.js` aussi, cf Section 2). **Ne rien faire d'autre pour la
+   matrice VR** : `viewportsForTheme()` le traite automatiquement comme
+   thème secondaire (desktop uniquement) et `visual.spec.ts` le filtre
+   automatiquement sur `SENTINEL_SECTIONS` (aucune baseline `*-mobile`,
+   aucune baseline hors sentinelles ne sera générée).
+3. Si le thème introduit un token qui change une **taille/bordure/espacement**
+   sur une section absente de `SENTINEL_SECTIONS` (par ex. un thème qui
+   redéfinirait `--radius` ou une largeur de bordure — aucun thème actuel ne
+   le fait, tous ne redéfinissent que des couleurs), **ajouter cette section
+   à la liste avant de merger**. Ne pas ajouter par prudence des sections qui
+   ne varient que par la couleur — c'est hors critère (cf ci-dessus).
+4. Générer les baselines desktop du nouveau thème pour les sections listées
+   via soft-harvest CI (jamais en local, cf pièges connus du repo).
+
+### Garde-fou en CI
+
+`visual.spec.ts` vérifie à l'exécution que chaque id listé dans
+`SENTINEL_SECTIONS` existe bien dans le DOM de la page (`toContain`) — si un
+`<section id>` est renommé/retiré sans mettre à jour la liste, le test échoue
+explicitement au lieu de silencieusement capturer 0 section.
+
+---
+
 ## Section 9 — Anti-patterns observés (apprentissages cross-consumers)
 
 Ces patterns ont été repérés sur les apps consumers et **doivent être proscrits côté DS**. Le DS doit fournir l'alternative correcte pour qu'aucun consumer n'ait à les reproduire.
@@ -667,7 +743,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 | `~/.claude/skills/audit-ds-compliance/scripts/*` | Audit cross-cutting consumer |
 
 ### CI workflows (DS repo)
-- Visual regression (Playwright + 108 baselines)
+- Visual regression (Playwright — matrice réduite MSYX complet + sentinelles thèmes secondaires, cf Section 8.3 #851)
 - Perf budget warn
 - A11y axe-core dry-run
 - Lighthouse CI warn

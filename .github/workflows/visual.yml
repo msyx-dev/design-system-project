@@ -7,7 +7,15 @@ on:
 jobs:
   visual:
     runs-on: ubuntu-latest
-    timeout-minutes: 60  # 123 sections × 16 projets = 1968 captures, workers:1 — bump #849 (45→60, run mesure a 44m48s avec 12 projets + 492 captures neuves). Reduction de la matrice suivie en #851
+    timeout-minutes: 55  # #851 : matrice reduite. AVANT : 16 projets x 123 sections = 1968 captures,
+      # workers:1, 7 derniers runs mesures a 53-60m17s (4/7 cancelled a la limite de 60 min, cf gh
+      # run list) -> job mort, timeout-minutes:60 (#849) insuffisant. APRES : MSYX garde la matrice
+      # complete (4 projets x toutes les sections), ACSSI/Nhood/Auchan passent desktop-only +
+      # sections sentinelles (SENTINEL_SECTIONS, visual-tests/visual.spec.ts) -> 612 captures (-69%).
+      # Mesure REELLE sur le run CI de la PR #851 (run 33186455086) : 34m50s (job va au bout, pas de
+      # cancel), avec des retries CI (retries:2) declenches par des echecs preexistants hors scope
+      # sur `formulaires` (issue separee, cf CHANGELOG/PR #851 - deja presents sur main avant cette
+      # PR). Marge large volontaire sur la mesure reelle (pas 1 min, cf #863 lighthouse) : ~58%.
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
