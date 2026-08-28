@@ -669,6 +669,30 @@ const REACT_TO_REGISTRY = {
   Badge: 'badges',                        // #871 — .badge + 6 variantes sémantiques réelles (issue en annonçait 7, cf. RELEASES) + .badge-nav
   Avatar: 'avatar',                       // #871 — 5 tailles + .avatar-gradient + .avatar-status(online/busy/offline), AvatarGroup co-localisé
   Divider: 'divider',                     // #871 — .divider (hr) / .divider-label (div) ; .divider-gradient/.divider-vertical hors périmètre (absents des cssClasses de l'entrée registre)
+  Alert: 'alert',                         // #872 — Lot 2 décoratifs B : 4 variantes sémantiques + composition kpi/cta (AlertIcon/Title/Body/Desc/Value/Actions)
+  Skeleton: 'skeleton',                   // #872 — .skeleton + text/title/avatar/btn
+  EmptyState: 'empty-state',              // #872 — .empty-state/.empty-state-icon
+  Spinner: 'spinner',                     // #872 — Spinner/SpinnerDots/LoadingBar/LoadingOverlay co-localisés dans components/Spinner/
+};
+
+// Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
+// `src/components/` propre : un seul wrapper sert plusieurs entrées du
+// registre (cf. #519 — zone-banner/upgrade-prompt sont les variantes
+// .alert--kpi/.alert--cta d'Alert, pas des composants séparés). Distincte de
+// REACT_TO_REGISTRY (qui mappe un DOSSIER réel à scanner) : ici il n'y a rien
+// à scanner, les classes de ces entrées sont déjà couvertes par le scan réel
+// du wrapper listé dans REACT_TO_REGISTRY. Même logique de séparation que
+// REACT_CSS_UNDETECTABLE / REACT_JS_HOOK_CLASSES (#889) — deux tables qui
+// disent chacune une chose vraie, plutôt qu'une seule où l'on glisse des
+// exceptions par des clés fictives.
+//
+// Contrat : une entrée n'entre ici que si son champ `reactComponent` dans
+// shared/components-registry.json désigne bien le wrapper couvrant (valeur
+// de droite ci-dessous) — c'est ce lien qui rend la table vérifiable, validé
+// mécaniquement plus bas (bloc réciprocité react:ported).
+const REACT_COVERED_BY = {
+  'zone-banner':    'Alert',   // .alert--kpi (#519) — reactComponent: "Alert" dans le registre
+  'upgrade-prompt': 'Alert',   // .alert--cta (#519) — reactComponent: "Alert" dans le registre
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -788,11 +812,33 @@ if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) 
   }
 
   // (b) réciproque : une entrée react:ported SANS composant React mappé → erreur
+  // Un composant mappé = un dossier réel scanné (REACT_TO_REGISTRY) OU une
+  // entrée couverte par un wrapper existant sans dossier propre
+  // (REACT_COVERED_BY, #872 — zone-banner/upgrade-prompt couverts par Alert).
   const portedNames = new Set(Object.values(REACT_TO_REGISTRY));
+  for (const name of Object.keys(REACT_COVERED_BY)) portedNames.add(name);
   for (const comp of newComponents) {
     if (comp.react === 'ported' && !portedNames.has(comp.name)) {
       reactDrift.push({ component: '(registre)', registry: comp.name,
         reason: 'react="ported" mais aucun composant React dans REACT_TO_REGISTRY' });
+    }
+  }
+
+  // (c) REACT_COVERED_BY vérifiable : le `reactComponent` déclaré dans le
+  // registre pour chaque entrée couverte DOIT désigner le même wrapper que
+  // la table — sinon la table dérive silencieusement d'un registre modifié
+  // sans mise à jour symétrique (#872).
+  for (const [regName, wrapperName] of Object.entries(REACT_COVERED_BY)) {
+    const entry = newComponents.find(c => c.name === regName);
+    if (!entry) {
+      reactDrift.push({ component: `(${wrapperName})`, registry: regName,
+        reason: 'entrée registre introuvable (REACT_COVERED_BY)' });
+    } else if (entry.reactComponent !== wrapperName) {
+      reactDrift.push({ component: `(${wrapperName})`, registry: regName,
+        reason: `reactComponent="${entry.reactComponent}" — attendu "${wrapperName}" (REACT_COVERED_BY)` });
+    } else if (entry.react !== 'ported') {
+      reactDrift.push({ component: `(${wrapperName})`, registry: regName,
+        reason: `react="${entry.react}" — attendu "ported"` });
     }
   }
 }

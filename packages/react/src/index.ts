@@ -409,3 +409,45 @@ export type {
 } from "./components/Avatar/Avatar";
 export { Divider } from "./components/Divider/Divider";
 export type { DividerProps } from "./components/Divider/Divider";
+
+// ─── Lot 2 « décoratifs B » — #872 (états de retour utilisateur) ───
+// Alert absorbe zone-banner (.alert--kpi) et upgrade-prompt (.alert--cta), #519.
+export {
+  Alert,
+  AlertActions,
+  AlertBody,
+  AlertDesc,
+  AlertIcon,
+  AlertTitle,
+  AlertValue,
+} from "./components/Alert/Alert";
+export type {
+  AlertProps,
+  AlertVariant,
+  AlertIconProps,
+  AlertTitleProps,
+  AlertDescProps,
+  AlertValueProps,
+  AlertBodyProps,
+  AlertActionsProps,
+} from "./components/Alert/Alert";
+export { Skeleton } from "./components/Skeleton/Skeleton";
+export type {
+  SkeletonProps,
+  SkeletonVariant,
+} from "./components/Skeleton/Skeleton";
+export { EmptyState } from "./components/EmptyState/EmptyState";
+export type { EmptyStateProps } from "./components/EmptyState/EmptyState";
+export {
+  Spinner,
+  SpinnerDots,
+  LoadingBar,
+  LoadingOverlay,
+} from "./components/Spinner/Spinner";
+export type {
+  SpinnerProps,
+  SpinnerSize,
+  SpinnerDotsProps,
+  LoadingBarProps,
+  LoadingOverlayProps,
+} from "./components/Spinner/Spinner";
