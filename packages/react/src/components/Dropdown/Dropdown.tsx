@@ -1,13 +1,20 @@
 import {
+  CSSProperties,
   KeyboardEvent as ReactKeyboardEvent,
   ReactNode,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "../../icons/Icon";
+
+/** useLayoutEffect côté client, useEffect côté serveur (SSR-safe, calque HeatmapCalendar). */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export interface DropdownOption {
   /** Valeur unique de l'option (utilisée pour `value`/`onChange`). */
@@ -112,6 +119,20 @@ function getOptionText(label: ReactNode): string | null {
  * Icône `.check` auto-contenue (inline SVG via `<Icon>`, #713) — aucun
  * sprite à servir.
  *
+ * **Portail sur `document.body` (#856)** : `.dropdown-menu` était rendu en
+ * enfant inline, `position: absolute` relatif à `.dropdown` — clippé par
+ * tout ancêtre `overflow: hidden` (`.card` notamment, vérifié en recette
+ * KeepThread). Un simple passage à `position: fixed` sans déplacer le nœud
+ * ne suffit pas : `.card` porte aussi `will-change: transform`, qui établit
+ * un containing block pour les descendants `fixed` au même titre qu'un
+ * `transform` réel (vérifié empiriquement via Playwright — `container-type`
+ * seul ne piège PAS `position: fixed`, `will-change: transform` si). Le menu
+ * est donc porté via `createPortal` dans `document.body` — même mécanisme
+ * que `RiskMatrix`/`HeatmapCalendar`/`Toast` — avec sa position calculée à
+ * l'ouverture (`useLayoutEffect`, pas de flash de position) depuis
+ * `triggerRef.getBoundingClientRect()`. Aucune ré-écoute scroll/resize :
+ * comportement identique au DS vanilla (position figée à l'ouverture).
+ *
  * SSR-safe : aucun accès à `document`/`window` au niveau module ; tout est
  * dans `useEffect`/handlers (post-hydratation).
  */
@@ -122,9 +143,11 @@ export function Dropdown(props: DropdownProps) {
 
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const optionRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -176,14 +199,36 @@ export function Dropdown(props: DropdownProps) {
     if (!open) setSearchQuery("");
   }, [open]);
 
-  // Fermeture au clic extérieur + Echap (écoute globale `document`).
+  // Position du menu porté (#856) — calculée à l'ouverture depuis le
+  // déclencheur, AVANT peinture (useLayoutEffect) pour ne pas flasher à
+  // (top:auto;left:auto) le temps d'un frame. Étire le menu à la largeur du
+  // déclencheur (calque `left:0;right:0` de l'ancien `position:absolute`).
+  useIsomorphicLayoutEffect(() => {
+    if (!open) return;
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    setMenuStyle({
+      position: "fixed",
+      top: rect.bottom + 4,
+      left: rect.left,
+      width: rect.width,
+    });
+  }, [open]);
+
+  // Fermeture au clic extérieur + Echap (écoute globale `document`). Le menu
+  // étant porté hors de `wrapRef` (`.dropdown`, #856), un clic à l'intérieur
+  // du menu porté doit AUSSI compter comme "à l'intérieur" — sinon toute
+  // sélection à la souris ferme le menu avant que le clic sur l'option ne
+  // soit traité.
   useEffect(() => {
     if (!open) return;
 
     const handlePointerDown = (event: MouseEvent) => {
-      if (!wrapRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
+      const target = event.target as Node;
+      if (wrapRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
     };
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -296,6 +341,9 @@ export function Dropdown(props: DropdownProps) {
     .join(" ");
   const menuClasses = ["dropdown-menu", "open"].join(" ");
 
+  // Portail #856 — cf. JSDoc du composant.
+  const portalTarget = typeof document !== "undefined" ? document.body : null;
+
   return (
     <div
       className={wrapClasses}
@@ -318,62 +366,67 @@ export function Dropdown(props: DropdownProps) {
           &#9662;
         </span>
       </button>
-      {open && (
-        <div
-          className={menuClasses}
-          id={menuId}
-          role="listbox"
-          aria-multiselectable={multi || undefined}
-          aria-label={label}
-        >
-          {searchable && (
-            <div className="dropdown-search">
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                placeholder="Filtrer..."
-                aria-label="Filtrer les options"
-              />
-            </div>
-          )}
-          {filteredOptions.map((option) => {
-            const selected = selectedValues.includes(option.value);
-            return (
-              <div
-                key={option.value}
-                ref={(node) => {
-                  if (node) {
-                    optionRefs.current.set(option.value, node);
-                  } else {
-                    optionRefs.current.delete(option.value);
-                  }
-                }}
-                className={["dropdown-option", selected ? "selected" : null]
-                  .filter(Boolean)
-                  .join(" ")}
-                role="option"
-                aria-selected={selected}
-                aria-disabled={option.disabled || undefined}
-                // Pas de tabIndex sur les options disabled : un <div> sans
-                // tabindex n'est pas focusable au clic souris, ce qui évite
-                // qu'une option disabled cliquée reste focus-piégée (les
-                // flèches ↑/↓ n'ont d'effet que sur enabledFilteredOptions).
-                tabIndex={option.disabled ? undefined : -1}
-                onClick={() => handleSelect(option)}
-                onKeyDown={(event) => handleOptionKeyDown(event, option)}
-              >
-                <span className="check">
-                  <Icon name="check" aria-hidden="true" />
-                </span>
-                {option.label}
+      {open &&
+        portalTarget &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className={menuClasses}
+            id={menuId}
+            role="listbox"
+            aria-multiselectable={multi || undefined}
+            aria-label={label}
+            style={menuStyle}
+          >
+            {searchable && (
+              <div className="dropdown-search">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder="Filtrer..."
+                  aria-label="Filtrer les options"
+                />
               </div>
-            );
-          })}
-        </div>
-      )}
+            )}
+            {filteredOptions.map((option) => {
+              const selected = selectedValues.includes(option.value);
+              return (
+                <div
+                  key={option.value}
+                  ref={(node) => {
+                    if (node) {
+                      optionRefs.current.set(option.value, node);
+                    } else {
+                      optionRefs.current.delete(option.value);
+                    }
+                  }}
+                  className={["dropdown-option", selected ? "selected" : null]
+                    .filter(Boolean)
+                    .join(" ")}
+                  role="option"
+                  aria-selected={selected}
+                  aria-disabled={option.disabled || undefined}
+                  // Pas de tabIndex sur les options disabled : un <div> sans
+                  // tabindex n'est pas focusable au clic souris, ce qui évite
+                  // qu'une option disabled cliquée reste focus-piégée (les
+                  // flèches ↑/↓ n'ont d'effet que sur enabledFilteredOptions).
+                  tabIndex={option.disabled ? undefined : -1}
+                  onClick={() => handleSelect(option)}
+                  onKeyDown={(event) => handleOptionKeyDown(event, option)}
+                >
+                  <span className="check">
+                    <Icon name="check" aria-hidden="true" />
+                  </span>
+                  {option.label}
+                </div>
+              );
+            })}
+          </div>,
+          portalTarget,
+        )}
     </div>
   );
 }
