@@ -1,12 +1,19 @@
 import { forwardRef, HTMLAttributes, ReactNode } from "react";
 
-export interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
+export interface EmptyStateProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   /**
    * Pictogramme rendu dans `.empty-state-icon` — icône SVG ou emoji
    * (`pages/feedback.html` #empty-states montre les deux cas).
    */
   icon?: ReactNode;
-  /** Titre `<h3>` (markup réel : titre en texte simple, sans classe dédiée). */
+  /**
+   * Titre `<h3>` (markup réel : titre en texte simple, sans classe dédiée).
+   * `Omit<..., "title">` ci-dessus : évite la collision avec l'attribut HTML
+   * natif `title` (tooltip, `string` uniquement) — ici `ReactNode` structuré.
+   */
   title?: ReactNode;
   /** Description `<p>` sous le titre. */
   description?: ReactNode;
