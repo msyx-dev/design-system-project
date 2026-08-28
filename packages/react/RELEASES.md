@@ -4,6 +4,11 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.39 — 2026-08-28 — `<ProgressTracker>` : retrait de `.progress-tracker-multi-layout`, classe morte (#889)
+
+### Fixed
+- **`<ProgressTracker>` (variante `rings`) émettait `.progress-tracker-multi-layout` sur son wrapper — classe qui n'existe dans AUCUN CSS du DS et qu'aucun hook (vanilla ou React) ne consomme.** Trouvée par le scanner anti-fantôme réparé dans la même PR (#889, côté `bin/`) : contrairement à `.search-with-suggestions`/`.sortable-list--numbered` (deux autres classes sans CSS repérées par la même repasse, mais qui ont chacune un hook `querySelector`/`classList.contains` vanilla réel), aucune occurrence de `.progress-tracker-multi-layout` n'existe ailleurs dans le repo que son émission dans `ProgressTracker.tsx`. Le vanilla de référence (`pages/data.html`) n'a jamais eu de classe à cet endroit — juste un `<div style="display:flex;…">` sans classe, que le wrapper React duplique déjà via son propre style inline. Code mort intégral, retiré du wrapper (le `style` inline existant suffit, calque exact du vanilla). Aucun test n'assertait cette classe (22/22 tests `ProgressTracker` toujours verts).
+
 ## v3.0.0-alpha.38 — 2026-08-28 — `<SortableList>` : réordonnancement souris/tactile/clavier (#853)
 
 ### Added

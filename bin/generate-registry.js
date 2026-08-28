@@ -724,12 +724,15 @@ const REACT_CSS_UNDETECTABLE = new Set([
 // liste des classes qui n'ont VRAIMENT aucun style — pour qu'une classe qui
 // devient inutile un jour ne se noie pas dans l'autre liste.
 // Ne JAMAIS ajouter ici une classe dont on n'a pas vérifié qu'elle n'a
-// AUCUNE règle CSS — documenter le hook (vanilla ou React) qui la consomme,
-// ou noter explicitement l'absence de hook si la classe n'en a pas.
+// AUCUNE règle CSS ET qu'elle est réellement consommée par un hook vérifié
+// (vanilla ou React) — documenter la référence exacte du hook à chaque
+// ajout. Une classe sans CSS ET sans hook n'est pas un hook JS : c'est du
+// code mort, à retirer du wrapper (cf. `.progress-tracker-multi-layout`,
+// #889 — trouvée ici puis retirée du wrapper une fois confirmé qu'aucun
+// hook, ni vanilla ni React, ne la consommait).
 const REACT_JS_HOOK_CLASSES = new Set([
-  '.search-with-suggestions',      // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:598 (`wrap.classList.contains('search-with-suggestions')`, initSearchInput). Émise côté React pour calquer le markup du vanilla (formulaires.html) — #889.
-  '.sortable-list--numbered',      // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:3500 (`list.classList.contains('sortable-list--numbered')`, initSortableLists). Émise côté React pour calquer le markup du vanilla (composants.html:714) — classe déjà morte identifiée AVANT le port (issue #889, section « Deux classes mortes déjà connues »), non imputable au wrapper.
-  '.progress-tracker-multi-layout', // AUCUNE règle CSS, ET aucun hook — ni vanilla, ni React (aucune occurrence ailleurs que sa propre émission dans ProgressTracker.tsx:173, vérifié par grep sur tout le repo). Contrairement aux deux entrées ci-dessus, ce N'EST PAS un hook de parité markup : le vanilla (pages/data.html:453) n'a même pas de classe à cet endroit (juste un `style="display:flex;…"` inline, que le wrapper React duplique déjà). Classe orpheline la plus probable des trois — laissée ici en inventaire (pas retirée du wrapper dans cette PR, cf. CHANGELOG) plutôt que sous silence dans REACT_CSS_UNDETECTABLE ; arbitrage attendu : retirer la classe du wrapper (bump packages/react) plutôt que lui inventer un CSS.
+  '.search-with-suggestions', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:598 (`wrap.classList.contains('search-with-suggestions')`, initSearchInput). Émise côté React pour calquer le markup du vanilla (formulaires.html) — #889.
+  '.sortable-list--numbered', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:3500 (`list.classList.contains('sortable-list--numbered')`, initSortableLists). Émise côté React pour calquer le markup du vanilla (composants.html:714) — classe déjà morte identifiée AVANT le port (issue #889, section « Deux classes mortes déjà connues »), non imputable au wrapper.
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
