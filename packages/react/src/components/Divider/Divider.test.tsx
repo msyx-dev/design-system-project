@@ -39,3 +39,64 @@ describe("Divider — avec et sans libellé", () => {
     expect(document.querySelector(".divider-label.custom")).toBeInTheDocument();
   });
 });
+
+describe("Divider — gradient (composants.html:489, fondation.html:192)", () => {
+  it("gradient rend <div class='divider-gradient'> vide", () => {
+    render(<Divider gradient />);
+    const el = document.querySelector(".divider-gradient") as HTMLElement;
+    expect(el).toBeInTheDocument();
+    expect(el.tagName).toBe("DIV");
+    expect(el).toBeEmptyDOMElement();
+    expect(document.querySelector("hr.divider")).not.toBeInTheDocument();
+  });
+
+  it("gradient l'emporte sur le rendu par défaut mais pas sur label/vertical", () => {
+    render(<Divider gradient label="ou" />);
+    expect(document.querySelector(".divider-label")).toBeInTheDocument();
+    expect(document.querySelector(".divider-gradient")).not.toBeInTheDocument();
+  });
+
+  it("className additionnelle est fusionnée (variante gradient)", () => {
+    render(<Divider gradient className="custom" />);
+    expect(
+      document.querySelector(".divider-gradient.custom"),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("Divider — vertical (composants.html:498)", () => {
+  it("vertical rend <span class='divider-vertical'> vide", () => {
+    render(<Divider vertical />);
+    const el = document.querySelector(".divider-vertical") as HTMLElement;
+    expect(el).toBeInTheDocument();
+    expect(el.tagName).toBe("SPAN");
+    expect(el).toBeEmptyDOMElement();
+  });
+
+  it("vertical est prioritaire sur label et gradient", () => {
+    render(<Divider vertical label="ou" gradient />);
+    expect(document.querySelector(".divider-vertical")).toBeInTheDocument();
+    expect(document.querySelector(".divider-label")).not.toBeInTheDocument();
+    expect(document.querySelector(".divider-gradient")).not.toBeInTheDocument();
+  });
+
+  it("usage typique : plusieurs séparateurs verticaux inline dans un flex", () => {
+    render(
+      <div style={{ display: "flex" }}>
+        <span>Accueil</span>
+        <Divider vertical />
+        <span>Projets</span>
+        <Divider vertical />
+        <span>Contact</span>
+      </div>,
+    );
+    expect(document.querySelectorAll(".divider-vertical")).toHaveLength(2);
+  });
+
+  it("className additionnelle est fusionnée (variante vertical)", () => {
+    render(<Divider vertical className="custom" />);
+    expect(
+      document.querySelector(".divider-vertical.custom"),
+    ).toBeInTheDocument();
+  });
+});

@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-28T21:21:33.716Z",
+    "at": "2026-08-28T21:25:55.094Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -618,10 +618,12 @@
       "page": "composants",
       "cssClasses": [
         ".divider",
-        ".divider-label"
+        ".divider-gradient",
+        ".divider-label",
+        ".divider-vertical"
       ],
       "jsInit": null,
-      "example": "<hr class=\"divider\">\n\n<div class=\"divider-label\">ou</div>",
+      "example": "<hr class=\"divider\">\n\n<div class=\"divider-label\">ou</div>\n\n<div class=\"divider-gradient\"></div>\n\n<span class=\"divider-vertical\"></span>",
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
