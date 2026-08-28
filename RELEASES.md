@@ -1,5 +1,15 @@
 # Releases
 
+## 2.126.2 — 2026-08-28 — Panneau flottant .card : le correctif échouait à ses propres tests (#886)
+
+> Touche `shared/components.js` + `visual-tests/fixtures/card-floating-panel-clip-856.html` ET `packages/react/**` (bug jumeau `<ActionMenu>` corrigé à la volée dans la même PR, cf. `packages/react/RELEASES.md` v3.0.0-alpha.37).
+
+### Fixed
+- **`card-floating-panel-clip.spec.ts` (#880) échouait en CI : 4 tests en échec déterministe + 8 flaky (run de référence `33195036514`)** — la PR #880 avait été mergée pendant que le job `visual` était annulé (timeout, corrigé depuis par #851), ses propres tests de non-régression n'avaient donc jamais tourné jusqu'au bout. Deux causes distinctes, aucune n'étant un défaut du test :
+  1. **Mobile, déterministe** (`msyx-{dark,light}-mobile`, Dropdown ET ActionMenu) — la fixture décale son contenu de `margin-left:400px` (isolation d'un artefact de bord d'écran desktop, sans rapport avec #856). À 375px de large ce contenu tombe intégralement hors du viewport ; `html`/`body` posent `overflow-x:clip` (filet de page #530/#795) qui ne crée **aucune** boîte de défilement — le contenu devient réellement inatteignable (`page.click` time-out `element is outside of the viewport`, avant même le hit-test du panneau). Fix : `.fixture-offset` mobile-first (24px), le 400px desktop revient au-dessus de 768px (breakpoint standard du DS).
+  2. **Desktop, flaky** (ActionMenu uniquement, tous thèmes — 8/8 projects desktop touchés dans le run de référence) — `openFloatingPanel()` ancrait le panneau à droite via `right: window.innerWidth - rect.right`. `window.innerWidth` n'est pas garanti identique au bord droit réel du containing block d'un `position:fixed` (scrollbar classique vs overlay selon l'environnement) : un écart de quelques px suffit à décaler tout le panneau hors de son ancre — cohérent avec la matrice d'échecs (seul `ActionMenu`, seul consommateur de `window.innerWidth` ; `Dropdown`, ancré à gauche via `rect.left` uniquement, n'y touche jamais et n'a jamais échoué sur desktop). Non reproduit en local (headless sandbox : scrollbar overlay 0px, y compris forcée via `overflow-y:scroll`) mais la matrice d'échecs CI cible exactement le seul chemin de code qui dépend de `window.innerWidth`. Fix : `left` calculé depuis `rect.right - panel.offsetWidth`, entièrement dans l'espace de coordonnées du déclencheur (`getBoundingClientRect()`) — plus aucune dépendance à une métrique globale de viewport.
+  - **`packages/react/src/components/ActionMenu/ActionMenu.tsx:163` portait le même bug jumeau** — corrigé à la volée dans cette même PR (règle « défaut borné → corrigé en place, pas ticketé ») : `left` calculé depuis `rect.right - menuRef.current.offsetWidth`. Détail complet dans `packages/react/RELEASES.md` (v3.0.0-alpha.37).
+
 ## 2.126.1 — 2026-08-28 — Dropdown/ActionMenu dans une .card : panneau clippé et incliquable (#856)
 
 > Touche `shared/css/components/forms.css` + `shared/css/components/overlays.css` + `shared/components.js` ET `packages/react/**` (2 entrées, cf. `packages/react/RELEASES.md` v3.0.0-alpha.35).

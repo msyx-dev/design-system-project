@@ -164,9 +164,19 @@ function openFloatingPanel(trigger, panel, align) {
     panel.style.position = 'fixed';
     if (align === 'end') {
         // .action-menu : ancre a droite du declencheur, largeur intrinseque (calque right:0).
+        // `left` calcule depuis rect.right - offsetWidth (#886), PAS `right: window.innerWidth -
+        // rect.right` (regression #880 constatee flaky en CI sur tous les themes desktop, jamais
+        // reproduite en local malgre throttle CPU + scrollbar forcee) : `window.innerWidth` et le
+        // bord droit reel du containing block d'un `position:fixed` peuvent diverger (scrollbar
+        // classique non-overlay presente sur le runner CI, absente de ce sandbox headless) — un
+        // ecart de quelques px suffit a decaler tout le panneau hors de son ancre reelle. En
+        // calculant `left` uniquement a partir de rect (meme espace de coordonnees que le
+        // declencheur) et offsetWidth (deja mesurable, panel appendChild plus haut, visibility:hidden
+        // preserve la boite de layout), le positionnement ne depend plus d'aucune metrique globale
+        // de viewport.
         panel.style.top = (rect.bottom + 6) + 'px';
-        panel.style.right = (window.innerWidth - rect.right) + 'px';
-        panel.style.left = '';
+        panel.style.left = (rect.right - panel.offsetWidth) + 'px';
+        panel.style.right = '';
         panel.style.width = '';
     } else {
         // .dropdown-menu : etire a la largeur du declencheur (calque left:0;right:0).

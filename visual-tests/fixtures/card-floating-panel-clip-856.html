@@ -4,6 +4,22 @@
 <meta charset="UTF-8" />
 <title>Card floating panel clip fixture (#856) — msyx.design</title>
 <link rel="stylesheet" href="/shared/styles.css" />
+<style>
+  /* offset desktop-only (#886) : le margin-left de 400px n'existe que pour isoler la
+     question testee (clip par .card) d'un artefact de bord d'ecran a largeur desktop —
+     cf. commentaire ci-dessous. En dessous de 768px il decale tout le fixture hors du
+     viewport (375px de large) ; `html`/`body` posent overflow-x:clip en filet de page
+     (shared/css/base.css #530/#795), qui NE cree aucune boite de defilement — contrairement
+     a overflow-x:hidden. Un contenu decale au-dela du viewport y devient donc reellement
+     inatteignable : ni scrollIntoView ni clic ne peuvent l'y rejoindre (constate en CI,
+     #886 — page.click time-out sur #dd-trigger/#am-trigger, "element is outside of the
+     viewport", avant meme le hit-test du panneau). Mobile-first : marge reduite par defaut,
+     le 400px desktop revient au-dela de 768px (breakpoint standard du DS). */
+  .fixture-offset { margin: 24px 0 40px 24px; }
+  @media (min-width: 768px) {
+    .fixture-offset { margin: 40px 0 40px 400px; }
+  }
+</style>
 </head>
 <body>
   <!--
@@ -16,11 +32,11 @@
     exactement le motif signale sur KeepThread : Dropdown/ActionMenu dans
     une .card (overflow:hidden + will-change:transform + container-type).
   -->
-  <!-- margin-left genereux : isole la question testee (clip par .card) de
-       tout artefact du viewport (un menu droit-aligne sur un declencheur
-       colle au bord gauche de l'ecran deborderait hors-viewport meme SANS
-       aucun bug .card — sans rapport avec #856). -->
-  <div style="margin: 40px 0 40px 400px;">
+  <!-- margin-left genereux (desktop uniquement, .fixture-offset ci-dessus) : isole la
+       question testee (clip par .card) de tout artefact du viewport (un menu droit-aligne
+       sur un declencheur colle au bord gauche de l'ecran deborderait hors-viewport meme
+       SANS aucun bug .card — sans rapport avec #856). -->
+  <div class="fixture-offset">
     <div class="card" style="max-width:280px;">
       <h3>Nouveau Perimetre</h3>
       <div class="dropdown" id="dd">
