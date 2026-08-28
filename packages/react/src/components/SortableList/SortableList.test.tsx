@@ -126,11 +126,11 @@ describe("SortableList — structure", () => {
     );
   });
 
-  it("rend une région live .sortable-live.sr-only, aria-live=polite, initialement vide", () => {
+  it("rend une région live .sr-only, aria-live=polite, initialement vide (aucune classe .sortable-live — pas de règle CSS dédiée, #853)", () => {
     render(<SortableList items={ITEMS} onReorder={() => {}} />);
-    const live = document.querySelector(".sortable-live");
+    const live = document.querySelector(".sr-only");
     expect(live).toBeInTheDocument();
-    expect(live).toHaveClass("sr-only");
+    expect(live).not.toHaveClass("sortable-live");
     expect(live).toHaveAttribute("aria-live", "polite");
     expect(live).toHaveAttribute("aria-atomic", "true");
     expect(live?.textContent).toBe("");
@@ -486,7 +486,7 @@ describe("SortableList — réordonnancement clavier Ctrl+↑/↓ (contrat #836,
 
     await user.keyboard("{Control>}{ArrowDown}{/Control}");
 
-    expect(document.querySelector(".sortable-live")?.textContent).toBe(
+    expect(document.querySelector(".sr-only")?.textContent).toBe(
       "Concevoir la maquette déplacé en position 2 sur 4",
     );
   });
@@ -499,7 +499,7 @@ describe("SortableList — réordonnancement clavier Ctrl+↑/↓ (contrat #836,
 
     await user.keyboard("{Control>}{ArrowDown}{/Control}");
 
-    expect(document.querySelector(".sortable-live")?.textContent).toBe(
+    expect(document.querySelector(".sr-only")?.textContent).toBe(
       "Concevoir la maquette déplacé en position 2 sur 4",
     );
   });
@@ -513,7 +513,7 @@ describe("SortableList — réordonnancement clavier Ctrl+↑/↓ (contrat #836,
     fireEvent.dragOver(itemC, { dataTransfer: makeDataTransfer() });
     fireEvent.drop(itemC, { dataTransfer: makeDataTransfer() });
 
-    expect(document.querySelector(".sortable-live")?.textContent).toBe("");
+    expect(document.querySelector(".sr-only")?.textContent).toBe("");
   });
 });
 

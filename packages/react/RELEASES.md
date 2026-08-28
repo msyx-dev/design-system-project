@@ -4,6 +4,13 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.38 — 2026-08-28 — `<SortableList>` : réordonnancement souris/tactile/clavier (#853)
+
+### Added
+- **`<SortableList>`** — premier wrapper React de `.sortable-list*` (`lists.css`), demandé par **KeepThread** pour réordonner les lignes d'une Session pendant une réunion. **Entièrement contrôlé** (`items`+`onReorder`, aucun ordre interne — une réorganisation ne fait QUE calculer le tableau cible et appeler `onReorder`). Trois modes de réordonnancement : **(1)** souris via HTML5 Drag & Drop natif (`.dragging`/`.drag-over`, `aria-grabbed` togglé) ; **(2)** tactile via Pointer Events réimplémenté (`setPointerCapture` + clone DOM fantôme suivant le doigt, calque `<SplitPane>` — `window.__pointerDrag()` non importable côté React) ; **(3)** clavier — **contrat repris à l'identique de #836** côté vanilla (roving tabindex, ↑/↓ déplacent le focus, `Home`/`End` aux extrémités, `Ctrl`+↑/↓ déplace l'item avec annonce `aria-live="polite"` `"<label> déplacé en position N sur M"`). Le focus DOM survit à un `Ctrl`+↑/↓ sans `.focus()` explicite (`key={item.id}`, React réutilise le même nœud). `numbered` (`.sortable-list--numbered`/`.sortable-num`) dérive directement de l'index dans `items`. Zéro classe CSS nouvelle. 32 tests (dont le parcours clavier complet et un audit `axe-core` sur les deux variantes).
+- **`sortable-list` passé à `react: "ported"`** dans le registre (`shared/components-registry.json`) + `SortableList` ajouté à `REACT_TO_REGISTRY` (`bin/generate-registry.js`). La région `aria-live` n'émet QUE `.sr-only` — `.sortable-live` du vanilla n'a aucune règle CSS dédiée (hook JS pur) et n'est jamais réémise côté React pour respecter le critère « zéro classe CSS nouvelle chez le consumer ».
+- **`jest-axe`** ajouté en devDependency (+ matcher `toHaveNoViolations` câblé dans `src/test-setup.ts`) — premier composant du package à embarquer un audit `axe-core` en test unitaire.
+
 ## v3.0.0-alpha.35 — 2026-08-28 — `<Dropdown>`/`<ActionMenu>` : portail hors de `.card` (#856)
 
 > Touche `packages/react/**` ET `shared/css/components/forms.css` + `shared/css/components/overlays.css` + `shared/components.js` (cf. `../../RELEASES.md` racine v2.126.1 pour le détail du défaut et sa gravité réelle).

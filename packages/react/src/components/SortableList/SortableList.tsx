@@ -89,7 +89,7 @@ function extractLabel(el: HTMLElement): string {
  *     …children…
  *   </li>
  * </ul>
- * <div class="sortable-live sr-only" aria-live="polite" aria-atomic="true">…</div>
+ * <div class="sr-only" aria-live="polite" aria-atomic="true">…</div>
  * ```
  *
  * **Contrôlé, aucun ordre interne** — `items` EST l'ordre affiché. Une
@@ -125,8 +125,10 @@ function extractLabel(el: HTMLElement): string {
  * déplacent le FOCUS (parcours, ne réordonnent rien) ; `Home`/`End` aux
  * extrémités ; **`Ctrl`+↑/↓ déplace l'ITEM lui-même** d'une position
  * (adjacente), en conservant le focus dessus, et pousse une annonce
- * `aria-live="polite"` (`.sortable-live.sr-only`) — même gabarit de message
- * que le vanilla : `"<label> déplacé en position N sur M"`. **Aucune
+ * `aria-live="polite"` (`.sr-only`, région dédiée sans classe DS propre —
+ * `.sortable-live` du vanilla n'a AUCUNE règle CSS, jamais réémise ici pour
+ * ne pas ajouter de classe morte chez le consumer, #853) — même gabarit de
+ * message que le vanilla : `"<label> déplacé en position N sur M"`. **Aucune
  * annonce n'est émise pour le drag souris/tactile** (parité exacte : dans
  * `initSortableLists`, `announceMove()` n'est appelée QUE par `moveItem()`,
  * jamais par les chemins `drop`/`pointerup`).
@@ -419,11 +421,7 @@ export function SortableList({
           );
         })}
       </ul>
-      <div
-        className="sortable-live sr-only"
-        aria-live="polite"
-        aria-atomic="true"
-      >
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
         {liveMessage}
       </div>
     </>
