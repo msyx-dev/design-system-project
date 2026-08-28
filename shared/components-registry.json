@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-28T19:14:24.670Z",
+    "at": "2026-08-28T21:21:33.716Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -66,7 +66,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"card\">\n  <div class=\"card-icon card-icon--accent\">&#9889;</div>\n  <h3>Titre de la card</h3>\n  <p>Description de contenu de la card.</p>\n</div>\n\n<div class=\"card-flat\">\n  <h3>Card interactive</h3>\n  <p>Utiliser pour les éléments cliquables.</p>\n</div>\n\n<a href=\"/projet\" class=\"card-link\">\n  <div class=\"card\">\n    <h3>Titre</h3>\n    <p>Description.</p>\n  </div>\n</a>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/cards.css",
         "shared/css/components/media.css",
@@ -86,7 +86,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"card card-media\">\n  <div class=\"card-thumb\">\n    <img src=\"/img/article.jpg\" alt=\"Vignette article\">\n  </div>\n  <div class=\"card-body\">\n    <span class=\"overline\">IA</span>\n    <h3>Titre de l'article</h3>\n    <p>Résumé du contenu en quelques mots.</p>\n    <span class=\"badge badge-success\">Pertinent</span>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/cards.css"
       ]
@@ -121,7 +121,7 @@
       ],
       "jsInit": null,
       "example": "<span class=\"badge badge-primary\">Nouveau</span>\n<span class=\"badge badge-success\">Actif</span>\n<span class=\"badge badge-warning\">En attente</span>\n<span class=\"badge badge-danger\">Erreur</span>\n<span class=\"badge badge-info\">Info</span>\n<span class=\"tag\">Next.js</span>\n<span class=\"tag\">TypeScript</span>\n\n<!-- Badge compact sidebar/nav -->\n<span class=\"badge badge-primary badge-nav\">12</span>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/badges.css",
         "shared/css/components/version-notes.css"
@@ -225,7 +225,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"avatar\">PR</div>\n<div class=\"avatar avatar-sm\">MS</div>\n<div class=\"avatar avatar-lg avatar-gradient\">AI</div>\n\n<div class=\"avatar-group\">\n  <div class=\"avatar avatar-sm\">AA</div>\n  <div class=\"avatar avatar-sm\">BB</div>\n  <div class=\"avatar avatar-sm\">CC</div>\n</div>\n\n<div class=\"avatar avatar-status\">\n  <img class=\"avatar-img\" src=\"photo.jpg\" alt=\"Prénom Nom\">\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/avatars.css"
       ]
@@ -622,7 +622,7 @@
       ],
       "jsInit": null,
       "example": "<hr class=\"divider\">\n\n<div class=\"divider-label\">ou</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
       ]
