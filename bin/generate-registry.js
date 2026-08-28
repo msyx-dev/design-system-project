@@ -663,6 +663,7 @@ const REACT_TO_REGISTRY = {
   TimePicker: 'time-picker',              // #761 — time-picker 24h/12h ; entrée registre dédiée (scission #770, ex-lumpée dans 'calendar')
   Rail: 'sidebar-rail',                   // #857 — rail compact + sidebar déployée (2 états d'1 composant), réutilise .sidebar-link-disabled (layout.css)
   Timeline: 'timeline',                   // #852 — fil vertical à deux niveaux, entièrement contrôlé, réutilise le vocabulaire .activity-* d'ActivityFeed (lists.css)
+  SortableList: 'sortable-list',          // #853 — réordonnancement souris (DnD HTML5)/tactile (Pointer Events)/clavier (roving tabindex + Ctrl+↑/↓, contrat #836 inchangé)
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

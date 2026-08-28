@@ -1,4 +1,13 @@
 import "@testing-library/jest-dom/vitest";
+import { expect } from "vitest";
+import { toHaveNoViolations } from "jest-axe";
+
+// jest-axe expose son matcher via `expect.extend` (API jest, compatible
+// vitest — cf. `@testing-library/jest-dom/vitest` juste au-dessus, même
+// mécanisme). Premier composant à en avoir besoin : `<SortableList>` (#853,
+// critère d'acceptation « test a11y axe-core »). Centralisé ici plutôt que
+// répété dans chaque fichier de test — tout composant peut l'utiliser.
+expect.extend(toHaveNoViolations);
 
 // jsdom n'implémente pas HTMLDialogElement.showModal()/close() (cf.
 // https://github.com/jsdom/jsdom/issues/3294). Polyfill minimal pour les
