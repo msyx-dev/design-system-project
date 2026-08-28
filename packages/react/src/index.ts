@@ -380,3 +380,32 @@ export type {
   SortableListItem,
   SortableListItemId,
 } from "./components/SortableList/SortableList";
+
+// ─── Lot 1 « décoratifs A » — #871 (cards, card-media, badges, avatar, divider) ───
+export { Card, CardIcon } from "./components/Card/Card";
+export type {
+  CardProps,
+  CardIconProps,
+  CardIconVariant,
+} from "./components/Card/Card";
+export {
+  CardMedia,
+  CardThumb,
+  CardBody,
+} from "./components/CardMedia/CardMedia";
+export type {
+  CardMediaProps,
+  CardThumbProps,
+  CardBodyProps,
+} from "./components/CardMedia/CardMedia";
+export { Badge } from "./components/Badge/Badge";
+export type { BadgeProps, BadgeVariant } from "./components/Badge/Badge";
+export { Avatar, AvatarGroup } from "./components/Avatar/Avatar";
+export type {
+  AvatarProps,
+  AvatarSize,
+  AvatarStatusValue,
+  AvatarGroupProps,
+} from "./components/Avatar/Avatar";
+export { Divider } from "./components/Divider/Divider";
+export type { DividerProps } from "./components/Divider/Divider";
