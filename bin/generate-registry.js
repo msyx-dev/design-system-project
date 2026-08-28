@@ -669,6 +669,19 @@ const REACT_TO_REGISTRY = {
   Badge: 'badges',                        // #871 — .badge + 6 variantes sémantiques réelles (issue en annonçait 7, cf. RELEASES) + .badge-nav
   Avatar: 'avatar',                       // #871 — 5 tailles + .avatar-gradient + .avatar-status(online/busy/offline), AvatarGroup co-localisé
   Divider: 'divider',                     // #871 — .divider (hr) / .divider-label (div) ; .divider-gradient/.divider-vertical hors périmètre (absents des cssClasses de l'entrée registre)
+  Alert: 'alert',                         // #872 — Lot 2 décoratifs B : 4 variantes sémantiques + composition kpi/cta (AlertIcon/Title/Body/Desc/Value/Actions)
+  // #872 — zone-banner/upgrade-prompt sont les variantes .alert--kpi/.alert--cta
+  // d'Alert (#519), sans dossier `src/components/` propre. Clés fictives :
+  // resolveReactCompDir('Alert__zone-banner') → src/components/Alert__zone-banner
+  // (inexistant) → boucle de scan (a) continue sans effet. Seule leur PRÉSENCE
+  // dans Object.values(REACT_TO_REGISTRY) compte, pour satisfaire la vérification
+  // réciproque (b) « react:ported sans composant mappé » plus bas dans ce fichier
+  // — leurs classes sont déjà couvertes par le scan réel de la clé Alert ci-dessus.
+  'Alert__zone-banner': 'zone-banner',
+  'Alert__upgrade-prompt': 'upgrade-prompt',
+  Skeleton: 'skeleton',                   // #872 — .skeleton + text/title/avatar/btn
+  EmptyState: 'empty-state',              // #872 — .empty-state/.empty-state-icon
+  Spinner: 'spinner',                     // #872 — Spinner/SpinnerDots/LoadingBar/LoadingOverlay co-localisés dans components/Spinner/
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

@@ -409,7 +409,7 @@
       ],
       "jsInit": null,
       "example": "<div class=\"alert alert-info\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#128712;</span>\n  Mise à jour disponible pour votre projet.\n</div>\n\n<div class=\"alert alert--kpi alert-danger\">\n  <div class=\"alert-title\">Zone de perte</div>\n  <div class=\"alert-value\">-2 340 €</div>\n  <div class=\"alert-desc\">Marge négative sur ce segment.</div>\n</div>\n\n<div class=\"alert alert--cta alert-info\" role=\"alert\">\n  <div class=\"alert-icon\" aria-hidden=\"true\">⚡</div>\n  <div class=\"alert-body\">\n    <div class=\"alert-title\">Passez au plan Pro</div>\n    <div class=\"alert-desc\">Débloquez les exports illimités.</div>\n    <div class=\"alert-actions\"><button class=\"btn-primary btn-sm\">Voir les plans</button></div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
         "shared/css/components/forms.css",
@@ -451,10 +451,10 @@
         ".alert-desc"
       ],
       "jsInit": null,
-      "description": "Absorbé par la variante `.alert--kpi` du composant `alert` (#519) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant (lot 2).",
+      "description": "Absorbé par la variante `.alert--kpi` du composant `alert` (#519) — pas de wrapper React dédié, porté avec `alert` via la variante `kpi` d’`Alert` (lot 2, #872).",
       "reactComponent": "Alert",
       "example": "<div class=\"alert alert--kpi alert-danger\">\n  <div class=\"alert-title\">Zone de perte</div>\n  <div class=\"alert-value\">-2 340 €</div>\n  <div class=\"alert-desc\">Marge négative.</div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
         "shared/css/components/forms.css",
@@ -475,10 +475,10 @@
         ".alert-actions"
       ],
       "jsInit": null,
-      "description": "Absorbé par la variante `.alert--cta` du composant `alert` (#519) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant (lot 2).",
+      "description": "Absorbé par la variante `.alert--cta` du composant `alert` (#519) — pas de wrapper React dédié, porté avec `alert` via la variante `cta` d’`Alert` (lot 2, #872).",
       "reactComponent": "Alert",
       "example": "<div class=\"alert alert--cta alert-info\" role=\"alert\">\n  <div class=\"alert-icon\" aria-hidden=\"true\">⚡</div>\n  <div class=\"alert-body\">\n    <div class=\"alert-title\">Passez au plan Pro</div>\n    <div class=\"alert-desc\">Débloquez les exports illimités.</div>\n    <div class=\"alert-actions\"><button class=\"btn-primary btn-sm\">Voir les plans</button></div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
         "shared/css/components/forms.css",
