@@ -703,6 +703,16 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.split-pane--dragging', // splitter.css — AUCUNE règle CSS aujourd'hui (bug DS suivi séparément, #763). Émise quand même côté React pour la parité vanilla ; #763 la rendra visible des deux côtés simultanément.
   '.cal-prev', // templates.css:84 — hook JS query-selector du vanilla (initCalendar), AUCUNE règle .cal-prev dédiée : le style vient de .cal-nav button (descendant, sans classe). Émise côté React pour parité markup (#760).
   '.cal-next', // idem .cal-prev — #760
+  // #889 — repasse du package une fois le motif « variable intermédiaire »
+  // couvert par extractReactClasses (#889) : les 5 classes ci-dessous sont
+  // toutes réellement stylées, seulement invisibles du scanner CSS-side
+  // (extractClasses ci-dessus, même limite documentée que .selected/.dropdown-value
+  // plus haut) sauf mention contraire.
+  '.number-input--compact',  // forms.css:216-224 — compound .number-input-wrap.number-input--compact (x3 règles)
+  '.number-input--disabled', // forms.css:160 — compound .number-input-wrap.number-input--disabled
+  '.initially-hidden',       // lists.css:166 — compound .activity-item.initially-hidden (fix #775/#778 : la classe A un backing CSS aujourd'hui, contrairement au commentaire historique dans ActivityFeed.tsx qui la disait sans CSS — commentaire à rafraîchir séparément)
+  '.drag-over',               // lists.css:107 — compound .sortable-item.drag-over
+  '.search-with-suggestions', // forms.css n'a AUCUNE règle dédiée (pas un cas de compound-selector) : hook JS pur, query par initSearchInput (shared/components.js:598), calque exact du vanilla (formulaires.html) — même catégorie que .dropdown-value ci-dessus
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js

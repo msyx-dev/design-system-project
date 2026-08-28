@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * extract-react-classes.js — extraction des classes CSS émises par un .tsx
- * Design System msyx.fr — bin/lib/extract-react-classes.js v1.1
+ * Design System msyx.fr — bin/lib/extract-react-classes.js v1.2
  *
  * Extrait de bin/generate-registry.js (#747) pour être testable en isolation
  * (require() direct, sans exécuter tout le script generate-registry.js qui a
@@ -13,6 +13,14 @@
  * juste un token qui ne matchait aucune regle et disparaissait. Conséquence :
  * le filet anti-fantôme de generate-registry.js (parité React #523) était
  * aveugle sur ces classes.
+ *
+ * Historique #889 : le motif « variable intermédiaire » — `const itemClasses
+ * = [...].filter(Boolean).join(" ")` puis `className={itemClasses}` plus
+ * loin dans le fichier — n'était couvert par AUCUNE des 3 formes ci-dessous
+ * (ni littéral, ni template, ni tableau inline dans `className={[...]}`).
+ * C'est pourtant le motif dominant du package (~40 composants dont
+ * `Timeline`/`Rail`/`ActionMenu`/`DataGrid`/`SortableList`), qui passaient
+ * donc au vert sans aucune vérification. Cf. étape 4 ci-dessous.
  *
  * @param {string} tsx  contenu du fichier .tsx
  * @param {Object} [opts]
@@ -87,6 +95,37 @@ function extractReactClasses(tsx, opts = {}) {
     const STR_INSIDE_RE = /"([^"]+)"|'([^']+)'|`([^`]+)`/g;
     let s;
     while ((s = STR_INSIDE_RE.exec(arrayContent)) !== null) {
+      processClassValue(s[1] ?? s[2] ?? s[3] ?? '');
+    }
+  }
+
+  // 4. Motif « variable intermédiaire » (#889) :
+  //      const itemClasses = [base, isActive && "actif"].filter(Boolean).join(" ");
+  //      return <div className={itemClasses} />;
+  //    Anti faux-positif : on ne scanne QUE les déclarations `const <nom> = …`
+  //    dont le <nom> est réellement référencé tel quel dans un
+  //    `className={<nom>}` ailleurs dans le fichier — jamais un scan aveugle
+  //    de tous les `.join(...)` du fichier (qui pourrait capturer un tableau
+  //    sans rapport avec des classes CSS et faire remonter un phantom
+  //    fantaisiste). La valeur associée n'est pas ré-analysée pour sa forme
+  //    exacte (tableau + `.join`, concaténation `+`, ternaire…) : on extrait
+  //    tout littéral de chaîne présent dans le membre droit de la déclaration,
+  //    jusqu'au `;` qui la termine — même tokenizer que les formes 1-3
+  //    (`processClassValue` rejette déjà tout ce qui ne ressemble pas à une
+  //    classe kebab/BEM/whitelist).
+  const classNameVarNames = new Set();
+  const CLASSNAME_VAR_RE = /className=\{\s*([A-Za-z_$][\w$]*)\s*\}/g;
+  while ((m = CLASSNAME_VAR_RE.exec(tsx)) !== null) {
+    classNameVarNames.add(m[1]);
+  }
+  for (const varName of classNameVarNames) {
+    const escaped = varName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const declRe = new RegExp('const\\s+' + escaped + '\\s*=\\s*([\\s\\S]*?);');
+    const decl = declRe.exec(tsx);
+    if (!decl) continue; // pas une const locale (ex. prop déstructurée) → rien à extraire
+    const STR_INSIDE_RE = /"([^"]+)"|'([^']+)'|`([^`]+)`/g;
+    let s;
+    while ((s = STR_INSIDE_RE.exec(decl[1])) !== null) {
       processClassValue(s[1] ?? s[2] ?? s[3] ?? '');
     }
   }
