@@ -1,5 +1,12 @@
 # Releases
 
+## 2.126.1 — 2026-08-28 — Dropdown/ActionMenu dans une .card : panneau clippé et incliquable (#856)
+
+> Touche `shared/css/components/forms.css` + `shared/css/components/overlays.css` + `shared/components.js` ET `packages/react/**` (2 entrées, cf. `packages/react/RELEASES.md` v3.0.0-alpha.35).
+
+### Fixed
+- **`.dropdown-menu`/`.action-menu` clippés par `.card`, au point d'être incliquables à la souris** — `.card` (`cards.css`) pose `overflow:hidden` + `will-change:transform` + `container-type:inline-size`. Un descendant `position:absolute` (l'ancien positionnement des deux panneaux) est clippé par `overflow:hidden` — comportement CSS standard. Vérifié empiriquement (Playwright, isolé propriété par propriété) : `will-change:transform` établit en plus un containing block pour tout descendant `position:fixed` **non déplacé** du sous-arbre, au même titre qu'un `transform` réel — un simple `position:absolute → fixed` sans déplacer le nœud ne suffit donc PAS. `container-type:inline-size` seul, lui, NE piège PAS `position:fixed` (vérifié isolément). Repro production plus grave que le titre de l'issue : recette `keepthread` (2026-08-28) — le menu Actions du panneau de détail d'un Périmètre (un `.card`) était incliquable à la souris (`document.elementFromPoint` résolvait sur `.card`, jamais sur le bouton), seule la navigation clavier fonctionnait encore. Correctif : les deux panneaux sont désormais **déplacés dans `document.body`** à l'ouverture (`position:fixed`, position calculée depuis `getBoundingClientRect()` du déclencheur) — vanilla via `openFloatingPanel()`/`restoreFloatingPanel()` (`shared/components.js`, restauration à côté du déclencheur à la fermeture pour ne laisser aucun nœud orphelin après une navigation SPA), React via `createPortal` (même mécanisme que `RiskMatrix`/`HeatmapCalendar`/`Toast`). `z-index` de `.dropdown-menu` relevé 50→200 (aligné sur `.action-menu`) : le panneau rivalise désormais avec le header/sidebar au niveau racine, plus seulement avec ses frères locaux. `.card` lui-même n'est pas modifié — aucun usage existant n'est affecté. Navigation clavier inchangée (elle n'était pas affectée par le clipping visuel).
+
 ## 2.126.0 — 2026-08-28 — Timeline : regroupement à deux niveaux + mode compact (#852)
 
 > Touche `shared/css/components/lists.css` ET `packages/react/**` (portage `<Timeline>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.34).

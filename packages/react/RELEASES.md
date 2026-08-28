@@ -4,6 +4,13 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.35 — 2026-08-28 — `<Dropdown>`/`<ActionMenu>` : portail hors de `.card` (#856)
+
+> Touche `packages/react/**` ET `shared/css/components/forms.css` + `shared/css/components/overlays.css` + `shared/components.js` (cf. `../../RELEASES.md` racine v2.126.1 pour le détail du défaut et sa gravité réelle).
+
+### Fixed
+- **`<Dropdown>`/`<ActionMenu>` : panneau rendu en enfant inline, clippé/incliquable dans une `.card`** — les deux composants rendaient leur panneau (`.dropdown-menu`/`.action-menu`) en `position: absolute` à l'intérieur de leur wrapper contrôlé (`.dropdown`/`.action-menu-wrap`), donc clippé par tout ancêtre `overflow: hidden` (`.card` en particulier, `will-change: transform` piégeant en plus tout `position: fixed` non déplacé du sous-arbre). Constaté en recette `keepthread` : le menu Actions du panneau de détail d'un Périmètre était incliquable à la souris. Les deux composants portent désormais leur panneau via `createPortal` dans `document.body` — même mécanisme que `RiskMatrix`/`HeatmapCalendar`/`Toast` — avec sa position calculée à l'ouverture (`useLayoutEffect`, pas de flash de position) depuis `getBoundingClientRect()` du déclencheur. Le check de clic extérieur (fermeture) a été étendu pour inclure le panneau porté (`menuRef`) : sans ça, tout clic sur une option/un item du panneau porté — désormais hors de `wrapRef` — se serait vu interprété comme "extérieur" et aurait refermé le menu avant la sélection. Aucun changement d'API (`props` inchangées), aucune régression clavier (navigation flèches/Home/End/Escape/focus management inchangés).
+
 ## v3.0.0-alpha.34 — 2026-08-28 — `<Timeline>` : fil vertical à deux niveaux, entièrement contrôlé (#852)
 
 > Touche `packages/react/**` ET `shared/css/components/lists.css` (5 nouvelles classes, cf. `../../RELEASES.md` racine v2.126.0).
