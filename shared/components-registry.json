@@ -1,7 +1,7 @@
 {
   "version": "2.126.1",
   "generated": {
-    "at": "2026-08-28T09:08:30.196Z",
+    "at": "2026-08-28T09:24:29.667Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -451,6 +451,8 @@
         ".alert-desc"
       ],
       "jsInit": null,
+      "description": "Absorbé par la variante `.alert--kpi` du composant `alert` (#519) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant (lot 2).",
+      "reactComponent": "Alert",
       "example": "<div class=\"alert alert--kpi alert-danger\">\n  <div class=\"alert-title\">Zone de perte</div>\n  <div class=\"alert-value\">-2 340 €</div>\n  <div class=\"alert-desc\">Marge négative.</div>\n</div>",
       "react": "pending",
       "module": [
@@ -473,6 +475,8 @@
         ".alert-actions"
       ],
       "jsInit": null,
+      "description": "Absorbé par la variante `.alert--cta` du composant `alert` (#519) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant (lot 2).",
+      "reactComponent": "Alert",
       "example": "<div class=\"alert alert--cta alert-info\" role=\"alert\">\n  <div class=\"alert-icon\" aria-hidden=\"true\">⚡</div>\n  <div class=\"alert-body\">\n    <div class=\"alert-title\">Passez au plan Pro</div>\n    <div class=\"alert-desc\">Débloquez les exports illimités.</div>\n    <div class=\"alert-actions\"><button class=\"btn-primary btn-sm\">Voir les plans</button></div>\n  </div>\n</div>",
       "react": "pending",
       "module": [
@@ -600,6 +604,8 @@
         ".copy-btn"
       ],
       "jsInit": "initCopyButtons",
+      "description": "Absorbé par le composant `code` (même `initCopyButtons`) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant (lot 4).",
+      "reactComponent": "Code",
       "example": "<button class=\"copy-btn\" data-copy=\"Texte à copier\" aria-label=\"Copier\">\n  <span class=\"copy-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"2\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"></rect><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path></svg></span>\n  Copier\n  <span class=\"copy-tooltip\">Copie !</span>\n</button>",
       "react": "pending",
       "module": [
@@ -1489,7 +1495,7 @@
       "jsInit": null,
       "description": "Composant icone via sprite SVG Lucide self-hoste. 53 symboles disponibles dans /shared/icons/sprite.svg. Convention : <svg class=\"icon\"><use href=\"/shared/icons/sprite.svg#i-{nom}\"/></svg>. Tokens : --icon-size-sm (16px), --icon-size-md (20px, defaut), --icon-size-lg (24px), --icon-stroke (1.5).",
       "example": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-home\"/></svg>\n<svg class=\"icon icon--sm\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-check\"/></svg>\n<svg class=\"icon icon--lg\" role=\"img\" aria-label=\"Parametres\"><use href=\"/shared/icons/sprite.svg#i-settings\"/></svg>\n<button class=\"btn-icon\" aria-label=\"Supprimer\"><svg class=\"icon\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-trash\"/></svg></button>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/overlays.css",
@@ -1521,9 +1527,9 @@
         ".main .section-header .overline"
       ],
       "jsInit": null,
-      "description": "Signature spatiale msyx (v2.42.0). Gradient underline 2px via ::after sur chaque .section-header .overline. Accent visuel 32×2px, var(--gradient-1), border-radius 2px. Module signature.css importé dans components.css après _base.css. Rend le DS reconnaissable même en grayscale.",
+      "description": "Signature spatiale msyx (v2.42.0). Gradient underline 2px via ::after sur chaque .section-header .overline. Accent visuel 32×2px, var(--gradient-1), border-radius 2px. Module signature.css importé dans components.css après _base.css. Rend le DS reconnaissable même en grayscale. Non portable — token/effet ::after posé globalement sur .section-header .overline, aucune API à offrir (#870).",
       "example": "<!-- Appliqué automatiquement via signature.css sur tous les .section-header .overline -->\n<div class=\"section-header\">\n  <span class=\"overline\">Catégorie</span>\n  <h2>Titre section</h2>\n</div>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/brand.css",
         "shared/css/components/section-header.css",
@@ -1559,9 +1565,9 @@
         ".motion-bounce-demo"
       ],
       "jsInit": "initMotionReplay",
-      "description": "Motion reference page (v2.35.0). Durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques avec boutons Replay. initMotionReplay() : toggle classe + void offsetWidth reflow. initMotionViewport() : IntersectionObserver pause hors viewport. prefers-reduced-motion geré via bloc global components.css.",
+      "description": "Motion reference page (v2.35.0). Durations (fast/base/slow), easings (standard/spring + courbes SVG), 6 patterns canoniques avec boutons Replay. initMotionReplay() : toggle classe + void offsetWidth reflow. initMotionViewport() : IntersectionObserver pause hors viewport. prefers-reduced-motion geré via bloc global components.css. Non portable — démo de showcase de la page fondation, pas un composant consommable (#870).",
       "example": "<!-- Fade-in -->\n<div class=\"motion-fade-in-demo\">Hello</div>\n\n<!-- Slide-up -->\n<div class=\"motion-slide-up-demo\">Hello</div>\n\n<!-- Scale-in -->\n<div class=\"motion-scale-in-demo\">Hello</div>\n\n<!-- Stagger (3 enfants) -->\n<div class=\"motion-stagger-demo\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</div>\n\n<!-- Success bounce -->\n<div class=\"motion-bounce-demo\">✓</div>\n\n<!-- Replay bouton -->\n<button class=\"btn-secondary motion-replay\" data-motion-target=\".motion-fade-in-demo\">Replay</button>",
-      "react": "pending",
+      "react": "n-a",
       "module": [
         "shared/css/components/motion.css"
       ]
@@ -1694,7 +1700,8 @@
       ],
       "jsInit": null,
       "version": "2.56.0",
-      "description": "Wordmark texte 'design-system' (Space Grotesk 600 18px, gradient charte) affiché à côté du pictogramme MSYX en header desktop. Masqué mobile < 640px.",
+      "description": "Wordmark texte 'design-system' (Space Grotesk 600 18px, gradient charte) affiché à côté du pictogramme MSYX en header desktop. Masqué mobile < 640px. Absorbé par les déclinaisons du futur <Logo> (#878, lot 8) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant.",
+      "reactComponent": "Logo",
       "example": "<span class=\"brand-wordmark\">design-system</span>",
       "react": "pending",
       "module": [
@@ -1713,7 +1720,8 @@
       ],
       "jsInit": null,
       "version": "2.56.0",
-      "description": "Mark stylisé 'DS' (Space Grotesk 700 72px, gradient charte) utilisé sur la page login en remplacement du pictogramme MSYX. Variantes --sm 32px / --lg 96px.",
+      "description": "Mark stylisé 'DS' (Space Grotesk 700 72px, gradient charte) utilisé sur la page login en remplacement du pictogramme MSYX. Variantes --sm 32px / --lg 96px. Absorbé par les déclinaisons du futur <Logo> (#878, lot 8) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant.",
+      "reactComponent": "Logo",
       "example": "<div class=\"brand-mark-ds\" aria-label=\"Design System\">DS</div>",
       "react": "pending",
       "module": [
@@ -3150,8 +3158,8 @@
         ".content-grid"
       ],
       "jsInit": null,
-      "react": "pending",
-      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53"
+      "react": "n-a",
+      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53. Non portable — layout, s'applique en className (#870). NB : #859 (variante large pour vues de données) est un chantier CSS distinct, sans rapport avec ce statut React."
     },
     {
       "name": "detail-grid",
@@ -3163,8 +3171,8 @@
         ".detail-grid-aside"
       ],
       "jsInit": null,
-      "react": "pending",
-      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (--bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795). Variable --detail-grid-offset (0px par défaut) sur .detail-grid, à poser à var(--page-header-sticky-h) quand la page combine un .section-header--sticky, sinon l'aside passe sous l'en-tête (#797)."
+      "react": "n-a",
+      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (--bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795). Variable --detail-grid-offset (0px par défaut) sur .detail-grid, à poser à var(--page-header-sticky-h) quand la page combine un .section-header--sticky, sinon l'aside passe sous l'en-tête (#797). Non portable — layout, s'applique en className (#870)."
     },
     {
       "name": "hidden-mobile",

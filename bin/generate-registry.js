@@ -573,14 +573,38 @@ for (const comp of newComponents) {
 
 // ─── Parité React (#523) ──────────────────────────────────────────────────────
 
-const REACT_SRC_ROOT = path.join(ROOT, 'packages', 'react', 'src', 'components');
+const REACT_SRC_BASE = path.join(ROOT, 'packages', 'react', 'src');
+const REACT_SRC_ROOT = path.join(REACT_SRC_BASE, 'components');
 
-// Table de mapping : composant React (dir) → nom d'entrée registre.
+/**
+ * Résout le dossier source d'une clé REACT_TO_REGISTRY.
+ * Par défaut une clé désigne un dossier de `src/components/<clé>` (cas
+ * general : un composant = un dossier). Si la clé contient un `/`, le
+ * dernier segment est le nom de fichier (pas un sous-dossier) : la clé
+ * désigne un chemin relatif à `src/` DONT ON RETIRE le dernier segment
+ * (ex. `icons/Icon` → dossier `src/icons/`, pour scanner `Icon.tsx`) —
+ * nécessaire pour les primitives qui ne vivent pas sous `components/`
+ * (#870 : Icon vit dans `src/icons/Icon.tsx`, jamais vu par le scanner
+ * sinon). Sans ce `dirname`, le chemin résolu (`src/icons/Icon`, sans
+ * extension) n'existe pas → le garde-fou `fs.existsSync` plus bas `continue`
+ * silencieusement et le scanner anti-fantôme ne valide jamais Icon.tsx.
+ * @param {string} key  clé de REACT_TO_REGISTRY
+ * @returns {string} chemin absolu du dossier à scanner
+ */
+function resolveReactCompDir(key) {
+  return key.includes('/')
+    ? path.join(REACT_SRC_BASE, path.dirname(key))
+    : path.join(REACT_SRC_ROOT, key);
+}
+
+// Table de mapping : composant React (dir, ou chemin relatif à src/ s'il
+// contient un '/' — cf. resolveReactCompDir) → nom d'entrée registre.
 // Source de vérité unique du lien React↔registre (robuste vs inférence).
 // Mise à jour requise à chaque nouveau portage React.
 const REACT_TO_REGISTRY = {
   Button:      'buttons',
   PageHeader:  'page-header',
+  'icons/Icon': 'icon',  // #870 — primitif hors src/components/ (src/icons/Icon.tsx)
   ThemeToggle: 'theme-switcher',  // #518 — ThemeToggle émet .mode-switch (canonique, layout.css)
   UserMenu:    'user-menu',
   LoginScreen: 'login-screen',
@@ -690,7 +714,7 @@ const reactDrift   = [];    // composant ported dont le marquage est incohérent
 if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) {
   // (a) + (b) : vérifier chaque composant React mappé
   for (const [dir, regName] of Object.entries(REACT_TO_REGISTRY)) {
-    const compDir = path.join(REACT_SRC_ROOT, dir);
+    const compDir = resolveReactCompDir(dir);
     if (!fs.existsSync(compDir)) continue;
 
     // Concat de tous les .tsx du composant (hors *.test.tsx)

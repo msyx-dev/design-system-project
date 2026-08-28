@@ -6,8 +6,10 @@
 // composants React 100 % autonomes, sans dépendance à un sprite servi par
 // l'app consommatrice (bug #713).
 //
-// INTERNE — non exporté depuis `index.ts`. Calqué sur le précédent
-// `components/LoginScreen/ProviderIcons.tsx` (SVG inline + dispatcher).
+// Exporté depuis `index.ts` (#870 — plus de dix wrappers internes en
+// dépendaient déjà sans que les consumers puissent l'importer directement).
+// Calqué sur le précédent `components/LoginScreen/ProviderIcons.tsx`
+// (SVG inline + dispatcher).
 //
 // Source de vérité des paths : `shared/icons/sprite.svg` (viewBox 0 0 24 24,
 // glyphes Lucide). Toute modification d'un glyphe côté sprite doit être
