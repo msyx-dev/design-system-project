@@ -22,8 +22,10 @@ const PAGES = [
   { slug: "divers", path: "/pages/divers.html", title: "Avancé" },
 ] as const;
 
-// Matrice : 9 pages x 12 projets. Depuis #286, capture PAR SECTION
-// (fullPage retiré — hauteur fullPage non déterministe sur pages longues).
+// Matrice : 10 pages x 10 projets (#851 — MSYX 4 projects x toutes sections,
+// ACSSI/Nhood/Auchan 2 projects desktop x sections sentinelles, cf.
+// SENTINEL_SECTIONS plus bas). Depuis #286, capture PAR SECTION (fullPage
+// retiré — hauteur fullPage non déterministe sur pages longues).
 // Naming baseline : <slug>__<section-id>.png
 // Le titre attendu sert de garde-fou anti-régression Bug 1 (#286) : si le
 // harness retombe sur index.html, l'assertion de titre echoue immediatement.
@@ -34,6 +36,41 @@ type Mode = "dark" | "light";
 const parseProjectName = (name: string): { theme: Theme; mode: Mode } => {
   const parts = name.split("-");
   return { theme: parts[0] as Theme, mode: parts[1] as Mode };
+};
+
+// --- Matrice reduite (#851) ---
+// MSYX (theme de reference) capture TOUTES les sections de chaque page —
+// aucune perte de couverture. Les themes secondaires (ACSSI/Nhood/Auchan)
+// ne capturent que les sections "sentinelles" listees ici : celles ou un
+// token de theme peut s'exprimer STRUCTURELLEMENT (une taille, une bordure,
+// un espacement qui varie) — le seul risque que la VR couvre et que rien
+// d'autre ne couvre. Le contraste, la completude des tokens et la
+// separabilite des teintes ne sont PAS des criteres de selection : deja
+// couverts par bin/check-categorical-palette.js + les audits a11y.
+// Regle complete + comment etendre a un futur theme : docs/DS-PRINCIPLES.md §VR.
+const SENTINEL_SECTIONS: Partial<
+  Record<(typeof PAGES)[number]["slug"], string[]>
+> = {
+  fondation: ["colors", "palette-categorielle", "theming"],
+  composants: [
+    "buttons",
+    "split-button",
+    "badges",
+    "chips",
+    "cards",
+    "card-media",
+    "segmented-control",
+  ],
+  navigation: ["action-menu"],
+  formulaires: ["inputs", "controls", "calendar"],
+  data: ["charts", "pie-donut"],
+  templates: ["pricing"],
+  feedback: ["alerts"],
+  overlays: ["modals"],
+  divers: ["diff-viewer"],
+  // user-feedback : aucune section sentinelle — la page ne comporte que
+  // #user-feedback-intro et #user-feedback-flow, deja couvertes par les
+  // sentinelles inputs/modals sur d'autres pages (#851).
 };
 
 const setThemeAndMode = async (
@@ -104,6 +141,16 @@ test.describe("Visual regression — full matrix (par section)", () => {
       test.setTimeout(120_000);
 
       const { theme, mode } = parseProjectName(testInfo.project.name);
+      const isReferenceMatrix = theme === "msyx";
+      const sentinels = SENTINEL_SECTIONS[slug] ?? [];
+
+      // #851 : theme secondaire sans section sentinelle sur cette page —
+      // aucune capture possible, inutile de charger la page.
+      test.skip(
+        !isReferenceMatrix && sentinels.length === 0,
+        `${slug} : aucune section sentinelle pour ce theme secondaire (#851)`,
+      );
+
       await setThemeAndMode(page, theme, mode);
       await freezeJsAnimations(page);
       await page.goto(path, { waitUntil: "networkidle" });
@@ -138,7 +185,21 @@ test.describe("Visual regression — full matrix (par section)", () => {
         `${slug} : aucune <section id> trouvée — page mal chargée ?`,
       ).toBeGreaterThan(0);
 
-      for (const sectionId of sectionIds) {
+      // #851 : MSYX capture toutes les sections (matrice de référence).
+      // Thèmes secondaires : uniquement les sections sentinelles — garde-fou
+      // explicite si SENTINEL_SECTIONS dérive du DOM réel (id renommé/retiré).
+      let idsToCapture = sectionIds;
+      if (!isReferenceMatrix) {
+        for (const id of sentinels) {
+          expect(
+            sectionIds,
+            `${slug} : section sentinelle "${id}" introuvable dans le DOM — SENTINEL_SECTIONS a dérivé (#851)`,
+          ).toContain(id);
+        }
+        idsToCapture = sectionIds.filter((id) => sentinels.includes(id));
+      }
+
+      for (const sectionId of idsToCapture) {
         const section = page.locator(`#${sectionId}`);
         await section.scrollIntoViewIfNeeded();
 
