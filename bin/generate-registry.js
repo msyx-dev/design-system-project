@@ -579,16 +579,21 @@ const REACT_SRC_ROOT = path.join(REACT_SRC_BASE, 'components');
 /**
  * Résout le dossier source d'une clé REACT_TO_REGISTRY.
  * Par défaut une clé désigne un dossier de `src/components/<clé>` (cas
- * general : un composant = un dossier). Si la clé contient un `/`, elle
- * désigne un chemin relatif à `src/` (ex. `icons/Icon` → `src/icons/`) —
+ * general : un composant = un dossier). Si la clé contient un `/`, le
+ * dernier segment est le nom de fichier (pas un sous-dossier) : la clé
+ * désigne un chemin relatif à `src/` DONT ON RETIRE le dernier segment
+ * (ex. `icons/Icon` → dossier `src/icons/`, pour scanner `Icon.tsx`) —
  * nécessaire pour les primitives qui ne vivent pas sous `components/`
- * (#870 : Icon vit dans `src/icons/`, jamais vu par le scanner sinon).
+ * (#870 : Icon vit dans `src/icons/Icon.tsx`, jamais vu par le scanner
+ * sinon). Sans ce `dirname`, le chemin résolu (`src/icons/Icon`, sans
+ * extension) n'existe pas → le garde-fou `fs.existsSync` plus bas `continue`
+ * silencieusement et le scanner anti-fantôme ne valide jamais Icon.tsx.
  * @param {string} key  clé de REACT_TO_REGISTRY
  * @returns {string} chemin absolu du dossier à scanner
  */
 function resolveReactCompDir(key) {
   return key.includes('/')
-    ? path.join(REACT_SRC_BASE, key)
+    ? path.join(REACT_SRC_BASE, path.dirname(key))
     : path.join(REACT_SRC_ROOT, key);
 }
 
