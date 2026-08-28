@@ -43,6 +43,7 @@ export default defineConfig({
     "**/graph-a11y.spec.ts",
     "**/graph-edit.spec.ts",
     "**/sticky-regression.spec.ts",
+    "**/card-floating-panel-clip.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
