@@ -152,8 +152,8 @@ function safeUrl(url, fallback, allowedSchemes) {
 // panneau dans document.body en `position:fixed`, positionne via getBoundingClientRect()
 // du declencheur ; `restoreFloatingPanel` le replace a cote de son declencheur a la
 // fermeture (delai = duree de la transition CSS) pour ne laisser aucun noeud orphelin
-// dans document.body apres une navigation SPA (`currentMain.innerHTML = ...` ne purge que
-// <main>, jamais document.body — nav.js:940).
+// dans document.body apres une navigation SPA (le swap de contenu de nav.js:940
+// ne reecrit que le innerHTML de <main>, jamais document.body).
 var FLOATING_PANEL_ANCHORS = new WeakMap();
 var FLOATING_PANEL_RESTORE_MS = 200; // aligne sur la transition CSS de .dropdown-menu/.action-menu
 
