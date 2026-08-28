@@ -1,5 +1,7 @@
 // @msyx-dev/react — Design System msyx.fr (React)
 // v3.0.0-alpha.6 — PageHeader ajouté dans #276
+export { Icon } from "./icons/Icon";
+export type { IconProps, IconName } from "./icons/Icon";
 export { Button } from "./components/Button/Button";
 export type {
   ButtonProps,
