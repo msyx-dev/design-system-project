@@ -197,8 +197,21 @@ function closeAllDropdownMenus() {
     document.querySelectorAll('.dropdown-trigger.open').forEach(function (t) { t.classList.remove('open'); });
 }
 
-function closeAllActionMenus() {
-    document.querySelectorAll('.action-menu.open').forEach(function (m) { m.classList.remove('open'); restoreFloatingPanel(m); });
+// restoreFocus (#744, cf. openMenu/closeMenu locaux dans initActionMenu) : le
+// listener Echap LOCAL a chaque instance (wrap.addEventListener('keydown', ...))
+// ne peut plus s'appuyer sur le bouillonnement DOM pour restaurer le focus des
+// que le menu est ouvert — il est alors deplace hors de `wrap` (portail #856),
+// donc plus un ancetre de l'element focus. Seul ce close-all GLOBAL (document)
+// reste dans le chemin de bouillonnement : restaure le focus sur le
+// declencheur de CHAQUE menu ferme quand demande (Echap), jamais sur un clic
+// exterieur (comportement d'origine inchange).
+function closeAllActionMenus(restoreFocus) {
+    document.querySelectorAll('.action-menu.open').forEach(function (m) {
+        m.classList.remove('open');
+        var anchor = FLOATING_PANEL_ANCHORS.get(m);
+        restoreFloatingPanel(m);
+        if (restoreFocus && anchor) anchor.focus();
+    });
     document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(function (t) { t.setAttribute('aria-expanded', 'false'); });
 }
 
@@ -7564,7 +7577,7 @@ document.addEventListener('click', () => {
 // Close action menus and split-button menus on Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        closeAllActionMenus();
+        closeAllActionMenus(true);
         // Split button menus (focus restore géré localement dans initSplitButton)
         document.querySelectorAll('.split-button__menu.open').forEach(m => m.classList.remove('open'));
         document.querySelectorAll('.split-button__caret[aria-expanded="true"]').forEach(c => c.setAttribute('aria-expanded', 'false'));
