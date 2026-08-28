@@ -149,18 +149,30 @@ export function ActionMenu({
 
   // Position du menu porté (#856) — calculée à l'ouverture depuis le
   // déclencheur, AVANT peinture (useLayoutEffect) pour ne pas flasher à
-  // (top:auto;right:auto) le temps d'un frame. `right` (pas `left`) : ancre
-  // le bord droit du menu sur le bord droit du déclencheur, largeur
-  // intrinsèque — calque l'ancien `right: 0` de `position: absolute`.
+  // (top:auto;left:auto) le temps d'un frame. Ancre le bord droit du menu
+  // sur le bord droit du déclencheur, largeur intrinsèque — calque l'ancien
+  // `right: 0` de `position: absolute`.
+  //
+  // `left` (pas `right: window.innerWidth - rect.right`, #886) : bug jumeau
+  // du vanilla `openFloatingPanel()` (shared/components.js) — `window.innerWidth`
+  // n'est pas garanti identique au bord droit réel du containing block d'un
+  // `position: fixed` (scrollbar classique vs overlay selon l'environnement),
+  // constaté flaky en CI sur `card-floating-panel-clip.spec.ts` (jamais
+  // reproduit en local). `left` calculé depuis `rect.right - menu.offsetWidth`
+  // reste entièrement dans l'espace de coordonnées du déclencheur — aucune
+  // dépendance à une métrique globale de viewport. `menuRef.current` est déjà
+  // monté à ce stade (portail + ref posés dans le même commit React que
+  // l'ouverture, avant ce layout effect).
   useIsomorphicLayoutEffect(() => {
     if (!open) return;
     const trigger = triggerRef.current;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
+    const menuWidth = menuRef.current?.offsetWidth ?? 0;
     setMenuStyle({
       position: "fixed",
       top: rect.bottom + 6,
-      right: window.innerWidth - rect.right,
+      left: rect.right - menuWidth,
     });
   }, [open]);
 
