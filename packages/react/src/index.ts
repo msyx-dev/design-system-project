@@ -451,3 +451,37 @@ export type {
   LoadingBarProps,
   LoadingOverlayProps,
 } from "./components/Spinner/Spinner";
+
+// Lot 3 « décoratifs C » (#873) — repères de progression et de position.
+export {
+  Pagination,
+  PaginationInfo,
+  getPaginationRange,
+} from "./components/Pagination/Pagination";
+export type {
+  PaginationProps,
+  PaginationInfoProps,
+  PaginationRangeItem,
+} from "./components/Pagination/Pagination";
+export { Breadcrumb } from "./components/Breadcrumb/Breadcrumb";
+export type {
+  BreadcrumbProps,
+  BreadcrumbItemData,
+} from "./components/Breadcrumb/Breadcrumb";
+export { Stepper } from "./components/Stepper/Stepper";
+export type {
+  StepperProps,
+  StepData,
+  StepState,
+} from "./components/Stepper/Stepper";
+export {
+  AchievementBadge,
+  AchievementGrid,
+  AchievementProgress,
+} from "./components/AchievementBadge/AchievementBadge";
+export type {
+  AchievementBadgeProps,
+  AchievementLevel,
+  AchievementGridProps,
+  AchievementProgressProps,
+} from "./components/AchievementBadge/AchievementBadge";

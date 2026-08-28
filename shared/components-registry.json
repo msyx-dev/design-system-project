@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-28T21:25:55.094Z",
+    "at": "2026-08-28T22:57:50.805Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -652,11 +652,12 @@
         ".breadcrumbs",
         ".bc-sep",
         ".bc-home",
-        ".bc-ellipsis"
+        ".bc-ellipsis",
+        ".bc-responsive"
       ],
       "jsInit": null,
       "example": "<nav class=\"breadcrumbs\" aria-label=\"Fil d'Ariane\">\n  <ol>\n    <li><a href=\"#\">Accueil</a></li>\n    <li><span class=\"bc-sep\" aria-hidden=\"true\">/</span></li>\n    <li><a href=\"#\">Projets</a></li>\n    <li><span class=\"bc-sep\" aria-hidden=\"true\">/</span></li>\n    <li><span aria-current=\"page\">Design System</span></li>\n  </ol>\n</nav>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/navigation.css"
       ]
@@ -718,11 +719,14 @@
         ".step",
         ".step-dot",
         ".step-label",
-        ".step-line"
+        ".step-line",
+        ".completed",
+        ".active",
+        ".pending"
       ],
       "jsInit": null,
       "example": "<div class=\"stepper\" aria-label=\"Étapes\">\n  <div class=\"step\"><div class=\"step-dot completed\">&#10003;</div><span class=\"step-label\">Compte</span></div>\n  <div class=\"step-line completed\"></div>\n  <div class=\"step\"><div class=\"step-dot active\">2</div><span class=\"step-label\">Profil</span></div>\n  <div class=\"step-line\"></div>\n  <div class=\"step\"><div class=\"step-dot pending\">3</div><span class=\"step-label\">Fin</span></div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/navigation.css",
         "shared/css/components/tracker.css"
@@ -927,11 +931,12 @@
         ".pagination",
         ".page-btn",
         ".page-ellipsis",
-        ".pagination-info"
+        ".pagination-info",
+        ".nav"
       ],
       "jsInit": null,
-      "example": "<nav class=\"pagination\" aria-label=\"Pagination\">\n  <button class=\"page-btn\" aria-label=\"Page précédente\">&#8592;</button>\n  <button class=\"page-btn active\" aria-current=\"page\">1</button>\n  <button class=\"page-btn\">2</button>\n  <button class=\"page-btn\">3</button>\n  <span class=\"page-ellipsis\">…</span>\n  <button class=\"page-btn\">10</button>\n  <button class=\"page-btn\" aria-label=\"Page suivante\">&#8594;</button>\n</nav>\n<p class=\"pagination-info\">1–20 de 200 résultats</p>",
-      "react": "pending",
+      "example": "<nav class=\"pagination\" aria-label=\"Pagination\">\n  <button class=\"page-btn nav\" aria-label=\"Page précédente\">&#8592;</button>\n  <button class=\"page-btn active\" aria-current=\"page\">1</button>\n  <button class=\"page-btn\">2</button>\n  <button class=\"page-btn\">3</button>\n  <span class=\"page-ellipsis\">…</span>\n  <button class=\"page-btn\">10</button>\n  <button class=\"page-btn nav\" aria-label=\"Page suivante\">&#8594;</button>\n</nav>\n<p class=\"pagination-info\">1–20 de 200 résultats</p>",
+      "react": "ported",
       "module": [
         "shared/css/components/feedback.css",
         "shared/css/components/tables.css"
@@ -1262,11 +1267,17 @@
         ".achievement--bronze",
         ".achievement--silver",
         ".achievement--gold",
-        ".achievement-progress"
+        ".achievement-grid",
+        ".locked",
+        ".new",
+        ".achievement-progress",
+        ".achievement-progress-label",
+        ".achievement-progress-bar",
+        ".achievement-progress-fill"
       ],
       "jsInit": null,
-      "example": "<div class=\"achievement achievement--gold\">\n  <div class=\"achievement-icon\" aria-hidden=\"true\">&#127942;</div>\n  <div class=\"achievement-title\">Contributeur Gold</div>\n  <div class=\"achievement-state\">Débloqué</div>\n</div>\n\n<div class=\"achievement achievement--silver\">\n  <div class=\"achievement-icon\" aria-hidden=\"true\">&#127941;</div>\n  <div class=\"achievement-title\">50 commits</div>\n  <div class=\"achievement-progress\">\n    <div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:80%\"></div></div>\n  </div>\n</div>",
-      "react": "pending",
+      "example": "<div class=\"achievement-grid\">\n  <div class=\"achievement achievement--gold\">\n    <div class=\"achievement-icon\">🏆</div>\n    <div class=\"achievement-title\">Champion</div>\n    <div class=\"achievement-state\">Débloqué</div>\n  </div>\n  <div class=\"achievement locked\">\n    <div class=\"achievement-icon\">🌟</div>\n    <div class=\"achievement-title\">Etoile</div>\n    <div class=\"achievement-state\">Verrouillé</div>\n  </div>\n</div>\n<div class=\"achievement-progress\">\n  <div class=\"achievement-progress-label\">Progression : 4/6 badges débloqués</div>\n  <div class=\"achievement-progress-bar\">\n    <div class=\"achievement-progress-fill\" style=\"width: 66.6%;\"></div>\n  </div>\n</div>",
+      "react": "ported",
       "module": [
         "shared/css/components/badges.css"
       ]

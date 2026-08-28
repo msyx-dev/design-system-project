@@ -3,12 +3,19 @@ import { HTMLAttributes, ReactNode } from "react";
 /** Niveaux réellement stylés (`shared/css/components/badges.css:114-116`). */
 export type AchievementLevel = "bronze" | "silver" | "gold";
 
-export interface AchievementBadgeProps extends HTMLAttributes<HTMLDivElement> {
+export interface AchievementBadgeProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   /** `.achievement--{level}` — couleur de bordure du niveau. */
   level: AchievementLevel;
   /** `.achievement-icon` — pictogramme (emoji dans les démos réelles). `aria-hidden="true"` par défaut (décoratif, accompagné du titre). */
   icon: ReactNode;
-  /** `.achievement-title`. */
+  /**
+   * `.achievement-title`. `Omit<..., "title">` sur `HTMLAttributes` : évite
+   * la collision avec l'attribut HTML natif `title` (tooltip `string`), ici
+   * un slot `ReactNode` structuré (même contrainte que `EmptyState`, #872).
+   */
   title: ReactNode;
   /**
    * `.achievement-state` — texte d'état (ex. "Débloqué"/"Verrouillé"/

@@ -673,6 +673,10 @@ const REACT_TO_REGISTRY = {
   Skeleton: 'skeleton',                   // #872 — .skeleton + text/title/avatar/btn
   EmptyState: 'empty-state',              // #872 — .empty-state/.empty-state-icon
   Spinner: 'spinner',                     // #872 — Spinner/SpinnerDots/LoadingBar/LoadingOverlay co-localisés dans components/Spinner/
+  Pagination: 'pagination',               // #873 — Lot 3 décoratifs C : fenêtrage pur getPaginationRange, racine <nav>, PaginationInfo co-localisé
+  Breadcrumb: 'breadcrumb',               // #873 — contrat ARIA vanilla reproduit (nav+aria-label+aria-current), structure <li> unifiée
+  Stepper: 'stepper',                     // #873 — états .completed/.active/.pending exposés en props typées
+  AchievementBadge: 'achievement-badge',  // #873 — AchievementBadge/AchievementGrid/AchievementProgress co-localisés dans components/AchievementBadge/
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
@@ -740,6 +744,13 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.number-input--disabled', // forms.css:160 — compound .number-input-wrap.number-input--disabled
   '.initially-hidden',       // lists.css:166 — compound .activity-item.initially-hidden (fix #775/#778 : la classe A un backing CSS aujourd'hui, contrairement au commentaire historique dans ActivityFeed.tsx qui la disait sans CSS — commentaire à rafraîchir séparément)
   '.drag-over',               // lists.css:107 — compound .sortable-item.drag-over
+  // #873 — Lot 3 décoratifs C : 4 classes réellement stylées, invisibles du
+  // scanner CSS-side car second token d'un sélecteur composé sans séparateur.
+  '.nav',        // feedback.css:43 — compound .page-btn.nav (Pagination, boutons précédent/suivant)
+  '.bc-responsive', // navigation.css:44 — compound .breadcrumbs.bc-responsive (Breadcrumb, collapse mobile)
+  '.completed',  // navigation.css:23,28 — compound .step-dot.completed / .step-line.completed (Stepper)
+  '.pending',    // navigation.css:25 — compound .step-dot.pending (Stepper)
+  '.new',        // badges.css:106 — compound .achievement.new (AchievementBadge)
 ]);
 
 // Whitelist DISTINCTE de REACT_CSS_UNDETECTABLE — ne pas fusionner (#889,
