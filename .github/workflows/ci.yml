@@ -130,6 +130,10 @@ jobs:
         run: |
           chmod +x tests/test-extract-react-classes-bem.sh
           ./tests/test-extract-react-classes-bem.sh
+      - name: extractReactClasses variable intermédiaire unit tests (#889)
+        run: |
+          chmod +x tests/test-extract-react-classes-varname.sh
+          ./tests/test-extract-react-classes-varname.sh
       - name: Registry example field validation unit tests (#748)
         run: |
           chmod +x tests/test-validate-example.sh
