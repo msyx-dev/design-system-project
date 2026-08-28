@@ -170,17 +170,21 @@ export function ProgressTracker({
   if (rings && rings.length > 0) {
     const visibleRings = rings.slice(0, MULTI_RADII.length);
     const showLegend = legend ?? true;
-    const wrapperClasses = ["progress-tracker-multi-layout", className]
-      .filter(Boolean)
-      .join(" ");
-
     return (
       <div
         ref={ref}
-        className={wrapperClasses}
-        style={{ display: "inline-flex", alignItems: "center", flexWrap: "wrap" }}
+        className={className}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
       >
-        <div className="progress-tracker-multi" role="img" aria-label={ariaLabel}>
+        <div
+          className="progress-tracker-multi"
+          role="img"
+          aria-label={ariaLabel}
+        >
           <svg
             viewBox={`0 0 ${MULTI_VIEWBOX} ${MULTI_VIEWBOX}`}
             aria-hidden="true"
@@ -264,8 +268,16 @@ export function ProgressTracker({
   };
 
   return (
-    <div ref={ref} className={containerClasses} role="img" aria-label={ariaLabel}>
-      <svg viewBox={`0 0 ${SINGLE_VIEWBOX} ${SINGLE_VIEWBOX}`} aria-hidden="true">
+    <div
+      ref={ref}
+      className={containerClasses}
+      role="img"
+      aria-label={ariaLabel}
+    >
+      <svg
+        viewBox={`0 0 ${SINGLE_VIEWBOX} ${SINGLE_VIEWBOX}`}
+        aria-hidden="true"
+      >
         <circle className="pt-track" cx={SINGLE_C} cy={SINGLE_C} r={SINGLE_R} />
         <circle
           className="pt-fill"

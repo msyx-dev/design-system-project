@@ -703,6 +703,36 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.split-pane--dragging', // splitter.css — AUCUNE règle CSS aujourd'hui (bug DS suivi séparément, #763). Émise quand même côté React pour la parité vanilla ; #763 la rendra visible des deux côtés simultanément.
   '.cal-prev', // templates.css:84 — hook JS query-selector du vanilla (initCalendar), AUCUNE règle .cal-prev dédiée : le style vient de .cal-nav button (descendant, sans classe). Émise côté React pour parité markup (#760).
   '.cal-next', // idem .cal-prev — #760
+  // #889 — repasse du package une fois le motif « variable intermédiaire »
+  // couvert par extractReactClasses (#889) : les 4 classes ci-dessous sont
+  // toutes réellement stylées, seulement invisibles du scanner CSS-side
+  // (extractClasses ci-dessus, même limite documentée que .selected plus haut).
+  '.number-input--compact',  // forms.css:216-224 — compound .number-input-wrap.number-input--compact (x3 règles)
+  '.number-input--disabled', // forms.css:160 — compound .number-input-wrap.number-input--disabled
+  '.initially-hidden',       // lists.css:166 — compound .activity-item.initially-hidden (fix #775/#778 : la classe A un backing CSS aujourd'hui, contrairement au commentaire historique dans ActivityFeed.tsx qui la disait sans CSS — commentaire à rafraîchir séparément)
+  '.drag-over',               // lists.css:107 — compound .sortable-item.drag-over
+]);
+
+// Whitelist DISTINCTE de REACT_CSS_UNDETECTABLE — ne pas fusionner (#889,
+// revue de review) : ici, aucune des classes n'a de règle CSS, nulle part,
+// même en sélecteur composé. Ce ne sont pas des faux négatifs de la regex
+// CSS-side — ce sont des classes que le wrapper émet volontairement, sans
+// aucun style attaché, pour rester accrochable par du JS (le sien ou celui
+// du vanilla de référence). Objectif de la séparation : garder la liste
+// ci-dessus strictement réservée aux faux négatifs de regex (chacune de ses
+// entrées DOIT avoir une règle CSS vérifiable), et rendre visible ici la
+// liste des classes qui n'ont VRAIMENT aucun style — pour qu'une classe qui
+// devient inutile un jour ne se noie pas dans l'autre liste.
+// Ne JAMAIS ajouter ici une classe dont on n'a pas vérifié qu'elle n'a
+// AUCUNE règle CSS ET qu'elle est réellement consommée par un hook vérifié
+// (vanilla ou React) — documenter la référence exacte du hook à chaque
+// ajout. Une classe sans CSS ET sans hook n'est pas un hook JS : c'est du
+// code mort, à retirer du wrapper (cf. `.progress-tracker-multi-layout`,
+// #889 — trouvée ici puis retirée du wrapper une fois confirmé qu'aucun
+// hook, ni vanilla ni React, ne la consommait).
+const REACT_JS_HOOK_CLASSES = new Set([
+  '.search-with-suggestions', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:598 (`wrap.classList.contains('search-with-suggestions')`, initSearchInput). Émise côté React pour calquer le markup du vanilla (formulaires.html) — #889.
+  '.sortable-list--numbered', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:3500 (`list.classList.contains('sortable-list--numbered')`, initSortableLists). Émise côté React pour calquer le markup du vanilla (composants.html:714) — classe déjà morte identifiée AVANT le port (issue #889, section « Deux classes mortes déjà connues »), non imputable au wrapper.
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
@@ -729,11 +759,14 @@ if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) 
       }
     }
 
-    // (a) chaque classe émise doit exister dans le CSS réel
-    // (ou dans REACT_CSS_UNDETECTABLE — faux négatif connu du scanner CSS,
-    // classe réelle confirmée manuellement, cf. commentaire ci-dessus).
+    // (a) chaque classe émise doit exister dans le CSS réel, OU dans l'une
+    // des deux whitelists ci-dessus (#889) : REACT_CSS_UNDETECTABLE (faux
+    // négatif connu du scanner CSS-side, classe réellement stylée) ou
+    // REACT_JS_HOOK_CLASSES (aucun style, hook JS volontaire — deux natures
+    // distinctes, gardées dans deux listes distinctes, cf. commentaires
+    // ci-dessus).
     for (const cls of emitted) {
-      if (!allCssClasses.has(cls) && !REACT_CSS_UNDETECTABLE.has(cls)) {
+      if (!allCssClasses.has(cls) && !REACT_CSS_UNDETECTABLE.has(cls) && !REACT_JS_HOOK_CLASSES.has(cls)) {
         reactPhantoms.push({ component: dir, registry: regName, class: cls });
       }
     }
