@@ -703,6 +703,7 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.split-pane--dragging', // splitter.css — AUCUNE règle CSS aujourd'hui (bug DS suivi séparément, #763). Émise quand même côté React pour la parité vanilla ; #763 la rendra visible des deux côtés simultanément.
   '.cal-prev', // templates.css:84 — hook JS query-selector du vanilla (initCalendar), AUCUNE règle .cal-prev dédiée : le style vient de .cal-nav button (descendant, sans classe). Émise côté React pour parité markup (#760).
   '.cal-next', // idem .cal-prev — #760
+  '.sortable-live', // lists.css — AUCUNE règle dédiée (hook JS pur, visuellement masqué par .sr-only) : `shared/components.js:3659` (`initSortableLists`, #836) crée déjà `live.className = 'sortable-live sr-only'` sans règle CSS ciblant `.sortable-live`. Émise côté React pour parité markup (#853).
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
