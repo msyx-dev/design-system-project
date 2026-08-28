@@ -1,10 +1,17 @@
 import {
+  CSSProperties,
   KeyboardEvent as ReactKeyboardEvent,
   ReactNode,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
+
+/** useLayoutEffect côté client, useEffect côté serveur (SSR-safe, calque HeatmapCalendar/Dropdown). */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export interface ActionMenuItemEntry {
   /** Identifiant unique de l'item (clé React + navigation clavier). */
@@ -87,6 +94,22 @@ function isDivider(item: ActionMenuItem): item is ActionMenuDividerEntry {
  *   les items `disabled` sont sautés ;
  * - focus posé sur le premier item activable à l'ouverture.
  *
+ * **Portail sur `document.body` (#856)** : `.action-menu` était rendu en
+ * enfant inline, `position: absolute` relatif à `.action-menu-wrap` —
+ * clippé par tout ancêtre `overflow: hidden`. Constaté en recette KeepThread :
+ * dans le panneau de détail d'un Périmètre (un `.card`), le menu Actions
+ * était incliquable à la souris (`document.elementFromPoint` résolvait sur
+ * `.card`, jamais sur le bouton) — seule la navigation clavier fonctionnait
+ * encore, `focus()` n'étant pas affecté par le clipping visuel. Un simple
+ * passage à `position: fixed` sans déplacer le nœud ne suffit pas : `.card`
+ * porte aussi `will-change: transform`, qui établit un containing block pour
+ * les descendants `fixed` au même titre qu'un `transform` réel (vérifié
+ * empiriquement via Playwright). Le menu est donc porté via `createPortal`
+ * dans `document.body` — même mécanisme que `RiskMatrix`/`HeatmapCalendar`/
+ * `Toast`/`Dropdown` (#856) — avec sa position calculée à l'ouverture
+ * (`useLayoutEffect`, pas de flash de position) depuis
+ * `triggerRef.getBoundingClientRect()`.
+ *
  * SSR-safe : aucun accès à `document`/`window` au niveau module ; tout est
  * dans `useEffect`/handlers (post-hydratation).
  */
@@ -99,8 +122,10 @@ export function ActionMenu({
   className,
 }: ActionMenuProps) {
   const [open, setOpen] = useState(false);
+  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   const enabledItems = items.filter(
@@ -122,14 +147,36 @@ export function ActionMenu({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Fermeture au clic extérieur + Escape (écoute globale `document`).
+  // Position du menu porté (#856) — calculée à l'ouverture depuis le
+  // déclencheur, AVANT peinture (useLayoutEffect) pour ne pas flasher à
+  // (top:auto;right:auto) le temps d'un frame. `right` (pas `left`) : ancre
+  // le bord droit du menu sur le bord droit du déclencheur, largeur
+  // intrinsèque — calque l'ancien `right: 0` de `position: absolute`.
+  useIsomorphicLayoutEffect(() => {
+    if (!open) return;
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    setMenuStyle({
+      position: "fixed",
+      top: rect.bottom + 6,
+      right: window.innerWidth - rect.right,
+    });
+  }, [open]);
+
+  // Fermeture au clic extérieur + Escape (écoute globale `document`). Le
+  // menu étant porté hors de `wrapRef` (`.action-menu-wrap`, #856), un clic
+  // à l'intérieur du menu porté doit AUSSI compter comme "à l'intérieur" —
+  // sinon toute sélection à la souris ferme le menu avant que le clic sur
+  // l'item ne soit traité.
   useEffect(() => {
     if (!open) return;
 
     const handlePointerDown = (event: MouseEvent) => {
-      if (!wrapRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
+      const target = event.target as Node;
+      if (wrapRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
     };
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -188,6 +235,9 @@ export function ActionMenu({
 
   const wrapClasses = ["action-menu-wrap", className].filter(Boolean).join(" ");
 
+  // Portail #856 — cf. JSDoc du composant.
+  const portalTarget = typeof document !== "undefined" ? document.body : null;
+
   return (
     <div className={wrapClasses} ref={wrapRef}>
       <button
@@ -205,46 +255,54 @@ export function ActionMenu({
           </>
         )}
       </button>
-      {open && (
-        <div className="action-menu open" role="menu">
-          {items.map((item, index) => {
-            if (isDivider(item)) {
-              // eslint-disable-next-line react/no-array-index-key
-              return (
-                <div
-                  key={`divider-${index}`}
-                  className="action-menu-divider"
-                  role="separator"
-                />
-              );
-            }
+      {open &&
+        portalTarget &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className="action-menu open"
+            role="menu"
+            style={menuStyle}
+          >
+            {items.map((item, index) => {
+              if (isDivider(item)) {
+                // eslint-disable-next-line react/no-array-index-key
+                return (
+                  <div
+                    key={`divider-${index}`}
+                    className="action-menu-divider"
+                    role="separator"
+                  />
+                );
+              }
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                ref={(node) => {
-                  if (node) {
-                    itemRefs.current.set(item.id, node);
-                  } else {
-                    itemRefs.current.delete(item.id);
-                  }
-                }}
-                className="action-menu-item"
-                role="menuitem"
-                disabled={item.disabled}
-                onClick={() => handleSelect(item)}
-                onKeyDown={(event) => handleItemKeyDown(event, item.id)}
-              >
-                {item.icon && (
-                  <span className="action-menu-icon">{item.icon}</span>
-                )}
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  ref={(node) => {
+                    if (node) {
+                      itemRefs.current.set(item.id, node);
+                    } else {
+                      itemRefs.current.delete(item.id);
+                    }
+                  }}
+                  className="action-menu-item"
+                  role="menuitem"
+                  disabled={item.disabled}
+                  onClick={() => handleSelect(item)}
+                  onKeyDown={(event) => handleItemKeyDown(event, item.id)}
+                >
+                  {item.icon && (
+                    <span className="action-menu-icon">{item.icon}</span>
+                  )}
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>,
+          portalTarget,
+        )}
     </div>
   );
 }

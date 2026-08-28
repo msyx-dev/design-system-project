@@ -143,6 +143,78 @@ function safeUrl(url, fallback, allowedSchemes) {
     return schemes.indexOf(scheme) !== -1 ? cleaned : fallback;
 }
 
+// Panneaux flottants (.dropdown-menu / .action-menu) — echappement de tout ancetre qui
+// clippe (#856). Un `.card` (overflow:hidden + will-change:transform) devient containing
+// block pour un `position:fixed` non deplace ET clippe un `position:absolute` — verifie
+// empiriquement (Playwright) : `will-change:transform` piege `position:fixed`,
+// `container-type:inline-size` seul ne le piege PAS. Seul un vrai deplacement du noeud
+// hors du sous-arbre `.card` (portail) echappe aux deux. `openFloatingPanel` deplace le
+// panneau dans document.body en `position:fixed`, positionne via getBoundingClientRect()
+// du declencheur ; `restoreFloatingPanel` le replace a cote de son declencheur a la
+// fermeture (delai = duree de la transition CSS) pour ne laisser aucun noeud orphelin
+// dans document.body apres une navigation SPA (le swap de contenu de nav.js:940
+// ne reecrit que le innerHTML de <main>, jamais document.body).
+var FLOATING_PANEL_ANCHORS = new WeakMap();
+var FLOATING_PANEL_RESTORE_MS = 200; // aligne sur la transition CSS de .dropdown-menu/.action-menu
+
+function openFloatingPanel(trigger, panel, align) {
+    FLOATING_PANEL_ANCHORS.set(panel, trigger);
+    if (panel.parentNode !== document.body) document.body.appendChild(panel);
+    var rect = trigger.getBoundingClientRect();
+    panel.style.position = 'fixed';
+    if (align === 'end') {
+        // .action-menu : ancre a droite du declencheur, largeur intrinseque (calque right:0).
+        panel.style.top = (rect.bottom + 6) + 'px';
+        panel.style.right = (window.innerWidth - rect.right) + 'px';
+        panel.style.left = '';
+        panel.style.width = '';
+    } else {
+        // .dropdown-menu : etire a la largeur du declencheur (calque left:0;right:0).
+        panel.style.top = (rect.bottom + 4) + 'px';
+        panel.style.left = rect.left + 'px';
+        panel.style.right = '';
+        panel.style.width = rect.width + 'px';
+    }
+}
+
+function restoreFloatingPanel(panel) {
+    var trigger = FLOATING_PANEL_ANCHORS.get(panel);
+    if (!trigger || panel.parentNode !== document.body) return;
+    setTimeout(function () {
+        if (panel.classList.contains('open')) return; // rouvert entre-temps
+        if (panel.parentNode !== document.body) return; // deja restaure
+        trigger.insertAdjacentElement('afterend', panel);
+        panel.style.position = '';
+        panel.style.top = '';
+        panel.style.left = '';
+        panel.style.right = '';
+        panel.style.width = '';
+    }, FLOATING_PANEL_RESTORE_MS);
+}
+
+function closeAllDropdownMenus() {
+    document.querySelectorAll('.dropdown-menu.open').forEach(function (m) { m.classList.remove('open'); restoreFloatingPanel(m); });
+    document.querySelectorAll('.dropdown-trigger.open').forEach(function (t) { t.classList.remove('open'); });
+}
+
+// restoreFocus (#744, cf. openMenu/closeMenu locaux dans initActionMenu) : le
+// listener Echap LOCAL a chaque instance (wrap.addEventListener('keydown', ...))
+// ne peut plus s'appuyer sur le bouillonnement DOM pour restaurer le focus des
+// que le menu est ouvert — il est alors deplace hors de `wrap` (portail #856),
+// donc plus un ancetre de l'element focus. Seul ce close-all GLOBAL (document)
+// reste dans le chemin de bouillonnement : restaure le focus sur le
+// declencheur de CHAQUE menu ferme quand demande (Echap), jamais sur un clic
+// exterieur (comportement d'origine inchange).
+function closeAllActionMenus(restoreFocus) {
+    document.querySelectorAll('.action-menu.open').forEach(function (m) {
+        m.classList.remove('open');
+        var anchor = FLOATING_PANEL_ANCHORS.get(m);
+        restoreFloatingPanel(m);
+        if (restoreFocus && anchor) anchor.focus();
+    });
+    document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(function (t) { t.setAttribute('aria-expanded', 'false'); });
+}
+
 function initComponents() {
     // Tabs — ARIA role=tablist/tab + navigation clavier flèches
     document.querySelectorAll('.tabs').forEach(g => {
@@ -284,17 +356,22 @@ function initComponents() {
         const trigger = dd.querySelector('.dropdown-trigger');
         const menu = dd.querySelector('.dropdown-menu');
         if (!trigger || !menu) return;
+        // Sweep SPA (#657/#856) : si `dd` disparait du DOM (navigateTo) pendant que le
+        // panneau est ouvert (donc deplace dans document.body), __sweepDetached() le
+        // purge au prochain reinitAll() plutot que de le laisser orphelin.
+        if (window.__registerInstance) {
+            window.__registerInstance(trigger, function () { if (menu.parentNode === document.body) menu.remove(); });
+        }
         trigger.addEventListener('click', e => {
             e.stopPropagation();
             const isOpen = menu.classList.contains('open');
-            document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-            document.querySelectorAll('.dropdown-trigger.open').forEach(t => t.classList.remove('open'));
-            if (!isOpen) { menu.classList.add('open'); trigger.classList.add('open'); const s = menu.querySelector('.dropdown-search input'); if (s) s.focus(); }
+            closeAllDropdownMenus();
+            if (!isOpen) { openFloatingPanel(trigger, menu); menu.classList.add('open'); trigger.classList.add('open'); const s = menu.querySelector('.dropdown-search input'); if (s) s.focus(); }
         });
         menu.querySelectorAll('.dropdown-option').forEach(opt => {
             opt.addEventListener('click', () => {
                 if (dd.dataset.multi === 'true') { opt.classList.toggle('selected'); }
-                else { menu.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('selected')); opt.classList.add('selected'); const v = trigger.querySelector('.dropdown-value'); if (v) v.textContent = opt.textContent.trim(); menu.classList.remove('open'); trigger.classList.remove('open'); }
+                else { menu.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('selected')); opt.classList.add('selected'); const v = trigger.querySelector('.dropdown-value'); if (v) v.textContent = opt.textContent.trim(); menu.classList.remove('open'); trigger.classList.remove('open'); restoreFloatingPanel(menu); }
             });
         });
         const si = menu.querySelector('.dropdown-search input');
@@ -4568,7 +4645,13 @@ function initActionMenu() {
         var menu = wrap.querySelector('.action-menu');
         if (!trigger || !menu) return;
 
+        // Sweep SPA (#657/#856) : cf. commentaire equivalent sur .dropdown-menu ci-dessus.
+        if (window.__registerInstance) {
+            window.__registerInstance(trigger, function () { if (menu.parentNode === document.body) menu.remove(); });
+        }
+
         function openMenu() {
+            openFloatingPanel(trigger, menu, 'end');
             menu.classList.add('open');
             trigger.setAttribute('aria-expanded', 'true');
         }
@@ -4578,6 +4661,7 @@ function initActionMenu() {
         // laissait le focus sur un item devenu invisible/hors flux).
         function closeMenu(restoreFocus) {
             menu.classList.remove('open');
+            restoreFloatingPanel(menu);
             trigger.setAttribute('aria-expanded', 'false');
             if (restoreFocus) trigger.focus();
         }
@@ -4586,8 +4670,7 @@ function initActionMenu() {
             e.stopPropagation();
             var isOpen = menu.classList.contains('open');
             // Close all other action menus
-            document.querySelectorAll('.action-menu.open').forEach(function(m) { m.classList.remove('open'); });
-            document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(function(t) { t.setAttribute('aria-expanded', 'false'); });
+            closeAllActionMenus();
             if (!isOpen) openMenu();
         });
 
@@ -7484,10 +7567,8 @@ window.__initComponents = reinitAll;
 
 // Close dropdowns, action menus and split-button menus on outside click (once)
 document.addEventListener('click', () => {
-    document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-    document.querySelectorAll('.dropdown-trigger.open').forEach(t => t.classList.remove('open'));
-    document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
-    document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+    closeAllDropdownMenus();
+    closeAllActionMenus();
     // Split button menus
     document.querySelectorAll('.split-button__menu.open').forEach(m => m.classList.remove('open'));
     document.querySelectorAll('.split-button__caret[aria-expanded="true"]').forEach(c => c.setAttribute('aria-expanded', 'false'));
@@ -7496,8 +7577,7 @@ document.addEventListener('click', () => {
 // Close action menus and split-button menus on Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        document.querySelectorAll('.action-menu.open').forEach(m => m.classList.remove('open'));
-        document.querySelectorAll('.action-menu-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+        closeAllActionMenus(true);
         // Split button menus (focus restore géré localement dans initSplitButton)
         document.querySelectorAll('.split-button__menu.open').forEach(m => m.classList.remove('open'));
         document.querySelectorAll('.split-button__caret[aria-expanded="true"]').forEach(c => c.setAttribute('aria-expanded', 'false'));
