@@ -140,12 +140,17 @@ export function BeforeAfter({
 
   function handleKeyDown(event: ReactKeyboardEvent<HTMLDivElement>): void {
     const step = 2;
+    // Base arrondie (calque exact `parseFloat(handle.getAttribute('aria-valuenow'))`,
+    // shared/components.js:3852) — pas `currentPercent` brut : après un drag
+    // sur une valeur fractionnaire, le vanilla repart de la valeur ARIA déjà
+    // arrondie, pas de la position exacte du pointeur.
+    const base = Math.round(currentPercent);
     if (event.key === "ArrowLeft") {
       event.preventDefault();
-      applyPercent(currentPercent - step);
+      applyPercent(base - step);
     } else if (event.key === "ArrowRight") {
       event.preventDefault();
-      applyPercent(currentPercent + step);
+      applyPercent(base + step);
     } else if (event.key === "Home") {
       event.preventDefault();
       applyPercent(MIN);

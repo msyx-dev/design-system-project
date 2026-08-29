@@ -115,6 +115,30 @@ describe("BeforeAfter — contrat clavier #836 (identique à initBeforeAfter)", 
     expect(handle).toHaveAttribute("aria-valuenow", "95");
   });
 
+  it("après un drag sur une valeur fractionnaire, la flèche repart de la valeur ARIA arrondie (calque exact parseFloat(aria-valuenow))", () => {
+    const onChange = vi.fn();
+    render(<BeforeAfter before="Avant" after="Après" onChange={onChange} />);
+    const container = document.querySelector(".before-after") as HTMLElement;
+    const handle = document.querySelector(
+      ".before-after-handle",
+    ) as HTMLElement;
+    vi.spyOn(container, "getBoundingClientRect").mockReturnValue(fakeRect());
+
+    // Drag → 63.7% (clientX=127.4 sur une largeur de 200)
+    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 100, clientY: 50 });
+    fireEvent.pointerMove(handle, {
+      pointerId: 1,
+      clientX: 127.4,
+      clientY: 50,
+    });
+    fireEvent.pointerUp(handle, { pointerId: 1, clientX: 127.4, clientY: 50 });
+    expect(handle).toHaveAttribute("aria-valuenow", "64"); // Math.round(63.7)
+
+    fireEvent.keyDown(handle, { key: "ArrowRight" });
+    // 64 + 2 = 66 (PAS 65.7) — repart de la valeur ARIA arrondie, pas de 63.7
+    expect(onChange).toHaveBeenLastCalledWith(66);
+  });
+
   it("clampe aux bornes MIN/MAX (ArrowLeft répété ne descend jamais sous 5)", () => {
     const onChange = vi.fn();
     render(
