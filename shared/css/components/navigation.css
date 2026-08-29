@@ -240,7 +240,7 @@
     background: var(--primary);
 }
 .rail-sidebar {
-    width: 260px;
+    width: var(--rail-w);
     background: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
     display: flex;
@@ -249,7 +249,7 @@
     flex-shrink: 0;
 }
 .rail-sidebar.collapsed {
-    width: 64px;
+    width: var(--rail-w-collapsed);
 }
 /* Pas d'overflow:hidden ici (#857) : .rail-item-label/.rail-logo s'auto-clippent
    deja (overflow:hidden pose sur eux-memes). Le laisser au niveau .rail-sidebar
@@ -265,11 +265,15 @@
    d'ecran. Opt-in via le modifieur structurel --fixed (calque du pattern
    Drawer --fullscreen) plutot qu'impose par defaut, pour ne pas casser le
    rendu du showcase existant. */
+/* Geometrie d'app-shell (#906) : top:0 + height:100vh faisait passer le rail
+   SOUS .site-header (z-index 150 contre 100 ici) — les 56px hauts du rail
+   etaient recouverts par l'en-tete. Meme ancrage que .sidebar (layout.css) :
+   demarre sous le header, hauteur reduite d'autant. */
 .rail-sidebar--fixed {
     position: fixed;
-    top: 0;
+    top: var(--header-h);
     left: 0;
-    height: 100vh;
+    height: calc(100vh - var(--header-h));
     z-index: 100;
 }
 .rail-header {
@@ -323,6 +327,25 @@
     flex: 1;
     padding: var(--space-sm) 0;
     overflow-y: auto;
+}
+/* Titre de groupe (#906) — calque .sidebar-section (layout.css) adapte a la
+   famille .rail-* : meme role purement visuel (pas de <a>/<button>, juste un
+   libelle de section), pose en sibling des .rail-item qu'il introduit. Cache
+   en mode replie : sans .rail-item-label visible a cote, un titre de groupe
+   flottant seul au-dessus d'icones perd son sens (meme logique que
+   .rail-subnav ci-dessous). */
+.rail-section-title {
+    padding: 0.8rem var(--space-md) 0.3rem;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.rail-sidebar.collapsed .rail-section-title {
+    display: none;
 }
 .rail-item {
     display: flex;
@@ -379,7 +402,7 @@
 }
 .rail-tooltip {
     position: absolute;
-    left: 64px;
+    left: var(--rail-w-collapsed);
     top: 50%;
     transform: translateY(-50%);
     background: var(--surface-solid);
@@ -445,6 +468,38 @@
 @media (max-width: 480px) {
     .rail-demo { height: 300px; }
     .rail-sidebar { width: 200px; }
+}
+
+/* Comportement hors-flux mobile (#906) — calque EXACT de .sidebar/.sidebar-overlay
+   (shared/css/layout.css) : hors-ecran par defaut, translateX(0) sur .open, overlay
+   sombre distinct sur .active. Seule .rail-sidebar--fixed est concernee (le mode
+   non-fixe, ex. HelpNav de KeepThread, reste dans le flux a toute largeur — rien
+   ne change pour lui). Le mode replie (icones) n'a pas de sens en panneau mobile
+   plein ecran : .collapsed est neutralise ici, le panneau ouvre toujours a
+   --rail-w. */
+@media (max-width: 768px) {
+    .rail-sidebar--fixed {
+        transform: translateX(-100%);
+    }
+    .rail-sidebar--fixed.collapsed {
+        width: var(--rail-w);
+    }
+    .rail-sidebar--fixed.open {
+        transform: translateX(0);
+    }
+    .rail-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--overlay-black-50);
+        z-index: 99;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+    .rail-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
 
 /* ===== USER MENU — composant standalone (apps M3) ===== */
