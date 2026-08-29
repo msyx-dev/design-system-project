@@ -680,6 +680,10 @@ const REACT_TO_REGISTRY = {
   Chips: 'chips',                         // #874 — Chip/ChipFilterGroup/ChipInput co-localisés dans components/Chips/ (fermeture/filtre/saisie, ChipInput = alias déprécié de TagInput)
   Rating: 'rating',                       // #874 — contrat clavier #836 (radiogroup APG) repris à l'identique
   Code: 'code',                           // #874 — dossier components/Code/ ; exporte CodeBlock/CopyButton/InlineCode/CodeKeyword/CodeString/CodeComment/CodeFunction/CodeNumber
+  Carousel: 'carousel',                   // #875 — Lot 5 interactifs B : piste/flèches/pastilles contrôlées, swipe tactile, auto-play pausable
+  Lightbox: 'lightbox',                   // #875 — galerie + visionneuse portée (document.body), focus restore WAI-APG ajoutée vs le vanilla (aucun contrat existant côté DS)
+  VideoEmbed: 'video-embed',              // #875 — chargement différé au clic préservé (iframe montée uniquement après activation)
+  BeforeAfter: 'before-after',            // #875 — contrat clavier #836 (role=separator) repris à l'identique, drag Pointer Events réimplémenté (calque SplitPane, window.__pointerDrag non disponible côté React)
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
@@ -758,6 +762,12 @@ const REACT_CSS_UNDETECTABLE = new Set([
   // #874 — Lot 4 interactifs A : compound sans séparateur, réellement stylé.
   '.copy-btn--success', // interactive.css:30,45,58 — compound .copy-btn.copy-btn--success (+ .copy-btn--inline.copy-btn--success, + `.copy-btn.copy-btn--success .copy-tooltip`)
   '.chip-icon', // badges.css:30 — compound .chip.chip-icon (posé sur la racine quand `icon` est fourni)
+  // #875 — Lot 5 interactifs B : compounds sans séparateur, réellement stylés
+  // (media.css), vérifiés par grep direct avant ajout.
+  '.lb-open',        // media.css:212 — compound .lightbox-overlay.lb-open
+  '.lb-hidden',       // media.css:301 — compound .lightbox-btn.lb-hidden
+  '.lb-img-visible',  // media.css:234 — compound .lightbox-img.lb-img-visible (+ .lightbox-img-placeholder.lb-img-visible:255, non émis côté React)
+  '.loaded',          // media.css:377 — compound .video-embed.loaded (sélecteur descendant .video-embed.loaded .video-embed-overlay)
 ]);
 
 // Whitelist DISTINCTE de REACT_CSS_UNDETECTABLE — ne pas fusionner (#889,

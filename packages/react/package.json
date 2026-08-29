@@ -1,6 +1,6 @@
 {
   "name": "@msyx-dev/react",
-  "version": "3.0.0-alpha.43",
+  "version": "3.0.0-alpha.44",
   "description": "Design System msyx.fr — composants React distribués via GitHub Packages",
   "private": false,
   "type": "module",
