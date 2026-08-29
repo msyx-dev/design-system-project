@@ -694,6 +694,8 @@ const REACT_TO_REGISTRY = {
   Roadmap: 'roadmap',                     // #877 — pure structure, réutilise Progress déjà porté
   SprintBoard: 'sprint',                  // #877 — pure structure, réutilise KanbanColumn/KanbanCard (sans DnD) + Progress
   SettingsPanel: 'settings-panel',        // #877 — pure structure, control composé par le parent (Toggle/Button déjà portés + SettingsRowInput/SettingsRowSelect co-localisés)
+  Logo: 'brand-logo-svg',                 // #878 — Lot 8 clôture : pictogramme SVG, résolution de chemin (basePath), absorbe brand-wordmark/brand-mark-ds (Wordmark/LogoMark co-localisés, cf. REACT_COVERED_BY)
+  AccessDenied: 'access-denied',          // #878 — page 403 standalone (UC3, groupe app-{slug})
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
@@ -715,6 +717,9 @@ const REACT_COVERED_BY = {
   'zone-banner':    'Alert',   // .alert--kpi (#519) — reactComponent: "Alert" dans le registre
   'upgrade-prompt': 'Alert',   // .alert--cta (#519) — reactComponent: "Alert" dans le registre
   'copy-button':    'CodeBlock', // même initCopyButtons que `code` (#874) — reactComponent: "CodeBlock" dans le registre
+  'brand-wordmark':    'Logo', // #878 — Wordmark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
+  'brand-mark-ds':      'Logo', // #878 — LogoMark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
+  'server-data-grid': 'DataGrid', // #878 — pagination serveur ajoutée à l'API DataGrid existante, pas de nouveau dossier — reactComponent: "DataGrid" dans le registre
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

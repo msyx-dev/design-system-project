@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-29T11:45:39.911Z",
+    "at": "2026-08-29T12:22:32.446Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1558,7 +1558,8 @@
       "jsInit": null,
       "description": "Wordmark SVG msyx (v2.42.0). Mark M autonome (logo-msyx-mark.svg, 60×60) + lockup primary (logo-msyx.svg, 200×60). Blob organique + double sommet en espace négatif + gradient turquoise→bleu→violet. Variantes dark/light dans assets/. Utilisé dans header (buildHeader()), index.html, canonical-pages/login.html.",
       "example": "<!-- Header (injecté par buildHeader() dans nav.js) -->\n<a href=\"/site.html\" class=\"header-logo\">\n  <img src=\"/assets/logo-msyx.svg\" alt=\"msyx Design System\" width=\"120\" height=\"32\" class=\"header-logo-img\">\n</a>\n\n<!-- Mark seule (favicon, login) -->\n<img src=\"/assets/logo-msyx-mark.svg\" alt=\"msyx\" width=\"48\" height=\"48\">\n\n<!-- Variantes thématiques -->\n<img src=\"/assets/logo-msyx-dark.svg\" alt=\"msyx\" width=\"120\" height=\"36\">\n<img src=\"/assets/logo-msyx-light.svg\" alt=\"msyx\" width=\"120\" height=\"36\">",
-      "react": "pending",
+      "reactComponent": "Logo",
+      "react": "ported",
       "module": [
         "shared/css/layout.css"
       ]
@@ -1745,10 +1746,10 @@
       ],
       "jsInit": null,
       "version": "2.56.0",
-      "description": "Wordmark texte 'design-system' (Space Grotesk 600 18px, gradient charte) affiché à côté du pictogramme MSYX en header desktop. Masqué mobile < 640px. Absorbé par les déclinaisons du futur <Logo> (#878, lot 8) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant.",
+      "description": "Wordmark texte 'design-system' (Space Grotesk 600 18px, gradient charte) affiché à côté du pictogramme MSYX en header desktop. Masqué mobile < 640px. Absorbé par <Logo> (#878, lot 8) — <Wordmark> co-localisé dans components/Logo/, pas de wrapper React dédié à cette entrée.",
       "reactComponent": "Logo",
       "example": "<span class=\"brand-wordmark\">design-system</span>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/brand.css",
         "shared/css/layout.css"
@@ -1765,10 +1766,10 @@
       ],
       "jsInit": null,
       "version": "2.56.0",
-      "description": "Mark stylisé 'DS' (Space Grotesk 700 72px, gradient charte) utilisé sur la page login en remplacement du pictogramme MSYX. Variantes --sm 32px / --lg 96px. Absorbé par les déclinaisons du futur <Logo> (#878, lot 8) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant.",
+      "description": "Mark stylisé 'DS' (Space Grotesk 700 72px, gradient charte) utilisé sur la page login en remplacement du pictogramme MSYX. Variantes --sm 40px / --lg 96px. Absorbé par <Logo> (#878, lot 8) — <LogoMark> co-localisé dans components/Logo/, pas de wrapper React dédié à cette entrée.",
       "reactComponent": "Logo",
       "example": "<div class=\"brand-mark-ds\" aria-label=\"Design System\">DS</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/brand.css"
       ]

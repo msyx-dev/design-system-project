@@ -570,7 +570,11 @@ export type {
   PricingPlan,
   PricingFeature,
 } from "./components/Pricing/Pricing";
-export { KanbanBoard, KanbanColumn, KanbanCard } from "./components/Kanban/Kanban";
+export {
+  KanbanBoard,
+  KanbanColumn,
+  KanbanCard,
+} from "./components/Kanban/Kanban";
 export type {
   KanbanBoardProps,
   KanbanColumnProps,
@@ -610,3 +614,14 @@ export type {
   SettingsRowInputProps,
   SettingsRowSelectProps,
 } from "./components/SettingsPanel/SettingsPanel";
+
+// Lot 8 « clôture » (#878) — dernier lot du chantier de parité React :
+// <Logo> (absorbe brand-logo-svg/brand-wordmark/brand-mark-ds), <AccessDenied>
+// (page 403 standalone), pagination serveur de <DataGrid> (réutilise
+// <Pagination> du lot 3, aucune logique de fenêtrage réécrite).
+export { Logo } from "./components/Logo/Logo";
+export type { LogoProps, LogoVariant } from "./components/Logo/Logo";
+export { Wordmark } from "./components/Logo/Wordmark";
+export type { WordmarkProps } from "./components/Logo/Wordmark";
+export { LogoMark } from "./components/Logo/LogoMark";
+export type { LogoMarkProps, LogoMarkSize } from "./components/Logo/LogoMark";
