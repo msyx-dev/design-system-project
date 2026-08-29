@@ -810,6 +810,13 @@ const REACT_JS_HOOK_CLASSES = new Set([
   // #876 — Lot 6 interactifs C : AUCUNE règle CSS, hooks `querySelector` vanilla réels.
   '.like-count',  // AUCUNE règle CSS (grep exhaustif shared/css/**). Hook vanilla réel : shared/components.js:5172 (`btn.querySelector('.like-count')`, initComments). Émise côté React pour cibler le compteur et calquer le markup du vanilla.
   '.dtree-reset', // AUCUNE règle CSS (grep exhaustif shared/css/**, style entièrement hérité de .btn-primary). Hook vanilla réel : shared/components.js:4064 (`dtree.querySelector('.dtree-reset')`, initDecisionTree). Émise côté React pour identifier le bouton de réinitialisation.
+  // #878 — Lot 8 clôture : pagination serveur DataGrid, 3 classes hooks
+  // pures (grep exhaustif shared/css/** : aucune règle), toujours combinées
+  // avec une classe réellement stylée côté vanilla (.pagination-info /
+  // .pagination / .sr-only) qui porte le rendu visuel.
+  '.data-grid-pagination',   // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:1469 (`wrap.querySelector('.data-grid-pagination')`, initServerDataGrid).
+  '.data-grid-server-info',  // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:1470 (`wrap.querySelector('.data-grid-server-info')`, initServerDataGrid).
+  '.data-grid-live',         // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:1471 (`wrap.querySelector('.data-grid-live')`, initServerDataGrid).
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js

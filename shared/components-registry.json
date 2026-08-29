@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-29T12:25:30.882Z",
+    "at": "2026-08-29T12:29:16.377Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3107,8 +3107,9 @@
         ".skeleton-cell"
       ],
       "jsInit": "initServerDataGrid",
-      "react": "pending",
-      "notes": "Démo mockée — fetch simulé setTimeout 600ms, 26 lignes. Distinct du pattern data-grid client (initDataGrids). Opt-in data-server + data-page-size."
+      "reactComponent": "DataGrid",
+      "react": "ported",
+      "notes": "Démo mockée — fetch simulé setTimeout 600ms, 26 lignes. Distinct du pattern data-grid client (initDataGrids). Opt-in data-server + data-page-size. Côté React (#878, lot 8) : props page/total/onPageChange sur <DataGrid> existant (pas de nouveau dossier), réutilise <Pagination> tel quel."
     },
     {
       "name": "theme-toggle",
