@@ -671,7 +671,7 @@
 
 <!-- SIDEBAR RAIL -->
 <section id="sidebar-rail">
-    <div class="section-header"><span class="overline">Navigation</span><h2>Sidebar Rail</h2><p>Sidebar rétractable : mode plein (260px) et mode rail (64px icônes seules) avec tooltips au hover et bouton toggle chevron.</p></div>
+    <div class="section-header"><span class="overline">Navigation</span><h2>Sidebar Rail</h2><p>Sidebar rétractable : mode plein (260px) et mode rail (64px icônes seules) avec tooltips au hover et bouton toggle chevron. Composable via des sections titrées + un slot de contenu libre (#906), géométrie d'app-shell sous un header fixe et panneau hors-flux avec overlay sous 768px.</p></div>
     <div class="demo-grid demo-grid-1">
         <div class="demo-box">
             <span class="demo-label">Demo interactive — toggle sidebar</span>
@@ -721,10 +721,99 @@
             </div>
         </div>
     </div>
+    <div class="demo-grid demo-grid-2" style="margin-top:var(--space-md);">
+        <div class="demo-box">
+            <span class="demo-label">Sections composables — titre de groupe + contenu libre (#906)</span>
+            <div class="rail-demo" id="rail-demo-2">
+                <div class="rail-sidebar" id="rail-sidebar-2">
+                    <div class="rail-header">
+                        <span class="rail-logo">KeepThread</span>
+                        <button class="rail-toggle" id="rail-toggle-2" aria-label="Réduire la sidebar" aria-expanded="true"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button>
+                    </div>
+                    <nav class="rail-nav" aria-label="Navigation principale">
+                        <div class="rail-section-title">Espace</div>
+                        <a class="rail-item active" href="#" onclick="return false;" aria-current="page">
+                            <span class="rail-item-icon">&#9670;</span>
+                            <span class="rail-item-label">Aperçu</span>
+                            <span class="rail-tooltip">Aperçu</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span>
+                            <span class="rail-item-label">Décisions</span>
+                            <span class="rail-tooltip">Décisions</span>
+                        </a>
+                        <div class="rail-section-title">Arborescence libre</div>
+                        <ul class="tree" role="tree" aria-label="Structure du projet">
+                            <li class="tree-item tree-branch" role="treeitem" aria-expanded="true">
+                                <button class="tree-toggle" aria-label="Basculer Réunions">
+                                    <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                                    <span class="tree-icon tree-icon-folder"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span>
+                                    <span class="tree-label">Réunions</span>
+                                </button>
+                                <ul class="tree tree-children" role="group">
+                                    <li class="tree-item tree-branch" role="treeitem" aria-expanded="true">
+                                        <button class="tree-toggle" aria-label="Basculer Sprint 12">
+                                            <svg class="tree-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 8 8 11 11 8"></polyline></svg>
+                                            <span class="tree-icon tree-icon-folder"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span>
+                                            <span class="tree-label">Sprint 12</span>
+                                        </button>
+                                        <ul class="tree tree-children" role="group">
+                                            <li class="tree-item tree-leaf" role="treeitem">
+                                                <span class="tree-icon tree-icon-file"><svg class="icon"><use href="/shared/icons/sprite.svg#i-file"/></svg></span>
+                                                <span class="tree-label">Kickoff</span>
+                                            </li>
+                                            <li class="tree-item tree-leaf" role="treeitem">
+                                                <span class="tree-icon tree-icon-file"><svg class="icon"><use href="/shared/icons/sprite.svg#i-file"/></svg></span>
+                                                <span class="tree-label">Rétro</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="tree-item tree-leaf" role="treeitem">
+                                        <span class="tree-icon tree-icon-file"><svg class="icon"><use href="/shared/icons/sprite.svg#i-file"/></svg></span>
+                                        <span class="tree-label">Point hebdo</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="rail-content">
+                    <div class="rail-content-title">Contenu principal</div>
+                    <div class="rail-content-desc">Deux <code class="code-inline">.rail-section-title</code> séparent les entrées classiques d'un contenu libre — ici une arborescence (<code class="code-inline">.tree</code>) de profondeur quelconque, que le rail ne connaît pas. Réduire la sidebar masque les titres de groupe ; le contenu libre reste affiché tel quel (à la charge du consumer de l'adapter à l'état réduit).</div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Panneau mobile hors-flux + overlay, sous 768px (#906)</span>
+            <div class="rail-mobile-mockup">
+                <div class="rail-overlay--demo-mobile"></div>
+                <div class="rail-sidebar rail-sidebar--demo-mobile">
+                    <div class="rail-header">
+                        <span class="rail-logo">KeepThread</span>
+                        <button class="rail-toggle" aria-label="Réduire la sidebar" aria-expanded="true"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button>
+                    </div>
+                    <nav class="rail-nav" aria-label="Navigation principale">
+                        <div class="rail-section-title">Espace</div>
+                        <a class="rail-item active" href="#" onclick="return false;" aria-current="page">
+                            <span class="rail-item-icon">&#9670;</span>
+                            <span class="rail-item-label">Aperçu</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-folder"/></svg></span>
+                            <span class="rail-item-label">Décisions</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            <p class="demo-note" style="margin-top:var(--space-sm);">Mockup figé (indépendant de la largeur réelle de la fenêtre, comme <code class="code-inline">.mobile-mockup</code> plus haut) : sous 768px, <code class="code-inline">.rail-sidebar--fixed</code> passe hors-écran par défaut et rentre avec <code class="code-inline">.open</code> + <code class="code-inline">.rail-overlay.active</code> — calque exact de <code class="code-inline">.sidebar</code>/<code class="code-inline">.sidebar-overlay</code>.</p>
+        </div>
+    </div>
     <div class="demo-box" style="margin-top:var(--space-md);">
         <span class="demo-label">Usage</span>
         <p class="demo-note">HTML : <code class="code-inline">.rail-demo</code> contient <code class="code-inline">.rail-sidebar</code> + <code class="code-inline">.rail-content</code>. Toggle : <code class="code-inline">.rail-toggle</code> bascule <code class="code-inline">.rail-sidebar.collapsed</code>.</p>
-        <p class="demo-note-last">Tooltips automatiques en mode rail au hover. JS : <code class="code-inline">initSidebarRail()</code>. CSS : transition width 0.28s cubic-bezier.</p>
+        <p class="demo-note">Tooltips automatiques en mode rail au hover. JS : <code class="code-inline">initSidebarRail()</code>. CSS : transition width 0.28s cubic-bezier.</p>
+        <p class="demo-note">Titre de groupe : <code class="code-inline">.rail-section-title</code> (calque <code class="code-inline">.sidebar-section</code>). Largeurs : tokens <code class="code-inline">--rail-w</code> / <code class="code-inline">--rail-w-collapsed</code> (260px / 64px). Géométrie d'app-shell : <code class="code-inline">.rail-sidebar--fixed</code> s'ancre sous <code class="code-inline">.site-header</code> (<code class="code-inline">top:var(--header-h)</code>) et passe hors-écran avec overlay sous 768px.</p>
+        <p class="demo-note-last">React (<code class="code-inline">@msyx-dev/react</code>) : prop <code class="code-inline">sections</code> pour le titre de groupe + le contenu libre (alternative à <code class="code-inline">items</code>), prop <code class="code-inline">mobileOpen</code> (contrôlée, comme <code class="code-inline">collapsed</code>) pour le panneau mobile — sans rupture pour les consumers existants (<code class="code-inline">items</code>/<code class="code-inline">fixed=false</code> inchangés).</p>
     </div>
 </section>
 
