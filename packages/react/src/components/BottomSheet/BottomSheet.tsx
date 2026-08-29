@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 
 export interface BottomSheetProps {
   /** Contrôlé par le parent — bascule `.open` sur `.bottom-sheet` ET `.bottom-sheet-overlay`. */
@@ -81,8 +82,12 @@ export interface BottomSheetProps {
  * `panel.focus()` est un no-op faute de tabindex, `components.js:1904`) :
  * capture `document.activeElement` à l'ouverture, focus initial sur le bouton
  * close, puis restauration du trigger à la fermeture (si toujours dans le DOM).
- * Pas de focus-trap (iso-vanilla — le panneau n'en a jamais eu ; à ajouter au
- * niveau produit si requis).
+ *
+ * **Focus trap (#862)** — `useFocusTrap` : `Tab`/`Maj+Tab` bouclent dans le
+ * panneau tant qu'il est ouvert. Ce wrapper documentait auparavant l'absence
+ * de piège comme un alignement sur le vanilla — constat devenu faux : le
+ * vanilla en a un depuis #825 (`trapTabKey` d'`initBottomSheet`). Même
+ * primitive que `<Drawer>`, même sélecteur de focalisables que le vanilla.
  *
  * **Fermeture** : ESC (listener document actif uniquement quand `open` —
  * évite le bug d'empilement vanilla `components.js:1942` sans garde
@@ -121,10 +126,18 @@ export function BottomSheet({
   contentClassName,
   className,
 }: BottomSheetProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const wasOpenRef = useRef(false);
+
+  // Piege de tabulation (#862) : le vanilla l'a depuis #825
+  // (`trapTabKey` d'initBottomSheet), ce wrapper ne l'avait pas -- il le
+  // documentait meme comme un manque assume ("Pas de focus-trap (iso-vanilla
+  // -- le panneau n'en a jamais eu)"), constat devenu faux. Meme primitive
+  // que <Drawer>.
+  useFocusTrap(panelRef, open);
 
   // Drag tactile : startY/currentY transitoires (pas de rerender),
   // dragTransform/dragging pilotent les styles inline (rerender voulu).
@@ -182,7 +195,8 @@ export function BottomSheet({
 
   function handleTouchEnd() {
     if (!swipeToClose || startYRef.current === null) return;
-    const delta = (currentYRef.current ?? startYRef.current) - startYRef.current;
+    const delta =
+      (currentYRef.current ?? startYRef.current) - startYRef.current;
     // Reset des styles inline : rend la main à la transition CSS de `.open`.
     setDragging(false);
     setDragTransform(null);
@@ -222,6 +236,7 @@ export function BottomSheet({
         {...inertProps}
       />
       <div
+        ref={panelRef}
         className={panelClasses}
         role={open ? "dialog" : undefined}
         aria-modal={open ? "true" : undefined}

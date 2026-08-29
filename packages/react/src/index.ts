@@ -210,6 +210,10 @@ export type {
 } from "./hooks/useChartReveal";
 export { useCountUp } from "./hooks/useCountUp";
 export type { UseCountUpOptions, UseCountUpResult } from "./hooks/useCountUp";
+// Piège de tabulation partagé par les surfaces modales (#862) — exporté pour
+// les surfaces custom d'un consumer, qui doivent piéger le focus comme
+// <Drawer>/<BottomSheet> plutôt que réimplémenter leur propre logique.
+export { useFocusTrap, FOCUS_TRAP_SELECTOR } from "./hooks/useFocusTrap";
 
 // ─── Lot Feedback Core (v3.0.0-alpha.14) — #695 ───
 export {
