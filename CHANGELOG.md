@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Fixed
+- **CI `visual` rouge sur `main` depuis `d822fe4` — baselines VR du Rail non rafraîchies (#906/#907)** — 6 baselines (`navigation-sidebar-rail` × 4 projets, `navigation-user-menu` × 2) figeaient le Rail d'avant les sections composables. Le job `visual` de `main` échouait donc depuis le 2026-08-29 19:09 UTC, et **toute PR ouverte ensuite héritait de cet échec**, mélangeant un churn qui ne lui appartient pas à ses propres captures. Baselines reprises des actuals du run de `main` (`33270123646`) et **regardées** avant commit : elles montrent bien le nouveau contenu de #906 (sections titrées, contenu libre, panneau mobile hors-flux). Aucun autre fichier touché — aucun bump de version, ce commit ne change que des PNG de référence.
+
 ### Changed
 - **Note produit 2.127.0 ajoutée à `shared/version-notes.json`** — le gate de déploiement préprod (`versioning-releases.md` §8.6) refuse un deploy tant que la tête de `released[]` est en retard sur la version du package : le badge du header annoncerait « 2.124.0 » alors que l'app sert 2.127.0. Trois entrées en langage utilisateur (2 `correction`, 1 `amelioration`) pour #900/#862/#899. `shared/nav.js` régénéré via `node bin/generate-version-notes.js` (VERSION_NOTES inliné entre marqueurs, jamais édité à la main).
 
