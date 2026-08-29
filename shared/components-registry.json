@@ -1,7 +1,7 @@
 {
-  "version": "2.127.0",
+  "version": "2.128.0",
   "generated": {
-    "at": "2026-08-29T12:36:45.184Z",
+    "at": "2026-08-29T17:54:05.823Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -362,6 +362,7 @@
       "module": [
         "shared/css/components/brand.css",
         "shared/css/components/feedback.css",
+        "shared/css/components/navigation.css",
         "shared/css/components/section-header.css",
         "shared/css/layout.css"
       ]
@@ -1377,7 +1378,9 @@
         ".rail-item-caret",
         ".rail-tooltip",
         ".rail-subnav",
-        ".rail-footer"
+        ".rail-footer",
+        ".rail-section-title",
+        ".rail-overlay"
       ],
       "jsInit": "initSidebarRail",
       "example": "<div class=\"rail-sidebar\"><div class=\"rail-header\"><span class=\"rail-logo\">msyx.design</span><button class=\"rail-toggle\" aria-label=\"Reduire la sidebar\" aria-expanded=\"true\"><svg class=\"icon icon--sm\"><use href=\"/shared/icons/sprite.svg#i-chevron-left\"/></svg></button></div><nav class=\"rail-nav\" aria-label=\"Navigation principale\"><a class=\"rail-item active\" href=\"#\" aria-current=\"page\"><span class=\"rail-item-icon\">...</span><span class=\"rail-item-label\">Dashboard</span><span class=\"rail-tooltip\">Dashboard</span></a></nav></div>",
@@ -2547,7 +2550,10 @@
         ".rail-tooltip",
         ".sep",
         ".step-line",
-        ".user-menu-dropdown-role"
+        ".user-menu-dropdown-role",
+        ".rail-mobile-mockup",
+        ".rail-overlay--demo-mobile",
+        ".rail-sidebar--demo-mobile"
       ],
       "jsInit": null,
       "generated": true,

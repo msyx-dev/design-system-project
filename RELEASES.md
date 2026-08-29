@@ -1,5 +1,20 @@
 # Releases
 
+## 2.128.0 — 2026-08-29 — `Rail` composable : sections + titre de groupe + géométrie d'app-shell (#906)
+
+> Touche `shared/css/tokens.css` + `shared/css/components/navigation.css` + `pages/navigation.html` + `tests/vanilla/sidebar-rail.test.js` ET `packages/react/**` (prop `sections`/`mobileOpen`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.49).
+
+### Added
+- **Tokens `--rail-w` (260px) / `--rail-w-collapsed` (64px) (`tokens.css`)** — remplacent les valeurs en dur de `.rail-sidebar`/`.rail-sidebar.collapsed`/`.rail-tooltip`, comme `.main` s'offsette déjà sur `--sidebar-w`. Un consumer peut désormais suivre la largeur du rail sans écrire de valeur en dur.
+- **`.rail-section-title` (`navigation.css`)** — titre de groupe propre à la famille `.rail-*`, calqué sur `.sidebar-section` (`layout.css`) : même rôle purement visuel, siblings des `.rail-item` qu'il introduit, masqué en mode replié (`.rail-sidebar.collapsed`).
+- **Showcase (`pages/navigation.html` #sidebar-rail)** — deux nouvelles démos : sections composables avec titre de groupe + un `<TreeView>` vanilla (`.tree`) de profondeur 3 en contenu libre ; panneau mobile hors-flux + overlay (mockup figé, même contrainte que `.mobile-mockup` existant).
+
+### Fixed
+- **`.rail-sidebar--fixed` passait sous `.site-header` (#906)** — `top: 0` contre le `z-index: 150` de l'en-tête (`.rail-sidebar--fixed` est à `z-index: 100`) faisait recouvrir les 56px hauts du rail. Corrigé : `top: var(--header-h)`, `height: calc(100vh - var(--header-h))` — même ancrage que `.sidebar` (`layout.css`).
+- **Aucun comportement hors-flux mobile sous 768px** — `.rail-sidebar--fixed` suit désormais le même hors-écran + overlay que `.sidebar`/`.sidebar-overlay` (`layout.css`) : `translateX(-100%)` par défaut, `.open` pour rentrer, `.rail-overlay`/`.active` pour l'estompage de fond. Le mode replié (icônes) est neutralisé sous 768px (`.rail-sidebar--fixed.collapsed { width: var(--rail-w) }`) — pas de sens en panneau plein écran. Mode non-fixe (ex. `HelpNav` de KeepThread) inchangé.
+
+Registre : `sidebar-rail.cssClasses` complété (`.rail-section-title`, `.rail-overlay`), `node bin/generate-registry.js --check` rc=0. `@ds-version` 2.127.0 → 2.128.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.127.0 — 2026-08-29 — Scrollbar visible sur `.tabs`/`.stepper` + patron combobox dans le showcase (#900, #899)
 
 > Touche `shared/css/components/navigation.css` + `pages/**` ET `packages/react/**` (passthrough `<SearchInput>` + piège de tabulation `<Drawer>`/`<BottomSheet>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.48).

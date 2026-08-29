@@ -1,6 +1,7 @@
 import {
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
+  useEffect,
   useId,
   useState,
 } from "react";
@@ -30,9 +31,34 @@ export interface RailItem {
   children?: RailItem[];
 }
 
+export interface RailSection {
+  /** Identifiant stable — clé React. Unique dans le rail. */
+  id: string;
+  /** Titre de groupe, rendu en `.rail-section-title` (calque `.sidebar-section`). Absent → la section n'affiche aucun titre, juste son contenu. */
+  label?: ReactNode;
+  /** Contenu libre de la section — `TreeView`, `Dropdown`, ou tout autre `ReactNode`. Fourni, prioritaire sur `items` (les deux ignorés simultanément n'a pas de sens ; les deux fournis, seul `content` est rendu). */
+  content?: ReactNode;
+  /** Entrées classiques de la section, même gabarit et même rendu que `RailProps.items` (sous-entrées comprises). Ignoré si `content` est fourni. */
+  items?: RailItem[];
+}
+
 export interface RailProps {
-  /** Entrées de premier niveau (`.rail-nav`), `key = item.id`. */
-  items: RailItem[];
+  /**
+   * Entrées de premier niveau (`.rail-nav`), `key = item.id`. Ignoré si
+   * `sections` est fourni (voir `sections`). Reste le mode par défaut —
+   * assoupli en optionnel (#906) pour qu'un rail purement `sections` n'ait
+   * pas à fournir un tableau vide inutile ; tout consumer existant continue
+   * de le passer sans rien changer.
+   */
+  items?: RailItem[];
+  /**
+   * Groupes composables de `.rail-nav` — alternative à `items` pour un rail
+   * organisé en sections titrées et/ou pour accueillir un slot de contenu
+   * libre (`TreeView`, `Dropdown`…) que `RailItem` ne peut pas représenter.
+   * Fourni (même `[]`), remplace ENTIÈREMENT le rendu de `items` — les deux
+   * props ne se combinent pas. @default undefined (mode `items` legacy)
+   */
+  sections?: RailSection[];
   /**
    * Accès secondaires en pied de rail (`.rail-footer`) — ex. Paramètres.
    * Rendus avec le même gabarit que `items` (icône/libellé/tooltip), mais
@@ -68,12 +94,28 @@ export interface RailProps {
   expandLabel?: string;
   /**
    * Positionne le rail en bord d'écran (`.rail-sidebar--fixed` :
-   * `position:fixed; top:0; left:0; height:100vh`) — c'est le mode réel
-   * d'une app. `false` garde le rail dans le flux d'un parent positionné
-   * (mode showcase `.rail-demo`, calque `fullscreen` de `<Drawer>`).
-   * @default true
+   * `position:fixed; top:var(--header-h); left:0;
+   * height:calc(100vh - var(--header-h))`) — c'est le mode réel d'une app.
+   * `false` garde le rail dans le flux d'un parent positionné (mode showcase
+   * `.rail-demo`, calque `fullscreen` de `<Drawer>`). Sans effet sur
+   * `mobileOpen`/l'overlay, qui ne s'appliquent qu'en mode fixe (voir
+   * `mobileOpen`). @default true
    */
   fixed?: boolean;
+  /**
+   * Ouvert en panneau hors-flux sous 768px (`.rail-sidebar--fixed.open` +
+   * `.rail-overlay.active`, calque `.sidebar`/`.sidebar-overlay` de
+   * `layout.css`) — mode **contrôlé**. Fourni, l'état interne ET
+   * `defaultMobileOpen` sont ignorés (le parent doit répercuter
+   * `onMobileOpenChange`, typiquement depuis le bouton burger de son propre
+   * header — comme `.sidebar` mobile, `<Rail>` n'a pas de déclencheur
+   * interne). Sans effet si `fixed={false}`. @default false (fermé)
+   */
+  mobileOpen?: boolean;
+  /** Amorce l'état ouvert mobile au montage (mode non contrôlé uniquement). @default false */
+  defaultMobileOpen?: boolean;
+  /** Appelé à toute demande de fermeture (clic overlay, touche Escape) ou d'ouverture avec le prochain état. */
+  onMobileOpenChange?: (open: boolean) => void;
   /** Classes additionnelles sur `.rail-sidebar`. */
   className?: string;
   /** id du `.rail-sidebar`. */
@@ -148,6 +190,39 @@ function isActionable(item: RailItem): boolean {
  * Si l'item doit aussi être atteignable, l'exposer une seconde fois en
  * premier enfant de `children` plutôt que de surcharger le parent.
  *
+ * **Slot de contenu libre — `sections` (design-system-project#906)** : `items`
+ * ne pouvait accueillir qu'un `RailItem` typé, aucun point d'entrée pour un
+ * `<TreeView>` ou un `<Dropdown>`. `sections` est le mode alternatif de
+ * `.rail-nav` : `{ id, label?, items?, content? }[]`, rendu à la place
+ * d'`items` s'il est fourni (les deux ne se combinent jamais). Chaque section
+ * affiche son `label` en `.rail-section-title` (calque `.sidebar-section`)
+ * puis SOIT `content` (n'importe quel `ReactNode` — profondeur libre, le
+ * rail ne connaît pas sa structure), SOIT `items` (même gabarit/rendu que
+ * `RailProps.items`, `content` prioritaire si les deux sont fournis). Choix
+ * délibéré plutôt que de lever la limite « un seul niveau » de
+ * `RailItem.children` : un slot `ReactNode` couvre déjà le cas (un consumer
+ * qui a besoin d'un arbre apporte `<TreeView>`, qui gère lui-même sa propre
+ * profondeur) sans faire porter au rail une recursion qu'il n'a pas à
+ * connaître.
+ *
+ * **Géométrie d'app-shell + hors-flux mobile (#906)** : `.rail-sidebar--fixed`
+ * passait sous `.site-header` (`top:0` contre le `z-index:150` de l'en-tête)
+ * — corrigé (`top:var(--header-h)`, hauteur réduite d'autant), sans rien
+ * changer côté props. Sous 768px, `.rail-sidebar--fixed` bascule hors-écran
+ * avec overlay — calque exact de `.sidebar`/`.sidebar-overlay`
+ * (`layout.css`) — piloté par `mobileOpen`/`defaultMobileOpen`/
+ * `onMobileOpenChange`, mode **contrôlé** comme `collapsed`. Comme
+ * `.sidebar`, `<Rail>` n'a pas de bouton burger interne : le consumer câble
+ * le sien (typiquement dans son propre header) sur `onMobileOpenChange`. Sans
+ * effet en mode `fixed={false}` (`<HelpNav>` de KeepThread, non-fixe,
+ * inchangé). Fermeture au clic sur l'overlay ET à `Escape` (écoute globale
+ * `document`, active uniquement quand ouvert — même pattern que `<Drawer>`).
+ *
+ * **Tokens de largeur (#906)** : `--rail-w`/`--rail-w-collapsed`
+ * (`tokens.css`) remplacent les `260px`/`64px` en dur — un consumer peut
+ * offsetter son propre layout dessus, comme `.main` le fait déjà sur
+ * `--sidebar-w`.
+ *
  * **Limite connue — tooltip et clipping (design-system-project#856)** :
  * `.rail-tooltip` reste `position:absolute` pur-CSS (comme `<Tooltip>`,
  * aucun composant DS ne fait de portail à ce jour). `.rail-sidebar` a été
@@ -166,10 +241,14 @@ function isActionable(item: RailItem): boolean {
  * (jamais `disabled` natif, pour rester cohérent entre `<a>` et `<button>`,
  * calque `sidebar-link-disabled` du registre).
  *
- * SSR-safe : aucun accès à `document`/`window`, tout l'état est du `useState` React pur.
+ * SSR-safe : aucun accès à `document`/`window` au niveau module ni pendant le
+ * rendu — tout l'état est du `useState` React pur ; seule l'écoute `Escape`
+ * de la fermeture mobile touche `document`, et uniquement dans un
+ * `useEffect` (post-hydratation, même garantie que `<Drawer>`).
  */
 export function Rail({
-  items,
+  items = [],
+  sections,
   footerItems,
   brand,
   ariaLabel = "Navigation principale",
@@ -182,6 +261,9 @@ export function Rail({
   collapseLabel = "Réduire la sidebar",
   expandLabel = "Développer la sidebar",
   fixed = true,
+  mobileOpen: mobileOpenProp,
+  defaultMobileOpen = false,
+  onMobileOpenChange,
   className,
   id,
 }: RailProps) {
@@ -189,9 +271,12 @@ export function Rail({
   const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
   const [internalExpandedIds, setInternalExpandedIds] =
     useState<string[]>(defaultExpandedIds);
+  const [internalMobileOpen, setInternalMobileOpen] =
+    useState(defaultMobileOpen);
 
   const collapsed = collapsedProp ?? internalCollapsed;
   const expandedIds = expandedIdsProp ?? internalExpandedIds;
+  const mobileOpen = mobileOpenProp ?? internalMobileOpen;
 
   function toggleCollapsed() {
     const next = !collapsed;
@@ -207,6 +292,23 @@ export function Rail({
     if (expandedIdsProp === undefined) setInternalExpandedIds(next);
     onExpandedChange?.(next, item);
   }
+
+  function setMobileOpen(next: boolean) {
+    if (mobileOpenProp === undefined) setInternalMobileOpen(next);
+    onMobileOpenChange?.(next);
+  }
+
+  // Escape ferme le panneau mobile (#906) — écoute globale active uniquement
+  // quand ouvert ET fixe (mode non-fixe n'a pas d'état hors-écran à fermer),
+  // même pattern que <Drawer>.
+  useEffect(() => {
+    if (!fixed || !mobileOpen) return;
+    function handleKeyDown(event: globalThis.KeyboardEvent) {
+      if (event.key === "Escape") setMobileOpen(false);
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [fixed, mobileOpen, mobileOpenProp, onMobileOpenChange]);
 
   function renderItem(item: RailItem, options: { nested?: boolean } = {}) {
     const hasChildren = !options.nested && !!item.children?.length;
@@ -301,42 +403,66 @@ export function Rail({
     );
   }
 
+  function renderSection(section: RailSection) {
+    return (
+      <div key={section.id}>
+        {section.label ? (
+          <div className="rail-section-title">{section.label}</div>
+        ) : null}
+        {section.content ??
+          (section.items ?? []).map((item) => renderItem(item))}
+      </div>
+    );
+  }
+
   const sidebarClasses = [
     "rail-sidebar",
     collapsed ? "collapsed" : null,
     fixed ? "rail-sidebar--fixed" : null,
+    fixed && mobileOpen ? "open" : null,
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
+  const overlayClasses = ["rail-overlay", mobileOpen ? "active" : null]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className={sidebarClasses} id={id}>
-      <div className="rail-header">
-        {brand ? <span className="rail-logo">{brand}</span> : null}
-        <button
-          type="button"
-          className="rail-toggle"
-          aria-label={collapsed ? expandLabel : collapseLabel}
-          aria-expanded={!collapsed}
-          onClick={toggleCollapsed}
-        >
-          <Icon
-            name="chevron-left"
-            className="icon icon--sm"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
-      <nav className="rail-nav" aria-label={ariaLabel}>
-        {items.map((item) => renderItem(item))}
-      </nav>
-      {footerItems?.length ? (
-        <div className="rail-footer">
-          {footerItems.map((item) => renderItem(item, { nested: true }))}
-        </div>
+    <>
+      {fixed ? (
+        <div className={overlayClasses} onClick={() => setMobileOpen(false)} />
       ) : null}
-    </div>
+      <div className={sidebarClasses} id={id}>
+        <div className="rail-header">
+          {brand ? <span className="rail-logo">{brand}</span> : null}
+          <button
+            type="button"
+            className="rail-toggle"
+            aria-label={collapsed ? expandLabel : collapseLabel}
+            aria-expanded={!collapsed}
+            onClick={toggleCollapsed}
+          >
+            <Icon
+              name="chevron-left"
+              className="icon icon--sm"
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+        <nav className="rail-nav" aria-label={ariaLabel}>
+          {sections
+            ? sections.map((section) => renderSection(section))
+            : items.map((item) => renderItem(item))}
+        </nav>
+        {footerItems?.length ? (
+          <div className="rail-footer">
+            {footerItems.map((item) => renderItem(item, { nested: true }))}
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 }
 

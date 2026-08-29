@@ -1,4 +1,4 @@
-/* @ds-version: 2.127.0 */
+/* @ds-version: 2.128.0 */
 /* CSS moderne : utiliser color-mix() pour les nouveaux composants
    Stratégie : les variables *-rgb restent pour rétrocompatibilité consommateurs.
    Nouveaux composants → color-mix(in srgb, var(--accent) 10%, transparent) */
@@ -77,6 +77,8 @@
     --info-rgb: 6, 182, 212;
     --sidebar-w: 260px;
     --header-h: 56px;
+    --rail-w: 260px;            /* largeur deployee de .rail-sidebar (#906) */
+    --rail-w-collapsed: 64px;   /* largeur repliee (icones seules) de .rail-sidebar (#906) */
     --page-header-sticky-h: 96px; /* hauteur réservée par .section-header--sticky (#795) —
        à combiner avec --header-h pour les offsets (scroll-margin-top, padding) du
        contenu qui suit un PageHeader sticky. Estimation overline+titre ; ajuster
