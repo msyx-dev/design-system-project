@@ -358,3 +358,127 @@ describe("SearchInput — disabled", () => {
     expect(document.querySelector(".search-clear")).toBeDisabled();
   });
 });
+
+/**
+ * #899 — Sans passthrough, un consumer qui pilote SA PROPRE liste de résultats
+ * (palette ⌘K de KeepThread) ne pouvait pas poser `aria-activedescendant` sur
+ * l'`<input>` : le lecteur d'écran n'annonçait jamais l'option surlignée. Les
+ * deux seules issues étaient de renoncer à l'annonce ou de réimplémenter le
+ * champ hors du DS.
+ */
+describe("SearchInput — passthrough des attributs natifs (#899)", () => {
+  it("reporte aria-activedescendant / aria-expanded / role sur l'<input>, pas sur le wrap", () => {
+    render(
+      <SearchInput
+        value="dep"
+        onChange={() => {}}
+        role="combobox"
+        aria-expanded
+        aria-controls="results"
+        aria-activedescendant="result-2"
+      />,
+    );
+    const input = document.querySelector(".search-input")!;
+    expect(input).toHaveAttribute("aria-activedescendant", "result-2");
+    expect(input).toHaveAttribute("aria-controls", "results");
+    expect(input).toHaveAttribute("aria-expanded", "true");
+    expect(input).toHaveAttribute("role", "combobox");
+    // Le conteneur garde sa sémantique de recherche simple : le patron
+    // combobox 1.2 vit sur l'input, pas sur le wrap.
+    expect(document.querySelector(".search-input-wrap")).toHaveAttribute(
+      "role",
+      "search",
+    );
+  });
+
+  it("reporte les attributs natifs non-ARIA (id, name, autoComplete, inputMode)", () => {
+    render(
+      <SearchInput
+        value=""
+        onChange={() => {}}
+        id="palette-input"
+        name="q"
+        autoComplete="off"
+        inputMode="search"
+      />,
+    );
+    const input = document.querySelector(".search-input")!;
+    expect(input).toHaveAttribute("id", "palette-input");
+    expect(input).toHaveAttribute("name", "q");
+    expect(input).toHaveAttribute("autocomplete", "off");
+    expect(input).toHaveAttribute("inputmode", "search");
+  });
+
+  it("aria-label explicite prime sur la prop label", () => {
+    render(
+      <SearchInput
+        value=""
+        onChange={() => {}}
+        label="Rechercher"
+        aria-label="Rechercher une commande"
+      />,
+    );
+    expect(document.querySelector(".search-input")).toHaveAttribute(
+      "aria-label",
+      "Rechercher une commande",
+    );
+  });
+
+  it("avec suggestions, le panneau interne garde la main sur aria-controls (jamais un idref pendant)", () => {
+    render(
+      <SearchInput
+        value="a"
+        onChange={() => {}}
+        suggestions={["alpha", "beta"]}
+        aria-controls="une-liste-que-le-consumer-ne-rend-pas"
+      />,
+    );
+    const input = document.querySelector(".search-input")!;
+    const listId = document.querySelector(".search-suggestions")!.id;
+    expect(input).toHaveAttribute("aria-controls", listId);
+    expect(input).toHaveAttribute("aria-autocomplete", "list");
+  });
+
+  it("onKeyDown du consumer est appelé, et son preventDefault neutralise la navigation interne", () => {
+    const onKeyDown = vi.fn((event: { preventDefault: () => void }) => {
+      event.preventDefault();
+    });
+    render(
+      <SearchInput
+        value="a"
+        onChange={() => {}}
+        suggestions={["alpha", "beta"]}
+        onKeyDown={onKeyDown}
+      />,
+    );
+    const input = document.querySelector(".search-input")!;
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(onKeyDown).toHaveBeenCalledTimes(1);
+    // La navigation interne n'a pas marqué d'item actif : le consumer a pris
+    // la main sur les flèches.
+    expect(document.querySelector(".search-item.active")).toBeNull();
+  });
+
+  it("onFocus / onBlur du consumer sont appelés sans casser l'ouverture du panneau interne", () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <SearchInput
+        value="a"
+        onChange={() => {}}
+        suggestions={["alpha"]}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />,
+    );
+    const input = document.querySelector(".search-input")!;
+    fireEvent.focus(input);
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(document.querySelector(".search-suggestions")).not.toHaveClass(
+      "hidden",
+    );
+    fireEvent.blur(input);
+    expect(onBlur).toHaveBeenCalledTimes(1);
+  });
+});

@@ -1,5 +1,7 @@
 import {
   ChangeEvent,
+  FocusEvent as ReactFocusEvent,
+  InputHTMLAttributes,
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent as ReactMouseEvent,
   ReactNode,
@@ -58,7 +60,20 @@ function highlightMatch(text: string, query: string): ReactNode {
   );
 }
 
-export interface SearchInputProps {
+/**
+ * Attributs natifs de l'`<input>` repris tels quels (`aria-*`, `role`, `id`,
+ * `name`, `autoFocus`, `inputMode`…). Sont retirés ceux dont ce composant
+ * possède la sémantique : `value`/`onChange` (signatures simplifiées),
+ * `onSelect` (réservé au choix d'une suggestion, cf. `onSelect` ci-dessous),
+ * `type` (toujours `search`) et `className` (porté par le conteneur
+ * `.search-input-wrap`, pas par l'`<input>`).
+ */
+type SearchInputPassthrough = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "value" | "onChange" | "onSelect" | "type" | "className" | "children"
+>;
+
+export interface SearchInputProps extends SearchInputPassthrough {
   /** Valeur courante — le parent pilote l'état, aucun état interne pour la saisie. */
   value: string;
   /** Appelé avec la nouvelle valeur à chaque saisie, effacement ou sélection. */
@@ -129,6 +144,35 @@ export interface SearchInputProps {
  * `aria-autocomplete="list"` + `aria-controls` sur l'input,
  * `role="option"`/`aria-selected` sur chaque `.search-item`.
  *
+ * **Passthrough des attributs natifs (#899)** : toute prop d'`<input>` non
+ * consommée par ce composant est reportée telle quelle sur l'`<input>` —
+ * `aria-*` (dont `aria-activedescendant`), `role`, `id`, `name`, `autoFocus`,
+ * `inputMode`… Indispensable au patron **combobox WAI-ARIA 1.2** quand le
+ * consumer pilote SA PROPRE liste de résultats (palette de commandes, panneau
+ * de recherche applicatif) : sans `aria-activedescendant`, un lecteur d'écran
+ * n'annonce jamais l'option survolée au clavier, et le seul recours était de
+ * réimplémenter le champ hors du DS.
+ *
+ * ```tsx
+ * // Liste pilotée par le consumer — ne pas passer `suggestions`.
+ * <SearchInput
+ *   value={q} onChange={setQ}
+ *   role="combobox"
+ *   aria-expanded={open}
+ *   aria-controls="results"
+ *   aria-activedescendant={active ? `result-${active}` : undefined}
+ *   onKeyDown={handleArrowKeys}
+ * />
+ * <ul id="results" role="listbox">…</ul>
+ * ```
+ *
+ * Arbitrage quand les deux mondes se croisent : avec `suggestions`, le panneau
+ * interne reste la source de vérité (`aria-autocomplete`/`aria-controls`
+ * internes l'emportent — sinon `aria-controls` pointerait vers une liste non
+ * rendue) ; `aria-label` explicite prime sur `label` ; `onKeyDown`/`onFocus`/
+ * `onBlur` du consumer sont appelés AVANT le comportement interne, et un
+ * `preventDefault()` neutralise la navigation clavier interne.
+ *
  * SSR-safe : aucun accès à `document`/`window` au niveau module ; tout est
  * dans `useEffect`/handlers (post-hydratation).
  */
@@ -143,6 +187,16 @@ export function SearchInput({
   suggestions,
   onSelect,
   label = "Rechercher",
+  // Attributs a11y que ce composant calcule lui-même : extraits du rest pour
+  // arbitrer explicitement qui gagne (cf. bloc `inputAria` plus bas) plutôt
+  // que de laisser l'ordre du spread décider silencieusement.
+  "aria-label": ariaLabel,
+  "aria-autocomplete": ariaAutocomplete,
+  "aria-controls": ariaControls,
+  onKeyDown,
+  onFocus,
+  onBlur,
+  ...rest
 }: SearchInputProps) {
   const hasSuggestions = suggestions !== undefined;
 
@@ -202,7 +256,8 @@ export function SearchInput({
     }
   };
 
-  const handleFocus = () => {
+  const handleFocus = (event: ReactFocusEvent<HTMLInputElement>) => {
+    onFocus?.(event);
     if (disabled || !hasSuggestions) return;
     if (value.trim().length > 0) {
       setOpen(true);
@@ -210,7 +265,8 @@ export function SearchInput({
     }
   };
 
-  const handleBlur = () => {
+  const handleBlur = (event: ReactFocusEvent<HTMLInputElement>) => {
+    onBlur?.(event);
     if (!hasSuggestions) return;
     blurTimeoutRef.current = setTimeout(() => {
       closeSuggestions();
@@ -218,7 +274,12 @@ export function SearchInput({
   };
 
   const handleKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (!hasSuggestions) return;
+    // Le handler du consumer passe EN PREMIER : sur une liste qu'il pilote
+    // lui-même (patron combobox, `suggestions` absent), c'est lui qui traite
+    // les flèches/Entrée. `defaultPrevented` lui laisse aussi le moyen de
+    // neutraliser la navigation interne quand les deux coexistent.
+    onKeyDown?.(event);
+    if (!hasSuggestions || event.defaultPrevented) return;
 
     switch (event.key) {
       case "ArrowDown":
@@ -307,19 +368,24 @@ export function SearchInput({
         </svg>
       </span>
       <input
+        {...rest}
         ref={inputRef}
         type="search"
         className="search-input"
         placeholder={placeholder}
-        aria-label={label}
         value={value}
         disabled={disabled}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-autocomplete={hasSuggestions ? "list" : undefined}
-        aria-controls={hasSuggestions ? listId : undefined}
+        aria-label={ariaLabel ?? label}
+        // Le panneau interne existe : c'est lui la source de vérité, sinon
+        // `aria-controls` pointerait vers une liste que le consumer ne rend
+        // pas. Sans `suggestions`, le consumer pilote sa propre liste et ses
+        // valeurs passent intégralement (patron combobox WAI-ARIA 1.2).
+        aria-autocomplete={hasSuggestions ? "list" : ariaAutocomplete}
+        aria-controls={hasSuggestions ? listId : ariaControls}
       />
       <button
         type="button"
