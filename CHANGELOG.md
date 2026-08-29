@@ -9,6 +9,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Fixed
+- **CI `lint` rouge sur `main` depuis `d822fe4` — `site.html` non régénéré après le bump 2.128.0 (#906/#907)** — `check-counters.sh` échouait sur « footer : version v2.128.0 absente » : les 8 sources de version ont bien été bumpées, mais `node bin/generate-counters.js` n'a pas été relancé, donc le footer du hub annonçait encore l'ancienne version. **Deux jobs de `main` étaient donc rouges**, pas un seul. `site.html` régénéré par le générateur (jamais édité à la main).
 - **CI `visual` rouge sur `main` depuis `d822fe4` — baselines VR du Rail non rafraîchies (#906/#907)** — 6 baselines (`navigation-sidebar-rail` × 4 projets, `navigation-user-menu` × 2) figeaient le Rail d'avant les sections composables. Le job `visual` de `main` échouait donc depuis le 2026-08-29 19:09 UTC, et **toute PR ouverte ensuite héritait de cet échec**, mélangeant un churn qui ne lui appartient pas à ses propres captures. Baselines reprises des actuals du run de `main` (`33270123646`) et **regardées** avant commit : elles montrent bien le nouveau contenu de #906 (sections titrées, contenu libre, panneau mobile hors-flux). Aucun autre fichier touché — aucun bump de version, ce commit ne change que des PNG de référence.
 
 ### Changed
