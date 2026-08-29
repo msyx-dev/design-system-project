@@ -514,3 +514,22 @@ export type {
   InlineCodeProps,
   CodeTokenProps,
 } from "./components/Code/Code";
+
+// Lot 5 « interactifs B » (#875) — composants média : chargement différé
+// (VideoEmbed), poignée draggable + clavier (BeforeAfter, contrat #836
+// repris à l'identique), galerie + visionneuse modale avec restitution du
+// focus (Lightbox), piste/flèches/pastilles contrôlées (Carousel).
+export { Carousel } from "./components/Carousel/Carousel";
+export type {
+  CarouselProps,
+  CarouselSlide,
+} from "./components/Carousel/Carousel";
+export { Lightbox } from "./components/Lightbox/Lightbox";
+export type {
+  LightboxProps,
+  LightboxImage,
+} from "./components/Lightbox/Lightbox";
+export { VideoEmbed } from "./components/VideoEmbed/VideoEmbed";
+export type { VideoEmbedProps } from "./components/VideoEmbed/VideoEmbed";
+export { BeforeAfter } from "./components/BeforeAfter/BeforeAfter";
+export type { BeforeAfterProps } from "./components/BeforeAfter/BeforeAfter";

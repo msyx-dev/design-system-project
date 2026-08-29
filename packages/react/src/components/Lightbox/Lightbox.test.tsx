@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { Lightbox, LightboxImage } from "./Lightbox";
 
@@ -180,7 +186,9 @@ describe("Lightbox — restitution du focus (WAI-APG, ajoutée vs le vanilla)", 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(document.querySelector(".lightbox-img")).toBeInTheDocument();
 
-    vi.advanceTimersByTime(250);
+    act(() => {
+      vi.advanceTimersByTime(250);
+    });
     expect(document.querySelector(".lightbox-img")).not.toBeInTheDocument();
   });
 });
