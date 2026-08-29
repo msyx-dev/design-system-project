@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-29T09:06:46.503Z",
+    "at": "2026-08-29T09:56:09.035Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -976,15 +976,17 @@
         ".carousel-btn-prev",
         ".carousel-btn-next",
         ".carousel-dots",
-        ".carousel-dot"
+        ".carousel-dot",
+        ".carousel--cards"
       ],
       "jsInit": "initCarousel",
       "example": "<div class=\"carousel\">\n  <div class=\"carousel-track\">\n    <div class=\"carousel-slide\">Diapo 1</div>\n    <div class=\"carousel-slide\">Diapo 2</div>\n    <div class=\"carousel-slide\">Diapo 3</div>\n  </div>\n  <button class=\"carousel-btn carousel-btn-prev\" aria-label=\"Précédent\">&#8592;</button>\n  <button class=\"carousel-btn carousel-btn-next\" aria-label=\"Suivant\">&#8594;</button>\n  <div class=\"carousel-dots\">\n    <button class=\"carousel-dot active\" aria-label=\"Diapo 1\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 2\"></button>\n    <button class=\"carousel-dot\" aria-label=\"Diapo 3\"></button>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/media.css",
         "shared/css/components/_a11y.css"
-      ]
+      ],
+      "reactComponent": "Carousel"
     },
     {
       "name": "lightbox",
@@ -993,14 +995,24 @@
       "cssClasses": [
         ".lightbox-gallery",
         ".lightbox-trigger",
-        ".lightbox-thumb"
+        ".lightbox-thumb",
+        ".lightbox-overlay",
+        ".lightbox-img-wrap",
+        ".lightbox-img",
+        ".lightbox-close",
+        ".lightbox-btn",
+        ".lightbox-prev",
+        ".lightbox-next",
+        ".lightbox-caption",
+        ".lightbox-counter"
       ],
       "jsInit": "initLightbox",
       "example": "<div class=\"lightbox-gallery\">\n  <button class=\"lightbox-trigger\" data-src=\"image1-full.jpg\" aria-label=\"Agrandir image 1\">\n    <img class=\"lightbox-thumb\" src=\"image1-thumb.jpg\" alt=\"Aperçu 1\">\n  </button>\n  <button class=\"lightbox-trigger\" data-src=\"image2-full.jpg\" aria-label=\"Agrandir image 2\">\n    <img class=\"lightbox-thumb\" src=\"image2-thumb.jpg\" alt=\"Aperçu 2\">\n  </button>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/media.css"
-      ]
+      ],
+      "reactComponent": "Lightbox"
     },
     {
       "name": "bottom-nav",
@@ -1189,14 +1201,18 @@
         ".video-embed",
         ".video-embed-overlay",
         ".video-embed-play",
-        ".video-card"
+        ".video-card",
+        ".video-card-body",
+        ".video-card-title",
+        ".video-card-desc"
       ],
       "jsInit": "initVideoEmbeds",
       "example": "<div class=\"video-card\">\n  <div class=\"video-embed\" data-src=\"https://www.youtube.com/embed/dQw4w9WgXcQ\" aria-label=\"Lecteur vidéo\">\n    <img src=\"https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg\" alt=\"Aperçu de la vidéo\">\n    <div class=\"video-embed-overlay\">\n      <button class=\"video-embed-play\" aria-label=\"Lire la vidéo\">&#9654;</button>\n    </div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/media.css"
-      ]
+      ],
+      "reactComponent": "VideoEmbed"
     },
     {
       "name": "quiz-poll",
@@ -1231,10 +1247,11 @@
       ],
       "jsInit": "initBeforeAfter",
       "example": "<div class=\"before-after\">\n  <div class=\"before-after-before\">\n    <span class=\"before-after-label\">Avant</span>\n    <img src=\"before.jpg\" alt=\"Avant\">\n  </div>\n  <div class=\"before-after-after\">\n    <span class=\"before-after-label\">Après</span>\n    <img src=\"after.jpg\" alt=\"Après\">\n  </div>\n  <div class=\"before-after-handle\" aria-label=\"Glisser pour comparer\"></div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/media.css"
-      ]
+      ],
+      "reactComponent": "BeforeAfter"
     },
     {
       "name": "splitter",
