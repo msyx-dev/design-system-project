@@ -17,6 +17,15 @@
                                 changement visuel pour les instances qui tiennent deja. */
     scrollbar-color: var(--border-color) transparent; /* #900 : Firefox */
 }
+    /* #900 -- MESURE (Chromium 147 headless, sonde Playwright sur la demo
+       « conteneur etroit ») : `scrollbar-width` ne RESERVE aucune place ici
+       (offsetHeight - clientHeight = bordures seules) -- les scrollbars y sont
+       en mode overlay, elles se materialisent au scroll/survol au lieu d'etre
+       permanentes. Firefox, lui, reserve bien une gouttiere fine. Ce que le
+       correctif retablit dans tous les cas, c'est le MECANISME : `none` (#530)
+       supprimait la scrollbar inconditionnellement, partout, ne laissant rien
+       a saisir a la souris ; le navigateur decide desormais de son rendu.
+       Meme constat pour `.segmented` (#866), non specifique a ce correctif. */
 .tabs::-webkit-scrollbar {
     height: 4px; /* #900 : fine -- Chromium/Safari n'ont pas de scrollbar-width,
                     styling manuel du thumb/track ci-dessous */
