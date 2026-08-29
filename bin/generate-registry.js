@@ -772,6 +772,8 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.lb-hidden',       // media.css:301 — compound .lightbox-btn.lb-hidden
   '.lb-img-visible',  // media.css:234 — compound .lightbox-img.lb-img-visible (+ .lightbox-img-placeholder.lb-img-visible:255, non émis côté React)
   '.loaded',          // media.css:377 — compound .video-embed.loaded (sélecteur descendant .video-embed.loaded .video-embed-overlay)
+  // #877 — Lot 7 templates : compound sans séparateur, réellement stylé.
+  '.in-progress', // templates.css:41,47 — compound .roadmap-milestone.in-progress (+ descendant .roadmap-milestone-dot)
 ]);
 
 // Whitelist DISTINCTE de REACT_CSS_UNDETECTABLE — ne pas fusionner (#889,
