@@ -794,6 +794,9 @@ const REACT_CSS_UNDETECTABLE = new Set([
 const REACT_JS_HOOK_CLASSES = new Set([
   '.search-with-suggestions', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:598 (`wrap.classList.contains('search-with-suggestions')`, initSearchInput). Émise côté React pour calquer le markup du vanilla (formulaires.html) — #889.
   '.sortable-list--numbered', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:3500 (`list.classList.contains('sortable-list--numbered')`, initSortableLists). Émise côté React pour calquer le markup du vanilla (composants.html:714) — classe déjà morte identifiée AVANT le port (issue #889, section « Deux classes mortes déjà connues »), non imputable au wrapper.
+  // #876 — Lot 6 interactifs C : AUCUNE règle CSS, hooks `querySelector` vanilla réels.
+  '.like-count',  // AUCUNE règle CSS (grep exhaustif shared/css/**). Hook vanilla réel : shared/components.js:5172 (`btn.querySelector('.like-count')`, initComments). Émise côté React pour cibler le compteur et calquer le markup du vanilla.
+  '.dtree-reset', // AUCUNE règle CSS (grep exhaustif shared/css/**, style entièrement hérité de .btn-primary). Hook vanilla réel : shared/components.js:4064 (`dtree.querySelector('.dtree-reset')`, initDecisionTree). Émise côté React pour identifier le bouton de réinitialisation.
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
