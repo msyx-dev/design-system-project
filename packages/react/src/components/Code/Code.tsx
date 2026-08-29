@@ -57,11 +57,21 @@ export interface CopyButtonProps {
  * `shared/components.js:1026-1078`).
  *
  * Émet `.copy-btn(.copy-btn--icon|.copy-btn--inline)(.copy-btn--success) >
- * .copy-icon + .copy-tooltip`. `.copy-btn--success` piloté par un état
- * interne (`success`), retiré après `SUCCESS_DURATION_MS` (2000ms, calque
- * exact du `setTimeout` vanilla) — c'est CETTE classe que le CSS du DS
- * utilise pour la couleur succès + l'apparition du tooltip
- * (`interactive.css:30,45,58`).
+ * svg + .copy-tooltip`. `.copy-btn--success` piloté par un état interne
+ * (`success`), retiré après `SUCCESS_DURATION_MS` (2000ms, calque exact du
+ * `setTimeout` vanilla) — c'est CETTE classe que le CSS du DS utilise pour
+ * la couleur succès + l'apparition du tooltip (`interactive.css:30,45,58`).
+ *
+ * **Pas de wrapper `.copy-icon`** (contrairement au vanilla) : côté vanilla
+ * `.copy-icon` est un hook `querySelector` réel — `doCopy()` mute son
+ * `innerHTML` pour basculer presse-papiers/coche (`shared/components.js:
+ * 1031,1035`, requis, `doCopy` lève sinon — cf. l'`example` cassant corrigé
+ * par #781). React n'a pas besoin de ce hook : l'icône affichée dépend
+ * directement de l'état `success` (rendu conditionnel), aucune mutation DOM
+ * externe à cibler. Reproduire quand même le `<span>` n'aurait eu aucune
+ * justification : `.copy-icon` n'a par ailleurs AUCUNE règle CSS
+ * (`grep -rn '\.copy-icon' shared/css/` ne renvoie rien — le style vient de
+ * `.copy-btn svg`).
  *
  * **Robustesse ajoutée vs le vanilla** (demandé par l'issue #874) :
  * `navigator.clipboard` absent (contexte non sécurisé, vieux navigateur) ⇒
@@ -125,9 +135,7 @@ export function CopyButton({
       title={ariaLabel}
       onClick={handleClick}
     >
-      <span className="copy-icon">
-        {success ? <CheckIcon /> : <ClipboardIcon />}
-      </span>
+      {success ? <CheckIcon /> : <ClipboardIcon />}
       <span className="copy-tooltip">Copie !</span>
     </button>
   );

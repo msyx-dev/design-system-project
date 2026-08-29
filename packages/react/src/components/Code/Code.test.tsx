@@ -61,10 +61,14 @@ describe("CopyButton — structure et variantes", () => {
     expect(document.querySelector(".copy-btn")).toHaveClass("copy-btn--inline");
   });
 
-  it("rend .copy-icon et .copy-tooltip", () => {
+  it("rend une icône svg (sans wrapper .copy-icon — pas de hook DOM côté React) et .copy-tooltip", () => {
     mockClipboard();
     render(<CopyButton text="x" />);
-    expect(document.querySelector(".copy-icon")).toBeInTheDocument();
+    // Pas de `.copy-icon` : côté vanilla c'est un hook `querySelector` réel
+    // (`doCopy()` mute son innerHTML) ; React n'en a pas besoin, l'icône est
+    // pilotée par l'état `success` (rendu conditionnel).
+    expect(document.querySelector(".copy-icon")).not.toBeInTheDocument();
+    expect(document.querySelector(".copy-btn svg")).toBeInTheDocument();
     expect(document.querySelector(".copy-tooltip")).toHaveTextContent(
       "Copie !",
     );

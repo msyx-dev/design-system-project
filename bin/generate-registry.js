@@ -780,7 +780,6 @@ const REACT_CSS_UNDETECTABLE = new Set([
 const REACT_JS_HOOK_CLASSES = new Set([
   '.search-with-suggestions', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:598 (`wrap.classList.contains('search-with-suggestions')`, initSearchInput). Émise côté React pour calquer le markup du vanilla (formulaires.html) — #889.
   '.sortable-list--numbered', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:3500 (`list.classList.contains('sortable-list--numbered')`, initSortableLists). Émise côté React pour calquer le markup du vanilla (composants.html:714) — classe déjà morte identifiée AVANT le port (issue #889, section « Deux classes mortes déjà connues »), non imputable au wrapper.
-  '.copy-icon', // AUCUNE règle CSS (le style vient de `.copy-btn svg`). Hook vanilla réel : shared/components.js:1031,1035 (`btn.querySelector('.copy-icon').innerHTML = ...`, doCopy). Émise côté React pour calquer le markup du vanilla (divers.html #code) — #874.
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
