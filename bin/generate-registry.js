@@ -688,6 +688,12 @@ const REACT_TO_REGISTRY = {
   Comments: 'comments',                   // #876 — fil récursif (.comment-thread imbriqué), like + réponse
   BottomNav: 'bottom-nav',                // #876 — navigation mobile basse, aria-current (pas aria-selected, cf. docstring)
   DecisionTree: 'decision-tree',          // #876 — questionnaire pas à pas contrôlé, prefers-reduced-motion déjà couvert par le kill-switch global _a11y.css
+  Pricing: 'pricing',                     // #877 — Lot 7 templates : seul composant du lot avec un vrai comportement (initPricing), contrôlé (yearly/onYearlyChange)
+  Kanban: 'kanban',                       // #877 — KanbanBoard (contrôlé, DnD HTML5) + KanbanColumn/KanbanCard présentationnels, réutilisés par SprintBoard
+  Backlog: 'backlog',                     // #877 — non contrôlé (activeFilter interne, comme ActivityFeed), .backlog-priority.{high,medium,low}
+  Roadmap: 'roadmap',                     // #877 — pure structure, réutilise Progress déjà porté
+  SprintBoard: 'sprint',                  // #877 — pure structure, réutilise KanbanColumn/KanbanCard (sans DnD) + Progress
+  SettingsPanel: 'settings-panel',        // #877 — pure structure, control composé par le parent (Toggle/Button déjà portés + SettingsRowInput/SettingsRowSelect co-localisés)
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier

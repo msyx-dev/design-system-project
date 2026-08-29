@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-29T10:45:37.607Z",
+    "at": "2026-08-29T11:45:39.911Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1664,7 +1664,7 @@
       ],
       "jsInit": "initPricing",
       "example": "<div class=\"pricing-grid\">\n  <div class=\"pricing-card\">\n    <div class=\"pricing-plan\">Free</div>\n    <div class=\"pricing-price\"><span class=\"pricing-price-currency\">&euro;</span><span class=\"pricing-price-amount\" data-price-monthly=\"0\" data-price-yearly=\"0\">0</span><span class=\"pricing-price-period\">/ mois</span></div>\n    <ul class=\"pricing-features\"><li class=\"pricing-feature\">Feature A</li></ul>\n    <div class=\"pricing-cta\"><button class=\"btn-secondary\" style=\"width:100%;\">Commencer</button></div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/pricing.css"
       ]
@@ -1861,7 +1861,7 @@
       ],
       "jsInit": "initComponents",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
@@ -1883,7 +1883,7 @@
       ],
       "jsInit": null,
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
@@ -1904,7 +1904,7 @@
       ],
       "jsInit": "initComponents",
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
@@ -1924,7 +1924,7 @@
       ],
       "jsInit": null,
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
@@ -1949,7 +1949,7 @@
       ],
       "jsInit": null,
       "version": "2.73.0",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/forms.css"
       ]
