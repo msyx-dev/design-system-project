@@ -559,3 +559,54 @@ export type {
   DecisionTreeNode,
   DecisionTreeChoice,
 } from "./components/DecisionTree/DecisionTree";
+
+// Lot 7 « templates » (#877) — compositions d'écran opinionated, portées à
+// condition de rester composables (données/callbacks en props, aucune
+// logique métier figée). Réutilisent les décoratifs déjà portés (Progress,
+// Toggle, Button) plutôt que de réémettre leurs classes.
+export { Pricing } from "./components/Pricing/Pricing";
+export type {
+  PricingProps,
+  PricingPlan,
+  PricingFeature,
+} from "./components/Pricing/Pricing";
+export { KanbanBoard, KanbanColumn, KanbanCard } from "./components/Kanban/Kanban";
+export type {
+  KanbanBoardProps,
+  KanbanColumnProps,
+  KanbanCardProps,
+  KanbanColumnData,
+  KanbanCardData,
+} from "./components/Kanban/Kanban";
+export { Backlog } from "./components/Backlog/Backlog";
+export type {
+  BacklogProps,
+  BacklogItemData,
+  BacklogFilterOption,
+  BacklogPriority,
+} from "./components/Backlog/Backlog";
+export { Roadmap } from "./components/Roadmap/Roadmap";
+export type {
+  RoadmapProps,
+  RoadmapQuarter,
+  RoadmapMilestone,
+  RoadmapMilestoneStatus,
+} from "./components/Roadmap/Roadmap";
+export { SprintBoard } from "./components/SprintBoard/SprintBoard";
+export type {
+  SprintBoardProps,
+  SprintColumnData,
+  SprintStat,
+} from "./components/SprintBoard/SprintBoard";
+export {
+  SettingsPanel,
+  SettingsRowInput,
+  SettingsRowSelect,
+} from "./components/SettingsPanel/SettingsPanel";
+export type {
+  SettingsPanelProps,
+  SettingsSection,
+  SettingsRow,
+  SettingsRowInputProps,
+  SettingsRowSelectProps,
+} from "./components/SettingsPanel/SettingsPanel";
