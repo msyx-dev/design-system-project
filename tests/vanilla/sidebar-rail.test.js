@@ -144,3 +144,59 @@ describe('initSidebarRail -- idempotence', () => {
     expect(sidebars[1].classList.contains('collapsed')).toBe(false);
   });
 });
+
+// #906 -- .rail-section-title (titre de groupe) et .rail-sidebar--fixed +
+// .rail-overlay (geometrie app-shell / hors-flux mobile) sont du markup/CSS
+// pur : aucun comportement JS ne leur est attache (verifie en lisant le
+// code source de initSidebarRail -- il ne cible que .rail-demo/.rail-sidebar/
+// .rail-toggle). Ce que le JS DOIT garantir : leur presence ne casse pas le
+// repli/depli existant.
+describe('initSidebarRail -- coexistence avec .rail-section-title / .rail-sidebar--fixed / .rail-overlay (#906)', () => {
+  function railHtmlWithSections() {
+    return `
+      <div class="rail-demo">
+        <div class="rail-overlay"></div>
+        <div class="rail-sidebar rail-sidebar--fixed">
+          <div class="rail-header">
+            <button class="rail-toggle" aria-label="Réduire la sidebar" aria-expanded="true">T</button>
+          </div>
+          <nav class="rail-nav" aria-label="Navigation principale">
+            <div class="rail-section-title">Espace</div>
+            <a class="rail-item active" href="#" aria-current="page">
+              <span class="rail-item-label">Dashboard</span>
+            </a>
+            <div class="rail-section-title">Arborescence libre</div>
+            <ul class="tree" role="tree"></ul>
+          </nav>
+        </div>
+      </div>
+    `;
+  }
+
+  it('le repli fonctionne toujours avec des .rail-section-title et du contenu libre dans .rail-nav', () => {
+    const dom = loadComponentsWindow(railHtmlWithSections());
+    const { window } = dom;
+    const { document } = window;
+    window.__initSidebarRail();
+    const sidebar = document.querySelector('.rail-sidebar');
+    const toggle = document.querySelector('.rail-toggle');
+    fireClick(window, toggle);
+    expect(sidebar.classList.contains('collapsed')).toBe(true);
+    // Les titres de groupe restent du markup statique -- aucune classe/attribut ajoute dessus.
+    document.querySelectorAll('.rail-section-title').forEach((el) => {
+      expect(el.className).toBe('rail-section-title');
+    });
+  });
+
+  it('.rail-overlay sibling n\'est jamais touche par initSidebarRail (pas de .active/.open poses par le JS)', () => {
+    const dom = loadComponentsWindow(railHtmlWithSections());
+    const { window } = dom;
+    const { document } = window;
+    window.__initSidebarRail();
+    const toggle = document.querySelector('.rail-toggle');
+    fireClick(window, toggle);
+    const overlay = document.querySelector('.rail-overlay');
+    expect(overlay.classList.contains('active')).toBe(false);
+    expect(document.querySelector('.rail-sidebar').classList.contains('open')).toBe(false);
+  });
+});
