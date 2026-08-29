@@ -451,3 +451,255 @@ describe("Dropdown — searchable", () => {
     ).toHaveFocus();
   });
 });
+
+/**
+ * #855 besoin 1 — motif combobox créatif. Avant, `filteredOptions.map(...)` ne
+ * rendait rien de plus quand la liste filtrée était vide : aucun slot pour
+ * proposer la création de la valeur saisie. Demandé par keepthread#18/#19/#20
+ * (création de Périmètre / Acteur / Contexte à la volée depuis le sélecteur).
+ */
+describe("Dropdown — entrée de création (#855)", () => {
+  const openAndType = async (query: string, extra: Partial<DropdownSingleProps> = {}) => {
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        value=""
+        onChange={vi.fn()}
+        searchable
+        {...extra}
+      />,
+    );
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    await user.type(
+      document.querySelector(".dropdown-search input") as HTMLElement,
+      query,
+    );
+    return user;
+  };
+
+  it("sans onCreateOption, une recherche sans résultat ne rend RIEN de plus (rétrocompatibilité)", async () => {
+    await openAndType("zzzz");
+    expect(document.querySelectorAll(".dropdown-option")).toHaveLength(0);
+    expect(document.querySelector(".dropdown-create")).toBeNull();
+  });
+
+  it("avec onCreateOption, rend .dropdown-option.dropdown-create quand le filtre ne retourne rien", async () => {
+    await openAndType("Alexandre", { onCreateOption: vi.fn() });
+    const create = document.querySelector(".dropdown-option.dropdown-create");
+    expect(create).toBeInTheDocument();
+    expect(create).toHaveAttribute("role", "option");
+    expect(
+      create?.querySelector(".dropdown-create-query")?.textContent,
+    ).toBe("Alexandre");
+  });
+
+  it("n'apparaît PAS tant que le filtre retourne au moins une option", async () => {
+    await openAndType(OPTIONS[0].label as string, { onCreateOption: vi.fn() });
+    expect(document.querySelectorAll(".dropdown-option").length).toBeGreaterThan(0);
+    expect(document.querySelector(".dropdown-create")).toBeNull();
+  });
+
+  it("n'apparaît PAS sur une requête vide (rien à créer)", async () => {
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        value=""
+        onChange={vi.fn()}
+        searchable
+        onCreateOption={vi.fn()}
+      />,
+    );
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    expect(document.querySelector(".dropdown-create")).toBeNull();
+  });
+
+  it("le clic appelle onCreateOption avec la requête et ferme le menu", async () => {
+    const onCreateOption = vi.fn();
+    const user = await openAndType("Alexandre Poutrain", { onCreateOption });
+    await user.click(document.querySelector(".dropdown-create") as HTMLElement);
+    expect(onCreateOption).toHaveBeenCalledWith("Alexandre Poutrain");
+    expect(document.querySelector(".dropdown-menu")).toBeNull();
+  });
+
+  it("est sélectionnable au CLAVIER comme une option normale (ArrowDown depuis la recherche puis Entrée)", async () => {
+    const onCreateOption = vi.fn();
+    const user = await openAndType("Alexandre", { onCreateOption });
+    await user.keyboard("{ArrowDown}");
+    expect(document.querySelector(".dropdown-create")).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(onCreateOption).toHaveBeenCalledWith("Alexandre");
+  });
+
+  it("n'est jamais annoncée sélectionnée et n'écrit pas dans .dropdown-value (c'est une action)", async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        value=""
+        onChange={onChange}
+        placeholder="Choisir"
+        searchable
+        onCreateOption={vi.fn()}
+      />,
+    );
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    await user.type(
+      document.querySelector(".dropdown-search input") as HTMLElement,
+      "Alexandre",
+    );
+    const create = document.querySelector(".dropdown-create") as HTMLElement;
+    expect(create).toHaveAttribute("aria-selected", "false");
+    expect(create).not.toHaveClass("selected");
+    await user.click(create);
+    expect(onChange).not.toHaveBeenCalled();
+    expect(document.querySelector(".dropdown-value")?.textContent).toBe("Choisir");
+  });
+
+  it("createOptionLabel remplace le libellé par défaut", async () => {
+    await openAndType("Alexandre", {
+      onCreateOption: vi.fn(),
+      createOptionLabel: (q) => `Créer le périmètre ${q}`,
+    });
+    expect(
+      document.querySelector(".dropdown-create")?.textContent,
+    ).toContain("Créer le périmètre Alexandre");
+  });
+
+  it("en mode multi aussi, la création ferme le menu (sélection ordinaire non)", async () => {
+    const onCreateOption = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        multi
+        value={[]}
+        onChange={vi.fn()}
+        searchable
+        onCreateOption={onCreateOption}
+      />,
+    );
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    await user.type(
+      document.querySelector(".dropdown-search input") as HTMLElement,
+      "Alexandre",
+    );
+    await user.click(document.querySelector(".dropdown-create") as HTMLElement);
+    expect(onCreateOption).toHaveBeenCalledWith("Alexandre");
+    expect(document.querySelector(".dropdown-menu")).toBeNull();
+  });
+});
+
+/**
+ * #855 besoin 2 — recherche contrôlable. `searchQuery` était un état interne
+ * non exposé : le parent ne pouvait pas savoir que l'utilisateur avait commencé
+ * à taper, donc pas faire varier `options` (favoris et récents tant que le champ
+ * est vide, référentiel complet dès la première frappe).
+ */
+describe("Dropdown — recherche contrôlée (#855)", () => {
+  it("sans searchQuery, la recherche reste interne (comportement inchangé)", async () => {
+    const user = userEvent.setup();
+    render(<Dropdown options={OPTIONS} value="" onChange={vi.fn()} searchable />);
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    const input = document.querySelector(".dropdown-search input") as HTMLInputElement;
+    await user.type(input, "ab");
+    expect(input.value).toBe("ab");
+  });
+
+  it("onSearchChange est notifié à chaque frappe, même en mode non contrôlé", async () => {
+    const onSearchChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        value=""
+        onChange={vi.fn()}
+        searchable
+        onSearchChange={onSearchChange}
+      />,
+    );
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    await user.type(
+      document.querySelector(".dropdown-search input") as HTMLElement,
+      "ab",
+    );
+    expect(onSearchChange).toHaveBeenLastCalledWith("ab");
+  });
+
+  it("en mode contrôlé, la valeur affichée vient du parent — le composant n'écrit jamais seul", async () => {
+    const onSearchChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        value=""
+        onChange={vi.fn()}
+        searchable
+        searchQuery="fige"
+        onSearchChange={onSearchChange}
+      />,
+    );
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    const input = document.querySelector(".dropdown-search input") as HTMLInputElement;
+    expect(input.value).toBe("fige");
+    await user.type(input, "x");
+    expect(onSearchChange).toHaveBeenCalledWith("figex");
+    // Le parent n'ayant pas mis à jour searchQuery, l'affichage ne bouge pas.
+    expect(input.value).toBe("fige");
+  });
+
+  it("divulgation progressive : le parent fait varier options selon la requête", async () => {
+    function ProgressiveDisclosure() {
+      const [query, setQuery] = useState("");
+      const favorites: DropdownOption[] = [
+        { value: "fav", label: "Favori recent" },
+      ];
+      const referentiel: DropdownOption[] = [
+        { value: "ref-1", label: "Zebre du referentiel" },
+      ];
+      return (
+        <Dropdown
+          options={query ? referentiel : favorites}
+          value=""
+          onChange={vi.fn()}
+          searchable
+          searchQuery={query}
+          onSearchChange={setQuery}
+        />
+      );
+    }
+    const user = userEvent.setup();
+    render(<ProgressiveDisclosure />);
+    await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
+    expect(screen.getByText("Favori recent")).toBeInTheDocument();
+
+    await user.type(
+      document.querySelector(".dropdown-search input") as HTMLElement,
+      "Zebre",
+    );
+    expect(screen.getByText("Zebre du referentiel")).toBeInTheDocument();
+    expect(screen.queryByText("Favori recent")).toBeNull();
+  });
+
+  it("à la fermeture, le composant NOTIFIE la remise à zéro au lieu de l'écrire", async () => {
+    const onSearchChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Dropdown
+        options={OPTIONS}
+        value=""
+        onChange={vi.fn()}
+        searchable
+        searchQuery="abc"
+        onSearchChange={onSearchChange}
+      />,
+    );
+    const trigger = document.querySelector(".dropdown-trigger") as HTMLElement;
+    await user.click(trigger);
+    onSearchChange.mockClear();
+    await user.click(trigger); // ferme
+    expect(onSearchChange).toHaveBeenCalledWith("");
+  });
+});

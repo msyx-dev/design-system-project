@@ -1,7 +1,7 @@
 {
   "version": "2.128.0",
   "generated": {
-    "at": "2026-08-29T17:54:05.823Z",
+    "at": "2026-08-29T20:38:45.052Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -744,6 +744,8 @@
         ".dropdown-menu",
         ".dropdown-search",
         ".dropdown-option",
+        ".dropdown-create-query",
+        ".dropdown-create",
         ".dropdown-tags",
         ".dropdown-tag"
       ],
