@@ -1,5 +1,18 @@
 # Releases
 
+## 2.129.0 — 2026-08-29 — Dropdown : création à la volée quand la recherche ne donne rien (#855)
+
+> Touche `shared/css/components/forms.css` + `shared/components.js` + `pages/formulaires.html` ET `packages/react/**` (mêmes extensions côté wrapper, cf. `packages/react/RELEASES.md` v3.0.0-alpha.50).
+
+### Added
+- **Motif combobox créatif sur `.dropdown` — entrée « + Ajouter « … » » (#855)** — quand le filtre de `.dropdown-search` ne retourne **aucune** option et que la requête n'est pas vide, une entrée `.dropdown-option.dropdown-create` propose de créer la valeur saisie. Demandé par trois issues d'un même sprint consommateur (`msyx-dev/keepthread#18`/`#19`/`#20` — création de Périmètre, d'Acteur et de Contexte à la volée depuis le sélecteur), toutes bloquées ou dégradées sans elle.
+  - **C'est une ACTION, pas une option du référentiel** — trois conséquences câblées explicitement dans `shared/components.js` : elle **échappe au filtre par texte** (son libellé contient la requête, un filtre naïf la garderait visible en permanence) ; elle **n'entre jamais dans la sélection** (jamais `.selected`, n'écrit pas dans `.dropdown-value`) ; elle **émet `dropdown:create`** avec `detail.query` — c'est au consommateur d'ajouter l'option puis de la sélectionner.
+  - La requête est rendue dans `.dropdown-create-query` via **`textContent`**, jamais `innerHTML` : c'est une donnée utilisateur (`DS-PRINCIPLES` §11). Un test le vérifie avec une charge `<img src=x onerror=...>`.
+  - CSS : `.dropdown-create` réutilise `.dropdown-option` (même cible tactile, même `:focus-visible`) et s'en distingue par un séparateur haut et l'accent. Le `.check` — `opacity: 0` au repos sur une option ordinaire — est visible en permanence ici : il n'y a rien à cocher, l'icône est un `+`.
+  - Tests : `tests/vanilla/dropdown.test.js` (nouveau — le dropdown vanilla n'avait aucun test), 7 cas dont la non-régression de la sélection ordinaire. Au passage, ces tests documentent que `.dropdown-menu` est **déplacé dans `document.body`** à l'ouverture (panneau flottant #856) et n'est remis en place qu'après la transition de fermeture.
+  - Démo dogfoodée dans `pages/formulaires.html` #dropdown (chercher « Alexandre » dans le sélecteur d'acteurs).
+  - `@ds-version` 2.128.0 → 2.129.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.128.0 — 2026-08-29 — `Rail` composable : sections + titre de groupe + géométrie d'app-shell (#906)
 
 > Touche `shared/css/tokens.css` + `shared/css/components/navigation.css` + `pages/navigation.html` + `tests/vanilla/sidebar-rail.test.js` ET `packages/react/**` (prop `sections`/`mobileOpen`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.49).

@@ -14,6 +14,21 @@
   },
   "released": [
     {
+      "version": "2.129.0",
+      "date": "2026-08-29",
+      "titre": "Créer une valeur absente sans quitter le menu déroulant",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Quand une recherche dans un menu déroulant ne donne aucun résultat, une entrée « Ajouter … » peut désormais proposer de créer la valeur saisie, sans quitter le menu ni perdre ce qui a été tapé."
+        },
+        {
+          "type": "amelioration",
+          "text": "Une application peut maintenant suivre ce qui est tapé dans la recherche d'un menu déroulant, et adapter la liste en conséquence : favoris et valeurs récentes tant que le champ est vide, référentiel complet dès la première frappe."
+        }
+      ]
+    },
+    {
       "version": "2.127.0",
       "date": "2026-08-29",
       "titre": "Options hors champ atteignables à la souris, et surfaces modales qui gardent le focus",
