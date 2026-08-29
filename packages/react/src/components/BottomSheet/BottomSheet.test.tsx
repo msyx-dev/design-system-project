@@ -538,3 +538,49 @@ describe("BottomSheet — a11y overlay fermé (inert + focus, vérif adversarial
     );
   });
 });
+
+/**
+ * #862 — Le vanilla piège la tabulation du bottom sheet depuis #825
+ * (`trapTabKey` d'`initBottomSheet`) ; ce wrapper ne le faisait pas et
+ * documentait même ce manque comme un alignement sur le vanilla, constat
+ * devenu faux. Même primitive (`useFocusTrap`) que `<Drawer>`.
+ */
+describe("BottomSheet — piège de tabulation (#862)", () => {
+  function renderTrapScenario() {
+    render(
+      <>
+        <button type="button" id="derriere">
+          Bouton d&apos;arriere-plan
+        </button>
+        <BottomSheet open onClose={() => {}} title="Filtres">
+          <button type="button">Appliquer</button>
+        </BottomSheet>
+      </>,
+    );
+    const panel = document.querySelector(".bottom-sheet") as HTMLElement;
+    const focusables = Array.from(
+      panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    return {
+      panel,
+      first: focusables[0],
+      last: focusables[focusables.length - 1],
+    };
+  }
+
+  it("Tab depuis le dernier element focalisable revient au premier", () => {
+    const { panel, first, last } = renderTrapScenario();
+    last.focus();
+    fireEvent.keyDown(panel, { key: "Tab" });
+    expect(first).toHaveFocus();
+  });
+
+  it("Maj+Tab depuis le premier element focalisable va au dernier", () => {
+    const { panel, first, last } = renderTrapScenario();
+    first.focus();
+    fireEvent.keyDown(panel, { key: "Tab", shiftKey: true });
+    expect(last).toHaveFocus();
+  });
+});

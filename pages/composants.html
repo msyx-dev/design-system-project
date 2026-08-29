@@ -670,6 +670,21 @@
             <p class="typo-small" style="margin-top:1rem;">Indicateur en <code style="font-family:'Fira Code',monospace;color:var(--accent-light);">rgba(accent, 0.18)</code> — moins saillant visuellement.</p>
         </div>
 
+        <div class="demo-box">
+            <span class="demo-label">Conteneur etroit — debordement</span>
+            <div style="max-width:260px;">
+                <div class="segmented" role="radiogroup" aria-label="Nature">
+                    <div class="segmented-indicator" aria-hidden="true"></div>
+                    <button class="segmented-item active" type="button" role="radio" aria-checked="true" tabindex="0">Decision</button>
+                    <button class="segmented-item" type="button" role="radio" aria-checked="false" tabindex="-1">Risque</button>
+                    <button class="segmented-item" type="button" role="radio" aria-checked="false" tabindex="-1">Action</button>
+                    <button class="segmented-item" type="button" role="radio" aria-checked="false" tabindex="-1">Information</button>
+                    <button class="segmented-item" type="button" role="radio" aria-checked="false" tabindex="-1">Alerte</button>
+                </div>
+            </div>
+            <p class="typo-small" style="margin-top:1rem;">Cas reel remonte en recette (#866) : 5 options dans un panneau de ~260px. La scrollbar fine est la seule affordance souris vers les options hors champ — le flechage clavier ne se devine pas.</p>
+        </div>
+
     </div>
 </section>
 

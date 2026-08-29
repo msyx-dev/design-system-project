@@ -8,8 +8,17 @@
 // initBottomSheet) : seul reinitAll(), alias window.__initComponents(),
 // l'appelle -- meme chemin que initModals()/initCommandPalette().
 // Markup repris de pages/navigation.html#tabs (classes reelles).
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { loadComponentsWindow, fireClick, fireKeydown } from './helpers/load-components.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const NAVIGATION_CSS_SOURCE = readFileSync(
+  path.resolve(__dirname, '../../shared/css/components/navigation.css'),
+  'utf8',
+);
 
 function tabsHtml() {
   return `
@@ -146,5 +155,62 @@ describe('Tabs (initComponents)', () => {
     fireKeydown(window, general, 'Home');
     expect(document.activeElement).toBe(general);
     expect(general.classList.contains('active')).toBe(true);
+  });
+});
+
+/**
+ * #900 -- `.tabs` partageait EXACTEMENT le pattern corrige sur `.segmented`
+ * par #866 : `overflow-x: auto` (#530) accompagne de `scrollbar-width: none`
+ * + `::-webkit-scrollbar { display: none }`. La scrollbar etait donc
+ * supprimee INCONDITIONNELLEMENT, y compris quand le contenu deborde
+ * reellement -- aucune affordance souris vers les onglets hors champ dans un
+ * conteneur etroit (drawer, panneau lateral, carte). Contrairement au
+ * `.segmented` (`radiogroup` + flechage), un `.tab` n'offre meme pas de
+ * porte de sortie clavier evidente : les onglets sont des <button> ordinaires
+ * dans le tab-order, atteignables mais sans qu'aucun indice ne signale qu'il
+ * y en a plus a droite.
+ *
+ * Meme methode de verification que le test #866 : jsdom ne calcule aucune
+ * mise en page (scrollWidth/clientWidth restent a 0) mais resout les VALEURS
+ * calculees depuis une feuille chargee en <style>. Le vrai navigation.css du
+ * repo est injecte (jamais duplique a la main).
+ */
+describe('.tabs -- CSS (#900, regression scrollbar entierement masquee)', () => {
+  function loadTabsWithRealCss() {
+    const dom = loadComponentsWindow(`
+      <div style="width:260px">
+        <div class="tabs">
+          <button class="tab active">General</button>
+          <button class="tab">Securite</button>
+          <button class="tab">Notifications</button>
+          <button class="tab">Integrations</button>
+          <button class="tab">API</button>
+        </div>
+      </div>
+    `);
+    const { window } = dom;
+    const styleEl = window.document.createElement('style');
+    styleEl.textContent = NAVIGATION_CSS_SOURCE;
+    window.document.head.appendChild(styleEl);
+    window.__initComponents();
+    return { window, group: window.document.querySelector('.tabs') };
+  }
+
+  it("ne masque plus inconditionnellement la scrollbar (scrollbar-width != 'none')", () => {
+    const { window, group } = loadTabsWithRealCss();
+    expect(window.getComputedStyle(group).scrollbarWidth).not.toBe('none');
+  });
+
+  it('le mecanisme de scroll horizontal (#530) reste intact -- overflow-x:auto inchange', () => {
+    const { window, group } = loadTabsWithRealCss();
+    expect(window.getComputedStyle(group).overflowX).toBe('auto');
+  });
+
+  it('le correctif est purement CSS -- roles et etat clavier des onglets inchanges', () => {
+    const { group } = loadTabsWithRealCss();
+    const active = group.querySelector('.tab.active');
+    expect(active.textContent).toBe('General');
+    expect(active.getAttribute('aria-selected')).toBe('true');
+    expect(active.getAttribute('tabindex')).toBe('0');
   });
 });

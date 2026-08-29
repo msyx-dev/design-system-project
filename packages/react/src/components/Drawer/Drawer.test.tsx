@@ -451,3 +451,79 @@ describe("Drawer — a11y overlay fermé (inert + focus, vérif adversariale)", 
     expect(document.activeElement).toBe(closeBtn);
   });
 });
+
+/**
+ * #862 — `role="dialog"` + `aria-modal="true"` ANNONÇAIENT au lecteur d'écran
+ * que l'arrière-plan était inerte, sans que rien ne l'applique : `inert` n'est
+ * posé que sur le drawer FERMÉ. `Tab` continuait donc de parcourir le contenu
+ * derrière le panneau ouvert. Relevé au groom de `msyx-dev/keepthread#24`
+ * (écran de capture = drawer dense en champs).
+ */
+describe("Drawer — piège de tabulation (#862)", () => {
+  function renderTrapScenario() {
+    render(
+      <>
+        <button type="button" id="derriere">
+          Bouton d&apos;arriere-plan
+        </button>
+        <Drawer open onClose={() => {}} title="Capture" actions={<button type="button">Enregistrer</button>}>
+          <input aria-label="Titre" />
+          <input aria-label="Note" />
+        </Drawer>
+      </>,
+    );
+    const panel = document.querySelector(".drawer-panel") as HTMLElement;
+    const focusables = Array.from(
+      panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    return { panel, first: focusables[0], last: focusables[focusables.length - 1] };
+  }
+
+  it("Tab depuis le dernier element focalisable revient au premier (jamais l'arriere-plan)", () => {
+    const { panel, first, last } = renderTrapScenario();
+    last.focus();
+    expect(last).toHaveFocus();
+    fireEvent.keyDown(panel, { key: "Tab" });
+    expect(first).toHaveFocus();
+  });
+
+  it("Maj+Tab depuis le premier element focalisable va au dernier", () => {
+    const { panel, first, last } = renderTrapScenario();
+    first.focus();
+    fireEvent.keyDown(panel, { key: "Tab", shiftKey: true });
+    expect(last).toHaveFocus();
+  });
+
+  it("le premier element focalisable du panneau est le bouton de fermeture, le dernier l'action de pied", () => {
+    const { first, last } = renderTrapScenario();
+    expect(first).toHaveClass("drawer-close");
+    expect(last.textContent).toBe("Enregistrer");
+  });
+
+  it("une touche autre que Tab ne detourne jamais le focus", () => {
+    const { panel, last } = renderTrapScenario();
+    last.focus();
+    fireEvent.keyDown(panel, { key: "ArrowDown" });
+    expect(last).toHaveFocus();
+  });
+
+  it("drawer ferme : le piege est inactif (Tab ne repositionne rien dans le panneau)", () => {
+    render(
+      <>
+        <button type="button" id="derriere">
+          Bouton d&apos;arriere-plan
+        </button>
+        <Drawer open={false} onClose={() => {}} title="Capture">
+          <input aria-label="Titre" />
+        </Drawer>
+      </>,
+    );
+    const derriere = document.getElementById("derriere") as HTMLElement;
+    derriere.focus();
+    const panel = document.querySelector(".drawer-panel") as HTMLElement;
+    fireEvent.keyDown(panel, { key: "Tab" });
+    expect(derriere).toHaveFocus();
+  });
+});

@@ -718,6 +718,45 @@
       </div>
     </div>
   </div>
+
+  <h3>Patron combobox — liste pilotee par le consumer</h3>
+  <p class="typo-small" style="margin-bottom:1rem;">Quand l'application rend elle-meme ses resultats (palette de commandes, panneau de recherche applicatif), le champ ne porte plus de panneau <code class="code-inline">.search-suggestions</code> : c'est le patron <strong>combobox WAI-ARIA 1.2</strong>, ou <code class="code-inline">role="combobox"</code> et <code class="code-inline">aria-activedescendant</code> vivent sur l'<code class="code-inline">&lt;input&gt;</code> et non sur le conteneur. Sans <code class="code-inline">aria-activedescendant</code>, un lecteur d'ecran n'annonce jamais l'option surlignee au clavier (#899). Le focus reel ne bouge pas : il reste dans le champ, seul l'identifiant de l'option active change.</p>
+  <div class="demo-grid demo-grid-2">
+    <div class="demo-box" style="padding-bottom:9rem;">
+      <span class="demo-label">Etat fige : 2e option active</span>
+      <div class="search-input-wrap" role="search">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input class="search-input" type="search" value="dep" readonly aria-label="Rechercher une commande" role="combobox" aria-expanded="true" aria-controls="combobox-results-demo" aria-activedescendant="combobox-result-2" aria-autocomplete="list">
+        <ul class="search-suggestions" id="combobox-results-demo" role="listbox" aria-label="Resultats">
+          <li class="search-item" id="combobox-result-1" role="option" aria-selected="false">Deployer en preprod</li>
+          <li class="search-item active" id="combobox-result-2" role="option" aria-selected="true">Deployer en production</li>
+          <li class="search-item" id="combobox-result-3" role="option" aria-selected="false">Dependances du projet</li>
+        </ul>
+      </div>
+      <p class="typo-small" style="margin-top:5.5rem;">Le focus reste dans le champ — <code class="code-inline">.search-item.active</code> n'est qu'un surlignage. C'est <code class="code-inline">aria-activedescendant</code> qui fait annoncer « Deployer en production » au lecteur d'ecran.</p>
+    </div>
+    <div class="demo-box">
+      <span class="demo-label">Markup a reproduire</span>
+      <div class="code-block">&lt;div class="search-input-wrap" role="search"&gt;
+  &lt;span class="search-icon" aria-hidden="true"&gt;...&lt;/span&gt;
+  &lt;input class="search-input" type="search"
+         role="combobox"
+         aria-expanded="true"
+         aria-controls="results"
+         aria-activedescendant="result-2"
+         aria-autocomplete="list"&gt;
+  &lt;ul class="search-suggestions" id="results" role="listbox"&gt;
+    &lt;li class="search-item" id="result-1" role="option" aria-selected="false"&gt;...&lt;/li&gt;
+    &lt;li class="search-item active" id="result-2" role="option" aria-selected="true"&gt;...&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;!-- React : &lt;SearchInput&gt; reporte role et aria-* sur l'input (#899).
+     Ne PAS passer `suggestions` — le panneau interne prendrait la main. --&gt;</div>
+    </div>
+  </div>
 </section>
 
 

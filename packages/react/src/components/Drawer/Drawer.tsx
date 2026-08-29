@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useId, useRef } from "react";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 
 export interface DrawerProps {
   /** Contrôle l'ouverture — le parent pilote l'état, aucun état interne. */
@@ -79,8 +80,18 @@ export interface DrawerProps {
  * (`shared/components.js`, cf. Modal) : à l'ouverture, capture
  * `document.activeElement` puis déplace le focus sur le bouton de fermeture ;
  * à la fermeture, restaure le focus sur le déclencheur (si toujours dans le
- * DOM). Le vanilla n'a AUCUN focus trap — on ajoute l'intention canonique
- * (Escape + focus restore), pas le trap complet.
+ * DOM).
+ *
+ * **Focus trap (#862)** — `useFocusTrap` : tant que le drawer est ouvert,
+ * `Tab` depuis le dernier élément focalisable du panneau revient au premier et
+ * `Maj+Tab` depuis le premier va au dernier. Sans lui, `role="dialog"` +
+ * `aria-modal="true"` ANNONÇAIENT au lecteur d'écran que l'arrière-plan était
+ * inerte sans que rien ne l'applique (l'`inert` de ce composant ne couvre que
+ * l'état FERMÉ), et la tabulation partait derrière le panneau. Primitive
+ * partagée avec `<BottomSheet>`, calquée sur le piège vanilla du bottom sheet
+ * (#825) — `<Modal>` n'en a pas besoin, son `<dialog>`/`showModal()` piège
+ * nativement. Demandé par KeepThread (`msyx-dev/keepthread#24`), dont l'écran
+ * de capture est un drawer dense en champs.
  *
  * **Fermeture** : clic overlay, bouton `.drawer-close`, touche `Escape`
  * (écoute globale `document`, active uniquement quand `open`).
@@ -120,6 +131,12 @@ export function Drawer({
   const titleId = useId();
   const triggerRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Piège de tabulation (#862) : Tab/Maj+Tab bouclent dans le panneau tant
+  // qu'il est ouvert. Primitive partagée avec <BottomSheet> et calquée sur le
+  // piège vanilla du bottom sheet (#825).
+  useFocusTrap(panelRef, open);
 
   // Focus restore WAI-APG (WCAG 2.4.3) : capture le déclencheur à l'ouverture,
   // déplace le focus dans le panneau (bouton close), restaure à la fermeture.
@@ -179,6 +196,7 @@ export function Drawer({
     <>
       <div className={overlayClasses} onClick={onClose} {...inertProps} />
       <div
+        ref={panelRef}
         className={panelClasses}
         id={id}
         role={open ? "dialog" : undefined}
