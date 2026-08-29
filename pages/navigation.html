@@ -345,6 +345,13 @@
             </div>
             <p class="typo-small">Variante pilule avec fond colore sur l'onglet actif.</p>
         </div>
+        <div class="demo-box">
+            <span class="demo-label">Conteneur etroit — debordement</span>
+            <div style="max-width:260px;">
+                <div class="tabs"><button class="tab active">General</button><button class="tab">Securite</button><button class="tab">Notifications</button><button class="tab">Integrations</button><button class="tab">API</button></div>
+            </div>
+            <p class="typo-small">Au-dela de la largeur disponible, <code class="code-inline">.tabs</code> defile horizontalement et affiche une scrollbar fine (#900) : sans elle, les onglets hors champ n'etaient atteignables qu'au clavier. Elle n'apparait que si le contenu deborde reellement.</p>
+        </div>
     </div>
 </section>
 
@@ -442,6 +449,21 @@
             <div class="step-line"></div>
             <div class="step"><div class="step-dot pending">4</div><span class="step-label">Verif</span></div>
         </div>
+    </div>
+    <div class="demo-box" style="max-width:320px;margin-top:1rem;">
+        <span class="demo-label">Conteneur etroit — debordement</span>
+        <div class="stepper">
+            <div class="step"><div class="step-dot completed"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></div><span class="step-label">Projet</span></div>
+            <div class="step-line completed"></div>
+            <div class="step"><div class="step-dot completed"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></div><span class="step-label">Config</span></div>
+            <div class="step-line completed"></div>
+            <div class="step"><div class="step-dot active">3</div><span class="step-label">Deploy</span></div>
+            <div class="step-line"></div>
+            <div class="step"><div class="step-dot pending">4</div><span class="step-label">Recette</span></div>
+            <div class="step-line"></div>
+            <div class="step"><div class="step-dot pending">5</div><span class="step-label">Verif</span></div>
+        </div>
+        <p class="typo-small" style="margin-top:1rem;">Le stepper est le plus expose des trois : <code class="code-inline">.step-line</code> porte <code class="code-inline">min-width:30px</code>, la largeur minimale grimpe vite. Scrollbar fine au debordement (#900).</p>
     </div>
 </section>
 
