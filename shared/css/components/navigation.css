@@ -501,6 +501,40 @@
         pointer-events: auto;
     }
 }
+/* Mockup showcase (#906) — illustre l'etat hors-flux + overlay sans dependre
+   de la largeur reelle de la fenetre (meme contrainte que .mobile-mockup /
+   .bottom-nav--demo plus haut : une media query (max-width:768px) ne repond
+   qu'au viewport, jamais a un conteneur). .rail-sidebar--fixed devient
+   position:absolute dans ce cadre positionne plutot que position:fixed —
+   sinon le panneau s'echapperait du mockup vers le vrai viewport. */
+.rail-mobile-mockup {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 340px;
+    margin: 0 auto;
+    border: 2px solid var(--border-hover);
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--primary);
+    box-shadow: var(--shadow-lg);
+}
+.rail-sidebar--demo-mobile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--rail-w);
+    transform: translateX(0);
+    z-index: 5;
+}
+.rail-overlay--demo-mobile {
+    position: absolute;
+    inset: 0;
+    background: var(--overlay-black-50);
+    opacity: 1;
+    z-index: 4;
+}
 
 /* ===== USER MENU — composant standalone (apps M3) ===== */
 /* Trigger wrapper — position relative pour dropdown absolu */
