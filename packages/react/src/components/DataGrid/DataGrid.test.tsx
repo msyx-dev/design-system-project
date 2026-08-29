@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { DataGrid, type DataGridColumn } from "./DataGrid";
 
@@ -234,5 +234,199 @@ describe("DataGrid — rendu de cellule", () => {
     expect(cells[0]).toHaveTextContent("Bea");
     expect(cells[1]).toHaveTextContent("41");
     expect(cells[2]).toHaveTextContent("•");
+  });
+});
+
+describe("DataGrid — pagination serveur (#878)", () => {
+  it("sans page/total/onPageChange : tfoot local inchangé, aucun footer serveur", () => {
+    render(<DataGrid columns={columns} rows={rows} getRowKey={getRowKey} />);
+    expect(
+      document.querySelector("table.data-grid > tfoot.data-grid-footer"),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector(".data-grid-pagination"),
+    ).not.toBeInTheDocument();
+    expect(
+      document.querySelector(".data-grid-server-info"),
+    ).not.toBeInTheDocument();
+    expect(document.querySelector(".data-grid-live")).not.toBeInTheDocument();
+  });
+
+  it("page+total+onPageChange fournis ensemble : bascule en footer serveur, tfoot local retiré", () => {
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={2}
+        total={5}
+        onPageChange={() => {}}
+      />,
+    );
+    expect(
+      document.querySelector("table.data-grid > tfoot"),
+    ).not.toBeInTheDocument();
+    const footer = document.querySelector(
+      ".data-grid-wrap > .data-grid-footer",
+    )!;
+    expect(footer).toBeInTheDocument();
+    expect(footer.querySelector(".data-grid-server-info")).toBeInTheDocument();
+    expect(footer.querySelector(".data-grid-server-info")).toHaveClass(
+      "pagination-info",
+    );
+    expect(
+      footer.querySelector("nav.data-grid-pagination"),
+    ).toBeInTheDocument();
+    expect(footer.querySelector("nav.data-grid-pagination")).toHaveClass(
+      "pagination",
+    );
+  });
+
+  it("props partielles (page seul, sans total/onPageChange) : mode serveur INACTIF", () => {
+    render(
+      <DataGrid columns={columns} rows={rows} getRowKey={getRowKey} page={2} />,
+    );
+    expect(
+      document.querySelector("table.data-grid > tfoot.data-grid-footer"),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector(".data-grid-pagination"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("réutilise <Pagination> tel quel : fenêtrage + boutons .page-btn identiques", () => {
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={1}
+        total={20}
+        onPageChange={() => {}}
+      />,
+    );
+    // Fenêtrage borné de getPaginationRange : ellipsis présente pour total=20
+    expect(document.querySelector(".page-ellipsis")).toBeInTheDocument();
+    expect(document.querySelectorAll(".page-btn.nav")).toHaveLength(2);
+  });
+
+  it("clic sur une page appelle onPageChange (délégué à Pagination)", () => {
+    const onPageChange = vi.fn();
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={1}
+        total={3}
+        onPageChange={onPageChange}
+      />,
+    );
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>(".page-btn:not(.nav)"),
+    );
+    const page2 = buttons.find((b) => b.textContent === "2")!;
+    fireEvent.click(page2);
+    expect(onPageChange).toHaveBeenCalledWith(2);
+  });
+
+  it("serverInfo rendu dans .data-grid-server-info", () => {
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={1}
+        total={5}
+        onPageChange={() => {}}
+        serverInfo="1–8 sur 26"
+      />,
+    );
+    expect(document.querySelector(".data-grid-server-info")).toHaveTextContent(
+      "1–8 sur 26",
+    );
+  });
+
+  it("live-region .data-grid-live aria-live=polite annonce la page courante", () => {
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={3}
+        total={7}
+        onPageChange={() => {}}
+      />,
+    );
+    const live = document.querySelector(".data-grid-live")!;
+    expect(live).toHaveClass("sr-only");
+    expect(live).toHaveAttribute("aria-live", "polite");
+    expect(live).toHaveAttribute("aria-atomic", "true");
+    expect(live).toHaveTextContent("Page 3 sur 7.");
+  });
+
+  it("live-region reflète la mise à jour de page (rerender contrôlé)", () => {
+    const { rerender } = render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={1}
+        total={4}
+        onPageChange={() => {}}
+      />,
+    );
+    expect(document.querySelector(".data-grid-live")).toHaveTextContent(
+      "Page 1 sur 4.",
+    );
+    rerender(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={2}
+        total={4}
+        onPageChange={() => {}}
+      />,
+    );
+    expect(document.querySelector(".data-grid-live")).toHaveTextContent(
+      "Page 2 sur 4.",
+    );
+  });
+
+  it("paginationAriaLabel custom passthrough vers Pagination", () => {
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={1}
+        total={3}
+        onPageChange={() => {}}
+        paginationAriaLabel="Pages des composants"
+      />,
+    );
+    expect(document.querySelector("nav.data-grid-pagination")).toHaveAttribute(
+      "aria-label",
+      "Pages des composants",
+    );
+  });
+
+  it("aria-busy toujours piloté par loading, y compris en mode serveur", () => {
+    render(
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        page={1}
+        total={3}
+        onPageChange={() => {}}
+        loading
+      />,
+    );
+    expect(document.querySelector(".data-grid-wrap")).toHaveAttribute(
+      "aria-busy",
+      "true",
+    );
   });
 });

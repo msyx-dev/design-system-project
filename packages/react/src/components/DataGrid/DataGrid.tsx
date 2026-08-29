@@ -1,4 +1,5 @@
 import { KeyboardEvent, ReactNode, useMemo, useState } from "react";
+import { Pagination, PaginationInfo } from "../Pagination/Pagination";
 
 export interface DataGridColumn<T> {
   /** Clé de colonne — sert de clé React de `<th>`/`<td>` et d'accès par défaut `row[key]`. */
@@ -26,6 +27,30 @@ export interface DataGridProps<T> {
   caption?: ReactNode;
   /** Classes additionnelles sur `.data-grid-wrap`. */
   className?: string;
+  /**
+   * Page courante 1-indexée — active la **pagination pilotée serveur**
+   * quand fournie AVEC `total` et `onPageChange` (calque `server-data-grid`,
+   * `data.html` #server-data-grid). Remplace le pied de page de comptage
+   * local (`<tfoot>`) par le pied de page serveur (`.data-grid-footer` en
+   * sibling du `<table>`, hors `<tfoot>` — markup exact du vanilla) : info
+   * + `<Pagination>` réutilisé tel quel (aucune logique de fenêtrage
+   * réécrite, cf. `getPaginationRange`).
+   */
+  page?: number;
+  /** Nombre total de pages — passthrough direct à `<Pagination total>`. */
+  total?: number;
+  /** Appelé au changement de page — passthrough direct à `<Pagination onPageChange>`. */
+  onPageChange?: (page: number) => void;
+  /**
+   * Contenu de `.data-grid-server-info` (ex. `"1–8 sur 26"`). Slot libre :
+   * le contrat `page`/`total` de `<Pagination>` ne porte que des NUMÉROS DE
+   * PAGE (pas un total d'items ni une taille de page), donc ce composant ne
+   * peut pas calculer ce texte lui-même — le consumer le formate depuis ses
+   * propres données serveur (calque `updateInfo()` côté vanilla).
+   */
+  serverInfo?: ReactNode;
+  /** `aria-label` du `<nav>` de pagination serveur. @default "Pagination" (défaut de `<Pagination>`) */
+  paginationAriaLabel?: string;
 }
 
 type SortDir = "asc" | "desc" | "none";
@@ -66,8 +91,10 @@ function defaultCellValue<T>(row: T, key: string): ReactNode {
  * CSS `components/tables.css`).
  *
  * Couche de PRÉSENTATION générique typée : le consumer fournit `columns` + `rows`
- * déjà filtrées côté data — pas de filter-row ni de pagination dans ce port MVP
- * (cf. contrat #696, la filter-row vanilla est optionnelle/hors scope ici).
+ * déjà filtrées côté data — pas de filter-row dans ce port (cf. contrat #696,
+ * la filter-row vanilla est optionnelle/hors scope ici). **Pagination
+ * serveur** ajoutée en #878 (lot de clôture) via `page`/`total`/
+ * `onPageChange`, cf. section dédiée plus bas.
  *
  * Émet le markup canonique :
  * ```html
@@ -104,8 +131,22 @@ function defaultCellValue<T>(row: T, key: string): ReactNode {
  * `tables.css:47`) ; vide (`rows.length === 0`, hors loading) → une ligne
  * `colSpan={columns.length}` avec `emptyLabel`.
  *
- * **Footer** : `tfoot.data-grid-footer` toujours émis (structure canonique) —
- * ce MVP n'a pas de prop dédiée, il résume le nombre de lignes affichées.
+ * **Footer** : deux modes, mutuellement exclusifs, calqués sur les DEUX
+ * markups vanilla existants (`data-grid` client vs `server-data-grid`
+ * serveur — ce ne sont pas la même structure côté DS) :
+ * - **local** (défaut, `page`/`total`/`onPageChange` absents) :
+ *   `<tfoot class="data-grid-footer">` DANS le `<table>`, résume le nombre
+ *   de lignes affichées (comportement inchangé depuis le port initial) ;
+ * - **serveur** (#878, lot de clôture — `page`+`total`+`onPageChange` fournis
+ *   ensemble) : `<tfoot>` supprimé, remplacé par `<div class="data-grid-footer">`
+ *   EN SIBLING du `<table>` (markup exact `data.html:1264-1281`) contenant
+ *   `.data-grid-server-info` (`serverInfo`, slot libre — voir `DataGridProps`)
+ *   et `<Pagination className="data-grid-pagination">` **réutilisé tel quel**
+ *   (aucune logique de fenêtrage réécrite, cf. `getPaginationRange`), plus
+ *   `.sr-only.data-grid-live[aria-live="polite"]` annonçant `"Page X sur Y."`
+ *   à chaque changement (calque l'intention de `announce()` côté vanilla,
+ *   texte simplifié car le contrat `page`/`total` ne porte pas de total
+ *   d'items — `serverInfo` couvre ce niveau de détail si besoin).
  */
 export function DataGrid<T>({
   columns,
@@ -115,7 +156,16 @@ export function DataGrid<T>({
   emptyLabel = "Aucun résultat",
   caption,
   className,
+  page,
+  total,
+  onPageChange,
+  serverInfo,
+  paginationAriaLabel,
 }: DataGridProps<T>) {
+  const serverPaginationActive =
+    page !== undefined &&
+    total !== undefined &&
+    typeof onPageChange === "function";
   const [sort, setSort] = useState<SortState>({ key: null, dir: "none" });
 
   const sortedRows = useMemo(() => {
@@ -242,16 +292,42 @@ export function DataGrid<T>({
             ))
           )}
         </tbody>
-        <tfoot className="data-grid-footer">
-          <tr>
-            <td colSpan={colCount}>
-              {loading
-                ? "Chargement…"
-                : `${sortedRows.length} ${sortedRows.length > 1 ? "lignes" : "ligne"}`}
-            </td>
-          </tr>
-        </tfoot>
+        {serverPaginationActive ? null : (
+          <tfoot className="data-grid-footer">
+            <tr>
+              <td colSpan={colCount}>
+                {loading
+                  ? "Chargement…"
+                  : `${sortedRows.length} ${sortedRows.length > 1 ? "lignes" : "ligne"}`}
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
+      {serverPaginationActive ? (
+        <>
+          <div className="data-grid-footer">
+            <PaginationInfo className="data-grid-server-info">
+              {serverInfo}
+            </PaginationInfo>
+            <Pagination
+              className="data-grid-pagination"
+              role="navigation"
+              page={page as number}
+              total={total as number}
+              onPageChange={onPageChange as (page: number) => void}
+              aria-label={paginationAriaLabel}
+            />
+          </div>
+          <span
+            className="sr-only data-grid-live"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {`Page ${page} sur ${total}.`}
+          </span>
+        </>
+      ) : null}
     </div>
   );
 }

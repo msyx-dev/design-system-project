@@ -694,6 +694,8 @@ const REACT_TO_REGISTRY = {
   Roadmap: 'roadmap',                     // #877 — pure structure, réutilise Progress déjà porté
   SprintBoard: 'sprint',                  // #877 — pure structure, réutilise KanbanColumn/KanbanCard (sans DnD) + Progress
   SettingsPanel: 'settings-panel',        // #877 — pure structure, control composé par le parent (Toggle/Button déjà portés + SettingsRowInput/SettingsRowSelect co-localisés)
+  Logo: 'brand-logo-svg',                 // #878 — Lot 8 clôture : pictogramme SVG, résolution de chemin (basePath), absorbe brand-wordmark/brand-mark-ds (Wordmark/LogoMark co-localisés, cf. REACT_COVERED_BY)
+  AccessDenied: 'access-denied',          // #878 — page 403 standalone (UC3, groupe app-{slug})
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
@@ -715,6 +717,9 @@ const REACT_COVERED_BY = {
   'zone-banner':    'Alert',   // .alert--kpi (#519) — reactComponent: "Alert" dans le registre
   'upgrade-prompt': 'Alert',   // .alert--cta (#519) — reactComponent: "Alert" dans le registre
   'copy-button':    'CodeBlock', // même initCopyButtons que `code` (#874) — reactComponent: "CodeBlock" dans le registre
+  'brand-wordmark':    'Logo', // #878 — Wordmark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
+  'brand-mark-ds':      'Logo', // #878 — LogoMark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
+  'server-data-grid': 'DataGrid', // #878 — pagination serveur ajoutée à l'API DataGrid existante, pas de nouveau dossier — reactComponent: "DataGrid" dans le registre
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -780,6 +785,11 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.loaded',          // media.css:377 — compound .video-embed.loaded (sélecteur descendant .video-embed.loaded .video-embed-overlay)
   // #877 — Lot 7 templates : compound sans séparateur, réellement stylé.
   '.in-progress', // templates.css:41,47 — compound .roadmap-milestone.in-progress (+ descendant .roadmap-milestone-dot)
+  // #878 — Lot 8 clôture : pas de règle SUR elle-même, mais style son
+  // descendant `.page-btn` (ancêtre, pas compound adjacent — même angle
+  // mort du scanner CSS-side que les compounds, la classe porte un effet
+  // visuel réel donc appartient ici et pas à REACT_JS_HOOK_CLASSES).
+  '.data-grid-pagination', // tables.css:55 — `.data-grid-pagination .page-btn { min-width/height: 44px }` (cible tactile 44px scopée server-driven)
 ]);
 
 // Whitelist DISTINCTE de REACT_CSS_UNDETECTABLE — ne pas fusionner (#889,
@@ -805,6 +815,14 @@ const REACT_JS_HOOK_CLASSES = new Set([
   // #876 — Lot 6 interactifs C : AUCUNE règle CSS, hooks `querySelector` vanilla réels.
   '.like-count',  // AUCUNE règle CSS (grep exhaustif shared/css/**). Hook vanilla réel : shared/components.js:5172 (`btn.querySelector('.like-count')`, initComments). Émise côté React pour cibler le compteur et calquer le markup du vanilla.
   '.dtree-reset', // AUCUNE règle CSS (grep exhaustif shared/css/**, style entièrement hérité de .btn-primary). Hook vanilla réel : shared/components.js:4064 (`dtree.querySelector('.dtree-reset')`, initDecisionTree). Émise côté React pour identifier le bouton de réinitialisation.
+  // #878 — Lot 8 clôture : pagination serveur DataGrid, 2 classes hooks
+  // pures (grep exhaustif shared/css/** : aucune règle, ni sur elles-mêmes
+  // ni sur un descendant), toujours combinées avec une classe réellement
+  // stylée côté vanilla (.pagination-info / .sr-only) qui porte le rendu
+  // visuel. (`.data-grid-pagination` a une règle sur son descendant
+  // `.page-btn` — REACT_CSS_UNDETECTABLE, pas ici, cf. tables.css:55.)
+  '.data-grid-server-info',  // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:1470 (`wrap.querySelector('.data-grid-server-info')`, initServerDataGrid).
+  '.data-grid-live',         // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:1471 (`wrap.querySelector('.data-grid-live')`, initServerDataGrid).
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
