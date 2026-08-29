@@ -133,4 +133,49 @@ describe('initLightbox', () => {
     expect(overlay.classList.contains('lb-open')).toBe(true);
     expect(caption.textContent).toBe('Premiere image');
   });
+
+  // Restitution du focus WAI-APG (#896) — meme contrat que Modal/BottomSheet
+  // (createFocusRestore, shared/components.js). La vignette declenchante est
+  // capturee par REFERENCE DIRECTE (triggers[idx], pas document.activeElement
+  // -- fiable que l'ouverture vienne d'un clic ou d'Entree/Espace, cf.
+  // commentaire du code source). Les 3 chemins de fermeture (Echap, clic sur
+  // le fond, bouton fermer) doivent TOUS restituer.
+  it("Echap restitue le focus sur la vignette qui a ouvert l'overlay", () => {
+    const { window, document, triggers } = ctx;
+    fireClick(window, triggers[1]);
+    fireKeydown(window, document, 'Escape');
+    expect(document.activeElement).toBe(triggers[1]);
+  });
+
+  it('le clic sur le bouton fermer restitue le focus sur la vignette declenchante', () => {
+    const { window, document, triggers, btnClose } = ctx;
+    fireClick(window, triggers[2]);
+    fireClick(window, btnClose);
+    expect(document.activeElement).toBe(triggers[2]);
+  });
+
+  it("le clic sur le fond de l'overlay restitue le focus sur la vignette declenchante", () => {
+    const { window, document, triggers, overlay } = ctx;
+    fireClick(window, triggers[0]);
+    fireClick(window, overlay);
+    expect(document.activeElement).toBe(triggers[0]);
+  });
+
+  it("ouverture au clavier (Entree) puis Echap : la restitution suit la vignette activee au clavier, pas necessairement document.activeElement", () => {
+    const { window, document, triggers } = ctx;
+    fireKeydown(window, triggers[1], 'Enter');
+    fireKeydown(window, document, 'Escape');
+    expect(document.activeElement).toBe(triggers[1]);
+  });
+
+  it('reouvrir sur une autre vignette puis fermer restitue vers la NOUVELLE vignette (pas la precedente)', () => {
+    const { window, document, triggers, btnClose } = ctx;
+    fireClick(window, triggers[0]);
+    fireClick(window, btnClose);
+    expect(document.activeElement).toBe(triggers[0]);
+
+    fireClick(window, triggers[2]);
+    fireClick(window, btnClose);
+    expect(document.activeElement).toBe(triggers[2]);
+  });
 });

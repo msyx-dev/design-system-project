@@ -17,7 +17,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { loadComponentsWindow, fireClick, fireKeydown } from './helpers/load-components.js';
 
-const BODY_HTML = `<div id="sidebar"></div>`;
+// #897 -- bouton dedie pour simuler le declencheur reel du raccourci
+// Ctrl/Cmd+K (l'ouverture n'est pas un clic sur un element dedie : le
+// declencheur EST document.activeElement au moment du raccourci).
+const BODY_HTML = `<div id="sidebar"></div><button id="trigger-btn">Ouvrir</button>`;
 
 function setup() {
   const dom = loadComponentsWindow(BODY_HTML);
@@ -204,5 +207,79 @@ describe('initCommandPalette', () => {
     expect(overlay.classList.contains('open')).toBe(true);
     openViaShortcut(window);
     expect(overlay.classList.contains('open')).toBe(false);
+  });
+
+  // Restitution du focus WAI-APG (#897) — meme contrat que Modal/BottomSheet
+  // (createFocusRestore, shared/components.js). L'ouverture se fait par
+  // raccourci global (pas de clic sur un declencheur dedie) : le
+  // declencheur capture est document.activeElement au moment du Ctrl+K,
+  // ici simule en focusant explicitement #trigger-btn avant le raccourci
+  // (jsdom ne deplace jamais le focus tout seul, cf. helpers/load-components.js).
+  // Les 4 chemins de fermeture (Echap, clic sur le fond, selection Entree,
+  // toggle Ctrl+K) doivent TOUS restituer.
+  describe('restitution du focus (#897)', () => {
+    function focusTrigger(document) {
+      const btn = document.getElementById('trigger-btn');
+      btn.focus();
+      return btn;
+    }
+
+    it('Echap restitue le focus sur le declencheur', () => {
+      const { window, document, input } = ctx;
+      const trigger = focusTrigger(document);
+      openViaShortcut(window);
+      expect(document.activeElement).toBe(input);
+
+      fireKeydown(window, input, 'Escape');
+
+      expect(document.activeElement).toBe(trigger);
+    });
+
+    it('le clic sur le fond restitue le focus sur le declencheur', () => {
+      const { window, document, overlay } = ctx;
+      const trigger = focusTrigger(document);
+      openViaShortcut(window);
+
+      fireClick(window, overlay);
+
+      expect(document.activeElement).toBe(trigger);
+    });
+
+    it("la selection d'un item (Entree) restitue le focus sur le declencheur", () => {
+      const { window, document, input } = ctx;
+      const trigger = focusTrigger(document);
+      openViaShortcut(window);
+      fireKeydown(window, input, 'ArrowDown'); // "Toggle sidebar"
+
+      fireKeydown(window, input, 'Enter');
+
+      expect(document.activeElement).toBe(trigger);
+    });
+
+    it('un second Ctrl+K (toggle -> fermeture) restitue le focus sur le declencheur', () => {
+      const { window, document } = ctx;
+      const trigger = focusTrigger(document);
+      openViaShortcut(window);
+
+      openViaShortcut(window); // toggle -> ferme
+
+      expect(document.activeElement).toBe(trigger);
+    });
+
+    it('reouvrir depuis un AUTRE declencheur restitue vers celui-ci (pas le precedent)', () => {
+      const { window, document, input } = ctx;
+      const firstTrigger = focusTrigger(document);
+      openViaShortcut(window);
+      fireKeydown(window, input, 'Escape');
+      expect(document.activeElement).toBe(firstTrigger);
+
+      const secondTrigger = document.getElementById('sidebar');
+      secondTrigger.setAttribute('tabindex', '-1');
+      secondTrigger.focus();
+      openViaShortcut(window);
+      fireKeydown(window, input, 'Escape');
+
+      expect(document.activeElement).toBe(secondTrigger);
+    });
   });
 });
