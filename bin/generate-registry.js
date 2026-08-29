@@ -684,6 +684,10 @@ const REACT_TO_REGISTRY = {
   Lightbox: 'lightbox',                   // #875 — galerie + visionneuse portée (document.body), focus restore WAI-APG ajoutée vs le vanilla (aucun contrat existant côté DS)
   VideoEmbed: 'video-embed',              // #875 — chargement différé au clic préservé (iframe montée uniquement après activation)
   BeforeAfter: 'before-after',            // #875 — contrat clavier #836 (role=separator) repris à l'identique, drag Pointer Events réimplémenté (calque SplitPane, window.__pointerDrag non disponible côté React)
+  CommandPalette: 'command-palette',      // #876 — Lot 6 interactifs C : raccourci global Ctrl/Cmd+K posé/retiré au (dé)montage, focus WAI-APG ajouté vs le vanilla (aligné sur Modal)
+  Comments: 'comments',                   // #876 — fil récursif (.comment-thread imbriqué), like + réponse
+  BottomNav: 'bottom-nav',                // #876 — navigation mobile basse, aria-current (pas aria-selected, cf. docstring)
+  DecisionTree: 'decision-tree',          // #876 — questionnaire pas à pas contrôlé, prefers-reduced-motion déjà couvert par le kill-switch global _a11y.css
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier

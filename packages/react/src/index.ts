@@ -533,3 +533,29 @@ export { VideoEmbed } from "./components/VideoEmbed/VideoEmbed";
 export type { VideoEmbedProps } from "./components/VideoEmbed/VideoEmbed";
 export { BeforeAfter } from "./components/BeforeAfter/BeforeAfter";
 export type { BeforeAfterProps } from "./components/BeforeAfter/BeforeAfter";
+
+// Lot 6 « interactifs C » (#876) — dernier lot d'interactifs : palette de
+// commandes (raccourci global, recherche, navigation clavier, focus WAI-APG
+// ajouté vs le vanilla), fil de commentaires récursif, navigation mobile
+// basse (aria-current), questionnaire pas à pas contrôlé.
+export { CommandPalette } from "./components/CommandPalette/CommandPalette";
+export type {
+  CommandPaletteProps,
+  CommandPaletteItem,
+} from "./components/CommandPalette/CommandPalette";
+export { Comments } from "./components/Comments/Comments";
+export type {
+  CommentsProps,
+  CommentItem,
+} from "./components/Comments/Comments";
+export { BottomNav } from "./components/BottomNav/BottomNav";
+export type {
+  BottomNavProps,
+  BottomNavItem,
+} from "./components/BottomNav/BottomNav";
+export { DecisionTree } from "./components/DecisionTree/DecisionTree";
+export type {
+  DecisionTreeProps,
+  DecisionTreeNode,
+  DecisionTreeChoice,
+} from "./components/DecisionTree/DecisionTree";
