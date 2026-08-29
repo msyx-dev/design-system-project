@@ -208,6 +208,12 @@ export type {
   UseChartOptions,
   UseChartReturn,
 } from "./hooks/useChartReveal";
+export { MarkdownEditor } from "./components/MarkdownEditor/MarkdownEditor";
+export type { MarkdownEditorProps } from "./components/MarkdownEditor/MarkdownEditor";
+// Rendu Markdown léger exposé seul (#854) — un consumer qui AFFICHE du Markdown
+// stocké sans l'éditer n'a pas à monter l'éditeur pour cela.
+export { renderMarkdown } from "./components/MarkdownEditor/markdown";
+
 export { useCountUp } from "./hooks/useCountUp";
 export type { UseCountUpOptions, UseCountUpResult } from "./hooks/useCountUp";
 // Piège de tabulation partagé par les surfaces modales (#862) — exporté pour
