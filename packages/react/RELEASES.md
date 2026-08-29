@@ -4,6 +4,20 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.49 — 2026-08-29 — `<Rail>` composable : sections, titre de groupe, panneau mobile (#906)
+
+> Constaté en spécifiant la colonne de navigation de KeepThread (`msyx-dev/keepthread#93`) : `<Rail>` n'acceptait ni `children`, ni `style`, ni rest-props (destructuration exhaustive), et sa géométrie fixe passait sous `.site-header`. CSS correspondant (`.rail-section-title`, tokens `--rail-w`/`--rail-w-collapsed`, mobile) livré dans la même PR, cf. `../../RELEASES.md` v2.128.0.
+
+### Added
+- **`sections?: RailSection[]`** — mode alternatif de `.rail-nav`, remplace `items` s'il est fourni : `{ id, label?, items?, content? }[]`. `label` rend `.rail-section-title` (titre de groupe). `content` accueille n'importe quel `ReactNode` — un `<TreeView>`, un `<Dropdown>` — profondeur libre puisque le rail ne connaît pas sa structure (choix retenu plutôt que de lever la limite « un seul niveau » de `RailItem.children` : un slot `ReactNode` couvre déjà le besoin sans faire porter au rail une récursion qu'il n'a pas à connaître). `content` prioritaire sur `items` si les deux sont fournis.
+- **`items` devient optionnel** — un rail purement `sections` n'a plus besoin de passer un tableau vide inutile. Rétrocompatible : tout consumer existant continue de le passer sans rien changer.
+- **`mobileOpen?`/`defaultMobileOpen?`/`onMobileOpenChange?`** — panneau hors-flux sous 768px, mode **contrôlé** comme `collapsed`. Overlay (`.rail-overlay`) rendu uniquement en mode `fixed`, fermeture au clic sur l'overlay et à `Escape` (écoute globale dans un `useEffect`, même pattern que `<Drawer>`). Sans effet en `fixed={false}` (`<HelpNav>` de KeepThread, non-fixe, inchangé) — comme `.sidebar` vanilla, `<Rail>` n'a pas de bouton burger interne, le consumer câble le sien sur `onMobileOpenChange`.
+
+### Fixed
+- **Géométrie d'app-shell** — `.rail-sidebar--fixed` s'ancre désormais sous `.site-header` (`top: var(--header-h)`, `height: calc(100vh - var(--header-h))`), sans rien changer côté props.
+
+**Zéro rupture d'API** : `items`, `footerItems`, `brand`, `ariaLabel`, `collapsed`/`defaultCollapsed`/`onCollapsedChange`, `expandedIds`/`defaultExpandedIds`/`onExpandedChange`, `collapseLabel`/`expandLabel`, `fixed`, `className`, `id` gardent exactement leur comportement — `<HelpNav>` de KeepThread (mode non-fixe) n'a rien à changer. 24 tests existants toujours verts + suite étendue, `pnpm build`/`pnpm test` verts.
+
 ## v3.0.0-alpha.48 — 2026-08-29 — `<SearchInput>` : passthrough ARIA · `<Drawer>`/`<BottomSheet>` : piège de tabulation (#899, #862)
 
 > Le showcase vanilla correspondant (patron combobox, `pages/formulaires.html`) est livré dans la même PR, cf. `../../RELEASES.md` v2.127.0.

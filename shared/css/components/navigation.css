@@ -329,7 +329,7 @@
     overflow-y: auto;
 }
 /* Titre de groupe (#906) — calque .sidebar-section (layout.css) adapte a la
-   famille .rail-* : meme role purement visuel (pas de <a>/<button>, juste un
+   famille rail-* : meme role purement visuel (pas de <a>/<button>, juste un
    libelle de section), pose en sibling des .rail-item qu'il introduit. Cache
    en mode replie : sans .rail-item-label visible a cote, un titre de groupe
    flottant seul au-dessus d'icones perd son sens (meme logique que
@@ -471,12 +471,12 @@
 }
 
 /* Comportement hors-flux mobile (#906) — calque EXACT de .sidebar/.sidebar-overlay
-   (shared/css/layout.css) : hors-ecran par defaut, translateX(0) sur .open, overlay
-   sombre distinct sur .active. Seule .rail-sidebar--fixed est concernee (le mode
-   non-fixe, ex. HelpNav de KeepThread, reste dans le flux a toute largeur — rien
-   ne change pour lui). Le mode replie (icones) n'a pas de sens en panneau mobile
-   plein ecran : .collapsed est neutralise ici, le panneau ouvre toujours a
-   --rail-w. */
+   (shared/css/layout.css) : hors-ecran par defaut, translateX(0) sur l'etat ouvert,
+   overlay sombre distinct sur l'etat actif. Seule .rail-sidebar--fixed est concernee
+   (le mode non-fixe, ex. HelpNav de KeepThread, reste dans le flux a toute largeur —
+   rien ne change pour lui). Le mode replie (icones) n'a pas de sens en panneau
+   mobile plein ecran : l'etat replie est neutralise ici, le panneau ouvre toujours
+   a --rail-w. */
 @media (max-width: 768px) {
     .rail-sidebar--fixed {
         transform: translateX(-100%);
