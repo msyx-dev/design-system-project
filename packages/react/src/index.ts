@@ -625,3 +625,8 @@ export { Wordmark } from "./components/Logo/Wordmark";
 export type { WordmarkProps } from "./components/Logo/Wordmark";
 export { LogoMark } from "./components/Logo/LogoMark";
 export type { LogoMarkProps, LogoMarkSize } from "./components/Logo/LogoMark";
+export { AccessDenied } from "./components/AccessDenied/AccessDenied";
+export type {
+  AccessDeniedProps,
+  AccessDeniedUser,
+} from "./components/AccessDenied/AccessDenied";

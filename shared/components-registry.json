@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-29T12:22:32.446Z",
+    "at": "2026-08-29T12:25:30.882Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1829,9 +1829,10 @@
       ],
       "jsInit": null,
       "version": "2.58.0",
-      "description": "Page 403 standalone msyx (v2.58.0, issue #291). Affichee quand l'utilisateur authentifie n'appartient pas au groupe app-{name}. Remplace l'erreur Authentik raw. Page autonome /access-denied.html configurable via data-* sur <body>. CSS dans components/access-denied.css. Logout = form POST (jamais GET). Info utilisateur connecte optionnelle (initiales avatar).",
+      "description": "Page 403 standalone msyx (v2.58.0, issue #291). Affichee quand l'utilisateur authentifie n'appartient pas au groupe app-{name}. Remplace l'erreur Authentik raw. Page autonome /access-denied.html configurable via data-* sur <body>. CSS dans components/access-denied.css. Logout = form POST (jamais GET). Info utilisateur connecte optionnelle (initiales avatar). Wrapper React <AccessDenied> (#878, lot 8) : composant de présentation pur, props à la place des data-*/du DOM patché.",
       "example": "<!-- Page standalone — configurer via attributs data-* sur <body> -->\n<!-- data-app-name, data-home-url, data-logout-url, data-user-name, data-user-email -->\n\n<!-- Embedding dans une page DS -->\n<div class=\"access-denied-preview\">\n  <div class=\"orb orb-1\" aria-hidden=\"true\"></div>\n  <div class=\"orb orb-2\" aria-hidden=\"true\"></div>\n  <div class=\"access-denied-card\">\n    <div class=\"access-denied-logo\">\n      <img src=\"/assets/sources/logoMSYX.png\" alt=\"msyx\" width=\"56\" height=\"56\">\n    </div>\n    <p class=\"access-denied-code\" aria-hidden=\"true\">403</p>\n    <h1>Acces refuse</h1>\n    <p class=\"access-denied-message\">Vous n'avez pas les droits necessaires pour acceder a cette application.</p>\n    <div class=\"access-denied-actions\">\n      <a href=\"https://msyx.fr\" class=\"access-denied-btn-primary\">Retour a msyx.fr</a>\n      <form method=\"POST\" action=\"/auth/logout\" style=\"display:contents;\">\n        <button type=\"submit\" class=\"access-denied-btn-secondary\">Se deconnecter</button>\n      </form>\n    </div>\n  </div>\n</div>",
-      "react": "pending",
+      "reactComponent": "AccessDenied",
+      "react": "ported",
       "module": [
         "shared/css/components/access-denied.css",
         "shared/css/components/cards.css",
