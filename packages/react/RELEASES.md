@@ -4,6 +4,23 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.48 — 2026-08-29 — `<SearchInput>` : passthrough ARIA · `<Drawer>`/`<BottomSheet>` : piège de tabulation (#899, #862)
+
+> Le showcase vanilla correspondant (patron combobox, `pages/formulaires.html`) est livré dans la même PR, cf. `../../RELEASES.md` v2.127.0.
+
+### Added
+- **`<SearchInput>` reporte les attributs natifs de l'`<input>` (#899)** — `SearchInputProps` étend désormais `InputHTMLAttributes<HTMLInputElement>` (pattern déjà établi par `<Input>`/`<Checkbox>`/`<Radio>`/`<Toggle>` du package), moins ce dont le composant possède la sémantique : `value`/`onChange` (signatures simplifiées), `onSelect` (réservé au choix d'une suggestion), `type` (toujours `search`) et `className` (porté par `.search-input-wrap`, pas par l'`<input>`). `aria-activedescendant`, `aria-controls`, `aria-expanded`, `role`, `id`, `name`, `inputMode`… passent donc tels quels.
+  - **Cas d'usage réel** (KeepThread, sprint 5, palette de recherche ⌘K) : un champ qui pilote une liste de résultats navigable au clavier **doit** annoncer l'option active via `aria-activedescendant` (patron combobox WAI-ARIA 1.2). Sans passthrough, le consommateur n'avait que deux issues — renoncer à l'annonce (l'utilisateur de lecteur d'écran n'entend pas l'option surlignée), ou réimplémenter le champ hors du DS.
+  - **Arbitrages explicites plutôt qu'un ordre de spread implicite** : avec `suggestions`, le panneau interne reste la source de vérité (`aria-autocomplete`/`aria-controls` internes l'emportent — sinon `aria-controls` pointerait vers une liste que le consommateur ne rend pas) ; sans `suggestions`, les valeurs du consommateur passent intégralement. `aria-label` explicite prime sur la prop `label`. `onKeyDown`/`onFocus`/`onBlur` du consommateur sont appelés **avant** le comportement interne, et un `preventDefault()` sur `onKeyDown` neutralise la navigation clavier interne (le consommateur pilote alors ses propres flèches).
+  - 6 tests ajoutés (27 au total sur le composant) couvrant chaque arbitrage ci-dessus, dont la garantie qu'`aria-controls` ne devient jamais un idref pendant.
+
+### Fixed
+- **`<Drawer>` ne piégeait pas la tabulation (#862)** — `role="dialog"` + `aria-modal="true"` **annonçaient** au lecteur d'écran que l'arrière-plan était inerte, sans que rien ne l'applique : l'`inert` du composant ne couvre que l'état FERMÉ (pour que le panneau hors écran ne reste pas tabulable), donc `Tab` continuait de parcourir le contenu derrière le panneau ouvert. Relevé au groom de `msyx-dev/keepthread#24` (écran de capture = drawer ouvert depuis n'importe quelle page, dense en champs) ; décision côté consommateur (Mike, 2026-08-26) : corriger **ici**, une fois, plutôt qu'autant d'implémentations divergentes que de consommateurs.
+  - Nouveau hook exporté **`useFocusTrap(ref, active)`** + `FOCUS_TRAP_SELECTOR` — `Tab` depuis le dernier élément focalisable revient au premier, `Maj+Tab` depuis le premier va au dernier. Sélecteur et logique de bouclage **identiques au piège vanilla** (`trapTabKey` d'`initBottomSheet`, #825) : un test dédié compare `FOCUS_TRAP_SELECTOR` à la constante lue dans `shared/components.js` — une divergence silencieuse produirait deux comportements clavier pour un même markup selon la techno du consommateur.
+  - **`<BottomSheet>` reçoit le même piège dans la foulée** : il documentait son absence comme un alignement sur le vanilla (« le panneau n'en a jamais eu »), constat **devenu faux** depuis #825. Défaut borné, corrigé en place plutôt que ticketé.
+  - **`<Modal>` n'est volontairement pas touché** : porté sur `<dialog>` + `showModal()`, son piège est natif au navigateur — la primitive partagée demandée par l'issue est donc `<Drawer>`↔`<BottomSheet>`, pas `<Drawer>`↔`<Modal>`.
+  - 7 tests ajoutés (5 Drawer, 2 BottomSheet) + 2 sur le contrat du hook. **Preuve par mutation** : appel de `useFocusTrap` neutralisé en local → 2 tests rouges pile sur le bouclage, 33 verts → restauration.
+
 ## v3.0.0-alpha.47 — 2026-08-29 — Lot 8 « clôture » : `<Logo>`/`<AccessDenied>` + pagination serveur `<DataGrid>` (#878)
 
 **Dernier lot du chantier de parité React — 0 entrée `pending` restante (95 ported / 95 portables).**

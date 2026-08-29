@@ -1,5 +1,20 @@
 # Releases
 
+## 2.127.0 — 2026-08-29 — Scrollbar visible sur `.tabs`/`.stepper` + patron combobox dans le showcase (#900, #899)
+
+> Touche `shared/css/components/navigation.css` + `pages/**` ET `packages/react/**` (passthrough `<SearchInput>` + piège de tabulation `<Drawer>`/`<BottomSheet>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.48).
+
+### Fixed
+- **`.tabs` et `.stepper` masquaient inconditionnellement leur scrollbar, comme `.segmented` avant #866 (#900)** — les trois composants partageaient le même triplet hérité de #530 : `overflow-x: auto` + `scrollbar-width: none` + `::-webkit-scrollbar { display: none }`. Le scroll fonctionnait donc réellement, mais **aucune affordance ne signalait qu'il y avait du contenu hors champ**, et une souris standard sans molette horizontale ne pouvait pas atteindre les onglets/étapes coupés. Deux sprints consécutifs que le constat était reporté côté consommateur (KeepThread). Correctif calqué à l'identique sur celui de `.segmented` : `scrollbar-width: thin` + `scrollbar-color` (Firefox) et styling manuel de `::-webkit-scrollbar` (Chromium/Safari, 4px, track transparent, thumb `var(--border-color)`). La scrollbar n'apparaît que si le contenu déborde réellement — **aucun changement visuel** pour les instances qui tiennent déjà dans leur conteneur.
+  - **`.stepper` était le plus exposé des trois** : `.step-line` porte `min-width: 30px` ET `flex: 1`, la largeur minimale grimpe donc vite avec le nombre d'étapes. Et contrairement à `.tabs`/`.segmented`, il ne contient **aucun élément focalisable** : sans scrollbar, les étapes hors champ n'étaient atteignables ni à la souris, ni au clavier — il n'existait aucune porte de sortie. C'est ce qui distingue ce cas de celui de `.segmented`, dont le `radiogroup` gardait au moins le fléchage clavier.
+  - Plus aucune occurrence de masquage inconditionnel de scrollbar dans `shared/css/**` (grep exhaustif après correctif).
+  - Tests de régression : `tests/vanilla/stepper.test.js` (nouveau — le composant n'avait aucun test, `jsInit: null`) et un bloc dédié dans `tests/vanilla/tabs.test.js`, tous deux chargeant le **vrai** `navigation.css` en `<style>` dans jsdom (même méthode que le test #866 : jsdom ne calcule aucune mise en page mais résout `getComputedStyle`). **Preuve par mutation** : `scrollbar-width` remis à `none` en local → les 2 tests rouges, les 15 autres verts → restauration.
+
+### Added
+- **Patron combobox WAI-ARIA 1.2 illustré dans le showcase (`pages/formulaires.html` #search-input, #899)** — nouvelle sous-section « Patron combobox — liste pilotée par le consumer » : quand l'application rend elle-même ses résultats (palette de commandes, panneau de recherche applicatif), `role="combobox"` et `aria-activedescendant` vivent sur l'`<input>`, jamais sur le conteneur `.search-input-wrap`. État figé (2ᵉ option active) + markup à reproduire côté consommateur. Démo statique volontairement : la liste appartient au consommateur par définition — aucun `init*` n'est ajouté, aucun faux composant n'est créé. Contrepartie côté package : `<SearchInput>` reporte désormais `aria-*`/`role` sur son `<input>` (cf. `packages/react/RELEASES.md` v3.0.0-alpha.48).
+- **Cas de débordement couvert dans le showcase pour les trois composants concernés (#900)** — une `demo-box` « conteneur étroit » ajoutée à `.tabs` et `.stepper` (`pages/navigation.html`) et à `.segmented` (`pages/composants.html`, avec les 5 « Natures » du cas réel remonté en recette #866, qui n'avait jamais été illustré). Le défaut n'était visible dans aucune démo du DS jusque-là : toutes disposaient de la largeur nécessaire.
+  - `@ds-version` 2.126.3 → 2.127.0 (minor : ajouts showcase), `shared/check-versions.sh` rc=0.
+
 ## 2.126.3 — 2026-08-29 — Lightbox et CommandPalette : restitution du focus à la fermeture (#896, #897)
 
 ### Fixed
