@@ -2558,14 +2558,18 @@ window.__initTreeView = initTreeView;
 
 // Grammaire inline : gras, italique (* ou _), lien. Ordre significatif --
 // `**` doit etre teste avant `*`.
-var MD_INLINE_RE = /\*\*([\s\S]+?)\*\*|\*([^*\n]+?)\*|_([^_\n]+?)_|\[([^\]]*)\]\(([^)\s]*)\)/g;
+// SOURCE de la regex, jamais un objet partage : `mdAppendInline` est RECURSIF
+// (gras contenant de l'italique) et une regex /g porte un `lastIndex` mutable.
+// Un objet unique reinitialise par l'appel imbrique ferait repartir la boucle du
+// parent a zero -- boucle infinie, worker de test tue sans message utile.
+var MD_INLINE_SOURCE = '\\*\\*([\\s\\S]+?)\\*\\*|\\*([^*\\n]+?)\\*|_([^_\\n]+?)_|\\[([^\\]]*)\\]\\(([^)\\s]*)\\)';
 
 function mdAppendInline(parent, text, doc) {
     var d = doc || document;
-    MD_INLINE_RE.lastIndex = 0;
+    var re = new RegExp(MD_INLINE_SOURCE, 'g');
     var lastIndex = 0;
     var match;
-    while ((match = MD_INLINE_RE.exec(text)) !== null) {
+    while ((match = re.exec(text)) !== null) {
         if (match.index > lastIndex) {
             parent.appendChild(d.createTextNode(text.slice(lastIndex, match.index)));
         }
@@ -2590,7 +2594,7 @@ function mdAppendInline(parent, text, doc) {
             a.textContent = match[4];
             parent.appendChild(a);
         }
-        lastIndex = MD_INLINE_RE.lastIndex;
+        lastIndex = re.lastIndex;
     }
     if (lastIndex < text.length) {
         parent.appendChild(d.createTextNode(text.slice(lastIndex)));

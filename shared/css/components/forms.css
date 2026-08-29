@@ -847,3 +847,20 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .mention-dropdown.open {
   display: block;
 }
+
+/* ===== MARKDOWN EDITOR (#854) ===== */
+/* Editeur Markdown leger : toolbar + <textarea> source + apercu .prose.
+   La source de verite est le <textarea> (Markdown brut) — l'apercu n'est qu'une
+   projection, jamais une zone d'edition (pas de contenteditable, pas de
+   conversion HTML -> MD). */
+.markdown-editor { border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; }
+.markdown-editor:focus-within { border-color: var(--accent); }
+.markdown-toolbar { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs); border-bottom: 1px solid var(--border-color); background: var(--surface-light); flex-wrap: wrap; }
+.markdown-input { display: block; width: 100%; min-height: 140px; padding: var(--space-md); border: none; background: transparent; color: var(--text); font-family: var(--font-mono); font-size: 0.85rem; line-height: var(--lh-base); resize: vertical; outline: none; }
+.markdown-input::placeholder { color: var(--text-dim); }
+/* L'apercu est separe du champ par une bordure pleine (et non un simple
+   espacement) : il faut qu'on voie d'un coup d'oeil ou s'arrete ce qu'on tape. */
+.markdown-preview { padding: var(--space-md); border-top: 1px solid var(--border-color); background: var(--primary); }
+.markdown-preview:empty { display: none; }
+.markdown-editor .markdown-preview :where(p, ul, ol):first-child { margin-block-start: 0; }
+.markdown-editor .markdown-preview :where(p, ul, ol):last-child { margin-block-end: 0; }

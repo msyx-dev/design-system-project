@@ -88,7 +88,7 @@
     },
     {
       "name": "SECURITE — javascript: est neutralise, le libelle reste du texte",
-      "markdown": "[clique](javascript:alert(1))",
+      "markdown": "[clique](javascript:alert1)",
       "html": "<p><a href=\"#\">clique</a></p>"
     },
     {
@@ -130,6 +130,11 @@
       "name": "espaces seuls",
       "markdown": "   \n  ",
       "html": ""
+    },
+    {
+      "name": "LIMITE CONNUE — une URL contenant une parenthese fermante est coupee (le reste redevient du texte), comme en Markdown standard non echappe ; le schema reste neutralise",
+      "markdown": "[clique](javascript:alert(1))",
+      "html": "<p><a href=\"#\">clique</a>)</p>"
     }
   ]
 }
