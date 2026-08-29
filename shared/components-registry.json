@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-29T09:56:09.035Z",
+    "at": "2026-08-29T10:45:37.607Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -852,16 +852,22 @@
         ".cmd-overlay",
         ".cmd-palette",
         ".cmd-input-wrap",
+        ".cmd-input-icon",
         ".cmd-input",
+        ".cmd-kbd",
         ".cmd-results",
         ".cmd-group-title",
         ".cmd-item",
+        ".cmd-item-icon",
+        ".cmd-item-text",
+        ".cmd-item-shortcut",
         ".cmd-footer",
         ".cmd-empty"
       ],
       "jsInit": "initCommandPalette",
       "example": "<!-- Déclencher via Ctrl+K ou JS : openCommandPalette() -->\n<div class=\"cmd-overlay\" id=\"cmd-palette\" hidden>\n  <div class=\"cmd-palette\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Palette de commandes\">\n    <div class=\"cmd-input-wrap\">\n      <input class=\"cmd-input\" type=\"text\" placeholder=\"Rechercher une commande...\" aria-label=\"Recherche\">\n    </div>\n    <div class=\"cmd-results\" role=\"listbox\">\n      <div class=\"cmd-group-title\">Navigation</div>\n      <div class=\"cmd-item\" role=\"option\">Aller aux composants</div>\n      <div class=\"cmd-item\" role=\"option\">Aller à la fondation</div>\n    </div>\n    <div class=\"cmd-footer\">&#8593;&#8595; naviguer &nbsp; &#8629; sélectionner &nbsp; Echap fermer</div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
+      "reactComponent": "CommandPalette",
       "module": [
         "shared/css/components/overlays.css",
         "shared/css/components/theming.css",
@@ -1023,11 +1029,13 @@
         ".bottom-nav-item",
         ".bottom-nav-icon",
         ".bottom-nav-label",
-        ".bottom-nav-badge"
+        ".bottom-nav-badge",
+        ".bottom-nav-badge--dot"
       ],
       "jsInit": "initBottomNav",
       "example": "<nav class=\"bottom-nav\" aria-label=\"Navigation principale\">\n  <a class=\"bottom-nav-item active\" href=\"/\" aria-current=\"page\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#8962;</span>\n    <span class=\"bottom-nav-label\">Accueil</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/projets\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128193;</span>\n    <span class=\"bottom-nav-label\">Projets</span>\n    <span class=\"bottom-nav-badge\">3</span>\n  </a>\n  <a class=\"bottom-nav-item\" href=\"/profil\">\n    <span class=\"bottom-nav-icon\" aria-hidden=\"true\">&#128100;</span>\n    <span class=\"bottom-nav-label\">Profil</span>\n  </a>\n</nav>",
-      "react": "pending",
+      "react": "ported",
+      "reactComponent": "BottomNav",
       "module": [
         "shared/css/components/navigation.css",
         "shared/css/utilities.css"
@@ -1307,13 +1315,18 @@
       "cssClasses": [
         ".dtree",
         ".dtree-node",
+        ".dtree-node-content",
+        ".dtree-node--question",
+        ".dtree-node--result",
         ".dtree-choices",
         ".dtree-choice",
-        ".dtree-connector"
+        ".dtree-connector",
+        ".dtree-reset"
       ],
       "jsInit": "initDecisionTree",
-      "example": "<div class=\"dtree\">\n  <div class=\"dtree-node\" id=\"dtree-root\">\n    <p>Ce projet a-t-il un backend ?</p>\n    <div class=\"dtree-choices\">\n      <button class=\"dtree-choice\" data-next=\"node-yes\">Oui</button>\n      <button class=\"dtree-choice\" data-next=\"node-no\">Non</button>\n    </div>\n  </div>\n  <div class=\"dtree-node\" id=\"node-yes\" hidden>\n    <p>Utiliser FastAPI + PostgreSQL + Prisma.</p>\n  </div>\n  <div class=\"dtree-node\" id=\"node-no\" hidden>\n    <p>Servir avec Caddy file_server statique.</p>\n  </div>\n</div>",
-      "react": "pending",
+      "example": "<div class=\"dtree\">\n  <div class=\"dtree-node dtree-node--question active\" id=\"dtree-root\">\n    <div class=\"dtree-node-content\">Ce projet a-t-il un backend ?</div>\n    <div class=\"dtree-choices\">\n      <button class=\"dtree-choice\" data-next=\"node-yes\">Oui</button>\n      <button class=\"dtree-choice\" data-next=\"node-no\">Non</button>\n    </div>\n  </div>\n  <div class=\"dtree-node dtree-node--result\" id=\"node-yes\">\n    <div class=\"dtree-node-content\">Utiliser FastAPI + PostgreSQL + Prisma.</div>\n  </div>\n  <div class=\"dtree-node dtree-node--result\" id=\"node-no\">\n    <div class=\"dtree-node-content\">Servir avec Caddy file_server statique.</div>\n  </div>\n  <button class=\"dtree-reset btn-primary\" style=\"display:none;\">Recommencer</button>\n</div>",
+      "react": "ported",
+      "reactComponent": "DecisionTree",
       "module": [
         "shared/css/components/tracker.css"
       ]
@@ -1677,7 +1690,8 @@
       ],
       "jsInit": "initComments",
       "example": "<div class=\"comment\">\n  <div class=\"comment-avatar\">MS</div>\n  <div class=\"comment-body\">\n    <div class=\"comment-header\"><span class=\"comment-author\">Mike</span><span class=\"comment-date\">il y a 5 min</span></div>\n    <div class=\"comment-text\">Super implementation !</div>\n    <div class=\"comment-actions\">\n      <button class=\"comment-action-btn\" data-reply-trigger aria-label=\"Repondre\">&#8617; Repondre</button>\n      <button class=\"comment-action-btn\" data-like-trigger aria-label=\"J'aime\">&#9825; <span class=\"like-count\">0</span></button>\n    </div>\n  </div>\n</div>",
-      "react": "pending",
+      "react": "ported",
+      "reactComponent": "Comments",
       "module": [
         "shared/css/components/forms.css"
       ]

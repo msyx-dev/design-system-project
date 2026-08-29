@@ -684,6 +684,10 @@ const REACT_TO_REGISTRY = {
   Lightbox: 'lightbox',                   // #875 — galerie + visionneuse portée (document.body), focus restore WAI-APG ajoutée vs le vanilla (aucun contrat existant côté DS)
   VideoEmbed: 'video-embed',              // #875 — chargement différé au clic préservé (iframe montée uniquement après activation)
   BeforeAfter: 'before-after',            // #875 — contrat clavier #836 (role=separator) repris à l'identique, drag Pointer Events réimplémenté (calque SplitPane, window.__pointerDrag non disponible côté React)
+  CommandPalette: 'command-palette',      // #876 — Lot 6 interactifs C : raccourci global Ctrl/Cmd+K posé/retiré au (dé)montage, focus WAI-APG ajouté vs le vanilla (aligné sur Modal)
+  Comments: 'comments',                   // #876 — fil récursif (.comment-thread imbriqué), like + réponse
+  BottomNav: 'bottom-nav',                // #876 — navigation mobile basse, aria-current (pas aria-selected, cf. docstring)
+  DecisionTree: 'decision-tree',          // #876 — questionnaire pas à pas contrôlé, prefers-reduced-motion déjà couvert par le kill-switch global _a11y.css
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
@@ -790,6 +794,9 @@ const REACT_CSS_UNDETECTABLE = new Set([
 const REACT_JS_HOOK_CLASSES = new Set([
   '.search-with-suggestions', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:598 (`wrap.classList.contains('search-with-suggestions')`, initSearchInput). Émise côté React pour calquer le markup du vanilla (formulaires.html) — #889.
   '.sortable-list--numbered', // AUCUNE règle CSS. Hook vanilla réel : shared/components.js:3500 (`list.classList.contains('sortable-list--numbered')`, initSortableLists). Émise côté React pour calquer le markup du vanilla (composants.html:714) — classe déjà morte identifiée AVANT le port (issue #889, section « Deux classes mortes déjà connues »), non imputable au wrapper.
+  // #876 — Lot 6 interactifs C : AUCUNE règle CSS, hooks `querySelector` vanilla réels.
+  '.like-count',  // AUCUNE règle CSS (grep exhaustif shared/css/**). Hook vanilla réel : shared/components.js:5172 (`btn.querySelector('.like-count')`, initComments). Émise côté React pour cibler le compteur et calquer le markup du vanilla.
+  '.dtree-reset', // AUCUNE règle CSS (grep exhaustif shared/css/**, style entièrement hérité de .btn-primary). Hook vanilla réel : shared/components.js:4064 (`dtree.querySelector('.dtree-reset')`, initDecisionTree). Émise côté React pour identifier le bouton de réinitialisation.
 ]);
 
 // extractReactClasses(tsx, opts) — extraite dans bin/lib/extract-react-classes.js
