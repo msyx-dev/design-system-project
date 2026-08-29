@@ -14,6 +14,25 @@
   },
   "released": [
     {
+      "version": "2.127.0",
+      "date": "2026-08-29",
+      "titre": "Options hors champ atteignables à la souris, et surfaces modales qui gardent le focus",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Dans un panneau étroit, les onglets et les étapes d'un stepper trop larges pour tenir se faisaient couper sans que rien ne le signale : la barre de défilement était masquée, et une souris sans molette horizontale ne pouvait pas atteindre ce qui dépassait. Elle réapparaît désormais quand le contenu déborde réellement, comme sur le sélecteur segmenté."
+        },
+        {
+          "type": "correction",
+          "text": "Le panneau latéral et la feuille du bas retiennent maintenant la tabulation tant qu'ils sont ouverts : la touche Tab boucle à l'intérieur au lieu de partir sur le contenu situé derrière, qui était pourtant annoncé comme inaccessible aux lecteurs d'écran."
+        },
+        {
+          "type": "amelioration",
+          "text": "Le champ de recherche accepte désormais les attributs d'accessibilité fournis par l'application : une palette de commandes qui affiche ses propres résultats peut enfin annoncer l'option surlignée aux lecteurs d'écran."
+        }
+      ]
+    },
+    {
       "version": "2.124.0",
       "date": "2026-08-24",
       "titre": "Un nouveau thème : Auchan",
