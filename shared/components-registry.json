@@ -1,7 +1,7 @@
 {
   "version": "2.126.2",
   "generated": {
-    "at": "2026-08-28T22:57:50.805Z",
+    "at": "2026-08-29T09:06:46.503Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -142,7 +142,7 @@
       ],
       "jsInit": "initChips",
       "example": "<div class=\"chip-group\">\n  <span class=\"chip\">Feature</span>\n  <span class=\"chip chip-accent\">Sprint:18</span>\n  <span class=\"chip chip-warning\">3 SP</span>\n  <span class=\"chip chip-success\">Done</span>\n</div>\n\n<!-- chip-input @deprecated : alias rétro-compat de tag-input (suppression v3). Utiliser tag-input. -->\n<div class=\"chip-input-wrapper\">\n  <span class=\"chip chip-input-item\">React <button class=\"chip-close\" aria-label=\"Supprimer React\">&times;</button></span>\n  <input class=\"chip-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/badges.css"
       ]
@@ -576,7 +576,8 @@
       ],
       "jsInit": "initCopyButtons",
       "example": "<div class=\"code-block\"><span class=\"cm\">/* Theme tokens */</span><br><span class=\"kw\">:root</span> {<br>&nbsp;&nbsp;<span class=\"fn\">--accent</span>: <span class=\"str\">#3b82f6</span>;<br>}</div>",
-      "react": "pending",
+      "reactComponent": "CodeBlock",
+      "react": "ported",
       "module": [
         "shared/css/components/interactive.css"
       ]
@@ -604,10 +605,10 @@
         ".copy-btn"
       ],
       "jsInit": "initCopyButtons",
-      "description": "Absorbé par le composant `code` (même `initCopyButtons`) — pas de wrapper React dédié, passera à `ported` avec le portage du composant absorbant (lot 4).",
-      "reactComponent": "Code",
+      "description": "Absorbé par le composant `code` (même `initCopyButtons`) — pas de wrapper React dédié, `CodeBlock` couvre cette entrée (lot 4, #874).",
+      "reactComponent": "CodeBlock",
       "example": "<button class=\"copy-btn\" data-copy=\"Texte à copier\" aria-label=\"Copier\">\n  <span class=\"copy-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"9\" y=\"2\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"></rect><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path></svg></span>\n  Copier\n  <span class=\"copy-tooltip\">Copie !</span>\n</button>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/interactive.css"
       ]
@@ -639,7 +640,7 @@
       ],
       "jsInit": "initRating",
       "example": "<div class=\"rating\" data-value=\"4\" data-max=\"5\" aria-label=\"Note : 4 sur 5\">\n  <span class=\"rating-star\" data-value=\"1\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"2\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"3\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"4\">&#9733;</span>\n  <span class=\"rating-star\" data-value=\"5\">&#9733;</span>\n</div>",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
       ]

@@ -485,3 +485,32 @@ export type {
   AchievementGridProps,
   AchievementProgressProps,
 } from "./components/AchievementBadge/AchievementBadge";
+
+// Lot 4 « interactifs A » (#874) — comportement JS à répliquer (pas
+// seulement décoratif) : chips (fermeture/filtre/saisie), rating (contrat
+// clavier #836 repris à l'identique), code (coloration manuelle + copie).
+export { Chip, ChipFilterGroup, ChipInput } from "./components/Chips/Chips";
+export type {
+  ChipProps,
+  ChipFilterOption,
+  ChipFilterGroupProps,
+  ChipInputProps,
+} from "./components/Chips/Chips";
+export { Rating } from "./components/Rating/Rating";
+export type { RatingProps } from "./components/Rating/Rating";
+export {
+  CodeBlock,
+  CopyButton,
+  InlineCode,
+  CodeKeyword,
+  CodeString,
+  CodeComment,
+  CodeFunction,
+  CodeNumber,
+} from "./components/Code/Code";
+export type {
+  CodeBlockProps,
+  CopyButtonProps,
+  InlineCodeProps,
+  CodeTokenProps,
+} from "./components/Code/Code";

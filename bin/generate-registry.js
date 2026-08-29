@@ -677,6 +677,9 @@ const REACT_TO_REGISTRY = {
   Breadcrumb: 'breadcrumb',               // #873 — contrat ARIA vanilla reproduit (nav+aria-label+aria-current), structure <li> unifiée
   Stepper: 'stepper',                     // #873 — états .completed/.active/.pending exposés en props typées
   AchievementBadge: 'achievement-badge',  // #873 — AchievementBadge/AchievementGrid/AchievementProgress co-localisés dans components/AchievementBadge/
+  Chips: 'chips',                         // #874 — Chip/ChipFilterGroup/ChipInput co-localisés dans components/Chips/ (fermeture/filtre/saisie, ChipInput = alias déprécié de TagInput)
+  Rating: 'rating',                       // #874 — contrat clavier #836 (radiogroup APG) repris à l'identique
+  Code: 'code',                           // #874 — dossier components/Code/ ; exporte CodeBlock/CopyButton/InlineCode/CodeKeyword/CodeString/CodeComment/CodeFunction/CodeNumber
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
@@ -697,6 +700,7 @@ const REACT_TO_REGISTRY = {
 const REACT_COVERED_BY = {
   'zone-banner':    'Alert',   // .alert--kpi (#519) — reactComponent: "Alert" dans le registre
   'upgrade-prompt': 'Alert',   // .alert--cta (#519) — reactComponent: "Alert" dans le registre
+  'copy-button':    'CodeBlock', // même initCopyButtons que `code` (#874) — reactComponent: "CodeBlock" dans le registre
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
@@ -751,6 +755,9 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.completed',  // navigation.css:23,28 — compound .step-dot.completed / .step-line.completed (Stepper)
   '.pending',    // navigation.css:25 — compound .step-dot.pending (Stepper)
   '.new',        // badges.css:106 — compound .achievement.new (AchievementBadge)
+  // #874 — Lot 4 interactifs A : compound sans séparateur, réellement stylé.
+  '.copy-btn--success', // interactive.css:30,45,58 — compound .copy-btn.copy-btn--success (+ .copy-btn--inline.copy-btn--success, + `.copy-btn.copy-btn--success .copy-tooltip`)
+  '.chip-icon', // badges.css:30 — compound .chip.chip-icon (posé sur la racine quand `icon` est fourni)
 ]);
 
 // Whitelist DISTINCTE de REACT_CSS_UNDETECTABLE — ne pas fusionner (#889,
