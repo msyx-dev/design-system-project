@@ -1,5 +1,5 @@
-/* @ds-version 2.126.2 */
-const VERSION = '2.126.2';
+/* @ds-version 2.126.3 */
+const VERSION = '2.126.3';
 
 // Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
 // image, etc.) — setAttribute() pose la valeur telle quelle : il protège de

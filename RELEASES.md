@@ -1,5 +1,16 @@
 # Releases
 
+## 2.126.3 — 2026-08-29 — Lightbox et CommandPalette : restitution du focus à la fermeture (#896, #897)
+
+### Fixed
+- **`initLightbox()`/`initCommandPalette()` (`shared/components.js`) ne restituaient jamais le focus au déclencheur à la fermeture** — deux surfaces modales (`role="dialog"` `aria-modal="true"` déjà posés) qui échappaient au contrat WAI-APG déjà appliqué à `<Modal>` (v2.41.0) et `<BottomSheet>` (#825) : un utilisateur au clavier ou au lecteur d'écran était renvoyé en début de document à la fermeture. Défaut trouvé pendant le portage React (#875 pour `Lightbox`, #876 pour `CommandPalette`) : les deux wrappers `@msyx-dev/react` implémentaient déjà la restitution, inversant la règle du projet où le vanilla est la référence.
+  - `createFocusRestore()` (helper déjà partagé par `Modal`/`BottomSheet`) généralisé pour accepter un élément explicite en plus de `document.activeElement` (`capture(explicitEl)`) — aucun code dupliqué créé, le helper existant est réutilisé tel quel.
+  - **`Lightbox`** : capture la vignette déclenchante par **référence directe** (`triggers[idx]`, pas `document.activeElement`) — fiable que l'ouverture vienne d'un clic ou d'Entrée/Espace au clavier, aligné sur `Lightbox.tsx` (`event.currentTarget`). Restitution câblée dans `closeLightbox()`, point de sortie unique des 3 chemins de fermeture (Échap, clic sur le fond, bouton fermer).
+  - **`CommandPalette`** : capture `document.activeElement` au tout début de `openOverlay()`, avant tout déplacement de focus — l'ouverture n'est pas un clic sur un déclencheur dédié mais le raccourci global `Ctrl/Cmd+K`, aligné sur `CommandPalette.tsx`. Restitution câblée dans `closeOverlay()`, point de sortie unique des 4 chemins de fermeture (Échap, clic sur le fond, sélection Entrée, toggle `Ctrl+K`).
+  - **Duplication constatée, non extraite** : `Modal`/`BottomSheet` partageaient déjà `createFocusRestore()` — aucune 3e implémentation créée pour ce fix, conformément à la consigne de l'issue.
+  - Tests vanilla ajoutés (`tests/vanilla/lightbox.test.js`, `tests/vanilla/command-palette.test.js`) couvrant tous les chemins de fermeture ci-dessus, y compris la ré-ouverture depuis un déclencheur différent (pas de fuite vers l'ancien). **Preuve par mutation** : les 4 lignes `capture()`/`restore()` neutralisées en local → 10 tests rouges pile sur les nouveaux cas ajoutés, 752 tests préexistants restés verts (aucune collatérale) → restauration, aucune trace laissée dans le code livré.
+  - `@ds-version` 2.126.2 → 2.126.3 (patch), `shared/check-versions.sh` rc=0. Aucun bump `packages/react` (les wrappers React avaient déjà tranché ce contrat, rien à changer côté package).
+
 ## 2.126.2 — 2026-08-28 — Panneau flottant .card : le correctif échouait à ses propres tests (#886)
 
 > Touche `shared/components.js` + `visual-tests/fixtures/card-floating-panel-clip-856.html` ET `packages/react/**` (bug jumeau `<ActionMenu>` corrigé à la volée dans la même PR, cf. `packages/react/RELEASES.md` v3.0.0-alpha.37).

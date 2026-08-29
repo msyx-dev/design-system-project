@@ -778,17 +778,29 @@ function showToast(message, type, duration) {
 window.__showToast = showToast;
 
 // Focus restoration generique (WAI APG) — capture le declencheur au moment
-// de l'ouverture (document.activeElement), le restaure au moment de la
-// fermeture. Coeur partage par attachFocusRestore (dialogs, via
-// showModal/close natifs) et initBottomSheet (#825 : un <div>, pas de
-// showModal/close a hooker, open/close sont des fonctions maison).
+// de l'ouverture, le restaure au moment de la fermeture. Coeur partage par
+// attachFocusRestore (dialogs, via showModal/close natifs), initBottomSheet
+// (#825 : un <div>, pas de showModal/close a hooker, open/close sont des
+// fonctions maison), initLightbox et initCommandPalette (#896/#897).
+//
+// capture(explicitEl) accepte un element explicite (Lightbox : le vrai
+// declencheur est deja connu par reference — la vignette cliquee ou activee
+// au clavier — inutile et moins fiable de repasser par
+// document.activeElement, cf. #896). Sans argument, capture
+// document.activeElement (CommandPalette : ouverture par raccourci clavier
+// global, aucun element explicite disponible — document.activeElement AU
+// MOMENT du raccourci EST le declencheur reel, meme contrat que Modal).
 function createFocusRestore() {
     var _trigger = null;
     return {
-        capture: function() {
-            _trigger = (document.activeElement instanceof HTMLElement)
-                ? document.activeElement
-                : null;
+        capture: function(explicitEl) {
+            if (explicitEl instanceof HTMLElement) {
+                _trigger = explicitEl;
+            } else {
+                _trigger = (document.activeElement instanceof HTMLElement)
+                    ? document.activeElement
+                    : null;
+            }
         },
         restore: function() {
             if (_trigger && document.contains(_trigger)) {
@@ -2688,9 +2700,17 @@ function initLightbox() {
     var currentGroup  = [];
     var currentIndex  = 0;
 
+    // Focus restoration WAI-APG (#896) — attache a l'overlay (singleton
+    // persistant dans le DOM, cf. commentaire au-dessus) pour survivre a un
+    // reinit SPA qui recree les closures locales de cette fonction.
+    if (!overlay.__focusRestore) overlay.__focusRestore = createFocusRestore();
+
     function openLightbox(triggers, idx) {
         currentGroup = Array.from(triggers);
         currentIndex = idx;
+        // Element explicite (la vignette activee) plutot que document.activeElement :
+        // fiable qu'il s'agisse d'un clic ou d'un Entree/Espace clavier (#896).
+        overlay.__focusRestore.capture(triggers[idx]);
         overlay.classList.add('lb-open');
         document.body.style.overflow = 'hidden';
         showImage(currentIndex);
@@ -2700,6 +2720,7 @@ function initLightbox() {
     function closeLightbox() {
         overlay.classList.remove('lb-open');
         document.body.style.overflow = '';
+        overlay.__focusRestore.restore(); // #896 — restitue vers la vignette declenchante
         // Nettoyer l'image pour la prochaine ouverture
         setTimeout(function() {
             imgWrap.innerHTML = '';
@@ -4174,6 +4195,9 @@ function initCommandPalette() {
     var input = overlay.querySelector('.cmd-input');
     var results = overlay.querySelector('.cmd-results');
     var activeIdx = -1;
+    // Focus restoration WAI-APG (#897) — singleton (garde en tete de
+    // fonction), pas besoin de l'attacher a l'overlay comme initLightbox.
+    var focusRestore = createFocusRestore();
 
     function getItems() {
         return results.querySelectorAll('.cmd-item[data-idx]');
@@ -4290,6 +4314,11 @@ function initCommandPalette() {
     }
 
     function openOverlay() {
+        // Capture document.activeElement AVANT tout deplacement de focus :
+        // l'ouverture n'est pas un clic sur un declencheur dedie mais le
+        // raccourci global Ctrl/Cmd+K, document.activeElement a cet instant
+        // EST le declencheur reel (#897).
+        focusRestore.capture();
         overlay.classList.add('open');
         palette.setAttribute('aria-expanded', 'true');
         input.value = '';
@@ -4300,6 +4329,7 @@ function initCommandPalette() {
     function closeOverlay() {
         overlay.classList.remove('open');
         palette.setAttribute('aria-expanded', 'false');
+        focusRestore.restore(); // #897 — restitue vers le declencheur (Echap, clic fond, selection)
     }
 
     // Clic sur fond
