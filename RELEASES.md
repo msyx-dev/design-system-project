@@ -1,5 +1,15 @@
 # Releases
 
+## 2.131.1 — 2026-08-30 — `.drawer-footer` : les boutons sortaient du panneau étroit (#912)
+
+### Fixed
+- **Les actions du pied d'un drawer sortaient du panneau dès qu'elles ne tenaient pas sur une ligne** — `.drawer-footer` était `display:flex` + `justify-content:flex-end` **sans `flex-wrap`**. `.drawer-panel` n'ayant pas d'`overflow`, les boutons débordants étaient peints **à côté** du panneau : hors cadre et **incliquables**. Corrigé par `flex-wrap: wrap` — les actions passent à la ligne, l'alignement à droite et le `gap` sont inchangés.
+  - **Mesuré, pas supposé** (sonde Playwright, Chromium 147). AVANT : sur la démo « Drawer large » de `overlays.html`, panneau **112px**, bouton « Annuler » **entièrement hors du panneau**. APRÈS : 0 bouton hors cadre, y compris en ajoutant une 3ᵉ action à un panneau de 320px.
+  - Le cas se produit en usage réel bien au-delà de cette démo : drawer mobile (85 % de 320px), variante `--lg` dans un conteneur, ou simplement trois actions au lieu de deux.
+- **La démo « Drawer large » ne montrait pas ce qu'elle annonçait** — `--drawer-w-lg: 50%` se calcule sur le **conteneur du panneau**, pas sur la fenêtre. Placée dans une colonne d'une grille à 3, elle rendait un panneau de 112px tout en annonçant « demi-fenêtre minimum en desktop ». Déplacée sur une ligne pleine largeur : **428px** mesurés, la demi-largeur est enfin visible. La grille des deux démos historiques passe de 3 à 2 colonnes. Le token et la règle `--lg` ne sont pas touchés : en usage réel (`--fullscreen`, `position:fixed`), `50%` porte bien sur le viewport.
+  - Test de régression `tests/vanilla/drawer.test.js` (nouveau — le drawer n'avait aucun test) chargeant le vrai `overlays.css` en jsdom.
+  - `@ds-version` 2.131.0 → 2.131.1 (patch), `shared/check-versions.sh` rc=0. Aucun bump `packages/react` : `<Drawer>` hérite du CSS, rien à changer côté wrapper.
+
 ## 2.131.0 — 2026-08-30 — Markdown Editor : nouveau composant (#854)
 
 > Touche `shared/css/components/forms.css` + `shared/components.js` + `pages/formulaires.html` ET `packages/react/**` (wrapper `<MarkdownEditor>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.52).

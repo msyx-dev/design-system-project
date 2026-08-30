@@ -9,6 +9,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 ## [Unreleased]
 
 ### Fixed
+- **`.drawer-footer` : les boutons sortaient du panneau étroit (#912)** — `shared/css/components/overlays.css`. `display:flex` + `justify-content:flex-end` **sans `flex-wrap`** : `.drawer-panel` n'ayant pas d'`overflow`, les boutons débordants étaient peints à côté du panneau, hors cadre et **incliquables**. Corrigé par `flex-wrap: wrap`. **Mesuré** (sonde Playwright) : avant, panneau 112px et bouton « Annuler » entièrement hors panneau ; après, 0 bouton hors cadre même avec 3 actions. Au passage, la démo « Drawer large » ne montrait pas ce qu'elle annonçait — `--drawer-w-lg: 50%` porte sur le **conteneur**, pas sur la fenêtre : dans une colonne de grille à 3 elle rendait 112px en annonçant « demi-fenêtre ». Déplacée en pleine largeur (428px mesurés) ; le token et la règle `--lg` sont inchangés. Nouveau `tests/vanilla/drawer.test.js`. `@ds-version` 2.131.0 → 2.131.1. Aucun bump `packages/react`.
+
+### Fixed
 - **CI `visual` + `lint` de nouveau rouges sur `main` depuis `65637ca` (#912/#914)** — même casse qu'à `d822fe4`, réparée par #909 la veille : 12 baselines de la page `overlays` non rafraîchies après la variante `--lg` du Drawer (`overlays-drawer` × 4, `confirm-popover`/`notification-center`/`tooltip`/`version-notes` × 2), et `site.html` non régénéré après le bump 2.130.0 (`check-counters.sh` : « footer : version v2.130.0 absente »). Baselines reprises des actuals du run de `main` `33283983875` et regardées avant commit. Aucun bump de version.
 
 ### Added

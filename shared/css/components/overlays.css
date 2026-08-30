@@ -316,7 +316,13 @@ dialog.modal-dialog .modal-actions {
 .drawer-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
 .drawer-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; padding: 0; }
 .drawer-body { padding: 1.5rem; flex: 1; overflow-y: auto; }
-.drawer-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 0.7rem; justify-content: flex-end; }
+/* flex-wrap (#912) : sans repli, des que les boutons ne tiennent pas sur une
+   ligne ils sortent du panneau — le panneau n'a pas d'overflow, ils sont donc
+   peints A COTE, hors cadre et incliquables. Mesure Playwright sur la demo
+   « Drawer large » (#912) : panneau 112px, bouton « Annuler » entierement hors
+   du panneau. Cas reel atteint des qu'un drawer est etroit (mobile 85%,
+   variante --lg dans un conteneur, 3 actions au lieu de 2). */
+.drawer-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 0.7rem; justify-content: flex-end; flex-wrap: wrap; }
 
 /* ===== BOTTOM SHEET ===== */
 /* Conteneur demo : simule un ecran mobile */
