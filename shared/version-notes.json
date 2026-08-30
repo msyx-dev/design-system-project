@@ -14,6 +14,25 @@
   },
   "released": [
     {
+      "version": "2.135.0",
+      "date": "2026-08-31",
+      "titre": "Un indicateur à zéro n'est plus peint comme une alerte",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Un compteur qui vaut zéro — donc qui ne signale rien — s'affichait quand même dans une couleur d'état, ce qui affaiblissait la valeur du signal partout ailleurs. Une présentation neutre est désormais disponible pour ces cas."
+        },
+        {
+          "type": "amelioration",
+          "text": "Le bouton qui replie la colonne de navigation peut maintenant être placé en bas, avec l'aide et les paramètres, plutôt qu'en haut à côté du nom du produit."
+        },
+        {
+          "type": "amelioration",
+          "text": "Neuf icônes déjà dessinées (recherche, accueil, horloge, réglages…) sont désormais utilisables dans les applications React : une colonne repliée en icônes s'affiche enfin en entier."
+        }
+      ]
+    },
+    {
       "version": "2.134.0",
       "date": "2026-08-30",
       "titre": "Une heure facultative peut enfin être effacée",

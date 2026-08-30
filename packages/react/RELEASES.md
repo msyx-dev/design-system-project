@@ -4,6 +4,21 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.55 — 2026-08-31 — 9 glyphes portés, repli de rail en pied, `Alert` neutre (#921, #920, #923)
+
+> Le CSS et les démos correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.135.0.
+
+### Added
+- **9 glyphes portés dans `<Icon>` (#921)** — `search`, `layers`, `home`, `square-check`, `alert-triangle`, `clock`, `edit`, `info`, `settings`. Ils existaient déjà dans le sprite mais étaient **inatteignables** depuis React : un rail replié n'affiche que des icônes, sans eux il était vide. Ajout purement additif, même contrat que les 16 existantes.
+- **`<Rail togglePosition="header" | "footer">` (#920)** — défaut `"header"`, rendu historique **strictement inchangé**. En `"footer"`, le bouton est rendu à la suite des entrées de pied, et le pied est rendu **même sans `footerItems`** (sinon le bouton n'aurait pas de conteneur). Un seul bouton existe, où qu'il soit : le dupliquer donnerait deux cibles clavier pour une action.
+- **`AlertVariant` gagne `"neutral"` (#923)** — `@default "info"` inchangé.
+
+### Fixed
+- **Garde-fou anti-divergence sur les icônes.** `<Icon>` n'utilise pas `<use>` : il **inline** une copie des tracés du sprite. Deux dérives sont donc possibles et invisibles à la compilation — un nom typé sans glyphe (carré vide en production), ou un tracé recopié qui s'écarte du sprite. Le nouveau test compare, forme par forme et attribut par attribut, **chaque glyphe rendu au `<symbol>` du vrai sprite**. Le critère d'acceptation de l'issue demandait un « `<use>` résolu » — il ne correspondait pas à l'implémentation, la vérification retenue est plus forte.
+- **Trois glyphes n'étaient pas testés** — `plus`, `link` et `sparkles` étaient exposés par `<Icon>` mais absents de la liste du test. Découvert par le garde-fou ci-dessus dès sa première exécution.
+
+35 tests ajoutés, suite complète **2011 tests verts**, `npx tsc --noEmit` rc=0.
+
 ## v3.0.0-alpha.54 — 2026-08-30 — `<TimePicker>` : heure facultative, et `<NumberInput>` : valeur vide (#860)
 
 > Le JS vanilla et la démo correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.134.0.
