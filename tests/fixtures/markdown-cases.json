@@ -1,0 +1,140 @@
+{
+  "_comment": "Corpus PARTAGE du rendu Markdown leger (#854). Utilise par les DEUX implementations : tests/vanilla/markdown-editor.test.js (renderMarkdown, noeuds DOM) et packages/react/src/components/MarkdownEditor/MarkdownEditor.test.tsx (elements React). Une divergence entre vanilla et React sur un meme corpus = deux rendus differents pour un meme contenu selon la techno du consumer, exactement ce que le DS existe pour empecher. Toute evolution de la grammaire commence par un cas ajoute ICI.",
+  "cases": [
+    {
+      "name": "paragraphe simple",
+      "markdown": "Bonjour le monde",
+      "html": "<p>Bonjour le monde</p>"
+    },
+    {
+      "name": "deux paragraphes separes par une ligne vide",
+      "markdown": "Premier\n\nSecond",
+      "html": "<p>Premier</p><p>Second</p>"
+    },
+    {
+      "name": "retour a la ligne simple dans un paragraphe",
+      "markdown": "Ligne un\nLigne deux",
+      "html": "<p>Ligne un<br>Ligne deux</p>"
+    },
+    {
+      "name": "gras",
+      "markdown": "Un **mot** en gras",
+      "html": "<p>Un <strong>mot</strong> en gras</p>"
+    },
+    {
+      "name": "italique avec asterisque",
+      "markdown": "Un *mot* en italique",
+      "html": "<p>Un <em>mot</em> en italique</p>"
+    },
+    {
+      "name": "italique avec underscore",
+      "markdown": "Un _mot_ en italique",
+      "html": "<p>Un <em>mot</em> en italique</p>"
+    },
+    {
+      "name": "gras et italique combines",
+      "markdown": "**gras** et *italique*",
+      "html": "<p><strong>gras</strong> et <em>italique</em></p>"
+    },
+    {
+      "name": "italique a l'interieur d'un gras",
+      "markdown": "**gras avec *emphase* dedans**",
+      "html": "<p><strong>gras avec <em>emphase</em> dedans</strong></p>"
+    },
+    {
+      "name": "liste a puces avec tiret",
+      "markdown": "- un\n- deux",
+      "html": "<ul><li>un</li><li>deux</li></ul>"
+    },
+    {
+      "name": "liste a puces avec asterisque",
+      "markdown": "* un\n* deux",
+      "html": "<ul><li>un</li><li>deux</li></ul>"
+    },
+    {
+      "name": "liste numerotee",
+      "markdown": "1. un\n2. deux",
+      "html": "<ol><li>un</li><li>deux</li></ol>"
+    },
+    {
+      "name": "liste numerotee ne renumerote pas (les numeros source sont ignores)",
+      "markdown": "3. un\n7. deux",
+      "html": "<ol><li>un</li><li>deux</li></ol>"
+    },
+    {
+      "name": "inline dans un item de liste",
+      "markdown": "- un **gras**",
+      "html": "<ul><li>un <strong>gras</strong></li></ul>"
+    },
+    {
+      "name": "liste puis paragraphe",
+      "markdown": "- un\n\ntexte apres",
+      "html": "<ul><li>un</li></ul><p>texte apres</p>"
+    },
+    {
+      "name": "lien http",
+      "markdown": "voir [le site](https://msyx.fr)",
+      "html": "<p>voir <a href=\"https://msyx.fr\" rel=\"noopener noreferrer\" target=\"_blank\">le site</a></p>"
+    },
+    {
+      "name": "lien relatif (pas de target ni rel : reste dans l'app)",
+      "markdown": "voir [la page](/pages/x)",
+      "html": "<p>voir <a href=\"/pages/x\">la page</a></p>"
+    },
+    {
+      "name": "lien mailto",
+      "markdown": "[ecrire](mailto:a@b.fr)",
+      "html": "<p><a href=\"mailto:a@b.fr\" rel=\"noopener noreferrer\" target=\"_blank\">ecrire</a></p>"
+    },
+    {
+      "name": "SECURITE — javascript: est neutralise, le libelle reste du texte",
+      "markdown": "[clique](javascript:alert1)",
+      "html": "<p><a href=\"#\">clique</a></p>"
+    },
+    {
+      "name": "SECURITE — data: est neutralise",
+      "markdown": "[clique](data:text/html;base64,PHNjcmlwdD4=)",
+      "html": "<p><a href=\"#\">clique</a></p>"
+    },
+    {
+      "name": "SECURITE — le HTML brut n'est jamais interprete, il est rendu en TEXTE",
+      "markdown": "<img src=x onerror=alert(1)>",
+      "html": "<p>&lt;img src=x onerror=alert(1)&gt;</p>"
+    },
+    {
+      "name": "SECURITE — une balise script est rendue en texte",
+      "markdown": "<script>alert(1)</script>",
+      "html": "<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>"
+    },
+    {
+      "name": "SECURITE — le libelle d'un lien reste du texte, jamais du markup",
+      "markdown": "[<b>gras</b>](https://msyx.fr)",
+      "html": "<p><a href=\"https://msyx.fr\" rel=\"noopener noreferrer\" target=\"_blank\">&lt;b&gt;gras&lt;/b&gt;</a></p>"
+    },
+    {
+      "name": "les esperluettes et chevrons du texte sont echappes",
+      "markdown": "a & b < c",
+      "html": "<p>a &amp; b &lt; c</p>"
+    },
+    {
+      "name": "asterisque isole non appariee : reste du texte",
+      "markdown": "2 * 3 = 6",
+      "html": "<p>2 * 3 = 6</p>"
+    },
+    {
+      "name": "chaine vide",
+      "markdown": "",
+      "html": ""
+    },
+    {
+      "name": "espaces seuls",
+      "markdown": "   \n  ",
+      "html": ""
+    },
+    {
+      "name": "LIMITE CONNUE — une URL contenant une parenthese fermante est coupee (le reste redevient du texte), comme en Markdown standard non echappe ; le schema reste neutralise",
+      "markdown": "[clique](javascript:alert(1))",
+      "html": "<p><a href=\"#\">clique</a>)</p>"
+    }
+  ]
+}

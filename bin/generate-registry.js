@@ -602,6 +602,7 @@ function resolveReactCompDir(key) {
 // Source de vérité unique du lien React↔registre (robuste vs inférence).
 // Mise à jour requise à chaque nouveau portage React.
 const REACT_TO_REGISTRY = {
+  MarkdownEditor: 'markdown-editor', // #854
   Button:      'buttons',
   PageHeader:  'page-header',
   'icons/Icon': 'icon',  // #870 — primitif hors src/components/ (src/icons/Icon.tsx)

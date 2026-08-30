@@ -1,5 +1,20 @@
 # Releases
 
+## 2.131.0 — 2026-08-30 — Markdown Editor : nouveau composant (#854)
+
+> Touche `shared/css/components/forms.css` + `shared/components.js` + `pages/formulaires.html` ET `packages/react/**` (wrapper `<MarkdownEditor>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.52).
+
+### Added
+- **`markdown-editor` — éditeur Markdown LÉGER (#854)** : gras, italique, listes à puces et numérotées, liens. Rien de plus — « l'objectif n'est pas de fournir un traitement de texte complet ». Aucun composant d'édition de texte n'existait dans le DS. Demandé par KeepThread (contenu d'une ligne de Journal, EB §8.3).
+  - **Architecture — la source de vérité est un `<textarea>` contenant du Markdown BRUT** (option A, arbitrée avec Mike face à `contenteditable` maison et à TipTap). Conséquences directes : entrée et sortie sont du Markdown, **sans aucune conversion HTML → MD** (le consommateur stocke exactement ce qu'il reçoit) ; la saisie Markdown directe (`**gras**`, `- item`) est **native**, il n'y a rien à intercepter ; la toolbar ne fait qu'**insérer de la syntaxe** autour de la sélection. `cap-transfo` est cité par l'issue pour ses patterns (pas de `window.prompt` pour les liens, pas de BubbleMenu), **pas pour sa dépendance** : le DS n'embarque aucune dépendance tierce hors `dagre`, vendorée.
+  - **Sécurité — whitelist par CONSTRUCTION, pas filtrage.** `renderMarkdownInto()` ne crée QUE des nœuds `p`/`br`/`strong`/`em`/`ul`/`ol`/`li`/`a` et met tout le reste en `createTextNode()`. Une balise saisie n'a **aucun chemin** vers le parseur HTML : il n'y a rien à assainir ni à contourner. Les URL passent par `safeUrl()` — `javascript:` et `data:` sont neutralisés en `#`, les liens externes reçoivent `rel="noopener noreferrer"`, et le libellé d'un lien reste du texte même s'il contient des balises. Un test vérifie qu'aucun élément hors whitelist n'est produit, sur la concaténation de tout le corpus.
+  - **Parité vanilla ↔ React verrouillée par un corpus PARTAGÉ** (`tests/fixtures/markdown-cases.json`, 27 cas) rejoué à l'identique par les deux suites : 42 tests vanilla + 54 tests React. Une divergence signifierait qu'un même contenu ne rend pas pareil selon la techno du consommateur — précisément ce que le DS existe pour empêcher. Le corpus documente aussi une **limite connue** (URL contenant une parenthèse fermante) plutôt que de la masquer.
+  - **Bug trouvé en écrivant les tests** : la regex du parseur inline était un objet `/g` **partagé**, alors que le parseur est récursif (un gras peut contenir de l'italique) — l'appel imbriqué réinitialisait le `lastIndex` du parent, et la boucle repartait de zéro. Boucle infinie, worker de test tué sans message exploitable. La source est désormais une chaîne, la regex construite à chaque appel, des deux côtés.
+  - **Toolbar en glyphes texte** (`B`, `I`, `•`, `1.`) plutôt qu'en icônes : le sprite Lucide n'embarque ni `bold`, ni `italic`, ni `list`, et `build-sprite.sh` est un build reproductible qu'on ne détourne pas pour un seul composant. Chaque bouton porte un `aria-label` explicite. Le lien s'insère **dans le champ** (`[texte](https://)`), jamais via `window.prompt`.
+  - Rendu exposé seul : `window.__renderMarkdownInto(container, markdown)` — un consommateur qui AFFICHE du Markdown stocké sans l'éditer n'a pas à monter l'éditeur.
+  - Section vitrine `pages/formulaires.html` #markdown-editor (20 sections sur la page, 130 au total — `EXPECTED_COUNTS` mis à jour). Registre : entrée `markdown-editor` + `react: "ported"` + clé `REACT_TO_REGISTRY`. Aperçu réutilisant `.prose` (#439).
+  - `@ds-version` 2.130.0 → 2.131.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.130.0 — 2026-08-30 — `Drawer` : variante de largeur `--lg`, demi-fenêtre desktop minimum (#912)
 
 > Touche `shared/css/tokens.css` + `shared/css/components/overlays.css` + `pages/overlays.html` + `shared/components-registry.json` ET `packages/react/**` (prop `size`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.51).

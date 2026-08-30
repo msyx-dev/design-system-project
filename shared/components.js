@@ -2535,6 +2535,195 @@ function initTreeView() {
 }
 window.__initTreeView = initTreeView;
 
+
+// ===== MARKDOWN EDITOR (#854) =====
+// Editeur Markdown LEGER : gras, italique, listes, liens. Rien de plus --
+// « l'objectif n'est pas de fournir un traitement de texte complet ».
+//
+// Choix d'architecture (option A, arbitree avec Mike) : la source de verite est
+// un <textarea> qui contient du Markdown BRUT. Consequences directes :
+//   - entree et sortie sont du Markdown, sans aucune conversion HTML -> MD (le
+//     consumer stocke exactement ce qu'il recoit) ;
+//   - la saisie Markdown directe (`**gras**`, `- item`) est native, il n'y a
+//     rien a intercepter ;
+//   - la toolbar ne fait qu'INSERER de la syntaxe autour de la selection ;
+//   - zero dependance tierce (le DS n'en a qu'une, dagre, et elle est vendoree).
+//
+// SECURITE -- l'apercu ne « nettoie » pas du HTML : il n'en produit jamais.
+// renderMarkdownInto() ne CONSTRUIT que six types de noeuds (p, br, strong, em,
+// ul/ol/li, a) et met tout le reste en createTextNode(). Une balise saisie par
+// l'utilisateur ne peut donc pas etre interpretee : elle n'a aucun chemin vers
+// le parseur HTML. C'est une whitelist par CONSTRUCTION, pas un filtre a
+// contourner (cf. DS-PRINCIPLES §11). Les URL passent par safeUrl().
+
+// Grammaire inline : gras, italique (* ou _), lien. Ordre significatif --
+// `**` doit etre teste avant `*`.
+// SOURCE de la regex, jamais un objet partage : `mdAppendInline` est RECURSIF
+// (gras contenant de l'italique) et une regex /g porte un `lastIndex` mutable.
+// Un objet unique reinitialise par l'appel imbrique ferait repartir la boucle du
+// parent a zero -- boucle infinie, worker de test tue sans message utile.
+var MD_INLINE_SOURCE = '\\*\\*([\\s\\S]+?)\\*\\*|\\*([^*\\n]+?)\\*|_([^_\\n]+?)_|\\[([^\\]]*)\\]\\(([^)\\s]*)\\)';
+
+function mdAppendInline(parent, text, doc) {
+    var d = doc || document;
+    var re = new RegExp(MD_INLINE_SOURCE, 'g');
+    var lastIndex = 0;
+    var match;
+    while ((match = re.exec(text)) !== null) {
+        if (match.index > lastIndex) {
+            parent.appendChild(d.createTextNode(text.slice(lastIndex, match.index)));
+        }
+        if (match[1] !== undefined) {
+            var strong = d.createElement('strong');
+            mdAppendInline(strong, match[1], d);
+            parent.appendChild(strong);
+        } else if (match[2] !== undefined || match[3] !== undefined) {
+            var em = d.createElement('em');
+            mdAppendInline(em, match[2] !== undefined ? match[2] : match[3], d);
+            parent.appendChild(em);
+        } else {
+            // Lien : le LIBELLE est toujours du texte (jamais du markup, meme si
+            // l'utilisateur y a mis des balises) et l'URL passe par safeUrl.
+            var a = d.createElement('a');
+            var href = safeUrl(match[5], '#');
+            a.setAttribute('href', href);
+            if (/^(https?|mailto):/i.test(href)) {
+                a.setAttribute('rel', 'noopener noreferrer');
+                a.setAttribute('target', '_blank');
+            }
+            a.textContent = match[4];
+            parent.appendChild(a);
+        }
+        lastIndex = re.lastIndex;
+    }
+    if (lastIndex < text.length) {
+        parent.appendChild(d.createTextNode(text.slice(lastIndex)));
+    }
+}
+
+// Decoupe le Markdown en blocs (paragraphes / listes) puis construit les noeuds.
+// `container` est VIDE avant reconstruction -- l'apercu est un rendu complet, il
+// n'y a pas de diff a maintenir sur un contenu de cette taille.
+function renderMarkdownInto(container, markdown) {
+    var doc = container.ownerDocument || document;
+    container.textContent = '';
+    var lines = String(markdown == null ? '' : markdown).split('\n');
+    var i = 0;
+
+    function isBullet(line) { return /^\s*[-*]\s+/.test(line); }
+    function isOrdered(line) { return /^\s*\d+[.)]\s+/.test(line); }
+
+    while (i < lines.length) {
+        var line = lines[i];
+        if (line.trim() === '') { i++; continue; }
+
+        if (isBullet(line) || isOrdered(line)) {
+            var ordered = isOrdered(line);
+            var list = doc.createElement(ordered ? 'ol' : 'ul');
+            while (i < lines.length && (ordered ? isOrdered(lines[i]) : isBullet(lines[i]))) {
+                var li = doc.createElement('li');
+                // Les numeros de la source sont ignores : <ol> renumerote seul.
+                mdAppendInline(li, lines[i].replace(ordered ? /^\s*\d+[.)]\s+/ : /^\s*[-*]\s+/, ''), doc);
+                list.appendChild(li);
+                i++;
+            }
+            container.appendChild(list);
+            continue;
+        }
+
+        // Paragraphe : lignes consecutives jusqu'a une ligne vide ou une liste.
+        // Un simple retour a la ligne devient <br> (attendu dans un champ de
+        // saisie court, ou l'utilisateur ne pense pas en « lignes vides »).
+        var para = doc.createElement('p');
+        var first = true;
+        while (i < lines.length && lines[i].trim() !== '' && !isBullet(lines[i]) && !isOrdered(lines[i])) {
+            if (!first) para.appendChild(doc.createElement('br'));
+            mdAppendInline(para, lines[i], doc);
+            first = false;
+            i++;
+        }
+        container.appendChild(para);
+    }
+    return container;
+}
+window.__renderMarkdownInto = renderMarkdownInto;
+
+// Insere une syntaxe autour de la selection courante du <textarea>, puis
+// repositionne la selection sur le contenu -- pas sur les marqueurs : l'utilisateur
+// continue de taper la ou il regarde.
+function mdWrapSelection(textarea, before, after, placeholder) {
+    var start = textarea.selectionStart;
+    var end = textarea.selectionEnd;
+    var value = textarea.value;
+    var selected = value.slice(start, end) || placeholder || '';
+    textarea.value = value.slice(0, start) + before + selected + after + value.slice(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + before.length, start + before.length + selected.length);
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+// Prefixe chaque ligne de la selection (listes). Une ligne deja prefixee est
+// laissee telle quelle : re-cliquer n'empile pas les marqueurs.
+function mdPrefixLines(textarea, prefix) {
+    var value = textarea.value;
+    var start = value.lastIndexOf('\n', textarea.selectionStart - 1) + 1;
+    var endOfLine = value.indexOf('\n', textarea.selectionEnd);
+    var end = endOfLine === -1 ? value.length : endOfLine;
+    var block = value.slice(start, end);
+    var ordered = /^\d+\.\s$/.test(prefix);
+    var next = block.split('\n').map(function (line, index) {
+        if (ordered) {
+            return /^\s*\d+[.)]\s+/.test(line) ? line : (index + 1) + '. ' + line;
+        }
+        return /^\s*[-*]\s+/.test(line) ? line : '- ' + line;
+    }).join('\n');
+    textarea.value = value.slice(0, start) + next + value.slice(end);
+    textarea.focus();
+    textarea.setSelectionRange(start, start + next.length);
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function initMarkdownEditor() {
+    document.querySelectorAll('.markdown-editor').forEach(function (root) {
+        if (root.dataset.bound) return;
+        root.dataset.bound = '1';
+        var textarea = root.querySelector('.markdown-input');
+        if (!textarea) return;
+        var preview = root.querySelector('.markdown-preview');
+
+        function refresh() {
+            if (preview) renderMarkdownInto(preview, textarea.value);
+        }
+
+        root.querySelectorAll('[data-md]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                switch (btn.dataset.md) {
+                    case 'bold': mdWrapSelection(textarea, '**', '**', 'gras'); break;
+                    case 'italic': mdWrapSelection(textarea, '*', '*', 'italique'); break;
+                    case 'ul': mdPrefixLines(textarea, '- '); break;
+                    case 'ol': mdPrefixLines(textarea, '1. '); break;
+                    // Le lien s'insere DANS le champ, curseur place sur l'URL --
+                    // jamais de window.prompt (anti-pattern releve sur cap-transfo).
+                    case 'link': mdWrapSelection(textarea, '[', '](https://)', 'texte'); break;
+                    default: break;
+                }
+            });
+        });
+
+        textarea.addEventListener('keydown', function (e) {
+            if (!(e.ctrlKey || e.metaKey)) return;
+            var key = e.key.toLowerCase();
+            if (key === 'b') { e.preventDefault(); mdWrapSelection(textarea, '**', '**', 'gras'); }
+            else if (key === 'i') { e.preventDefault(); mdWrapSelection(textarea, '*', '*', 'italique'); }
+            else if (key === 'k') { e.preventDefault(); mdWrapSelection(textarea, '[', '](https://)', 'texte'); }
+        });
+
+        textarea.addEventListener('input', refresh);
+        refresh();
+    });
+}
+window.__initMarkdownEditor = initMarkdownEditor;
+
 // Bottom Sheet
 function initBottomSheet() {
     // A11y overlay ferme (verif adversariale) : le panneau reste TOUJOURS
@@ -7637,6 +7826,7 @@ function reinitAll() {
     initVersionNotes();
     initUserFeedbackDemo();
     initHeaderUserFeedback();
+    initMarkdownEditor();
 }
 window.__initComponents = reinitAll;
 

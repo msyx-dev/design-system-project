@@ -14,6 +14,21 @@
   },
   "released": [
     {
+      "version": "2.131.0",
+      "date": "2026-08-30",
+      "titre": "Un éditeur pour écrire en Markdown, avec aperçu",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Un éditeur Markdown léger fait son entrée : gras, italique, listes et liens, avec une barre d'outils, les raccourcis habituels (Ctrl+B, Ctrl+I, Ctrl+K) et un aperçu du rendu sous le champ. Ce qui est tapé reste du Markdown, exactement tel qu'il sera enregistré."
+        },
+        {
+          "type": "securite",
+          "text": "L'aperçu ne peut pas exécuter de contenu : il ne construit qu'un jeu d'éléments fixé à l'avance et affiche tout le reste comme du texte. Une balise collée dans le champ s'affiche telle quelle, et les liens qui ne pointent pas vers une adresse web ordinaire sont neutralisés."
+        }
+      ]
+    },
+    {
       "version": "2.129.0",
       "date": "2026-08-29",
       "titre": "Créer une valeur absente sans quitter le menu déroulant",

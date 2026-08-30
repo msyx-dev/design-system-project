@@ -1526,6 +1526,38 @@
   </div>
 </section>
 
+<section id="markdown-editor" class="ds-section">
+  <div class="section-header"><span class="overline">Formulaires</span><h2>Markdown Editor</h2><p class="section-desc">Éditeur Markdown <strong>léger</strong> : gras, italique, listes, liens. Rien de plus — ce n'est pas un traitement de texte.</p></div>
+
+  <div class="demo-box">
+    <span class="demo-label">Éditeur complet — toolbar, raccourcis, aperçu</span>
+    <div class="markdown-editor">
+      <div class="markdown-toolbar" role="toolbar" aria-label="Mise en forme">
+        <button type="button" class="btn-icon" data-md="bold" aria-label="Gras (Ctrl+B)" title="Gras (Ctrl+B)"><strong>B</strong></button>
+        <button type="button" class="btn-icon" data-md="italic" aria-label="Italique (Ctrl+I)" title="Italique (Ctrl+I)"><em>I</em></button>
+        <button type="button" class="btn-icon" data-md="ul" aria-label="Liste à puces" title="Liste à puces">&#8226;</button>
+        <button type="button" class="btn-icon" data-md="ol" aria-label="Liste numérotée" title="Liste numérotée">1.</button>
+        <button type="button" class="btn-icon" data-md="link" aria-label="Lien (Ctrl+K)" title="Lien (Ctrl+K)"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-link"/></svg></button>
+      </div>
+      <textarea class="markdown-input" aria-label="Contenu Markdown" placeholder="Écrire en Markdown...">Une ligne de journal en **gras**, une autre en *italique*.
+
+- un point
+- un autre point
+
+Et un [lien vers le design system](https://design-system.miklaw.fr).</textarea>
+      <div class="markdown-preview prose" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="demo-notes">
+    <p class="demo-note">La <strong>source de vérité est le <code class="code-inline">&lt;textarea&gt;</code></strong>, qui contient du Markdown brut : entrée et sortie sont du Markdown, sans aucune conversion HTML → MD. Taper <code class="code-inline">**gras**</code> ou <code class="code-inline">- item</code> directement fonctionne — il n'y a rien à intercepter.</p>
+    <p class="demo-note">La toolbar ne fait qu'<strong>insérer de la syntaxe</strong> autour de la sélection, puis replace le curseur sur le contenu, pas sur les marqueurs. Raccourcis : <code class="code-inline">Ctrl/Cmd+B</code>, <code class="code-inline">Ctrl/Cmd+I</code>, <code class="code-inline">Ctrl/Cmd+K</code>. Le lien s'insère <strong>dans le champ</strong>, jamais via une boîte de dialogue du navigateur.</p>
+    <p class="demo-note"><strong>Sécurité — whitelist par construction, pas filtrage</strong> : l'aperçu ne construit que des nœuds <code class="code-inline">p</code>, <code class="code-inline">br</code>, <code class="code-inline">strong</code>, <code class="code-inline">em</code>, <code class="code-inline">ul</code>/<code class="code-inline">ol</code>/<code class="code-inline">li</code> et <code class="code-inline">a</code>, et met tout le reste en texte. Une balise saisie n'a aucun chemin vers le parseur HTML : essayez de taper <code class="code-inline">&lt;img src=x onerror=alert(1)&gt;</code>, elle s'affiche telle quelle. Les URL passent par <code class="code-inline">safeUrl()</code> — <code class="code-inline">javascript:</code> et <code class="code-inline">data:</code> sont neutralisés, les liens externes reçoivent <code class="code-inline">rel="noopener noreferrer"</code>.</p>
+    <p class="demo-note">La toolbar utilise des glyphes texte (<strong>B</strong>, <em>I</em>, &#8226;, 1.) plutôt que des icônes : le sprite Lucide du DS n'embarque ni <code class="code-inline">bold</code>, ni <code class="code-inline">italic</code>, ni <code class="code-inline">list</code>, et <code class="code-inline">build-sprite.sh</code> est un build reproductible qu'on ne détourne pas pour un seul composant. Chaque bouton porte un <code class="code-inline">aria-label</code> explicite.</p>
+    <p class="demo-note-last"><code class="code-inline">initMarkdownEditor()</code> câble la toolbar, les raccourcis et l'aperçu. Le rendu est exposé seul via <code class="code-inline">window.__renderMarkdownInto(container, markdown)</code> pour afficher du Markdown stocké sans monter l'éditeur. Côté React : <code class="code-inline">&lt;MarkdownEditor value onChange /&gt;</code> et <code class="code-inline">renderMarkdown()</code>, dont la parité avec le vanilla est verrouillée par un corpus de cas partagé entre les deux suites de tests.</p>
+  </div>
+</section>
+
     </div>
     <script src="/shared/nav.js"></script>
     <script src="/shared/dist/graph-lib.global.js"></script>

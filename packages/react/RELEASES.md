@@ -4,6 +4,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.52 — 2026-08-30 — `<MarkdownEditor>` : nouveau composant (#854)
+
+> Le CSS, le JS vanilla et la démo correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.131.0.
+
+### Added
+- **`<MarkdownEditor>`** — éditeur Markdown léger, **contrôlé** (`value`/`onChange`). `onChange` reçoit du **Markdown**, jamais du HTML : la source de vérité est un `<textarea>` brut, il n'y a aucune conversion HTML → MD. Toolbar (gras, italique, liste à puces, liste numérotée, lien), raccourcis `Ctrl/Cmd+B`/`I`/`K`, aperçu `.prose` optionnel (`preview`).
+- **`renderMarkdown()` exporté séparément** — un consommateur qui AFFICHE du Markdown stocké sans l'éditer n'a pas à monter l'éditeur pour cela.
+- **Sécurité par construction** : `renderMarkdown` ne produit QUE des éléments `p`/`br`/`strong`/`em`/`ul`/`ol`/`li`/`a` et met tout le reste en chaînes (React les échappe). **`dangerouslySetInnerHTML` n'apparaît nulle part.** `safeUrl` (exporté aussi) neutralise `javascript:`/`data:` en `#` et pose `rel="noopener noreferrer"` sur les liens externes ; le libellé d'un lien reste du texte même s'il contient des balises.
+- **SSR-safe sous Next 15** : aucun accès à `document`/`window` au niveau module ni au rendu. Aucun équivalent d'`immediatelyRender: false` n'est nécessaire — il n'y a pas d'éditeur tiers à monter.
+- La sélection est reposée après le rendu (`requestAnimationFrame`) puisque le composant est contrôlé : le DOM n'a la nouvelle valeur qu'au passage suivant du parent. Le curseur revient sur le **contenu**, pas sur les marqueurs.
+- Icône `link` ajoutée à `IconName` — copie fidèle du `<symbol>` de `shared/icons/sprite.svg`.
+- 54 tests, dont les **27 cas du corpus partagé** avec le vanilla (`tests/fixtures/markdown-cases.json`) et un test vérifiant qu'aucun élément hors whitelist n'est jamais produit. `npx tsc --noEmit` vert.
+
 ## v3.0.0-alpha.51 — 2026-08-30 — `<Drawer>` : variante de largeur `size` (#912)
 
 > Le CSS et la démo vanilla correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.130.0.
