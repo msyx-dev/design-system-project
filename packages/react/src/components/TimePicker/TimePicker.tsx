@@ -13,14 +13,27 @@ export interface TimePickerProps {
    * `"HH:MM AM|PM"` (12h), calque exact de `sync()` du vanilla
    * (`shared/components.js:5444-5455`).
    */
-  value?: string;
+  value?: string | null;
   /**
    * Valeur initiale — mode **non contrôlé** (ignorée si `value` est fourni).
    * Même format que `value`. @default "00:00" (24h) / "01:00 AM" (12h)
    */
-  defaultValue?: string;
-  /** Appelé avec la NOUVELLE valeur formatée à chaque changement (heure, minute ou bascule AM/PM). */
+  defaultValue?: string | null;
+  /**
+   * Appelé avec la NOUVELLE valeur formatée à chaque changement (heure, minute
+   * ou bascule AM/PM). **Chaîne vide quand l'heure n'est pas renseignée**
+   * (#860) — distinguable d'une heure valide, et de minuit (`"00:00"`).
+   */
   onChange?: (value: string) => void;
+  /**
+   * Affiche un bouton « Effacer » qui remet l'heure à l'état non renseigné
+   * (#860). Opt-in : sans lui, aucun markup existant ne change. Requis dès que
+   * l'heure est **facultative** — sans effacement, elle devient obligatoire à
+   * la première saisie.
+   */
+  clearable?: boolean;
+  /** Libellé du bouton d'effacement. @default "Effacer" */
+  clearLabel?: string;
   /** Pas d'incrément/décrément des minutes. @default 5 (aligné démo DS, `formulaires.html:428`) */
   minuteStep?: number;
   /** `aria-label` du champ heures. @default "Heures" (libellé exact du vanilla) */
@@ -36,8 +49,9 @@ export interface TimePickerProps {
 }
 
 interface TimeParts {
-  hours: number;
-  minutes: number;
+  /** `null` = champ vide (#860) — « non renseigné », pas 0. */
+  hours: number | null;
+  minutes: number | null;
   period: TimePickerPeriod;
 }
 
@@ -58,12 +72,18 @@ function defaultParts(format: TimePickerFormat): TimeParts {
 
 const TIME_VALUE_RE = /^(\d{1,2}):(\d{1,2})(?:\s+(AM|PM))?$/i;
 
-/** Parse tolérant — valeur absente ou invalide retombe sur `defaultParts()`, bornes toujours respectées. */
+/** Heure absente (#860) — `null`/`""` en entrée, `""` en sortie. */
+const EMPTY_PARTS: TimeParts = { hours: null, minutes: null, period: "AM" };
+
+/** Parse tolérant — `null`/`""` donnent l'heure VIDE (#860) ; `undefined` ou une chaîne invalide retombent sur `defaultParts()`, bornes toujours respectées. */
 function parseTimeValue(
-  raw: string | undefined,
+  raw: string | null | undefined,
   format: TimePickerFormat,
 ): TimeParts {
   const fallback = defaultParts(format);
+  // Distinction volontaire : `undefined` = « rien de fourni » (défaut
+  // historique), `null`/`""` = « explicitement vide ».
+  if (raw === null || raw === "") return EMPTY_PARTS;
   if (!raw) return fallback;
   const match = TIME_VALUE_RE.exec(raw.trim());
   if (!match) return fallback;
@@ -77,6 +97,10 @@ function parseTimeValue(
 
 /** Calque exact de `sync()` (`components.js:5444-5449`) : `padStart(2,'0')` sur la valeur brute, pas de conversion 12h→24h. */
 function formatTimeValue(parts: TimeParts, format: TimePickerFormat): string {
+  // Une heure INCOMPLÈTE est une heure absente : « 08:__ » ne forme aucune
+  // valeur, et compléter le champ manquant par 0 inventerait une donnée que
+  // l'utilisateur n'a pas saisie (#860). Calque exact du vanilla.
+  if (parts.hours === null || parts.minutes === null) return "";
   const hh = String(parts.hours).padStart(2, "0");
   const mm = String(parts.minutes).padStart(2, "0");
   return format === "12" ? `${hh}:${mm} ${parts.period}` : `${hh}:${mm}`;
@@ -163,6 +187,8 @@ export function TimePicker({
   value,
   defaultValue,
   onChange,
+  clearable,
+  clearLabel = "Effacer",
   minuteStep = 5,
   hourLabel = "Heures",
   minuteLabel = "Minutes",
@@ -181,7 +207,10 @@ export function TimePicker({
   const [minHour, maxHour] = hourBounds(format);
   const parts: TimeParts = {
     ...rawParts,
-    hours: clampInt(rawParts.hours, minHour, maxHour),
+    hours:
+      rawParts.hours === null
+        ? null
+        : clampInt(rawParts.hours, minHour, maxHour),
   };
 
   function commit(next: TimeParts): void {
@@ -197,6 +226,7 @@ export function TimePicker({
         <NumberInput
           value={parts.hours}
           onChange={(hours) => commit({ ...parts, hours })}
+          onEmpty={() => commit({ ...parts, hours: null })}
           min={minHour}
           max={maxHour}
           label={hourLabel}
@@ -207,6 +237,7 @@ export function TimePicker({
         <NumberInput
           value={parts.minutes}
           onChange={(minutes) => commit({ ...parts, minutes })}
+          onEmpty={() => commit({ ...parts, minutes: null })}
           min={0}
           max={59}
           step={minuteStep}
@@ -225,6 +256,17 @@ export function TimePicker({
           }
           label={periodLabel}
         />
+      )}
+      {clearable && (
+        <button
+          type="button"
+          className="btn-ghost btn-sm"
+          data-time-clear=""
+          onClick={() => commit(EMPTY_PARTS)}
+          disabled={parts.hours === null && parts.minutes === null}
+        >
+          {clearLabel}
+        </button>
       )}
     </div>
   );

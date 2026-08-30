@@ -139,3 +139,109 @@ describe('initTimePicker -- format 24h (pas de segment AM/PM)', () => {
     expect(btnDec.disabled).toBe(true);
   });
 });
+
+// --- Etat vide (#860) --------------------------------------------------------
+//
+// `getPartValue` retournait 0 pour un champ vide et `sync()` ecrivait donc
+// toujours « 00:00 » : l'heure devenait obligatoire des la premiere saisie,
+// alors qu'une Session porte une heure NULLABLE en base. Le consommateur
+// devait encadrer le composant d'une logique maison -- ce que la convention
+// « l'app qui consomme le DS consomme TOUT » lui interdit.
+describe('initTimePicker -- heure facultative (#860)', () => {
+  function htmlEmpty(withClear) {
+    return `
+      <div class="time-input-wrap" data-time data-format="24" data-target="#time-out-empty">
+        ${numberPart('hh', '', 0, 23, 1)}
+        <span class="time-sep">:</span>
+        ${numberPart('mm', '', 0, 59, 5)}
+        ${withClear ? '<button type="button" class="btn-ghost btn-sm" data-time-clear>Effacer</button>' : ''}
+      </div>
+      <input id="time-out-empty" type="text" readonly>
+    `;
+  }
+
+  function setup(withClear) {
+    const dom = loadComponentsWindow(htmlEmpty(withClear));
+    const { window } = dom;
+    const events = [];
+    window.document.addEventListener('time:change', (e) => events.push(e.detail));
+    window.__initTimePicker();
+    const wrap = window.document.querySelector('.time-input-wrap');
+    return {
+      window,
+      wrap,
+      events,
+      out: window.document.getElementById('time-out-empty'),
+      hh: window.document.querySelector('[data-time-part="hh"] input'),
+      mm: window.document.querySelector('[data-time-part="mm"] input'),
+      clear: window.document.querySelector('[data-time-clear]'),
+    };
+  }
+
+  it('deux champs vides ne produisent AUCUNE heure (et non « 00:00 »)', () => {
+    const { out } = setup(false);
+    expect(out.value).toBe('');
+  });
+
+  it('emet hours/minutes a null, distinguable de minuit', () => {
+    const { events } = setup(false);
+    const last = events[events.length - 1];
+    expect(last.hours).toBeNull();
+    expect(last.minutes).toBeNull();
+    expect(last.empty).toBe(true);
+  });
+
+  it('une heure INCOMPLETE est une heure absente (pas de 0 invente)', () => {
+    const { window, hh, out, events } = setup(false);
+    hh.value = '8';
+    hh.dispatchEvent(new window.Event('change', { bubbles: true }));
+    expect(out.value).toBe('');
+    expect(events[events.length - 1].empty).toBe(true);
+  });
+
+  it('les deux champs remplis reforment une heure normale', () => {
+    const { window, hh, mm, out } = setup(false);
+    hh.value = '8';
+    hh.dispatchEvent(new window.Event('change', { bubbles: true }));
+    mm.value = '30';
+    mm.dispatchEvent(new window.Event('change', { bubbles: true }));
+    expect(out.value).toBe('08:30');
+  });
+
+  it('effacer un champ apres saisie REDONNE l etat vide (le defaut corrige)', () => {
+    const { window, hh, mm, out } = setup(false);
+    hh.value = '8';
+    hh.dispatchEvent(new window.Event('change', { bubbles: true }));
+    mm.value = '30';
+    mm.dispatchEvent(new window.Event('change', { bubbles: true }));
+    expect(out.value).toBe('08:30');
+    mm.value = '';
+    mm.dispatchEvent(new window.Event('change', { bubbles: true }));
+    expect(out.value).toBe('');
+  });
+
+  it('le bouton Effacer vide les deux champs d un coup et rend le focus aux heures', () => {
+    const { window, hh, mm, clear, out } = setup(true);
+    hh.value = '8';
+    hh.dispatchEvent(new window.Event('change', { bubbles: true }));
+    mm.value = '30';
+    mm.dispatchEvent(new window.Event('change', { bubbles: true }));
+    fireClick(window, clear);
+    expect(hh.value).toBe('');
+    expect(mm.value).toBe('');
+    expect(out.value).toBe('');
+    expect(window.document.activeElement).toBe(hh);
+  });
+
+  it("le bouton Effacer est desactive quand il n'y a rien a effacer", () => {
+    const { clear } = setup(true);
+    expect(clear.disabled).toBe(true);
+  });
+
+  it('les fleches +/- amorcent la saisie depuis un champ vide (min)', () => {
+    const { window, hh, wrap } = setup(false);
+    const inc = wrap.querySelector('[data-time-part="hh"] .number-inc');
+    fireClick(window, inc);
+    expect(hh.value).toBe('0');
+  });
+});

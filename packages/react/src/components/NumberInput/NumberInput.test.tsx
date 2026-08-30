@@ -252,3 +252,58 @@ describe("NumberInput — variantes compact / disabled", () => {
     );
   });
 });
+
+// --- Valeur vide (#860) -----------------------------------------------------
+//
+// `value: number` forçait une valeur : un champ vidé retombait sur 0 via
+// `parseFloat('') || 0`, donc « non renseigné » était inatteignable. C'est ce
+// qui rendait une heure facultative obligatoire dès la première saisie.
+describe("NumberInput — valeur vide (#860)", () => {
+  const field = () =>
+    document.querySelector(".number-input-field") as HTMLInputElement;
+  const buttons = () => document.querySelectorAll(".number-input-btn");
+
+  it("value={null} rend un champ VIDE (et non 0)", () => {
+    render(<NumberInput value={null} onChange={() => {}} min={0} max={23} />);
+    expect(field().value).toBe("");
+  });
+
+  it("effacer le champ appelle onEmpty, jamais onChange(0)", () => {
+    const onChange = vi.fn();
+    const onEmpty = vi.fn();
+    render(
+      <NumberInput value={9} onChange={onChange} onEmpty={onEmpty} min={0} max={23} />,
+    );
+    fireEvent.change(field(), { target: { value: "" } });
+    expect(onEmpty).toHaveBeenCalledTimes(1);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("SANS onEmpty, effacer garde le comportement d'avant (aucune régression)", () => {
+    const onChange = vi.fn();
+    render(<NumberInput value={9} onChange={onChange} min={0} max={23} />);
+    fireEvent.change(field(), { target: { value: "" } });
+    expect(onChange).toHaveBeenCalledWith(0);
+  });
+
+  it("les deux boutons restent actifs sur un champ vide, et amorcent à min", () => {
+    const onChange = vi.fn();
+    render(<NumberInput value={null} onChange={onChange} min={3} max={23} />);
+    const [dec, inc] = Array.from(buttons()) as HTMLButtonElement[];
+    // Un champ vide n'est ni au plancher ni au plafond.
+    expect(dec.disabled).toBe(false);
+    expect(inc.disabled).toBe(false);
+    fireEvent.click(inc);
+    expect(onChange).toHaveBeenCalledWith(3);
+    fireEvent.click(dec);
+    expect(onChange).toHaveBeenLastCalledWith(3);
+  });
+
+  it("sans borne min, les flèches amorcent à 0 (et non à -Infinity)", () => {
+    const onChange = vi.fn();
+    render(<NumberInput value={null} onChange={onChange} />);
+    const [, inc] = Array.from(buttons()) as HTMLButtonElement[];
+    fireEvent.click(inc);
+    expect(onChange).toHaveBeenCalledWith(0);
+  });
+});
