@@ -6433,24 +6433,45 @@ function initTimePicker() {
     var targetSel = wrap.dataset.target;
     var target = targetSel ? document.querySelector(targetSel) : null;
     var period = 'AM';
+    // Effacement explicite (#860) — cable seulement si la page fournit le
+    // bouton : aucun consumer existant ne voit son markup changer.
+    var clearBtn = wrap.querySelector('[data-time-clear]');
 
+    // ETAT VIDE (#860) — un champ laisse vide vaut « non renseigne », pas 0.
+    // Une heure facultative (`time` nullable en base) doit pouvoir etre saisie
+    // PUIS effacee ; sans ca elle devient de fait obligatoire des la premiere
+    // saisie. `null` remonte tel quel dans `time:change`, ce qui le rend
+    // distinguable de minuit (`{hours: 0, minutes: 0}`).
     function getPartValue(part) {
       var partWrap = wrap.querySelector('[data-time-part="'+part+'"]');
-      if (!partWrap) return 0;
+      if (!partWrap) return null;
       var inp = partWrap.querySelector('input[type="number"]');
-      return inp ? (parseInt(inp.value, 10) || 0) : 0;
+      if (!inp || inp.value === '') return null;
+      var n = parseInt(inp.value, 10);
+      return isNaN(n) ? null : n;
     }
 
     function sync() {
-      var hh = String(getPartValue('hh')).padStart(2,'0');
-      var mm = String(getPartValue('mm')).padStart(2,'0');
+      var h = getPartValue('hh');
+      var m = getPartValue('mm');
+      // Une heure INCOMPLETE est une heure absente : « 08:__ » ne forme aucune
+      // valeur. On ne complete pas le champ manquant par 0 — ce serait inventer
+      // une donnee que l'utilisateur n'a pas saisie.
+      var empty = h === null || m === null;
       if (target) {
-        target.value = fmt === '12' ? hh+':'+mm+' '+period : hh+':'+mm;
+        if (empty) target.value = '';
+        else {
+          var hh = String(h).padStart(2,'0');
+          var mm = String(m).padStart(2,'0');
+          target.value = fmt === '12' ? hh+':'+mm+' '+period : hh+':'+mm;
+        }
       }
+      if (clearBtn) clearBtn.disabled = empty;
       wrap.dispatchEvent(new CustomEvent('time:change', { bubbles:true, detail:{
-        hours: getPartValue('hh'),
-        minutes: getPartValue('mm'),
-        period: fmt === '12' ? period : null
+        hours: h,
+        minutes: m,
+        period: fmt === '12' && !empty ? period : null,
+        empty: empty
       }}));
     }
 
@@ -6472,31 +6493,43 @@ function initTimePicker() {
         return Math.min(max, Math.max(min, val));
       }
 
+      // `null` = champ vide (#860). Les fleches +/- restent actives sur un champ
+      // vide : elles amorcent la saisie a `min`, plutot que d'obliger a taper.
       function setValue(val) {
-        inp.value = clamp(val);
-        if (btnDec) btnDec.disabled = inp.value <= min;
-        if (btnInc) btnInc.disabled = inp.value >= max;
+        inp.value = val === null ? '' : clamp(val);
+        var cur = inp.value === '' ? null : parseInt(inp.value, 10);
+        if (btnDec) btnDec.disabled = cur !== null && cur <= min;
+        if (btnInc) btnInc.disabled = cur !== null && cur >= max;
         sync();
       }
 
+      function current() {
+        return inp.value === '' ? null : (parseInt(inp.value, 10) || 0);
+      }
+
       if (btnDec) btnDec.addEventListener('click', function() {
-        setValue(parseInt(inp.value, 10) - step);
+        var c = current();
+        setValue(c === null ? min : c - step);
       });
       if (btnInc) btnInc.addEventListener('click', function() {
-        setValue(parseInt(inp.value, 10) + step);
+        var c = current();
+        setValue(c === null ? min : c + step);
       });
       inp.addEventListener('change', function() {
-        setValue(parseInt(inp.value, 10) || 0);
+        // Champ vide laisse VIDE : `|| 0` ecrasait l'effacement par 0, ce qui
+        // rendait l'etat « non renseigne » inatteignable (#860).
+        setValue(inp.value.trim() === '' ? null : (parseInt(inp.value, 10) || 0));
       });
       inp.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowUp') { e.preventDefault(); setValue(parseInt(inp.value, 10) + step); }
-        if (e.key === 'ArrowDown') { e.preventDefault(); setValue(parseInt(inp.value, 10) - step); }
+        var c = current();
+        if (e.key === 'ArrowUp') { e.preventDefault(); setValue(c === null ? min : c + step); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); setValue(c === null ? min : c - step); }
       });
 
       // Init button state
-      var initVal = parseInt(inp.value, 10) || 0;
-      if (btnDec) btnDec.disabled = initVal <= min;
-      if (btnInc) btnInc.disabled = initVal >= max;
+      var initVal = current();
+      if (btnDec) btnDec.disabled = initVal !== null && initVal <= min;
+      if (btnInc) btnInc.disabled = initVal !== null && initVal >= max;
     });
 
     // Segmented AM/PM — radiogroup (DS-PRINCIPLES §3.2). Cette instance n'a pas de
@@ -6531,6 +6564,23 @@ function initTimePicker() {
         if (t) setPeriod(t, true);
       });
     });
+
+    // Effacement explicite (#860) — vide les deux champs d'un coup et rend le
+    // focus au champ des heures : l'utilisateur repart d'un etat propre, la ou
+    // vider deux champs a la main laisse un etat intermediaire incoherent.
+    if (clearBtn && !clearBtn.dataset.timeBound) {
+      clearBtn.dataset.timeBound = '1';
+      clearBtn.addEventListener('click', function() {
+        wrap.querySelectorAll('[data-time-part] input[type="number"]').forEach(function(i) {
+          i.value = '';
+        });
+        wrap.querySelectorAll('[data-time-part] .number-dec, [data-time-part] .number-inc')
+          .forEach(function(b) { b.disabled = false; });
+        sync();
+        var firstInput = wrap.querySelector('[data-time-part="hh"] input[type="number"]');
+        if (firstInput) firstInput.focus();
+      });
+    }
 
     // Sync initiale
     sync();
