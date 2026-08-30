@@ -23,6 +23,7 @@ export type IconName =
   | "chevron-right"
   | "chevron-down"
   | "check"
+  | "plus"
   | "upload"
   | "file"
   | "folder"
@@ -43,6 +44,12 @@ const ICON_CHILDREN: Record<IconName, ReactElement> = {
   "chevron-right": <path d="m9 18 6-6-6-6" />,
   "chevron-down": <path d="m6 9 6 6 6-6" />,
   check: <path d="M20 6 9 17l-5-5" />,
+  plus: (
+    <>
+      <path d="M5 12h14" />
+      <path d="M12 5v14" />
+    </>
+  ),
   upload: (
     <>
       <path d="M12 3v12" />

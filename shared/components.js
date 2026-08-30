@@ -378,14 +378,49 @@ function initComponents() {
             closeAllDropdownMenus();
             if (!isOpen) { openFloatingPanel(trigger, menu); menu.classList.add('open'); trigger.classList.add('open'); const s = menu.querySelector('.dropdown-search input'); if (s) s.focus(); }
         });
+        // Entree de creation « + Ajouter "..." » (#855, motif combobox creatif) :
+        // c'est une ACTION, pas une option du referentiel. Elle n'entre donc ni
+        // dans le filtre par texte (son libelle contient la requete, il matcherait
+        // toujours), ni dans la selection (elle ne prend jamais .selected et
+        // n'ecrit pas dans .dropdown-value). Elle emet `dropdown:create` avec la
+        // requete ; c'est au consumer d'ajouter l'option et de la selectionner.
+        const createOpt = menu.querySelector('.dropdown-option.dropdown-create');
         menu.querySelectorAll('.dropdown-option').forEach(opt => {
             opt.addEventListener('click', () => {
+                if (opt === createOpt) {
+                    const si0 = menu.querySelector('.dropdown-search input');
+                    dd.dispatchEvent(new CustomEvent('dropdown:create', {
+                        detail: { query: si0 ? si0.value.trim() : '' },
+                        bubbles: true
+                    }));
+                    menu.classList.remove('open'); trigger.classList.remove('open'); restoreFloatingPanel(menu);
+                    return;
+                }
                 if (dd.dataset.multi === 'true') { opt.classList.toggle('selected'); }
                 else { menu.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('selected')); opt.classList.add('selected'); const v = trigger.querySelector('.dropdown-value'); if (v) v.textContent = opt.textContent.trim(); menu.classList.remove('open'); trigger.classList.remove('open'); restoreFloatingPanel(menu); }
             });
         });
         const si = menu.querySelector('.dropdown-search input');
-        if (si) si.addEventListener('input', () => { const q = si.value.toLowerCase(); menu.querySelectorAll('.dropdown-option').forEach(o => { o.style.display = o.textContent.toLowerCase().includes(q) ? '' : 'none'; }); });
+        if (si) si.addEventListener('input', () => {
+            const q = si.value.toLowerCase();
+            let visibleCount = 0;
+            menu.querySelectorAll('.dropdown-option').forEach(o => {
+                if (o === createOpt) return;
+                const match = o.textContent.toLowerCase().includes(q);
+                o.style.display = match ? '' : 'none';
+                if (match) visibleCount++;
+            });
+            if (createOpt) {
+                // Visible seulement quand la recherche ne donne rien ET qu'il y a
+                // quelque chose a creer. `textContent` (jamais innerHTML) : la
+                // requete est une donnee utilisateur (DS-PRINCIPLES §11).
+                const query = si.value.trim();
+                const show = query.length > 0 && visibleCount === 0;
+                createOpt.style.display = show ? '' : 'none';
+                const slot = createOpt.querySelector('.dropdown-create-query');
+                if (slot) slot.textContent = query;
+            }
+        });
     });
 
     // Chips

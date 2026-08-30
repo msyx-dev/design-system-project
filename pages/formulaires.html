@@ -497,6 +497,22 @@
     </div>
     <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
         <div class="demo-box">
+            <span class="demo-label">Création à la volée — motif combobox créatif (#855)</span>
+            <p class="typo-small" style="margin-bottom:0.75rem;">Ouvrir, puis chercher un acteur qui n'existe pas (« Alexandre » par exemple). Quand le filtre ne retourne rien, une entrée <code class="code-inline">.dropdown-option.dropdown-create</code> propose de créer la valeur saisie. C'est une <strong>action</strong>, pas une option du référentiel : elle échappe au filtre, ne prend jamais <code class="code-inline">.selected</code>, n'écrit pas dans <code class="code-inline">.dropdown-value</code>, et émet <code class="code-inline">dropdown:create</code> avec la requête — au consumer d'ajouter l'option puis de la sélectionner.</p>
+            <div class="dropdown" id="dropdown-create-demo">
+                <div class="dropdown-trigger"><span class="dropdown-value">Choisir un acteur...</span><span class="arrow">&#9662;</span></div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-search"><input type="text" placeholder="Filtrer..."></div>
+                    <div class="dropdown-option"><span class="check"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Camille Berger</div>
+                    <div class="dropdown-option"><span class="check"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Dominique Lefevre</div>
+                    <div class="dropdown-option"><span class="check"><svg class="icon"><use href="/shared/icons/sprite.svg#i-check"/></svg></span> Sacha Morvan</div>
+                    <div class="dropdown-option dropdown-create" style="display:none;"><span class="check"><svg class="icon"><use href="/shared/icons/sprite.svg#i-plus"/></svg></span> Ajouter &laquo;&nbsp;<span class="dropdown-create-query"></span>&nbsp;&raquo;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-1" style="margin-top:1.5rem;">
+        <div class="demo-box">
             <span class="demo-label">Multi-select avec tags</span>
             <div class="dropdown" data-multi="true">
                 <div class="dropdown-trigger"><span class="dropdown-value">Ajouter des technologies...</span><span class="arrow">&#9662;</span></div>

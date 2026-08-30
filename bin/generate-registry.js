@@ -755,6 +755,7 @@ const REACT_CSS_UNDETECTABLE = new Set([
   '.risk-dot-hidden',      // data.css compound .risk-dot.risk-dot-hidden
   '.risk-dot-visible',     // data.css compound .risk-dot.risk-dot-visible
   '.selected',       // forms.css:53 .dropdown-option.selected (compound, non capturé)
+  '.dropdown-create', // forms.css — compound .dropdown-option.dropdown-create (x3 règles : accent, séparateur haut, .check visible). Vérifiée par grep : la classe EST stylée, seulement invisible du scanner (2e token d'un sélecteur composé sans séparateur), comme .selected juste au-dessus. #855
   '.dropdown-value', // formulaires.html / components.js — span JS-hook sans règle CSS dédiée (hérite .dropdown-trigger)
   '.split-pane--dragging', // splitter.css — AUCUNE règle CSS aujourd'hui (bug DS suivi séparément, #763). Émise quand même côté React pour la parité vanilla ; #763 la rendra visible des deux côtés simultanément.
   '.cal-prev', // templates.css:84 — hook JS query-selector du vanilla (initCalendar), AUCUNE règle .cal-prev dédiée : le style vient de .cal-nav button (descendant, sans classe). Émise côté React pour parité markup (#760).

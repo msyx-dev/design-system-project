@@ -4,6 +4,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.50 — 2026-08-29 — `<Dropdown>` : création à la volée + recherche contrôlable (#855)
+
+> Le CSS et la démo vanilla correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.129.0.
+
+### Added
+- **`onCreateOption` — motif combobox créatif** : quand la recherche ne retourne aucune option et que la requête n'est pas vide, une entrée `.dropdown-option.dropdown-create` est rendue. **Elle est insérée dans la liste NAVIGABLE** (`renderedOptions`) plutôt que rendue à part — elle hérite ainsi de toute la navigation clavier existante (flèches bouclantes, `Home`/`End`, `Enter`/`Espace`, focus depuis la recherche) sans qu'une seule de ces logiques soit dupliquée. `createOptionLabel` remplace le libellé par défaut.
+  - **Ferme le menu dans les DEUX modes**, y compris `multi` où une sélection ordinaire le laisse ouvert : sinon le parent ajoute l'option, elle matche alors la requête, et le focus se retrouve sur un nœud démonté. Elle ne prend jamais `.selected` et n'écrit pas dans `.dropdown-value`.
+  - Valeur sentinelle interne `__msyx-dropdown-create__` — aucune collision possible avec une vraie option : l'entrée n'existe QUE lorsque la liste filtrée est vide, donc aucune autre option n'est montée à cet instant.
+- **`searchQuery`/`onSearchChange` — recherche contrôlable par le parent**, même convention que `value`/`onChange`. Débloque la divulgation progressive (favoris et récents tant que le champ est vide, référentiel complet dès la première frappe), impossible tant que la requête restait un état interne non exposé. À la fermeture, le composant **notifie** `onSearchChange("")` sans écrire lui-même en mode contrôlé.
+- Icône `plus` ajoutée à `IconName` (`src/icons/Icon.tsx`) — copie fidèle du `<symbol id="i-plus">` de `shared/icons/sprite.svg`.
+- **`getOptionText()` est inchangé** (contrainte explicite de l'issue) : l'entrée de création ne passe pas par le filtre — elle n'existe que lorsque celui-ci ne retourne rien — donc le contrat « libellé `ReactNode` complexe ⇒ option toujours incluse » reste intact.
+- **Rétrocompatibilité totale** : sans les nouvelles props, le comportement est strictement inchangé — un test dédié vérifie qu'une recherche sans résultat ne rend toujours **rien de plus**. 14 tests ajoutés (36 au total sur le composant). **Preuve par mutation** : `showCreateOption` forcé à `false` → 6 tests rouges, 30 verts → restauration.
+
 ## v3.0.0-alpha.49 — 2026-08-29 — `<Rail>` composable : sections, titre de groupe, panneau mobile (#906)
 
 > Constaté en spécifiant la colonne de navigation de KeepThread (`msyx-dev/keepthread#93`) : `<Rail>` n'acceptait ni `children`, ni `style`, ni rest-props (destructuration exhaustive), et sa géométrie fixe passait sous `.site-header`. CSS correspondant (`.rail-section-title`, tokens `--rail-w`/`--rail-w-collapsed`, mobile) livré dans la même PR, cf. `../../RELEASES.md` v2.128.0.

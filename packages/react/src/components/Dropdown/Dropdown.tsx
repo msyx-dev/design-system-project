@@ -38,6 +38,29 @@ interface DropdownCommonProps {
   className?: string;
   /** Désactive le trigger — le menu ne peut pas s'ouvrir. */
   disabled?: boolean;
+  /**
+   * Motif combobox créatif (#855) : appelé avec la requête courante quand
+   * l'utilisateur choisit l'entrée « + Ajouter "…" », rendue **uniquement**
+   * quand `searchable` est actif, que la requête n'est pas vide et que le
+   * filtre ne retourne AUCUNE option. Absent → aucune entrée de création,
+   * comportement strictement inchangé.
+   */
+  onCreateOption?: (query: string) => void;
+  /**
+   * Libellé de l'entrée de création. Défaut : `Ajouter « <query> »`, la requête
+   * étant rendue dans un `.dropdown-create-query`. Ignoré sans `onCreateOption`.
+   */
+  createOptionLabel?: (query: string) => ReactNode;
+  /**
+   * Recherche **contrôlée** (#855) — même convention que `value`/`onChange` :
+   * fournir `searchQuery` bascule le champ en contrôlé, le parent devient
+   * responsable de sa valeur. Permet de faire varier `options` selon l'état de
+   * la recherche (favoris et récents tant que le champ est vide, référentiel
+   * complet dès la première frappe). Absent → état interne, inchangé.
+   */
+  searchQuery?: string;
+  /** Notifie chaque changement de la recherche (frappe, effacement à la fermeture). */
+  onSearchChange?: (query: string) => void;
 }
 
 export interface DropdownSingleProps extends DropdownCommonProps {
@@ -55,6 +78,13 @@ export interface DropdownMultiProps extends DropdownCommonProps {
 }
 
 export type DropdownProps = DropdownSingleProps | DropdownMultiProps;
+
+/**
+ * Valeur interne de l'entrée de création (#855). Aucune collision possible avec
+ * une vraie option : l'entrée n'est rendue QUE lorsque la liste filtrée est
+ * vide, donc aucune autre option n'est montée à ce moment-là.
+ */
+const CREATE_OPTION_VALUE = "__msyx-dropdown-create__";
 
 /**
  * Extrait un texte filtrable d'un `label` — `null` si le label n'est pas une
@@ -133,16 +163,58 @@ function getOptionText(label: ReactNode): string | null {
  * `triggerRef.getBoundingClientRect()`. Aucune ré-écoute scroll/resize :
  * comportement identique au DS vanilla (position figée à l'ouverture).
  *
+ * **Motif combobox créatif (#855)** — `onCreateOption` : quand la recherche ne
+ * retourne AUCUNE option et que la requête n'est pas vide, une entrée
+ * `.dropdown-option.dropdown-create` « + Ajouter « … » » est rendue. Elle est
+ * insérée dans la liste **navigable** plutôt que rendue à part : elle hérite
+ * ainsi de toute la navigation clavier existante (flèches bouclantes,
+ * `Home`/`End`, `Enter`/`Espace`, focus depuis la recherche) sans dupliquer
+ * la moindre logique. C'est une ACTION, pas un choix dans le référentiel :
+ * elle ne prend jamais `.selected`, n'écrit pas dans `.dropdown-value`, et
+ * ferme le menu dans les deux modes — y compris `multi`, où une sélection
+ * ordinaire le laisse ouvert (sinon le parent ajoute l'option, elle matche la
+ * requête, et le focus se retrouve sur un nœud démonté).
+ *
+ * **Recherche contrôlable (#855)** — `searchQuery`/`onSearchChange`, même
+ * convention que `value`/`onChange` : fournir `searchQuery` bascule le champ en
+ * contrôlé. Permet la divulgation progressive (favoris et récents tant que le
+ * champ est vide, référentiel complet dès la première frappe) — impossible tant
+ * que la requête restait un état interne. À la fermeture, le composant
+ * **notifie** `onSearchChange("")` sans écrire lui-même en mode contrôlé.
+ *
+ * `getOptionText()` est inchangé — l'entrée de création ne passe pas par le
+ * filtre (elle n'existe que lorsque celui-ci ne retourne rien), donc le contrat
+ * « libellé `ReactNode` complexe ⇒ option toujours incluse » reste intact.
+ *
  * SSR-safe : aucun accès à `document`/`window` au niveau module ; tout est
  * dans `useEffect`/handlers (post-hydratation).
  */
 export function Dropdown(props: DropdownProps) {
-  const { options, placeholder, searchable, label, className, disabled } =
-    props;
+  const {
+    options,
+    placeholder,
+    searchable,
+    label,
+    className,
+    disabled,
+    onCreateOption,
+    createOptionLabel,
+    searchQuery: controlledSearchQuery,
+    onSearchChange,
+  } = props;
   const multi = props.multi === true;
 
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [internalSearchQuery, setInternalSearchQuery] = useState("");
+  // Bascule contrôlé / non contrôlé — même convention que `value`/`onChange`.
+  const searchControlled = controlledSearchQuery !== undefined;
+  const searchQuery = searchControlled
+    ? controlledSearchQuery
+    : internalSearchQuery;
+  const setSearchQuery = (query: string) => {
+    if (!searchControlled) setInternalSearchQuery(query);
+    onSearchChange?.(query);
+  };
   const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -169,7 +241,22 @@ export function Dropdown(props: DropdownProps) {
     });
   }, [options, searchable, searchQuery]);
 
-  const enabledFilteredOptions = filteredOptions.filter(
+  // Entrée de création (#855) — insérée dans la liste NAVIGABLE plutôt que
+  // rendue à part : elle hérite ainsi de toute la navigation clavier existante
+  // (flèches bouclantes, Home/End, Enter/Espace, focus depuis la recherche)
+  // sans qu'aucune de ces logiques ne soit dupliquée.
+  const createQuery = searchQuery.trim();
+  const showCreateOption =
+    Boolean(onCreateOption) &&
+    Boolean(searchable) &&
+    createQuery.length > 0 &&
+    filteredOptions.length === 0;
+
+  const renderedOptions: DropdownOption[] = showCreateOption
+    ? [{ value: CREATE_OPTION_VALUE, label: createQuery }]
+    : filteredOptions;
+
+  const enabledFilteredOptions = renderedOptions.filter(
     (option) => !option.disabled,
   );
 
@@ -194,9 +281,12 @@ export function Dropdown(props: DropdownProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Réinitialise la recherche à la fermeture.
+  // Réinitialise la recherche à la fermeture. En mode contrôlé, le composant
+  // NOTIFIE `onSearchChange("")` sans écrire lui-même : c'est le parent qui
+  // décide, exactement comme pour `value`/`onChange`.
   useEffect(() => {
     if (!open) setSearchQuery("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Position du menu porté (#856) — calculée à l'ouverture depuis le
@@ -252,6 +342,17 @@ export function Dropdown(props: DropdownProps) {
 
   const handleSelect = (option: DropdownOption) => {
     if (option.disabled) return;
+
+    // La création est une ACTION, pas un choix dans le référentiel : elle ferme
+    // le menu dans les DEUX modes, y compris multi (où une sélection ordinaire
+    // le laisse ouvert). Garder le menu ouvert ferait disparaître l'entrée sous
+    // le focus — le parent ajoute l'option, elle matche alors la requête, et le
+    // focus se retrouverait sur un nœud démonté.
+    if (option.value === CREATE_OPTION_VALUE) {
+      onCreateOption?.(createQuery);
+      closeMenu(true);
+      return;
+    }
 
     if (multi) {
       const current = (props as DropdownMultiProps).value;
@@ -391,8 +492,10 @@ export function Dropdown(props: DropdownProps) {
                 />
               </div>
             )}
-            {filteredOptions.map((option) => {
-              const selected = selectedValues.includes(option.value);
+            {renderedOptions.map((option) => {
+              const isCreate = option.value === CREATE_OPTION_VALUE;
+              const selected =
+                !isCreate && selectedValues.includes(option.value);
               return (
                 <div
                   key={option.value}
@@ -403,7 +506,11 @@ export function Dropdown(props: DropdownProps) {
                       optionRefs.current.delete(option.value);
                     }
                   }}
-                  className={["dropdown-option", selected ? "selected" : null]
+                  className={[
+                    "dropdown-option",
+                    isCreate ? "dropdown-create" : null,
+                    selected ? "selected" : null,
+                  ]
                     .filter(Boolean)
                     .join(" ")}
                   role="option"
@@ -418,9 +525,19 @@ export function Dropdown(props: DropdownProps) {
                   onKeyDown={(event) => handleOptionKeyDown(event, option)}
                 >
                   <span className="check">
-                    <Icon name="check" aria-hidden="true" />
+                    <Icon name={isCreate ? "plus" : "check"} aria-hidden="true" />
                   </span>
-                  {option.label}
+                  {isCreate
+                    ? (createOptionLabel?.(createQuery) ?? (
+                        <>
+                          Ajouter&nbsp;«&nbsp;
+                          <span className="dropdown-create-query">
+                            {createQuery}
+                          </span>
+                          &nbsp;»
+                        </>
+                      ))
+                    : option.label}
                 </div>
               );
             })}
