@@ -31,6 +31,34 @@
  */
 import { test, expect } from "@playwright/test";
 
+
+/**
+ * Attend que le panneau flottant ait FINI de s'ouvrir avant tout hit-test
+ * manuel (#863). `Locator.click()` fait ce contrôle lui-même (actionability),
+ * mais `evaluate()` non : sous charge, `document.elementFromPoint` tombait
+ * pendant la transition d'ouverture et résolvait sur l'élément du dessous —
+ * un échec qui ne se reproduit jamais en local, et qui a fait passer un
+ * runner chargé pour une régression de clipping. On attend donc la fin des
+ * animations du sous-arbre, puis deux mesures identiques du rectangle : à ce
+ * moment-là, un hit-test qui échoue accuse bien le clipping, pas le timing.
+ */
+async function waitUntilSettled(locator: import("@playwright/test").Locator) {
+  await expect(locator).toBeVisible();
+  await locator.evaluate(async (el) => {
+    await Promise.all(
+      el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})),
+    );
+  });
+  await expect
+    .poll(async () => {
+      const first = await locator.boundingBox();
+      await new Promise((r) => setTimeout(r, 60));
+      const second = await locator.boundingBox();
+      return JSON.stringify(first) === JSON.stringify(second);
+    })
+    .toBe(true);
+}
+
 test.describe("Panneau flottant dans .card — non-régression #856", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/visual-tests/fixtures/card-floating-panel-clip-856.html");
@@ -44,6 +72,7 @@ test.describe("Panneau flottant dans .card — non-régression #856", () => {
 
     const target = page.locator("#dd-target");
     await expect(target).toHaveText("Astro");
+    await waitUntilSettled(target);
 
     // Confirmation par hit-test explicite (même méthode que le diagnostic
     // KeepThread) : le point cible doit résoudre sur l'option elle-même (ou
@@ -72,6 +101,7 @@ test.describe("Panneau flottant dans .card — non-régression #856", () => {
 
     const rename = page.locator("#am-rename");
     await expect(rename).toHaveText("Renommer");
+    await waitUntilSettled(rename);
 
     const hit = await rename.evaluate((el) => {
       const r = el.getBoundingClientRect();

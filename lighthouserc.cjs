@@ -47,7 +47,15 @@ module.exports = {
       },
     },
     upload: {
-      target: 'temporary-public-storage',
+      // `filesystem` et non `temporary-public-storage` (#863) : les 8 rapports
+      // etaient televerses un par un vers un stockage public externe, alors que
+      // l'etape suivante du workflow archive DEJA `.lighthouseci/` en artefact
+      // GitHub (retention 30 jours). C'etait donc un aller-retour reseau
+      // redondant, et une source de variance de duree qui ne depend ni du code
+      // ni de la machine — exactement le genre d'alea qui faisait sauter le
+      // plafond du job.
+      target: 'filesystem',
+      outputDir: '.lighthouseci',
     },
   },
 };
