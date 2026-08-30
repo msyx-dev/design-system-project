@@ -4,6 +4,24 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.53 — 2026-08-30 — `<CommandPalette>` : mode contrôlé pour une recherche serveur (#911)
+
+> PR 100 % `packages/react/**` — **aucun bump DS racine** : ni CSS, ni markup, ni classe nouvelle. Le composant émet exactement le même DOM.
+
+### Added
+- **Ouverture contrôlée — `open` / `onOpenChange`.** Fournir `open` fait du parent la source de vérité ; le composant se contente de notifier l'intention (`Ctrl+K`, `Échap`, clic sur le fond, sélection d'un résultat). C'est ce qui permet de **s'interposer** avant l'ouverture — avertir d'une saisie en cours, par exemple. Un no-op ne notifie pas : `Échap` sur une palette déjà fermée reste silencieux, exactement comme avant (React bailait sur `setOpen(false)`).
+- **Recherche contrôlée — `searchQuery` / `onSearchChange`**, convention identique à `<Dropdown>` (#855). Le parent voit la frappe et déclenche sa requête. La réinitialisation à l'ouverture **notifie** `onSearchChange("")` sans écrire.
+- **`shouldFilter` (défaut `true`).** À `false`, `items` est affiché **tel quel** : ni filtre par sous-chaîne, ni tri A-Z sur requête vide. Les deux sont court-circuités ensemble — une liste renvoyée par un serveur arrive triée par pertinence, et la retrier alphabétiquement détruirait cette information.
+- **`enableShortcut` (défaut `true`).** À `false`, l'écouteur `Ctrl/Cmd+K` n'est plus posé du tout. `Échap` continue de fermer : c'est une sortie d'urgence, pas un raccourci d'ouverture.
+- **`renderItem(item, { active, index })`** — rend le **contenu** d'un résultat (extrait surligné, date, contexte). Le `.cmd-item` porteur reste fourni par le composant : classes DS, `role="option"`, `aria-selected`, id cible d'`aria-activedescendant`, gestion du clic. Déléguer l'enveloppe au consommateur reviendrait à lui déléguer le contrat d'accessibilité.
+
+### Changed
+- L'écouteur `document` reste **unique** et posé une seule fois, comme avant : les props courantes sont lues via une ref plutôt qu'en re-posant l'écouteur à chaque rendu du parent. Le retrait au démontage (test dédié « un 2e Ctrl+K après unmount ne rouvre rien ») est inchangé.
+
+**Aucune rupture.** Sans aucune des nouvelles props, le comportement est strictement celui d'alpha.52 : état interne, filtre + tri A-Z, `Ctrl/Cmd+K` posé, `onOpenChange` purement observationnel (notification au montage comprise). Chaque bascule est indépendante — on peut contrôler la recherche sans contrôler l'ouverture. 13 tests ajoutés (29 au total sur ce composant), `npx tsc --noEmit` vert.
+
+Demandé par KeepThread (`msyx-dev/keepthread#186`) : faute de ces quatre prises, le consommateur avait réécrit la palette à la main en ne reprenant que les classes CSS — identité visuelle sauve, logique dupliquée.
+
 ## v3.0.0-alpha.52 — 2026-08-30 — `<MarkdownEditor>` : nouveau composant (#854)
 
 > Le CSS, le JS vanilla et la démo correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.131.0.

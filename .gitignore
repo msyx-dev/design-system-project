@@ -4,6 +4,10 @@
 
 # Visual regression (Playwright) — ajouté v2.32.1
 node_modules/
+# Sans slash : `node_modules/` ne couvre QUE le repertoire. Un worktree qui
+# pointe vers les dependances du checkout principal cree un SYMLINK du meme
+# nom, que `git add -A` ajoutait alors au depot.
+node_modules
 visual-tests/diffs/
 test-results/
 playwright-report/

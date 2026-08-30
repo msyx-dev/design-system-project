@@ -274,3 +274,215 @@ describe("CommandPalette — reset à l'ouverture", () => {
     expect(document.querySelectorAll(".cmd-item")).toHaveLength(3);
   });
 });
+
+// --- Mode contrôlé (#911) ----------------------------------------------------
+//
+// Chaque bascule est opt-in et indépendante. Le fil rouge de ces tests : sans
+// la prop, le comportement historique est intact (couvert par les describe
+// ci-dessus) ; avec la prop, le composant NOTIFIE et n'écrit plus lui-même.
+
+const input = () => document.querySelector(".cmd-input") as HTMLInputElement;
+const itemTexts = () =>
+  Array.from(document.querySelectorAll(".cmd-item-text")).map(
+    (el) => el.textContent,
+  );
+
+describe("CommandPalette — ouverture contrôlée (#911)", () => {
+  it("open={false} : Ctrl+K notifie l'intention mais n'ouvre pas — le parent s'interpose", () => {
+    const onOpenChange = vi.fn();
+    render(
+      <CommandPalette
+        items={makeItems()}
+        open={false}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    openViaShortcut();
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+    // Le parent n'a pas appliqué : la palette reste fermée.
+    expect(document.querySelector(".cmd-overlay")?.className).not.toContain(
+      "open",
+    );
+  });
+
+  it("open={true} rend la palette ouverte sans qu'aucun raccourci ait été frappé", () => {
+    render(<CommandPalette items={makeItems()} open />);
+    expect(document.querySelector(".cmd-overlay")?.className).toContain("open");
+  });
+
+  it("Échap et clic sur le fond notifient false au lieu de fermer eux-mêmes", () => {
+    const onOpenChange = vi.fn();
+    render(
+      <CommandPalette items={makeItems()} open onOpenChange={onOpenChange} />,
+    );
+    fireEvent.keyDown(input(), { key: "Escape" });
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    expect(document.querySelector(".cmd-overlay")?.className).toContain("open");
+
+    onOpenChange.mockClear();
+    fireEvent.click(document.querySelector(".cmd-overlay") as HTMLElement);
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+  });
+
+  it("une fermeture déjà effective ne renotifie pas (Échap sur palette fermée)", () => {
+    const onOpenChange = vi.fn();
+    render(
+      <CommandPalette
+        items={makeItems()}
+        open={false}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+});
+
+describe("CommandPalette — recherche contrôlée (#911)", () => {
+  it("searchQuery pilote la valeur affichée, la frappe part en onSearchChange sans écrire", async () => {
+    const user = userEvent.setup();
+    const onSearchChange = vi.fn();
+    render(
+      <CommandPalette
+        items={makeItems()}
+        open
+        searchQuery="card"
+        onSearchChange={onSearchChange}
+      />,
+    );
+    expect(input().value).toBe("card");
+    await user.type(input(), "s");
+    expect(onSearchChange).toHaveBeenCalledWith("cards");
+    // Le parent n'a pas appliqué : la valeur reste celle de la prop.
+    expect(input().value).toBe("card");
+  });
+
+  it("la réinitialisation à l'ouverture NOTIFIE une requête vide au lieu de l'écrire", () => {
+    const onSearchChange = vi.fn();
+    const { rerender } = render(
+      <CommandPalette
+        items={makeItems()}
+        open={false}
+        searchQuery="reste"
+        onSearchChange={onSearchChange}
+      />,
+    );
+    rerender(
+      <CommandPalette
+        items={makeItems()}
+        open
+        searchQuery="reste"
+        onSearchChange={onSearchChange}
+      />,
+    );
+    expect(onSearchChange).toHaveBeenCalledWith("");
+    expect(input().value).toBe("reste");
+  });
+});
+
+describe("CommandPalette — filtrage désactivable (#911)", () => {
+  it("shouldFilter={false} affiche les items tels quels, sans filtre NI tri A-Z", () => {
+    // Ordre volontairement non alphabétique : c'est l'ordre de pertinence
+    // qu'un serveur renvoie, et qu'un tri interne détruirait.
+    const serverItems: CommandPaletteItem[] = [
+      { id: "z", label: "Zèbre", category: "Notes", onSelect: vi.fn() },
+      { id: "a", label: "Abeille", category: "Notes", onSelect: vi.fn() },
+    ];
+    render(
+      <CommandPalette
+        items={serverItems}
+        open
+        shouldFilter={false}
+        searchQuery="rien-a-voir"
+        onSearchChange={vi.fn()}
+      />,
+    );
+    // Aucun des deux libellés ne contient la requête : avec le filtre interne
+    // la liste serait vide.
+    expect(itemTexts()).toEqual(["Zèbre", "Abeille"]);
+  });
+
+  it("le filtre interne reste actif par défaut (aucune régression)", () => {
+    render(
+      <CommandPalette
+        items={makeItems()}
+        open
+        searchQuery="card"
+        onSearchChange={vi.fn()}
+      />,
+    );
+    expect(itemTexts()).toEqual(["Cards"]);
+  });
+});
+
+describe("CommandPalette — raccourci débrayable (#911)", () => {
+  it("enableShortcut={false} : Ctrl+K n'ouvre plus rien et ne notifie plus", () => {
+    const onOpenChange = vi.fn();
+    render(
+      <CommandPalette
+        items={makeItems()}
+        enableShortcut={false}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    onOpenChange.mockClear(); // l'effet de montage notifie déjà false
+    openViaShortcut();
+    expect(document.querySelector(".cmd-overlay")?.className).not.toContain(
+      "open",
+    );
+    expect(onOpenChange).not.toHaveBeenCalledWith(true);
+  });
+
+  it("Échap continue de fermer quand le raccourci est débrayé", () => {
+    const onOpenChange = vi.fn();
+    render(
+      <CommandPalette
+        items={makeItems()}
+        open
+        enableShortcut={false}
+        onOpenChange={onOpenChange}
+      />,
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+  });
+});
+
+describe("CommandPalette — renderItem (#911)", () => {
+  it("remplace le contenu du résultat sans lui retirer son enveloppe a11y", () => {
+    render(
+      <CommandPalette
+        items={makeItems()}
+        open
+        renderItem={(item, { active, index }) => (
+          <span className="kt-hit">{`${index}:${item.label}${active ? " *" : ""}`}</span>
+        )}
+      />,
+    );
+    const items = document.querySelectorAll(".cmd-item");
+    expect(items).toHaveLength(3);
+    // Contenu délégué…
+    expect(document.querySelectorAll(".cmd-item-text")).toHaveLength(0);
+    expect(items[0].querySelector(".kt-hit")?.textContent).toBe("0:Boutons *");
+    // …enveloppe conservée : classes DS, rôle, sélection ARIA, id cible de
+    // aria-activedescendant.
+    expect(items[0].getAttribute("role")).toBe("option");
+    expect(items[0].getAttribute("aria-selected")).toBe("true");
+    expect(items[0].id).toBe(input().getAttribute("aria-activedescendant"));
+  });
+
+  it("un résultat rendu sur mesure reste cliquable (onSelect appelé)", async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    const items = makeItems([{ onSelect }]);
+    render(
+      <CommandPalette
+        items={items}
+        open
+        renderItem={(item) => <span>{item.label}</span>}
+      />,
+    );
+    await user.click(document.querySelectorAll(".cmd-item")[0] as HTMLElement);
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+});

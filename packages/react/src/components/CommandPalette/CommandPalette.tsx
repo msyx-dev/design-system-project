@@ -34,8 +34,51 @@ export interface CommandPaletteProps {
   overlayLabel?: string;
   /** Placeholder du champ de recherche. @default "Rechercher une page, commande..." */
   placeholder?: string;
-  /** Appelé à chaque ouverture/fermeture (observation, pas de contrôle externe). */
+  /**
+   * Ouverture **contrôlée** (#911) — même convention que `searchQuery` :
+   * fournir `open` bascule l'état d'ouverture en contrôlé, le parent devient
+   * la source de vérité et `onOpenChange` sa seule voie de notification.
+   * Omis, le composant garde son état interne (comportement historique).
+   */
+  open?: boolean;
+  /**
+   * Appelé à chaque ouverture/fermeture. Observation en non-contrôlé ; en
+   * contrôlé (`open` fourni), c'est le canal par lequel le parent applique —
+   * ou refuse — le changement.
+   */
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Recherche **contrôlée** (#911) — même convention que `<Dropdown>` (#855) :
+   * fournir `searchQuery` bascule le champ en contrôlé. C'est ce qui permet
+   * de déclencher une requête serveur à la frappe.
+   */
+  searchQuery?: string;
+  /** Notifié à chaque frappe, et à `""` quand la palette réinitialise sa recherche. */
+  onSearchChange?: (query: string) => void;
+  /**
+   * Filtrage interne (sous-chaîne sur `label`/`category`, index A-Z quand la
+   * requête est vide). `false` affiche `items` **tel quel**, sans filtre ni
+   * tri : le cas d'une recherche déjà exécutée côté serveur, dont l'ordre de
+   * pertinence ne doit pas être réécrit. @default true
+   */
+  shouldFilter?: boolean;
+  /**
+   * Raccourci global `Ctrl/Cmd+K`. `false` ne pose plus l'écouteur — au
+   * consommateur d'ouvrir la palette (typiquement via `open`), par exemple
+   * pour s'interposer et avertir d'une saisie en cours. `Échap` reste géré.
+   * @default true
+   */
+  enableShortcut?: boolean;
+  /**
+   * Rendu du CONTENU d'un résultat (extrait surligné, date, contexte…). Le
+   * `.cmd-item` lui-même — classes DS, `role="option"`, `aria-selected`, id
+   * de `aria-activedescendant`, clic — reste fourni par le composant : le
+   * contrat d'accessibilité n'est pas délégué au consommateur.
+   */
+  renderItem?: (
+    item: CommandPaletteItem,
+    state: { active: boolean; index: number },
+  ) => ReactNode;
   /** Classes additionnelles sur `.cmd-palette`. */
   className?: string;
 }
@@ -45,11 +88,13 @@ interface Group {
   items: CommandPaletteItem[];
 }
 
-/** Filtre + trie (index A-Z par défaut) — calque `renderResults` (`shared/components.js:4196-4262`), généralisé à une source unique d'items (le vanilla fusionne 2 tableaux internes `index`/`ACTIONS`, sans équivalent générique côté React). */
+/** Filtre + trie (index A-Z par défaut) — calque `renderResults` (`shared/components.js:4196-4262`), généralisé à une source unique d'items (le vanilla fusionne 2 tableaux internes `index`/`ACTIONS`, sans équivalent générique côté React). `shouldFilter: false` (#911) court-circuite les DEUX : ni filtre, ni tri — une liste renvoyée par un serveur arrive triée par pertinence, la retrier en A-Z détruirait l'information. */
 function filterItems(
   items: CommandPaletteItem[],
   query: string,
+  shouldFilter = true,
 ): CommandPaletteItem[] {
+  if (!shouldFilter) return items;
   const q = query.trim().toLowerCase();
   if (q === "") {
     return [...items].sort((a, b) => a.label.localeCompare(b.label, "fr"));
@@ -104,12 +149,38 @@ function groupItems(items: CommandPaletteItem[]): Group[] {
  * </div>
  * ```
  *
- * **Non-contrôlé** (état d'ouverture interne, comme `<ActionMenu>`/
- * `<Lightbox>`) : `onOpenChange` observe, ne pilote pas. Le vanilla est un
+ * **Non-contrôlé PAR DÉFAUT** (état d'ouverture interne, comme `<ActionMenu>`/
+ * `<Lightbox>`) : sans les props de contrôle, `onOpenChange` observe et ne
+ * pilote pas — comportement d'origine strictement inchangé. Le vanilla est un
  * singleton injecté une fois dans `document.body` ; côté React chaque
  * instance montée porte son propre portail et son propre état — cohérent
  * avec le reste du package (aucun autre composant DS n'implémente de
  * singleton global).
+ *
+ * **Mode contrôlé, pour une palette adossée au serveur (#911)** — quatre
+ * verrous levés, chacun opt-in, aucun n'altère l'usage statique :
+ * - `searchQuery`/`onSearchChange` (convention `<Dropdown>` #855) : le parent
+ *   voit la frappe et déclenche sa requête ;
+ * - `shouldFilter={false}` : `items` est affiché **tel quel**, ni filtré ni
+ *   retrié — l'ordre de pertinence du serveur est une information, la remettre
+ *   en A-Z la détruirait ;
+ * - `open`/`onOpenChange` : le parent devient la source de vérité de
+ *   l'ouverture et peut donc **s'interposer** (avertir d'une saisie en cours,
+ *   refuser l'ouverture) ;
+ * - `enableShortcut={false}` : l'écouteur `Ctrl/Cmd+K` n'est plus posé du
+ *   tout, au consommateur de câbler son propre déclencheur. `Échap` continue
+ *   de fermer.
+ *
+ * Chaque bascule est indépendante : on peut contrôler la recherche sans
+ * contrôler l'ouverture, et réciproquement. En contrôlé, le composant
+ * **notifie sans écrire** — y compris pour la réinitialisation de la
+ * recherche à l'ouverture, qui part en `onSearchChange("")`.
+ *
+ * **`renderItem`** rend le CONTENU d'un résultat (extrait, date, contexte).
+ * Le `.cmd-item` porteur — classes DS, `role="option"`, `aria-selected`, id
+ * cible de `aria-activedescendant`, gestion du clic — reste fourni par le
+ * composant : déléguer ça au consommateur reviendrait à lui déléguer le
+ * contrat d'accessibilité, que le DS existe précisément pour tenir.
  *
  * **Raccourci global `Ctrl/Cmd+K` — posé au montage, RETIRÉ au démontage**
  * (calque `document.addEventListener('keydown', …)`, `shared/components.js:4337`) :
@@ -166,12 +237,26 @@ export function CommandPalette({
   items,
   overlayLabel = "Palette de commandes",
   placeholder = "Rechercher une page, commande...",
+  open: controlledOpen,
   onOpenChange,
+  searchQuery: controlledSearchQuery,
+  onSearchChange,
+  shouldFilter = true,
+  enableShortcut = true,
+  renderItem,
   className,
 }: CommandPaletteProps) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
+  const [internalOpen, setInternalOpen] = useState(false);
+  const [internalQuery, setInternalQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
+
+  // Bascules contrôlé / non contrôlé — même convention que `<Dropdown>` (#855) :
+  // une prop definie fait du parent la source de verite, le composant se
+  // contente de NOTIFIER. Sans elles, l'etat interne historique est conserve.
+  const openControlled = controlledOpen !== undefined;
+  const open = openControlled ? controlledOpen : internalOpen;
+  const searchControlled = controlledSearchQuery !== undefined;
+  const query = searchControlled ? controlledSearchQuery : internalQuery;
 
   const uid = useId();
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -179,27 +264,63 @@ export function CommandPalette({
   const triggerRef = useRef<HTMLElement | null>(null);
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
-  const matched = useMemo(() => filterItems(items, query), [items, query]);
+  const matched = useMemo(
+    () => filterItems(items, query, shouldFilter),
+    [items, query, shouldFilter],
+  );
   const groups = useMemo(() => groupItems(matched), [matched]);
   const flatItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
 
+  function setQuery(next: string) {
+    if (!searchControlled) setInternalQuery(next);
+    onSearchChange?.(next);
+  }
+
+  // Etat courant lisible depuis l'ecouteur `document`, pose une seule fois.
+  const openRef = useRef(open);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
+  // Demande d'ouverture/fermeture. En contrôlé, seule la notification part :
+  // le parent applique (ou refuse — c'est le point de #911, s'interposer avant
+  // l'ouverture). Un no-op (`next` deja courant) ne notifie pas, ce qui preserve
+  // la semantique historique : `setOpen(false)` sur une palette fermee ne
+  // declenchait aucun rendu, donc aucun `onOpenChange`.
+  function requestOpen(next: boolean) {
+    if (next === openRef.current) return;
+    if (next) {
+      triggerRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+    }
+    if (!openControlled) setInternalOpen(next);
+    // En non-contrôlé, la notification reste portee par l'effet ci-dessous
+    // (comportement historique, appel au montage inclus) — la dedoubler ici
+    // ferait deux appels par changement.
+    if (openControlled) onOpenChange?.(next);
+  }
+
   // Raccourci global Ctrl/Cmd+K — posé au montage, retiré au démontage.
+  // `latestRef` : l'ecouteur reste unique (comme avant #911) tout en voyant
+  // toujours les props courantes, sans se re-poser a chaque rendu du parent.
+  const latestRef = useRef({ requestOpen, enableShortcut });
+  useEffect(() => {
+    latestRef.current = { requestOpen, enableShortcut };
+  });
   useEffect(() => {
     function handleGlobalKeyDown(event: globalThis.KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      const current = latestRef.current;
+      if (
+        current.enableShortcut &&
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
         event.preventDefault();
-        setOpen((prev) => {
-          const next = !prev;
-          if (next) {
-            triggerRef.current =
-              document.activeElement instanceof HTMLElement
-                ? document.activeElement
-                : null;
-          }
-          return next;
-        });
+        current.requestOpen(!openRef.current);
       } else if (event.key === "Escape") {
-        setOpen(false);
+        current.requestOpen(false);
       }
     }
     document.addEventListener("keydown", handleGlobalKeyDown);
@@ -207,9 +328,11 @@ export function CommandPalette({
   }, []);
 
   // Réinitialise la recherche à l'ouverture — calque `input.value = '';
-  // renderResults('')`.
+  // renderResults('')`. En contrôlé, NOTIFIE `onSearchChange("")` sans ecrire :
+  // c'est le parent qui vide (ou non) sa propre requete.
   useEffect(() => {
     if (open) setQuery("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Focus le champ à l'ouverture — calque `input.focus()`.
@@ -242,20 +365,25 @@ export function CommandPalette({
     itemRefs.current.get(activeIndex)?.scrollIntoView?.({ block: "nearest" });
   }, [activeIndex]);
 
+  // Notification en NON contrôlé : portee par l'etat interne, comportement
+  // historique inchange (appel au montage compris). En contrôlé, l'effet ne
+  // verrait jamais un changement que le parent a refuse d'appliquer —
+  // `requestOpen()` notifie donc l'INTENTION, et cet effet se tait.
   useEffect(() => {
-    onOpenChange?.(open);
+    if (openControlled) return;
+    onOpenChange?.(internalOpen);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [internalOpen, openControlled]);
 
   function activate(item: CommandPaletteItem) {
-    setOpen(false);
+    requestOpen(false);
     item.onSelect();
   }
 
   function handleInputKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
     if (event.key === "Escape") {
       event.preventDefault();
-      setOpen(false);
+      requestOpen(false);
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
       setActiveIndex((prev) => Math.min(prev + 1, flatItems.length - 1));
@@ -270,7 +398,7 @@ export function CommandPalette({
   }
 
   function handleOverlayClick(event: ReactMouseEvent<HTMLDivElement>) {
-    if (event.target === overlayRef.current) setOpen(false);
+    if (event.target === overlayRef.current) requestOpen(false);
   }
 
   const listboxId = `cmd-listbox-${uid}`;
@@ -353,15 +481,21 @@ export function CommandPalette({
                       aria-selected={isActive}
                       onClick={() => activate(item)}
                     >
-                      {item.icon != null && (
-                        <span className="cmd-item-icon" aria-hidden="true">
-                          {item.icon}
-                        </span>
+                      {renderItem ? (
+                        renderItem(item, { active: isActive, index: idx })
+                      ) : (
+                        <>
+                          {item.icon != null && (
+                            <span className="cmd-item-icon" aria-hidden="true">
+                              {item.icon}
+                            </span>
+                          )}
+                          <span className="cmd-item-text">{item.label}</span>
+                          <span className="cmd-item-shortcut">
+                            {item.category ?? ""}
+                          </span>
+                        </>
                       )}
-                      <span className="cmd-item-text">{item.label}</span>
-                      <span className="cmd-item-shortcut">
-                        {item.category ?? ""}
-                      </span>
                     </div>
                   );
                 })}
