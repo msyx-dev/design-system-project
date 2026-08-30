@@ -1,7 +1,7 @@
 {
-  "version": "2.130.0",
+  "version": "2.131.0",
   "generated": {
-    "at": "2026-08-29T20:38:45.052Z",
+    "at": "2026-08-30T00:54:44.283Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1476,6 +1476,23 @@
       "react": "ported",
       "module": [
         "shared/css/components/transfer-list.css"
+      ]
+    },
+    {
+      "name": "markdown-editor",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".markdown-editor",
+        ".markdown-toolbar",
+        ".markdown-input",
+        ".markdown-preview"
+      ],
+      "jsInit": "initMarkdownEditor",
+      "example": "<div class=\"markdown-editor\">\n  <div class=\"markdown-toolbar\" role=\"toolbar\" aria-label=\"Mise en forme\">\n    <button type=\"button\" class=\"btn-icon\" data-md=\"bold\" aria-label=\"Gras (Ctrl+B)\"><strong>B</strong></button>\n    <button type=\"button\" class=\"btn-icon\" data-md=\"italic\" aria-label=\"Italique (Ctrl+I)\"><em>I</em></button>\n    <button type=\"button\" class=\"btn-icon\" data-md=\"ul\" aria-label=\"Liste à puces\">&#8226;</button>\n    <button type=\"button\" class=\"btn-icon\" data-md=\"ol\" aria-label=\"Liste numérotée\">1.</button>\n    <button type=\"button\" class=\"btn-icon\" data-md=\"link\" aria-label=\"Lien (Ctrl+K)\">&#128279;</button>\n  </div>\n  <textarea class=\"markdown-input\" aria-label=\"Contenu Markdown\"></textarea>\n  <div class=\"markdown-preview prose\" aria-live=\"polite\"></div>\n</div>",
+      "react": "ported",
+      "module": [
+        "shared/css/components/forms.css"
       ]
     },
     {
@@ -3298,6 +3315,7 @@
       "jsInit": null,
       "react": "n-a",
       "module": [
+        "shared/css/components/forms.css",
         "shared/css/components/prose.css"
       ]
     },
