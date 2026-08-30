@@ -76,6 +76,14 @@ export interface RailProps {
   collapsed?: boolean;
   /** Amorce l'état replié au montage (mode non contrôlé uniquement). @default false */
   defaultCollapsed?: boolean;
+  /**
+   * Où rendre le bouton de repli (#920) — `"header"` (défaut, rendu
+   * historique inchangé) ou `"footer"`, à la suite des entrées de pied.
+   * Le CSS ne scope pas `.rail-toggle` au header : la classe est réemployée
+   * telle quelle, aucune règle nouvelle. En `"footer"`, le pied est rendu même
+   * sans `footerItems` — sinon le bouton n'aurait pas de conteneur.
+   */
+  togglePosition?: "header" | "footer";
   /** Appelé à chaque bascule du repli (clic `.rail-toggle`) avec le prochain état. */
   onCollapsedChange?: (collapsed: boolean) => void;
   /**
@@ -247,6 +255,7 @@ function isActionable(item: RailItem): boolean {
  * `useEffect` (post-hydratation, même garantie que `<Drawer>`).
  */
 export function Rail({
+  togglePosition = "header",
   items = [],
   sections,
   footerItems,
@@ -429,6 +438,21 @@ export function Rail({
     .filter(Boolean)
     .join(" ");
 
+  // Un SEUL bouton, rendu à un endroit ou à l'autre (#920) : le dupliquer
+  // dans les deux conteneurs donnerait deux cibles clavier pour une action.
+  const toggleInFooter = togglePosition === "footer";
+  const toggleButton = (
+    <button
+      type="button"
+      className="rail-toggle"
+      aria-label={collapsed ? expandLabel : collapseLabel}
+      aria-expanded={!collapsed}
+      onClick={toggleCollapsed}
+    >
+      <Icon name="chevron-left" className="icon icon--sm" aria-hidden="true" />
+    </button>
+  );
+
   return (
     <>
       {fixed ? (
@@ -437,28 +461,17 @@ export function Rail({
       <div className={sidebarClasses} id={id}>
         <div className="rail-header">
           {brand ? <span className="rail-logo">{brand}</span> : null}
-          <button
-            type="button"
-            className="rail-toggle"
-            aria-label={collapsed ? expandLabel : collapseLabel}
-            aria-expanded={!collapsed}
-            onClick={toggleCollapsed}
-          >
-            <Icon
-              name="chevron-left"
-              className="icon icon--sm"
-              aria-hidden="true"
-            />
-          </button>
+          {toggleInFooter ? null : toggleButton}
         </div>
         <nav className="rail-nav" aria-label={ariaLabel}>
           {sections
             ? sections.map((section) => renderSection(section))
             : items.map((item) => renderItem(item))}
         </nav>
-        {footerItems?.length ? (
+        {footerItems?.length || toggleInFooter ? (
           <div className="rail-footer">
-            {footerItems.map((item) => renderItem(item, { nested: true }))}
+            {footerItems?.map((item) => renderItem(item, { nested: true }))}
+            {toggleInFooter ? toggleButton : null}
           </div>
         ) : null}
       </div>

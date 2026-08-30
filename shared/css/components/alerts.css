@@ -9,6 +9,13 @@
 .alert-success { background: color-mix(in srgb, var(--success) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); color: var(--success-light); }
 .alert-warning { background: color-mix(in srgb, var(--warning) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); color: var(--warning-light); }
 .alert-danger  { background: color-mix(in srgb, var(--danger)  var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); color: var(--danger-light); }
+/* Variante NON semantique (#923) — un indicateur qui ne signale rien ne doit
+   pas etre peint. Un compteur a zero rendu en `info` affiche du vert/cyan la
+   ou il n'y a rien a traiter, et la couleur perd sa valeur de signal partout
+   ailleurs. Meme role que `.badge-neutral` (badges.css), qui existait deja.
+   Aucun token nouveau : --text-muted et --border-color sont definis dans les
+   quatre themes. */
+.alert-neutral { background: color-mix(in srgb, var(--text-muted) var(--alert-bg-alpha), transparent); border: 1px solid var(--border-color); color: var(--text-muted); }
 
 /* Slots optionnels (réutilisés par .alert--kpi et .alert--cta) */
 .alert-title   { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
@@ -80,10 +87,12 @@
 .alert--kpi.alert-success { border-left-color: color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); }
 .alert--kpi.alert-warning { border-left-color: color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); }
 .alert--kpi.alert-danger  { border-left-color: color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); }
+.alert--kpi.alert-neutral { border-left-color: color-mix(in srgb, var(--text-muted) var(--alert-border-alpha), transparent); }
 .alert--kpi.alert-info    .alert-title, .alert--kpi.alert-info    .alert-value { color: var(--info-light); }
 .alert--kpi.alert-success .alert-title, .alert--kpi.alert-success .alert-value { color: var(--success-light); }
 .alert--kpi.alert-warning .alert-title, .alert--kpi.alert-warning .alert-value { color: var(--warning-light); }
 .alert--kpi.alert-danger  .alert-title, .alert--kpi.alert-danger  .alert-value { color: var(--danger-light); }
+.alert--kpi.alert-neutral .alert-title, .alert--kpi.alert-neutral .alert-value { color: var(--text-muted); }
 
 /* ===== ALERT --cta (ex-upgrade-banner #519, migré depuis pricing.css) — alerte actionnable ===== */
 /* Anatomie upgrade-banner : flex icône lg, padding md, bg 8% / border 30%, radius-lg */
