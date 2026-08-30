@@ -149,12 +149,38 @@ function groupItems(items: CommandPaletteItem[]): Group[] {
  * </div>
  * ```
  *
- * **Non-contrôlé** (état d'ouverture interne, comme `<ActionMenu>`/
- * `<Lightbox>`) : `onOpenChange` observe, ne pilote pas. Le vanilla est un
+ * **Non-contrôlé PAR DÉFAUT** (état d'ouverture interne, comme `<ActionMenu>`/
+ * `<Lightbox>`) : sans les props de contrôle, `onOpenChange` observe et ne
+ * pilote pas — comportement d'origine strictement inchangé. Le vanilla est un
  * singleton injecté une fois dans `document.body` ; côté React chaque
  * instance montée porte son propre portail et son propre état — cohérent
  * avec le reste du package (aucun autre composant DS n'implémente de
  * singleton global).
+ *
+ * **Mode contrôlé, pour une palette adossée au serveur (#911)** — quatre
+ * verrous levés, chacun opt-in, aucun n'altère l'usage statique :
+ * - `searchQuery`/`onSearchChange` (convention `<Dropdown>` #855) : le parent
+ *   voit la frappe et déclenche sa requête ;
+ * - `shouldFilter={false}` : `items` est affiché **tel quel**, ni filtré ni
+ *   retrié — l'ordre de pertinence du serveur est une information, la remettre
+ *   en A-Z la détruirait ;
+ * - `open`/`onOpenChange` : le parent devient la source de vérité de
+ *   l'ouverture et peut donc **s'interposer** (avertir d'une saisie en cours,
+ *   refuser l'ouverture) ;
+ * - `enableShortcut={false}` : l'écouteur `Ctrl/Cmd+K` n'est plus posé du
+ *   tout, au consommateur de câbler son propre déclencheur. `Échap` continue
+ *   de fermer.
+ *
+ * Chaque bascule est indépendante : on peut contrôler la recherche sans
+ * contrôler l'ouverture, et réciproquement. En contrôlé, le composant
+ * **notifie sans écrire** — y compris pour la réinitialisation de la
+ * recherche à l'ouverture, qui part en `onSearchChange("")`.
+ *
+ * **`renderItem`** rend le CONTENU d'un résultat (extrait, date, contexte).
+ * Le `.cmd-item` porteur — classes DS, `role="option"`, `aria-selected`, id
+ * cible de `aria-activedescendant`, gestion du clic — reste fourni par le
+ * composant : déléguer ça au consommateur reviendrait à lui déléguer le
+ * contrat d'accessibilité, que le DS existe précisément pour tenir.
  *
  * **Raccourci global `Ctrl/Cmd+K` — posé au montage, RETIRÉ au démontage**
  * (calque `document.addEventListener('keydown', …)`, `shared/components.js:4337`) :
@@ -455,15 +481,21 @@ export function CommandPalette({
                       aria-selected={isActive}
                       onClick={() => activate(item)}
                     >
-                      {item.icon != null && (
-                        <span className="cmd-item-icon" aria-hidden="true">
-                          {item.icon}
-                        </span>
+                      {renderItem ? (
+                        renderItem(item, { active: isActive, index: idx })
+                      ) : (
+                        <>
+                          {item.icon != null && (
+                            <span className="cmd-item-icon" aria-hidden="true">
+                              {item.icon}
+                            </span>
+                          )}
+                          <span className="cmd-item-text">{item.label}</span>
+                          <span className="cmd-item-shortcut">
+                            {item.category ?? ""}
+                          </span>
+                        </>
                       )}
-                      <span className="cmd-item-text">{item.label}</span>
-                      <span className="cmd-item-shortcut">
-                        {item.category ?? ""}
-                      </span>
                     </div>
                   );
                 })}
