@@ -194,7 +194,13 @@
 .modal-content { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); max-width: 420px; width: 100%; }
 .modal-content h3 { font-family: var(--font-display); margin-bottom: 0.6rem; }
 .modal-content p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.6; }
-.modal-actions { display: flex; gap: 0.7rem; justify-content: flex-end; }
+/* `flex-wrap: wrap` — meme famille de defaut que `.drawer-footer` (#912),
+   symptome different : ici le parent borne la largeur, donc les boutons ne
+   sortent pas du cadre, ils sont COMPRESSES par `flex-shrink` et leur libelle
+   est tronque. Mesure sur la maquette de `overlays.html` en 375px : bouton
+   « Supprimer » rendu a 85px pour 132px de contenu. Avec `wrap`, il passe a la
+   ligne entier. Aucun effet tant que la rangee tient sur une ligne. (#917) */
+.modal-actions { display: flex; gap: 0.7rem; justify-content: flex-end; flex-wrap: wrap; }
 
 /* .modal-title — equivalent semantique de `.typo-h3` + color var(--text), pour titres de modals/dialogs
    sans imposer le tag `<h3>` (composer avec aria-labelledby selon le pattern WAI APG dialog).
@@ -247,7 +253,7 @@ dialog.modal-dialog .modal-close:hover { color: var(--text); background: var(--s
 dialog.modal-dialog .modal-body { padding: var(--space-lg); }
 dialog.modal-dialog .modal-body p { color: var(--text-muted); margin: 0; line-height: 1.6; }
 dialog.modal-dialog .modal-actions {
-  display: flex; gap: var(--space-sm); justify-content: flex-end;
+  display: flex; gap: var(--space-sm); justify-content: flex-end; flex-wrap: wrap;
   padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border-color);
 }
 /* Largeur — pilotee par le token `--modal-w` (#917). Trois usages, du plus

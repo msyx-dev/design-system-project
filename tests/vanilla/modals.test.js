@@ -231,6 +231,27 @@ describe('dialog.modal-dialog -- largeur par token (#917)', () => {
     expect(body).toMatch(/max-width:\s*var\(--cmd-palette-w\)/);
   });
 
+  // Trouve en REGARDANT la capture VR mobile de la section : le bouton
+  // « Supprimer » y etait tronque -- et il l'etait DEJA dans la baseline
+  // d'avant #917. Meme famille que `.drawer-footer` (#912), symptome different :
+  // le parent borne la largeur, donc les boutons ne sortent pas du cadre, ils
+  // sont compresses par `flex-shrink` et leur libelle est coupe. Mesure
+  // Playwright a 375px AVANT : bouton rendu a 85px pour 132px de contenu ;
+  // APRES : 134px, passe a la ligne, entier. La vraie <dialog> (90% du
+  // viewport) tenait deja -- c'est la maquette `.modal-content` en conteneur
+  // etroit qui revelait le defaut, et un consommateur l'aurait rencontre.
+  // Limite connue et assumee : sous ~130px utiles, un libelle long reste
+  // tronque (mesure a 320px) -- aucun `wrap` ne peut y remedier.
+  it("les actions se replient au lieu d'etre compressees (flex-wrap != 'nowrap')", () => {
+    for (const selector of ['.modal-actions', 'dialog.modal-dialog .modal-actions']) {
+      const [body] = ruleBodies(OVERLAYS_CSS_SOURCE, selector);
+      expect(body, selector).toBeDefined();
+      expect(body, selector).toMatch(/flex-wrap:\s*wrap/);
+      // L'alignement a droite et le gap ne bougent pas.
+      expect(body, selector).toMatch(/justify-content:\s*flex-end/);
+    }
+  });
+
   it('la variante notes de version utilise le meme mecanisme (plus de max-width qui court-circuite)', () => {
     const bodies = ruleBodies(VERSION_NOTES_CSS_SOURCE, 'dialog.modal-dialog.version-notes-dialog');
     expect(bodies).toHaveLength(2); // base 440px + >=768px 480px
