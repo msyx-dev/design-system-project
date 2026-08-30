@@ -4,6 +4,21 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.54 — 2026-08-30 — `<TimePicker>` : heure facultative, et `<NumberInput>` : valeur vide (#860)
+
+> Le JS vanilla et la démo correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.134.0.
+
+### Added
+- **`<NumberInput value={null}>` — champ vide (#860).** `value: number` forçait une valeur : `parseFloat('') || 0` écrasait tout effacement par 0. `value` accepte désormais `null` (champ vide), et un nouveau callback **`onEmpty`** est appelé quand l'utilisateur efface. **Convention alignée sur `<Calendar>`** : l'entrée accepte le vide, la sortie `onChange` reste strictement numérique — **aucune signature existante n'est modifiée**, donc aucune rupture de typage chez les consommateurs. Sans `onEmpty`, comportement d'avant à l'identique (test dédié).
+- Les deux boutons restent **actifs** sur un champ vide et amorcent la saisie à `min` (ou `0` s'il n'y a pas de borne — incrémenter depuis `-Infinity` ne donnerait rien d'utilisable).
+- **`<TimePicker>` — `value`/`defaultValue` acceptent `null` et `""`** (l'issue laissait les deux ouverts : les deux sont traités comme « vide »). `onChange` émet la **chaîne vide** quand l'heure n'est pas renseignée, distinguable d'une heure valide et de minuit (`"00:00"`).
+- **`clearable`** (opt-in) — bouton « Effacer » (`clearLabel` personnalisable), désactivé quand il n'y a rien à effacer. Sans la prop, aucun markup n'apparaît : les consommateurs existants ne voient aucun changement.
+- Une **heure incomplète est une heure absente** : `formatTimeValue` renvoie `""` dès qu'une des deux parties manque, calque exact du vanilla.
+
+13 tests ajoutés (5 `<NumberInput>`, 8 `<TimePicker>`), suite complète **1976 tests verts**, `npx tsc --noEmit` rc=0.
+
+Demandé par KeepThread (`msyx-dev/keepthread#25`, en-tête de Session — `time` nullable en base) : sans état vide, le consommateur devait encadrer le composant d'une logique maison, ce que la convention « l'app qui consomme le DS consomme TOUT » lui interdit.
+
 ## v3.0.0-alpha.53 — 2026-08-30 — `<CommandPalette>` : mode contrôlé pour une recherche serveur (#911)
 
 > PR 100 % `packages/react/**` — **aucun bump DS racine** : ni CSS, ni markup, ni classe nouvelle. Le composant émet exactement le même DOM.
