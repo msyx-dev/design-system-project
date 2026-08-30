@@ -9,7 +9,16 @@ on:
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 25 min, pas 15 (#863). Mesure a l'origine du relevement : sur la PR #861,
+    # un run VERT tenait en 13 min 54 pour un plafond de 15 min — une minute de
+    # marge. Le run suivant, dont le seul diff etait une ligne de CHANGELOG, a
+    # ete tue a 15 min 05 PENDANT `actions/checkout`, sans avoir atteint la
+    # mesure ; son rejeu a l'identique a pris 4 min. Un facteur 3 entre deux
+    # executions du meme code : la duree ici depend de l'etat des caches et de
+    # la charge du runner, pas du contenu de la PR. Un plafond serre transforme
+    # cet alea en echec, et un controle qu'on relance sans lire ne protege plus
+    # de rien.
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v5
@@ -19,8 +28,12 @@ jobs:
           node-version: 24
           cache: npm
 
+      # Plafonds PAR ETAPE (#863) : sans eux, un depassement tue le job sans
+      # dire OU le temps est parti — c'est ce qui a fait passer un blocage du
+      # checkout pour un echec du budget de performance.
       - name: Install dependencies
         run: npm ci
+        timeout-minutes: 10
 
       - name: Cache Playwright browsers
         id: playwright-cache
@@ -33,6 +46,7 @@ jobs:
 
       - name: Install Playwright browsers (Chromium for lhci)
         run: npx playwright install chromium
+        timeout-minutes: 6
 
       - name: Start local server
         run: npx serve -s . -l 3001 &
@@ -40,8 +54,15 @@ jobs:
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:3001 --timeout 30000
 
+      # `continue-on-error` : le budget est en WARN-ONLY (toutes les assertions
+      # de lighthouserc.cjs sont en `warn`). Consequence a connaitre : ce job ne
+      # peut PAS echouer sur une regression de performance — son seul mode
+      # d'echec etait le depassement de plafond, donc un faux positif. Passer
+      # les assertions en `error` est un arbitrage produit, hors perimetre de
+      # cette issue.
       - name: Run Lighthouse CI
         run: npx lhci autorun
+        timeout-minutes: 12
         continue-on-error: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
