@@ -1,5 +1,20 @@
 # Releases
 
+## 2.134.0 — 2026-08-30 — Time picker : l'heure facultative peut être effacée (#860)
+
+> Touche `shared/components.js` + `pages/formulaires.html` + `shared/components-registry.json` ET `packages/react/**` (`<TimePicker>` + `<NumberInput>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.54).
+
+### Fixed
+- **Un champ vide valait 0, donc l'heure devenait obligatoire dès la première saisie.** `getPartValue()` retournait `0` pour un champ vide et `sync()` écrivait toujours `"00:00"` : l'état « non renseigné » était **inatteignable**. Une Session de KeepThread porte pourtant une heure **nullable** en base (`msyx-dev/keepthread#25`). Désormais un champ vide vaut `null`, et `time:change` émet `{hours: null, minutes: null, empty: true}` — **distinguable de minuit** (`{hours: 0, minutes: 0}`), ce qui est précisément ce que l'issue demandait.
+- **`change` sur un champ vidé écrasait l'effacement par 0** (`parseInt(...) || 0`). Corrigé : le vide reste vide.
+
+### Added
+- **Une heure incomplète est une heure absente** — `08:__` ne forme aucune valeur. Le DS ne complète pas par `0` le champ manquant : ce serait inventer une donnée que l'utilisateur n'a pas saisie.
+- **Effacement explicite** — un bouton `[data-time-clear]` fourni par la page vide les deux champs d'un coup et rend le focus aux heures (vider deux champs à la main laisse un état intermédiaire incohérent). **Câblé seulement s'il est présent** : aucun markup existant ne change. Aucune classe CSS nouvelle — le bouton réutilise `.btn-ghost.btn-sm`.
+- **Les flèches +/- amorcent la saisie depuis un champ vide** (à `min`) au lieu de rester inertes : repartir du vide ne force pas à taper.
+- **Showcase** — 3ᵉ démo « Heure facultative (état vide) » dans `formulaires.html` #time-picker.
+
+**Aucune rupture** : les deux démos existantes (24h/12h, champs pré-remplis) se comportent exactement comme avant. 9 cas ajoutés à `tests/vanilla/time-picker.test.js`. `@ds-version` 2.133.0 → 2.134.0 (minor), `shared/check-versions.sh` rc=0.
 ## 2.133.0 — 2026-08-30 — `.page-content--wide` : un gabarit de page pour les vues de données (#859)
 
 > Touche `shared/css/tokens.css` + `shared/css/layout.css` + `pages/fondation.html` + `shared/components-registry.json`. **Aucun bump `packages/react`** : `.page-content` est un layout appliqué en `className`, sans wrapper (registre `react: "n-a"`).

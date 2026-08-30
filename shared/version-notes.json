@@ -14,6 +14,17 @@
   },
   "released": [
     {
+      "version": "2.134.0",
+      "date": "2026-08-30",
+      "titre": "Une heure facultative peut enfin être effacée",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le sélecteur d'heure ne pouvait pas rester vide : une fois une heure saisie, il était impossible de revenir à « pas d'heure », alors que certaines saisies sont facultatives. Le champ accepte désormais l'état non renseigné, avec un bouton « Effacer » optionnel, et une heure absente se distingue clairement de minuit."
+        }
+      ]
+    },
+    {
       "version": "2.133.0",
       "date": "2026-08-30",
       "titre": "Les tableaux peuvent enfin occuper la largeur de l'écran",

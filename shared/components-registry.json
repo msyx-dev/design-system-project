@@ -1,7 +1,7 @@
 {
-  "version": "2.133.0",
+  "version": "2.134.0",
   "generated": {
-    "at": "2026-08-30T18:26:28.665Z",
+    "at": "2026-08-30T20:57:44.934Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3210,7 +3210,8 @@
       "react": "ported",
       "module": [
         "shared/css/components/templates.css"
-      ]
+      ],
+      "notes": " État vide (#860) : un champ laissé vide vaut « non renseigné », pas 0 — time:change émet hours/minutes à null plus empty:true, ce qui distingue une heure absente de minuit. Une heure incomplète (08:__) compte comme absente : le DS ne complète pas par 0 une donnée non saisie. Effacement explicite via un bouton [data-time-clear] fourni par la page (aucune classe nouvelle : .btn-ghost.btn-sm) — câblé seulement s'il est présent, donc aucun markup existant ne change. Côté React : value/defaultValue acceptent null, onChange émet la chaîne vide, prop clearable opt-in ; <NumberInput> accepte value={null} et expose onEmpty."
     },
     {
       "name": "tables",

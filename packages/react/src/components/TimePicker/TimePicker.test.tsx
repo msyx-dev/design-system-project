@@ -278,3 +278,68 @@ describe("TimePicker — valeurs par défaut sans defaultValue/value", () => {
     expect(am).toHaveClass("active");
   });
 });
+
+// --- Heure facultative (#860) -----------------------------------------------
+//
+// Une Session porte une heure nullable en base : il faut pouvoir saisir une
+// heure PUIS l'effacer. Le composant n'avait aucun état vide.
+describe("TimePicker — heure facultative (#860)", () => {
+  it("value={null} rend les deux champs vides", () => {
+    render(<TimePicker value={null} onChange={() => {}} />);
+    expect(hourInput().value).toBe("");
+    expect(minuteInput().value).toBe("");
+  });
+
+  it('value="" est équivalent à null (l\'issue laissait les deux ouverts)', () => {
+    render(<TimePicker value="" onChange={() => {}} />);
+    expect(hourInput().value).toBe("");
+    expect(minuteInput().value).toBe("");
+  });
+
+  it("effacer un seul champ émet la chaîne vide — une heure incomplète est absente", () => {
+    const onChange = vi.fn();
+    render(<TimePicker value="09:30" onChange={onChange} />);
+    fireEvent.change(minuteInput(), { target: { value: "" } });
+    expect(onChange).toHaveBeenCalledWith("");
+  });
+
+  it("la chaîne vide se distingue de minuit", () => {
+    const onChange = vi.fn();
+    render(<TimePicker value="00:00" onChange={onChange} />);
+    // Minuit est une heure VALIDE : le champ n'est pas vide. (Le `padStart`
+    // ne s'applique qu'à la valeur formatée, pas au champ `type="number"`.)
+    expect(hourInput().value).toBe("0");
+    fireEvent.change(hourInput(), { target: { value: "" } });
+    expect(onChange).toHaveBeenCalledWith("");
+  });
+
+  it("clearable rend un bouton qui remet l'heure à l'état non renseigné", () => {
+    const onChange = vi.fn();
+    render(<TimePicker value="09:30" clearable onChange={onChange} />);
+    const clear = document.querySelector("[data-time-clear]") as HTMLButtonElement;
+    expect(clear).toBeInTheDocument();
+    expect(clear.disabled).toBe(false);
+    fireEvent.click(clear);
+    expect(onChange).toHaveBeenCalledWith("");
+  });
+
+  it("le bouton d'effacement est désactivé quand il n'y a rien à effacer", () => {
+    render(<TimePicker value={null} clearable onChange={() => {}} />);
+    const clear = document.querySelector("[data-time-clear]") as HTMLButtonElement;
+    expect(clear.disabled).toBe(true);
+  });
+
+  it("sans clearable, aucun bouton n'apparaît (markup existant inchangé)", () => {
+    render(<TimePicker value="09:30" onChange={() => {}} />);
+    expect(document.querySelector("[data-time-clear]")).toBeNull();
+  });
+
+  it("repartir du vide : les flèches amorcent la saisie", () => {
+    const onChange = vi.fn();
+    render(<TimePicker value={null} onChange={onChange} />);
+    const [, incHour] = Array.from(hourButtons()) as HTMLButtonElement[];
+    fireEvent.click(incHour);
+    // hh=0 mais mm toujours vide → la valeur reste vide, pas "00:00".
+    expect(onChange).toHaveBeenCalledWith("");
+  });
+});

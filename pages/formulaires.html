@@ -457,6 +457,28 @@
           <input id="time-12-out" type="text" readonly placeholder="HH:MM AM">
         </div>
       </div>
+      <!-- Heure facultative — etat vide (#860) -->
+      <div>
+        <p class="demo-label">Heure facultative (état vide)</p>
+        <div class="time-input-wrap" data-time data-format="24" data-target="#time-empty-out">
+          <div class="number-input-wrap" data-time-part="hh">
+            <button type="button" class="number-dec" aria-label="Diminuer les heures">&#8722;</button>
+            <input type="number" min="0" max="23" value="" aria-label="Heures">
+            <button type="button" class="number-inc" aria-label="Augmenter les heures">+</button>
+          </div>
+          <span class="time-sep">:</span>
+          <div class="number-input-wrap" data-time-part="mm">
+            <button type="button" class="number-dec" aria-label="Diminuer les minutes">&#8722;</button>
+            <input type="number" min="0" max="59" step="5" value="" aria-label="Minutes">
+            <button type="button" class="number-inc" aria-label="Augmenter les minutes">+</button>
+          </div>
+          <button type="button" class="btn-ghost btn-sm" data-time-clear>Effacer</button>
+        </div>
+        <div class="date-input-wrap" style="margin-top:var(--space-sm)">
+          <input id="time-empty-out" type="text" readonly placeholder="Aucune heure">
+        </div>
+        <p class="demo-note">Une heure <strong>facultative</strong> doit pouvoir être saisie <em>puis effacée</em> — sinon elle devient obligatoire dès la première saisie. Champ vide = <code class="code-inline">null</code> dans <code class="code-inline">time:change</code>, ce qui le distingue de minuit (<code class="code-inline">0:0</code>). Une heure incomplète (<code class="code-inline">08:__</code>) compte comme absente : le DS ne complète pas par 0 une donnée non saisie. Le bouton « Effacer » n'est câblé que si la page fournit <code class="code-inline">[data-time-clear]</code> — aucun markup existant ne change.</p>
+      </div>
     </div>
 </section>
 
