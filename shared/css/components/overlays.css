@@ -215,7 +215,7 @@ dialog.modal-dialog {
   background: var(--surface);
   color: var(--text);
   padding: 0;
-  max-width: 480px;
+  max-width: var(--modal-w);
   width: 90%;
   margin: auto;
   box-shadow: var(--shadow-lg);
@@ -250,6 +250,16 @@ dialog.modal-dialog .modal-actions {
   display: flex; gap: var(--space-sm); justify-content: flex-end;
   padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border-color);
 }
+/* Largeur — pilotee par le token `--modal-w` (#917). Trois usages, du plus
+   simple au plus specifique :
+     1. defaut          <dialog class="modal-dialog">                  → 480px
+     2. variante large  <dialog class="modal-dialog modal-dialog--lg"> → 640px
+     3. sur-mesure      <dialog class="modal-dialog" style="--modal-w: 720px">
+   Le 3e cas est le point de l'issue : un consommateur dimensionne SANS
+   redefinir `.modal-dialog` ni ecrire de `max-width` en dur (anti-pattern A3 —
+   « customiser par variable CSS, jamais par override de classe DS »). En
+   mobile, `width: 90%` continue de primer : le token ne borne que le desktop. */
+dialog.modal-dialog.modal-dialog--lg { --modal-w: var(--modal-w-lg); }
 @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -275,8 +285,19 @@ dialog.modal-dialog .modal-actions {
 .cmd-palette-preview { position: relative; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; background: var(--primary); min-height: 400px; display: flex; align-items: flex-start; justify-content: center; padding-top: 2rem; }
 .cmd-overlay { position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .cmd-overlay.open { opacity: 1; pointer-events: auto; }
-.cmd-palette { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-card); width: 100%; max-width: 560px; box-shadow: var(--shadow-lg); overflow: hidden; transform: translateY(-10px) scale(0.98); transition: transform 0.2s; }
+.cmd-palette { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-card); width: 100%; max-width: var(--cmd-palette-w); box-shadow: var(--shadow-lg); overflow: hidden; transform: translateY(-10px) scale(0.98); transition: transform 0.2s; }
 .cmd-overlay.open .cmd-palette { transform: translateY(0) scale(1); }
+/* Palette montee dans une <dialog class="modal-dialog cmd-palette"> (#917).
+   Deux corrections, toutes deux invisibles tant qu'on ne monte pas la palette
+   en <dialog> — d'ou l'impasse cote consommateur :
+     - largeur : `dialog.modal-dialog` (0,1,1) l'emporte sur `.cmd-palette`
+       (0,1,0), la palette retombait a 480px. On rebranche le token de la
+       modale sur celui de la palette (plutot que de reecrire une largeur) ;
+     - transform : l'etat de repos `translateY(-10px) scale(0.98)` n'est leve
+       que par `.cmd-overlay.open` — absent ici, puisque c'est <dialog> qui
+       porte l'ouverture. Sans reset, la palette resterait decalee et reduite
+       une fois `modalIn` terminee (animation sans fill-mode). */
+dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: none; }
 .cmd-input-wrap { display: flex; align-items: center; gap: 0.7rem; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-color); }
 .cmd-input-icon { color: var(--text-dim); font-size: 1.1rem; flex-shrink: 0; }
 .cmd-input { flex: 1; background: none; border: none; color: var(--text); font-size: 0.95rem; outline: none; font-family: var(--font-sans); }

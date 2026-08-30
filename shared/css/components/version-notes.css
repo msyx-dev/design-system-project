@@ -56,9 +56,12 @@
     }
 }
 
-/* Modale — variante largeur pour accueillir la timeline (reutilisation pure dialog.modal-dialog) */
+/* Modale — variante largeur pour accueillir la timeline (reutilisation pure dialog.modal-dialog).
+   Depuis #917, la largeur passe par le token `--modal-w` de la modale plutot que par un
+   `max-width` qui la court-circuitait : meme rendu (440px), mais la variante devient
+   l'exemple de reference du mecanisme documente pour les consommateurs. */
 dialog.modal-dialog.version-notes-dialog {
-    max-width: 440px;
+    --modal-w: 440px;
 }
 
 /* Wrapper contenu (.modal-body) — reserve un scroll si beaucoup de notes */
@@ -114,7 +117,7 @@ dialog.modal-dialog.version-notes-dialog {
 
 @media (min-width: 768px) {
     dialog.modal-dialog.version-notes-dialog {
-        max-width: 480px;
+        --modal-w: 480px;
     }
 }
 
