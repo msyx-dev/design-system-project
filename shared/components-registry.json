@@ -1,5 +1,5 @@
 {
-  "version": "2.129.0",
+  "version": "2.130.0",
   "generated": {
     "at": "2026-08-29T20:38:45.052Z",
     "by": "bin/generate-registry.js v1.3"
@@ -885,6 +885,7 @@
         ".drawer-preview",
         ".drawer-overlay",
         ".drawer-panel",
+        ".drawer-panel--lg",
         ".drawer-header",
         ".drawer-close",
         ".drawer-body",

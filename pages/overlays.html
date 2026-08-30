@@ -109,7 +109,7 @@
 
 <section id="drawer">
     <div class="section-header"><span class="overline">Overlays</span><h2>Drawer</h2><p>Panneau glissant depuis le cote pour les details ou formulaires.</p></div>
-    <div class="demo-grid demo-grid-2">
+    <div class="demo-grid demo-grid-3">
         <div class="demo-box">
             <span class="demo-label">Drawer droite</span>
             <div class="drawer-preview" id="drawer-demo-1">
@@ -154,6 +154,30 @@
                             <div class="list-item"><span class="text-warning-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-alert-triangle"/></svg></span><div class="list-item-content"><div class="list-item-title">CPU eleve</div><div class="list-item-desc">VPS — 89% utilisation — il y a 20 min</div></div></div>
                             <div class="list-item"><span class="text-info-md"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></span><div class="list-item-content"><div class="list-item-title">Mise a jour disponible</div><div class="list-item-desc">Caddy v2.12.0 — il y a 1h</div></div></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Drawer large (--lg, ≥768px)</span>
+            <div class="drawer-preview" id="drawer-demo-3">
+                <div class="p-lg">
+                    <p class="typo-small mb-md">Capture pendant une reunion — demi-fenetre minimum en desktop (#912), plein ecran en mobile (inchange).</p>
+                    <button class="btn-primary btn-sm" onclick="document.querySelector('#drawer-demo-3 .drawer-overlay').classList.add('open');document.querySelector('#drawer-demo-3 .drawer-panel').classList.add('open');">Ouvrir le drawer large &rarr;</button>
+                </div>
+                <div class="drawer-overlay" onclick="this.classList.remove('open');this.nextElementSibling.classList.remove('open');"></div>
+                <div class="drawer-panel drawer-panel--lg">
+                    <div class="drawer-header">
+                        <h3>Notes de reunion</h3>
+                        <button class="drawer-close" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-panel').classList.remove('open');">&times;</button>
+                    </div>
+                    <div class="drawer-body">
+                        <div class="input-group mb-md"><label class="input-label" for="wz-drawer-lg-titre">Titre</label><input class="input" type="text" value="Point hebdo — comptes rendus" id="wz-drawer-lg-titre"></div>
+                        <div class="input-group"><label class="input-label">Notes</label><textarea class="input" rows="6" placeholder="Prendre en note pendant la reunion..."></textarea></div>
+                    </div>
+                    <div class="drawer-footer">
+                        <button class="btn-ghost btn-sm" onclick="this.closest('.drawer-preview').querySelector('.drawer-overlay').classList.remove('open');this.closest('.drawer-preview').querySelector('.drawer-panel').classList.remove('open');">Annuler</button>
+                        <button class="btn-primary btn-sm">Sauvegarder</button>
                     </div>
                 </div>
             </div>
