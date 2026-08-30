@@ -1,7 +1,7 @@
 {
-  "version": "2.131.1",
+  "version": "2.132.0",
   "generated": {
-    "at": "2026-08-30T00:54:44.283Z",
+    "at": "2026-08-30T12:37:15.790Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -529,9 +529,11 @@
         ".modal-overlay",
         ".modal-content",
         ".modal-actions",
-        ".modal-dialog"
+        ".modal-dialog",
+        ".modal-dialog--lg"
       ],
       "jsInit": "openModal",
+      "notes": "Largeur pilotée par le token --modal-w (#917) : 480px par défaut, .modal-dialog--lg pour 640px, ou style=\"--modal-w: …\" posé en local pour une largeur sur-mesure — jamais de max-width réécrite côté consommateur. Une palette montée en modale (<dialog class=\"modal-dialog cmd-palette\">) retrouve ses 560px via la combinaison dédiée.",
       "a11y": {
         "focusRestore": true,
         "pattern": "WAI APG Dialog Modal",
