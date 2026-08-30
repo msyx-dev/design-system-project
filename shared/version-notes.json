@@ -14,6 +14,17 @@
   },
   "released": [
     {
+      "version": "2.133.0",
+      "date": "2026-08-30",
+      "titre": "Les tableaux peuvent enfin occuper la largeur de l'écran",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Les pages qui affichent des données — tableaux, grilles, listes larges — disposent d'un gabarit adapté : au lieu d'être ramenées à une largeur de lecture confortable pour du texte, elles occupent la largeur d'un poste de travail. Un tableau de sept colonnes s'affiche en entier au lieu de partir en défilement horizontal."
+        }
+      ]
+    },
+    {
       "version": "2.132.0",
       "date": "2026-08-30",
       "titre": "Des fenêtres modales à la bonne largeur",
