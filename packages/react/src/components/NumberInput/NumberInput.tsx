@@ -1,10 +1,24 @@
 import { ChangeEvent, KeyboardEvent, useId } from "react";
 
 export interface NumberInputProps {
-  /** Valeur courante — le parent pilote l'état, aucun état interne. */
-  value: number;
+  /**
+   * Valeur courante — le parent pilote l'état, aucun état interne.
+   * `null` = champ **vide** (#860) : c'est « non renseigné », pas 0. Utile
+   * partout où la donnée est facultative (une heure nullable en base, par
+   * exemple). Convention alignée sur `<Calendar>` : l'entrée accepte le vide,
+   * la sortie `onChange` reste strictement numérique — le vide part par
+   * `onEmpty`.
+   */
+  value: number | null;
   /** Appelé avec la nouvelle valeur numérique (déjà clampée/arrondie au step). */
   onChange: (value: number) => void;
+  /**
+   * Appelé quand l'utilisateur EFFACE le champ (#860). Sans ce callback, le
+   * champ vidé retombe sur `min` (ou `0` s'il n'y a pas de borne) — le
+   * comportement d'avant, où l'effacement était impossible. Le fournir est
+   * donc l'opt-in explicite de la valeur vide.
+   */
+  onEmpty?: () => void;
   /** Borne minimale. @default -Infinity (non borné, comme le vanilla sans `data-min`) */
   min?: number;
   /** Borne maximale. @default Infinity (non borné, comme le vanilla sans `data-max`) */
@@ -72,6 +86,7 @@ function clampValue(val: number, min: number, max: number): number {
 export function NumberInput({
   value,
   onChange,
+  onEmpty,
   min = -Infinity,
   max = Infinity,
   step = 1,
@@ -83,6 +98,11 @@ export function NumberInput({
 }: NumberInputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const isEmpty = value === null;
+  // Point de depart des fleches sur un champ vide : la borne basse si elle
+  // existe, 0 sinon (`min` vaut -Infinity par defaut, incrementer depuis
+  // -Infinity ne donnerait rien d'utilisable).
+  const emptyBase = Number.isFinite(min) ? min : 0;
 
   const commit = (nextValue: number) => {
     const rounded = roundToStep(nextValue, step);
@@ -90,10 +110,21 @@ export function NumberInput({
     onChange(clamped);
   };
 
-  const handleDecrement = () => commit(value - step);
-  const handleIncrement = () => commit(value + step);
+  // Depuis le vide, +/- AMORCENT la saisie a `emptyBase` au lieu de rester
+  // inertes : l'utilisateur n'est pas oblige de taper pour repartir.
+  const handleDecrement = () =>
+    commit(isEmpty ? emptyBase : (value as number) - step);
+  const handleIncrement = () =>
+    commit(isEmpty ? emptyBase : (value as number) + step);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    // Champ vide : `parseFloat('') || 0` ecrasait l'effacement par 0, ce qui
+    // rendait l'etat « non renseigne » inatteignable (#860). Le parent decide,
+    // via `onEmpty` — sans ce callback, comportement d'avant strictement.
+    if (event.target.value.trim() === "" && onEmpty) {
+      onEmpty();
+      return;
+    }
     const parsed = parseFloat(event.target.value) || 0;
     commit(parsed);
   };
@@ -108,8 +139,12 @@ export function NumberInput({
     }
   };
 
-  const decDisabled = Boolean(disabled) || value <= min;
-  const incDisabled = Boolean(disabled) || value >= max;
+  // Un champ vide n'est ni au plancher ni au plafond : les deux boutons
+  // restent actifs, ce sont eux qui amorcent la saisie.
+  const decDisabled =
+    Boolean(disabled) || (!isEmpty && (value as number) <= min);
+  const incDisabled =
+    Boolean(disabled) || (!isEmpty && (value as number) >= max);
 
   const wrapClasses = [
     "number-input-wrap",
@@ -141,7 +176,7 @@ export function NumberInput({
         id={inputId}
         className="number-input-field"
         type="number"
-        value={value}
+        value={isEmpty ? "" : value}
         min={Number.isFinite(min) ? min : undefined}
         max={Number.isFinite(max) ? max : undefined}
         step={step}
