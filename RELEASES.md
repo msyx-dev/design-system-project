@@ -1,5 +1,27 @@
 # Releases
 
+## 2.132.0 — 2026-08-30 — `modal-dialog` : largeur pilotée par token (#917)
+
+> Touche `shared/css/tokens.css` + `shared/css/components/overlays.css` + `shared/css/components/version-notes.css` + `pages/overlays.html` + `shared/components-registry.json`. **Aucun bump `packages/react`** : `<Modal>`/`<CommandPalette>` héritent du CSS, aucun wrapper n'est modifié.
+
+### Added
+- **Tokens `--modal-w` (480px) / `--modal-w-lg` (640px) / `--cmd-palette-w` (560px) (`tokens.css`)** — sur le modèle de `--rail-w` (#906) et `--drawer-w` (#912). `dialog.modal-dialog` consomme `var(--modal-w)` au lieu d'un `max-width: 480px` en dur : **valeur par défaut strictement inchangée**.
+- **`.modal-dialog--lg` (`overlays.css`)** — variante 640px pour les contenus riches (aperçu, comparaison, sélecteur). Elle **remappe le token** (`--modal-w: var(--modal-w-lg)`), elle ne pose pas une seconde `max-width`.
+- **Largeur sur-mesure sans override de classe** — `style="--modal-w: 720px"` posé en local sur la `<dialog>` suffit. C'est le point de l'issue : un consommateur dimensionne une modale **sans écrire de pixels ni éditer le CSS synchronisé** (anti-pattern A3 — « customiser par variable CSS, jamais par override de classe DS »).
+- **Showcase (`pages/overlays.html` #modals)** — sous-partie « Largeur » : les 3 cas (variante large, sur-mesure, palette en modale) dans la section existante, sans nouvelle entrée de navigation.
+
+### Fixed
+- **Une palette montée dans une modale retombait à 480px** — `dialog.modal-dialog` (spécificité 0,1,1) l'emporte sur `.cmd-palette` (0,1,0), et la combinaison des deux n'existait pas, alors que le précédent `dialog.modal-dialog.version-notes-dialog` était prévu dans le même fichier. La combinaison `dialog.modal-dialog.cmd-palette` rebranche le token de la modale sur `--cmd-palette-w`.
+- **Second défaut, invisible tant qu'on ne monte pas la palette en `<dialog>`** : `.cmd-palette` porte un transform de repos (`translateY(-10px) scale(0.98)`) que **seul** `.cmd-overlay.open` lève. Dans une `<dialog>`, cet overlay n'existe pas : une fois `modalIn` terminée (animation sans `fill-mode`), la palette restait **décalée de 10px et réduite à 98 %**. Corrigé par `transform: none` sur la combinaison. La démo statique de `divers.html` neutralisait déjà ce transform en style inline — le contournement était donc visible dans le showcase lui-même.
+- **Mesuré, pas supposé** (sonde Playwright, Chromium) : desktop 1280 → **480 / 640 / 720 / 560px** exactement, `transform: none` sur les quatre ; mobile 375 → **338px** pour les quatre (`width: 90%` prime toujours, le token ne borne que le desktop). Sans le reset de transform, la palette mesure **549px** au lieu de 560 et reste décalée.
+- **`.modal-actions` : les boutons étaient compressés au lieu de passer à la ligne** — défaut **pré-existant**, trouvé en regardant la capture VR mobile de la section (le bouton « Supprimer » y était tronqué, et il l'était **déjà dans la baseline d'avant cette PR**). Même famille que `.drawer-footer` (#912), symptôme différent : ici le parent borne la largeur, donc les boutons ne sortent pas du cadre — ils sont écrasés par `flex-shrink` et leur libellé est coupé. Mesuré à 375px : bouton rendu à **85px pour 132px de contenu** ; après `flex-wrap: wrap`, **134px**, passé à la ligne, entier. Corrigé sur les deux porteurs (`.modal-actions` et `dialog.modal-dialog .modal-actions`) ; alignement à droite et `gap` inchangés, aucun effet tant que la rangée tient sur une ligne. **Limite assumée** : sous ~130px utiles (mesuré à 320px sur la maquette compressée), un libellé long reste tronqué — aucun `wrap` n'y remédie, et la vraie `<dialog>` (90 % du viewport) n'atteint pas ce régime.
+
+### Changed
+- **`dialog.modal-dialog.version-notes-dialog` passe au même mécanisme** (`--modal-w: 440px`, puis 480px ≥768px) au lieu d'un `max-width` qui court-circuitait le token. **Rendu identique** — mais la variante cesse d'être le contre-exemple de la règle qu'on documente.
+- **Tests** — `tests/vanilla/modals.test.js` : 6 cas sur le contrat CSS (tokens présents aux valeurs actuelles, plus aucune largeur en dur, variante et combinaison qui remappent le token, reset de transform, variante notes de version). Assertions portées sur la **source CSS** : jsdom résout les valeurs calculées mais **pas les custom properties**, une assertion de largeur résolue y serait vide de sens — la mesure réelle est faite au navigateur.
+
+Demandé par KeepThread (`msyx-dev/keepthread#185`) : un parcours traversant trois largeurs (contenu 1200px, palette 480px, lecture 720px), décrit par le propriétaire du produit comme « un changement de largeur très moche ». Le consommateur s'était **arrêté** plutôt que de contourner la convention. **Aucune rupture** : une modale qui ne déclare rien garde exactement sa largeur actuelle. `@ds-version` 2.131.1 → 2.132.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.131.1 — 2026-08-30 — `.drawer-footer` : les boutons sortaient du panneau étroit (#912)
 
 ### Fixed

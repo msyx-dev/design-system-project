@@ -5,8 +5,17 @@
 // signale. initModals() n'est pas expose individuellement -- accessible
 // uniquement via window.__initComponents() (alias reinitAll -> initComponents()
 // -> initModals()). Markup repris de pages/overlays.html#modals (classes/attrs reels).
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { loadComponentsWindow, fireClick, fireKeydown } from './helpers/load-components.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const readCss = (rel) => readFileSync(path.resolve(__dirname, '../../shared/css', rel), 'utf8');
+const OVERLAYS_CSS_SOURCE = readCss('components/overlays.css');
+const VERSION_NOTES_CSS_SOURCE = readCss('components/version-notes.css');
+const TOKENS_CSS_SOURCE = readCss('tokens.css');
 
 const BODY_HTML = `
   <button class="btn-primary" id="trigger-btn" data-modal-trigger="modal-confirm">Ouvrir</button>
@@ -155,5 +164,99 @@ describe('initModals', () => {
     fireClick(window, closeBtn);
     expect(dialog.hasAttribute('open')).toBe(false);
     expect(document.activeElement).toBe(trigger);
+  });
+});
+
+// --- Contrat CSS de largeur (#917) -------------------------------------------
+//
+// DEFAUT CORRIGE : `dialog.modal-dialog` imposait `max-width: 480px` en dur.
+// Une palette montee en modale (`<dialog class="modal-dialog cmd-palette">`)
+// retombait donc a 480px : `dialog.modal-dialog` (0,1,1) l'emporte sur
+// `.cmd-palette` (0,1,0), et la combinaison des deux n'existait pas. Cote
+// consommateur, la seule issue etait d'ecrire une largeur en dur ou d'editer le
+// CSS synchronise -- les deux interdits par la convention (anti-pattern A3).
+//
+// Ces assertions portent sur la SOURCE CSS et non sur `getComputedStyle` :
+// jsdom resout bien les valeurs calculees (cf. tests #866/#900), mais PAS les
+// custom properties -- `var(--modal-w)` n'y est jamais substitue, donc une
+// assertion de largeur resolue y serait vide de sens. La mesure reelle des 3
+// largeurs (480 / 640 / 560px) est faite par le rendu navigateur, pas ici.
+const ruleBodies = (css, selector) => {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // `\s*\{` juste apres le selecteur : garantit qu'on ne capture QUE la regle
+  // exacte, jamais un descendant (`… .modal-header`) ni une combinaison
+  // (`….cmd-palette`), qui ont d'autres caracteres avant leur accolade.
+  const re = new RegExp(`(?:^|[{}\\n])\\s*${escaped}\\s*\\{([^{}]*)\\}`, 'g');
+  const bodies = [];
+  let match;
+  while ((match = re.exec(css)) !== null) bodies.push(match[1]);
+  return bodies;
+};
+
+describe('dialog.modal-dialog -- largeur par token (#917)', () => {
+  it('declare les 3 tokens de largeur, aux valeurs actuelles (aucune rupture)', () => {
+    expect(TOKENS_CSS_SOURCE).toMatch(/--modal-w:\s*480px/);
+    expect(TOKENS_CSS_SOURCE).toMatch(/--modal-w-lg:\s*640px/);
+    expect(TOKENS_CSS_SOURCE).toMatch(/--cmd-palette-w:\s*560px/);
+  });
+
+  it("ne fixe plus de largeur en dur : la regle de base passe par var(--modal-w)", () => {
+    const [body] = ruleBodies(OVERLAYS_CSS_SOURCE, 'dialog.modal-dialog');
+    expect(body).toBeDefined();
+    expect(body).toMatch(/max-width:\s*var\(--modal-w\)/);
+    expect(body).not.toMatch(/max-width:\s*\d/);
+    // `width: 90%` inchange : en mobile c'est lui qui prime, pas le token.
+    expect(body).toMatch(/width:\s*90%/);
+  });
+
+  it('expose une variante large qui remappe le token (pas une 2e max-width)', () => {
+    const [body] = ruleBodies(OVERLAYS_CSS_SOURCE, 'dialog.modal-dialog.modal-dialog--lg');
+    expect(body).toBeDefined();
+    expect(body).toMatch(/--modal-w:\s*var\(--modal-w-lg\)/);
+    expect(body).not.toMatch(/max-width/);
+  });
+
+  it('rend sa largeur a la palette montee en modale, et leve son transform de repos', () => {
+    const [body] = ruleBodies(OVERLAYS_CSS_SOURCE, 'dialog.modal-dialog.cmd-palette');
+    expect(body).toBeDefined();
+    expect(body).toMatch(/--modal-w:\s*var\(--cmd-palette-w\)/);
+    // Hors `.cmd-overlay.open`, rien ne leve `translateY(-10px) scale(0.98)` :
+    // sans ce reset la palette resterait decalee et reduite dans la <dialog>.
+    expect(body).toMatch(/transform:\s*none/);
+  });
+
+  it('la palette autonome garde sa largeur, elle aussi tokenisee', () => {
+    const [body] = ruleBodies(OVERLAYS_CSS_SOURCE, '.cmd-palette');
+    expect(body).toBeDefined();
+    expect(body).toMatch(/max-width:\s*var\(--cmd-palette-w\)/);
+  });
+
+  // Trouve en REGARDANT la capture VR mobile de la section : le bouton
+  // « Supprimer » y etait tronque -- et il l'etait DEJA dans la baseline
+  // d'avant #917. Meme famille que `.drawer-footer` (#912), symptome different :
+  // le parent borne la largeur, donc les boutons ne sortent pas du cadre, ils
+  // sont compresses par `flex-shrink` et leur libelle est coupe. Mesure
+  // Playwright a 375px AVANT : bouton rendu a 85px pour 132px de contenu ;
+  // APRES : 134px, passe a la ligne, entier. La vraie <dialog> (90% du
+  // viewport) tenait deja -- c'est la maquette `.modal-content` en conteneur
+  // etroit qui revelait le defaut, et un consommateur l'aurait rencontre.
+  // Limite connue et assumee : sous ~130px utiles, un libelle long reste
+  // tronque (mesure a 320px) -- aucun `wrap` ne peut y remedier.
+  it("les actions se replient au lieu d'etre compressees (flex-wrap != 'nowrap')", () => {
+    for (const selector of ['.modal-actions', 'dialog.modal-dialog .modal-actions']) {
+      const [body] = ruleBodies(OVERLAYS_CSS_SOURCE, selector);
+      expect(body, selector).toBeDefined();
+      expect(body, selector).toMatch(/flex-wrap:\s*wrap/);
+      // L'alignement a droite et le gap ne bougent pas.
+      expect(body, selector).toMatch(/justify-content:\s*flex-end/);
+    }
+  });
+
+  it('la variante notes de version utilise le meme mecanisme (plus de max-width qui court-circuite)', () => {
+    const bodies = ruleBodies(VERSION_NOTES_CSS_SOURCE, 'dialog.modal-dialog.version-notes-dialog');
+    expect(bodies).toHaveLength(2); // base 440px + >=768px 480px
+    expect(bodies[0]).toMatch(/--modal-w:\s*440px/);
+    expect(bodies[1]).toMatch(/--modal-w:\s*480px/);
+    for (const body of bodies) expect(body).not.toMatch(/max-width/);
   });
 });

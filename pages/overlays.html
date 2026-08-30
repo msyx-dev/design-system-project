@@ -55,6 +55,69 @@
         </div>
     </div>
 
+    <h3 style="margin-top:var(--space-xl);margin-bottom:var(--space-md);">Largeur</h3>
+    <p class="demo-note">Les trois modales ci-dessus sont au défaut (<code class="code-inline">--modal-w: 480px</code>). Pour une modale plus large, il n'y a <strong>jamais</strong> de <code class="code-inline">max-width</code> à écrire côté application : soit la variante <code class="code-inline">.modal-dialog--lg</code>, soit le token posé en local <code class="code-inline">style="--modal-w: 720px"</code>. En mobile, <code class="code-inline">width: 90%</code> continue de primer — le token ne borne que le desktop.</p>
+    <div class="demo-grid demo-grid-3">
+        <div class="demo-box">
+            <h4>Variante large</h4>
+            <p class="typo-small mb-md"><code class="code-inline">.modal-dialog--lg</code> — 640px</p>
+            <button class="btn-secondary" data-modal-trigger="modal-width-lg">Ouvrir</button>
+        </div>
+        <div class="demo-box">
+            <h4>Sur-mesure</h4>
+            <p class="typo-small mb-md"><code class="code-inline">style="--modal-w: 720px"</code></p>
+            <button class="btn-secondary" data-modal-trigger="modal-width-custom">Ouvrir</button>
+        </div>
+        <div class="demo-box">
+            <h4>Palette en modale</h4>
+            <p class="typo-small mb-md"><code class="code-inline">.modal-dialog.cmd-palette</code> — 560px</p>
+            <button class="btn-secondary" data-modal-trigger="modal-width-palette">Ouvrir</button>
+        </div>
+    </div>
+
+    <dialog id="modal-width-lg" class="modal-dialog modal-dialog--lg" aria-labelledby="modal-width-lg-title">
+        <div class="modal-header">
+            <h3 id="modal-width-lg-title">Comparer deux versions</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Contenu riche (aperçu, comparaison, tableau) : la variante <code class="code-inline">--lg</code> passe la modale à 640px sans rien écrire côté application.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-modal-close>Fermer</button>
+        </div>
+    </dialog>
+
+    <dialog id="modal-width-custom" class="modal-dialog" style="--modal-w: 720px;" aria-labelledby="modal-width-custom-title">
+        <div class="modal-header">
+            <h3 id="modal-width-custom-title">Largeur sur-mesure</h3>
+            <button class="modal-close" data-modal-close aria-label="Fermer">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Une largeur hors barème se pose en local sur l'élément — <code class="code-inline">style="--modal-w: 720px"</code> — sans redéfinir la classe DS. C'est le mécanisme, pas une exception.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-modal-close>Fermer</button>
+        </div>
+    </dialog>
+
+    <dialog id="modal-width-palette" class="modal-dialog cmd-palette" aria-label="Palette de recherche">
+        <div class="cmd-input-wrap">
+            <span class="cmd-input-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-search"/></svg></span>
+            <input class="cmd-input" type="text" placeholder="Rechercher..." aria-label="Recherche">
+            <div class="cmd-kbd"><kbd>Esc</kbd></div>
+        </div>
+        <div class="cmd-results">
+            <div class="cmd-group-title">Résultats</div>
+            <div class="cmd-item active"><span class="cmd-item-icon"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-right"/></svg></span><span class="cmd-item-text">Compte rendu du 12 mars</span><span class="cmd-item-shortcut">Notes</span></div>
+            <div class="cmd-item"><span class="cmd-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></span><span class="cmd-item-text">Trame d'entretien</span><span class="cmd-item-shortcut">Modèles</span></div>
+        </div>
+        <div class="cmd-footer">
+            <span>&#8593;&#8595; Naviguer</span>
+            <button class="btn-ghost btn-sm" data-modal-close>Fermer</button>
+        </div>
+    </dialog>
+
     <dialog id="modal-confirm" class="modal-dialog" aria-labelledby="modal-confirm-title">
         <div class="modal-header">
             <h3 id="modal-confirm-title">Confirmer la suppression</h3>
