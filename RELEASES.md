@@ -1,5 +1,17 @@
 # Releases
 
+## 2.130.0 — 2026-08-30 — `Drawer` : variante de largeur `--lg`, demi-fenêtre desktop minimum (#912)
+
+> Touche `shared/css/tokens.css` + `shared/css/components/overlays.css` + `pages/overlays.html` + `shared/components-registry.json` ET `packages/react/**` (prop `size`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.51).
+
+### Added
+- **Tokens `--drawer-w` (320px) / `--drawer-w-lg` (50%) (`tokens.css`)** — sur le modèle de `--rail-w`/`--rail-w-collapsed` (#906) : `.drawer-panel` consomme désormais `var(--drawer-w)` au lieu d'une valeur en dur (320px, comportement strictement inchangé), et une nouvelle variante `.drawer-panel--lg` consomme `var(--drawer-w-lg)`.
+- **`.drawer-panel--lg` (`overlays.css`)** — demi-fenêtre desktop minimum, gate mobile-first `@media (min-width: 768px)`. Sous 768px, aucun changement : le repli mobile existant (`_responsive.css`, `.drawer-panel { width: 85% }` / `.drawer-panel--fullscreen { width: 100% }`) reste prioritaire, la variante `--lg` n'a donc AUCUN effet en mobile — pas de modification requise côté `_responsive.css`.
+- **Showcase (`pages/overlays.html` #drawer)** — 3e démo (« Drawer large (--lg, ≥768px) ») illustrant l'écran de capture de notes visé, grille passée en 3 colonnes.
+- **Registre** — `.drawer-panel--lg` ajoutée à `cssClasses` de l'entrée `drawer`, `node bin/generate-registry.js --check` rc=0 (idempotent, aucune dérive `module[]`).
+
+Demandé par KeepThread (`msyx-dev/keepthread#176`, audit UX senior, arbitrage propriétaire : « demi-page minimum en desktop, plein écran en mobile » pour l'écran de capture de notes en réunion) — bloqué faute de variante de largeur, la surcharge locale étant explicitement écartée par la convention DS (source unique). **Aucune rupture d'API** : un consumer qui ne passe pas la nouvelle variante garde exactement son rendu actuel. `@ds-version` 2.129.0 → 2.130.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.129.0 — 2026-08-29 — Dropdown : création à la volée quand la recherche ne donne rien (#855)
 
 > Touche `shared/css/components/forms.css` + `shared/components.js` + `pages/formulaires.html` ET `packages/react/**` (mêmes extensions côté wrapper, cf. `packages/react/RELEASES.md` v3.0.0-alpha.50).
