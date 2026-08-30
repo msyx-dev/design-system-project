@@ -25,6 +25,15 @@ export interface DrawerProps {
    */
   fullscreen?: boolean;
   /**
+   * Variante de largeur desktop (≥768px, sans effet en mobile où le panneau
+   * reste plein écran/85% quelle que soit la valeur — cf. `_responsive.css`).
+   * `"default"` = `--drawer-w` (320px, inchangé). `"lg"` = ajoute
+   * `.drawer-panel--lg`, `--drawer-w-lg` (50% du viewport) — demi-fenêtre
+   * minimum demandée pour un écran de capture dense (`msyx-dev/keepthread#176`,
+   * #912). @default "default"
+   */
+  size?: "default" | "lg";
+  /**
    * Retire le padding par défaut du `.drawer-body` (`padding: 0` inline) pour
    * un contenu full-bleed (ex. `.list`). Le CSS DS ne fournit pas de classe
    * flush — le style est donc posé INLINE (calque de la variante liste vanilla
@@ -76,6 +85,13 @@ export interface DrawerProps {
  * 200/201) — requis en usage réel. `fullscreen={false}` garde le drawer dans
  * le flux d'un parent positionné (mode demo `.drawer-preview`).
  *
+ * **Variante de largeur `size` (#912)** : `"lg"` ajoute `.drawer-panel--lg`,
+ * qui consomme `--drawer-w-lg` (50%) à partir de 768px — orthogonal à
+ * `fullscreen` (les deux se combinent librement). Sous 768px, sans effet : le
+ * repli mobile existant (`_responsive.css`, 100%/85%) reste prioritaire quelle
+ * que soit la variante desktop. `"default"` (défaut) reste `--drawer-w`
+ * (320px) — aucune rupture pour les consumers existants.
+ *
  * **Focus restore WAI-APG (WCAG 2.4.3)** — calque `attachFocusRestore`
  * (`shared/components.js`, cf. Modal) : à l'ouverture, capture
  * `document.activeElement` puis déplace le focus sur le bouton de fermeture ;
@@ -123,6 +139,7 @@ export function Drawer({
   actions,
   closeLabel = "Fermer",
   fullscreen = true,
+  size = "default",
   flush,
   bodyClassName,
   className,
@@ -181,6 +198,7 @@ export function Drawer({
     "drawer-panel",
     open ? "open" : null,
     fullscreen ? "drawer-panel--fullscreen" : null,
+    size === "lg" ? "drawer-panel--lg" : null,
     className,
   ]
     .filter(Boolean)
