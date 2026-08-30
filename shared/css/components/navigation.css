@@ -449,6 +449,18 @@
     border-top: 1px solid var(--border-color);
     flex-shrink: 0;
 }
+/* Repli en pied (#920) — `.rail-toggle` fonctionne telle quelle dans le pied,
+   aucune classe nouvelle ; il lui manquait seulement l'alignement que
+   `.rail-header` lui donne via `justify-content: space-between`. Sans ces deux
+   lignes, le bouton se retrouve collé a gauche sous des entrees pleine largeur,
+   ce qui le fait lire comme un element egare plutot que comme le pendant du
+   chevron de tete. En mode replie, `.rail-sidebar.collapsed .rail-toggle`
+   continue de s'appliquer : rien n'est duplique ici. */
+.rail-footer .rail-toggle {
+    display: block;
+    margin-inline-start: auto;
+    margin-inline-end: var(--space-md);
+}
 .rail-content {
     flex: 1;
     padding: var(--space-lg);
