@@ -1,5 +1,28 @@
 # Releases
 
+## 2.133.0 — 2026-08-30 — `.page-content--wide` : un gabarit de page pour les vues de données (#859)
+
+> Touche `shared/css/tokens.css` + `shared/css/layout.css` + `pages/fondation.html` + `shared/components-registry.json`. **Aucun bump `packages/react`** : `.page-content` est un layout appliqué en `className`, sans wrapper (registre `react: "n-a"`).
+
+### Added
+- **Token `--content-max-wide` (1440px) + variante `.page-content--wide`** — la variante **remappe** `--content-max`, elle ne redéclare aucune propriété : centrage, gouttières responsives et dégagement de la bottom-nav mobile restent rigoureusement ceux de `.page-content`. Même mécanisme que `--modal-w` (#917), `--drawer-w` (#912) et `--rail-w` (#906) : le DS n'a plus qu'un seul patron de largeur.
+- **Largeur hors barème** — `style="--content-max: 1800px"` posé sur l'élément suffit, sans réécrire de classe côté application.
+
+### Changed
+- **Le défaut ne bouge pas.** `--content-max` reste `72ch` : une page de texte garde exactement sa mesure de lecture. `.page-content--wide` est strictement opt-in.
+
+**Mesuré, pas supposé** (sonde Playwright, table de 7 colonnes dans un `.data-grid-wrap`) :
+
+| Viewport | `.page-content` | `--wide` | `--wide` + `--content-max: 1800px` |
+|---|---|---|---|
+| 1920 | 641px — table **en défilement** | **1440px** — table entière (1342px) | 1800px |
+| 1440 | 641px — table **en défilement** | 1440px — table entière | 1440px (borné par la fenêtre) |
+| 375 | 375px | 375px | 375px — gouttières mobiles inchangées |
+
+Le cas de l'issue est exactement la première colonne : sur un écran de 1920px, une grille de 7 colonnes partait en défilement horizontal dans un conteneur de 641px — et avec une colonne épinglée (`.data-grid-col-sticky-end`), ce défilement faisait recouvrir les données. En mobile, rien ne change : un tableau de 7 colonnes défile de toute façon, et le padding de 16px est conservé.
+
+Demandé par KeepThread (`msyx-dev/keepthread#94`), retour d'usage sur la préprod : « pourquoi c'est si petit en largeur ? on n'est pas en mobile, on est desktop-first ». Le consommateur n'avait que de mauvaises options — garder le tableau à l'étroit, ou écrire sa propre classe, ce que la convention lui interdit. Test de régression `tests/vanilla/page-content.test.js` (nouveau — ce conteneur n'en avait aucun). `@ds-version` 2.132.0 → 2.133.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.132.0 — 2026-08-30 — `modal-dialog` : largeur pilotée par token (#917)
 
 > Touche `shared/css/tokens.css` + `shared/css/components/overlays.css` + `shared/css/components/version-notes.css` + `pages/overlays.html` + `shared/components-registry.json`. **Aucun bump `packages/react`** : `<Modal>`/`<CommandPalette>` héritent du CSS, aucun wrapper n'est modifié.
