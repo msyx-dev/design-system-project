@@ -3230,12 +3230,13 @@
       "page": "fondation",
       "cssClasses": [
         ".page-content",
+        ".page-content--wide",
         ".main--no-rail",
         ".content-grid"
       ],
       "jsInit": null,
       "react": "n-a",
-      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53. Non portable — layout, s'applique en className (#870). NB : #859 (variante large pour vues de données) est un chantier CSS distinct, sans rapport avec ce statut React."
+      "description": "Conteneur de page pour consumers sans sidebar (#567). max-width var(--content-max), centré, padding-inline responsive, padding-bottom dégageant bottom-nav. + .page-content--wide : variante vues de données (tableaux, grilles), remappe le token sur var(--content-max-wide) = 1440px — 72ch est une mesure de lecture qui étrangle un tableau (#859) ; largeur hors barème via style=\"--content-max: …\" en local, jamais une classe réécrite côté app. + .content-grid : conteneur large pour fil de cartes en grille, max-width var(--content-grid-max), #53. Non portable — layout, s'applique en className (#870)."
     },
     {
       "name": "detail-grid",

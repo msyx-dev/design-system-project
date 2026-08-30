@@ -709,6 +709,7 @@
             <p class="text-muted text-sm mb-md">Pour les consumers <strong>sans sidebar</strong> (ex. mikpulse P0 public). Applique : max-width <code>var(--content-max)</code> = 72ch, centrage, padding-inline responsive, padding-bottom dégageant la bottom-nav mobile.</p>
             <div class="token-list">
                 <div class="flex-center-gap"><code class="text-xs">.page-content</code><span class="text-muted text-xs">max-width:72ch · margin-inline:auto · padding-inline responsive · padding-bottom dégagé bottom-nav</span></div>
+                <div class="flex-center-gap"><code class="text-xs">.page-content--wide</code><span class="text-muted text-xs">Variante <strong>vues de données</strong> (tableaux, grilles) : max-width 1440px. Tout le reste identique — la variante remappe le token, elle ne redéclare rien</span></div>
                 <div class="flex-center-gap"><code class="text-xs">.main--no-rail</code><span class="text-muted text-xs">Variante .main sans sidebar : margin-inline-start:0 + --sidebar-w:0</span></div>
             </div>
         </div>
@@ -725,12 +726,19 @@
 &lt;main class="page-content"&gt;
   &lt;!-- --sidebar-w:0 est garanti par l'absence de .main --&gt;
   &lt;!-- padding-bottom dégagement bottom-nav inclus --&gt;
+&lt;/main&gt;
+
+&lt;!-- Option C : vue de données (tableau, grille) — #859 --&gt;
+&lt;main class="page-content page-content--wide"&gt;
+  &lt;!-- 1440px au lieu de 72ch : un .data-grid respire au lieu --&gt;
+  &lt;!-- de partir en défilement horizontal sur un écran large --&gt;
 &lt;/main&gt;</pre>
         </div>
         <div class="demo-box mt-sm">
             <span class="demo-label text-xs">Tokens concernés</span>
             <div class="token-list mt-sm">
                 <div class="flex-center-gap"><code class="text-xs">--content-max</code><span class="text-muted text-xs">72ch — mesure typo optimale pour lecture longue</span></div>
+                <div class="flex-center-gap"><code class="text-xs">--content-max-wide</code><span class="text-muted text-xs">1440px — appliqué par <code class="text-xs">.page-content--wide</code>. Pour une largeur hors barème : <code class="text-xs">style="--content-max: 1800px"</code> sur l'élément, jamais une classe réécrite côté app</span></div>
                 <div class="flex-center-gap"><code class="text-xs">--bottom-nav-h</code><span class="text-muted text-xs">60px — hauteur .bottom-nav fixe (pad-bottom mobile)</span></div>
             </div>
         </div>

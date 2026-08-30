@@ -130,6 +130,18 @@
     box-sizing: border-box;
 }
 
+/* Variante LARGE — vues de donnees (#859).
+   `.page-content` est calibree pour du TEXTE : 72ch est une mesure de lecture,
+   et elle etrangle un tableau. Un .data-grid (min-width 640px) y part en
+   defilement horizontal alors que l'ecran a de la place — et si une colonne est
+   epinglee (.data-grid-col-sticky-end), elle recouvre les donnees en defilant.
+   La variante REMAPPE le token plutot que de redeclarer une max-width : le
+   centrage, les gouttieres responsives et le degagement de la bottom-nav sont
+   donc rigoureusement ceux de `.page-content` (meme mecanisme que --modal-w,
+   #917). Largeur sur-mesure : `style="--content-max: 1800px"` sur l'element.
+   Usage : <main class="page-content page-content--wide"> */
+.page-content--wide { --content-max: var(--content-max-wide); }
+
 @media (min-width: 768px) {
     .page-content {
         padding-inline: var(--space-xl);

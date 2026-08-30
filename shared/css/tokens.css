@@ -90,6 +90,11 @@
        localement si lead/actions/breadcrumb alourdissent le header. */
     --bottom-nav-h: 60px;  /* hauteur de .bottom-nav fixe (#567/#568) */
     --content-max: 72ch;   /* mesure typo optimale .page-content (#567) */
+    --content-max-wide: 1440px; /* variante .page-content--wide — vues de donnees (#859).
+       72ch est une mesure de LECTURE : elle etrangle un tableau. 1440px = poste de
+       travail courant, gouttieres conservees ; borne volontairement (au-dela, une
+       ligne de tableau devient illisible d'un bout a l'autre). Surchargeable en
+       local via `style="--content-max: …"`, meme mecanisme que --modal-w (#917). */
     --content-grid-max: 1200px; /* largeur max d'un fil de cartes .content-grid (#53) */
     --opacity-muted: 0.85; /* opacité atténuation .card-muted — WCAG-safe (#569) */
     --sidebar-bg: rgba(10, 15, 30, 0.85);
