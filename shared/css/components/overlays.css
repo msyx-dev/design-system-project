@@ -297,13 +297,21 @@ dialog.modal-dialog .modal-actions {
 .drawer-preview { position: relative; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; background: var(--primary); min-height: 350px; }
 .drawer-overlay { position: absolute; inset: 0; background: var(--overlay); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-.drawer-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 320px; background: var(--surface-solid); border-left: 1px solid var(--border-color); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 10; display: flex; flex-direction: column; }
+.drawer-panel { position: absolute; top: 0; right: 0; bottom: 0; width: var(--drawer-w); background: var(--surface-solid); border-left: 1px solid var(--border-color); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 10; display: flex; flex-direction: column; }
 .drawer-panel.open { transform: translateX(0); }
 /* Variante plein-écran : le panel et son overlay couvrent toute la fenêtre (position:fixed).
    Utile quand le drawer n'est pas enfant d'un .drawer-preview container.
    Usage : <div class="drawer-overlay drawer-overlay--fullscreen"> + <div class="drawer-panel drawer-panel--fullscreen"> */
 .drawer-overlay--fullscreen { position: fixed; inset: 0; z-index: 200; }
 .drawer-panel--fullscreen { position: fixed; top: 0; right: 0; bottom: 0; z-index: 201; }
+/* Variante --lg : demi-fenetre desktop minimum (#912, arbitrage keepthread#176 — ecran de
+   capture pendant une reunion, ne peut plus se contenter des 320px fixes). Mobile-first :
+   ne s'applique qu'a partir de 768px ; en dessous, le repli mobile existant (100%/85%,
+   _responsive.css) reste prioritaire et n'a pas besoin d'etre touche — meme comportement
+   plein ecran quelle que soit la variante desktop. Usage : <div class="drawer-panel drawer-panel--lg"> */
+@media (min-width: 768px) {
+    .drawer-panel--lg { width: var(--drawer-w-lg); }
+}
 .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); }
 .drawer-header h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
 .drawer-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; padding: 0; }
