@@ -109,9 +109,9 @@ describe("Drawer — structure & a11y", () => {
     );
     const body = document.querySelector(".drawer-body");
     expect(body).toBeInTheDocument();
-    expect(body?.querySelector('[data-testid="body-content"]')).toHaveTextContent(
-      "Formulaire",
-    );
+    expect(
+      body?.querySelector('[data-testid="body-content"]'),
+    ).toHaveTextContent("Formulaire");
   });
 });
 
@@ -184,6 +184,52 @@ describe("Drawer — modifieur structurel --fullscreen", () => {
     expect(document.querySelector(".drawer-panel")).not.toHaveClass(
       "drawer-panel--fullscreen",
     );
+  });
+});
+
+describe("Drawer — variante de largeur size (#912)", () => {
+  it('size par défaut ("default") : pas de .drawer-panel--lg', () => {
+    render(
+      <Drawer open onClose={() => {}}>
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-panel")).not.toHaveClass(
+      "drawer-panel--lg",
+    );
+  });
+
+  it('size="lg" : .drawer-panel--lg posé sur le panel', () => {
+    render(
+      <Drawer open onClose={() => {}} size="lg">
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-panel")).toHaveClass(
+      "drawer-panel--lg",
+    );
+  });
+
+  it('size="lg" ne touche pas .drawer-overlay (modifieur porté par le panel seul)', () => {
+    render(
+      <Drawer open onClose={() => {}} size="lg">
+        Corps
+      </Drawer>,
+    );
+    expect(document.querySelector(".drawer-overlay")).not.toHaveClass(
+      "drawer-panel--lg",
+    );
+  });
+
+  it('size="lg" se combine avec fullscreen (les deux modifieurs coexistent)', () => {
+    render(
+      <Drawer open onClose={() => {}} size="lg" fullscreen>
+        Corps
+      </Drawer>,
+    );
+    const panel = document.querySelector(".drawer-panel");
+    expect(panel).toHaveClass("drawer-panel--lg");
+    expect(panel).toHaveClass("drawer-panel--fullscreen");
   });
 });
 
@@ -466,7 +512,12 @@ describe("Drawer — piège de tabulation (#862)", () => {
         <button type="button" id="derriere">
           Bouton d&apos;arriere-plan
         </button>
-        <Drawer open onClose={() => {}} title="Capture" actions={<button type="button">Enregistrer</button>}>
+        <Drawer
+          open
+          onClose={() => {}}
+          title="Capture"
+          actions={<button type="button">Enregistrer</button>}
+        >
           <input aria-label="Titre" />
           <input aria-label="Note" />
         </Drawer>
@@ -478,7 +529,11 @@ describe("Drawer — piège de tabulation (#862)", () => {
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
       ),
     );
-    return { panel, first: focusables[0], last: focusables[focusables.length - 1] };
+    return {
+      panel,
+      first: focusables[0],
+      last: focusables[focusables.length - 1],
+    };
   }
 
   it("Tab depuis le dernier element focalisable revient au premier (jamais l'arriere-plan)", () => {

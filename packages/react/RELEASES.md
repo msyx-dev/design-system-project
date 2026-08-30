@@ -4,6 +4,15 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.51 — 2026-08-30 — `<Drawer>` : variante de largeur `size` (#912)
+
+> Le CSS et la démo vanilla correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.130.0.
+
+### Added
+- **`size?: "default" | "lg"`** — variante de largeur desktop du panneau. `"lg"` ajoute `.drawer-panel--lg`, qui consomme le nouveau token `--drawer-w-lg` (50% du viewport) à partir de 768px — demi-fenêtre minimum demandée par KeepThread (`msyx-dev/keepthread#176`) pour un écran de capture de notes dense, pris en réunion. `"default"` (valeur par défaut) reste `--drawer-w` (320px, inchangé). Orthogonal à `fullscreen` : les deux modifieurs se combinent librement sur `.drawer-panel`.
+- Sans effet en mobile (<768px) : le repli plein écran/85% existant reste inchangé quelle que soit la variante `size` — aucune logique supplémentaire côté composant, tout est porté par la media query CSS.
+- **Rétrocompatibilité totale** : sans `size`, le rendu d'un `<Drawer>` existant ne change pas (`"default"` produit exactement le même markup qu'avant #912). 4 tests ajoutés (`Drawer.test.tsx`) : défaut sans `--lg`, `size="lg"` pose `.drawer-panel--lg` sur le panel, le modifieur ne fuit pas sur `.drawer-overlay`, combinaison avec `fullscreen`.
+
 ## v3.0.0-alpha.50 — 2026-08-29 — `<Dropdown>` : création à la volée + recherche contrôlable (#855)
 
 > Le CSS et la démo vanilla correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.129.0.
