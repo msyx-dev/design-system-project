@@ -12,6 +12,12 @@ const ALL_NAMES: IconName[] = [
   "chevron-right",
   "chevron-down",
   "check",
+  // `plus`, `link` et `sparkles` etaient exposes par <Icon> mais ABSENTS de
+  // cette liste : trois glyphes non testes, decouverts par le garde-fou de
+  // synchronisation ajoute en #921.
+  "plus",
+  "link",
+  "sparkles",
   "upload",
   "file",
   "folder",
