@@ -14,6 +14,17 @@
   },
   "released": [
     {
+      "version": "2.135.1",
+      "date": "2026-08-31",
+      "titre": "Le nombre d'icônes annoncé était faux",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "La page de référence des icônes annonçait 53 icônes disponibles alors que la bibliothèque en compte 60. Le chiffre est désormais calculé automatiquement à partir de la bibliothèque elle-même : il ne pourra plus se désynchroniser."
+        }
+      ]
+    },
+    {
       "version": "2.135.0",
       "date": "2026-08-31",
       "titre": "Un indicateur à zéro n'est plus peint comme une alerte",

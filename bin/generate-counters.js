@@ -22,6 +22,11 @@
  *    Écrit dans : site.html (`<span class="hub-card-count">N sections</span>`
  *    de chaque hub-card, dans l'ordre d'apparition).
  *
+ * 3bis. Compteur d'icônes de pages/fondation.html (#927) — source de vérité :
+ *    nombre de `<symbol id="i-…">` dans shared/icons/sprite.svg. Il était écrit
+ *    EN DUR et avait dérivé (53 affichées pour 60 dans le sprite) : c'est la
+ *    page de référence des icônes, et rien ne comparait ce texte à sa source.
+ *
  * 3. Version affichée sur la page d'accueil — source de vérité : `const
  *    VERSION` de shared/nav.js (== @ds-version, cf. shared/check-versions.sh).
  *    Écrit dans : site.html (fin de la meta description + début du footer).
@@ -53,6 +58,8 @@ const SITE_PATH = path.join(ROOT, 'site.html');
 const ARCHITECTURE_PATH = path.join(ROOT, 'docs', 'ARCHITECTURE.md');
 const NAV_JS_PATH = path.join(ROOT, 'shared', 'nav.js');
 const PAGES_DIR = path.join(ROOT, 'pages');
+const SPRITE_PATH = path.join(ROOT, 'shared', 'icons', 'sprite.svg');
+const FONDATION_PATH = path.join(PAGES_DIR, 'fondation.html');
 
 // ─── Sources de vérité ──────────────────────────────────────────────────────
 
@@ -71,6 +78,17 @@ function getVersion() {
   const m = navJs.match(/const\s+VERSION\s*=\s*'([0-9]+\.[0-9]+\.[0-9]+)'/);
   if (!m) throw new Error("shared/nav.js : \"const VERSION = '…'\" introuvable.");
   return m[1];
+}
+
+// Glyphes réellement présents dans le sprite (#927) — un `<symbol id="i-…">`
+// par icône, prefixe `i-` garanti par shared/icons/build-sprite.sh.
+function countSpriteIcons() {
+  const svg = fs.readFileSync(SPRITE_PATH, 'utf8');
+  const matches = svg.match(/<symbol\s+id="i-[^"]+"/g);
+  if (!matches || matches.length === 0) {
+    throw new Error('shared/icons/sprite.svg : aucun <symbol id="i-…"> trouvé.');
+  }
+  return matches.length;
 }
 
 // Nombre réel de sections d'une page — même logique que l'historique
@@ -167,12 +185,22 @@ function updateArchitectureMd(md, count) {
   return md.replace(re, '**' + count + ' composants UI**');
 }
 
-function transform(siteHtml, archMd, count, version) {
+// pages/fondation.html : « N icones disponibles » de la section Iconographie.
+function updateIconCount(html, icons) {
+  const re = /(\d+)( icones disponibles)/;
+  if (!re.test(html)) {
+    throw new Error('pages/fondation.html : motif "N icones disponibles" introuvable (section Iconographie).');
+  }
+  return html.replace(re, (m, n, suf) => icons + suf);
+}
+
+function transform(siteHtml, archMd, fondationHtml, count, version, icons) {
   let site = updateComponentCount(siteHtml, count);
   site = updateVersion(site, version);
   site = updateHubCardCounts(site);
   const arch = updateArchitectureMd(archMd, count);
-  return { site, arch };
+  const fondation = updateIconCount(fondationHtml, icons);
+  return { site, arch, fondation };
 }
 
 // ─── Main ───────────────────────────────────────────────────────────────────
@@ -183,12 +211,19 @@ function transform(siteHtml, archMd, count, version) {
 
     const count = countComponents();
     const version = getVersion();
+    const icons = countSpriteIcons();
     console.log('[generate-counters] Composants (kind:component, registre) : ' + count);
     console.log('[generate-counters] Version (shared/nav.js const VERSION) : ' + version);
+    console.log('[generate-counters] Icones (symbols du sprite) : ' + icons);
 
     const siteBefore = fs.readFileSync(SITE_PATH, 'utf8');
     const archBefore = fs.readFileSync(ARCHITECTURE_PATH, 'utf8');
-    const { site: siteAfter, arch: archAfter } = transform(siteBefore, archBefore, count, version);
+    const fondationBefore = fs.readFileSync(FONDATION_PATH, 'utf8');
+    const {
+      site: siteAfter,
+      arch: archAfter,
+      fondation: fondationAfter,
+    } = transform(siteBefore, archBefore, fondationBefore, count, version, icons);
 
     if (CHECK_MODE) {
       const errors = [];
@@ -198,29 +233,36 @@ function transform(siteHtml, archMd, count, version) {
       if (archAfter !== archBefore) {
         errors.push('docs/ARCHITECTURE.md : compteur composants désynchronisé du registre (attendu ' + count + ').');
       }
+      if (fondationAfter !== fondationBefore) {
+        errors.push('pages/fondation.html : compteur d\'icones desynchronise du sprite (attendu ' + icons + ').');
+      }
       if (errors.length) {
         console.error('\n[ERREUR --check] Compteurs désynchronisés :');
         errors.forEach((e) => console.error('  ' + e));
-        console.error('\nLancez :\n  node bin/generate-counters.js\npuis committez site.html / docs/ARCHITECTURE.md.');
+        console.error('\nLancez :\n  node bin/generate-counters.js\npuis committez site.html / docs/ARCHITECTURE.md / pages/fondation.html.');
         process.exit(1);
       }
-      console.log('\n[OK] Compteurs à jour (site.html + docs/ARCHITECTURE.md).');
+      console.log('\n[OK] Compteurs à jour (site.html + docs/ARCHITECTURE.md + pages/fondation.html).');
       process.exit(0);
     }
 
     fs.writeFileSync(SITE_PATH, siteAfter, 'utf8');
     fs.writeFileSync(ARCHITECTURE_PATH, archAfter, 'utf8');
+    fs.writeFileSync(FONDATION_PATH, fondationAfter, 'utf8');
 
     // Idempotence : une 2e passe ne doit rien changer.
     const site2 = transform(
       fs.readFileSync(SITE_PATH, 'utf8'),
       fs.readFileSync(ARCHITECTURE_PATH, 'utf8'),
+      fs.readFileSync(FONDATION_PATH, 'utf8'),
       count,
-      version
+      version,
+      icons
     );
     if (
       site2.site !== fs.readFileSync(SITE_PATH, 'utf8') ||
-      site2.arch !== fs.readFileSync(ARCHITECTURE_PATH, 'utf8')
+      site2.arch !== fs.readFileSync(ARCHITECTURE_PATH, 'utf8') ||
+      site2.fondation !== fs.readFileSync(FONDATION_PATH, 'utf8')
     ) {
       throw new Error('Idempotence KO — re-génération produit un résultat différent.');
     }

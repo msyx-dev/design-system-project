@@ -1,5 +1,17 @@
 # Releases
 
+## 2.135.1 — 2026-08-31 — Iconographie : le compteur d'icônes est dérivé du sprite (#927)
+
+> Touche `pages/fondation.html` + `bin/generate-counters.js`. Aucun composant, aucun CSS.
+
+### Fixed
+- **La page de référence des icônes annonçait un chiffre faux** — « 53 icones disponibles », écrit **en dur**, pour **60** `<symbol>` réellement présents dans `shared/icons/sprite.svg`. Il avait dérivé au fil des ajouts au sprite (`undo-2`/`redo-2` en #697, entre autres), et rien ne comparait ce texte à sa source. Trois chiffres divergeaient : 60 dans le sprite, 53 annoncés, 26 tuiles présentées.
+
+### Changed
+- **`bin/generate-counters.js` gagne une 4ᵉ famille de valeurs dérivées** (après le compteur de composants, les sections par hub-card et la version affichée) : source de vérité = le nombre de `<symbol id="i-…">` du sprite. Le mode `--check`, déjà câblé en CI, **échoue désormais si le texte diverge** — vérifié par mutation : ramené à 53, le check sort en erreur et nomme le fichier à régénérer.
+
+Sans cela, le chiffre serait redevenu faux au prochain glyphe ajouté — c'est exactement ce qui s'était produit. `@ds-version` 2.135.0 → 2.135.1 (patch), `shared/check-versions.sh` rc=0. Aucun bump `packages/react`.
+
 ## 2.135.0 — 2026-08-31 — `Alert` neutre, repli de rail en pied, 9 glyphes portés (#923, #920, #921)
 
 > Lot demandé par KeepThread (`#207`/`#209`). Touche `shared/css/components/alerts.css` + `pages/fondation.html` + `pages/navigation.html` + `pages/feedback.html` + `shared/components-registry.json` ET `packages/react/**` (cf. `packages/react/RELEASES.md` v3.0.0-alpha.55).
