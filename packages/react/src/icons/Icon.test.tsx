@@ -36,6 +36,41 @@ const ALL_NAMES: IconName[] = [
   "edit",
   "info",
   "settings",
+  "menu",
+  "chevron-up",
+  "arrow-left",
+  "arrow-right",
+  "minus",
+  "trash",
+  "copy",
+  "external-link",
+  "download",
+  "refresh-cw",
+  "scissors",
+  "undo-2",
+  "redo-2",
+  "x",
+  "alert-circle",
+  "check-circle",
+  "x-circle",
+  "loader",
+  "image",
+  "code",
+  "terminal",
+  "layout",
+  "package",
+  "server",
+  "user",
+  "users",
+  "mail",
+  "phone",
+  "calendar",
+  "lock",
+  "palette",
+  "command",
+  "git-branch",
+  "zap",
+  "rocket",
 ];
 
 describe("Icon — primitif inline auto-contenu (#713)", () => {
@@ -84,7 +119,11 @@ describe("Icon — primitif inline auto-contenu (#713)", () => {
     ALL_NAMES.forEach((name) => {
       const { container, unmount } = render(<Icon name={name} />);
       const svg = container.querySelector(`svg[data-icon="${name}"]`);
-      expect(svg?.querySelector("path, circle")).not.toBeNull();
+      // `server` n'a ni path ni circle (2 <rect> + 2 <line>) : la liste des
+      // formes SVG possibles ne se limite pas a path/circle (#929).
+      expect(
+        svg?.querySelector("path, circle, rect, line, polyline, polygon"),
+      ).not.toBeNull();
       expect(svg?.querySelector("use")).toBeNull();
       unmount();
     });
@@ -152,7 +191,9 @@ describe("Icon — fidélité au sprite (#921)", () => {
       ICON_SOURCE.indexOf("const ICON_CHILDREN"),
       ICON_SOURCE.indexOf("\n};", ICON_SOURCE.indexOf("const ICON_CHILDREN")),
     );
-    const keys = [...body.matchAll(/^ {2}"?([a-z-]+)"?:/gm)].map((m) => m[1]);
+    // [a-z0-9-] et non [a-z-] : `undo-2`/`redo-2` portent un chiffre, ils
+    // etaient invisibles pour ce controle de synchronisation (#929).
+    const keys = [...body.matchAll(/^ {2}"?([a-z0-9-]+)"?:/gm)].map((m) => m[1]);
     expect([...keys].sort()).toEqual([...ALL_NAMES].sort());
   });
 

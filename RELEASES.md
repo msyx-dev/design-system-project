@@ -1,5 +1,14 @@
 # Releases
 
+## 2.136.0 — 2026-08-31 — Iconographie : la planche présente les 60 glyphes (#929)
+
+> Touche `pages/fondation.html` ET `packages/react/**` (`<Icon>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.56).
+
+### Added
+- **La planche du showcase présente les 60 glyphes du sprite**, contre **17** auparavant. Un consommateur ne pouvait pas savoir que les 43 autres existaient — c'est précisément ce qui a produit #921 : une application a demandé 9 glyphes qui étaient déjà là.
+
+`@ds-version` 2.135.1 → 2.136.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.135.1 — 2026-08-31 — Iconographie : le compteur d'icônes est dérivé du sprite (#927)
 
 > Touche `pages/fondation.html` + `bin/generate-counters.js`. Aucun composant, aucun CSS.
