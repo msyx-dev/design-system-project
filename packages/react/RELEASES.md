@@ -4,6 +4,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.56 — 2026-08-31 — `<Icon>` expose les 60 glyphes du sprite (#929)
+
+> La planche du showcase correspondante est livrée dans la même PR, cf. `../../RELEASES.md` v2.136.0.
+
+### Added
+- **35 glyphes portés** : `alert-circle`, `arrow-left`, `arrow-right`, `calendar`, `check-circle`, `chevron-up`, `code`, `command`, `copy`, `download`, `external-link`, `git-branch`, `image`, `layout`, `loader`, `lock`, `mail`, `menu`, `minus`, `package`, `palette`, `phone`, `redo-2`, `refresh-cw`, `rocket`, `scissors`, `server`, `terminal`, `trash`, `undo-2`, `user`, `users`, `x`, `x-circle`, `zap`. `<Icon>` couvre désormais **60/60**.
+- **Traité en bloc, et non au fil des demandes** : #921 avait porté 9 glyphes parce qu'un rail replié s'affichait en carrés vides. Le même ticket serait revenu consommateur par consommateur pour un travail purement mécanique — les tracés existaient déjà.
+
+### Fixed
+- **Deux angles morts du garde-fou de #921, révélés par les nouveaux glyphes** : son contrôle de synchronisation lisait les clés avec `[a-z-]+`, donc `undo-2` et `redo-2` (les seuls noms portant un chiffre) lui étaient **invisibles** ; et son contrôle de présence ne cherchait que `path, circle`, alors que `server` n'est fait que de `<rect>` et de `<line>`. Les deux sont corrigés — le garde-fou couvre maintenant réellement les 60.
+
+Aucun changement de comportement sur les 25 glyphes existants. 35 cas ajoutés (le garde-fou les couvre automatiquement, aucun test n'a eu à être écrit pour eux), suite complète **2046 tests verts**, `npx tsc --noEmit` rc=0.
+
 ## v3.0.0-alpha.55 — 2026-08-31 — 9 glyphes portés, repli de rail en pied, `Alert` neutre (#921, #920, #923)
 
 > Le CSS et les démos correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.135.0.

@@ -14,6 +14,21 @@
   },
   "released": [
     {
+      "version": "2.136.0",
+      "date": "2026-08-31",
+      "titre": "Toute la bibliothèque d'icônes est enfin disponible",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Les 60 icônes de la bibliothèque sont désormais utilisables dans les applications React — il n'y en avait que 25, alors que les 35 autres étaient déjà dessinées. Parmi elles, des symboles du quotidien : fermer, utilisateur, corbeille, copier, télécharger, cadenas, courrier, calendrier, menu, flèches."
+        },
+        {
+          "type": "amelioration",
+          "text": "La page de référence les présente toutes : elle n'en montrait que 17, si bien qu'on ne pouvait pas savoir que les autres existaient."
+        }
+      ]
+    },
+    {
       "version": "2.135.1",
       "date": "2026-08-31",
       "titre": "Le nombre d'icônes annoncé était faux",
