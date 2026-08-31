@@ -3,7 +3,18 @@ import { forwardRef, HTMLAttributes, ReactNode } from "react";
 /**
  * Variantes sémantiques de `.alert` (`shared/css/components/alerts.css:8-11`).
  */
-export type AlertVariant = "info" | "success" | "warning" | "danger";
+/**
+ * `"neutral"` (#923) : variante NON sémantique — pour un indicateur qui ne
+ * signale rien (un compteur à zéro). Sans elle, `variant` retombait sur
+ * `"info"` et peignait en couleur d'état une information qui n'en est pas une.
+ * Le défaut reste `"info"` : aucun consommateur existant ne bouge.
+ */
+export type AlertVariant =
+  | "info"
+  | "success"
+  | "warning"
+  | "danger"
+  | "neutral";
 
 export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
   /** @default "info" */

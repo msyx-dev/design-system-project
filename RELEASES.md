@@ -1,5 +1,19 @@
 # Releases
 
+## 2.135.0 — 2026-08-31 — `Alert` neutre, repli de rail en pied, 9 glyphes portés (#923, #920, #921)
+
+> Lot demandé par KeepThread (`#207`/`#209`). Touche `shared/css/components/alerts.css` + `pages/fondation.html` + `pages/navigation.html` + `pages/feedback.html` + `shared/components-registry.json` ET `packages/react/**` (cf. `packages/react/RELEASES.md` v3.0.0-alpha.55).
+
+### Added
+- **`.alert-neutral` — variante NON sémantique (#923).** Les quatre variantes étaient toutes colorées : un indicateur chiffré à **zéro**, qui ne signale rien, retombait sur `info` et s'affichait en couleur d'état — le signal perdait sa valeur partout ailleurs. `.badge-neutral` avait déjà résolu ce cas côté badge. Aucun token nouveau (`--text-muted`, `--border-color`), teinte reportée sur la barre gauche de `.alert--kpi` comme pour les quatre autres. **Le défaut reste `info`** : aucun consommateur existant ne bouge.
+- **Repli de rail en pied (#920)** — démo `navigation.html` : `.rail-toggle` dans `.rail-footer`. **Aucune classe CSS nouvelle** ; la classe n'était pas scopée au header, elle s'y comportait déjà correctement, et le blocage était entièrement côté React (cf. `togglePosition`). Une règle de composition a tout de même été ajoutée après avoir **regardé la capture** : il manquait au bouton l'alignement que `.rail-header` lui donne par `justify-content: space-between`, si bien qu'il se retrouvait collé à gauche sous des entrées pleine largeur — il se lisait comme un élément égaré plutôt que comme le pendant du chevron de tête. Deux lignes sur `.rail-footer .rail-toggle` ; **mesuré** : 17px de marge droite en pied comme en tête.
+- **Planche d'icônes complétée (#921)** — `layers`, `square-check` et `clock` manquaient au showcase alors qu'ils sont dans le sprite.
+
+### Changed
+- **Le showcase montrait lui-même l'anti-pattern** : la carte KPI « Zone neutre », valeur `0 €`, était rendue en `.alert-info`. Elle passe en `.alert-neutral` — la démonstration devient celle de la règle, plus celle du défaut.
+
+`@ds-version` 2.134.0 → 2.135.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.134.0 — 2026-08-30 — Time picker : l'heure facultative peut être effacée (#860)
 
 > Touche `shared/components.js` + `pages/formulaires.html` + `shared/components-registry.json` ET `packages/react/**` (`<TimePicker>` + `<NumberInput>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.54).

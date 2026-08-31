@@ -1,7 +1,7 @@
 {
-  "version": "2.134.0",
+  "version": "2.135.0",
   "generated": {
-    "at": "2026-08-30T20:57:44.934Z",
+    "at": "2026-08-30T22:35:34.610Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -267,6 +267,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/tables.css",
+        "shared/css/layout.css",
         "shared/css/components/_a11y.css"
       ]
     },
@@ -406,7 +407,8 @@
         ".alert-body",
         ".alert-desc",
         ".alert-value",
-        ".alert-actions"
+        ".alert-actions",
+        ".alert-neutral"
       ],
       "jsInit": null,
       "example": "<div class=\"alert alert-info\" role=\"alert\">\n  <span class=\"alert-icon\" aria-hidden=\"true\">&#128712;</span>\n  Mise à jour disponible pour votre projet.\n</div>\n\n<div class=\"alert alert--kpi alert-danger\">\n  <div class=\"alert-title\">Zone de perte</div>\n  <div class=\"alert-value\">-2 340 €</div>\n  <div class=\"alert-desc\">Marge négative sur ce segment.</div>\n</div>\n\n<div class=\"alert alert--cta alert-info\" role=\"alert\">\n  <div class=\"alert-icon\" aria-hidden=\"true\">⚡</div>\n  <div class=\"alert-body\">\n    <div class=\"alert-title\">Passez au plan Pro</div>\n    <div class=\"alert-desc\">Débloquez les exports illimités.</div>\n    <div class=\"alert-actions\"><button class=\"btn-primary btn-sm\">Voir les plans</button></div>\n  </div>\n</div>",
@@ -416,7 +418,8 @@
         "shared/css/components/forms.css",
         "shared/css/components/interactive.css",
         "shared/css/components/pricing.css"
-      ]
+      ],
+      "notes": " Variante NON sémantique .alert-neutral (#923) : un indicateur qui ne signale rien — un compteur à zéro — ne doit pas être peint en couleur d'état, sinon la couleur perd sa valeur de signal ailleurs. Même rôle que .badge-neutral. Défaut inchangé (info). Reportée sur la barre gauche de .alert--kpi."
     },
     {
       "name": "toast",
@@ -1392,7 +1395,8 @@
       "react": "ported",
       "module": [
         "shared/css/components/navigation.css"
-      ]
+      ],
+      "notes": " Position du bouton de repli (#920) : .rail-toggle n'est pas scopée au header et fonctionne telle quelle dans .rail-footer — côté React, prop togglePosition:'header'|'footer' (défaut 'header', rendu historique inchangé). Aucune classe CSS nouvelle."
     },
     {
       "name": "avatar-img",

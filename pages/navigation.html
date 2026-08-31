@@ -784,6 +784,50 @@
             </div>
         </div>
         <div class="demo-box">
+            <span class="demo-label">Repli en pied — <code class="code-inline">.rail-toggle</code> dans <code class="code-inline">.rail-footer</code> (#920)</span>
+            <div class="rail-demo" id="rail-demo-3">
+                <div class="rail-sidebar" id="rail-sidebar-3">
+                    <div class="rail-header">
+                        <span class="rail-logo">KeepThread</span>
+                    </div>
+                    <nav class="rail-nav" aria-label="Navigation principale">
+                        <a class="rail-item active" href="#" onclick="return false;" aria-current="page">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-home"/></svg></span>
+                            <span class="rail-item-label">Accueil</span>
+                            <span class="rail-tooltip">Accueil</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-search"/></svg></span>
+                            <span class="rail-item-label">Recherche</span>
+                            <span class="rail-tooltip">Recherche</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-layers"/></svg></span>
+                            <span class="rail-item-label">Familles</span>
+                            <span class="rail-tooltip">Familles</span>
+                        </a>
+                    </nav>
+                    <div class="rail-footer">
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-info"/></svg></span>
+                            <span class="rail-item-label">Aide</span>
+                            <span class="rail-tooltip">Aide</span>
+                        </a>
+                        <a class="rail-item" href="#" onclick="return false;">
+                            <span class="rail-item-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-settings"/></svg></span>
+                            <span class="rail-item-label">Paramètres</span>
+                            <span class="rail-tooltip">Paramètres</span>
+                        </a>
+                        <button class="rail-toggle" aria-label="Réduire la sidebar" aria-expanded="true"><svg class="icon icon--sm" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-chevron-left"/></svg></button>
+                    </div>
+                </div>
+                <div class="rail-content">
+                    <div class="rail-content-title">Contenu principal</div>
+                    <div class="rail-content-desc">Le bouton de repli vit en pied, sous Aide et Paramètres, plutôt qu'en tête à côté de la marque. <strong>Aucune classe CSS nouvelle</strong> : <code class="code-inline">.rail-toggle</code> n'est pas scopée au header, elle se comporte à l'identique dans <code class="code-inline">.rail-footer</code>. Côté React, une prop <code class="code-inline">togglePosition="footer"</code> pilote ce placement ; le défaut reste le repli en tête.</div>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
             <span class="demo-label">Panneau mobile hors-flux + overlay, sous 768px (#906)</span>
             <div class="rail-mobile-mockup">
                 <div class="rail-overlay--demo-mobile"></div>

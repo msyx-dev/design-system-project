@@ -155,3 +155,29 @@ describe("Alert — className additionnelle", () => {
     expect(document.querySelector(".alert.custom")).toBeInTheDocument();
   });
 });
+
+// --- Variante neutral (#923) -------------------------------------------------
+//
+// Les quatre variantes étaient toutes sémantiques et toutes colorées : un
+// indicateur chiffré à ZÉRO — qui ne signale rien — retombait sur `info` et
+// s'affichait en couleur d'état. Le vert perdait alors sa valeur de signal
+// partout ailleurs. `.badge-neutral` avait déjà résolu ce cas côté badge.
+describe("Alert — variante neutral (#923)", () => {
+  it('variant="neutral" émet .alert-neutral', () => {
+    render(<Alert variant="neutral">Aucune action en retard</Alert>);
+    expect(document.querySelector(".alert.alert-neutral")).toBeInTheDocument();
+  });
+
+  it("n'émet AUCUNE classe sémantique en même temps", () => {
+    render(<Alert variant="neutral">Rien à signaler</Alert>);
+    const el = document.querySelector(".alert") as HTMLElement;
+    for (const semantic of ["alert-info", "alert-success", "alert-warning", "alert-danger"]) {
+      expect(el.classList.contains(semantic)).toBe(false);
+    }
+  });
+
+  it("le défaut reste info — aucun consommateur existant ne bouge", () => {
+    render(<Alert>Message</Alert>);
+    expect(document.querySelector(".alert.alert-info")).toBeInTheDocument();
+  });
+});

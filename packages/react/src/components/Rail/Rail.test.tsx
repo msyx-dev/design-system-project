@@ -313,3 +313,67 @@ describe("Rail — zone basse (.rail-footer)", () => {
     expect(footerItem).not.toHaveAttribute("aria-expanded");
   });
 });
+
+// --- Position du bouton de repli (#920) --------------------------------------
+//
+// Le bouton était émis EN DUR dans `.rail-header`. Une maquette validée place
+// le repli en bas, avec Aide et Paramètres ; le seul contournement aurait été
+// de recomposer un rail maison — ce que la règle « le DS est source unique »
+// interdit. Le CSS, lui, ne s'y opposait pas : `.rail-toggle` n'est pas scopé
+// au header, aucune règle nouvelle n'est donc nécessaire.
+describe("Rail — position du bouton de repli (#920)", () => {
+  const FOOTER: RailItem[] = [
+    { id: "help", label: "Aide", href: "/aide" },
+    { id: "settings", label: "Paramètres", href: "/parametres" },
+  ];
+
+  it("par défaut le bouton reste dans .rail-header (rendu historique inchangé)", () => {
+    render(<Rail items={ITEMS} footerItems={FOOTER} />);
+    expect(document.querySelector(".rail-header .rail-toggle")).toBeInTheDocument();
+    expect(document.querySelector(".rail-footer .rail-toggle")).toBeNull();
+  });
+
+  it('togglePosition="footer" le rend dans .rail-footer, après les entrées de pied', () => {
+    render(<Rail items={ITEMS} footerItems={FOOTER} togglePosition="footer" />);
+    expect(document.querySelector(".rail-header .rail-toggle")).toBeNull();
+    const footer = document.querySelector(".rail-footer") as HTMLElement;
+    const toggle = footer.querySelector(".rail-toggle");
+    expect(toggle).toBeInTheDocument();
+    // Après le contenu de pied, pas avant.
+    expect(footer.lastElementChild).toBe(toggle);
+  });
+
+  it("un seul bouton existe, où qu'il soit — jamais deux cibles pour une action", () => {
+    render(<Rail items={ITEMS} footerItems={FOOTER} togglePosition="footer" />);
+    expect(document.querySelectorAll(".rail-toggle")).toHaveLength(1);
+  });
+
+  it("le pied est rendu même sans footerItems (sinon le bouton n'a pas de conteneur)", () => {
+    render(<Rail items={ITEMS} togglePosition="footer" />);
+    expect(document.querySelector(".rail-footer .rail-toggle")).toBeInTheDocument();
+  });
+
+  it("sans footerItems ni repli en pied, aucun .rail-footer n'est rendu (inchangé)", () => {
+    render(<Rail items={ITEMS} />);
+    expect(document.querySelector(".rail-footer")).toBeNull();
+  });
+
+  it("en pied, le bouton garde son étiquette et bascule le repli, replié comme déplié", () => {
+    const onCollapsedChange = vi.fn();
+    render(
+      <Rail
+        items={ITEMS}
+        togglePosition="footer"
+        onCollapsedChange={onCollapsedChange}
+      />,
+    );
+    const toggle = document.querySelector(".rail-footer .rail-toggle") as HTMLButtonElement;
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(toggle.getAttribute("aria-label")).toBeTruthy();
+    fireEvent.click(toggle);
+    expect(onCollapsedChange).toHaveBeenCalledWith(true);
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    // Étiquette recalculée en mode replié : elle propose maintenant de déplier.
+    expect(toggle.getAttribute("aria-label")).toBeTruthy();
+  });
+});
