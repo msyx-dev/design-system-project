@@ -14,6 +14,25 @@
   },
   "released": [
     {
+      "version": "2.137.0",
+      "date": "2026-09-03",
+      "titre": "Les menus déroulants restent cliquables partout",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Un menu déroulant ouvert dans un panneau latéral ou dans une fenêtre modale était inaccessible : il s'affichait derrière la surface, ou ne réagissait tout simplement plus au clic. Les deux situations sont corrigées, y compris quand le menu doit s'ouvrir vers le haut pour tenir dans la fenêtre."
+        },
+        {
+          "type": "correction",
+          "text": "Un lien qui porte l'apparence d'un composant — une carte, une rangée de liste, un bouton — n'est plus souligné. Les liens de texte, eux, gardent leur soulignement : c'est le seul repère qui ne dépend pas de la perception des couleurs."
+        },
+        {
+          "type": "correction",
+          "text": "Sur Mac, réordonner une liste au clavier ne fonctionnait pas : la combinaison utilisée est réservée par le système. L'option (⌥) prend le relais sur ces appareils."
+        }
+      ]
+    },
+    {
       "version": "2.136.0",
       "date": "2026-08-31",
       "titre": "Toute la bibliothèque d'icônes est enfin disponible",

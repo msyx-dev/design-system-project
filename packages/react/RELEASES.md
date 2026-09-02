@@ -4,6 +4,16 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.57 — 2026-09-03 — Portail vers le dialog ouvert, clavier macOS (#934, #931)
+
+> Le CSS, le JS vanilla et les démos correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.137.0.
+
+### Fixed
+- **`<Dropdown>`/`<ActionMenu>` dans un `<Modal>` : panneau totalement inerte (#934).** `showModal()` place le `<dialog>` dans le *top layer* — tout ce qui est hors de son sous-arbre devient non interactif, clic **et** focus, quel que soit le `z-index`. Le panneau porté dans `document.body` en est le frère. Le portail cible désormais `triggerRef.current?.closest("dialog[open]") ?? document.body`. Hors dialog, comportement d'origine strictement inchangé (test dédié) ; un dialog **fermé** ne capte pas le portail (son contenu n'est pas rendu — y porter le menu le rendrait invisible).
+- **`<SortableList>` : déplacement au clavier inopérant sur macOS (#931).** Nouvelle prop `moveModifier?: "ctrl" | "alt" | "auto"` (**défaut `"auto"`** : `Alt` sur les plateformes Apple, `Ctrl` ailleurs). Helper `resolveMoveModifier()` exporté et testé pour les deux plateformes ; il retombe sur `Ctrl` quand la plateforme est inconnue (SSR). Sans la prop, aucun consommateur non-Apple ne voit de changement.
+
+10 tests ajoutés, suite complète **2056 tests verts**, `npx tsc --noEmit` rc=0.
+
 ## v3.0.0-alpha.56 — 2026-08-31 — `<Icon>` expose les 60 glyphes du sprite (#929)
 
 > La planche du showcase correspondante est livrée dans la même PR, cf. `../../RELEASES.md` v2.136.0.
