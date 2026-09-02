@@ -807,3 +807,55 @@ Certaines API du DS acceptent **volontairement** du HTML brut ou du JS (ex. `bod
 ---
 
 *Dernière mise à jour : 2026-05-11 — synthèse post-S32 et audit aksyva v1.1.*
+
+## 12. Surfaces flottantes : empilement et conteneur (#932/#934)
+
+Deux règles, pour deux mécanismes que l'on confond facilement — un menu ouvert
+qu'on ne peut pas cliquer se diagnostique de deux façons opposées.
+
+### 12.1 L'empilement — un menu passe TOUJOURS au-dessus de la surface qui l'ouvre
+
+Les valeurs de `z-index` sont des tokens (`tokens.css`), jamais des nombres écrits
+dans un composant :
+
+| Token | Valeur | Pour |
+|---|---|---|
+| `--z-sticky` | 150 | en-têtes collés (`.site-header`, `.section-header--sticky`) |
+| `--z-surface` | 200 | surfaces conteneurs (sidebar, overlay de drawer, panneau de notifs) |
+| `--z-surface-panel` | 201 | le panneau lui-même, au-dessus de son propre overlay |
+| `--z-nav` | 300 | `.bottom-nav` fixe |
+| `--z-modal` | 1000 | surfaces modales **non natives** (`.cmd-overlay`) |
+| `--z-lightbox` | 1500 | visionneuse plein écran |
+| **`--z-floating`** | **2000** | **menus flottants** : dropdown, action-menu, contextuel, mention |
+| `--z-toast` | 9000 | notifications système |
+| `--z-skip-link` | 9999 | lien d'évitement (WCAG 2.4.1), jamais recouvert |
+
+❌ **Don't** — choisir sa valeur isolément. C'est ainsi que `.dropdown-menu` (200)
+s'est retrouvé sous `.drawer-panel--fullscreen` (201) : le menu était peint, mais
+le clic atterrissait sur le champ du formulaire situé dessous.
+
+✅ **Do** — `z-index: var(--z-floating)` pour toute surface ancrée à un déclencheur.
+
+### 12.2 Le conteneur — aucun `z-index` ne peut rien contre le *top layer*
+
+Un `<dialog>` ouvert par `showModal()` entre dans le **top layer** : il est peint
+au-dessus de tout le document, et **tout ce qui est hors de son sous-arbre devient
+inerte** (clic et focus bloqués), quelle que soit la valeur d'empilement.
+
+Un panneau porté dans `document.body` est un **frère** du dialog : il tombe donc
+dans la zone inerte. La seule réponse est le **conteneur du portail** :
+
+```js
+// vanilla : openFloatingPanel() ; React : Dropdown/ActionMenu
+const host = trigger.closest("dialog[open]") ?? document.body;
+```
+
+Deux corollaires vérifiés à la mesure :
+
+1. `dialog[open]` et non `dialog` — un dialog fermé n'inerte rien, et son contenu
+   n'est pas rendu : y porter un menu le rendrait invisible.
+2. Porté dans le dialog, le panneau **est** clippé par son `overflow` (le dialog lui
+   sert de containing block). Il faut donc aussi le **cadrer** : basculer au-dessus
+   du déclencheur quand il déborde du bord bas. Corriger l'inertie sans corriger le
+   cadrage ne rend pas le composant utilisable.
+

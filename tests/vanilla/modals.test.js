@@ -260,3 +260,39 @@ describe('dialog.modal-dialog -- largeur par token (#917)', () => {
     for (const body of bodies) expect(body).not.toMatch(/max-width/);
   });
 });
+
+// --- Décoration des liens de composant (#933) --------------------------------
+//
+// `components/_base.css` pose `a { text-decoration: underline }` — bon défaut
+// en PROSE (le soulignement est le seul indice de lien qui ne dépende pas de la
+// perception des couleurs, WCAG 1.4.1), mais il s'appliquait aussi à un <a>
+// portant une classe de composant : un titre de rangée souligné, une carte
+// entière soulignée. Côté consommateur le défaut a été corrigé QUATRE fois, à
+// quatre endroits — une correction qui exige de se souvenir d'un défaut absent
+// de son propre code ne tient pas.
+describe('Liens de composant -- decoration (#933)', () => {
+  const BASE_CSS = readCss('components/_base.css');
+
+  it('la prose garde son soulignement (accessibilite, non negociable)', () => {
+    const [body] = ruleBodies(BASE_CSS, 'a');
+    expect(body).toBeDefined();
+    expect(body).toMatch(/text-decoration:\s*underline/);
+  });
+
+  it('les classes de composant neutralisent le soulignement', () => {
+    // La regle est un `a:is(...)` : on verifie la declaration ET quelques
+    // classes representatives de familles differentes.
+    const rule = BASE_CSS.slice(BASE_CSS.indexOf('a:is('));
+    const block = rule.slice(0, rule.indexOf('}') + 1);
+    expect(block).toMatch(/text-decoration:\s*none/);
+    for (const cls of ['.btn-primary', '.card', '.list-item-title', '.rail-item', '.badge']) {
+      expect(block, cls + ' absente de la liste').toContain(cls);
+    }
+  });
+
+  it("n'applique PAS la neutralisation a tous les <a> a classe", () => {
+    // `a[class]` aurait desouligne un lien de prose portant une simple classe
+    // utilitaire (.text-sm). La regle liste donc des classes de composant.
+    expect(BASE_CSS).not.toMatch(/a\[class\]/);
+  });
+});
