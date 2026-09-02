@@ -18,7 +18,18 @@ export interface SortableListItem {
   className?: string;
 }
 
+/** Modificateur du déplacement au clavier (#931). */
+export type SortableListMoveModifier = "ctrl" | "alt" | "auto";
+
 export interface SortableListProps {
+  /**
+   * Touche tenue avec ↑/↓ pour DÉPLACER l'item (#931). `"auto"` (défaut) :
+   * `Alt` (⌥) sur les plateformes Apple, où `Ctrl`+↑/↓ est capté par Mission
+   * Control avant le navigateur, `Ctrl` partout ailleurs. Forcer une valeur
+   * rend le comportement testable côté consommateur.
+   * @default "auto"
+   */
+  moveModifier?: SortableListMoveModifier;
   /** Items dans leur ordre courant — le composant ne maintient AUCUN ordre interne. */
   items: SortableListItem[];
   /**
@@ -146,7 +157,30 @@ function extractLabel(el: HTMLElement): string {
  * SSR-safe : aucun accès `window`/`document` au render — uniquement dans les
  * gestionnaires d'événements pointeur (jamais invoqués côté serveur).
  */
+/**
+ * Touche de déplacement effective (#931). `Ctrl`+↑/↓ ne peut PAS fonctionner
+ * sur macOS : le système réserve ces combinaisons pour Mission Control et les
+ * intercepte AVANT le navigateur — l'événement n'atteint jamais la page, donc
+ * aucun `preventDefault()` ne peut les récupérer. L'alternative clavier, seule
+ * voie accessible du composant, y était donc inopérante.
+ *
+ * `"auto"` (défaut) résout vers `Alt` (⌥) sur les plateformes Apple et `Ctrl`
+ * ailleurs. La détection reste défensive : hors navigateur (SSR) ou si la
+ * plateforme est inconnue, on retombe sur `Ctrl`, le comportement d'origine.
+ */
+export function resolveMoveModifier(
+  requested: SortableListMoveModifier,
+  platform?: string,
+): "ctrl" | "alt" {
+  if (requested !== "auto") return requested;
+  const raw =
+    platform ??
+    (typeof navigator === "undefined" ? "" : navigator.platform || "");
+  return /mac|iphone|ipad|ipod/i.test(raw) ? "alt" : "ctrl";
+}
+
 export function SortableList({
+  moveModifier = "auto",
   items,
   onReorder,
   numbered = false,
@@ -346,7 +380,9 @@ export function SortableList({
     const idx = items.findIndex((item) => item.id === id);
     if (idx === -1) return;
 
-    if (e.ctrlKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+    const activeModifier = resolveMoveModifier(moveModifier);
+    const modifierHeld = activeModifier === "alt" ? e.altKey : e.ctrlKey;
+    if (modifierHeld && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
       e.preventDefault();
       moveByKeyboard(idx, e.key === "ArrowUp" ? -1 : 1);
       return;

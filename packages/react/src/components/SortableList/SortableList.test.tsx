@@ -3,7 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { useState } from "react";
-import { SortableList, SortableListItem } from "./SortableList";
+import {
+  SortableList,
+  SortableListItem,
+  resolveMoveModifier,
+} from "./SortableList";
 
 const ITEMS: SortableListItem[] = [
   { id: "a", children: "Concevoir la maquette" },
@@ -585,3 +589,53 @@ function fakeRect(overrides: Partial<DOMRect> = {}): DOMRect {
     ...overrides,
   } as DOMRect;
 }
+
+// --- Déplacement au clavier sur macOS (#931) ---------------------------------
+//
+// `Ctrl`+↑/↓ ne PEUT PAS fonctionner sur macOS : Mission Control intercepte la
+// combinaison avant le navigateur, l'événement n'atteint jamais la page. Sur la
+// plateforme où le raccourci ne passe pas, l'alternative clavier — seule voie
+// accessible de ce composant — était donc inopérante.
+describe("SortableList — modificateur de déplacement (#931)", () => {
+  it("résout vers Alt sur les plateformes Apple, Ctrl ailleurs", () => {
+    expect(resolveMoveModifier("auto", "MacIntel")).toBe("alt");
+    expect(resolveMoveModifier("auto", "iPhone")).toBe("alt");
+    expect(resolveMoveModifier("auto", "Win32")).toBe("ctrl");
+    expect(resolveMoveModifier("auto", "Linux x86_64")).toBe("ctrl");
+  });
+
+  it("retombe sur Ctrl quand la plateforme est inconnue (défensif, SSR)", () => {
+    expect(resolveMoveModifier("auto", "")).toBe("ctrl");
+  });
+
+  it("une valeur explicite l'emporte sur la détection", () => {
+    expect(resolveMoveModifier("ctrl", "MacIntel")).toBe("ctrl");
+    expect(resolveMoveModifier("alt", "Win32")).toBe("alt");
+  });
+
+  it('moveModifier="alt" déplace avec Alt+↑ et ignore Ctrl+↑', async () => {
+    const onReorder = vi.fn();
+    render(
+      <SortableList items={ITEMS} onReorder={onReorder} moveModifier="alt" />,
+    );
+    const first = document.querySelectorAll(".sortable-item")[1] as HTMLElement;
+    first.focus();
+
+    fireEvent.keyDown(first, { key: "ArrowUp", ctrlKey: true });
+    expect(onReorder).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(first, { key: "ArrowUp", altKey: true });
+    expect(onReorder).toHaveBeenCalledTimes(1);
+  });
+
+  it('moveModifier="ctrl" garde le comportement d\'origine (aucune régression)', () => {
+    const onReorder = vi.fn();
+    render(
+      <SortableList items={ITEMS} onReorder={onReorder} moveModifier="ctrl" />,
+    );
+    const first = document.querySelectorAll(".sortable-item")[1] as HTMLElement;
+    first.focus();
+    fireEvent.keyDown(first, { key: "ArrowUp", ctrlKey: true });
+    expect(onReorder).toHaveBeenCalledTimes(1);
+  });
+});

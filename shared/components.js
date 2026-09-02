@@ -3772,6 +3772,10 @@ function initProgressTrackers() {
 window.__initProgressTrackers = initProgressTrackers;
 
 // Sortable List
+// Plateformes Apple : Ctrl+fleches est reserve par le systeme (#931).
+var SORTABLE_MOVE_WITH_ALT = typeof navigator !== 'undefined'
+    && /mac|iphone|ipad|ipod/i.test(navigator.platform || '');
+
 function initSortableLists() {
     document.querySelectorAll('.sortable-list').forEach(function(list) {
         if (list.dataset.bound) return;
@@ -4014,7 +4018,14 @@ function initSortableLists() {
             var all = getItems();
             var idx = all.indexOf(current);
 
-            if (e.ctrlKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+            // #931 — sur macOS, Ctrl+fleche est capte par Mission Control AVANT
+            // le navigateur : l'evenement n'atteint jamais la page, aucun
+            // preventDefault() ne peut le recuperer. On accepte donc Alt (⌥)
+            // sur les plateformes Apple, Ctrl partout ailleurs — sans quoi
+            // l'alternative clavier, seule voie accessible du composant, est
+            // inoperante sur Mac.
+            var moveHeld = SORTABLE_MOVE_WITH_ALT ? e.altKey : e.ctrlKey;
+            if (moveHeld && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
                 e.preventDefault();
                 moveItem(current, e.key === 'ArrowUp' ? -1 : 1);
                 return;
