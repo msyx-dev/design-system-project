@@ -712,18 +712,13 @@ describe("Dropdown — recherche contrôlée (#855)", () => {
 // donc inerte. Porté DANS le dialog, il redevient atteignable. C'est un choix
 // de CONTENEUR, aucune valeur d'empilement ne peut le remplacer.
 describe("Dropdown — conteneur du portail (#934)", () => {
-  const OPTIONS = [
-    { value: "a", label: "Décision" },
-    { value: "b", label: "Risque" },
-  ];
-
   const openMenu = async () => {
     const user = userEvent.setup();
     await user.click(document.querySelector(".dropdown-trigger") as HTMLElement);
   };
 
   it("hors dialog, le menu est porté dans document.body (comportement d'origine)", async () => {
-    render(<Dropdown options={OPTIONS} />);
+    render(<ControlledSingle />);
     await openMenu();
     const menu = document.querySelector(".dropdown-menu") as HTMLElement;
     expect(menu.parentElement).toBe(document.body);
@@ -733,7 +728,7 @@ describe("Dropdown — conteneur du portail (#934)", () => {
   it("dans un <dialog open>, le menu est porté DANS le dialog", async () => {
     render(
       <dialog open data-testid="dlg">
-        <Dropdown options={OPTIONS} />
+        <ControlledSingle />
       </dialog>,
     );
     await openMenu();
@@ -745,7 +740,7 @@ describe("Dropdown — conteneur du portail (#934)", () => {
   it("un dialog FERMÉ ne capte pas le portail (il n'est pas dans le top layer)", async () => {
     render(
       <dialog>
-        <Dropdown options={OPTIONS} />
+        <ControlledSingle />
       </dialog>,
     );
     await openMenu();
