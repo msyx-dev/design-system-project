@@ -384,9 +384,12 @@ export type {
 } from "./components/Timeline/Timeline";
 
 // ─── SortableList — #853 (réordonnancement souris/tactile/clavier, contrôlé) ───
-export { SortableList } from "./components/SortableList/SortableList";
+export { SortableList ,
+  resolveMoveModifier,
+} from "./components/SortableList/SortableList";
 export type {
   SortableListProps,
+  SortableListMoveModifier,
   SortableListItem,
   SortableListItemId,
 } from "./components/SortableList/SortableList";

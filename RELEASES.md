@@ -1,5 +1,21 @@
 # Releases
 
+## 2.137.0 — 2026-09-03 — Surfaces flottantes, liens de composant, clavier macOS (#932, #934, #933, #931)
+
+> Lot demandé par KeepThread. Touche `shared/css/tokens.css` + `components/{_base,forms,overlays,media,alerts,_a11y,data,heatmap-calendar,navigation}.css` + `layout.css` + `base.css` + `shared/components.js` + `pages/composants.html` ET `packages/react/**` (cf. `packages/react/RELEASES.md` v3.0.0-alpha.57).
+
+### Added
+- **Échelle d'empilement en tokens (#932)** — `--z-sticky` (150), `--z-surface` (200), `--z-surface-panel` (201), `--z-nav` (300), `--z-modal` (1000), `--z-lightbox` (1500), **`--z-floating` (2000)**, `--z-toast` (9000), `--z-skip-link` (9999). 15 règles migrées ; **plus aucune valeur d'empilement écrite en dur** dans `shared/css`. La règle tient en une phrase : *un menu flottant passe toujours au-dessus de la surface qui l'ouvre*.
+- **Doctrine écrite** — `docs/DS-PRINCIPLES.md` §12, avec la distinction entre les deux mécanismes et les deux corollaires mesurés du portail.
+
+### Fixed
+- **#932 — un menu ouvert dans un drawer fullscreen était incliquable.** `.dropdown-menu` (200) contre `.drawer-panel--fullscreen` (201) : deux enfants de `<body>`, chacun sa stacking context racine. **Mesuré** : le hit-test au centre de la première option résolvait sur `INPUT.input` — le champ **suivant** du formulaire. Après : l'option est atteinte, le clic passe.
+- **#934 — un menu ouvert dans un `<dialog>` modal était totalement inerte.** Cause différente, et **aucun `z-index` n'y pouvait rien** : `showModal()` place le dialog dans le *top layer*, ce qui rend inerte tout ce qui est hors de son sous-arbre — or le panneau porté dans `document.body` en est le **frère**. Le portail cible désormais `trigger.closest("dialog[open]") ?? document.body`. **Deux corollaires trouvés à la mesure, pas déduits** : (1) `dialog[open]` et non `dialog`, un dialog fermé n'inerte rien et son contenu n'est pas rendu ; (2) porté dans le dialog, le panneau **est** clippé par son `overflow` (le dialog lui sert de containing block) — mesuré, il débordait de 54px sous le bord. Il bascule donc au-dessus du déclencheur quand il ne tient pas. Corriger l'inertie sans corriger le cadrage n'aurait pas rendu le composant utilisable.
+- **#933 — un `<a>` portant une classe de composant était souligné.** L'issue signalait « 0 occurrence de `text-decoration` dans le CSS distribué » : le comptage portait sur les **barrels** (`ds-base.css`, `ds-components.css`), pas sur les fichiers qu'ils importent. Le DS **se prononce** bel et bien — `components/_base.css` pose `a { text-decoration: underline }` — et le défaut était donc l'inverse : le DS *imposait* le soulignement, y compris à un titre de rangée ou à une carte cliquable. Corrigé par `a:is(…)` sur les classes de composant. **Ce qui n'a PAS été fait** : `a { text-decoration: none }` global — en prose, le soulignement est le seul indice de lien indépendant de la perception des couleurs (WCAG 1.4.1). **Mesuré** au rendu : prose `underline`, prose avec classe utilitaire `underline`, `.rail-item`/`.list-item-title`/`.btn-primary`/`.hub-card` `none`.
+- **#931 — le déplacement au clavier était inopérant sur macOS.** `Ctrl`+↑/↓ y est capté par Mission Control **avant** le navigateur : l'événement n'atteint jamais la page, aucun `preventDefault()` ne peut le récupérer. Le composant accepte désormais `Alt` (⌥) sur les plateformes Apple, `Ctrl` ailleurs. L'aide du showcase nomme la touche réellement active — sinon l'interface indiquerait une touche qui ne fait rien, c'est-à-dire le défaut déplacé d'un cran.
+
+`@ds-version` 2.136.0 → 2.137.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.136.0 — 2026-08-31 — Iconographie : la planche présente les 60 glyphes (#929)
 
 > Touche `pages/fondation.html` ET `packages/react/**` (`<Icon>`, cf. `packages/react/RELEASES.md` v3.0.0-alpha.56).

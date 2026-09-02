@@ -59,6 +59,7 @@ export default defineConfig({
     "**/graph-edit.spec.ts",
     "**/sticky-regression.spec.ts",
     "**/card-floating-panel-clip.spec.ts",
+    "**/floating-surface-stacking.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

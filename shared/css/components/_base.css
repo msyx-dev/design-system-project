@@ -20,6 +20,37 @@ a:hover {
     text-decoration-thickness: 2px;
 }
 
+/* Un <a> qui porte une CLASSE DE COMPOSANT n'est pas un lien en prose : c'est
+   un composant qui se trouve etre cliquable (#933). La regle `a` ci-dessus lui
+   imposait couleur d'accent ET soulignement, ce qui casse sa composition — un
+   titre de rangee souligne, une carte entiere soulignee.
+
+   Le remede appartient au DS, pas au consommateur : cote KeepThread le defaut
+   a ete corrige QUATRE fois, a quatre endroits, par quatre commits. Ce genre de
+   correction ne tient pas — elle exige que l'auteur de chaque nouveau <a> se
+   souvienne d'un defaut qui n'est pas dans son code, et le nombre de rappels
+   croit avec le nombre de liens ecrits.
+
+   Ce qu'on NE fait PAS : `a { text-decoration: none }` global. En prose, le
+   soulignement est le seul indice de lien qui ne depende pas de la perception
+   des couleurs (WCAG 1.4.1) — le supprimer partout echangerait un defaut de
+   composition contre un defaut d'accessibilite.
+
+   La liste ci-dessous est celle des classes qui DEFINISSENT une apparence de
+   composant. La decoration devient la responsabilite de cette classe, au meme
+   titre que sa couleur et son espacement. */
+a:is(
+    .btn, .btn-primary, .btn-secondary, .btn-ghost, .btn-danger, .btn-icon, .btn-sm,
+    .card, .card-link, .hub-card, .card-media,
+    .list-item, .list-item-title,
+    .rail-item, .sidebar-link, .nav-item, .tab, .bottom-nav-item, .breadcrumb-item,
+    .menu-item, .dropdown-option, .cmd-item, .action-menu-item, .header-dropdown-item,
+    .badge, .chip, .kanban-card, .access-denied-btn-primary
+) {
+    color: inherit;
+    text-decoration: none;
+}
+
 /* Focus-visible global
    Probleme : outline 1px user-agent (~2:1) insuffisant — sous WCAG 2.4.7 (3:1 + >= 2px).
    Solution : outline 2px var(--accent) + offset 2px sur tous les focusables sans focus custom.

@@ -201,7 +201,7 @@
     position: fixed;
     inset: 0;
     background: var(--overlay-black-92);
-    z-index: 1500;
+    z-index: var(--z-lightbox);
     display: flex;
     align-items: center;
     justify-content: center;

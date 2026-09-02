@@ -281,7 +281,7 @@
     padding: 0.65rem 0.85rem;
     min-width: 190px;
     max-width: 260px;
-    z-index: 1000;
+    z-index: var(--z-modal);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.15s;

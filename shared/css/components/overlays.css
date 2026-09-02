@@ -52,7 +52,7 @@
     display: none;
     border-color: var(--border-hover); /* override : border plus marquée que le primitif */
     border-radius: var(--radius-sm);   /* override : radius compact context-menu */
-    z-index: 1000;
+    z-index: var(--z-floating);
     animation: contextMenuIn 0.12s ease;
 }
 .context-menu.show {
@@ -98,7 +98,7 @@
     border: 1px solid var(--border-hover);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-lg);
-    z-index: 1001;
+    z-index: calc(var(--z-floating) + 1);
     min-width: 160px;
     padding: 0.3rem 0;
     animation: contextMenuIn 0.1s ease;
@@ -163,7 +163,7 @@
     transform: translateY(-8px) scale(0.97);
     transform-origin: top right;
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
-    z-index: 200;
+    z-index: var(--z-floating);
 }
 .action-menu.open {
     opacity: 1;
@@ -289,7 +289,7 @@ dialog.modal-dialog.modal-dialog--lg { --modal-w: var(--modal-w-lg); }
 
 /* ===== COMMAND PALETTE ===== */
 .cmd-palette-preview { position: relative; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; background: var(--primary); min-height: 400px; display: flex; align-items: flex-start; justify-content: center; padding-top: 2rem; }
-.cmd-overlay { position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.cmd-overlay { position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(4px); z-index: var(--z-modal); display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .cmd-overlay.open { opacity: 1; pointer-events: auto; }
 .cmd-palette { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-card); width: 100%; max-width: var(--cmd-palette-w); box-shadow: var(--shadow-lg); overflow: hidden; transform: translateY(-10px) scale(0.98); transition: transform 0.2s; }
 .cmd-overlay.open .cmd-palette { transform: translateY(0) scale(1); }
@@ -329,8 +329,8 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 /* Variante plein-écran : le panel et son overlay couvrent toute la fenêtre (position:fixed).
    Utile quand le drawer n'est pas enfant d'un .drawer-preview container.
    Usage : <div class="drawer-overlay drawer-overlay--fullscreen"> + <div class="drawer-panel drawer-panel--fullscreen"> */
-.drawer-overlay--fullscreen { position: fixed; inset: 0; z-index: 200; }
-.drawer-panel--fullscreen { position: fixed; top: 0; right: 0; bottom: 0; z-index: 201; }
+.drawer-overlay--fullscreen { position: fixed; inset: 0; z-index: var(--z-surface); }
+.drawer-panel--fullscreen { position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--z-surface-panel); }
 /* Variante --lg : demi-fenetre desktop minimum (#912, arbitrage keepthread#176 — ecran de
    capture pendant une reunion, ne peut plus se contenter des 320px fixes). Mobile-first :
    ne s'applique qu'a partir de 768px ; en dessous, le repli mobile existant (100%/85%,
@@ -384,7 +384,7 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 
 /* ===== CONFIRM POPOVER ===== */
 .popover-confirm-wrap { position: relative; display: inline-block; }
-.popover-confirm { position: absolute; z-index: 200; background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-md); min-width: 220px; box-shadow: var(--shadow-lg); display: none; }
+.popover-confirm { position: absolute; z-index: var(--z-floating); background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-md); min-width: 220px; box-shadow: var(--shadow-lg); display: none; }
 .popover-confirm.open { display: block; animation: fadeInScale 0.15s ease; }
 .popover-confirm--top { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
 .popover-confirm--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }

@@ -52,7 +52,7 @@ a[aria-disabled="true"] {
     position: absolute;
     top: var(--space-2, 0.75rem);
     left: var(--space-2, 0.75rem);
-    z-index: 9999;
+    z-index: var(--z-skip-link);
     padding: var(--space-2, 0.75rem) var(--space-md, 1rem);
     background: var(--accent);
     color: var(--text-on-accent);

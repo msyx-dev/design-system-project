@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surfaces flottantes empilées — non-régression #932 / #934</title>
+<!--
+  Fixture des deux défauts d'empilement remontés par KeepThread. Les deux se
+  ressemblent — un menu ouvert qu'on ne peut pas atteindre — mais leurs causes
+  n'ont RIEN en commun, et corriger l'une ne corrige pas l'autre :
+
+  #932 — z-index. `.dropdown-menu` (200) contre `.drawer-panel--fullscreen`
+         (201) : deux enfants de <body>, chacun sa stacking context racine,
+         le plus grand gagne. Le menu est peint SOUS le panneau.
+
+  #934 — top layer. Un <dialog> en mode modal (`showModal()`) est peint
+         au-dessus de TOUT le document et rend inerte tout ce qui est hors de
+         son sous-arbre. Le menu portalé dans <body> est un FRÈRE du dialog :
+         aucun z-index, si grand soit-il, ne le rend cliquable.
+
+  Le markup reproduit ce que produisent <Dropdown>/<ActionMenu> en React :
+  le menu est un enfant direct de <body> (portail #856), jamais un descendant
+  de la surface qui l'a ouvert.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script src="/shared/components.js" defer></script>
+<style>
+  body { margin: 0; min-height: 100vh; }
+  .bench { padding: 2rem; }
+</style>
+</head>
+<body>
+
+<div class="bench">
+  <h1 class="typo-h2">Banc d'empilement</h1>
+  <p class="text-muted">Deux surfaces conteneurs, un menu portalé dans <code class="code-inline">body</code> dans chaque cas.</p>
+</div>
+
+<!-- ── Cas #932 : drawer fullscreen ─────────────────────────────────────── -->
+<div class="drawer-overlay drawer-overlay--fullscreen open" id="drawer-overlay"></div>
+<div class="drawer-panel drawer-panel--fullscreen drawer-panel--lg open" id="drawer-panel" role="dialog" aria-modal="true" aria-label="Nouvelle Session">
+  <div class="drawer-header">
+    <h3>Nouvelle Session</h3>
+  </div>
+  <div class="drawer-body">
+    <div class="input-group">
+      <label class="input-label" for="dd-932">Statut d'Action</label>
+      <div class="dropdown">
+        <button class="dropdown-trigger open" id="dd-932" type="button" aria-expanded="true" aria-haspopup="listbox">
+          Choisir…
+        </button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Échéance</label>
+      <input class="input" type="text" placeholder="jj/mm/aaaa">
+    </div>
+  </div>
+</div>
+
+<!-- Menu du cas #932 — portalé dans <body>, comme le fait React (#856). -->
+<div class="dropdown-menu open" id="menu-932" role="listbox" aria-label="Statut d'Action">
+  <div class="dropdown-option" id="opt-932" role="option" aria-selected="false">À faire</div>
+  <div class="dropdown-option" role="option" aria-selected="false">En cours</div>
+</div>
+
+<!-- ── Cas #934 : <dialog> natif en mode modal ──────────────────────────── -->
+<dialog class="modal-dialog" id="modal-934" aria-labelledby="modal-934-title">
+  <div class="modal-header">
+    <h3 id="modal-934-title">Rechercher</h3>
+  </div>
+  <div class="modal-body">
+    <div class="input-group">
+      <label class="input-label" for="dd-934">Nature</label>
+      <div class="dropdown">
+        <button class="dropdown-trigger open" id="dd-934" type="button" aria-expanded="true" aria-haspopup="listbox">
+          Toutes
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- Menu du cas #934 — portalé dans <body> : FRÈRE du <dialog>, donc inerte. -->
+<div class="dropdown-menu open" id="menu-934" role="listbox" aria-label="Nature">
+  <div class="dropdown-option" id="opt-934" role="option" aria-selected="false">Décision</div>
+  <div class="dropdown-option" role="option" aria-selected="false">Risque</div>
+</div>
+
+<script defer>
+  // Ouverture par LE code du DS (`openFloatingPanel`, shared/components.js) —
+  // c'est lui qui choisit le conteneur du portail et positionne le panneau.
+  // Reproduire sa règle ici testerait la fixture, pas le composant.
+  function place(menuId, triggerId) {
+    window.__openFloatingPanel(
+      document.getElementById(triggerId),
+      document.getElementById(menuId),
+    );
+  }
+
+  // Le <dialog> reste FERMÉ au chargement : ouvert, son top layer recouvre
+  // tout l'écran et masquerait le cas #932. C'est au test de l'ouvrir pour
+  // mesurer le cas #934 — les deux défauts doivent être observés séparément.
+  // `defer` ne diffère QUE les scripts externes : ce bloc inline s'exécute
+  // avant components.js. On attend donc DOMContentLoaded, qui suit l'exécution
+  // des scripts différés — sinon `window.__openFloatingPanel` n'existe pas
+  // encore et le panneau reste au coin haut-gauche.
+  window.addEventListener('DOMContentLoaded', function () {
+    place('menu-932', 'dd-932');
+  });
+  window.addEventListener('resize', function () {
+    place('menu-932', 'dd-932');
+  });
+</script>
+
+</body>
+</html>

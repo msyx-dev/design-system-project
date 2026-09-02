@@ -625,7 +625,7 @@
     top: calc(100% + 6px);
     right: 0;
     min-width: 220px; /* override : dropdown user plus large que le primitif (180px) */
-    z-index: 300;
+    z-index: var(--z-nav);
     overflow: hidden;
     opacity: 0;
     transform: translateY(-6px) scale(0.97);
