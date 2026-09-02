@@ -96,6 +96,26 @@
        ligne de tableau devient illisible d'un bout a l'autre). Surchargeable en
        local via `style="--content-max: …"`, meme mecanisme que --modal-w (#917). */
     --content-grid-max: 1200px; /* largeur max d'un fil de cartes .content-grid (#53) */
+
+    /* === Echelle d'empilement (#932/#934) ==================================
+       Chaque composant choisissait sa valeur isolement — d'ou la collision
+       `.dropdown-menu` (200) contre `.drawer-panel--fullscreen` (201), qui
+       rendait un menu inatteignable a la souris. La regle tient en une phrase :
+       UN MENU FLOTTANT PASSE TOUJOURS AU-DESSUS DE LA SURFACE QUI L'OUVRE.
+       D'ou `--z-floating` au-dessus de toutes les surfaces conteneurs.
+       Limite a connaitre : ces valeurs ne peuvent RIEN contre le « top layer »
+       d'un <dialog> ouvert par showModal(), qui est peint au-dessus de tout le
+       document quel que soit le z-index (#934) — la reponse est alors le
+       portail, pas l'empilement. */
+    --z-sticky: 150;         /* en-tetes colles : .site-header, .section-header--sticky */
+    --z-surface: 200;        /* surfaces conteneurs : sidebar, overlay de drawer, panneau de notifs */
+    --z-surface-panel: 201;  /* le panneau lui-meme, au-dessus de son propre overlay */
+    --z-nav: 300;            /* .bottom-nav fixe */
+    --z-modal: 1000;         /* surfaces modales NON natives : .cmd-overlay */
+    --z-lightbox: 1500;      /* visionneuse plein ecran */
+    --z-floating: 2000;      /* menus flottants : dropdown, action-menu, contextuel, mention */
+    --z-toast: 9000;         /* notifications systeme — au-dessus de tout contenu */
+    --z-skip-link: 9999;     /* lien d'evitement : jamais recouvert, WCAG 2.4.1 */
     --opacity-muted: 0.85; /* opacité atténuation .card-muted — WCAG-safe (#569) */
     --sidebar-bg: rgba(10, 15, 30, 0.85);
     --sidebar-link-hover-bg: rgba(var(--accent-rgb), 0.04);

@@ -230,3 +230,28 @@ describe("ActionMenu — navigation clavier", () => {
     expect(screen.getByRole("menuitem", { name: "C" })).toHaveFocus();
   });
 });
+
+// --- Conteneur du portail (#934) — même règle que <Dropdown> ------------------
+describe("ActionMenu — conteneur du portail (#934)", () => {
+  const ITEMS = [{ id: "ren", label: "Renommer", onSelect: () => {} }];
+
+  it("hors dialog, le menu est porté dans document.body", async () => {
+    const user = userEvent.setup();
+    render(<ActionMenu items={ITEMS} />);
+    await user.click(screen.getAllByRole("button")[0]);
+    const menu = document.querySelector(".action-menu") as HTMLElement;
+    expect(menu?.parentElement).toBe(document.body);
+  });
+
+  it("dans un <dialog open>, le menu est porté DANS le dialog", async () => {
+    const user = userEvent.setup();
+    render(
+      <dialog open>
+        <ActionMenu items={ITEMS} />
+      </dialog>,
+    );
+    await user.click(screen.getAllByRole("button")[0]);
+    const menu = document.querySelector(".action-menu") as HTMLElement;
+    expect(menu?.closest("dialog")).not.toBeNull();
+  });
+});

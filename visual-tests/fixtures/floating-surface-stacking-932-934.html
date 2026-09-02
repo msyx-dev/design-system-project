@@ -23,6 +23,7 @@
   de la surface qui l'a ouvert.
 -->
 <link rel="stylesheet" href="/shared/styles.css">
+<script src="/shared/components.js" defer></script>
 <style>
   body { margin: 0; min-height: 100vh; }
   .bench { padding: 2rem; }
@@ -86,26 +87,29 @@
   <div class="dropdown-option" role="option" aria-selected="false">Risque</div>
 </div>
 
-<script>
-  // Positionne chaque menu sous son déclencheur, exactement comme le
-  // positionnement en `position: fixed` que fait le composant à l'ouverture.
+<script defer>
+  // Ouverture par LE code du DS (`openFloatingPanel`, shared/components.js) —
+  // c'est lui qui choisit le conteneur du portail et positionne le panneau.
+  // Reproduire sa règle ici testerait la fixture, pas le composant.
   function place(menuId, triggerId) {
-    var menu = document.getElementById(menuId);
-    var trigger = document.getElementById(triggerId);
-    var r = trigger.getBoundingClientRect();
-    menu.style.left = r.left + 'px';
-    menu.style.top = (r.bottom + 4) + 'px';
-    menu.style.width = Math.max(r.width, 180) + 'px';
+    window.__openFloatingPanel(
+      document.getElementById(triggerId),
+      document.getElementById(menuId),
+    );
   }
 
   // Le <dialog> reste FERMÉ au chargement : ouvert, son top layer recouvre
   // tout l'écran et masquerait le cas #932. C'est au test de l'ouvrir pour
   // mesurer le cas #934 — les deux défauts doivent être observés séparément.
-  place('menu-932', 'dd-932');
-  place('menu-934', 'dd-934');
+  // `defer` ne diffère QUE les scripts externes : ce bloc inline s'exécute
+  // avant components.js. On attend donc DOMContentLoaded, qui suit l'exécution
+  // des scripts différés — sinon `window.__openFloatingPanel` n'existe pas
+  // encore et le panneau reste au coin haut-gauche.
+  window.addEventListener('DOMContentLoaded', function () {
+    place('menu-932', 'dd-932');
+  });
   window.addEventListener('resize', function () {
     place('menu-932', 'dd-932');
-    place('menu-934', 'dd-934');
   });
 </script>
 

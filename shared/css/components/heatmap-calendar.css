@@ -125,7 +125,7 @@
     color: var(--text);
     box-shadow: var(--shadow-lg);
     pointer-events: none;
-    z-index: 1000;
+    z-index: var(--z-modal);
     opacity: 0;
     transition: opacity 0.1s;
     display: none;

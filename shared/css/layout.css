@@ -476,7 +476,7 @@
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-    z-index: 200;
+    z-index: var(--z-floating);
     overflow: hidden;
     opacity: 0;
     transform: translateY(-6px) scale(0.97);
@@ -533,7 +533,7 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: 0 8px 32px var(--overlay-black-35);
-    z-index: 200;
+    z-index: var(--z-floating);
     display: flex;
     flex-direction: column;
     overflow: hidden;

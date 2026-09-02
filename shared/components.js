@@ -157,9 +157,23 @@ function safeUrl(url, fallback, allowedSchemes) {
 var FLOATING_PANEL_ANCHORS = new WeakMap();
 var FLOATING_PANEL_RESTORE_MS = 200; // aligne sur la transition CSS de .dropdown-menu/.action-menu
 
+// Cible du portail (#934) : le plus proche <dialog open> qui CONTIENT le
+// declencheur, sinon document.body. Un <dialog> ouvert par showModal() entre
+// dans le « top layer » : il est peint au-dessus de tout le document, et tout
+// ce qui est HORS de son sous-arbre devient inerte — clic et focus bloques —
+// quel que soit le z-index. Un panneau porte dans document.body est un FRERE
+// du dialog, donc inerte ; porte DANS le dialog, il redevient atteignable.
+// Aucune valeur d'empilement ne peut remplacer ce choix de conteneur : c'est
+// ce qui distingue #934 de #932.
+function floatingPanelHost(trigger) {
+    var dialog = trigger.closest ? trigger.closest('dialog[open]') : null;
+    return dialog || document.body;
+}
+
 function openFloatingPanel(trigger, panel, align) {
     FLOATING_PANEL_ANCHORS.set(panel, trigger);
-    if (panel.parentNode !== document.body) document.body.appendChild(panel);
+    var host = floatingPanelHost(trigger);
+    if (panel.parentNode !== host) host.appendChild(panel);
     var rect = trigger.getBoundingClientRect();
     panel.style.position = 'fixed';
     if (align === 'end') {
@@ -185,7 +199,35 @@ function openFloatingPanel(trigger, panel, align) {
         panel.style.right = '';
         panel.style.width = rect.width + 'px';
     }
+    clampFloatingPanel(panel, rect, host);
 }
+
+// Bascule vers le haut quand le panneau depasse le bord bas de son conteneur
+// (#934). Porte dans un <dialog>, un panneau `position:fixed` EST clippe par
+// l'`overflow` du dialog : celui-ci lui sert de containing block. Sans cette
+// bascule, le portail rend bien le menu interactif (il n'est plus inerte) mais
+// sa moitie basse est coupee — corriger l'inertie sans corriger le cadrage ne
+// rend pas le composant utilisable. Le bord de reference est celui du
+// CONTENEUR quand c'est un dialog, celui du viewport sinon.
+function clampFloatingPanel(panel, triggerRect, host) {
+    var limitBottom = host && host.tagName === 'DIALOG'
+        ? host.getBoundingClientRect().bottom
+        : window.innerHeight;
+    var panelBottom = panel.getBoundingClientRect().bottom;
+    if (panelBottom <= limitBottom) return;
+    // Au-dessus du declencheur, meme ecart qu'en dessous.
+    var flipped = triggerRect.top - panel.offsetHeight - 4;
+    // Si meme retourne il ne tient pas (conteneur plus court que le panneau),
+    // on le colle au bord haut plutot que de le laisser deborder des deux cotes.
+    var limitTop = host && host.tagName === 'DIALOG'
+        ? host.getBoundingClientRect().top
+        : 0;
+    panel.style.top = Math.max(limitTop, flipped) + 'px';
+}
+
+// Exposé (comme les autres `window.__*`) pour que la fixture de non-régression
+// #932/#934 teste LE code du DS, et non une reproduction de sa règle.
+window.__openFloatingPanel = openFloatingPanel;
 
 function restoreFloatingPanel(panel) {
     var trigger = FLOATING_PANEL_ANCHORS.get(panel);

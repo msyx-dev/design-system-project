@@ -443,7 +443,18 @@ export function Dropdown(props: DropdownProps) {
   const menuClasses = ["dropdown-menu", "open"].join(" ");
 
   // Portail #856 — cf. JSDoc du composant.
-  const portalTarget = typeof document !== "undefined" ? document.body : null;
+  // Cible du portail (#934) : le plus proche `<dialog open>` qui CONTIENT le
+  // déclencheur, sinon `document.body`. Un `<dialog>` ouvert par `showModal()`
+  // entre dans le « top layer » : il est peint au-dessus de tout le document,
+  // et tout ce qui est HORS de son sous-arbre devient inerte — clic ET focus
+  // bloqués — quel que soit le `z-index`. Le panneau porté dans `document.body`
+  // est un FRÈRE du dialog, donc inerte ; porté DANS le dialog, il redevient
+  // atteignable. Aucune valeur d'empilement ne peut remplacer ce choix de
+  // conteneur : c'est ce qui distingue #934 de #932.
+  const portalTarget =
+    typeof document === "undefined"
+      ? null
+      : (triggerRef.current?.closest("dialog[open]") ?? document.body);
 
   return (
     <div
