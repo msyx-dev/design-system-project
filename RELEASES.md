@@ -1,5 +1,29 @@
 # Releases
 
+## 2.138.0 — 2026-09-26 — 5e thème « Noël » (#939)
+
+### Added
+- **Thème `noel` (dark + light)** — 5e palette du DS, `themes/noel.json` (91 tokens dark / 85 light, couverture alignée sur `themes/acssi.json`/`themes/auchan.json`). Rouge houx sur surfaces vert sapin, or dans les gradients. **Pourquoi pas un accent vert** : Nhood est **déjà** un thème vert sapin sur fond vert sombre (`--accent: #008837`, `--surface-solid: #0f2415`) ; un accent vert sapin pour Noël donnait ΔE(OKLab) **0,06–0,08** avec Nhood, sous le seuil de séparabilité du DS (≥ 0,12). D'où le rouge houx sur surfaces sapin — la distance à Auchan (également rouge) est portée par les surfaces (ΔE 0,19), pas par la teinte de l'accent. `--danger` décalé vers l'orangé (même arbitrage qu'Auchan en #849, pour la raison inverse : deux rouges — accent et danger — ne se séparent pas par la teinte seule) :
+
+  | Combo | `--accent` | `--surface-solid` | accent/surface | `--text-on-accent` | on-accent/accent | `--danger` | ΔH | ΔE |
+  |---|---|---|---|---|---|---|---|---|
+  | dark | `#ef5a5f` | `#122019` | 5,05:1 | `#200a0d` | 5,67:1 | `#fb923c` | 34,3° | 0,139 |
+  | light | `#96121f` | `#ffffff` | 8,74:1 | `#ffffff` | 8,74:1 | `#b45309` | 25,2° | 0,141 |
+
+  Gate catégoriel vert sur les 10 combos désormais couverts (`THEMES=['acssi','nhood','auchan','noel']`) — `noel-dark` 44,9°/0,201/4,18:1, `noel-light` 44,6°/0,158/3,22:1 ; échelle `--chart-*` également verte — `noel-dark` 27,4°/0,098, `noel-light` 29,5°/0,142. Les échelles `--cat-1..8`/`--chart-1..5` reprennent **délibérément** les teintes MSYX pour ce thème comme pour les précédents : leur contrat est la séparabilité entre catégories, pas l'expression d'une identité de marque — seule exception, `--chart-1` prend la couleur du thème (`--accent`), comme le fait déjà Auchan.
+  - `shared/components.js` (`THEME_CONFIG`/`THEME_LABELS`), `shared/nav.js` (`<option value="noel">Noël</option>`), overrides `layout.css`/`forms.css` (knob de toggle — même correctif que celui déjà en place pour ACSSI/Auchan dark).
+  - `pages/fondation.html` (`.theme-card` + bloc démo), `pages/getting-started.html` (exemple `data-theme`), `pages/templates.html`/`pages/divers.html` (listes de démo complétées).
+  - `playwright.config.ts` : projets `noel-{dark,light}-{desktop,mobile}` — **rouges par construction** à ce stade, baselines récoltées par soft-harvest CI par la session parente, pas générées localement.
+  - Perf : `lighthouserc.cjs`/`lhci-baseline.json` étendus à la matrice 5 thèmes (les 2 runs `noel-*` sont ajoutés mais pas encore mesurés).
+  - `@msyx-dev/react` : voir `packages/react/RELEASES.md` (alpha.57 → alpha.58).
+  - Docs : `CLAUDE.md` (dont la procédure d'ajout de thème — la mention « ACSSI, seul thème à déclarer `--text-on-accent` » était devenue fausse depuis Auchan, corrigée), `DS-PRINCIPLES.md` (Section 2 et §8.3), `ARCHITECTURE.md`, `PERF-BUDGET.md`, `CONSUMER_GUIDE.md`, `README.md` — « 4 thèmes / 8 combos » → « 5 thèmes / 10 combos » partout où c'était écrit en dur. `SKILL.md`, `prompts.md`, `shared/sync.sh` corrigés au passage : déjà faux depuis #849 (« 3 thèmes / 6 combos », libellé « themes ACSSI / Nhood »).
+
+### Fixed
+- **Knob de toggle invisible en Noël dark** — même défaut, même correctif que ACSSI/Auchan : `.toggle-slider::before` utilisait `var(--text-on-accent)`, sombre (`#200a0d`) en Noël dark ; `background: var(--overlay-text)` (blanc, non thémé) étendu à `[data-theme="noel"]`.
+- **Matrice a11y : Auchan n'avait jamais rejoint `THEME_COMBOS` malgré le commentaire « tous les thèmes » (#939)** — `visual-tests/a11y.spec.ts`. `docs/DS-PRINCIPLES.md` §8.3 exclut explicitement le contraste des critères couverts par la régression visuelle, **parce qu'axe-core le couvre déjà** dans cette suite a11y — sauf que la matrice était restée figée à 6 combos (3 thèmes) depuis #242, et Auchan (#849) n'y a jamais été ajouté : son contraste n'était donc couvert par rien du tout. Corrigé dans le même geste que l'ajout de Noël : matrice portée à 10 combos, 54 → 90 runs.
+
+Voir `packages/react/RELEASES.md` pour le port `@msyx-dev/react` (`<ThemeSwitcher>`, alpha séparée, cf. #314).
+
 ## 2.137.0 — 2026-09-03 — Surfaces flottantes, liens de composant, clavier macOS (#932, #934, #933, #931)
 
 > Lot demandé par KeepThread. Touche `shared/css/tokens.css` + `components/{_base,forms,overlays,media,alerts,_a11y,data,heatmap-calendar,navigation}.css` + `layout.css` + `base.css` + `shared/components.js` + `pages/composants.html` ET `packages/react/**` (cf. `packages/react/RELEASES.md` v3.0.0-alpha.57).
