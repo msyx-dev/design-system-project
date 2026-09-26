@@ -84,7 +84,7 @@ export interface SiteHeaderProps {
   /** `<VersionNotes>` (badge + modale). Rendu si fourni. */
   versionNotes?: VersionNotesProps;
   /**
-   * Affiche le sélecteur de palette (`<ThemeSwitcher>`, dropdown MSYX/ACSSI/Nhood).
+   * Affiche le sélecteur de palette (`<ThemeSwitcher>`, dropdown MSYX/ACSSI/Nhood/Auchan/Noël).
    * Le toggle clair/sombre est **toujours présent** (batteries-included), avec
    * ou sans cette prop : `<ThemeSwitcher>` (qui l'inclut déjà) si `true`, sinon
    * `<ThemeToggle>` seul.
