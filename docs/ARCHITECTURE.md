@@ -181,7 +181,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 - **Outils** : `@axe-core/playwright` v4.x (devDep) — API Deque officielle `AxeBuilder`
 - **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les baselines VR
-- **Matrice** : 9 pages × 3 thèmes × 2 modes = 54 runs (même couverture que VR sans viewport)
+- **Matrice** : 9 pages × 5 thèmes × 2 modes = 90 runs (même couverture que VR sans viewport ; `auchan` et `noel` ajoutés en #939 — `auchan` n'y avait jamais été ajouté)
 - **Règles** : `wcag2a`, `wcag2aa`, `wcag21aa` (WCAG 2.0 + 2.1 A/AA)
 - **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001, séparé du pipeline VR
 - **Mode dry-run** : ne fait jamais échouer le test sur violation (logger seulement)
