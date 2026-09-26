@@ -31,7 +31,7 @@ describe("ThemeSwitcher — rendu", () => {
     ).toBeInTheDocument();
   });
 
-  it("le select expose les 4 options MSYX/ACSSI/Nhood/Auchan par défaut", async () => {
+  it("le select expose les 5 options MSYX/ACSSI/Nhood/Auchan/Noël par défaut", async () => {
     render(<ThemeSwitcher />);
     const select = await screen.findByRole("combobox");
     const options = Array.from(select.querySelectorAll("option")).map((o) => ({
@@ -43,6 +43,7 @@ describe("ThemeSwitcher — rendu", () => {
       { value: "acssi", label: "ACSSI" },
       { value: "nhood", label: "Nhood" },
       { value: "auchan", label: "Auchan" },
+      { value: "noel", label: "Noël" },
     ]);
   });
 
@@ -149,6 +150,21 @@ describe("ThemeSwitcher — changement de thème", () => {
       );
     });
     expect(localStorage.getItem("msyx-theme")).toBe("auchan");
+  });
+
+  it("sélectionner noel pose data-theme=noel et persiste (#939)", async () => {
+    render(<ThemeSwitcher />);
+    const select = await screen.findByRole("combobox");
+    await waitFor(() => expect(select).toHaveValue("msyx"));
+
+    fireEvent.change(select, { target: { value: "noel" } });
+
+    await waitFor(() => {
+      expect(document.documentElement.getAttribute("data-theme")).toBe(
+        "noel",
+      );
+    });
+    expect(localStorage.getItem("msyx-theme")).toBe("noel");
   });
 
   it("revenir à msyx retire data-theme (défaut implicite)", async () => {

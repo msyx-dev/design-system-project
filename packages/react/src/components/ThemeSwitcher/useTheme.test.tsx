@@ -302,4 +302,23 @@ describe("useTheme — config par défaut", () => {
     localStorage.clear();
     cleanDom();
   });
+
+  it("expose noel (dark+light) dans DEFAULT_THEME_CONFIG (#939)", async () => {
+    localStorage.clear();
+    cleanDom();
+    localStorage.setItem("msyx-theme", "noel");
+
+    const { result } = renderHook(() => useTheme());
+
+    await waitFor(() => expect(result.current.theme).toBe("noel"));
+    expect(DEFAULT_THEME_CONFIG.noel).toEqual({
+      modes: ["dark", "light"],
+      defaultMode: "dark",
+    });
+    expect(result.current.availableModes).toEqual(["dark", "light"]);
+    expect(result.current.isModeLocked).toBe(false);
+
+    localStorage.clear();
+    cleanDom();
+  });
 });
