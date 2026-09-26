@@ -139,6 +139,28 @@ EOF
     --cat-7: #2c066b;
     --cat-8: #a509a3;
 }
+[data-theme="noel"] {
+    --surface-solid: #122019;
+    --cat-1: #2f7fff;
+    --cat-2: #c599f8;
+    --cat-3: #ff00aa;
+    --cat-4: #ec3c00;
+    --cat-5: #d7a447;
+    --cat-6: #bdf600;
+    --cat-7: #009d7a;
+    --cat-8: #00dbfe;
+}
+[data-theme="noel"][data-mode="light"] {
+    --surface-solid: #ffffff;
+    --cat-1: #056eff;
+    --cat-2: #a200fe;
+    --cat-3: #ff00aa;
+    --cat-4: #ff4408;
+    --cat-5: #704e00;
+    --cat-6: #769c00;
+    --cat-7: #007f62;
+    --cat-8: #004e5c;
+}
 EOF
 }
 

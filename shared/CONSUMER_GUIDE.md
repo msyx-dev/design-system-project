@@ -503,7 +503,7 @@ Cas d'usage typiques : bouton avec icône + texte, cellule de tableau avec icôn
 
 ## Coder des catégories — `--cat-1..8` (#800)
 
-**Ne réinventez pas une palette maison** (ex. `src/lib/timeline-colors.ts`) : le DS expose une échelle catégorielle dédiée, garantie séparable et lisible sur les 8 combos theme/mode (MSYX/ACSSI/NHOOD/AUCHAN × dark/light).
+**Ne réinventez pas une palette maison** (ex. `src/lib/timeline-colors.ts`) : le DS expose une échelle catégorielle dédiée, garantie séparable et lisible sur les 10 combos theme/mode (MSYX/ACSSI/NHOOD/AUCHAN/NOEL × dark/light).
 
 ### Ce que le DS garantit
 8 tokens `--cat-1` à `--cat-8`, vérifiés en CI par `bin/check-categorical-palette.js` :
@@ -579,7 +579,7 @@ Les variantes destructives suivantes utilisees en aksy sont couvertes par le DS 
 | `.btn-primary.btn-danger` | `.btn-primary.btn-danger` (gradient) | DS expose `.btn-danger` en gradient (style charte msyx). Si flat strict requis, override projet (DS-EXCEPTION acceptee). |
 | `.btn-icon--danger` | `.btn-icon.btn-icon--danger` | Disponible depuis v2.27.0 (#156). Combine `.btn-icon` (taille 44x44, forme) et `.btn-icon--danger` (couleur rouge). |
 
-Les projets consumers SHOULD migrer leurs overrides custom vers les classes DS pour profiter du theming automatique (4 themes x 2 modes).
+Les projets consumers SHOULD migrer leurs overrides custom vers les classes DS pour profiter du theming automatique (5 themes x 2 modes).
 
 **Exemple d'usage :**
 ```html
@@ -865,7 +865,7 @@ Apres chaque modification de theme, lancer les tests visuels de reference pour s
 npm run test:visual
 ```
 
-Les 144 baselines (4 themes × 2 modes × 9 pages × 2 viewports, +auchan #849) doivent passer sans `--update-snapshots`. Si un diff est detecte :
+Les 180 baselines (5 themes × 2 modes × 9 pages × 2 viewports, +auchan #849, +noel #939) doivent passer sans `--update-snapshots`. Si un diff est detecte :
 1. Lire le rapport Playwright pour identifier le theme/mode/viewport touche
 2. Comparer les valeurs dans le fichier JSON vs les blocs CSS originaux
 3. Corriger la valeur incorrecte dans le JSON et relancer `node shared/build-themes.js`

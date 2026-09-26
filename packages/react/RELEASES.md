@@ -4,6 +4,14 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.58 — 2026-09-26 — 5e thème « Noël » (#939)
+
+> Le CSS, le JS vanilla et les démos correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.138.0.
+
+### Added
+- **`noel` (dark+light) ajouté à `DEFAULT_THEME_CONFIG` / `THEME_LABELS` (#939).** `<ThemeSwitcher>` expose désormais 5 options (msyx/acssi/nhood/auchan/noel) ; `useTheme()` réconcilie noel comme les autres thèmes deux-modes.
+- Docstrings de `ThemeSwitcher.tsx`, `useTheme.ts`, `SiteHeader.tsx` et `README.md` mises à jour (elles annonçaient encore « msyx/acssi/nhood », obsolète depuis l'ajout d'Auchan #849).
+
 ## v3.0.0-alpha.57 — 2026-09-03 — Portail vers le dialog ouvert, clavier macOS (#934, #931)
 
 > Le CSS, le JS vanilla et les démos correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.137.0.

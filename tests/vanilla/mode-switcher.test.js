@@ -11,7 +11,7 @@
 // THEME_CONFIG est une var top-level de shared/components.js -> devient une
 // propriete mutable de dom.window sous l'eval indirect (verifie empiriquement,
 // cf. theme-switcher.test.js). On l'utilise pour simuler un theme SANS mode
-// clair (aucun des 4 themes reels du DS -- msyx/acssi/nhood/auchan -- n'est
+// clair (aucun des 5 themes reels du DS -- msyx/acssi/nhood/auchan/noel -- n'est
 // dans ce cas aujourd'hui : tous ont dark+light) et prouver que le toggle est
 // bien neutralise dans ce cas, comme le prevoit le code de updateModeSwitch()/toggle().
 import { describe, it, expect, afterEach, vi } from 'vitest';
@@ -60,6 +60,13 @@ describe('initModeSwitcher -- rendu initial', () => {
   it('#849 -- theme "auchan" a bien 2 modes (dark+light), toggle non neutralise', () => {
     const { window, sw } = setup();
     window.THEME_CONFIG.auchan = { modes: ['dark', 'light'], defaultMode: 'dark' };
+    window.__initModeSwitcher();
+    expect(sw.hasAttribute('aria-disabled')).toBe(false);
+  });
+
+  it('#939 -- theme "noel" a bien 2 modes (dark+light), toggle non neutralise', () => {
+    const { window, sw } = setup();
+    window.THEME_CONFIG.noel = { modes: ['dark', 'light'], defaultMode: 'dark' };
     window.__initModeSwitcher();
     expect(sw.hasAttribute('aria-disabled')).toBe(false);
   });

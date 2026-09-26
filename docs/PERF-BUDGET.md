@@ -63,7 +63,7 @@ Note : `components.css` est un barrel de @import — la taille des modules resol
 ### Perimetre
 
 Page de reference : `pages/composants.html` (la plus lourde en composants JS).
-Matrice : **4 themes × 2 modes = 8 runs** par cycle CI (+auchan, #849).
+Matrice : **5 themes × 2 modes = 10 runs** par cycle CI (+auchan, #849 ; +noel, #939).
 
 ### Mecanisme query param → localStorage (anti-FOUC)
 
@@ -100,9 +100,11 @@ http://localhost:3001/pages/composants.html?theme=nhood&mode=dark
 http://localhost:3001/pages/composants.html?theme=nhood&mode=light
 http://localhost:3001/pages/composants.html?theme=auchan&mode=dark
 http://localhost:3001/pages/composants.html?theme=auchan&mode=light
+http://localhost:3001/pages/composants.html?theme=noel&mode=dark
+http://localhost:3001/pages/composants.html?theme=noel&mode=light
 ```
 
-Themes valides conformes a `THEME_CONFIG` dans `shared/components.js` : tous les 4 themes supportent `['dark', 'light']`.
+Themes valides conformes a `THEME_CONFIG` dans `shared/components.js` : tous les 5 themes supportent `['dark', 'light']`.
 
 ### Seuils (warn-only)
 

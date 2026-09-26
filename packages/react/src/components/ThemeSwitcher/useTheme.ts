@@ -17,7 +17,7 @@ const STORAGE_KEY_MODE = "msyx-mode";
 
 /**
  * Config par défaut du DS msyx.fr — réplique `THEME_CONFIG`
- * (`shared/components.js:771-775`). Les 3 thèmes officiels sont dark+light.
+ * (`shared/components.js:771-775`). Les 5 thèmes officiels sont dark+light.
  * Le mécanisme mono-mode (`modes: ['dark']` seul) est supporté ici mais
  * dormant côté DS vanilla — un consumer peut le déclencher en passant un
  * `config` custom à `useTheme()`.
@@ -27,9 +27,10 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
   acssi: { modes: ["dark", "light"], defaultMode: "dark" },
   nhood: { modes: ["dark", "light"], defaultMode: "dark" },
   auchan: { modes: ["dark", "light"], defaultMode: "dark" },
+  noel: { modes: ["dark", "light"], defaultMode: "dark" },
 };
 
-/** Nom de thème dérivé des clés de la config par défaut (msyx/acssi/nhood). */
+/** Nom de thème dérivé des clés de la config par défaut (msyx/acssi/nhood/auchan/noel). */
 export type ThemeName = keyof typeof DEFAULT_THEME_CONFIG;
 
 const DEFAULT_THEME = "msyx";

@@ -3,18 +3,19 @@ import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
 import { DEFAULT_THEME_CONFIG, useTheme, type ThemeConfig } from "./useTheme";
 
 export interface ThemeSwitcherProps {
-  /** Config des thèmes disponibles (défaut : `DEFAULT_THEME_CONFIG` — msyx/acssi/nhood). */
+  /** Config des thèmes disponibles (défaut : `DEFAULT_THEME_CONFIG` — msyx/acssi/nhood/auchan/noel). */
   config?: ThemeConfig;
   /** Label du select (défaut : "Thème"). */
   label?: string;
 }
 
-/** Libellés lisibles des 3 thèmes officiels du DS (`THEME_LABELS`, `shared/components.js`). */
+/** Libellés lisibles des 5 thèmes officiels du DS (`THEME_LABELS`, `shared/components.js`). */
 const THEME_LABELS: Record<string, string> = {
   msyx: "MSYX",
   acssi: "ACSSI",
   nhood: "Nhood",
   auchan: "Auchan",
+  noel: "Noël",
 };
 
 /**

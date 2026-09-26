@@ -164,7 +164,7 @@ Port complet du sélecteur de thème DS — pas seulement le visuel. `<ThemeSwit
 
 | Prop     | Type           | Défaut               | Description                                   |
 |----------|----------------|-----------------------|------------------------------------------------|
-| `config` | `ThemeConfig`  | `DEFAULT_THEME_CONFIG` | Thèmes disponibles (msyx/acssi/nhood par défaut) |
+| `config` | `ThemeConfig`  | `DEFAULT_THEME_CONFIG` | Thèmes disponibles (msyx/acssi/nhood/auchan/noel par défaut) |
 | `label`  | `string`       | `"Thème"`             | Label du `<select>`                             |
 
 Le hook `useTheme(config?)` retourne `{ theme, mode, setTheme, setMode, toggleMode, availableModes, isModeLocked, config }`.

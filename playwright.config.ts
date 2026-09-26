@@ -17,7 +17,7 @@ const PORT = 4173;
 // Sharding et workers>1 ecartes (tranche par l'arbitrage #851) : le
 // parallelisme rendait les captures instables sous charge (deja tranche
 // dans le ticket), et le sharding traite la duree, pas le volume/stockage.
-const THEMES = ["msyx", "acssi", "nhood", "auchan"] as const;
+const THEMES = ["msyx", "acssi", "nhood", "auchan", "noel"] as const;
 const MODES = ["dark", "light"] as const;
 const VIEWPORTS = [
   { name: "desktop", width: 1280, height: 800 },
