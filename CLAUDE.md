@@ -10,7 +10,7 @@ Tout projet msyx.fr qui a besoin d'un composant manquant doit le creer ICI d'abo
 
 Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
 - **Aucune valeur hardcodée** (hex/rgb/px/font) — toujours `var(--token)` depuis `tokens.css`
-- **8 combos theme/mode à tester** — MSYX/ACSSI/Nhood/Auchan × dark/light (4 × 2, `THEME_CONFIG` de `shared/components.js`)
+- **10 combos theme/mode à tester** — MSYX/ACSSI/Nhood/Auchan/Noël × dark/light (5 × 2, `THEME_CONFIG` de `shared/components.js`)
 - **Mobile-first uniquement** — `@media (min-width: ...)`, jamais `max-width`
 - **A11y baseline** — `aria-label` sur icon-only, `:focus-visible`, contraste 4.5:1, target 44px mobile
 - **Anti-FOUC** — script synchrone inline `<head>`, lit `msyx-theme` + `msyx-mode` (jamais de naming divergent)
@@ -124,7 +124,7 @@ Cf. issue #314 (convention décidée 2026-05-25, option A).
 ## Theming
 - 2 attributs HTML : `data-theme` (palette) + `data-mode` (dark/light)
 - Cascade CSS 4 couches : `:root` → `[data-theme]` → `[data-mode="light"]` → `[data-theme][data-mode]`
-- 4 themes : MSYX (dark+light), ACSSI (dark+light), Nhood (dark+light), Auchan (dark+light, #849)
+- 5 themes : MSYX (dark+light), ACSSI (dark+light), Nhood (dark+light), Auchan (dark+light, #849), Noël (dark+light, #939)
 - `THEME_CONFIG` dans components.js : modes disponibles par theme, extensible
 - 2 cles localStorage : `msyx-theme` + `msyx-mode`
 - Toggle sun/moon dans le header, grise si theme dark-only
@@ -132,7 +132,7 @@ Cf. issue #314 (convention décidée 2026-05-25, option A).
 - Variables RGB semantiques : `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`
 - **Ajouter un theme** (source de verite depuis v2.39.0 — PAS d'edition manuelle de bloc CSS) :
   1. `./shared/scaffold-theme.sh <nom>` — cree `themes/<nom>.json` depuis `themes/msyx.json`
-  2. Remplir les 2 modes (`dark`/`light`) dans ce JSON — s'aligner sur `themes/acssi.json` (couverture la plus complete, 91 cles dark / 85 light, seul thème a declarer `--text-on-accent`)
+  2. Remplir les 2 modes (`dark`/`light`) dans ce JSON — s'aligner sur `themes/acssi.json` (couverture la plus complete, 91 cles dark / 85 light — acssi, auchan et noel declarent aussi `--text-on-accent`)
   3. `node shared/build-themes.js` — regenere `shared/css/themes.css` (**AUTOGENERE, ne jamais l'editer a la main**)
   4. `--cat-1..8`/`--chart-1..5` : arbitres par `node bin/check-categorical-palette.js --scale=cat|chart`, pas a l'oeil
   5. 1 entree `THEME_CONFIG`/`THEME_LABELS` (`shared/components.js`) + 1 `<option>` dans le select (`shared/nav.js`)
@@ -158,7 +158,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Section dediee avec commentaire `/* ===== NOM COMPOSANT ===== */`
    - Variables CSS uniquement (jamais de hex/rgb hardcode)
    - Mobile-first : media queries co-localisees avec le composant
-   - Tester les 8 combinaisons theme/mode (MSYX/ACSSI/Nhood/Auchan × dark/light)
+   - Tester les 10 combinaisons theme/mode (MSYX/ACSSI/Nhood/Auchan/Noël × dark/light)
 3. **JS** (si interactif) : ajouter dans `shared/components.js`
    - Fonction `initNomComposant()` exportee
    - Pattern `dataset.bound` anti-double-bind sur les event listeners

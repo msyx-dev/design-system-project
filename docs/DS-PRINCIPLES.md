@@ -96,12 +96,12 @@ Trois categories de valeurs hardcodees **legitimement tokenisees** sans lien au 
 
 ---
 
-## Section 2 — Theming (4 themes × 2 modes = 8 combos à tester)
+## Section 2 — Theming (5 themes × 2 modes = 10 combos à tester)
 
 ### Règle
-- 2 attributs HTML : `data-theme` (palette : msyx / acssi / nhood / auchan) + `data-mode` (dark / light).
+- 2 attributs HTML : `data-theme` (palette : msyx / acssi / nhood / auchan / noel) + `data-mode` (dark / light).
 - Cascade CSS 4 couches : `:root` → `[data-theme]` → `[data-mode="light"]` → `[data-theme][data-mode]`.
-- Tout composant doit être **testable** sur les **8 combos** (MSYX dark+light, ACSSI dark+light, Nhood dark+light, Auchan dark+light — `THEME_CONFIG` de `shared/components.js` donne bien `['dark','light']` aux 4 themes ; `playwright.config.ts` génère 4×2×2=16 projets et `visual-tests/baseline/` contient 16 dossiers, cf. correction #800 + #849 — l'ancien chiffre « 5 combos » était déjà stale, « 8 combos » l'est devenu à son tour).
+- Tout composant doit être **testable** sur les **10 combos** (MSYX dark+light, ACSSI dark+light, Nhood dark+light, Auchan dark+light, Noël dark+light — `THEME_CONFIG` de `shared/components.js` donne bien `['dark','light']` aux 5 themes ; `playwright.config.ts` génère 5×2×2=20 projets, cf. correction #800 + #849 + #939 — l'ancien chiffre « 5 combos » était déjà stale, puis « 8 combos » l'est devenu à son tour).
 
 ### Variables RGB pour rgba()
 Pour les declinaisons opaques :
@@ -157,7 +157,7 @@ Le DS expose une échelle dédiée `--cat-1` à `--cat-8` : elle ne veut rien di
 .milestone-livraison { background: var(--cat-4); }
 ```
 
-**Contrat vérifié par `bin/check-categorical-palette.js`** (CI, bloquant) sur les 8 combos theme/mode :
+**Contrat vérifié par `bin/check-categorical-palette.js`** (CI, bloquant) sur les 10 combos theme/mode :
 - **C1** — écart de teinte ΔH(OKLCh) ≥ 30° entre deux entrées quelconques.
 - **C2** — distance perceptuelle ΔE(OKLab) ≥ 0,12 entre deux entrées quelconques (ferme le trou de C1 : deux teintes lointaines à faible chroma restent confondues).
 - **C3** — contraste ≥ 3:1 vs `--surface-solid` (WCAG 2.1 SC 1.4.11, objet graphique non-textuel — **pas** 4,5:1).
@@ -493,7 +493,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 - [ ] Commentaire en-tête `/* ===== NOM COMPOSANT ===== */`
 - [ ] Aucune valeur hardcodée (cf Section 1)
 - [ ] Mobile-first (cf Section 4)
-- [ ] Testé sur les 8 combos theme/mode (cf Section 2)
+- [ ] Testé sur les 10 combos theme/mode (cf Section 2)
 
 ### JS (si interactif)
 - [ ] Fonction `init<NomComposant>()` exportée
@@ -531,7 +531,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 
 ### Tests visuels (Visual Regression)
 - [ ] Nouvelle baseline VR générée pour la page concernée
-- [ ] Tests sur les 8 combos theme/mode (où applicable)
+- [ ] Tests sur les 10 combos theme/mode (où applicable)
 
 ---
 
@@ -630,8 +630,8 @@ pas le volume ni le coût de stockage des baselines.
 - **MSYX** conserve la **matrice complète** : 2 modes × 2 viewports (desktop +
   mobile) × **toutes** les sections de toutes les pages. C'est le thème de
   référence — aucune perte de couverture n'est acceptable dessus.
-- **Tout thème secondaire** (ACSSI, Nhood, Auchan, et tout thème futur ajouté
-  via `shared/scaffold-theme.sh`, cf. Section 2) : **desktop uniquement**
+- **Tout thème secondaire** (ACSSI, Nhood, Auchan, Noël, et tout thème futur
+  ajouté via `shared/scaffold-theme.sh`, cf. Section 2) : **desktop uniquement**
   (pas de projet `*-mobile` dans `playwright.config.ts` — `viewportsForTheme()`
   ne garde le mobile que pour `msyx`) et **sections sentinelles uniquement**
   (`SENTINEL_SECTIONS` dans `visual-tests/visual.spec.ts`).
@@ -657,7 +657,7 @@ invoquer pour ajouter une section) :
 | `fondation` | `colors`, `palette-categorielle`, `theming` | expriment directement la palette du thème (swatches, 8 teintes `--cat-*`, switcher) |
 | `composants` | `buttons`, `split-button`, `badges`, `chips`, `cards`, `card-media`, `segmented-control` | bordures/ombres/pill-shape pilotées par tokens (`--btn-shadow-alpha`, `--border`, radius) |
 | `navigation` | `action-menu` | dropdown avec bordure token (`menu.css`) |
-| `formulaires` | `inputs`, `controls`, `calendar` | `controls` a un override per-thème réel (`forms.css` : `.toggle-slider::before` différent sur ACSSI/Auchan) ; `calendar` = grille dense forte densité de bordures/espacements |
+| `formulaires` | `inputs`, `controls`, `calendar` | `controls` a un override per-thème réel (`forms.css` : `.toggle-slider::before` différent sur ACSSI/Auchan/Noël) ; `calendar` = grille dense forte densité de bordures/espacements |
 | `data` | `charts`, `pie-donut` | consomment directement `--chart-*`/`--cat-*` |
 | `templates` | `pricing` | plan mis en avant = bordure/emphase token-dépendante |
 | `feedback` | `alerts` | bordures/fond par statut (`--danger`, `--warning`…) |
