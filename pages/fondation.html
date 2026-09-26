@@ -278,6 +278,13 @@
                     </div>
                     <span class="typo-xs">Palette rouge de marque/ambre/teal — accent et danger separes par teinte+luminance (#849).</span>
                 </div>
+                <div class="theme-card">
+                    <div class="theme-card-head">
+                        <span class="typo-small fw-600">Noël</span>
+                        <span class="badge badge-success text-2xs">dark + light</span>
+                    </div>
+                    <span class="typo-xs">Rouge houx sur surfaces vert sapin, or dans les gradients — danger decale vers l'orange pour rester distinguable de l'accent (#939).</span>
+                </div>
                 <div class="theme-card theme-card--future">
                     <div class="theme-card-head">
                         <span class="typo-small fw-600">Futur theme</span>
@@ -410,6 +417,43 @@
                 </div>
             </div>
             <div class="code-block text-xs-lh"><span class="cm">/* Activer Auchan dark */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'auchan'</span>;<br><br><span class="cm">/* Activer Auchan light */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'auchan'</span>;<br><span class="fn">document.documentElement.dataset.mode</span> = <span class="str">'light'</span>;</div>
+        </div>
+    </div>
+    <div class="demo-grid demo-grid-2 mt-lg">
+        <div class="demo-box grid-full">
+            <span class="demo-label">Theme Noël (#939)</span>
+            <p class="typo-body mb-md">5e theme du DS — rouge houx sur surfaces vert sapin, or dans les gradients. <span class="code-inline">--danger</span> decale vers l'orange pour rester distinguable de <span class="code-inline">--accent</span> (ΔH 34,3° / ΔE 0,139 en dark, 25,2° / ΔE 0,141 en light). Supporte dark et light.</p>
+            <div class="color-grid color-grid--compact">
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#ef5a5f;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Accent (rouge houx)</div>
+                        <div class="color-hex">#ef5a5f</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#e8b93a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Warning (or)</div>
+                        <div class="color-hex">#e8b93a</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#fb923c;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Danger (orange)</div>
+                        <div class="color-hex">#fb923c</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-preview" style="background:#122019;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface (vert sapin)</div>
+                        <div class="color-hex">#122019</div>
+                    </div>
+                </div>
+            </div>
+            <div class="code-block text-xs-lh"><span class="cm">/* Activer Noël dark */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'noel'</span>;<br><br><span class="cm">/* Activer Noël light */</span><br><span class="fn">document.documentElement.dataset.theme</span> = <span class="str">'noel'</span>;<br><span class="fn">document.documentElement.dataset.mode</span> = <span class="str">'light'</span>;</div>
         </div>
     </div>
 </section>
