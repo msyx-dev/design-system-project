@@ -2,7 +2,7 @@
  * a11y.spec.ts — Axe-core dry-run audit
  * DS v2.52.0 — issue #242
  *
- * Matrice : 9 pages × 3 thèmes × 2 modes = 54 runs
+ * Matrice : 9 pages × 5 thèmes × 2 modes = 90 runs
  * Mode dry-run : ne fait PAS échouer le test sur violation.
  * Produit docs/audit-a11y-2026-05-09.md après tous les runs.
  */
@@ -40,6 +40,10 @@ const THEME_COMBOS: Array<{ theme: string; mode: string }> = [
   { theme: "acssi", mode: "light" },
   { theme: "nhood", mode: "dark" },
   { theme: "nhood", mode: "light" },
+  { theme: "auchan", mode: "dark" },
+  { theme: "auchan", mode: "light" },
+  { theme: "noel", mode: "dark" },
+  { theme: "noel", mode: "light" },
 ];
 
 // --- Buffer des résultats pour le rapport afterAll ---
@@ -84,7 +88,7 @@ async function setThemeAndMode(
 
 // ---- Tests ----
 
-test.describe("A11y audit — dry-run (54 runs)", () => {
+test.describe("A11y audit — dry-run (90 runs)", () => {
   for (const { slug, path: pagePath, title } of PAGES) {
     for (const { theme, mode } of THEME_COMBOS) {
       const runLabel = `${slug} [${theme}-${mode}]`;
