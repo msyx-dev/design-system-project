@@ -14,6 +14,17 @@
   },
   "released": [
     {
+      "version": "2.139.0",
+      "date": "2026-09-27",
+      "titre": "Un décor pour le thème de Noël",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Le thème de Noël s'accompagne désormais d'un décor : sapin, guirlande lumineuse, ornements suspendus et chute de neige, que l'on peut activer ou couper d'un clic."
+        }
+      ]
+    },
+    {
       "version": "2.138.0",
       "date": "2026-09-26",
       "titre": "Un nouveau thème : Noël",
