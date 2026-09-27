@@ -14,6 +14,25 @@
   },
   "released": [
     {
+      "version": "2.140.0",
+      "date": "2026-09-27",
+      "titre": "La neige tombe, et le sapin a pris du galon",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "La neige ne se déclenchait plus d'elle-même : elle tombe désormais dès que le thème de Noël est choisi, et un bouton flocon dans l'en-tête permet de l'arrêter à tout moment."
+        },
+        {
+          "type": "correction",
+          "text": "Certaines ampoules de la guirlande étaient coupées en bas. La guirlande s'affiche maintenant en entier."
+        },
+        {
+          "type": "amelioration",
+          "text": "Le sapin a été redessiné : branches découpées, neige posée sur les étages, guirlandes en courbe, boules qui brillent et étoile lumineuse."
+        }
+      ]
+    },
+    {
       "version": "2.139.0",
       "date": "2026-09-27",
       "titre": "Un décor pour le thème de Noël",
