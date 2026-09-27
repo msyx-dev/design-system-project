@@ -208,6 +208,45 @@
         </div>
     </div>
 </section>
+<section id="festif">
+    <div class="section-header">
+        <span class="overline">Decor</span>
+        <h2>Decor festif</h2>
+        <p class="typo-body text-muted">Nappe de flocons (<code class="code-inline">.snowfall</code>) et guirlande lumineuse (<code class="code-inline">.garland</code>) — meme famille que le primitif <code class="code-inline">.orb</code> : CSS-only, zero noeud DOM par flocon, opt-in (#940).</p>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Nappe de neige (.snowfall)</span>
+        <div class="demo-box" style="position:relative;overflow:hidden;height:220px;background:var(--primary);">
+            <div class="snowfall" aria-hidden="true" id="festif-snow"></div>
+            <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:0.5rem;padding:var(--space-md);">
+                <p class="typo-small" style="font-weight:600;">Trois densites, une seule classe</p>
+                <p class="typo-xs text-muted">Variantes : <code class="code-inline">.snowfall--sparse</code> &middot; <code class="code-inline">.snowfall</code> (defaut) &middot; <code class="code-inline">.snowfall--dense</code>. Couleur surchargeable via <code class="code-inline">--snow-color</code>.</p>
+                <div class="row" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn btn-secondary" type="button" data-festif-density="">Defaut</button>
+                    <button class="btn btn-secondary" type="button" data-festif-density="sparse">Clairsemee</button>
+                    <button class="btn btn-secondary" type="button" data-festif-density="dense">Dense</button>
+                    <button class="btn btn-secondary" type="button" id="festif-toggle-demo" aria-pressed="true">Arreter la neige</button>
+                </div>
+                <p class="typo-xs text-muted">Le bouton « Arreter la neige » est le patron de controle exige par <strong>WCAG 2.2.2</strong> (Pause/Stop/Hide) des qu'une app active une animation permanente : a copier tel quel, cle <code class="code-inline">localStorage</code> <code class="code-inline">msyx-festive</code>.</p>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Guirlande lumineuse (.garland)</span>
+        <div class="demo-box">
+            <ul class="garland" aria-hidden="true">
+                <li class="garland-bulb" style="--i:0"></li><li class="garland-bulb" style="--i:1"></li><li class="garland-bulb" style="--i:2"></li><li class="garland-bulb" style="--i:3"></li><li class="garland-bulb" style="--i:4"></li><li class="garland-bulb" style="--i:5"></li><li class="garland-bulb" style="--i:6"></li><li class="garland-bulb" style="--i:7"></li>
+            </ul>
+            <p class="typo-xs text-muted mt-sm">Ampoules dephasees, cycle 1,8s (variable <code class="code-inline">--garland-cycle</code>, minimum 0,7s) : sous le plafond de 3 flashs/seconde de <strong>WCAG 2.3.1</strong> par construction. Variante fixe : <code class="code-inline">.garland--steady</code>.</p>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Fond de page decore</span>
+        <div class="demo-box">
+            <p class="typo-small">Le theme <strong>Noel</strong> habille aussi le fond de toutes les pages via <code class="code-inline">--texture-grain</code> (motif flocons/etoiles) et <code class="code-inline">--texture-grain-opacity</code> — statique, donc <strong>actif par defaut</strong> sur <code class="code-inline">[data-theme="noel"]</code> sans bouton d'arret requis (WCAG 2.2.2 ne s'applique qu'aux animations).</p>
+        </div>
+    </div>
+</section>
 
 <section id="tokens">
     <div class="section-header"><span class="overline">Reference</span><h2>Tokens CSS</h2><p>Toutes les variables CSS disponibles pour la charte.</p></div>
