@@ -1,5 +1,22 @@
 # Releases
 
+## 2.140.0 — 2026-09-27 — Décor festif : guirlande, neige par défaut, sapin redessiné (#946)
+
+> Trois défauts constatés sur la livraison 2.139.0. Touche `shared/css/components/festive.css`, `shared/nav.js`, `assets/tree-noel.svg`, `shared/icons/sprite.svg`, `pages/fondation.html`.
+
+### Fixed
+- **La guirlande était tronquée.** `.garland` portait un `overflow: hidden` posé pour contenir un débordement **horizontal** — mais la propriété agit sur les deux axes et coupait les ampoules impaires, qui pendent `--bulb-drop` sous le fil. `overflow-x: hidden` seul n'aurait rien réglé : CSS force alors `overflow-y: auto`, donc une barre de défilement. L'`overflow` est retiré ; le conteneur réserve désormais la hauteur des ampoules les plus basses (`min-height`), le débordement horizontal restant absorbé par `justify-content: space-between`. **Mesuré** : l'ampoule basse s'arrête à 78,0px pour un conteneur qui descend à 91,0px.
+- **La neige ne tombait plus.** Elle était opt-in, `msyx-festive` à `off` par défaut — conforme à ce qui avait été spécifié, mais absurde à l'usage : choisir un thème de Noël et ne rien voir tomber. **Le défaut s'inverse** : la neige tombe dès la sélection du thème, et seule la valeur `off` la coupe. WCAG 2.2.2 n'interdit pas une animation qui démarre seule, il exige qu'on puisse l'arrêter — d'où le **bouton flocon dans l'en-tête**, rendu uniquement sur ce thème, avec son `aria-pressed` et son libellé qui suivent l'état.
+
+### Changed
+- **Sapin redessiné.** L'ancien empilait trois triangles pleins. Le nouveau a des branches **dentelées**, un dégradé d'ombre entre les étages, de la **neige posée** sur chaque niveau, des guirlandes en courbe, des boules avec reflet, un cache-pot et une étoile à halo. Couleurs toujours prises dans les tokens du thème, lumières toujours synchronisées sur `--garland-cycle`.
+- **Sprite : 61 glyphes** (+ `snowflake`, via `build-sprite.sh`). Le compteur de la page d'iconographie s'est mis à jour tout seul — il dérive du sprite depuis #927.
+
+### Ce qui n'a PAS bougé
+Les quatre autres thèmes sont **identiques au pixel**. Vérifié : `git diff --name-only` sur `visual-tests/baseline/*/composants-buttons.png` ne liste que des chemins `noel-*`, et `festive.css` ne contient aucune règle visant un composant existant — uniquement ses propres classes. Le ticket #944 (contraste du texte des boutons sous AA sur tous les thèmes) reste **non traité** : il changerait l'apparence des boutons partout et demande un arbitrage.
+
+`@ds-version` 2.139.0 → 2.140.0 (minor : nouveau glyphe, nouveau bouton d'en-tête, changement de défaut), `shared/check-versions.sh` rc=0.
+
 ## 2.139.0 — 2026-09-27 — Décor festif (#940)
 
 ### Added

@@ -146,3 +146,21 @@ describe('initFestiveDemo -- absence de markup', () => {
     expect(() => window.__initFestiveDemo()).not.toThrow();
   });
 });
+
+// #946 — le DEFAUT de la neige. La regle vit dans updateFestiveDecor() (nav.js),
+// non chargeable ici ; on verrouille donc la SEMANTIQUE de la cle partagee, qui
+// est ce qui a change : avant, il fallait 'on' pour voir la neige ; desormais
+// seule la valeur 'off' la coupe. Un test de la valeur, pas du DOM.
+describe('festive — semantique de la cle msyx-festive (#946)', () => {
+  const neigeVisible = (valeur) => valeur !== 'off';
+
+  it('aucune valeur stockee => la neige tombe', () => {
+    expect(neigeVisible(null)).toBe(true);
+  });
+
+  it("seule la valeur 'off' coupe la neige", () => {
+    expect(neigeVisible('off')).toBe(false);
+    expect(neigeVisible('on')).toBe(true);
+    expect(neigeVisible('nimporte quoi')).toBe(true);
+  });
+});
