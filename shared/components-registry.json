@@ -1,7 +1,7 @@
 {
   "version": "2.139.0",
   "generated": {
-    "at": "2026-09-27T07:52:58.153Z",
+    "at": "2026-09-27T08:17:35.819Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3527,7 +3527,17 @@
         ".snowfall--dense",
         ".garland",
         ".garland-bulb",
-        ".garland--steady"
+        ".garland--steady",
+        ".garland--header",
+        ".ornaments",
+        ".ornament",
+        ".frost",
+        ".snowcap",
+        ".snowcap--sm",
+        ".btn-candy",
+        ".festive-character",
+        ".festive-character--left",
+        ".tree-lights"
       ],
       "jsInit": "initFestiveDemo",
       "react": "pending",
