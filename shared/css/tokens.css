@@ -107,6 +107,7 @@
        d'un <dialog> ouvert par showModal(), qui est peint au-dessus de tout le
        document quel que soit le z-index (#934) — la reponse est alors le
        portail, pas l'empilement. */
+    --z-decor: 1;            /* couches decoratives ambiantes : .snowfall — au-dessus du fond, sous tout contenu interactif (#940) */
     --z-sticky: 150;         /* en-tetes colles : .site-header, .section-header--sticky */
     --z-surface: 200;        /* surfaces conteneurs : sidebar, overlay de drawer, panneau de notifs */
     --z-surface-panel: 201;  /* le panneau lui-meme, au-dessus de son propre overlay */

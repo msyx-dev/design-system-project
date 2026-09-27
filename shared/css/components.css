@@ -3,6 +3,7 @@
    Tree-shaking : shared/CONSUMER_GUIDE.md#tree-shaking */
 @import "./components/_base.css";
 @import "./components/orb.css";
+@import "./components/festive.css";
 @import "./components/menu.css";
 @import "./components/signature.css";
 @import "./components/brand.css";

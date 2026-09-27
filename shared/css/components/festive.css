@@ -1,0 +1,133 @@
+/* festive.css — Decor saisonnier OPT-IN (#940)
+   Usage : <div class="snowfall" aria-hidden="true"></div>
+           <div class="garland" aria-hidden="true"><span class="garland-bulb"></span>...</div>
+   CSS-only. ZERO JS, ZERO noeud DOM par flocon. Inerte tant que la classe n'est pas posee.
+   prefers-reduced-motion couvert globalement par _a11y.css. */
+
+/* ===== SNOWFALL — nappe de flocons plein ecran ===== */
+/* Deux couches animees (les pseudo-elements), chacune portant deux tailles de flocons :
+   quatre tailles apparentes pour deux elements composites. Le motif se repete sur la
+   moitie de la hauteur et la couche translate d'exactement cette moitie -> boucle sans couture. */
+.snowfall {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: var(--z-decor);
+    /* Blanc non theme : de la neige est claire, y compris sur fond clair — ou elle
+       se lit alors comme un voile. --overlay-text est deja le blanc non theme du DS. */
+    --snow-color: var(--overlay-text);
+    --snow-opacity: 0.55;
+    --snow-speed: 18s;
+    --snow-scale: 1;
+}
+
+.snowfall::before,
+.snowfall::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 200%;
+    opacity: var(--snow-opacity);
+    will-change: transform;
+    animation: snowfallDrift var(--snow-speed) linear infinite;
+}
+
+/* Couche lointaine : flocons fins, lents */
+.snowfall::before {
+    background-image:
+        radial-gradient(circle at 18% 12%, var(--snow-color) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 63% 37%, var(--snow-color) 0 1.4px, transparent 2px),
+        radial-gradient(circle at 87% 71%, var(--snow-color) 0 1px, transparent 1.6px);
+    background-size: calc(210px * var(--snow-scale)) 12.5%;  /* divise 50% -> boucle sans couture */
+    background-repeat: repeat;
+}
+
+/* Couche proche : flocons plus gros, plus rapides, legerement decales */
+.snowfall::after {
+    background-image:
+        radial-gradient(circle at 41% 23%, var(--snow-color) 0 2px, transparent 2.8px),
+        radial-gradient(circle at 76% 58%, var(--snow-color) 0 2.4px, transparent 3.2px);
+    background-size: calc(320px * var(--snow-scale)) 25%;    /* divise 50% -> boucle sans couture */
+    background-repeat: repeat;
+    animation-duration: calc(var(--snow-speed) * 0.62);
+    opacity: calc(var(--snow-opacity) * 0.8);
+}
+
+@keyframes snowfallDrift {
+    from { transform: translate3d(0, -50%, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+}
+
+/* Mode clair : le blanc pur disparait sur une surface claire — la neige passe en bleu glacier */
+[data-mode="light"] .snowfall {
+    --snow-color: color-mix(in srgb, var(--info) 40%, white);
+    --snow-opacity: 0.85;
+}
+
+/* Densites — modificateurs */
+.snowfall--sparse { --snow-scale: 1.7; --snow-opacity: 0.4; }
+.snowfall--dense  { --snow-scale: 0.62; --snow-opacity: 0.7; }
+
+/* ===== GARLAND — guirlande d'ampoules ===== */
+/* Le fil est une bordure superieure arrondie : l'arc ne coute aucun element. */
+.garland {
+    --bulb-size: 11px;
+    --garland-cycle: 1.8s;      /* >= 0.7s : WCAG 2.3.1 (3 flashs/s max) tenu par construction */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-sm, 0.5rem);
+    padding-top: 0;
+    border-top: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border-hover));
+    border-radius: 0 0 50% 50% / 0 0 16px 16px;
+    list-style: none;
+    margin: 0;
+    /* Une guirlande trop fournie pour son conteneur se tronque au lieu de deborder :
+       le nombre d'ampoules est au choix du consumer, la mise en page ne doit pas casser. */
+    overflow: hidden;
+}
+
+.garland-bulb {
+    width: var(--bulb-size);
+    height: var(--bulb-size);
+    flex: none;
+    border-radius: 50%;
+    background: var(--bulb-color, var(--accent));
+    box-shadow: 0 0 8px var(--bulb-color, var(--accent));
+    animation: garlandTwinkle var(--garland-cycle) ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.22s);
+    position: relative;
+    margin-top: var(--bulb-drop, 9px);
+}
+
+/* Le brin qui suspend l'ampoule au fil — sans lui, les ampoules flottent sous une ligne */
+.garland-bulb::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 2px;
+    height: var(--bulb-drop, 9px);
+    transform: translateX(-50%);
+    background: color-mix(in srgb, var(--accent) 45%, var(--border-hover));
+}
+
+/* Couleurs en rotation — tokens du theme actif, jamais de valeur en dur */
+.garland-bulb:nth-child(4n + 1) { --bulb-color: var(--accent); }
+.garland-bulb:nth-child(4n + 2) { --bulb-color: var(--warning); }
+.garland-bulb:nth-child(4n + 3) { --bulb-color: var(--success); }
+.garland-bulb:nth-child(4n + 4) { --bulb-color: var(--deco-cyan); }
+
+/* Ampoules alternees plus basses : la guirlande ne fait pas une ligne plate */
+.garland-bulb:nth-child(odd) { --bulb-drop: 16px; }
+
+@keyframes garlandTwinkle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+}
+
+/* Variante sans clignotement — guirlande allumee en continu */
+.garland--steady .garland-bulb { animation: none; }
+/* prefers-reduced-motion global couvert par _a11y.css (flocons ET ampoules) */
