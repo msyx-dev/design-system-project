@@ -241,6 +241,8 @@ function buildHeader() {
     // Modale UserFeedback (#708) : injectée une seule fois, indépendamment de la page démo
     // (patron identique à ensureVersionNotesDialog). Skip si le bouton est désactivé.
     if (feedbackVisible) ensureUserFeedbackDialog();
+    // Decor festif dogfoode (#940) : injecte une seule fois, visibilite pilotee par updateFestiveDecor().
+    ensureFestiveDecor();
     if (typeof initModals === 'function') initModals();
     if (typeof initVersionNotes === 'function') initVersionNotes();
     // M3 : notifie les consumers que le header DOM est rendu (slot #ds-user-menu disponible)
@@ -346,6 +348,59 @@ function ensureVersionNotesDialog() {
 // mais pas la « vraie » détection de connexion pour ce flow. Hors scope #708 (l'AC ne
 // couvre que window.MSYX_HEADER.user synchrone) — suivi à ouvrir séparément si besoin.
 // Soumission + capture de contexte : initHeaderUserFeedback() (shared/components.js, reinitAll()).
+// Decor festif dogfoode (#940) — injecte .snowfall + .garland une seule fois dans <body>.
+// Fond de page (--texture-grain) et guirlande sont statiques : ON par defaut sur
+// data-theme="noel" (aucune obligation WCAG 2.2.2 — pas d'animation permanente pour
+// la guirlande, cycle cadence par festive.css). La neige (.snowfall) EST une animation
+// permanente : elle reste opt-in, pilotee par la cle localStorage `msyx-festive`
+// partagee avec la demo de pages/fondation.html (initFestiveDemo, shared/components.js),
+// defaut OFF. updateFestiveDecor() est rappelee par initThemeSwitcher() (components.js)
+// a chaque changement de theme en direct (#940 — sans ca, le decor n'apparaitrait
+// qu'au rechargement).
+function ensureFestiveDecor() {
+    if (document.getElementById('ds-festive-decor')) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'ds-festive-decor';
+    var snow = document.createElement('div');
+    snow.id = 'ds-festive-snow';
+    snow.className = 'snowfall';
+    snow.setAttribute('aria-hidden', 'true');
+    snow.hidden = true;
+    var garland = document.createElement('ul');
+    garland.id = 'ds-festive-garland';
+    garland.className = 'garland';
+    garland.setAttribute('aria-hidden', 'true');
+    garland.style.position = 'fixed';
+    garland.style.top = '56px'; /* hauteur header fixe, cf. CLAUDE.md#Navigation */
+    garland.style.left = '0';
+    garland.style.right = '0';
+    garland.style.pointerEvents = 'none';
+    garland.style.zIndex = 'var(--z-sticky)';
+    garland.style.padding = '0 var(--space-md, 1rem)';
+    for (var i = 0; i < 14; i++) {
+        var bulb = document.createElement('li');
+        bulb.className = 'garland-bulb';
+        bulb.style.setProperty('--i', String(i));
+        garland.appendChild(bulb);
+    }
+    wrap.appendChild(snow);
+    wrap.appendChild(garland);
+    document.body.appendChild(wrap);
+    updateFestiveDecor();
+}
+
+// Montre/masque le decor festif selon le theme courant + la preference `msyx-festive`.
+function updateFestiveDecor() {
+    var snow = document.getElementById('ds-festive-snow');
+    var garland = document.getElementById('ds-festive-garland');
+    if (!snow || !garland) return;
+    var isNoel = document.documentElement.getAttribute('data-theme') === 'noel';
+    garland.style.display = isNoel ? '' : 'none';
+    var festiveOn = false;
+    try { festiveOn = localStorage.getItem('msyx-festive') === 'on'; } catch (e) { /* localStorage indisponible — ignore */ }
+    snow.hidden = !(isNoel && festiveOn);
+}
+
 function ensureUserFeedbackDialog() {
     if (document.getElementById('ds-user-feedback-modal')) return;
     var cfg = (typeof window.MSYX_HEADER === 'object' && window.MSYX_HEADER) ? window.MSYX_HEADER : {};

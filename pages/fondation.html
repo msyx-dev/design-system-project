@@ -217,7 +217,7 @@
     <div class="subsection mt-lg">
         <span class="demo-label">Nappe de neige (.snowfall)</span>
         <div class="demo-box" style="position:relative;overflow:hidden;height:220px;background:var(--primary);">
-            <div class="snowfall" aria-hidden="true" id="festif-snow"></div>
+            <div class="snowfall" aria-hidden="true" id="festif-snow" hidden></div>
             <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:0.5rem;padding:var(--space-md);">
                 <p class="typo-small" style="font-weight:600;">Trois densites, une seule classe</p>
                 <p class="typo-xs text-muted">Variantes : <code class="code-inline">.snowfall--sparse</code> &middot; <code class="code-inline">.snowfall</code> (defaut) &middot; <code class="code-inline">.snowfall--dense</code>. Couleur surchargeable via <code class="code-inline">--snow-color</code>.</p>
@@ -225,7 +225,7 @@
                     <button class="btn btn-secondary" type="button" data-festif-density="">Defaut</button>
                     <button class="btn btn-secondary" type="button" data-festif-density="sparse">Clairsemee</button>
                     <button class="btn btn-secondary" type="button" data-festif-density="dense">Dense</button>
-                    <button class="btn btn-secondary" type="button" id="festif-toggle-demo" aria-pressed="true">Arreter la neige</button>
+                    <button class="btn btn-secondary" type="button" id="festif-toggle-demo" aria-pressed="false">Activer la neige</button>
                 </div>
                 <p class="typo-xs text-muted">Le bouton « Arreter la neige » est le patron de controle exige par <strong>WCAG 2.2.2</strong> (Pause/Stop/Hide) des qu'une app active une animation permanente : a copier tel quel, cle <code class="code-inline">localStorage</code> <code class="code-inline">msyx-festive</code>.</p>
             </div>
