@@ -32,7 +32,7 @@ ICONS=(
   # System (8) — +command (fallback apple/⌘ mikpulse #55)
   settings bell search eye eye-off lock palette command
   # Brand/Misc (7)
-  git-branch message-circle sun moon zap sparkles rocket
+  git-branch message-circle sun moon zap sparkles rocket snowflake
 )
 
 echo "→ Extraction et nettoyage de ${#ICONS[@]} icones Lucide via Python..."

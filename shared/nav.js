@@ -1,5 +1,5 @@
-/* @ds-version 2.139.0 */
-const VERSION = '2.139.0';
+/* @ds-version 2.140.0 */
+const VERSION = '2.140.0';
 
 // Neutralise les URL à schéma exécutable (javascript:, vbscript:, data: hors
 // image, etc.) — setAttribute() pose la valeur telle quelle : il protège de
@@ -123,10 +123,15 @@ function buildHeader() {
         ? `<button class="header-notification" id="header-feedback-btn" data-modal-trigger="ds-user-feedback-modal" aria-haspopup="dialog" aria-label="Donner un retour"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-message-circle"/></svg></button>`
         : '';
 
+    // Bascule de la neige — WCAG 2.2.2 : une animation qui demarre seule et dure
+    // plus de 5s doit pouvoir etre arretee. Le bouton n'est rendu visible qu'en
+    // theme noel (updateFestiveDecor), mais il est toujours dans le DOM.
+    var festiveBtnHtml = `<button class="header-notification" id="header-festive-btn" aria-pressed="true" aria-label="Arreter la neige" hidden><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-snowflake"/></svg></button>`;
+
     // Zone user : rendue si cloche OU feedback OU profil présent (évite un wrapper vide orphelin)
     var userZoneHtml = '';
     if (notifBellHtml || feedbackBtnHtml || profileHtml) {
-        userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${notifBellHtml}${feedbackBtnHtml}${profileHtml}</div>`;
+        userZoneHtml = `<div class="header-user-zone" id="header-user-zone">${festiveBtnHtml}${notifBellHtml}${feedbackBtnHtml}${profileHtml}</div>`;
     }
 
     // Switcher thème : derrière flag themeSwitcher (défaut false — opt-in vitrine/multi-thème)
@@ -414,41 +419,60 @@ function ensureFestiveDecor() {
     tree.setAttribute('aria-hidden', 'true');
     tree.innerHTML = `<svg viewBox="0 0 200 300" width="100%" height="auto" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
-    <linearGradient id="fol" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2f8f52"/><stop offset="1" stop-color="#14562f"/>
+    <linearGradient id="tn-fol" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3fa563"/><stop offset=".55" stop-color="#1f7a44"/><stop offset="1" stop-color="#0f4d2b"/>
     </linearGradient>
-    <radialGradient id="glow"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#ffd24f" stop-opacity="0"/></radialGradient>
+    <linearGradient id="tn-pot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c8433f"/><stop offset="1" stop-color="#8d2422"/>
+    </linearGradient>
+    <radialGradient id="tn-glow"><stop offset="0" stop-color="#fff6c2" stop-opacity=".95"/><stop offset="1" stop-color="#ffd24f" stop-opacity="0"/></radialGradient>
+    <radialGradient id="tn-bauble" cx=".34" cy=".3"><stop offset="0" stop-color="#ffffff" stop-opacity=".7"/><stop offset=".45" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
   </defs>
-  <ellipse cx="100" cy="288" rx="66" ry="10" fill="rgba(0,0,0,.20)"/>
-  <rect x="88" y="248" width="24" height="34" rx="4" fill="#7a4a22"/>
-  <path d="M100 26 L142 104 H58 Z" fill="url(#fol)"/>
-  <path d="M100 74 L156 168 H44 Z" fill="url(#fol)"/>
-  <path d="M100 130 L172 252 H28 Z" fill="url(#fol)"/>
-  <path d="M100 26 L142 104 H100 Z" fill="#000" opacity=".10"/>
-  <path d="M100 74 L156 168 H100 Z" fill="#000" opacity=".10"/>
-  <path d="M100 130 L172 252 H100 Z" fill="#000" opacity=".10"/>
-  <path d="M62 96 q38 16 76 -4" stroke="#f2c14e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95"/>
-  <path d="M50 160 q50 20 104 -6" stroke="#f2c14e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95"/>
-  <path d="M36 234 q64 24 134 -8" stroke="#f2c14e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95"/>
+  <ellipse cx="100" cy="292" rx="70" ry="9" fill="rgba(0,0,0,.22)"/>
+  <path d="M74 252h52l-7 34a6 6 0 0 1-6 5H87a6 6 0 0 1-6-5z" fill="url(#tn-pot)"/>
+  <rect x="70" y="246" width="60" height="12" rx="4" fill="#d9534f"/>
+  <rect x="70" y="250" width="60" height="4" fill="#ffd24f" opacity=".85"/>
+  <rect x="88" y="236" width="24" height="18" fill="#6b4423"/>
+  <path d="M100 128 L176 246 L165.1 255 L154.3 246 L143.4 255 L132.6 246 L121.7 255 L110.9 246 L100.0 255 L89.1 246 L78.3 255 L67.4 246 L56.6 255 L45.7 246 L34.9 255 L24.0 246 Z" fill="url(#tn-fol)"/>
+  <path d="M100 128 L176 246 L100 246 Z" fill="#000" opacity=".12"/>
+  <path d="M100 74 L158 172 L148.3 181 L138.7 172 L129.0 181 L119.3 172 L109.7 181 L100.0 172 L90.3 181 L80.7 172 L71.0 181 L61.3 172 L51.7 181 L42.0 172 Z" fill="url(#tn-fol)"/>
+  <path d="M100 74 L158 172 L100 172 Z" fill="#000" opacity=".12"/>
+  <path d="M100 26 L142 104 L133.6 113 L125.2 104 L116.8 113 L108.4 104 L100.0 113 L91.6 104 L83.2 113 L74.8 104 L66.4 113 L58.0 104 Z" fill="url(#tn-fol)"/>
+  <path d="M100 26 L142 104 L100 104 Z" fill="#000" opacity=".12"/>
+  <path d="M64 101 q23.1 11 39.9 1 q21.0 -9 37.800000000000004 3 l0 5 q-35.699999999999996 -9 -23.1 2 q-25.2 10 -54.6 -4z" fill="#ffffff" opacity=".9"/>
+  <path d="M48 169 q31.900000000000002 11 55.099999999999994 1 q29.0 -9 52.2 3 l0 5 q-49.3 -9 -31.900000000000002 2 q-34.8 10 -75.4 -4z" fill="#ffffff" opacity=".9"/>
+  <path d="M30 243 q41.800000000000004 11 72.2 1 q38.0 -9 68.4 3 l0 5 q-64.6 -9 -41.800000000000004 2 q-45.6 10 -98.8 -4z" fill="#ffffff" opacity=".9"/>
+  <path d="M64 88 q36 24 74 -6" stroke="#f2c14e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M50 152 q50 28 102 -8" stroke="#f2c14e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M34 224 q66 32 134 -10" stroke="#f2c14e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
   <g class="tree-lights">
-    <circle cx="72" cy="96" r="4.6" fill="var(--accent, #ff4757)"/>
-    <circle cx="100" cy="103" r="4.6" fill="var(--deco-cyan, #56d4ff)"/>
-    <circle cx="128" cy="94" r="4.6" fill="var(--warning, #ffd250)"/>
-    <circle cx="60" cy="162" r="5" fill="var(--warning, #ffd250)"/>
-    <circle cx="92" cy="172" r="5" fill="var(--accent, #ff4757)"/>
-    <circle cx="124" cy="168" r="5" fill="var(--success, #36e07f)"/>
-    <circle cx="150" cy="156" r="5" fill="var(--deco-violet, #b98cff)"/>
-    <circle cx="50" cy="236" r="5.4" fill="var(--success, #36e07f)"/>
-    <circle cx="82" cy="246" r="5.4" fill="var(--warning, #ffd250)"/>
-    <circle cx="116" cy="244" r="5.4" fill="var(--deco-pink, #ff6fae)"/>
-    <circle cx="150" cy="232" r="5.4" fill="var(--accent, #ff4757)"/>
+    <circle cx="72" cy="92" r="6" fill="var(--accent, #ff4757)"/>
+    <circle cx="100" cy="100" r="6" fill="var(--warning, #ffd250)"/>
+    <circle cx="128" cy="90" r="6" fill="var(--success, #36e07f)"/>
+    <circle cx="58" cy="158" r="7" fill="var(--deco-cyan, #56d4ff)"/>
+    <circle cx="90" cy="170" r="7" fill="var(--deco-pink, #ff6fae)"/>
+    <circle cx="124" cy="166" r="7" fill="var(--deco-violet, #b98cff)"/>
+    <circle cx="150" cy="150" r="7" fill="var(--accent, #ff4757)"/>
+    <circle cx="48" cy="232" r="8" fill="var(--warning, #ffd250)"/>
+    <circle cx="82" cy="244" r="8" fill="var(--success, #36e07f)"/>
+    <circle cx="118" cy="242" r="8" fill="var(--deco-cyan, #56d4ff)"/>
+    <circle cx="152" cy="226" r="8" fill="var(--deco-pink, #ff6fae)"/>
   </g>
-  <circle cx="100" cy="24" r="26" fill="url(#glow)"/>
-  <path d="M100 4 l6.2 13.2 14.4 2-10.6 10.2 2.6 14.4L100 37l-12.6 6.8 2.6-14.4L79.4 19.2l14.4-2z" fill="#ffd24f" stroke="#e8b93a" stroke-width="1.5"/>
-  <g fill="#fff" opacity=".85">
-    <path d="M58 104 q20 6 40 2 q18 -4 34 2 l0 5 q-20 -6 -36 -1 q-18 5 -38 -1z"/>
-    <path d="M44 168 q26 8 54 3 q24 -5 44 2 l0 6 q-24 -7 -46 -2 q-24 5 -52 -2z"/>
+  <g>
+    <circle cx="72" cy="92" r="6" fill="url(#tn-bauble)"/>
+    <circle cx="100" cy="100" r="6" fill="url(#tn-bauble)"/>
+    <circle cx="128" cy="90" r="6" fill="url(#tn-bauble)"/>
+    <circle cx="58" cy="158" r="7" fill="url(#tn-bauble)"/>
+    <circle cx="90" cy="170" r="7" fill="url(#tn-bauble)"/>
+    <circle cx="124" cy="166" r="7" fill="url(#tn-bauble)"/>
+    <circle cx="150" cy="150" r="7" fill="url(#tn-bauble)"/>
+    <circle cx="48" cy="232" r="8" fill="url(#tn-bauble)"/>
+    <circle cx="82" cy="244" r="8" fill="url(#tn-bauble)"/>
+    <circle cx="118" cy="242" r="8" fill="url(#tn-bauble)"/>
+    <circle cx="152" cy="226" r="8" fill="url(#tn-bauble)"/>
   </g>
+  <circle cx="100" cy="24" r="30" fill="url(#tn-glow)"/>
+  <path d="M100 2 l6.8 14.4 15.8 2.2-11.6 11.1 2.9 15.7L100 38l-13.9 7.4 2.9-15.7L77.4 18.6l15.8-2.2z" fill="#ffd24f" stroke="#e0a92f" stroke-width="1.4" stroke-linejoin="round"/>
 </svg>`;
 
     wrap.appendChild(snow);
@@ -472,9 +496,28 @@ function updateFestiveDecor() {
         var el = document.getElementById(id);
         if (el) el.style.display = isNoel ? '' : 'none';
     });
-    var festiveOn = false;
-    try { festiveOn = localStorage.getItem('msyx-festive') === 'on'; } catch (e) { /* localStorage indisponible — ignore */ }
-    snow.hidden = !(isNoel && festiveOn);
+    // #946 : la neige est ON PAR DEFAUT sur le theme noel — choisir un theme de
+    // Noel et ne rien voir tomber n'a pas de sens. Seul un 'off' explicite la coupe.
+    var festiveOff = false;
+    try { festiveOff = localStorage.getItem('msyx-festive') === 'off'; } catch (e) { /* localStorage indisponible — ignore */ }
+    var snowOn = isNoel && !festiveOff;
+    snow.hidden = !snowOn;
+
+    var btn = document.getElementById('header-festive-btn');
+    if (btn) {
+        btn.hidden = !isNoel;
+        btn.setAttribute('aria-pressed', snowOn ? 'true' : 'false');
+        btn.setAttribute('aria-label', snowOn ? 'Arreter la neige' : 'Faire tomber la neige');
+        if (!btn.dataset.bound) {
+            btn.dataset.bound = '1';
+            btn.addEventListener('click', function () {
+                var off = false;
+                try { off = localStorage.getItem('msyx-festive') === 'off'; } catch (e) { /* ignore */ }
+                try { localStorage.setItem('msyx-festive', off ? 'on' : 'off'); } catch (e) { /* ignore */ }
+                updateFestiveDecor();
+            });
+        }
+    }
 }
 
 function ensureUserFeedbackDialog() {
