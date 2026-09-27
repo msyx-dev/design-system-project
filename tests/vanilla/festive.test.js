@@ -17,6 +17,12 @@ function festifHtml() {
       <li class="garland-bulb" style="--i:0"></li>
       <li class="garland-bulb" style="--i:1"></li>
     </ul>
+    <div class="ornaments" aria-hidden="true">
+      <div class="ornament" style="--ornament-color:var(--accent);--ornament-size:22px;--ornament-drop:24px;--i:0"></div>
+      <div class="ornament" style="--ornament-color:var(--warning);--ornament-size:26px;--ornament-drop:44px;--i:1"></div>
+    </div>
+    <div class="frost" aria-hidden="true"></div>
+    <img class="festive-character" src="/assets/tree-noel.svg" alt="" aria-hidden="true">
     <button type="button" id="festif-toggle-demo" aria-pressed="false">Activer la neige</button>
     <button type="button" data-festif-density="">Defaut</button>
     <button type="button" data-festif-density="sparse">Clairsemee</button>
@@ -41,6 +47,26 @@ describe('initFestiveDemo -- markup decoratif', () => {
     const garland = document.querySelector('.garland');
     expect(snow.getAttribute('aria-hidden')).toBe('true');
     expect(garland.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('tous les elements du decor (.ornaments, .frost, .festive-character) portent aria-hidden="true"', () => {
+    const { document } = setup();
+    const ornaments = document.querySelector('.ornaments');
+    const frost = document.querySelector('.frost');
+    const character = document.querySelector('.festive-character');
+    expect(ornaments.getAttribute('aria-hidden')).toBe('true');
+    expect(frost.getAttribute('aria-hidden')).toBe('true');
+    expect(character.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('.ornament porte ses variables de couleur (--ornament-color) et de dephasage (--i)', () => {
+    const { document } = setup();
+    const balls = document.querySelectorAll('.ornament');
+    expect(balls.length).toBeGreaterThan(0);
+    balls.forEach((ball, idx) => {
+      expect(ball.style.getPropertyValue('--ornament-color')).not.toBe('');
+      expect(ball.style.getPropertyValue('--i')).toBe(String(idx));
+    });
   });
 });
 
