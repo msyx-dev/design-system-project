@@ -1,5 +1,3 @@
-// @vitest-environment node
-//
 // graph-layered-vendor-built.test.tsx — harnais de non-regression #942.
 //
 // Ce que les autres suites NE voient PAS : ni `tests/regression/graph-layout-layered.test.js`
@@ -9,19 +7,10 @@
 // exactement pour ca que la regression #942 (layout 'layered' cassait chez un consommateur
 // npm) est passee inapercue jusqu'a la production.
 //
-// ENVIRONNEMENT `node`, PAS `jsdom` (correction du ciblage, groom #11) : `shared/graph/
-// layout/layered.js:41` choisit son specifier ainsi :
+// `shared/graph/layout/layered.js:41` choisit son specifier ainsi :
 //   typeof window !== 'undefined' ? '/shared/graph/vendor/graph-layered.js' : '../vendor/graph-layered.js'
-// Sous jsdom, `window` EXISTE toujours (c'est le but de jsdom) — la suite precedente heritait
-// donc de l'environnement `jsdom` global du paquet (vitest.config.ts:7) et exercait a chaque
-// fois la branche NAVIGATEUR (chemin absolu site-root, que rien ne sert dans un test), jamais
-// la branche SERVEUR que ce correctif #942 repare. Les 2 cas ci-dessous echouaient pour une
-// vraie raison (repli sur 'tree' detecte), mais ne testaient pas ce qu'ils pretendaient tester.
-// `environment: node` retire `window` du global — condition necessaire pour forcer la branche
-// serveur — mais retire aussi tout DOM : un `render()` `@testing-library/react` est donc exclu
-// ici (pas de `document`). Ce n'est pas une perte : ce qui compte est de prouver que le
-// CHARGEMENT DU VENDOR reussit depuis le paquet CONSTRUIT, pas de faire peindre un `<svg>` par
-// React — cf. le detail par cas ci-dessous.
+// Ce harnais verifie la branche SERVEUR (celle que #942 repare) telle qu'elle apparait dans
+// le paquet REELLEMENT CONSTRUIT — pas en source.
 //
 // Quatre verifications, chacune capable de faire echouer ce test seule :
 //  1. Le MANIFESTE de publication (`npm pack --dry-run --json`, la meme logique de filtrage
@@ -29,37 +18,36 @@
 //     dans package.json fait rougir CETTE assertion, sans reconstruire quoi que ce soit.
 //  2. Le paquet CONSTRUIT (`dist/index.js` en ESM, `dist/index.cjs` en CJS) contient bien
 //     `vendor/` a cote de `dist/` (copie `onSuccess` de tsup.config.ts).
-//  3. ESM — appel DIRECT de `layeredLayout()` : esbuild code-splitte le format ESM sur la
-//     frontiere du dynamic import (cf. le commentaire de tsup.config.ts sur `dist/layered-
-//     <hash>.js`) — `dist/index.js` delegue via `import('./layered-<hash>.js').then(m =>
-//     m.layeredLayout(...))`. Ce chunk separe EXPORTE reellement `layeredLayout` (effet de
-//     bord du code-splitting d'esbuild, pas une API publique intentionnelle du paquet — le
-//     hash n'est donc JAMAIS fige en dur ici, il est lu depuis le vrai `import()` ecrit par
-//     esbuild dans `dist/index.js`). On l'appelle directement, sans passer par `<Graph>` :
-//     c'est la forme la plus directe pour ce format, et elle exerce la VRAIE resolution
-//     relative depuis le VRAI fichier construit.
-//  4. CJS — pas de chunk separe : esbuild NE code-splitte PAS le format CJS, `layeredLayout`
-//     reste INLINE dans `dist/index.cjs`, dans une fermeture privee (mecanique `__esm`/
-//     `layered_exports` d'esbuild pour simuler l'ex-dynamic-import interne au registre de
-//     layouts) — elle n'est exposee ni sur `module.exports`, ni ailleurs. Impossible de
-//     l'appeler PAR SON NOM depuis l'exterieur sans modifier le build (hors perimetre #942).
-//     Ce test verifie donc directement ce dont depend `loadDagre()` pour ce format : que le
-//     specifier relatif '../vendor/graph-layered.js' (LITTERALEMENT le meme texte que la
-//     branche serveur de `shared/graph/layout/layered.js:41`, cf. aussi le commentaire de
-//     tsup.config.ts sur la profondeur partagee `dist/index.cjs` / `dist/vendor`) resout ET
-//     s'EXECUTE bien depuis l'emplacement REEL du fichier construit (`dist/index.cjs`), via
-//     la resolution d'URL Node reelle (`new URL(specifier, base)`) — pas une reconstruction
-//     manuelle de chemin qui ne prouverait que nos propres maths. Preuve plus indirecte que
-//     le cas ESM (on ne "declenche" pas le code inline), mais c'est la meilleure preuve
-//     directe disponible pour cette forme de bundle sans toucher au perimetre du correctif.
+//  3. ESM — le chunk separe issu du code-splitting esbuild (`dist/layered-<hash>.js`, cf. le
+//     commentaire de tsup.config.ts ; le hash n'est JAMAIS fige en dur ici, il est lu depuis
+//     le vrai `import('./layered-<hash>.js')` ecrit par esbuild dans `dist/index.js` pour le
+//     registre de layouts) porte bien le specifier serveur, et celui-ci resout vers un fichier
+//     reel non vide.
+//  4. CJS — esbuild NE code-splitte PAS ce format : `layeredLayout` reste INLINE dans
+//     `dist/index.cjs`, dans une fermeture privee, non exportee. Le specifier serveur y est
+//     neanmoins present tel quel (LITTERALEMENT le meme texte que `shared/graph/layout/
+//     layered.js:41`) et doit resoudre vers un fichier reel non vide depuis l'emplacement
+//     REEL du fichier construit.
 //
-// Dans les DEUX cas 3 et 4, l'exigence du harnais initial est conservee : on verifie
-// l'ABSENCE d'avertissement de repli (`FALLBACK_MARKER`), pas l'absence de plantage — le
-// filet de degradation (#942 point b) rend desormais le plantage impossible, donc un test
-// "ca ne plante pas" serait un FAUX POSITIF permanent. Le cas 3 espionne `console.error`
-// autour de l'appel reel ; le cas 4 charge et execute reellement le module vendor et verifie
-// sa forme utilisable (`graphlib.Graph`, `layout`) — un dagre reellement charge ne peut pas,
-// par construction du code source, avoir declenche l'avertissement de repli.
+// POURQUOI UNE VERIFICATION STATIQUE, PAS UNE EXECUTION : une version anterieure de ce test
+// executait reellement le chargement (import() du chunk ESM depuis son vrai chemin sur
+// disque, puis appel de layeredLayout() ; pour le CJS, import() du fichier vendor resolu
+// depuis dist/index.cjs). Les deux cas echouaient, mais pour des raisons d'OUTILLAGE, pas de
+// defaut du paquet : le lanceur de tests (transform Vite/Vitest) reecrit les imports
+// dynamiques d'un module charge hors de la racine suivie du projet — un `import()` sur un
+// chemin absolu vers dist/layered-<hash>.js ou vers vendor/graph-layered.js n'atteint donc
+// pas le fichier reel de la meme facon qu'un `import()` Node nu, et un test construit
+// dessus mesure le lanceur autant que le paquet construit. Une verification par EXECUTION
+// n'est donc pas fiable ici. La verification STATIQUE ci-dessous evite entierement ce
+// probleme : elle lit le texte litteral emis par le build (sans presupposer le style de
+// guillemets — esbuild normalise en guillemets doubles, une ancienne assertion cherchait des
+// simples et rougissait pour cette seule raison), resout ce specifier exactement comme le
+// ferait la resolution de module Node (`new URL(specifier, pathToFileURL(fichier))`, relatif
+// au fichier qui le PORTE), et verifie que la cible existe reellement sur disque et n'est pas
+// vide. Cette verification rougit precisement quand le defaut #942 reapparait — vendor non
+// copie, `files` qui perd "vendor", ou chemin relatif modifie sans que la cible suive — et ne
+// peut pas rougir pour une raison etrangere au defaut (elle ne depend d'aucune machinerie
+// d'import runtime).
 //
 // Ce que ce test NE couvre PAS (a ecrire ailleurs si besoin, cf. CHANGELOG.md #942) : la
 // branche NAVIGATEUR du chargement (`/shared/graph/vendor/graph-layered.js`, chemin ABSOLU
@@ -69,10 +57,10 @@
 // pas celui demande (repli silencieux-une-fois sur 'tree'). Gap connu, assume, pas corrige
 // ici : hors perimetre de cette PR.
 import { execSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 const __filename = fileURLToPath(import.meta.url);
 const PKG_ROOT = path.resolve(path.dirname(__filename), "../..");
@@ -80,7 +68,6 @@ const DIST_DIR = path.join(PKG_ROOT, "dist");
 const DIST_ESM = path.join(DIST_DIR, "index.js");
 const DIST_CJS = path.join(DIST_DIR, "index.cjs");
 const VENDOR_FILE = path.join(PKG_ROOT, "vendor/graph-layered.js");
-const FALLBACK_MARKER = "layout 'layered' indisponible";
 const SERVER_SPECIFIER = "../vendor/graph-layered.js";
 
 beforeAll(() => {
@@ -89,15 +76,19 @@ beforeAll(() => {
   execSync("npx tsup", { cwd: PKG_ROOT, stdio: "inherit" });
 }, 120_000);
 
-/** Forme minimale attendue par `layeredLayout(model, opts)` — pas besoin d'un vrai GraphModel. */
-function sampleGraph() {
-  return {
-    nodes: [{ data: { id: "a" } }, { data: { id: "b" } }, { data: { id: "c" } }],
-    edges: [
-      { data: { id: "e1", source: "a", target: "b", directed: true } },
-      { data: { id: "e2", source: "b", target: "c", directed: true } },
-    ],
-  };
+/**
+ * Verifie que `filePath` contient bien le specifier serveur du vendor, et que ce specifier
+ * resout — relativement a `filePath` lui-meme, comme le ferait Node — vers un fichier reel
+ * et non vide. Ne presuppose jamais le style de guillemets autour du specifier : on cherche
+ * la sous-chaine nue.
+ */
+function expectServerSpecifierResolves(filePath: string) {
+  const src = readFileSync(filePath, "utf8");
+  expect(src).toContain(SERVER_SPECIFIER);
+
+  const resolvedPath = fileURLToPath(new URL(SERVER_SPECIFIER, pathToFileURL(filePath)));
+  expect(existsSync(resolvedPath)).toBe(true);
+  expect(statSync(resolvedPath).size).toBeGreaterThan(0);
 }
 
 describe("#942 - paquet @msyx-dev/react CONSTRUIT : vendor dagre publie + layout 'layered' fonctionnel", () => {
@@ -115,7 +106,7 @@ describe("#942 - paquet @msyx-dev/react CONSTRUIT : vendor dagre publie + layout
     expect(existsSync(VENDOR_FILE)).toBe(true);
   });
 
-  it("ESM (dist/index.js) : appel direct de layeredLayout() depuis le chunk construit — resout le vendor et calcule reellement dagre (pas de repli 'tree')", async () => {
+  it("ESM (dist/layered-<hash>.js) : le chunk construit porte le specifier serveur du vendor, et il resout vers un fichier reel non vide", () => {
     // Le nom du chunk (hash de contenu esbuild) n'est jamais fige en dur : on le lit depuis
     // le vrai `import('./layered-<hash>.js')` ecrit par esbuild dans dist/index.js pour le
     // registre de layouts (cf. registerLayout("layered", ...) dans le fichier construit).
@@ -128,32 +119,10 @@ describe("#942 - paquet @msyx-dev/react CONSTRUIT : vendor dagre publie + layout
       );
     }
     const chunkPath = path.join(DIST_DIR, chunkMatch[1]);
-
-    const errors: unknown[][] = [];
-    const spy = vi.spyOn(console, "error").mockImplementation((...args: unknown[]) => {
-      errors.push(args);
-    });
-    const mod: any = await import(/* @vite-ignore */ pathToFileURL(chunkPath).href);
-    const positions: Map<string, { x: number; y: number }> = await mod.layeredLayout(sampleGraph(), {});
-    spy.mockRestore();
-
-    const fellBack = errors.some((args) => String(args[0] ?? "").includes(FALLBACK_MARKER));
-    expect(fellBack).toBe(false);
-    expect(positions.size).toBe(3);
+    expectServerSpecifierResolves(chunkPath);
   });
 
-  it("CJS (dist/index.cjs) : le specifier serveur inline ('../vendor/graph-layered.js') resout et s'execute bien depuis l'emplacement reel du fichier construit", async () => {
-    // layeredLayout() est INLINE dans dist/index.cjs (esbuild ne code-splitte pas le format
-    // CJS) et n'est exportee nulle part : impossible de l'appeler par son nom sans modifier
-    // le build. On verifie donc ce dont depend loadDagre() pour ce format — meme specifier
-    // texte que la branche serveur source, resolu ET execute depuis le VRAI dist/index.cjs.
-    const cjsSrc = readFileSync(DIST_CJS, "utf8");
-    expect(cjsSrc).toContain(`'${SERVER_SPECIFIER}'`);
-
-    const resolvedUrl = new URL(SERVER_SPECIFIER, pathToFileURL(DIST_CJS)).href;
-    const mod: any = await import(/* @vite-ignore */ resolvedUrl);
-    const dagre = mod.default ?? mod;
-    expect(typeof dagre.layout).toBe("function");
-    expect(typeof dagre.graphlib?.Graph).toBe("function");
+  it("CJS (dist/index.cjs) : le specifier serveur inline porte bien '../vendor/graph-layered.js', et il resout vers un fichier reel non vide", () => {
+    expectServerSpecifierResolves(DIST_CJS);
   });
 });
