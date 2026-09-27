@@ -1,5 +1,18 @@
 # Releases
 
+## 2.139.0 — 2026-09-27 — Décor festif (#940)
+
+### Added
+- **Décor festif du thème `noel`** — deuxième volet du thème Noël (#939) : le thème s'habille désormais d'un décor complet plutôt que d'une simple palette. Sapin illustré, guirlande lumineuse, ornements suspendus sous le header, givre sur les bords de l'écran, neige posée sur cartes et boutons, nappe de flocons animée, et un bouton thématisé « canne à sucre ».
+  - **Mécanique CSS-only** — `shared/css/components/festive.css` (nouveau module), ajouté au barrel `shared/css/components.css` **à la place qu'occupe `orb.css`** dans l'ordre de cascade (même famille : primitif décoratif ambiant, opt-in, `pointer-events: none`, `aria-hidden="true"`). `.snowfall` : nappe de flocons plein écran rendue par 3 couches de `background-image` (gradients radiaux répétés) animées en `transform` seul — zéro nœud DOM par flocon. `.garland` : rangée d'ampoules CSS, clignotement déphasé par `--i`, cycle **1,8 s** (≥ 0,7 s : WCAG 2.3.1, 3 flashs/s max, tenu par construction). Aucune couleur ni `z-index` en dur : `--snow-color`, `--bulb-color` dérivent de `--accent`/`--warning`/`--success`/`--deco-cyan`/`--overlay-text`/`--info` ; `--z-decor: 1` ajouté à l'échelle d'empilement en tokens (`tokens.css`, #932) — le décor passe au-dessus du fond et sous tout contenu interactif.
+  - **Fond de page décoré** — `themes/noel.json` surcharge `--texture-grain` (motif SVG flocons/étoiles) et `--texture-grain-opacity` en dark et en light : aucune mécanique nouvelle, ces deux tokens existaient déjà et sont appliqués par `body::after` depuis la v2.42.0. Statique, donc **actif par défaut** sur `[data-theme="noel"]` — WCAG 2.2.2 ne s'applique pas à un motif fixe.
+  - **Règle d'activation** — fond de page et guirlande sont **ON par défaut** (statiques, aucune obligation de contrôle) ; `.snowfall` (animation permanente) reste **opt-in**, pilotée par la clé `localStorage` `msyx-festive` (défaut OFF). Le bouton de bascule de la démo `pages/fondation.html` est le patron à copier pour tout consumer qui activerait le décor en permanence (WCAG 2.2.2, Pause/Stop/Hide).
+  - **Dogfood** — `shared/nav.js` (`ensureFestiveDecor()`/`updateFestiveDecor()`, injectées depuis `buildHeader()` sur le modèle de `ensureUserFeedbackDialog()`) : la guirlande est injectée sous le header de toutes les pages du DS quand `data-theme="noel"`, la neige reste masquée tant que `msyx-festive` n'est pas `"on"`. `shared/components.js` (`initFestiveDemo()`, appelée dans `reinitAll()`) câble la démo de `pages/fondation.html` (bascule + variantes de densité `.snowfall--sparse`/`.snowfall--dense`), même clé `localStorage` que le dogfood du header.
+  - **Live-switch** — `initThemeSwitcher()` (`shared/components.js`) rappelle `updateFestiveDecor()` juste après `updateModeSwitch()`, à chaque changement de thème via le sélecteur du header : modification assumée de ce callback existant, nécessaire pour que le décor apparaisse/disparaisse sans rechargement de page.
+  - **Vitrine** — nouvelle section `#festif` dans `pages/fondation.html`, juste après la section du primitif `.orb` (même famille : décoratif ambiant).
+  - **Registre** — entrée `festif` (`page: "fondation"`, `cssClasses`, `jsInit: "initFestiveDemo"`, `react: "pending"`) dans `shared/components-registry.json`, `module[]` auto-dérivé par `npm run generate-registry`.
+  - `@ds-version` 2.138.0 → 2.139.0 (8 sources, `check-versions.sh` rc=0).
+
 ## 2.138.0 — 2026-09-26 — 5e thème « Noël » (#939)
 
 ### Added
