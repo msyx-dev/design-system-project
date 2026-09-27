@@ -1,5 +1,21 @@
 # Releases
 
+## 2.141.0 — 2026-09-27 — Charte ACSSI : logo vectorisé, Montserrat, gris (#948)
+
+> Touche `assets/logo-acssi*.svg`, `themes/acssi.json`, `shared/css/fonts.css`, `shared/fonts/montserrat-*.woff2`, `pages/fondation.html`.
+
+### Fixed
+- **Le logo ACSSI diffusé par le DS était inventé.** Les quatre fichiers (mai 2026) montraient un « A » stylisé sur un carré marine arrondi, suivi du mot composé en **Space Grotesk**. La charte réelle montre tout autre chose : le mot **ACSSI** seul, sans fond, `ACS` en marine et `SI` en jaune, avec une baseline DATA / DIGITAL / CLOUD / ERP séparée par un filet. Un design system qui diffuse un logo client erroné est pire qu'un design system qui n'en diffuse aucun — les applications le reprennent de bonne foi.
+- **Refaits par vectorisation** de la planche officielle (`potrace`, un tracé par couleur). **Une première tentative a été jetée** : reconstruire les lettres à la géométrie donnait du « Montserrat gras », pas le lettrage ACSSI. Le A à sommet plat, les jonctions des deux S et le I accolé ne se devinent pas, ils se tracent. Les lettres sont donc de vrais tracés, **jamais du texte composé** — un logo ne doit pas dépendre d'une police installée chez celui qui l'affiche.
+- La vitrine indique désormais **explicitement** qu'il s'agit d'une reproduction et non du fichier officiel, qui reste à fournir.
+
+### Added
+- **Les tokens de police deviennent thémables.** `--font-display` et `--font-sans` ne vivaient que dans le `:root` de `tokens.css` : **aucun thème ne pouvait changer la typographie**, alors qu'une charte client, ce sont des couleurs *et* une typo. Le theming du DS ne couvrait donc que la moitié du sujet.
+- `themes/acssi.json` déclare **Montserrat**, auto-hébergée en woff2 comme les autres polices du DS — aucun CDN tiers. **Mesuré** : en thème `acssi`, titres et corps sont bien composés en Montserrat et la police est réellement chargée ; en thème `msyx`, `document.fonts.check` renvoie `false` — le navigateur ne télécharge pas le woff2, donc **coût nul pour les autres thèmes**.
+- Les deux gris de la charte rejoignent le thème en mode clair : `#dbdfe0` sur `--surface-light`, `#f1f3f3` sur `--primary`.
+
+`@ds-version` 2.140.0 → 2.141.0 (minor), `shared/check-versions.sh` rc=0.
+
 ## 2.140.0 — 2026-09-27 — Décor festif : guirlande, neige par défaut, sapin redessiné (#946)
 
 > Trois défauts constatés sur la livraison 2.139.0. Touche `shared/css/components/festive.css`, `shared/nav.js`, `assets/tree-noel.svg`, `shared/icons/sprite.svg`, `pages/fondation.html`.

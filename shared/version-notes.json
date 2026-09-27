@@ -14,6 +14,21 @@
   },
   "released": [
     {
+      "version": "2.141.0",
+      "date": "2026-09-27",
+      "titre": "Le logo ACSSI est enfin le bon",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le logo ACSSI proposé jusqu'ici ne correspondait pas à la charte de la marque. Il a été refait à partir du document officiel, avec ses vraies couleurs et sa signature DATA / DIGITAL / CLOUD / ERP."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Un thème peut désormais imposer sa propre typographie, et non plus seulement ses couleurs. Le thème ACSSI s'affiche donc en Montserrat, la police de sa charte."
+        }
+      ]
+    },
+    {
       "version": "2.140.0",
       "date": "2026-09-27",
       "titre": "La neige tombe, et le sapin a pris du galon",

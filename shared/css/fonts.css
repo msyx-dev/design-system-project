@@ -11,3 +11,13 @@
 
 @font-face { font-family: 'Fira Code'; font-weight: 400; font-display: swap; src: url('../fonts/fira-code-regular.woff2') format('woff2'); }
 @font-face { font-family: 'Fira Code'; font-weight: 500; font-display: swap; src: url('../fonts/fira-code-500.woff2') format('woff2'); }
+
+/* Montserrat — police de la charte ACSSI (#948). Auto-hebergee comme les autres :
+   le DS ne charge aucune police depuis un CDN tiers. Chargee pour tous les themes
+   (le navigateur ne telecharge un woff2 que si une regle l'utilise reellement),
+   mais n'est appliquee que par [data-theme="acssi"], via --font-display/-sans. */
+@font-face { font-family: 'Montserrat'; font-weight: 400; font-display: swap; src: url('../fonts/montserrat-400.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 500; font-display: swap; src: url('../fonts/montserrat-500.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 600; font-display: swap; src: url('../fonts/montserrat-600.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 700; font-display: swap; src: url('../fonts/montserrat-700.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-weight: 900; font-display: swap; src: url('../fonts/montserrat-900.woff2') format('woff2'); }
