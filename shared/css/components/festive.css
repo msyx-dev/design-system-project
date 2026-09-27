@@ -154,9 +154,9 @@
     height: var(--ornament-size, 22px);
     border-radius: 50%;
     background:
-        radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.75), transparent 45%),
+        radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--overlay-text) 75%, transparent), transparent 45%),
         var(--ornament-color, var(--accent));
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28), inset 0 -4px 8px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28), inset 0 -4px 8px rgba(0, 0, 0, 0.22); /* allow-hardcoded: ombre portee + creux interne d'une boule, noir pur volontaire — aucune couleur de theme n'a de sens pour une ombre */
     transform-origin: 50% calc(-1 * var(--ornament-drop, 40px));
     animation: ornamentSwing 4.2s ease-in-out infinite;
     animation-delay: calc(var(--i, 0) * -0.7s);
@@ -204,7 +204,7 @@
     left: 0; right: 0;
     height: var(--frost-height, 90px);
     background: radial-gradient(120% 100% at 50% 0,
-        var(--frost-color, rgba(255, 255, 255, 0.28)) 0%, transparent 62%);
+        var(--frost-color, color-mix(in srgb, var(--overlay-text) 28%, transparent)) 0%, transparent 62%);
 }
 
 .frost::before { top: var(--frost-top, 56px); }
@@ -220,7 +220,7 @@
     height: 17px;
     background: var(--snowcap-color, var(--overlay-text));
     border-radius: 14px 16px 6px 8px / 12px 14px 5px 6px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.20);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.20); /* allow-hardcoded: ombre portee sous la neige posee */
     pointer-events: none;
 }
 
@@ -279,7 +279,7 @@
     width: var(--character-width, clamp(130px, 15vw, 210px));
     z-index: var(--z-decor);
     pointer-events: none;
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35)); /* allow-hardcoded: ombre portee de l'illustration */
     animation: characterBob 5.5s ease-in-out infinite;
 }
 
