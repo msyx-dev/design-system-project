@@ -1,7 +1,7 @@
 {
   "version": "2.138.0",
   "generated": {
-    "at": "2026-08-30T22:35:34.610Z",
+    "at": "2026-09-27T07:52:58.153Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -32,7 +32,8 @@
       "module": [
         "shared/css/components/buttons.css",
         "shared/css/components/graph.css",
-        "shared/css/components/_a11y.css"
+        "shared/css/components/_a11y.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -72,7 +73,8 @@
         "shared/css/components/media.css",
         "shared/css/components/theming.css",
         "shared/css/layout.css",
-        "shared/css/components/_a11y.css"
+        "shared/css/components/_a11y.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -88,7 +90,8 @@
       "example": "<div class=\"card card-media\">\n  <div class=\"card-thumb\">\n    <img src=\"/img/article.jpg\" alt=\"Vignette article\">\n  </div>\n  <div class=\"card-body\">\n    <span class=\"overline\">IA</span>\n    <h3>Titre de l'article</h3>\n    <p>Résumé du contenu en quelques mots.</p>\n    <span class=\"badge badge-success\">Pertinent</span>\n  </div>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/cards.css"
+        "shared/css/components/cards.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -124,7 +127,8 @@
       "react": "ported",
       "module": [
         "shared/css/components/badges.css",
-        "shared/css/components/version-notes.css"
+        "shared/css/components/version-notes.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -144,7 +148,8 @@
       "example": "<div class=\"chip-group\">\n  <span class=\"chip\">Feature</span>\n  <span class=\"chip chip-accent\">Sprint:18</span>\n  <span class=\"chip chip-warning\">3 SP</span>\n  <span class=\"chip chip-success\">Done</span>\n</div>\n\n<!-- chip-input @deprecated : alias rétro-compat de tag-input (suppression v3). Utiliser tag-input. -->\n<div class=\"chip-input-wrapper\">\n  <span class=\"chip chip-input-item\">React <button class=\"chip-close\" aria-label=\"Supprimer React\">&times;</button></span>\n  <input class=\"chip-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/badges.css"
+        "shared/css/components/badges.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -759,7 +764,8 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css",
-        "shared/css/components/menu.css"
+        "shared/css/components/menu.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -879,6 +885,7 @@
       "module": [
         "shared/css/components/overlays.css",
         "shared/css/components/theming.css",
+        "shared/css/components/_base.css",
         "shared/css/components/_responsive.css"
       ]
     },
@@ -1047,7 +1054,8 @@
       "reactComponent": "BottomNav",
       "module": [
         "shared/css/components/navigation.css",
-        "shared/css/utilities.css"
+        "shared/css/utilities.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -1394,7 +1402,8 @@
       "example": "<div class=\"rail-sidebar\"><div class=\"rail-header\"><span class=\"rail-logo\">msyx.design</span><button class=\"rail-toggle\" aria-label=\"Reduire la sidebar\" aria-expanded=\"true\"><svg class=\"icon icon--sm\"><use href=\"/shared/icons/sprite.svg#i-chevron-left\"/></svg></button></div><nav class=\"rail-nav\" aria-label=\"Navigation principale\"><a class=\"rail-item active\" href=\"#\" aria-current=\"page\"><span class=\"rail-item-icon\">...</span><span class=\"rail-item-label\">Dashboard</span><span class=\"rail-tooltip\">Dashboard</span></a></nav></div>",
       "react": "ported",
       "module": [
-        "shared/css/components/navigation.css"
+        "shared/css/components/navigation.css",
+        "shared/css/components/_base.css"
       ],
       "notes": " Position du bouton de repli (#920) : .rail-toggle n'est pas scopée au header et fonctionne telle quelle dans .rail-footer — côté React, prop togglePosition:'header'|'footer' (défaut 'header', rendu historique inchangé). Aucune classe CSS nouvelle."
     },
@@ -1663,7 +1672,8 @@
       "react": "ported",
       "module": [
         "shared/css/components/menu.css",
-        "shared/css/components/overlays.css"
+        "shared/css/components/overlays.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -1865,7 +1875,8 @@
       "module": [
         "shared/css/components/access-denied.css",
         "shared/css/components/cards.css",
-        "shared/css/components/forms.css"
+        "shared/css/components/forms.css",
+        "shared/css/components/_base.css"
       ]
     },
     {
@@ -1895,6 +1906,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/templates.css",
+        "shared/css/components/_base.css",
         "shared/css/components/_responsive.css"
       ]
     },
@@ -2142,7 +2154,10 @@
       "source_file": "shared/css/components/_base.css",
       "cssClasses": [
         ".sidebar-link",
-        ".breadcrumb"
+        ".breadcrumb",
+        ".breadcrumb-item",
+        ".btn",
+        ".nav-item"
       ],
       "jsInit": null,
       "generated": true,
@@ -3500,6 +3515,24 @@
       "react": "ported",
       "module": [
         "shared/css/components/graph.css"
+      ]
+    },
+    {
+      "name": "festif",
+      "kind": "component",
+      "page": "fondation",
+      "cssClasses": [
+        ".snowfall",
+        ".snowfall--sparse",
+        ".snowfall--dense",
+        ".garland",
+        ".garland-bulb",
+        ".garland--steady"
+      ],
+      "jsInit": "initFestiveDemo",
+      "react": "pending",
+      "module": [
+        "shared/css/components/festive.css"
       ]
     }
   ]
