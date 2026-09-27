@@ -1,0 +1,313 @@
+/* festive.css — Decor saisonnier OPT-IN (#940)
+   Usage : <div class="snowfall" aria-hidden="true"></div>
+           <div class="garland" aria-hidden="true"><span class="garland-bulb"></span>...</div>
+   CSS-only. ZERO JS, ZERO noeud DOM par flocon. Inerte tant que la classe n'est pas posee.
+   prefers-reduced-motion couvert globalement par _a11y.css. */
+
+/* ===== SNOWFALL — nappe de flocons plein ecran ===== */
+/* Deux couches animees (les pseudo-elements), chacune portant deux tailles de flocons :
+   quatre tailles apparentes pour deux elements composites. Le motif se repete sur la
+   moitie de la hauteur et la couche translate d'exactement cette moitie -> boucle sans couture. */
+.snowfall {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: var(--z-decor);
+    /* Blanc non theme : de la neige est claire, y compris sur fond clair — ou elle
+       se lit alors comme un voile. --overlay-text est deja le blanc non theme du DS. */
+    --snow-color: var(--overlay-text);
+    --snow-opacity: 0.55;
+    --snow-speed: 18s;
+    --snow-scale: 1;
+}
+
+.snowfall::before,
+.snowfall::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 200%;
+    opacity: var(--snow-opacity);
+    will-change: transform;
+    animation: snowfallDrift var(--snow-speed) linear infinite;
+}
+
+/* Couche lointaine : flocons fins, lents */
+.snowfall::before {
+    background-image:
+        radial-gradient(circle at 18% 12%, var(--snow-color) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 63% 37%, var(--snow-color) 0 1.4px, transparent 2px),
+        radial-gradient(circle at 87% 71%, var(--snow-color) 0 1px, transparent 1.6px);
+    background-size: calc(210px * var(--snow-scale)) 12.5%;  /* divise 50% -> boucle sans couture */
+    background-repeat: repeat;
+}
+
+/* Couche proche : flocons plus gros, plus rapides, legerement decales */
+.snowfall::after {
+    background-image:
+        radial-gradient(circle at 41% 23%, var(--snow-color) 0 2px, transparent 2.8px),
+        radial-gradient(circle at 76% 58%, var(--snow-color) 0 2.4px, transparent 3.2px);
+    background-size: calc(320px * var(--snow-scale)) 25%;    /* divise 50% -> boucle sans couture */
+    background-repeat: repeat;
+    animation-duration: calc(var(--snow-speed) * 0.62);
+    opacity: calc(var(--snow-opacity) * 0.8);
+}
+
+@keyframes snowfallDrift {
+    from { transform: translate3d(0, -50%, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+}
+
+/* Mode clair : le blanc pur disparait sur une surface claire — la neige passe en bleu glacier */
+[data-mode="light"] .snowfall {
+    --snow-color: color-mix(in srgb, var(--info) 40%, white);
+    --snow-opacity: 0.85;
+}
+
+/* Densites — modificateurs */
+.snowfall--sparse { --snow-scale: 1.7; --snow-opacity: 0.4; }
+.snowfall--dense  { --snow-scale: 0.62; --snow-opacity: 0.7; }
+
+/* ===== GARLAND — guirlande d'ampoules ===== */
+/* Le fil est une bordure superieure arrondie : l'arc ne coute aucun element. */
+.garland {
+    --bulb-size: 11px;
+    --garland-cycle: 1.8s;      /* >= 0.7s : WCAG 2.3.1 (3 flashs/s max) tenu par construction */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-sm, 0.5rem);
+    padding-top: 0;
+    border-top: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border-hover));
+    border-radius: 0 0 50% 50% / 0 0 16px 16px;
+    list-style: none;
+    margin: 0;
+    /* Une guirlande trop fournie pour son conteneur se tronque au lieu de deborder :
+       le nombre d'ampoules est au choix du consumer, la mise en page ne doit pas casser. */
+    overflow: hidden;
+}
+
+.garland-bulb {
+    width: var(--bulb-size);
+    height: var(--bulb-size);
+    flex: none;
+    border-radius: 50%;
+    background: var(--bulb-color, var(--accent));
+    box-shadow: 0 0 8px var(--bulb-color, var(--accent));
+    animation: garlandTwinkle var(--garland-cycle) ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.22s);
+    position: relative;
+    margin-top: var(--bulb-drop, 9px);
+}
+
+/* Le brin qui suspend l'ampoule au fil — sans lui, les ampoules flottent sous une ligne */
+.garland-bulb::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 2px;
+    height: var(--bulb-drop, 9px);
+    transform: translateX(-50%);
+    background: color-mix(in srgb, var(--accent) 45%, var(--border-hover));
+}
+
+/* Couleurs en rotation — tokens du theme actif, jamais de valeur en dur */
+.garland-bulb:nth-child(4n + 1) { --bulb-color: var(--accent); }
+.garland-bulb:nth-child(4n + 2) { --bulb-color: var(--warning); }
+.garland-bulb:nth-child(4n + 3) { --bulb-color: var(--success); }
+.garland-bulb:nth-child(4n + 4) { --bulb-color: var(--deco-cyan); }
+
+/* Ampoules alternees plus basses : la guirlande ne fait pas une ligne plate */
+.garland-bulb:nth-child(odd) { --bulb-drop: 16px; }
+
+@keyframes garlandTwinkle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+}
+
+/* Variante sans clignotement — guirlande allumee en continu */
+.garland--steady .garland-bulb { animation: none; }
+/* prefers-reduced-motion global couvert par _a11y.css (flocons ET ampoules) */
+
+/* ===== ORNEMENTS SUSPENDUS — boules accrochees sous le header (#940) =====
+   Chaque boule pend d'un fil dore et se balance. Purement decoratif :
+   aria-hidden + pointer-events:none cote consumer. */
+.ornaments {
+    position: fixed;
+    top: var(--ornaments-top, var(--header-h, 56px));
+    /* Les ornements pendent du header au-dessus du CONTENU, jamais par-dessus
+       la barre laterale : mesure au rendu, une boule se posait sur son champ
+       de filtre. `--sidebar-w` vaut 0 en mobile, la regle vaut donc partout. */
+    inset-inline-start: var(--sidebar-w, 0);
+    inset-inline-end: 0;
+    height: 0;
+    z-index: var(--z-sticky);
+    pointer-events: none;
+}
+
+.ornament {
+    position: absolute;
+    width: var(--ornament-size, 22px);
+    height: var(--ornament-size, 22px);
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--overlay-text) 75%, transparent), transparent 45%),
+        var(--ornament-color, var(--accent));
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28), inset 0 -4px 8px rgba(0, 0, 0, 0.22); /* allow-hardcoded: ombre portee + creux interne d'une boule, noir pur volontaire — aucune couleur de theme n'a de sens pour une ombre */
+    transform-origin: 50% calc(-1 * var(--ornament-drop, 40px));
+    animation: ornamentSwing 4.2s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -0.7s);
+}
+
+/* le fil */
+.ornament::before {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: 100%;
+    width: 1.5px;
+    height: var(--ornament-drop, 40px);
+    background: color-mix(in srgb, var(--warning) 70%, transparent);
+    transform: translateX(-50%);
+}
+
+/* l'attache doree */
+.ornament::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: -5px;
+    width: 8px; height: 6px;
+    border-radius: 2px;
+    background: var(--warning);
+    transform: translateX(-50%);
+}
+
+@keyframes ornamentSwing {
+    0%, 100% { rotate: -4deg; }
+    50%      { rotate: 4deg; }
+}
+
+/* ===== GIVRE — voile clair sur les bords de l'ecran (#940) ===== */
+.frost {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: var(--z-decor);
+}
+
+.frost::before,
+.frost::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: var(--frost-height, 90px);
+    background: radial-gradient(120% 100% at 50% 0,
+        var(--frost-color, color-mix(in srgb, var(--overlay-text) 28%, transparent)) 0%, transparent 62%);
+}
+
+.frost::before { top: var(--frost-top, 56px); }
+.frost::after  { bottom: 0; transform: scaleY(-1); }
+
+/* ===== NEIGE POSEE — bande blanche qui coiffe une carte ou un bouton (#940) ===== */
+.snowcap { position: relative; }
+
+.snowcap::before {
+    content: "";
+    position: absolute;
+    left: -3px; right: -3px; top: -9px;
+    height: 17px;
+    background: var(--snowcap-color, var(--overlay-text));
+    border-radius: 14px 16px 6px 8px / 12px 14px 5px 6px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.20); /* allow-hardcoded: ombre portee sous la neige posee */
+    pointer-events: none;
+}
+
+/* gouttes de neige qui pendent sous la bande */
+.snowcap::after {
+    content: "";
+    position: absolute;
+    left: -3px; right: -3px; top: 5px;
+    height: 12px;
+    pointer-events: none;
+    background:
+        radial-gradient(7px 10px at 16% 0, var(--snowcap-color, var(--overlay-text)) 98%, transparent 100%),
+        radial-gradient(9px 13px at 45% 0, var(--snowcap-color, var(--overlay-text)) 98%, transparent 100%),
+        radial-gradient(6px 9px at 74% 0, var(--snowcap-color, var(--overlay-text)) 98%, transparent 100%),
+        radial-gradient(5px 7px at 91% 0, var(--snowcap-color, var(--overlay-text)) 98%, transparent 100%);
+    background-repeat: no-repeat;
+}
+
+.snowcap--sm::before { height: 11px; top: -6px; }
+.snowcap--sm::after  { height: 8px; top: 2px; }
+
+/* ===== BOUTON CANNE A SUCRE (#940) =====
+   Le decor est dans la BORDURE, jamais sous le texte : la couleur de texte
+   reste celle du DS sur une surface opaque, donc le contraste est inchange. */
+.btn-candy {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0.7rem 1.25rem;
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background:
+        linear-gradient(var(--surface-solid), var(--surface-solid)) padding-box,
+        repeating-linear-gradient(45deg,
+            var(--accent) 0 8px,
+            var(--overlay-text) 8px 16px) border-box;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--duration-fast, 150ms) var(--ease-out, ease);
+}
+
+.btn-candy:hover { transform: translateY(-1px); }
+.btn-candy:active { transform: translateY(0); }
+
+/* ===== SAPIN / PERSONNAGE ILLUSTRE (#940) ===== */
+.festive-character {
+    position: fixed;
+    right: clamp(8px, 2vw, 32px);
+    bottom: 0;
+    width: var(--character-width, clamp(130px, 15vw, 210px));
+    z-index: var(--z-decor);
+    pointer-events: none;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35)); /* allow-hardcoded: ombre portee de l'illustration */
+    animation: characterBob 5.5s ease-in-out infinite;
+}
+
+.festive-character--left { right: auto; left: clamp(8px, 2vw, 32px); }
+
+@keyframes characterBob {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -7px; }
+}
+
+/* Les lumieres du sapin scintillent au meme rythme que la guirlande */
+.tree-lights circle { animation: treeTwinkle var(--garland-cycle, 1.8s) ease-in-out infinite; }
+.tree-lights circle:nth-child(3n + 2) { animation-delay: 0.6s; }
+.tree-lights circle:nth-child(3n + 3) { animation-delay: 1.2s; }
+
+@keyframes treeTwinkle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+}
+
+/* ===== GUIRLANDE EN BANDEAU — position d'en-tete, sans style inline (#940) ===== */
+.garland--header {
+    position: fixed;
+    top: var(--garland-top, var(--header-h, 56px));
+    /* meme cadrage que .ornaments : au-dessus du contenu, pas de la sidebar */
+    inset-inline-start: var(--sidebar-w, 0);
+    inset-inline-end: 0;
+    z-index: var(--z-sticky);
+    padding-inline: var(--space-md, 1rem);
+    pointer-events: none;
+}

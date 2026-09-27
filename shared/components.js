@@ -1229,6 +1229,9 @@ function initThemeSwitcher() {
                 applyMode(config.defaultMode);
             }
             updateModeSwitch();
+            // Decor festif dogfoode (#940) : live-switch — sans cet appel, .garland/.snowfall
+            // n'apparaitraient/disparaitraient qu'au rechargement de la page.
+            if (typeof updateFestiveDecor === 'function') updateFestiveDecor();
         });
         if (typeof showToast === 'function') {
             showToast('Theme : ' + (THEME_LABELS[theme] || theme), 'info', 2000);
@@ -7891,6 +7894,53 @@ function __sweepDetached() {
 window.__sweepDetached = __sweepDetached;
 
 // reinitAll — appelle TOUS les init* pour compatibilité lazy-load et SPA
+// ===== FESTIVE DEMO (#940) — bascule neige + densite, demo pages/fondation.html =====
+// Cle localStorage `msyx-festive` partagee avec le decor dogfoode injecte par
+// shared/nav.js (ensureFestiveDecor/updateFestiveDecor) : source de verite commune,
+// defaut OFF (arbitrage Mike — la neige animee reste opt-in, contrairement au fond
+// de page et a la guirlande, statiques et actifs par defaut sur le theme Noel).
+function initFestiveDemo() {
+    var snow = document.getElementById('festif-snow');
+    var toggle = document.getElementById('festif-toggle-demo');
+    var densityBtns = document.querySelectorAll('[data-festif-density]');
+    if (!snow && !toggle && !densityBtns.length) return;
+
+    function isFestiveOn() {
+        try { return localStorage.getItem('msyx-festive') === 'on'; } catch (e) { return false; }
+    }
+    function applyState(on) {
+        if (snow) snow.hidden = !on;
+        if (toggle) {
+            toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+            toggle.textContent = on ? 'Arrêter la neige' : 'Activer la neige';
+        }
+    }
+
+    applyState(isFestiveOn());
+
+    if (toggle && !toggle.dataset.bound) {
+        toggle.dataset.bound = '1';
+        toggle.addEventListener('click', function() {
+            var next = !isFestiveOn();
+            try { localStorage.setItem('msyx-festive', next ? 'on' : 'off'); } catch (e) { /* localStorage indisponible — ignore */ }
+            applyState(next);
+            if (typeof updateFestiveDecor === 'function') updateFestiveDecor();
+        });
+    }
+
+    densityBtns.forEach(function(btn) {
+        if (btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+            if (!snow) return;
+            snow.classList.remove('snowfall--sparse', 'snowfall--dense');
+            var d = btn.getAttribute('data-festif-density');
+            if (d) snow.classList.add('snowfall--' + d);
+        });
+    });
+}
+window.__initFestiveDemo = initFestiveDemo;
+
 function reinitAll() {
     __sweepDetached();
     initCalendar();
@@ -7931,6 +7981,7 @@ function reinitAll() {
     initUserFeedbackDemo();
     initHeaderUserFeedback();
     initMarkdownEditor();
+    initFestiveDemo();
 }
 window.__initComponents = reinitAll;
 

@@ -208,6 +208,119 @@
         </div>
     </div>
 </section>
+<section id="festif">
+    <div class="section-header">
+        <span class="overline">Decor</span>
+        <h2>Decor festif</h2>
+        <p class="typo-body text-muted">Nappe de flocons (<code class="code-inline">.snowfall</code>), guirlande lumineuse (<code class="code-inline">.garland</code>), ornements suspendus (<code class="code-inline">.ornaments</code>/<code class="code-inline">.ornament</code>), givre (<code class="code-inline">.frost</code>), neige posee (<code class="code-inline">.snowcap</code>), bouton canne a sucre (<code class="code-inline">.btn-candy</code>) et sapin illustre (<code class="code-inline">.festive-character</code>) — meme famille que le primitif <code class="code-inline">.orb</code> : CSS/SVG uniquement, opt-in (#940). Tout element decoratif porte <code class="code-inline">aria-hidden="true"</code> ; <code class="code-inline">prefers-reduced-motion</code> est couvert globalement par <code class="code-inline">_a11y.css</code> — aucune regle a reecrire ici.</p>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Nappe de neige (.snowfall)</span>
+        <div class="demo-box" style="position:relative;overflow:hidden;height:220px;background:var(--primary);">
+            <div class="snowfall" aria-hidden="true" id="festif-snow" hidden></div>
+            <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:0.5rem;padding:var(--space-md);">
+                <p class="typo-small" style="font-weight:600;">Trois densites, une seule classe</p>
+                <p class="typo-xs text-muted">Variantes : <code class="code-inline">.snowfall--sparse</code> &middot; <code class="code-inline">.snowfall</code> (defaut) &middot; <code class="code-inline">.snowfall--dense</code>. Couleur surchargeable via <code class="code-inline">--snow-color</code>.</p>
+                <div class="row" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <button class="btn btn-secondary" type="button" data-festif-density="">Defaut</button>
+                    <button class="btn btn-secondary" type="button" data-festif-density="sparse">Clairsemee</button>
+                    <button class="btn btn-secondary" type="button" data-festif-density="dense">Dense</button>
+                    <button class="btn btn-secondary" type="button" id="festif-toggle-demo" aria-pressed="false">Activer la neige</button>
+                </div>
+                <p class="typo-xs text-muted">Le bouton « Arreter la neige » est le patron de controle exige par <strong>WCAG 2.2.2</strong> (Pause/Stop/Hide) des qu'une app active une animation permanente : a copier tel quel, cle <code class="code-inline">localStorage</code> <code class="code-inline">msyx-festive</code>.</p>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Guirlande lumineuse (.garland)</span>
+        <div class="demo-box">
+            <ul class="garland" aria-hidden="true">
+                <li class="garland-bulb" style="--i:0"></li><li class="garland-bulb" style="--i:1"></li><li class="garland-bulb" style="--i:2"></li><li class="garland-bulb" style="--i:3"></li><li class="garland-bulb" style="--i:4"></li><li class="garland-bulb" style="--i:5"></li><li class="garland-bulb" style="--i:6"></li><li class="garland-bulb" style="--i:7"></li>
+            </ul>
+            <p class="typo-xs text-muted mt-sm">Ampoules dephasees, cycle 1,8s (variable <code class="code-inline">--garland-cycle</code>, minimum 0,7s) : sous le plafond de 3 flashs/seconde de <strong>WCAG 2.3.1</strong> par construction. Variante fixe : <code class="code-inline">.garland--steady</code>.</p>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Fond de page decore</span>
+        <div class="demo-box">
+            <p class="typo-small">Le theme <strong>Noel</strong> habille aussi le fond de toutes les pages via <code class="code-inline">--texture-grain</code> (motif flocons/etoiles) et <code class="code-inline">--texture-grain-opacity</code> — statique, donc <strong>actif par defaut</strong> sur <code class="code-inline">[data-theme="noel"]</code> sans bouton d'arret requis (WCAG 2.2.2 ne s'applique qu'aux animations).</p>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Ornements suspendus (.ornaments / .ornament)</span>
+        <div class="demo-box" style="position:relative;overflow:hidden;height:140px;background:var(--primary);">
+            <div class="ornaments" style="position:absolute;top:20px;inset-inline:0;" aria-hidden="true">
+                <div class="ornament" style="left:12%;top:14px;--ornament-color:var(--accent);--ornament-size:22px;--ornament-drop:24px;--i:0"></div>
+                <div class="ornament" style="left:30%;top:34px;--ornament-color:var(--warning);--ornament-size:26px;--ornament-drop:44px;--i:1"></div>
+                <div class="ornament" style="left:48%;top:14px;--ornament-color:var(--success);--ornament-size:20px;--ornament-drop:24px;--i:2"></div>
+                <div class="ornament" style="left:66%;top:34px;--ornament-color:var(--deco-cyan);--ornament-size:26px;--ornament-drop:44px;--i:3"></div>
+                <div class="ornament" style="left:84%;top:14px;--ornament-color:var(--deco-pink);--ornament-size:22px;--ornament-drop:24px;--i:4"></div>
+            </div>
+            <div style="position:relative;z-index:1;padding:var(--space-md);">
+                <p class="typo-xs text-muted">Chaque boule pend d'un fil dore et se balance (<code class="code-inline">--ornament-color</code>, <code class="code-inline">--ornament-size</code>, <code class="code-inline">--ornament-drop</code>) ; <code class="code-inline">--i</code> dephase le balancement d'une boule a l'autre, comme <code class="code-inline">--i</code> sur <code class="code-inline">.garland-bulb</code>. Injectees sous le header par le dogfood (<code class="code-inline">ensureFestiveDecor()</code>), cadrees pour ne jamais recouvrir la barre laterale.</p>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Givre (.frost)</span>
+        <div class="demo-box" style="position:relative;overflow:hidden;height:160px;background:var(--primary);">
+            <div class="frost" style="position:absolute;" aria-hidden="true"></div>
+            <div style="position:relative;z-index:1;padding:var(--space-md);">
+                <p class="typo-xs text-muted">Voile clair sur les bords haut et bas de l'ecran, surchargeable via <code class="code-inline">--frost-color</code>, <code class="code-inline">--frost-height</code> et <code class="code-inline">--frost-top</code> (decalage sous le header).</p>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Neige posee (.snowcap / .snowcap--sm)</span>
+        <div class="demo-box" style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;">
+            <div class="card snowcap" style="width:220px;padding:1rem;">
+                <p class="typo-small" style="font-weight:600;margin:0 0 0.35rem;">Carte avec neige posee</p>
+                <p class="typo-xs text-muted" style="margin:0;">La bande blanche coiffe le coin superieur de la carte — c'est sur un vrai composant que <code class="code-inline">.snowcap</code> rend le mieux, pas sur un rectangle vide.</p>
+            </div>
+            <button class="btn btn-secondary snowcap snowcap--sm" type="button" style="align-self:flex-start;">Bouton enneige</button>
+        </div>
+        <p class="typo-xs text-muted mt-sm">Couleur surchargeable via <code class="code-inline">--snowcap-color</code> ; variante compacte <code class="code-inline">.snowcap--sm</code> pour les elements de petite taille (boutons, chips).</p>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Bouton canne a sucre (.btn-candy)</span>
+        <div class="demo-box">
+            <button class="btn-candy" type="button">Offre de Noel</button>
+            <p class="typo-xs text-muted mt-sm">Le rayures rouge/blanc sont dans la <strong>bordure</strong> (<code class="code-inline">border-box</code>), jamais sous le texte : le fond du bouton reste <code class="code-inline">--surface-solid</code> et le libelle garde la couleur <code class="code-inline">--text</code> du DS sur cette surface opaque. Le contraste du texte est donc <strong>strictement identique</strong> a celui d'un bouton standard, quel que soit le theme — c'est une contrainte de conception, pas un detail : un decor ne doit jamais degrader la lisibilite qu'il est cense celebrer.</p>
+        </div>
+    </div>
+    <div class="subsection mt-lg">
+        <span class="demo-label">Sapin illustre (.festive-character)</span>
+        <div class="demo-box" style="position:relative;overflow:hidden;height:200px;background:var(--primary);">
+            <svg class="festive-character" viewBox="0 0 200 300" aria-hidden="true" style="position:absolute;right:16px;bottom:0;width:110px;">
+                <defs>
+                    <linearGradient id="festif-demo-fol" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#2f8f52"/><stop offset="1" stop-color="#14562f"/>
+                    </linearGradient>
+                    <radialGradient id="festif-demo-glow"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#ffd24f" stop-opacity="0"/></radialGradient>
+                </defs>
+                <ellipse cx="100" cy="288" rx="66" ry="10" fill="rgba(0,0,0,.20)"/>
+                <rect x="88" y="248" width="24" height="34" rx="4" fill="#7a4a22"/>
+                <path d="M100 26 L142 104 H58 Z" fill="url(#festif-demo-fol)"/>
+                <path d="M100 74 L156 168 H44 Z" fill="url(#festif-demo-fol)"/>
+                <path d="M100 130 L172 252 H28 Z" fill="url(#festif-demo-fol)"/>
+                <g class="tree-lights">
+                    <circle cx="72" cy="96" r="4.6" fill="var(--accent, #ff4757)"/>
+                    <circle cx="100" cy="103" r="4.6" fill="var(--deco-cyan, #56d4ff)"/>
+                    <circle cx="128" cy="94" r="4.6" fill="var(--warning, #ffd250)"/>
+                    <circle cx="60" cy="162" r="5" fill="var(--warning, #ffd250)"/>
+                    <circle cx="92" cy="172" r="5" fill="var(--accent, #ff4757)"/>
+                    <circle cx="124" cy="168" r="5" fill="var(--success, #36e07f)"/>
+                    <circle cx="150" cy="156" r="5" fill="var(--deco-violet, #b98cff)"/>
+                </g>
+                <circle cx="100" cy="24" r="26" fill="url(#festif-demo-glow)"/>
+                <path d="M100 4 l6.2 13.2 14.4 2-10.6 10.2 2.6 14.4L100 37l-12.6 6.8 2.6-14.4L79.4 19.2l14.4-2z" fill="#ffd24f" stroke="#e8b93a" stroke-width="1.5"/>
+            </svg>
+            <div style="position:relative;z-index:1;padding:var(--space-md);max-width:60%;">
+                <p class="typo-xs text-muted">Sapin illustre en pied de page (<code class="code-inline">assets/tree-noel.svg</code>), largeur <code class="code-inline">--character-width</code>, modificateur <code class="code-inline">.festive-character--left</code> pour l'ancrer a gauche. Ses lumieres (<code class="code-inline">.tree-lights circle</code>) scintillent au <strong>meme rythme</strong> que la guirlande — meme variable <code class="code-inline">--garland-cycle</code>, les deux respirent ensemble.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section id="tokens">
     <div class="section-header"><span class="overline">Reference</span><h2>Tokens CSS</h2><p>Toutes les variables CSS disponibles pour la charte.</p></div>
@@ -429,20 +542,20 @@
     <div class="demo-grid demo-grid-2 mt-lg">
         <div class="demo-box grid-full">
             <span class="demo-label">Theme Noël (#939)</span>
-            <p class="typo-body mb-md">5e theme du DS — rouge houx sur surfaces vert sapin, or dans les gradients. <span class="code-inline">--danger</span> decale vers l'orange pour rester distinguable de <span class="code-inline">--accent</span> (ΔH 34,3° / ΔE 0,139 en dark, 25,2° / ΔE 0,141 en light). Supporte dark et light.</p>
+            <p class="typo-body mb-md">5e theme du DS — palette multicolore facon guirlande : rouge vif, or, vert emeraude, bleu glacier, rose et violet, sur des surfaces vert sapin. Les 8 teintes categorielles reprennent ces couleurs, donc graphiques et tags en profitent. <span class="code-inline">--danger</span> est decale vers l'orange pour rester distinguable de <span class="code-inline">--accent</span> (ΔH 35,0° / ΔE 0,155 en dark, 26,7° / ΔE 0,121 en light). Accent sur surface : 4,60:1 en dark, 7,61:1 en light. Supporte dark et light, avec son decor festif (voir <a href="#festif">Decor festif</a>).</p>
             <div class="color-grid color-grid--compact">
                 <div class="color-swatch">
-                    <div class="color-preview" style="background:#ef5a5f;"></div>
+                    <div class="color-preview" style="background:#ff4757;"></div>
                     <div class="color-info">
                         <div class="color-name">Accent (rouge houx)</div>
-                        <div class="color-hex">#ef5a5f</div>
+                        <div class="color-hex">#ff4757</div>
                     </div>
                 </div>
                 <div class="color-swatch">
-                    <div class="color-preview" style="background:#e8b93a;"></div>
+                    <div class="color-preview" style="background:#ffd250;"></div>
                     <div class="color-info">
                         <div class="color-name">Warning (or)</div>
-                        <div class="color-hex">#e8b93a</div>
+                        <div class="color-hex">#ffd250</div>
                     </div>
                 </div>
                 <div class="color-swatch">
@@ -453,10 +566,10 @@
                     </div>
                 </div>
                 <div class="color-swatch">
-                    <div class="color-preview" style="background:#122019;"></div>
+                    <div class="color-preview" style="background:#0f2a1c;"></div>
                     <div class="color-info">
                         <div class="color-name">Surface (vert sapin)</div>
-                        <div class="color-hex">#122019</div>
+                        <div class="color-hex">#0f2a1c</div>
                     </div>
                 </div>
             </div>

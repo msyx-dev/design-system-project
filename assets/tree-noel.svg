@@ -1,0 +1,38 @@
+<svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="fol" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f8f52"/><stop offset="1" stop-color="#14562f"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#ffd24f" stop-opacity="0"/></radialGradient>
+  </defs>
+  <ellipse cx="100" cy="288" rx="66" ry="10" fill="rgba(0,0,0,.20)"/>
+  <rect x="88" y="248" width="24" height="34" rx="4" fill="#7a4a22"/>
+  <path d="M100 26 L142 104 H58 Z" fill="url(#fol)"/>
+  <path d="M100 74 L156 168 H44 Z" fill="url(#fol)"/>
+  <path d="M100 130 L172 252 H28 Z" fill="url(#fol)"/>
+  <path d="M100 26 L142 104 H100 Z" fill="#000" opacity=".10"/>
+  <path d="M100 74 L156 168 H100 Z" fill="#000" opacity=".10"/>
+  <path d="M100 130 L172 252 H100 Z" fill="#000" opacity=".10"/>
+  <path d="M62 96 q38 16 76 -4" stroke="#f2c14e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95"/>
+  <path d="M50 160 q50 20 104 -6" stroke="#f2c14e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95"/>
+  <path d="M36 234 q64 24 134 -8" stroke="#f2c14e" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95"/>
+  <g class="tree-lights">
+    <circle cx="72" cy="96" r="4.6" fill="var(--accent, #ff4757)"/>
+    <circle cx="100" cy="103" r="4.6" fill="var(--deco-cyan, #56d4ff)"/>
+    <circle cx="128" cy="94" r="4.6" fill="var(--warning, #ffd250)"/>
+    <circle cx="60" cy="162" r="5" fill="var(--warning, #ffd250)"/>
+    <circle cx="92" cy="172" r="5" fill="var(--accent, #ff4757)"/>
+    <circle cx="124" cy="168" r="5" fill="var(--success, #36e07f)"/>
+    <circle cx="150" cy="156" r="5" fill="var(--deco-violet, #b98cff)"/>
+    <circle cx="50" cy="236" r="5.4" fill="var(--success, #36e07f)"/>
+    <circle cx="82" cy="246" r="5.4" fill="var(--warning, #ffd250)"/>
+    <circle cx="116" cy="244" r="5.4" fill="var(--deco-pink, #ff6fae)"/>
+    <circle cx="150" cy="232" r="5.4" fill="var(--accent, #ff4757)"/>
+  </g>
+  <circle cx="100" cy="24" r="26" fill="url(#glow)"/>
+  <path d="M100 4 l6.2 13.2 14.4 2-10.6 10.2 2.6 14.4L100 37l-12.6 6.8 2.6-14.4L79.4 19.2l14.4-2z" fill="#ffd24f" stroke="#e8b93a" stroke-width="1.5"/>
+  <g fill="#fff" opacity=".85">
+    <path d="M58 104 q20 6 40 2 q18 -4 34 2 l0 5 q-20 -6 -36 -1 q-18 5 -38 -1z"/>
+    <path d="M44 168 q26 8 54 3 q24 -5 44 2 l0 6 q-24 -7 -46 -2 q-24 5 -52 -2z"/>
+  </g>
+</svg>
