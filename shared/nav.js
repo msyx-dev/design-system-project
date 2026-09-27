@@ -368,23 +368,52 @@ function ensureFestiveDecor() {
     snow.hidden = true;
     var garland = document.createElement('ul');
     garland.id = 'ds-festive-garland';
-    garland.className = 'garland';
+    garland.className = 'garland garland--header';
     garland.setAttribute('aria-hidden', 'true');
-    garland.style.position = 'fixed';
-    garland.style.top = '56px'; /* hauteur header fixe, cf. CLAUDE.md#Navigation */
-    garland.style.left = '0';
-    garland.style.right = '0';
-    garland.style.pointerEvents = 'none';
-    garland.style.zIndex = 'var(--z-sticky)';
-    garland.style.padding = '0 var(--space-md, 1rem)';
     for (var i = 0; i < 14; i++) {
         var bulb = document.createElement('li');
         bulb.className = 'garland-bulb';
         bulb.style.setProperty('--i', String(i));
         garland.appendChild(bulb);
     }
+    // Ornements suspendus — couleurs prises dans les tokens du theme actif
+    var ornaments = document.createElement('div');
+    ornaments.id = 'ds-festive-ornaments';
+    ornaments.className = 'ornaments';
+    ornaments.setAttribute('aria-hidden', 'true');
+    var ornColors = ['var(--accent)', 'var(--warning)', 'var(--success)', 'var(--deco-cyan)', 'var(--deco-pink)', 'var(--deco-violet)'];
+    var ornLeft = [8, 21, 34, 52, 66, 79, 92];
+    for (var o = 0; o < ornLeft.length; o++) {
+        var ball = document.createElement('div');
+        ball.className = 'ornament';
+        ball.style.setProperty('--ornament-color', ornColors[o % ornColors.length]);
+        ball.style.setProperty('--i', String(o));
+        ball.style.setProperty('--ornament-drop', (22 + (o % 3) * 20) + 'px');
+        ball.style.setProperty('--ornament-size', (20 + (o % 3) * 6) + 'px');
+        ball.style.left = ornLeft[o] + '%';
+        ball.style.top = (22 + (o % 3) * 20) + 'px';
+        ornaments.appendChild(ball);
+    }
+
+    // Givre sur les bords de l'ecran
+    var frost = document.createElement('div');
+    frost.id = 'ds-festive-frost';
+    frost.className = 'frost';
+    frost.setAttribute('aria-hidden', 'true');
+
+    // Sapin decore en pied de page
+    var tree = document.createElement('img');
+    tree.id = 'ds-festive-tree';
+    tree.className = 'festive-character';
+    tree.src = '/assets/tree-noel.svg';
+    tree.alt = '';
+    tree.setAttribute('aria-hidden', 'true');
+
     wrap.appendChild(snow);
     wrap.appendChild(garland);
+    wrap.appendChild(ornaments);
+    wrap.appendChild(frost);
+    wrap.appendChild(tree);
     document.body.appendChild(wrap);
     updateFestiveDecor();
 }
@@ -395,7 +424,12 @@ function updateFestiveDecor() {
     var garland = document.getElementById('ds-festive-garland');
     if (!snow || !garland) return;
     var isNoel = document.documentElement.getAttribute('data-theme') === 'noel';
-    garland.style.display = isNoel ? '' : 'none';
+    // Elements statiques : visibles des que le theme est actif (aucun controle
+    // d'arret requis, ils n'animent rien en continu qui gene la lecture).
+    ['ds-festive-garland', 'ds-festive-ornaments', 'ds-festive-frost', 'ds-festive-tree'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = isNoel ? '' : 'none';
+    });
     var festiveOn = false;
     try { festiveOn = localStorage.getItem('msyx-festive') === 'on'; } catch (e) { /* localStorage indisponible — ignore */ }
     snow.hidden = !(isNoel && festiveOn);

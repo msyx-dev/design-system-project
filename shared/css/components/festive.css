@@ -137,8 +137,13 @@
    aria-hidden + pointer-events:none cote consumer. */
 .ornaments {
     position: fixed;
-    top: var(--ornaments-top, 56px);   /* hauteur du header */
-    left: 0; right: 0; height: 0;
+    top: var(--ornaments-top, var(--header-h, 56px));
+    /* Les ornements pendent du header au-dessus du CONTENU, jamais par-dessus
+       la barre laterale : mesure au rendu, une boule se posait sur son champ
+       de filtre. `--sidebar-w` vaut 0 en mobile, la regle vaut donc partout. */
+    inset-inline-start: var(--sidebar-w, 0);
+    inset-inline-end: 0;
+    height: 0;
     z-index: var(--z-sticky);
     pointer-events: none;
 }
@@ -293,4 +298,16 @@
 @keyframes treeTwinkle {
     0%, 100% { opacity: 1; }
     50%      { opacity: 0.35; }
+}
+
+/* ===== GUIRLANDE EN BANDEAU — position d'en-tete, sans style inline (#940) ===== */
+.garland--header {
+    position: fixed;
+    top: var(--garland-top, var(--header-h, 56px));
+    /* meme cadrage que .ornaments : au-dessus du contenu, pas de la sidebar */
+    inset-inline-start: var(--sidebar-w, 0);
+    inset-inline-end: 0;
+    z-index: var(--z-sticky);
+    padding-inline: var(--space-md, 1rem);
+    pointer-events: none;
 }
