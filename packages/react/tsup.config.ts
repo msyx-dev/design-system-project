@@ -1,5 +1,6 @@
 import { defineConfig } from "tsup";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir, copyFile } from "node:fs/promises";
+import path from "node:path";
 
 // #703 : le barrel `dist/index.js`/`dist/index.cjs` n'avait AUCUNE
 // directive "use client" en tete, cassant l'import de @msyx-dev/react
@@ -7,6 +8,25 @@ import { readFile, writeFile } from "node:fs/promises";
 // <PageHeader>, alpha.14.
 const USE_CLIENT_DIRECTIVE = '"use client";\n';
 const CLIENT_ENTRY_FILES = ["dist/index.js", "dist/index.cjs"];
+
+// #942 : shared/graph/layout/layered.js charge dagre vendore via un dynamic
+// import() dont le specifier est calcule dans une VARIABLE (`spec`, cf. le
+// fichier source) -> esbuild ne peut PAS l'analyser statiquement et laisse le
+// literal '../vendor/graph-layered.js' tel quel dans la sortie bundlee (branche
+// Node, `typeof window === 'undefined'`). Ce chemin relatif se resout contre
+// l'URL du FICHIER qui le contient une fois bundle -> dist/layered-<hash>.js en
+// ESM (chunk separe, code-splitting naturel d'esbuild sur la frontiere du
+// dynamic import), ou dist/index.cjs en CJS (tout inline, meme mecanique
+// d'import() differe). Dans les deux cas, le fichier porteur vit dans
+// packages/react/dist/ -> "../vendor/graph-layered.js" cible
+// packages/react/vendor/graph-layered.js (UN niveau au-dessus de dist, PAS a
+// l'interieur : meme profondeur relative que shared/graph/layout/ -> ../vendor/
+// dans le monorepo non-bundle, d'ou l'absence de changement du specifier
+// source). Ce dossier doit donc exister dans le paquet publie a cote de dist/
+// (voir "files" dans package.json) — copie generee ici, jamais committee.
+const VENDOR_SRC = path.resolve(__dirname, "../../shared/graph/vendor/graph-layered.js");
+const VENDOR_DEST_DIR = path.resolve(__dirname, "vendor");
+const VENDOR_DEST = path.join(VENDOR_DEST_DIR, "graph-layered.js");
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -35,5 +55,9 @@ export default defineConfig({
         await writeFile(file, USE_CLIENT_DIRECTIVE + contents);
       }
     }
+
+    // #942 : voir le commentaire au-dessus de VENDOR_SRC/VENDOR_DEST.
+    await mkdir(VENDOR_DEST_DIR, { recursive: true });
+    await copyFile(VENDOR_SRC, VENDOR_DEST);
   },
 });

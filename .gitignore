@@ -26,6 +26,9 @@ shared/dist/*
 # @msyx-dev/react — build artifact généré (ne pas commiter)
 packages/react/dist/
 packages/react/node_modules/
+# #942 : copie generee au build (tsup onSuccess) du vendor dagre, jamais committee —
+# source de verite = shared/graph/vendor/graph-layered.js.
+packages/react/vendor/
 pnpm-lock.yaml
 # Exception : lockfile packages/react commité pour CI --frozen-lockfile (#307)
 !packages/react/pnpm-lock.yaml
