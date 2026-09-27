@@ -67,7 +67,7 @@ const NAV_PAGES_PATHS = [
 // Le --check échoue si un compte dévie (détecte un risque de sur/sous-comptage).
 const EXPECTED_COUNTS = {
   '/pages/getting-started.html': 6,
-  '/pages/fondation.html':       17,
+  '/pages/fondation.html':       18,
   '/pages/composants.html':      14,
   '/pages/formulaires.html':     20,
   '/pages/navigation.html':      10,
@@ -78,7 +78,7 @@ const EXPECTED_COUNTS = {
   '/pages/divers.html':          15,
   '/pages/templates.html':       6,
 };
-const EXPECTED_TOTAL = 130;
+const EXPECTED_TOTAL = 131;
 
 // ─── Décodage des entités HTML ─────────────────────────────────────────────────
 
