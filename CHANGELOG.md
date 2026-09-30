@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Added
+- **`@msyx-dev/react` 3.0.0-alpha.59 : `<FestiveDecor>`, `<FestiveSnowToggle>`, `<SiteHeader festive>` et `<Icon name="snowflake">` (#950).** `packages/react/src/components/FestiveDecor/`, `SiteHeader.tsx`, `icons/Icon.tsx`, `index.ts`, `shared/components-registry.json` (`festif.react` `pending` → `ported`), `bin/generate-registry.js`. Portage React du décor Noël de `nav.js` : sapin en SVG inline JSX natif (`id` préfixés par `useId()`), neige pilotée par `msyx-festive` (seule la valeur `"off"` la coupe), rendu uniquement sous `data-theme="noel"`, réactif au changement de thème. Aucun changement du DS CSS ni de sa version.
+
 ### Fixed
 - **`sync.sh` distribuait un `ds-styles.css` dont les 7 `@import` pointaient vers un dossier `css/` inexistant chez le consommateur (#951)** — `shared/sync.sh`, `tests/test-sync-styles.sh`. Le `sed` visait `url('css/…')` alors que `shared/styles.css` écrit `@import 'css/…';` sans `url()` : la substitution ne transformait **rien** (sortie identique à l'entrée). Il vise désormais `@import` (et garde la forme `url()`), et produit un chemin **relatif explicite** `@import './ds-tokens.css';` — un specifier nu (`'ds-tokens.css'`) n'est pas résolu par le bundler Next/webpack. Impact, sans le dramatiser : aucune app n'était cassée, les quatre consommateurs mesurés (`cap-transfo`, `feedbacks`, `keepthread`, `tirokado`) contournant le défaut par des imports individuels ; le coût était que chacun réécrive le même contournement, désormais **inutile** pour qui resynchronise. `shared/styles.css` reste inchangé (correct pour le DS, qui sert bien un dossier `css/`). Test de non-régression `tests/test-sync-styles.sh` (aucun `css/` résiduel, 7 `./ds-*.css`, chaque import résout vers un fichier livré), câblé dans `package.json` **et** `ci.yml` ; il échoue sur l'ancien `sync.sh`.
 

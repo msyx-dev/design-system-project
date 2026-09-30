@@ -4,6 +4,23 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.59 — 2026-09-30 — `<FestiveDecor>` : décor du thème Noël (#950)
+
+> Le CSS (`festive.css`) et le JS vanilla (`ensureFestiveDecor()`/`updateFestiveDecor()`) existent depuis v2.139.0/v2.141.0 ; ce lot ne livre que le portage React. Aucune modification du DS CSS.
+
+### Added
+- **`<FestiveDecor>` (#950).** Neige, guirlande (14 ampoules), 7 ornements suspendus, givre et sapin, sur le CSS existant de `festive.css`. Ne rend **rien** hors `data-theme="noel"` et réagit en direct au changement de thème (`<ThemeSwitcher>`, script anti-FOUC ou consommateur), sans rechargement. Tout est `aria-hidden="true"`, `position: fixed`, aucun nœud DOM par flocon. Prop `snow` (défaut `true`) : `false` retire la neige.
+- **`<FestiveSnowToggle>` (#950).** Bouton flocon (`.header-notification`) : `aria-pressed` reflète l'état de la neige, `aria-label` bascule entre « Arrêter la neige » et « Faire tomber la neige » (WCAG 2.2.2). Marche même si `localStorage` refuse l'écriture (repli mémoire).
+- **`<SiteHeader festive>` (#950).** Slot opt-in : bouton flocon au début de la zone utilisateur, décor rendu comme **frère** du `<header>` (`.site-header` porte un `backdrop-filter`, qui deviendrait le bloc conteneur des enfants `position: fixed`).
+- **`<Icon name="snowflake">` (#950).** Glyphe reporté depuis `shared/icons/sprite.svg` (`i-snowflake`, v2.140.0) ; le garde-fou de fidélité au sprite de `Icon.test.tsx` le couvre. Aucun `<use href>` vers le sprite.
+
+### Notes de conception (pièges mesurés dans le vanilla)
+- **Sapin = SVG inline en JSX natif**, ni `<img>` (opaque au CSS : ni tokens du thème ni animation `.tree-lights`) ni `dangerouslySetInnerHTML`.
+- **`id` SVG préfixés par `useId()`** (`tn-fol/pot/glow/bauble` sont globaux au document) : deux instances montées ensemble ne se disputent plus les dégradés.
+- **`msyx-festive`, sémantique identique à `nav.js`** : seule la valeur littérale `"off"` coupe la neige ; clé absente, `"on"` ou toute autre valeur la laisse tomber. Tout accès `localStorage` dans un `try/catch`.
+- **Thème lu sur `<html data-theme>`, en lecture seule** (`useSyncExternalStore` + `MutationObserver`), et non via `useTheme()` : chaque appel de `useTheme()` porte son propre état (pas de partage entre instances), et son effet de montage réécrit `data-theme` depuis `localStorage` — ce qui écraserait le `data-theme="noel"` fixe d'un consommateur mono-thème.
+- SSR-safe : rien n'est rendu côté serveur, le décor apparaît à l'hydratation.
+
 ## v3.0.0-alpha.58 — 2026-09-26 — 5e thème « Noël » (#939)
 
 > Le CSS, le JS vanilla et les démos correspondants sont livrés dans la même PR, cf. `../../RELEASES.md` v2.138.0.

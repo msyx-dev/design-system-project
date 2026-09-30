@@ -1,7 +1,7 @@
 {
   "version": "2.141.1",
   "generated": {
-    "at": "2026-09-27T08:17:35.819Z",
+    "at": "2026-09-30T12:58:21.781Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3540,7 +3540,7 @@
         ".tree-lights"
       ],
       "jsInit": "initFestiveDemo",
-      "react": "pending",
+      "react": "ported",
       "module": [
         "shared/css/components/festive.css"
       ]
