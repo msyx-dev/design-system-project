@@ -194,7 +194,7 @@ ou le modal par défaut pour le détail.
 # Copier les fichiers DS dans votre projet
 ./sync.sh /chemin/vers/projet/styles/
 
-# Verifier si votre copie est a jour (4 fichiers verifies)
+# Verifier si votre copie est a jour (6 fichiers CSS + les logos de marque, #954)
 ./check-sync.sh /chemin/vers/projet/styles/
 ```
 
@@ -202,6 +202,7 @@ Le script `sync.sh` copie les fichiers DS avec le prefixe `ds-` :
 - `ds-tokens.css`, `ds-themes.css`, `ds-base.css`, `ds-utilities.css`, `ds-layout.css`, `ds-components.css`
 - `ds-fonts.css` (+ `fonts/*.woff2`) et `icons/sprite.svg` (self-hosted). **Le sprite est reference en chemin absolu `/shared/icons/sprite.svg` par `ds-nav.js` et `ds-components.js`** : si vous utilisez ce JS (Niveau C), servez votre copie `icons/sprite.svg` a cette URL exacte (montez ou routez le dossier sous `/shared/icons/`) — meme contrainte que `graph/vendor/graph-layered.js` avec `--with-graph`.
 - **Niveau C (#372)** : `ds-styles.css` (agregateur), `ds-nav.js`, `ds-components.js` (shell JS)
+- `assets/` (#954) : les logos de marque MSYX (`logo-msyx.svg`, `-mark`, `-dark`, `-light`), copies **a l'identique** dans `<cible>/assets/` — `--assets=<charte>` ajoute une charte cliente, voir [Assets de marque](#assets-de-marque--logos-954)
 
 ### Sync automatique (tous les consommateurs)
 
@@ -250,6 +251,69 @@ Editer `shared/consumers.json` et ajouter une entree :
 
 Le champ `css_dir` indique le chemin relatif depuis `path` ou se trouvent
 les fichiers `ds-*.css`. Valeur par defaut : `src/styles`.
+
+## Assets de marque — logos (#954)
+
+`sync.sh` depose les logos de marque dans **`<cible>/assets/`** (la `<cible>` est le dossier passe en argument, typiquement `src/styles/`). Le DS ne les reference depuis **aucun CSS** : c'est le HTML ou le JSX du consommateur qui les pointe, et qui doit donc les servir (`public/assets/` en Next, import bundler, route statique…).
+
+### Chartes et option `--assets=`
+
+- **MSYX est toujours copiee** : `assets/logo-msyx.svg`, `logo-msyx-mark.svg`, `logo-msyx-dark.svg`, `logo-msyx-light.svg`.
+- Une **charte cliente est opt-in** : `--assets=<charte>[,<charte>…]` (virgules, sans espaces). `--assets=msyx` est accepte sans effet, et plusieurs `--assets=` se cumulent.
+
+```bash
+# MSYX seule (defaut)
+./shared/sync.sh --no-showcase /path/vers/votre-projet/src/styles/
+
+# MSYX + la charte ACSSI
+./shared/sync.sh --no-showcase --assets=acssi /path/vers/votre-projet/src/styles/
+```
+
+- Une charte `<c>` est reconnue si `assets/logo-<c>.svg` existe a la racine du DS (liste deduite des fichiers, rien n'est code en dur) et si son nom respecte `^[a-z0-9]+$`. Ses fichiers sont `logo-<c>.svg` et `logo-<c>-*.svg`, a la racine seulement.
+- Une charte inconnue est une **erreur explicite** (`ERREUR: charte inconnue pour --assets : '<c>' (disponibles : …)`, exit 1), levee **avant toute copie** : la cible reste intacte.
+- `sync.sh` **ne supprime jamais** rien dans `<cible>/assets/` : un logo propre a votre app peut y cohabiter.
+
+### Pointer le logo
+
+Vanilla (HTML) :
+
+```html
+<img src="/assets/logo-msyx.svg" alt="Nom de votre application" width="40" height="40">
+```
+
+React (`@msyx-dev/react`) : `<Logo>` resout `${basePath}/logo-msyx*.svg`, avec `basePath` a `"/assets"` par defaut. Servez donc le dossier copie sous cette URL, ou passez `basePath` :
+
+```tsx
+<Logo variant="dark" basePath="/brand" alt="Nom de votre application" />
+```
+
+**Header vanilla (`ds-nav.js`)** : sans configuration, le header pointe sur `/assets/sources/logoMSYX.png` (`shared/nav.js`), un fichier qui **n'est pas distribue** (`sources/` reste dans le DS). Posez `window.MSYX_HEADER.brand.logoSrc` sur l'URL ou vous servez `assets/logo-msyx.svg` :
+
+```html
+<script>
+window.MSYX_HEADER = { brand: { logoSrc: '/assets/logo-msyx.svg' } };
+</script>
+```
+
+### Ce qui n'est pas distribue
+
+- **`tree-noel.svg`** (sapin du theme Noel) n'est jamais copie. Un SVG charge en `<img>` est **opaque au CSS de la page** : ni les tokens du theme, ni l'animation `.tree-lights` de `festive.css` ne l'atteignent, donc une copie distribuee s'afficherait figee et aux mauvaises couleurs. Le decor festif inline le sapin : utilisez `<SiteHeader festive />` (React) ou `ensureFestiveDecor()` de `ds-nav.js` (vanilla).
+- `assets/sources/` (PNG source) et `assets/explorations/` (historique de conception) : sources internes du DS.
+
+### Verification
+
+`check-sync.sh` compare les logos par **sha256** et sort une ligne `OK` / `DRIFT` / `MISSING` par fichier, comptee dans le meme exit 1 que les CSS :
+
+```bash
+./shared/check-sync.sh /chemin/vers/votre-projet/src/styles/
+#   MISSING  assets/logo-msyx.svg   — absent (resynchroniser : sync.sh)
+#   DRIFT    assets/logo-msyx.svg   — contenu different
+```
+
+- MSYX est **toujours attendue** : un consommateur synchronise avant #954 sort 4 `MISSING` jusqu'a sa prochaine synchro.
+- Une charte cliente n'est verifiee que si au moins un de ses fichiers est present localement (trace d'un `--assets=<c>`). Limite assumee : une charte retiree ou renommee cote DS n'est plus signalee chez le consommateur.
+- Un fichier local sans equivalent dans le DS (logo propre a l'app) est ignore.
+- `sync-all.sh` ne relaie pas `--assets=` : pour une charte cliente, lancer `sync.sh --assets=<c>` directement sur le consommateur.
 
 ## Regles d'or
 

@@ -29,11 +29,13 @@ Si une règle te paraît ambiguë : `docs/DS-PRINCIPLES.md` a un exemple ❌ Don
 
 ## Structure
 ```
-assets/             # Brand assets SVG (v2.43.0)
-  logo-msyx.svg     # PRIMARY mark vectorisé depuis source officiel (viewBox 1475×1562, quasi-carré)
+assets/             # Brand assets SVG (v2.43.0) — logos MSYX revectorisés depuis logoMSYX.png (#954, potrace une passe par zone, mesuré : IoU zones 0,9991, ΔE2000 moyen 0,08 ; planches et mesures dans docs/renders/954/) ; distribués par `sync.sh` dans <cible>/assets/ (MSYX toujours, charte cliente via --assets=<c>) et vérifiés par `check-sync.sh` (sha256)
+  logo-msyx.svg     # PRIMARY mark (viewBox 1475×1562, quasi-carré), fidèle au PNG officiel
   logo-msyx-mark.svg  # Mark alias (identique à logo-msyx.svg)
-  logo-msyx-dark.svg  # Variante fond sombre (gradients identiques, saturés)
+  logo-msyx-dark.svg  # Variante fond sombre (dégradés du PNG officiel, ids distincts)
   logo-msyx-light.svg # Variante fond clair (gradients assombris pour contraste WCAG AA)
+  logo-acssi*.svg   # Charte ACSSI (4 fichiers) — opt-in côté consommateur via sync.sh --assets=acssi
+  tree-noel.svg     # Sapin du thème Noël — JAMAIS distribué (un SVG en <img> est opaque au CSS : ni tokens ni .tree-lights) ; le décor l'inline (FestiveDecor / ensureFestiveDecor)
   sources/          # Sources de référence — logoMSYX.png (1475×1562 PNG officiel msyx.fr)
   explorations/     # Historique conception S23 (wordmark-monogram-a/b, NE PAS SUPPRIMER)
 index.html          # Page login auth gate
@@ -62,8 +64,8 @@ shared/
                          #   avatars, tables, lists, alerts, overlays, navigation, modals, feedback,
                          #   interactive, templates, media, _responsive, tracker, quiz, _a11y,
                          #   pricing, notifications, motion, access-denied, theme-toggle (v2.60.0), section-header
-  sync.sh                    # Sync CSS vers un projet consommateur (--no-showcase, --components=core|list, --with-graph moteur graph.global.js+graph.css v2.100.0 #666, + vendor/graph-layered.js+LICENSE-*/NOTICE v2.102.0 #670)
-  check-sync.sh              # Vérifie un consommateur : version ET contenu (sha256) des fichiers copiés à l'identique (tokens, themes, utilities, base), version seule pour ceux que sync.sh transforme (layout --no-showcase, components) — #951 ; + mode --check-overrides
+  sync.sh                    # Sync CSS vers un projet consommateur (--no-showcase, --components=core|list, --with-graph moteur graph.global.js+graph.css v2.100.0 #666, + vendor/graph-layered.js+LICENSE-*/NOTICE v2.102.0 #670, + --assets=<charte>[,…] logos de marque dans <cible>/assets/ : MSYX toujours, charte cliente opt-in, charte inconnue = erreur exit 1 avant toute copie, copie non destructive, tree-noel.svg jamais distribué #954)
+  check-sync.sh              # Vérifie un consommateur : version ET contenu (sha256) des fichiers copiés à l'identique (tokens, themes, utilities, base), version seule pour ceux que sync.sh transforme (layout --no-showcase, components) — #951 ; + sha256 des logos distribués dans assets/ (MSYX toujours attendue → MISSING si absente, charte cliente vérifiée si un de ses fichiers est présent) #954 ; + mode --check-overrides
   check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS + passe orphelins opt-in `--orphans=<src>` (#938)
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
   version-notes.json         # Données curées {next, released[]} des notes de version — éditées à la main, inlinées au build par bin/generate-version-notes.js (v2.96.0 #645)
@@ -144,7 +146,7 @@ Cf. issue #314 (convention décidée 2026-05-25, option A).
 - Gradients : bleu→violet, cyan→bleu, violet→rose
 - Typo : Space Grotesk (titres) + Inter (corps) + Fira Code (mono)
 - Glassmorphism + border glow subtil
-- **Logo officiel (v2.43.0)** : `assets/logo-msyx.svg` — mark seul vectorisé depuis le source officiel MSYX (`msyx.fr/media/logo/logoMSYX.png`, mark only, 1475×1562 PNG conservé en `assets/sources/logoMSYX.png`). Gradient vertical turquoise→vert→bleu→violet. ViewBox 1475×1562 (ratio quasi-carré). Pas de wordmark texte. Toujours utiliser ce fichier SVG (pas de texte CSS gradient, pas de réinterprétation paths). Variantes dark/light dans `assets/`. Mark alias : `assets/logo-msyx-mark.svg`. Wordmark Monogram historique conservé en `assets/explorations/`.
+- **Logo officiel (v2.43.0, revectorisé #954)** : `assets/logo-msyx.svg` — mark seul revectorisé à l'identique depuis le source officiel MSYX (`msyx.fr/media/logo/logoMSYX.png`, mark only, 1475×1562 PNG conservé en `assets/sources/logoMSYX.png`). Gradient vertical turquoise→vert→bleu→violet. ViewBox 1475×1562 (ratio quasi-carré). Pas de wordmark texte. Toujours utiliser ce fichier SVG (pas de texte CSS gradient, pas de réinterprétation paths). Variantes dark/light dans `assets/`. Mark alias : `assets/logo-msyx-mark.svg`. Wordmark Monogram historique conservé en `assets/explorations/`.
 - **Signature spatiale (v2.42.0)** : gradient underline 2px sous `.section-header .overline` via `signature.css`. Automatique sur toutes les pages.
 - **Texture grain (v2.42.0)** : `--texture-grain` + `--texture-grain-opacity: 0.015` dans `tokens.css`. `body::after` global.
 

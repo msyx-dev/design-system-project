@@ -477,7 +477,7 @@ après bascule explicite (dépendance #508 — bascule tracée dans ce document)
 Si un sprint touche `@ds-version` sur 3+ issues, le parent `/sprint` **pré-alloue les versions** et les injecte dans le prompt `/dev` de chaque issue. Garantit zéro conflit git sur les bumps. Validé Sprint 17 (0 conflit vs 2 attendus en S16).
 
 ### Garde-fou
-- Script `check-sync.sh` (consumers) vérifie le drift de version ET le contenu (sha256) des fichiers que `sync.sh` copie à l'identique (`ds-tokens/themes/utilities/base.css`) ; `ds-layout.css` et `ds-components.css`, transformés par `sync.sh` (`--no-showcase`, `--components=…`), restent comparés par leur seul en-tête (#951)
+- Script `check-sync.sh` (consumers) vérifie le drift de version ET le contenu (sha256) des fichiers que `sync.sh` copie à l'identique (`ds-tokens/themes/utilities/base.css`) ; `ds-layout.css` et `ds-components.css`, transformés par `sync.sh` (`--no-showcase`, `--components=…`), restent comparés par leur seul en-tête (#951) ; il couvre aussi les logos de marque que `sync.sh` dépose dans `assets/` (sha256, `OK`/`DRIFT`/`MISSING` par fichier, #954)
 - CI sur DS vérifie cohérence inter-fichiers
 
 ---

@@ -1,0 +1,5 @@
+logo-msyx.svg          PASS  IoU alpha=0.9994  IoU zones=0.9991  dE00 galet moy=0.08 p99=0.72  interieur moy=0.06 max=0.79  degrades moy=0.13  17591 o
+logo-msyx-mark.svg     PASS  IoU alpha=0.9994  IoU zones=0.9991  dE00 galet moy=0.08 p99=0.72  interieur moy=0.06 max=0.79  degrades moy=0.13  17591 o
+logo-msyx-dark.svg     PASS  IoU alpha=0.9994  IoU zones=0.9991  dE00 galet moy=0.08 p99=0.72  interieur moy=0.06 max=0.79  degrades moy=0.13  17580 o
+logo-msyx-light.svg    PASS  IoU alpha=0.9994  IoU zones=0.9992  dE00 galet moy=5.67 p99=14.57  interieur moy=5.70 max=15.15  degrades moy=12.22  17591 o  (couleurs assombries volontairement : dE non juge)
+exit=0
