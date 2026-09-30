@@ -14,6 +14,17 @@
   },
   "released": [
     {
+      "version": "2.141.1",
+      "date": "2026-09-30",
+      "titre": "Le contrôle de synchronisation voit enfin les thèmes manquants",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le contrôle qui indique si un projet est à jour du design system ne pouvait pas voir qu'un fichier de thèmes était incomplet (thèmes Auchan ou Noël absents) : il ne comparait que le numéro de version, et celui-ci n'avançait plus. Il compare désormais le contenu de ces fichiers, et le numéro de version des thèmes suit celui du design system."
+        }
+      ]
+    },
+    {
       "version": "2.141.0",
       "date": "2026-09-27",
       "titre": "Le logo ACSSI est enfin le bon",

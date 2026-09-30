@@ -85,7 +85,7 @@ shared/
       theme-toggle.css  #   Theme toggle / mode switch UI (v2.60.0)
   sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
-  check-sync.sh              # Vérifie version sur les 4 fichiers CSS + mode --check-overrides
+  check-sync.sh              # Vérifie version + contenu (sha256) des ds-*.css copiés à l'identique, version seule pour layout/components (transformés par sync.sh) + mode --check-overrides (#951)
   check-components.sh        # Lint consommateurs — détecte composants custom hors DS
   build.sh                   # Minification assets CSS (csso) + JS (terser) → dist/
   consumers.json             # Registre des projets consommateurs pour sync-all.sh
