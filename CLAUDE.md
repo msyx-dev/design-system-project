@@ -51,7 +51,7 @@ pages/
   overlays.html     # 8 sections surfaces flottantes — modals (+ largeur par token `--modal-w` : defaut 480px, variante `.modal-dialog--lg` 640px, sur-mesure `style="--modal-w: …"` ; combinaison `dialog.modal-dialog.cmd-palette` = 560px + reset du transform de repos, v2.132.0 #917), drawer, bottom sheet, FAB, notification center, confirm popover, tooltip (scindé depuis feedback.html #514), notes de version (badge + modale timeline + pastille localStorage, initVersionNotes, v2.95.0 #614 — désormais dogfoodée dans le header du DS, badge cliquable + modale alimentée par shared/version-notes.json, v2.96.0 #645 ; chips catégorie par highlight — badge statut mappé sur type, v2.96.1 #647 ; montée de niveau v2.97.0 #649 — badge en Inter + icône spark (i-sparkles), visible en mobile (44px) et compact en desktop (min-width:768px), timeline scopée `.version-notes .timeline` (nœuds anneau-creux, 1er nœud plein+halo, nœud « À venir » pointillé — la primitive globale `.timeline`/`.timeline-dot` de lists.css reste intacte), item « À venir » piloté par `next.highlights`, pastille « Nouveau » sur la dernière version, sous-titre optionnel `subtitle`, modale en `<ol>`/`<li>` + `.modal-title`)
   divers.html       # Avancé — Contenu riche (timeline, carousel, lightbox, code blocks + .code-inline refactor v2.50.0, video embed, + .prose rendu markdown v2.85.0 #439) + Interaction (accordion, command palette fonctionnelle, context menu, copy button) + splitter/resizable panels (.split-pane, initSplitPane v2.90.0 #443) + json-viewer (arbre JSON repliable, initJsonViewer v2.91.0 #446) + diff-viewer (.diff présentation diff pré-calculé, CSS-only, v2.94.0 #447)
 shared/
-  styles.css        # Agregateur CSS — imports des 4 modules + base reset
+  styles.css        # Agregateur CSS — @import fonts, tokens, themes, utilities, layout, components, base
   css/
     tokens.css      # Design tokens purs — variables CSS uniquement (:root, [data-mode="light"], themes acssi/nhood/auchan)
     utilities.css   # Classes utilitaires couleur, backgrounds, bordures, espacement, layout, radius, shadows, typo, accessibilité
@@ -107,7 +107,7 @@ Cf. issue #314 (convention décidée 2026-05-25, option A).
 
 ## Conventions
 - Chaque page importe `/shared/styles.css` + `/shared/nav.js` + `/shared/components.js`
-- Variables CSS dans `:root` de `shared/styles.css` — ne pas dupliquer
+- Variables CSS dans `shared/css/tokens.css` — ne pas dupliquer
 - Mobile-first : tout composant doit etre responsive
 - Pas de dependance externe (sauf Google Fonts)
 - Nouveaux composants : ajouter dans la page thematique appropriee + mettre a jour le compteur hero dans `site.html`
@@ -155,7 +155,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Pattern : `<section id="nom">` + `section-header` + `demo-box` avec exemples
    - Variantes : montrer au moins 2-3 variantes (tailles, etats, couleurs)
    - Respecter le style des sections existantes dans la meme page
-2. **CSS** : ajouter dans `shared/styles.css`
+2. **CSS** : nouveau module `shared/css/components/<nom>.css` + `@import` dans `components.css`
    - Section dediee avec commentaire `/* ===== NOM COMPOSANT ===== */`
    - Variables CSS uniquement (jamais de hex/rgb hardcode)
    - Mobile-first : media queries co-localisees avec le composant
