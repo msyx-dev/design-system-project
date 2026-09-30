@@ -188,7 +188,7 @@ ou le modal par défaut pour le détail.
 
 Le script `sync.sh` copie les fichiers DS avec le prefixe `ds-` :
 - `ds-tokens.css`, `ds-themes.css`, `ds-base.css`, `ds-utilities.css`, `ds-layout.css`, `ds-components.css`
-- `ds-fonts.css` (+ `fonts/*.woff2`) et `icons/sprite.svg` (self-hosted)
+- `ds-fonts.css` (+ `fonts/*.woff2`) et `icons/sprite.svg` (self-hosted). **Le sprite est reference en chemin absolu `/shared/icons/sprite.svg` par `ds-nav.js` et `ds-components.js`** : si vous utilisez ce JS (Niveau C), servez votre copie `icons/sprite.svg` a cette URL exacte (montez ou routez le dossier sous `/shared/icons/`) — meme contrainte que `graph/vendor/graph-layered.js` avec `--with-graph`.
 - **Niveau C (#372)** : `ds-styles.css` (agregateur), `ds-nav.js`, `ds-components.js` (shell JS)
 
 ### Sync automatique (tous les consommateurs)

@@ -70,6 +70,13 @@ sed 's#\.\./fonts/#./fonts/#g' "$DS_DIR/fonts.css" > "$TARGET/ds-fonts.css"
 # ─── Sprite SVG Lucide self-hosted (#367-373) ───────────────────────────────
 # Copié dans <TARGET>/icons/sprite.svg. Les consumers référencent l'icône via
 # <use href="icons/sprite.svg#i-{nom}"/> (relatif au dossier styles/).
+# ATTENTION — le ds-nav.js / ds-components.js livrés ci-dessous (Niveau C) référencent
+# eux le sprite par un chemin ABSOLU site-root `/shared/icons/sprite.svg` (cloche du
+# header, chevron du json-viewer…). Le CONSOMMATEUR qui utilise ce JS DOIT donc servir
+# sa copie à cette URL exacte — même contrainte que pour graph/vendor/graph-layered.js
+# (--with-graph, plus bas). Copie ici dans <TARGET>/icons/ pour rester corrélée au
+# chemin source ; à l'intégrateur de router/monter ce dossier sous /shared/icons/ sur
+# son site. Chemin non configurable : contrainte assumée du DS, pas un oubli (#951).
 mkdir -p "$TARGET/icons"
 cp "$SHARED_DIR/icons/sprite.svg" "$TARGET/icons/sprite.svg"
 
@@ -199,7 +206,7 @@ echo "   -> ds-layout.css       (header, sidebar, main)$(${NO_SHOWCASE} && echo 
 echo "   -> ds-components.css   (${COMPONENTS_MODE})"
 echo "   -> ds-fonts.css        (self-hosted woff2 + fonts/)"
 echo "   -> fonts/              (woff2 Space Grotesk / Inter / Fira Code)"
-echo "   -> icons/sprite.svg    (sprite Lucide self-hosted)"
+echo "   -> icons/sprite.svg    (sprite Lucide self-hosted — ds-nav.js/ds-components.js le référencent en /shared/icons/sprite.svg : à monter ou router sous cette URL exacte)"
 echo "   -> components/         (modules CSS resolus par les @import)"
 echo "   -> ds-nav.js           (Niveau C : header, sidebar, scroll-spy, SPA)"
 echo "   -> ds-components.js    (Niveau C : composants interactifs JS)"

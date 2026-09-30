@@ -75,6 +75,8 @@ jobs:
           ./tests/test-check-versions.sh
       - name: Run check-sync script tests — comparaison de contenu (anti-regression #951)
         run: npm run test:check-sync
+      - name: Run sync.sh ds-styles.css tests — imports relatifs ./ds-*.css (anti-regression #951)
+        run: npm run test:sync-styles
       - name: nav.js syntax regression (#206, #378)
         run: npm run test:syntax
       - name: Check innerHTML anti-XSS gate (#758)
