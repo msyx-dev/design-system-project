@@ -147,6 +147,31 @@
     border-color: color-mix(in srgb, var(--accent) 30%, transparent);
     color: var(--text);
 }
+/* Variante à libellé visible (#936) — trigger SANS icône : le carré de 32px
+   ci-dessus est dimensionné pour un glyphe (⋮, icône), pas pour du texte ; avec
+   `white-space: normal` hérité le libellé se cassait mot à mot et débordait du
+   carré. La variante élargit le trigger à son contenu (`width: auto`, pas de
+   retour à la ligne). Mobile-first : cible tactile 44px (DS-PRINCIPLES §3, WCAG
+   2.5.5), ramenée à la hauteur du carré de 32px dès le desktop. Un trigger AVEC
+   icône reste le carré de base : son libellé passe en `.sr-only` (nom accessible
+   sans largeur visuelle). */
+.action-menu-trigger--labeled {
+    width: auto;
+    height: auto;
+    min-height: 44px;
+    padding: 0 var(--space-md);
+    gap: var(--space-sm);
+    white-space: nowrap;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: var(--fw-semibold);
+    letter-spacing: normal;
+}
+@media (min-width: 768px) {
+    .action-menu-trigger--labeled {
+        min-height: 32px;
+    }
+}
 /* @deprecated v3 → .menu + classe-conteneur de positionnement. Surface héritée menu.css (#520). */
 /* position:fixed + top/right poses inline par le JS a l'ouverture (initActionMenu vanilla /
    <ActionMenu> React, #856) : le panneau est deplace dans document.body pour echapper au
