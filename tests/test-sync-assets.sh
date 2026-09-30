@@ -177,6 +177,9 @@ ERR="$(bash "$DS/shared/sync.sh" --assets=nhood "$(mktarget)" 2>&1 >/dev/null)";
 # Apres l'ajout d'une charte (+ une variante) : valide, copiee avec sa variante.
 echo '<svg id="nhood"/>' > "$DS/assets/logo-nhood.svg"
 echo '<svg id="nhood-dark"/>' > "$DS/assets/logo-nhood-dark.svg"
+# Une variante qui se trie APRES toutes les chartes : la derniere iteration de la deduction
+# echoue le motif ^[a-z0-9]+$, ce qui ne doit pas faire sortir sync.sh sous `set -e`.
+echo '<svg id="zz"/>' > "$DS/assets/logo-zz-variante.svg"
 H="$(mktarget)"
 bash "$DS/shared/sync.sh" --assets=nhood "$H" > /dev/null 2>&1; RC=$?
 [ "$RC" = "0" ] || BAD="$BAD [apres ajout : exit $RC au lieu de 0]"
