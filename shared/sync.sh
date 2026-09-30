@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # sync.sh — Synchronise les fichiers CSS du design system vers un projet consommateur
-# Usage : ./sync.sh [--no-showcase] [--components=<list|core>] <répertoire-cible>
+# Usage : ./sync.sh [--no-showcase] [--components=<list|core>] [--assets=<charte>[,<charte>…]] <répertoire-cible>
 # Exemple : ./sync.sh --no-showcase /home/deployer/projects/prod/acssi-core-project/src/styles/
 #
 # --no-showcase : supprime les règles showcase (.main section, .demo-*, .subsection, .subgroup-*)
@@ -10,6 +10,13 @@ set -euo pipefail
 # --components=core  : copie uniquement components-core.css (modules essentiels)
 # --components=<list>: copie uniquement les modules listés (ex: buttons,cards,forms)
 #                      Liste disponible : shared/CONSUMER_GUIDE.md#tree-shaking
+# --assets=<charte>[,<charte>…] : logos de marque en plus de MSYX, toujours copiée (#954).
+#                      Virgules, sans espaces. Une charte <c> est valide si `assets/logo-<c>.svg`
+#                      existe à la racine du DS (liste déduite des fichiers) et si <c> respecte
+#                      ^[a-z0-9]+$. Charte inconnue : erreur, exit 1, AVANT toute copie.
+#                      Fichiers copiés : logo-<c>.svg + logo-<c>-*.svg vers <cible>/assets/.
+#                      tree-noel.svg, sources/ et explorations/ ne sont jamais distribués.
+#                      sync.sh ne supprime jamais rien dans <cible>/assets/.
 #
 # Le script distribue un DS COMPLET (#367-373) : tokens, themes, utilities, layout,
 # base, components + fonts self-hosted (ds-fonts.css + fonts/*.woff2) + sprite SVG
@@ -21,12 +28,15 @@ set -euo pipefail
 NO_SHOWCASE=false
 COMPONENTS_LIST=""
 WITH_GRAPH=false
+ASSETS_LIST=""
 
 for ARG in "$@"; do
     case "$ARG" in
         --no-showcase)     NO_SHOWCASE=true ;;
         --components=*)    COMPONENTS_LIST="${ARG#--components=}" ;;
         --with-graph)      WITH_GRAPH=true ;;
+        # Plusieurs --assets= se cumulent (le dernier n'écrase pas les précédents).
+        --assets=*)        ASSETS_LIST="${ASSETS_LIST:+$ASSETS_LIST,}${ARG#--assets=}" ;;
     esac
 done
 
@@ -42,10 +52,49 @@ done
 
 SHARED_DIR="$(cd "$(dirname "$0")" && pwd)"
 DS_DIR="$SHARED_DIR/css"
-TARGET="${POSITIONAL[0]:?Usage: $0 [--no-showcase] [--components=core|<list>] <target-css-dir>}"
+TARGET="${POSITIONAL[0]:?Usage: $0 [--no-showcase] [--components=core|<list>] [--assets=<charte>[,<charte>...]] <target-css-dir>}"
 
 if [ ! -d "$TARGET" ]; then
     echo "ERREUR: répertoire cible inexistant : $TARGET" >&2
+    exit 1
+fi
+
+# ─── Assets de marque : validation de --assets AVANT toute copie (#954) ─────
+# Les chartes se déduisent des fichiers : `assets/logo-<c>.svg` à la racine du DS.
+# logo-msyx-dark.svg (variante) n'est pas une charte : son nom contient un `-`, donc
+# il ne passe pas ^[a-z0-9]+$. Ce même motif ferme `--assets=../x` et `--assets=ACSSI`.
+# Charte inconnue = erreur explicite, exit 1, cible intacte (la validation précède le
+# premier cp ; ne pas la déplacer après le socle CSS).
+ASSETS_SRC="$(dirname "$SHARED_DIR")/assets"
+ASSETS_AVAILABLE=()
+for F in "$ASSETS_SRC"/logo-*.svg; do
+    [ -f "$F" ] || continue
+    C="$(basename "$F" .svg)"; C="${C#logo-}"
+    [[ "$C" =~ ^[a-z0-9]+$ ]] && ASSETS_AVAILABLE+=("$C")
+done
+ASSETS_AVAILABLE_STR="$(IFS=','; echo "${ASSETS_AVAILABLE[*]:-}")"
+
+# MSYX est toujours copiée ; les doublons (et `msyx` redemandée) sont sans effet.
+ASSETS_CHARTES=(msyx)
+ASSETS_BAD=false
+if [ -n "$ASSETS_LIST" ]; then
+    IFS=',' read -ra ASSETS_REQ <<< "$ASSETS_LIST"
+    for C in "${ASSETS_REQ[@]}"; do
+        [ -n "$C" ] || continue          # `--assets=a,,b` : élément vide ignoré, comme les chaînes vides plus haut
+        if [[ " ${ASSETS_CHARTES[*]} " == *" $C "* ]]; then continue; fi
+        if [[ "$C" =~ ^[a-z0-9]+$ ]] && [ -f "$ASSETS_SRC/logo-$C.svg" ]; then
+            ASSETS_CHARTES+=("$C")
+        else
+            echo "ERREUR: charte inconnue pour --assets : '$C' (disponibles : $ASSETS_AVAILABLE_STR)" >&2
+            ASSETS_BAD=true
+        fi
+    done
+fi
+if [ ! -f "$ASSETS_SRC/logo-msyx.svg" ]; then
+    echo "ERREUR: charte msyx introuvable dans le DS source : $ASSETS_SRC/logo-msyx.svg" >&2
+    ASSETS_BAD=true
+fi
+if $ASSETS_BAD; then
     exit 1
 fi
 
@@ -79,6 +128,24 @@ sed 's#\.\./fonts/#./fonts/#g' "$DS_DIR/fonts.css" > "$TARGET/ds-fonts.css"
 # son site. Chemin non configurable : contrainte assumée du DS, pas un oubli (#951).
 mkdir -p "$TARGET/icons"
 cp "$SHARED_DIR/icons/sprite.svg" "$TARGET/icons/sprite.svg"
+
+# ─── Assets de marque : logos (#954) ────────────────────────────────────────
+# <TARGET>/assets/<fichier>. Par charte <c> : logo-<c>.svg + logo-<c>-*.svg, niveau
+# racine seulement — tree-noel.svg (inliné par FestiveDecor), sources/ et explorations/
+# ne correspondent à aucun de ces motifs et ne sont donc jamais distribués. Copie non
+# destructive : rien n'est supprimé dans <TARGET>/assets/ (un logo propre à l'app y
+# survit). Le DS ne référence ces fichiers depuis aucun CSS : c'est le HTML/JSX du
+# consommateur qui les pointe (cf. CONSUMER_GUIDE.md).
+mkdir -p "$TARGET/assets"
+ASSETS_COPIED=0
+for C in "${ASSETS_CHARTES[@]}"; do
+    for SRC in "$ASSETS_SRC/logo-$C.svg" "$ASSETS_SRC"/logo-"$C"-*.svg; do
+        [ -f "$SRC" ] || continue
+        cp "$SRC" "$TARGET/assets/"
+        ASSETS_COPIED=$((ASSETS_COPIED+1))
+    done
+done
+ASSETS_CHARTES_STR="$(IFS=','; echo "${ASSETS_CHARTES[*]}")"
 
 # ─── Niveau C : shell JS + agrégateur CSS (#372) ────────────────────────────
 # Distribue le shell complet (header, sidebar, scroll-spy, SPA, composants
@@ -199,13 +266,14 @@ fi
 
 echo "Design System v${DS_VERSION} synchronisé vers $TARGET"
 echo "   -> ds-tokens.css       (variables CSS)"
-echo "   -> ds-themes.css       (themes ACSSI / Nhood)"
+echo "   -> ds-themes.css       (themes MSYX / ACSSI / Nhood / Auchan / Noël)"
 echo "   -> ds-base.css         (socle : reset, body, texture grain)"
 echo "   -> ds-utilities.css    (classes utilitaires)"
 echo "   -> ds-layout.css       (header, sidebar, main)$(${NO_SHOWCASE} && echo ' [showcase stripped]' || true)"
 echo "   -> ds-components.css   (${COMPONENTS_MODE})"
 echo "   -> ds-fonts.css        (self-hosted woff2 + fonts/)"
 echo "   -> fonts/              (woff2 Space Grotesk / Inter / Fira Code)"
+echo "   -> assets/             (logos de marque : ${ASSETS_CHARTES_STR} — ${ASSETS_COPIED} fichiers ; le DS ne les référence pas, à servir ou importer côté consommateur)"
 echo "   -> icons/sprite.svg    (sprite Lucide self-hosted — ds-nav.js/ds-components.js le référencent en /shared/icons/sprite.svg : à monter ou router sous cette URL exacte)"
 echo "   -> components/         (modules CSS resolus par les @import)"
 echo "   -> ds-nav.js           (Niveau C : header, sidebar, scroll-spy, SPA)"
