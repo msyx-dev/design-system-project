@@ -193,7 +193,7 @@ En-tête de page DS (`.section-header`) avec overline, titre, lead, breadcrumb e
 | `overline`   | `string`                   | —        | Label overline au-dessus du titre                |
 | `lead`       | `string`                   | —        | Texte descriptif sous le titre                   |
 | `actions`    | `ReactNode`                | —        | Slot boutons d'actions à droite                  |
-| `breadcrumb` | `ReactNode`                | —        | Slot breadcrumb au-dessus                        |
+| `breadcrumb` | `ReactNode`                | —        | Slot fil d'Ariane au-dessus — attend un `<Breadcrumb>` (porte le landmark `nav`) |
 | `as`         | `"h1" \| "h2" \| "h3"`     | `"h1"`   | Niveau de heading du titre                       |
 | `className`  | `string`                   | —        | Classe CSS additionnelle sur la racine           |
 
