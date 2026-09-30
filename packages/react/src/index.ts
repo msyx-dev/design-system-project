@@ -656,3 +656,7 @@ export type {
   FestiveDecorProps,
   FestiveSnowToggleProps,
 } from "./components/FestiveDecor/FestiveDecor";
+
+// ─── Textarea — #952 ───
+export { Textarea } from "./components/Textarea/Textarea";
+export type { TextareaProps } from "./components/Textarea/Textarea";
