@@ -31,6 +31,46 @@
     </div>
 </section>
 
+<section id="textarea">
+    <div class="section-header"><span class="overline">Formulaires</span><h2>Textarea</h2><p>Zone de saisie multi-lignes avec aide, erreur et compteur de caractères (limite dure via <code class="code-inline">maxlength</code>). Le compteur est pilote par <code class="code-inline">initInputCounters()</code>.</p></div>
+    <div class="demo-grid demo-grid-2">
+        <div class="demo-box">
+            <span class="demo-label">Aide + compteur</span>
+            <div class="input-group">
+                <label class="input-label" for="form-textarea-counter">Description</label>
+                <textarea class="input" id="form-textarea-counter" rows="4" maxlength="200" placeholder="Décrivez votre projet..." aria-describedby="form-textarea-counter-hint form-textarea-counter-count"></textarea>
+                <div class="input-footer">
+                    <span class="input-hint" id="form-textarea-counter-hint">200 caractères maximum.</span>
+                    <span class="input-counter" id="form-textarea-counter-count">0 / 200</span>
+                    <span class="sr-only" aria-live="polite"></span>
+                </div>
+            </div>
+        </div>
+        <div class="demo-box">
+            <span class="demo-label">Erreur + compteur</span>
+            <div class="input-group" style="margin-bottom:1rem;">
+                <label class="input-label" for="form-textarea-error">Commentaire</label>
+                <textarea class="input input-error" id="form-textarea-error" rows="3" maxlength="200" aria-invalid="true" aria-describedby="form-textarea-error-msg form-textarea-error-count">Trop court.</textarea>
+                <div class="input-footer">
+                    <span class="input-error-msg" id="form-textarea-error-msg">Le commentaire doit contenir au moins 20 caractères.</span>
+                    <span class="input-counter" id="form-textarea-error-count">11 / 200</span>
+                    <span class="sr-only" aria-live="polite"></span>
+                </div>
+            </div>
+            <span class="demo-label">Valeur initiale au-delà de la limite</span>
+            <div class="input-group">
+                <label class="input-label" for="form-textarea-over">Description importée</label>
+                <textarea class="input" id="form-textarea-over" rows="4" maxlength="200" aria-describedby="form-textarea-over-hint form-textarea-over-count">Cette description a été collée depuis un autre fichier : elle dépasse volontairement la limite de 200 caractères du champ. Le compteur passe en couleur d'erreur, sans tronquer le texte déjà saisi dans le champ.</textarea>
+                <div class="input-footer">
+                    <span class="input-hint" id="form-textarea-over-hint">La saisie au clavier est bloquée à la limite.</span>
+                    <span class="input-counter input-counter--over" id="form-textarea-over-count">210 / 200</span>
+                    <span class="sr-only" aria-live="polite"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- CONTROLS -->
 <section id="controls">
     <div class="section-header"><span class="overline">Formulaires</span><h2>Controls</h2><p>Toggles, checkboxes et radios.</p></div>

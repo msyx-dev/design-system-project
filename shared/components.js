@@ -71,6 +71,7 @@
 //  Virtual list (fenetree)      initVirtualList()            .virtual-list
 //  Version notes (pastille)     initVersionNotes()           .version-badge[data-version-notes]
 //  Feedback header standard     initHeaderUserFeedback()     #ds-user-feedback-form (#708)
+//  Compteur de caracteres       initInputCounters()          .input-group .input-counter
 //
 // ─── Pattern anti-double-bind ─────────────────────────────────────────────
 //  Tous les init* utilisent `element.dataset.bound = '1'` pour éviter
@@ -5575,6 +5576,40 @@ function initPasswordToggle() {
 }
 window.__initPasswordToggle = initPasswordToggle;
 
+// ===== INPUT COUNTER (#952) =====
+// Hook : .input-counter dans un .input-group ; champ = .input[maxlength] du meme groupe.
+// Unite = value.length (unites UTF-16), meme mesure que le maxlength natif.
+// Le texte du compteur passe par textContent (jamais innerHTML, DS-PRINCIPLES §11).
+function initInputCounters() {
+    document.querySelectorAll('.input-group .input-counter').forEach(function(counter) {
+        if (counter.dataset.bound) return;
+        var group = counter.closest('.input-group');
+        var field = group && group.querySelector('.input[maxlength]');
+        if (!field) return;
+        var max = parseInt(field.getAttribute('maxlength'), 10);
+        if (isNaN(max)) return;
+        counter.dataset.bound = '1';
+        var live = group.querySelector('.input-footer .sr-only[aria-live]');
+        function sync() {
+            var count = field.value.length;
+            counter.textContent = count + ' / ' + max;
+            counter.classList.toggle('input-counter--over', count > max);
+            if (live) {
+                // Ecrit seulement si le texte change : une region live reecrite a
+                // l'identique peut etre re-annoncee a chaque frappe par certains lecteurs.
+                var message = count >= max ? 'Limite de caractères atteinte' : '';
+                if (live.textContent !== message) live.textContent = message;
+            }
+        }
+        field.addEventListener('input', sync);
+        // Le reset du formulaire ne declenche aucun 'input' ; l'evenement 'reset'
+        // part AVANT la remise a zero -> relire au tour suivant.
+        if (field.form) field.form.addEventListener('reset', function() { setTimeout(sync, 0); });
+        sync();
+    });
+}
+window.__initInputCounters = initInputCounters;
+
 // ===== COLOR INPUT (#448) =====
 function initColorInput() {
     document.querySelectorAll('[data-color-input]').forEach(function(wrapper) {
@@ -7964,6 +7999,7 @@ function reinitAll() {
     initMentionInput();
     initAuthFlows();
     initPasswordToggle();
+    initInputCounters();
     initColorInput();
     initFormValidation();
     initUsageMeter();
