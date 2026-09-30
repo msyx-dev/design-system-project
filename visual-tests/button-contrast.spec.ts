@@ -21,14 +21,17 @@
  *      du texte et chaque arret `rgb()` opaque de `backgroundImage`.
  *
  * Decisions de mesure :
- * - Opacite de l'element (`.login-submit:hover { opacity: .85 }`) : le pixel
- *   capture est deja melange avec le fond du banc ; la couleur du texte l'est
- *   aussi a l'ecran, donc on la recompose (alpha · texte + (1 - alpha) · fond
- *   du banc) au lieu de comparer un texte pur a un fond melange.
- * - Le reflet `::before` est peint AU-DESSUS du texte (element positionne) ;
- *   il n'est PAS modelise ici. Sans effet sur un texte blanc ; pour un texte
- *   sombre, le texte reel est un peu plus clair que sa couleur nominale au
- *   survol, donc le ratio reel est legerement inferieur au ratio mesure.
+ * - La couleur de texte comparee est celle EFFECTIVEMENT PEINTE, lue sur une
+ *   2e capture (texte visible) : moyenne des pixels a couverture pleine, ceux
+ *   qui different le plus de la capture texte masque. Deux effets la
+ *   modifient et la couleur calculee (`getComputedStyle().color`) les ignore :
+ *     . le reflet `::before` du survol (`--overlay-white-15`) est peint
+ *       AU-DESSUS du texte (element positionne) : un texte sombre est
+ *       eclairci d'environ 5 % (mesure : #1a0f00 -> ~#261c11) ;
+ *     . l'opacite de l'element (`.login-submit:hover { opacity: .85 }`) melange
+ *       texte ET fond au banc.
+ *   Repli (aucun pixel de texte identifiable) : couleur calculee recomposee
+ *   avec l'opacite de l'element.
  * - Etats exclus : `disabled` (opacite .5) et `.btn-loading` — WCAG exempte
  *   les composants inactifs.
  *
@@ -122,6 +125,8 @@ const parseStops = (bgImage: string): { rgb: Rgb; alpha: number }[] => {
 
 type Measure = {
   text: Rgb;
+  composed: Rgb;
+  shown: Rgb;
   textAlpha: number;
   opacity: number;
   bench: Rgb;
@@ -173,17 +178,21 @@ async function measureButton(page: Page, probe: string): Promise<Measure> {
   const textRgb: Rgb = [parsed[0], parsed[1], parsed[2]];
   const benchRgb: Rgb = [benchParsed[0], benchParsed[1], benchParsed[2]];
 
-  // Couleur de texte telle qu'affichee : recomposee si l'element est translucide.
+  // Couleur de texte telle qu'affichee, recomposee (repli) si l'element est translucide.
   const a = info.opacity;
-  const shownText: Rgb = [0, 1, 2].map(
+  const composedText: Rgb = [0, 1, 2].map(
     (i) => a * textRgb[i] + (1 - a) * benchRgb[i],
   ) as Rgb;
 
-  // 3. Capture du bouton, texte masque (capture alignee sur la grille de pixels).
+  // 3. Captures du bouton (alignees sur la grille de pixels) : texte VISIBLE
+  //    (pour lire la couleur reellement peinte du texte), puis texte MASQUE
+  //    (pour lire le fond sous le texte).
   const x = Math.floor(info.box.left);
   const y = Math.floor(info.box.top);
   const w = Math.ceil(info.box.right) - x;
   const h = Math.ceil(info.box.bottom) - y;
+  const clip = { x, y, width: w, height: h };
+  const pngVisible = await page.screenshot({ clip });
   await page.evaluate((s) => {
     const el = document.querySelector<HTMLElement>(s)!;
     el.style.setProperty("color", "transparent", "important");
@@ -191,7 +200,7 @@ async function measureButton(page: Page, probe: string): Promise<Measure> {
   }, sel);
   let png: Buffer;
   try {
-    png = await page.screenshot({ clip: { x, y, width: w, height: h } });
+    png = await page.screenshot({ clip });
   } finally {
     await page.evaluate((s) => {
       const el = document.querySelector<HTMLElement>(s)!;
@@ -200,40 +209,80 @@ async function measureButton(page: Page, probe: string): Promise<Measure> {
     }, sel);
   }
 
-  // 4. Decodage dans la page : couleurs distinctes sous la boite du texte.
+  // 4. Decodage dans la page : couleurs distinctes du fond sous la boite du
+  //    texte (capture masquee) + couleur peinte du texte = moyenne des pixels
+  //    a couverture pleine (ceux qui different le plus entre les 2 captures).
+  //    Le reflet `::before` du survol est peint AU-DESSUS du texte, et
+  //    l'opacite d'un bouton (`.login-submit:hover`) melange le texte au banc :
+  //    seule cette mesure les voit, la couleur nominale les ignore.
   const region = {
     x0: Math.max(0, Math.floor(info.text.left) - x),
     y0: Math.max(0, Math.floor(info.text.top) - y),
     x1: Math.min(w, Math.ceil(info.text.right) - x),
     y1: Math.min(h, Math.ceil(info.text.bottom) - y),
   };
-  const colors = await page.evaluate(
-    async ({ b64, reg }) => {
-      const img = new Image();
-      img.src = "data:image/png;base64," + b64;
-      await img.decode();
-      const cv = document.createElement("canvas");
-      cv.width = img.naturalWidth;
-      cv.height = img.naturalHeight;
-      const ctx = cv.getContext("2d")!;
-      ctx.drawImage(img, 0, 0);
-      const x1 = Math.min(reg.x1, cv.width);
-      const y1 = Math.min(reg.y1, cv.height);
-      const data = ctx.getImageData(
-        reg.x0,
-        reg.y0,
-        x1 - reg.x0,
-        y1 - reg.y0,
-      ).data;
+  const decoded = await page.evaluate(
+    async ({ hidden, visible, reg }) => {
+      const read = async (b64: string) => {
+        const img = new Image();
+        img.src = "data:image/png;base64," + b64;
+        await img.decode();
+        const cv = document.createElement("canvas");
+        cv.width = img.naturalWidth;
+        cv.height = img.naturalHeight;
+        const ctx = cv.getContext("2d")!;
+        ctx.drawImage(img, 0, 0);
+        const x1 = Math.min(reg.x1, cv.width);
+        const y1 = Math.min(reg.y1, cv.height);
+        return ctx.getImageData(reg.x0, reg.y0, x1 - reg.x0, y1 - reg.y0).data;
+      };
+      const hid = await read(hidden);
+      const vis = await read(visible);
       const seen = new Map<number, number>();
-      for (let i = 0; i < data.length; i += 4) {
-        const k = (data[i] << 16) | (data[i + 1] << 8) | data[i + 2];
+      let maxDelta = 0;
+      for (let i = 0; i < hid.length; i += 4) {
+        const k = (hid[i] << 16) | (hid[i + 1] << 8) | hid[i + 2];
         seen.set(k, (seen.get(k) ?? 0) + 1);
+        const d =
+          Math.abs(vis[i] - hid[i]) +
+          Math.abs(vis[i + 1] - hid[i + 1]) +
+          Math.abs(vis[i + 2] - hid[i + 2]);
+        if (d > maxDelta) maxDelta = d;
       }
-      return [...seen.entries()];
+      const sum = [0, 0, 0];
+      let core = 0;
+      for (let i = 0; i < hid.length; i += 4) {
+        const d =
+          Math.abs(vis[i] - hid[i]) +
+          Math.abs(vis[i + 1] - hid[i + 1]) +
+          Math.abs(vis[i + 2] - hid[i + 2]);
+        if (maxDelta > 0 && d >= maxDelta * 0.98) {
+          sum[0] += vis[i];
+          sum[1] += vis[i + 1];
+          sum[2] += vis[i + 2];
+          core++;
+        }
+      }
+      return {
+        colors: [...seen.entries()],
+        maxDelta,
+        core,
+        glyph: core ? sum.map((v) => v / core) : null,
+      };
     },
-    { b64: png.toString("base64"), reg: region },
+    {
+      hidden: png.toString("base64"),
+      visible: pngVisible.toString("base64"),
+      reg: region,
+    },
   );
+  const colors = decoded.colors;
+  // Texte effectivement peint ; repli sur la couleur recomposee si aucun pixel
+  // de texte n'est identifiable (ecart trop faible entre les 2 captures).
+  const shownText: Rgb =
+    decoded.glyph && decoded.maxDelta >= 40
+      ? (decoded.glyph as Rgb)
+      : composedText;
 
   // 5. pixelMin.
   let pixels = 0;
@@ -244,14 +293,17 @@ async function measureButton(page: Page, probe: string): Promise<Measure> {
     pixelMin = Math.min(pixelMin, contrast(shownText, px));
   }
 
-  // 6. stopMin (arrets opaques du degrade calcule).
+  // 6. stopMin (arrets opaques du degrade calcule ; couleur nominale, donc
+  //    deterministe et independante de l'anticrenelage).
   const stops = parseStops(info.bgImage).filter((s) => s.alpha === 1);
   const stopMin = stops.length
-    ? Math.min(...stops.map((s) => contrast(shownText, s.rgb)))
+    ? Math.min(...stops.map((s) => contrast(composedText, s.rgb)))
     : null;
 
   return {
     text: textRgb,
+    composed: composedText,
+    shown: shownText,
     textAlpha: parsed[3],
     opacity: a,
     bench: benchRgb,
@@ -360,7 +412,7 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
         `hover=${fmt(r.hover.pixelMin)}${flag(r.hover.pixelMin)} ` +
         `${r.solid ? "SOLID " : "rapport"} ` +
         `${r.solid && worst < CONTRAST_MIN ? "KO" : "  "} ` +
-        `texte=${hex(r.rest.text)} arrets=${r.rest.stops.join(">") || "-"}`
+        `texte=${hex(r.rest.text)}${hex(r.hover.shown) !== hex(r.rest.text) ? `(survol ${hex(r.hover.shown)})` : ""} arrets=${r.rest.stops.join(">") || "-"}`
       );
     });
     console.log(
@@ -380,6 +432,7 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
             probe: r.probe,
             solid: r.solid,
             text: hex(r.rest.text),
+            hoverText: hex(r.hover.shown),
             stops: r.rest.stops,
             backgroundImage: r.rest.bgImage,
             stopMin: r.rest.stopMin === null ? null : round2(r.rest.stopMin),
@@ -411,6 +464,18 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
           )
           .toBeGreaterThan(0);
       }
+      // Coherence de la mesure du texte : au repos rien ne recouvre le texte
+      // (pas de reflet, opacite 1), donc la couleur PEINTE doit egaler la
+      // couleur calculee — sinon l'estimation de la couleur peinte est faussee.
+      const drift = Math.max(
+        ...[0, 1, 2].map((i) => Math.abs(r.rest.shown[i] - r.rest.composed[i])),
+      );
+      expect
+        .soft(
+          drift,
+          `${projectName} ${r.probe} rest: couleur peinte ${hex(r.rest.shown)} != couleur calculee ${hex(r.rest.composed)} (mesure du texte faussee)`,
+        )
+        .toBeLessThanOrEqual(4);
       if (!r.solid) continue;
       expect
         .soft(
