@@ -37,6 +37,8 @@ new_tmp() {
 }
 
 # run_check <dir> : lance check-sync.sh, stocke la sortie dans $OUT et le code dans $RC.
+# Les assertions utilisent `grep -q ... <<< "$OUT"`, jamais `echo "$OUT" | grep -q` : sous
+# pipefail, grep -q quitte au 1er match, echo prend SIGPIPE et le pipeline vaut 141 (test flaky).
 run_check() {
   OUT="$(bash shared/check-sync.sh "$1" 2>&1)"
   RC=$?
@@ -56,7 +58,7 @@ echo "Test A: consommateur synchronise (defaut) -> 0 DRIFT (exit 0 attendu)..."
 A="$(new_tmp)"
 sync_into "$A"
 run_check "$A"
-if [ "$RC" -eq 0 ] && ! echo "$OUT" | grep -qE '^ +(DRIFT|MISSING|NO-TAG)'; then pass; else fail "un consommateur fraichement synchronise doit etre a jour (rc=$RC)"; fi
+if [ "$RC" -eq 0 ] && ! grep -qE '^ +(DRIFT|MISSING|NO-TAG)' <<< "$OUT"; then pass; else fail "un consommateur fraichement synchronise doit etre a jour (rc=$RC)"; fi
 
 # --- Test B : themes.css amputé d'un theme, en-tete inchange -> DRIFT (le defaut #951) ---
 echo "Test B: ds-themes.css sans un theme, en-tete egal (DRIFT attendu)..."
@@ -72,7 +74,7 @@ elif [ "$(sed -n 2p "$B/ds-themes.css")" != "$(sed -n 2p shared/css/themes.css)"
   echo "  FAIL: l'en-tete a bouge (fixture invalide)"; FAIL=$((FAIL+1))
 else
   run_check "$B"
-  if [ "$RC" -eq 1 ] && echo "$OUT" | grep -qE 'DRIFT +ds-themes\.css .*contenu différent'; then pass; else fail "contenu modifie a en-tete egal doit sortir DRIFT sur ds-themes.css (rc=$RC)"; fi
+  if [ "$RC" -eq 1 ] && grep -qE 'DRIFT +ds-themes\.css .*contenu différent' <<< "$OUT"; then pass; else fail "contenu modifie a en-tete egal doit sortir DRIFT sur ds-themes.css (rc=$RC)"; fi
 fi
 
 # --- Test C : ds-base.css modifie a en-tete egal -> DRIFT (paire base.css ajoutee) ---
@@ -81,7 +83,7 @@ C="$(new_tmp)"
 sync_into "$C"
 printf '\n/* divergence locale */\nbody { margin: 1px; }\n' >> "$C/ds-base.css"
 run_check "$C"
-if [ "$RC" -eq 1 ] && echo "$OUT" | grep -qE 'DRIFT +ds-base\.css .*contenu différent'; then pass; else fail "ds-base.css modifie doit sortir DRIFT (rc=$RC)"; fi
+if [ "$RC" -eq 1 ] && grep -qE 'DRIFT +ds-base\.css .*contenu différent' <<< "$OUT"; then pass; else fail "ds-base.css modifie doit sortir DRIFT (rc=$RC)"; fi
 
 # --- Test D : --no-showcase -> layout amputé, PAS de faux DRIFT ---
 echo "Test D: sync.sh --no-showcase (ds-layout.css amputé) -> pas de faux DRIFT (exit 0 attendu)..."
@@ -112,7 +114,7 @@ F="$(new_tmp)"
 sync_into "$F"
 rm -f "$F/ds-base.css"
 run_check "$F"
-if [ "$RC" -eq 1 ] && echo "$OUT" | grep -qE 'MISSING +ds-base\.css'; then pass; else fail "ds-base.css absent doit sortir MISSING (rc=$RC)"; fi
+if [ "$RC" -eq 1 ] && grep -qE 'MISSING +ds-base\.css' <<< "$OUT"; then pass; else fail "ds-base.css absent doit sortir MISSING (rc=$RC)"; fi
 
 # --- Test G : contenu ET en-tete differents -> DRIFT de version ---
 echo "Test G: ds-themes.css a un en-tete ancien (DRIFT de version attendu)..."
@@ -120,7 +122,7 @@ G="$(new_tmp)"
 sync_into "$G"
 sed -i '2s#@ds-version: [0-9.]*#@ds-version: 2.67.0#' "$G/ds-themes.css"
 run_check "$G"
-if [ "$RC" -eq 1 ] && echo "$OUT" | grep -qE 'DRIFT +ds-themes\.css .*local v2\.67\.0'; then pass; else fail "en-tete ancien doit sortir DRIFT avec les deux versions (rc=$RC)"; fi
+if [ "$RC" -eq 1 ] && grep -qE 'DRIFT +ds-themes\.css .*local v2\.67\.0' <<< "$OUT"; then pass; else fail "en-tete ancien doit sortir DRIFT avec les deux versions (rc=$RC)"; fi
 
 # --- Test H : limite ASSUMEE du regime "header" (documentee dans check-sync.sh) ---
 # ds-layout.css / ds-components.css sont transformes par sync.sh : seule leur version est
