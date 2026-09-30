@@ -212,8 +212,9 @@
     --border-hover: rgba(var(--accent-rgb), 0.35);
     --btn-danger-bg-end: #913d00;
     --btn-danger-bg-start: #a54600;
-    --btn-primary-bg-end: #f45343;
-    --btn-primary-bg-start: #ff6b59;
+    --btn-on-primary: #ffffff;
+    --btn-primary-bg-end: #ba0c07;
+    --btn-primary-bg-start: #c9251a;
     --btn-success-bg-end: #00622f;
     --btn-success-bg-start: #007136;
     --btn-warning-bg-end: #c69100;

@@ -329,6 +329,7 @@
     --btn-on-danger: #ffffff;       /* AA — 4.83:1 sur #ef4444 */
     --btn-on-success: #ffffff;      /* AA — 4.55:1 sur #22c55e (large text) */
     --btn-on-warning: #1a0f00;      /* AAA — 11.7:1 sur #f59e0b (noir chaud sur ambre) */
+    --btn-on-primary: var(--text-on-accent); /* texte des boutons primaires (#944) — alias de --text-on-accent : le rendu ne change nulle part, sauf Auchan sombre qui le surcharge (blanc). Une seule déclaration : :root et [data-mode="light"] sont le même <html>, le var() résout avec le --text-on-accent du thème/mode actif. */
     --btn-shadow-alpha: 35%;
     /* Fond des boutons pleins — tokens dédiés (#944) : hex littéral, JAMAIS dérivé du dégradé de marque ni des
        sémantiques (partagés hors boutons). Déclarés dans les 4 couches (DS-PRINCIPLES §2), réglés à la mesure

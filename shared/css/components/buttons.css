@@ -2,7 +2,7 @@
 /* buttons.css — extracted from components.css v2.35.0 */
 
 /* ===== BUTTONS ===== */
-.btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, var(--btn-primary-bg-start), var(--btn-primary-bg-end)); color: var(--text-on-accent); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; transition: transform var(--duration-slow) var(--ease-standard), box-shadow var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); border: none; cursor: pointer; position: relative; overflow: hidden; font-family: var(--font-sans); }
+.btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, var(--btn-primary-bg-start), var(--btn-primary-bg-end)); color: var(--btn-on-primary); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; transition: transform var(--duration-slow) var(--ease-standard), box-shadow var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); border: none; cursor: pointer; position: relative; overflow: hidden; font-family: var(--font-sans); }
 .btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--overlay-white-15), transparent); opacity: 0; transition: opacity var(--duration-slow); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 35%, transparent); }
 .btn-primary:hover::before { opacity: 1; }
