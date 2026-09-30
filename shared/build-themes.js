@@ -11,7 +11,37 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const THEMES_DIR = path.join(ROOT, 'themes');
 const OUT = path.join(__dirname, 'css', 'themes.css');
-const VERSION = '2.67.0';
+const TOKENS = path.join(__dirname, 'css', 'tokens.css');
+
+/**
+ * Lit la version du DS dans l'en-tete `@ds-version` de tokens.css (source de verite
+ * du bump synchrone, cf. shared/check-versions.sh).
+ *
+ * Ne JAMAIS retomber sur une valeur par defaut ni sur une constante : une version
+ * figee ici (`const VERSION = '2.67.0'`, #951) est reecrite dans l'en-tete de
+ * themes.css a CHAQUE regeneration. Aucun bump n'etait donc possible : source et
+ * copie consommateur portaient toutes deux 2.67.0, et la ligne ds-themes.css de
+ * check-sync.sh ne pouvait structurellement jamais signaler d'ecart (muette par
+ * construction, meme apres l'ajout des themes Auchan et Noel).
+ * Version illisible = echec bruyant, jamais de repli silencieux : c'est ce silence
+ * qui a cree le defaut.
+ */
+function readDsVersion() {
+    let css;
+    try {
+        css = fs.readFileSync(TOKENS, 'utf8');
+    } catch (err) {
+        console.error(`Error reading ${TOKENS}: ${err.message}`);
+        process.exit(1);
+    }
+    const match = css.match(/@ds-version:\s*(\d+\.\d+\.\d+)/);
+    if (!match) {
+        console.error(`Error: no "@ds-version: X.Y.Z" header found in ${TOKENS}`);
+        console.error('Refusing to generate themes.css with a made-up version (#951).');
+        process.exit(1);
+    }
+    return match[1];
+}
 
 /**
  * Render a CSS block with alphabetically sorted properties.
@@ -26,6 +56,9 @@ function renderBlock(selector, vars) {
 }
 
 function main() {
+    // Version lue AVANT toute ecriture : echec => themes.css intact, pas de fichier a moitie ecrit.
+    const VERSION = readDsVersion();
+
     // Read and sort all JSON theme files
     let files;
     try {
