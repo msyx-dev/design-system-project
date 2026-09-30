@@ -16,6 +16,7 @@
     "test:categorical": "node tests/regression/categorical-palette.test.js",
     "test:version-notes": "node tests/regression/generate-version-notes.test.js",
     "test:registry-react-exports": "node tests/regression/generate-registry-react-exports.test.js",
+    "test:check-orphans": "node tests/regression/check-orphans.test.js",
     "test:check-sync": "bash tests/test-check-sync.sh",
     "test:sync-styles": "bash tests/test-sync-styles.sh",
     "test:graph-lib": "node tests/regression/graph-lib.test.js",
