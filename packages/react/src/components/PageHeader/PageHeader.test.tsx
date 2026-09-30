@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { PageHeader } from "./PageHeader";
+import { Breadcrumb } from "../Breadcrumb/Breadcrumb";
 
 describe("PageHeader — rendu minimum (title seul)", () => {
   it("rend un <section> avec la classe section-header", () => {
@@ -70,14 +71,58 @@ describe("PageHeader — avec actions", () => {
 });
 
 describe("PageHeader — avec breadcrumb", () => {
-  it("rend le slot breadcrumb dans <nav> avec aria-label", () => {
+  it("rend le slot breadcrumb dans un conteneur .section-header-breadcrumb", () => {
     const { container } = render(
       <PageHeader title="Aksyva" breadcrumb={<a href="/">Accueil</a>} />,
     );
-    const nav = container.querySelector("nav.section-header-breadcrumb");
-    expect(nav).not.toBeNull();
-    expect(nav?.getAttribute("aria-label")).toBe("Fil d'ariane");
-    expect(nav?.querySelector("a")?.textContent).toBe("Accueil");
+    const wrapper = container.querySelector(".section-header-breadcrumb");
+    expect(wrapper).not.toBeNull();
+    expect(wrapper?.querySelector("a")?.textContent).toBe("Accueil");
+  });
+
+  it("le conteneur est un <div> non landmark : ni <nav>, ni role, ni aria-label (#937)", () => {
+    const { container } = render(
+      <PageHeader title="Aksyva" breadcrumb={<a href="/">Accueil</a>} />,
+    );
+    const wrapper = container.querySelector(".section-header-breadcrumb");
+    expect(wrapper?.tagName).toBe("DIV");
+    expect(wrapper?.hasAttribute("role")).toBe(false);
+    expect(wrapper?.hasAttribute("aria-label")).toBe(false);
+  });
+
+  it("avec un <Breadcrumb> : exactement UN landmark navigation, nommé « Fil d'Ariane » (#937)", () => {
+    render(
+      <PageHeader
+        title="Aksyva"
+        breadcrumb={
+          <Breadcrumb
+            items={[
+              { id: "home", label: "Accueil", href: "/" },
+              { id: "current", label: "Aksyva" },
+            ]}
+          />
+        }
+      />,
+    );
+    expect(screen.getAllByRole("navigation")).toHaveLength(1);
+    // Nom résolu sans `exact: false` : une seule casse existe, celle du Breadcrumb.
+    expect(
+      screen.getByRole("navigation", { name: "Fil d'Ariane" }),
+    ).toBeInTheDocument();
+  });
+
+  it("le <nav> du Breadcrumb est DANS .section-header-breadcrumb, sans <nav> ancêtre (#937)", () => {
+    const { container } = render(
+      <PageHeader
+        title="Aksyva"
+        breadcrumb={
+          <Breadcrumb items={[{ id: "home", label: "Accueil", href: "/" }]} />
+        }
+      />,
+    );
+    const nav = container.querySelector("nav");
+    expect(nav?.parentElement?.className).toBe("section-header-breadcrumb");
+    expect(nav?.parentElement?.closest("nav")).toBeNull();
   });
 });
 
@@ -146,11 +191,13 @@ describe("PageHeader — structure HTML", () => {
     );
     const section = container.querySelector("section");
     const children = section ? Array.from(section.children) : [];
-    const navIdx = children.findIndex((el) => el.tagName === "NAV");
+    const breadcrumbIdx = children.findIndex((el) =>
+      el.classList.contains("section-header-breadcrumb"),
+    );
     const rowIdx = children.findIndex((el) =>
       el.classList.contains("section-header-row"),
     );
-    expect(navIdx).toBeGreaterThanOrEqual(0);
-    expect(navIdx).toBeLessThan(rowIdx);
+    expect(breadcrumbIdx).toBeGreaterThanOrEqual(0);
+    expect(breadcrumbIdx).toBeLessThan(rowIdx);
   });
 });

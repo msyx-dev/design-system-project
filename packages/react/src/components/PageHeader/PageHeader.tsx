@@ -11,7 +11,15 @@ export interface PageHeaderProps {
   lead?: string;
   /** Slot ReactNode pour les boutons d'actions à droite — optionnel */
   actions?: ReactNode;
-  /** Slot ReactNode pour le breadcrumb au-dessus — optionnel */
+  /**
+   * Slot ReactNode pour le fil d'Ariane au-dessus — optionnel.
+   *
+   * Attend un `<Breadcrumb>` : c'est lui qui porte le landmark
+   * `<nav aria-label="Fil d'Ariane">`. `PageHeader` n'en ajoute aucun (son
+   * conteneur `.section-header-breadcrumb` est un `<div>` de mise en forme) ;
+   * passer ici un `<a>` ou une liste nue ne produit donc PAS de landmark
+   * `navigation` — enveloppez-les dans votre propre `<nav aria-label>`.
+   */
   breadcrumb?: ReactNode;
   /** Niveau de heading du titre — défaut : "h1" */
   as?: PageHeaderHeadingLevel;
@@ -33,9 +41,9 @@ export function PageHeader({
   return (
     <section className={rootClasses}>
       {breadcrumb != null && (
-        <nav className="section-header-breadcrumb" aria-label="Fil d'ariane">
-          {breadcrumb}
-        </nav>
+        // <div>, pas <nav> : le landmark appartient au <Breadcrumb> du slot.
+        // Un <nav> ici imbriquerait deux landmarks « navigation » (#937).
+        <div className="section-header-breadcrumb">{breadcrumb}</div>
       )}
       <div className="section-header-row">
         <div className="section-header-text">
