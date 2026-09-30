@@ -58,7 +58,7 @@ import * as path from "node:path";
 
 const FIXTURE = "/visual-tests/fixtures/button-contrast-944.html";
 const CONTRAST_MIN = 4.5;
-const ENFORCE = false; // T1 : rapport. T3 : true.
+const ENFORCE = true; // T3 : bloquant (T1 : rapport). Ne JAMAIS baisser CONTRAST_MIN ni retirer un cas de SOLID pour passer.
 
 // Cas bloquants (fond plein) — data-probe de la fixture :
 const SOLID = [
