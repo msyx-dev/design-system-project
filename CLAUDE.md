@@ -64,7 +64,7 @@ shared/
                          #   pricing, notifications, motion, access-denied, theme-toggle (v2.60.0), section-header
   sync.sh                    # Sync CSS vers un projet consommateur (--no-showcase, --components=core|list, --with-graph moteur graph.global.js+graph.css v2.100.0 #666, + vendor/graph-layered.js+LICENSE-*/NOTICE v2.102.0 #670)
   check-sync.sh              # Vérifie un consommateur : version ET contenu (sha256) des fichiers copiés à l'identique (tokens, themes, utilities, base), version seule pour ceux que sync.sh transforme (layout --no-showcase, components) — #951 ; + mode --check-overrides
-  check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS
+  check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS + passe orphelins opt-in `--orphans=<src>` (#938)
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
   version-notes.json         # Données curées {next, released[]} des notes de version — éditées à la main, inlinées au build par bin/generate-version-notes.js (v2.96.0 #645)
   CONSUMER_GUIDE.md          # Guide d'integration pour projets consommateurs

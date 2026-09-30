@@ -1,7 +1,7 @@
 {
   "version": "2.141.1",
   "generated": {
-    "at": "2026-09-30T14:35:06.863Z",
+    "at": "2026-09-30T16:30:45.193Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -34,6 +34,9 @@
         "shared/css/components/graph.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Button"
       ]
     },
     {
@@ -75,6 +78,10 @@
         "shared/css/layout.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Card",
+        "CardIcon"
       ]
     },
     {
@@ -92,6 +99,11 @@
       "module": [
         "shared/css/components/cards.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "CardBody",
+        "CardMedia",
+        "CardThumb"
       ]
     },
     {
@@ -129,6 +141,9 @@
         "shared/css/components/badges.css",
         "shared/css/components/version-notes.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Badge"
       ]
     },
     {
@@ -150,6 +165,11 @@
       "module": [
         "shared/css/components/badges.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Chip",
+        "ChipFilterGroup",
+        "ChipInput"
       ]
     },
     {
@@ -179,6 +199,13 @@
         "shared/css/components/graph.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Checkbox",
+        "Input",
+        "Radio",
+        "Select",
+        "Toggle"
       ]
     },
     {
@@ -196,6 +223,10 @@
       "react": "ported",
       "module": [
         "shared/css/components/data.css"
+      ],
+      "reactExports": [
+        "Progress",
+        "ProgressRing"
       ]
     },
     {
@@ -233,6 +264,10 @@
       "react": "ported",
       "module": [
         "shared/css/components/avatars.css"
+      ],
+      "reactExports": [
+        "Avatar",
+        "AvatarGroup"
       ]
     },
     {
@@ -274,6 +309,9 @@
         "shared/css/components/tables.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css"
+      ],
+      "reactExports": [
+        "DataGrid"
       ]
     },
     {
@@ -314,6 +352,16 @@
         "shared/css/layout.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "DEFAULT_MAX_BYTES",
+        "DEFAULT_MAX_DIMENSION",
+        "ScreenshotNormalizeError",
+        "UserFeedbackButton",
+        "UserFeedbackModal",
+        "UserFeedbackProvider",
+        "normalizeScreenshot",
+        "useUserFeedback"
       ]
     },
     {
@@ -345,6 +393,9 @@
         "shared/css/components/overlays.css",
         "shared/css/layout.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "NotificationBell"
       ]
     },
     {
@@ -371,6 +422,10 @@
         "shared/css/components/navigation.css",
         "shared/css/components/section-header.css",
         "shared/css/layout.css"
+      ],
+      "structural": true,
+      "reactExports": [
+        "SiteHeader"
       ]
     },
     {
@@ -393,6 +448,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/lists.css"
+      ],
+      "reactExports": [
+        "TreeView"
       ]
     },
     {
@@ -424,7 +482,16 @@
         "shared/css/components/interactive.css",
         "shared/css/components/pricing.css"
       ],
-      "notes": " Variante NON sémantique .alert-neutral (#923) : un indicateur qui ne signale rien — un compteur à zéro — ne doit pas être peint en couleur d'état, sinon la couleur perd sa valeur de signal ailleurs. Même rôle que .badge-neutral. Défaut inchangé (info). Reportée sur la barre gauche de .alert--kpi."
+      "notes": " Variante NON sémantique .alert-neutral (#923) : un indicateur qui ne signale rien — un compteur à zéro — ne doit pas être peint en couleur d'état, sinon la couleur perd sa valeur de signal ailleurs. Même rôle que .badge-neutral. Défaut inchangé (info). Reportée sur la barre gauche de .alert--kpi.",
+      "reactExports": [
+        "Alert",
+        "AlertActions",
+        "AlertBody",
+        "AlertDesc",
+        "AlertIcon",
+        "AlertTitle",
+        "AlertValue"
+      ]
     },
     {
       "name": "toast",
@@ -446,6 +513,10 @@
       "module": [
         "shared/css/components/alerts.css",
         "shared/css/components/_a11y.css"
+      ],
+      "reactExports": [
+        "ToastProvider",
+        "useToast"
       ]
     },
     {
@@ -468,6 +539,9 @@
         "shared/css/components/alerts.css",
         "shared/css/components/forms.css",
         "shared/css/components/interactive.css"
+      ],
+      "reactExports": [
+        "Alert"
       ]
     },
     {
@@ -493,6 +567,9 @@
         "shared/css/components/forms.css",
         "shared/css/components/interactive.css",
         "shared/css/components/pricing.css"
+      ],
+      "reactExports": [
+        "Alert"
       ]
     },
     {
@@ -508,6 +585,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/overlays.css"
+      ],
+      "reactExports": [
+        "Tooltip"
       ]
     },
     {
@@ -526,6 +606,9 @@
         "shared/css/utilities.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Tabs"
       ]
     },
     {
@@ -552,6 +635,9 @@
       "module": [
         "shared/css/components/overlays.css",
         "shared/css/components/theming.css"
+      ],
+      "reactExports": [
+        "Modal"
       ]
     },
     {
@@ -570,6 +656,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
+      ],
+      "reactExports": [
+        "Skeleton"
       ]
     },
     {
@@ -591,6 +680,16 @@
       "react": "ported",
       "module": [
         "shared/css/components/interactive.css"
+      ],
+      "reactExports": [
+        "CodeBlock",
+        "CodeComment",
+        "CodeFunction",
+        "CodeKeyword",
+        "CodeNumber",
+        "CodeString",
+        "CopyButton",
+        "InlineCode"
       ]
     },
     {
@@ -622,6 +721,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/interactive.css"
+      ],
+      "reactExports": [
+        "CodeBlock"
       ]
     },
     {
@@ -639,6 +741,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
+      ],
+      "reactExports": [
+        "Divider"
       ]
     },
     {
@@ -654,6 +759,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
+      ],
+      "reactExports": [
+        "Rating"
       ]
     },
     {
@@ -672,6 +780,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/navigation.css"
+      ],
+      "reactExports": [
+        "Breadcrumb"
       ]
     },
     {
@@ -702,6 +813,9 @@
       "module": [
         "shared/css/components/lists.css",
         "shared/css/components/version-notes.css"
+      ],
+      "reactExports": [
+        "Timeline"
       ]
     },
     {
@@ -720,6 +834,9 @@
       "module": [
         "shared/css/components/lists.css",
         "shared/css/components/navigation.css"
+      ],
+      "reactExports": [
+        "Accordion"
       ]
     },
     {
@@ -742,6 +859,9 @@
       "module": [
         "shared/css/components/navigation.css",
         "shared/css/components/tracker.css"
+      ],
+      "reactExports": [
+        "Stepper"
       ]
     },
     {
@@ -766,6 +886,9 @@
         "shared/css/components/forms.css",
         "shared/css/components/menu.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Dropdown"
       ]
     },
     {
@@ -785,6 +908,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "FileUpload"
       ]
     },
     {
@@ -804,6 +930,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "Slider"
       ]
     },
     {
@@ -821,6 +950,9 @@
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/templates.css"
+      ],
+      "reactExports": [
+        "NumberInput"
       ]
     },
     {
@@ -841,6 +973,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "SearchInput"
       ]
     },
     {
@@ -856,6 +991,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/overlays.css"
+      ],
+      "reactExports": [
+        "Popover"
       ]
     },
     {
@@ -887,6 +1025,9 @@
         "shared/css/components/theming.css",
         "shared/css/components/_base.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "CommandPalette"
       ]
     },
     {
@@ -909,6 +1050,9 @@
       "module": [
         "shared/css/components/overlays.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "Drawer"
       ]
     },
     {
@@ -929,6 +1073,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/overlays.css"
+      ],
+      "reactExports": [
+        "BottomSheet"
       ]
     },
     {
@@ -944,6 +1091,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
+      ],
+      "reactExports": [
+        "EmptyState"
       ]
     },
     {
@@ -963,6 +1113,11 @@
       "module": [
         "shared/css/components/feedback.css",
         "shared/css/components/tables.css"
+      ],
+      "reactExports": [
+        "Pagination",
+        "PaginationInfo",
+        "getPaginationRange"
       ]
     },
     {
@@ -984,6 +1139,12 @@
       "module": [
         "shared/css/components/cards.css",
         "shared/css/components/feedback.css"
+      ],
+      "reactExports": [
+        "LoadingBar",
+        "LoadingOverlay",
+        "Spinner",
+        "SpinnerDots"
       ]
     },
     {
@@ -1008,7 +1169,10 @@
         "shared/css/components/media.css",
         "shared/css/components/_a11y.css"
       ],
-      "reactComponent": "Carousel"
+      "reactComponent": "Carousel",
+      "reactExports": [
+        "Carousel"
+      ]
     },
     {
       "name": "lightbox",
@@ -1034,7 +1198,10 @@
       "module": [
         "shared/css/components/media.css"
       ],
-      "reactComponent": "Lightbox"
+      "reactComponent": "Lightbox",
+      "reactExports": [
+        "Lightbox"
+      ]
     },
     {
       "name": "bottom-nav",
@@ -1056,6 +1223,9 @@
         "shared/css/components/navigation.css",
         "shared/css/utilities.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "BottomNav"
       ]
     },
     {
@@ -1078,6 +1248,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/feedback.css"
+      ],
+      "reactExports": [
+        "FAB"
       ]
     },
     {
@@ -1095,6 +1268,9 @@
       "module": [
         "shared/css/components/buttons.css",
         "shared/css/components/navigation.css"
+      ],
+      "reactExports": [
+        "SegmentedControl"
       ]
     },
     {
@@ -1110,6 +1286,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "OTPInput"
       ]
     },
     {
@@ -1129,6 +1308,9 @@
       "module": [
         "shared/css/components/badges.css",
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "TagInput"
       ]
     },
     {
@@ -1164,6 +1346,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/data.css"
+      ],
+      "reactExports": [
+        "useCountUp"
       ]
     },
     {
@@ -1182,6 +1367,9 @@
       "module": [
         "shared/css/components/menu.css",
         "shared/css/components/overlays.css"
+      ],
+      "reactExports": [
+        "ContextMenu"
       ]
     },
     {
@@ -1200,6 +1388,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/tracker.css"
+      ],
+      "reactExports": [
+        "ProgressTracker"
       ]
     },
     {
@@ -1216,6 +1407,10 @@
       "react": "ported",
       "module": [
         "shared/css/components/lists.css"
+      ],
+      "reactExports": [
+        "SortableList",
+        "resolveMoveModifier"
       ]
     },
     {
@@ -1237,7 +1432,10 @@
       "module": [
         "shared/css/components/media.css"
       ],
-      "reactComponent": "VideoEmbed"
+      "reactComponent": "VideoEmbed",
+      "reactExports": [
+        "VideoEmbed"
+      ]
     },
     {
       "name": "quiz-poll",
@@ -1257,6 +1455,10 @@
       "react": "ported",
       "module": [
         "shared/css/components/quiz.css"
+      ],
+      "reactExports": [
+        "Poll",
+        "Quiz"
       ]
     },
     {
@@ -1276,7 +1478,10 @@
       "module": [
         "shared/css/components/media.css"
       ],
-      "reactComponent": "BeforeAfter"
+      "reactComponent": "BeforeAfter",
+      "reactExports": [
+        "BeforeAfter"
+      ]
     },
     {
       "name": "splitter",
@@ -1296,6 +1501,9 @@
       "module": [
         "shared/css/components/splitter.css",
         "shared/css/layout.css"
+      ],
+      "reactExports": [
+        "SplitPane"
       ]
     },
     {
@@ -1323,6 +1531,11 @@
       "react": "ported",
       "module": [
         "shared/css/components/badges.css"
+      ],
+      "reactExports": [
+        "AchievementBadge",
+        "AchievementGrid",
+        "AchievementProgress"
       ]
     },
     {
@@ -1346,6 +1559,9 @@
       "reactComponent": "DecisionTree",
       "module": [
         "shared/css/components/tracker.css"
+      ],
+      "reactExports": [
+        "DecisionTree"
       ]
     },
     {
@@ -1405,7 +1621,10 @@
         "shared/css/components/navigation.css",
         "shared/css/components/_base.css"
       ],
-      "notes": " Position du bouton de repli (#920) : .rail-toggle n'est pas scopée au header et fonctionne telle quelle dans .rail-footer — côté React, prop togglePosition:'header'|'footer' (défaut 'header', rendu historique inchangé). Aucune classe CSS nouvelle."
+      "notes": " Position du bouton de repli (#920) : .rail-toggle n'est pas scopée au header et fonctionne telle quelle dans .rail-footer — côté React, prop togglePosition:'header'|'footer' (défaut 'header', rendu historique inchangé). Aucune classe CSS nouvelle.",
+      "reactExports": [
+        "Rail"
+      ]
     },
     {
       "name": "avatar-img",
@@ -1452,6 +1671,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "PasswordInput"
       ]
     },
     {
@@ -1468,6 +1690,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "ColorInput"
       ]
     },
     {
@@ -1491,6 +1716,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/transfer-list.css"
+      ],
+      "reactExports": [
+        "TransferList"
       ]
     },
     {
@@ -1508,6 +1736,10 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "MarkdownEditor",
+        "renderMarkdown"
       ]
     },
     {
@@ -1553,6 +1785,9 @@
         "shared/css/components/theming.css",
         "shared/css/layout.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "LoginScreen"
       ]
     },
     {
@@ -1583,6 +1818,9 @@
         "shared/css/components/overlays.css",
         "shared/css/layout.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "Icon"
       ]
     },
     {
@@ -1600,6 +1838,11 @@
       "react": "ported",
       "module": [
         "shared/css/layout.css"
+      ],
+      "reactExports": [
+        "Logo",
+        "LogoMark",
+        "Wordmark"
       ]
     },
     {
@@ -1662,6 +1905,7 @@
       "cssClasses": [
         ".action-menu-wrap",
         ".action-menu-trigger",
+        ".action-menu-trigger--labeled",
         ".action-menu",
         ".action-menu-item",
         ".action-menu-divider",
@@ -1674,6 +1918,9 @@
         "shared/css/components/menu.css",
         "shared/css/components/overlays.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "ActionMenu"
       ]
     },
     {
@@ -1707,6 +1954,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/pricing.css"
+      ],
+      "reactExports": [
+        "Pricing"
       ]
     },
     {
@@ -1734,6 +1984,9 @@
       "reactComponent": "Comments",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "Comments"
       ]
     },
     {
@@ -1749,6 +2002,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "MentionInput"
       ]
     },
     {
@@ -1774,6 +2030,12 @@
         "shared/css/components/theme-toggle.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css"
+      ],
+      "reactExports": [
+        "DEFAULT_THEME_CONFIG",
+        "ThemeSwitcher",
+        "ThemeToggle",
+        "useTheme"
       ]
     },
     {
@@ -1792,6 +2054,9 @@
       "module": [
         "shared/css/components/brand.css",
         "shared/css/layout.css"
+      ],
+      "reactExports": [
+        "Logo"
       ]
     },
     {
@@ -1811,6 +2076,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/brand.css"
+      ],
+      "reactExports": [
+        "Logo"
       ]
     },
     {
@@ -1841,6 +2109,9 @@
       "module": [
         "shared/css/components/menu.css",
         "shared/css/components/navigation.css"
+      ],
+      "reactExports": [
+        "UserMenu"
       ]
     },
     {
@@ -1877,6 +2148,9 @@
         "shared/css/components/cards.css",
         "shared/css/components/forms.css",
         "shared/css/components/_base.css"
+      ],
+      "reactExports": [
+        "AccessDenied"
       ]
     },
     {
@@ -1908,6 +2182,11 @@
         "shared/css/components/templates.css",
         "shared/css/components/_base.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "KanbanBoard",
+        "KanbanCard",
+        "KanbanColumn"
       ]
     },
     {
@@ -1930,6 +2209,9 @@
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "Roadmap"
       ]
     },
     {
@@ -1951,6 +2233,9 @@
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "Backlog"
       ]
     },
     {
@@ -1971,6 +2256,9 @@
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "SprintBoard"
       ]
     },
     {
@@ -1995,6 +2283,11 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "SettingsPanel",
+        "SettingsRowInput",
+        "SettingsRowSelect"
       ]
     },
     {
@@ -2023,6 +2316,11 @@
       "module": [
         "shared/css/components/data.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "useChart",
+        "useChartReveal",
+        "useChartTooltip"
       ]
     },
     {
@@ -2043,6 +2341,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/data.css"
+      ],
+      "reactExports": [
+        "Gauge"
       ]
     },
     {
@@ -2070,6 +2371,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/lists.css"
+      ],
+      "reactExports": [
+        "ActivityFeed"
       ]
     },
     {
@@ -2103,6 +2407,9 @@
       "module": [
         "shared/css/components/data.css",
         "shared/css/components/heatmap-calendar.css"
+      ],
+      "reactExports": [
+        "RiskMatrix"
       ]
     },
     {
@@ -2126,6 +2433,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/pricing.css"
+      ],
+      "reactExports": [
+        "UsageMeter"
       ]
     },
     {
@@ -3135,6 +3445,9 @@
         "shared/css/components/section-header.css",
         "shared/css/components/signature.css",
         "shared/css/layout.css"
+      ],
+      "reactExports": [
+        "PageHeader"
       ]
     },
     {
@@ -3156,7 +3469,10 @@
       "jsInit": "initServerDataGrid",
       "reactComponent": "DataGrid",
       "react": "ported",
-      "notes": "Démo mockée — fetch simulé setTimeout 600ms, 26 lignes. Distinct du pattern data-grid client (initDataGrids). Opt-in data-server + data-page-size. Côté React (#878, lot 8) : props page/total/onPageChange sur <DataGrid> existant (pas de nouveau dossier), réutilise <Pagination> tel quel."
+      "notes": "Démo mockée — fetch simulé setTimeout 600ms, 26 lignes. Distinct du pattern data-grid client (initDataGrids). Opt-in data-server + data-page-size. Côté React (#878, lot 8) : props page/total/onPageChange sur <DataGrid> existant (pas de nouveau dossier), réutilise <Pagination> tel quel.",
+      "reactExports": [
+        "DataGrid"
+      ]
     },
     {
       "name": "theme-toggle",
@@ -3213,6 +3529,9 @@
         "shared/css/components/theming.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_responsive.css"
+      ],
+      "reactExports": [
+        "Calendar"
       ]
     },
     {
@@ -3230,7 +3549,10 @@
       "module": [
         "shared/css/components/templates.css"
       ],
-      "notes": " État vide (#860) : un champ laissé vide vaut « non renseigné », pas 0 — time:change émet hours/minutes à null plus empty:true, ce qui distingue une heure absente de minuit. Une heure incomplète (08:__) compte comme absente : le DS ne complète pas par 0 une donnée non saisie. Effacement explicite via un bouton [data-time-clear] fourni par la page (aucune classe nouvelle : .btn-ghost.btn-sm) — câblé seulement s'il est présent, donc aucun markup existant ne change. Côté React : value/defaultValue acceptent null, onChange émet la chaîne vide, prop clearable opt-in ; <NumberInput> accepte value={null} et expose onEmpty."
+      "notes": " État vide (#860) : un champ laissé vide vaut « non renseigné », pas 0 — time:change émet hours/minutes à null plus empty:true, ce qui distingue une heure absente de minuit. Une heure incomplète (08:__) compte comme absente : le DS ne complète pas par 0 une donnée non saisie. Effacement explicite via un bouton [data-time-clear] fourni par la page (aucune classe nouvelle : .btn-ghost.btn-sm) — câblé seulement s'il est présent, donc aucun markup existant ne change. Côté React : value/defaultValue acceptent null, onChange émet la chaîne vide, prop clearable opt-in ; <NumberInput> accepte value={null} et expose onEmpty.",
+      "reactExports": [
+        "TimePicker"
+      ]
     },
     {
       "name": "tables",
@@ -3297,6 +3619,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "FormErrorSummary"
       ]
     },
     {
@@ -3326,6 +3651,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/buttons.css"
+      ],
+      "reactExports": [
+        "SplitButton"
       ]
     },
     {
@@ -3393,6 +3721,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/json-viewer.css"
+      ],
+      "reactExports": [
+        "JsonViewer"
       ]
     },
     {
@@ -3421,6 +3752,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/heatmap-calendar.css"
+      ],
+      "reactExports": [
+        "HeatmapCalendar"
       ]
     },
     {
@@ -3437,6 +3771,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/virtual-list.css"
+      ],
+      "reactExports": [
+        "VirtualList"
       ]
     },
     {
@@ -3475,6 +3812,11 @@
       "module": [
         "shared/css/components/version-notes.css",
         "shared/css/layout.css"
+      ],
+      "structural": true,
+      "reactExports": [
+        "VersionBadge",
+        "VersionNotes"
       ]
     },
     {
@@ -3515,6 +3857,12 @@
       "react": "ported",
       "module": [
         "shared/css/components/graph.css"
+      ],
+      "reactExports": [
+        "DependencyMap",
+        "Graph",
+        "Mindmap",
+        "OrgChart"
       ]
     },
     {
@@ -3543,6 +3891,10 @@
       "react": "ported",
       "module": [
         "shared/css/components/festive.css"
+      ],
+      "reactExports": [
+        "FestiveDecor",
+        "FestiveSnowToggle"
       ]
     },
     {
@@ -3559,6 +3911,9 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "Textarea"
       ]
     }
   ]

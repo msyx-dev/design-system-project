@@ -25,7 +25,7 @@ Le fichier `shared/components-registry.json` liste tous les composants disponibl
 
 ### Scripts de verification
 
-Trois scripts sont disponibles pour detecter les drifts :
+Quatre commandes sont disponibles pour detecter les drifts :
 
 ```bash
 # 1. Verifier que la copie locale du DS est a jour
@@ -36,9 +36,21 @@ Trois scripts sont disponibles pour detecter les drifts :
 
 # 3. Detecter les overrides de classes DS
 ./check-sync.sh --check-overrides /chemin/projet/styles/
+
+# 4. Detecter les composants LIVRES par sync.sh mais jamais MONTES (opt-in, #938)
+./check-components.sh --orphans=/chemin/projet/src /chemin/projet/styles/
 ```
 
 **check-components.sh** detecte les classes CSS avec des prefixes composant-like (`.btn-`, `.card-`, `.modal-`, etc.) qui ne sont pas dans le registre DS. Pour les cas legitimes (ex : Tailwind, librairie tierce), ajouter les classes dans un fichier `.ds-allowlist` (une classe par ligne) a la racine du dossier CSS analyse.
+
+**check-components.sh --orphans=<src>** (opt-in : sans le drapeau, sortie et code retour sont inchanges) ajoute la passe « orphelins », qui repond a l'autre question : un composant que `sync.sh` a copie dans le projet est-il reellement monte ? Le cas d'ecole est `<SiteHeader>` monte sans la prop `versionNotes` : le badge de version est livre et absent de l'ecran. Un consommateur se controle par appel (chemins explicites, aucun registre du VPS n'est lu).
+
+- **Livre** : au moins une classe simple du composant est definie dans les copies DS du projet (`ds-*.css`, `components/*.css`). Un `sync.sh --components=core` ne livre donc que les modules core.
+- **Consomme** : au moins un de ces 4 signaux dans les sources de `<src>` (les `*.test.*`, `*.spec.*`, `node_modules`, `dist`, etc. sont exclus) : **S1** une classe propre au composant (les classes partagees avec une autre entree du registre ne comptent pas) ; **S2** un import `import { Nom } from '@msyx-dev/react'` (alias accepte, `import type` refuse) ; **S3** la prop de composition homonyme, par exemple `versionNotes={` ; **S4** le shell `ds-nav.js` est charge (sa simple presence sur disque ne compte pas). En cas de doute, le composant compte comme consomme.
+- **Structurant** : entree du registre marquee `structural: true` (aujourd'hui `version-notes` et `site-header`). Seuls les structurants font echouer.
+- **Sortie** : lignes `ORPHELIN-STRUCTUREL`, `ORPHELIN` (informatif), `ORPHELIN-ACCEPTÉ`, `NON-MESURABLE`, puis un bilan chiffre.
+- **Assumer un ecart** : une ligne `orphelin:<nom-entree>` (par exemple `orphelin:site-header`) dans le `.ds-allowlist`, avec un commentaire `#` qui justifie. L'ecart reste visible (`ORPHELIN-ACCEPTÉ`) sans bloquer.
+- **Codes retour** : `0` propre ; `1` classe hors DS, orphelin structurel, ou erreur d'usage (dossier source inexistant, `node` absent).
 
 **check-sync.sh --check-overrides** detecte les redefinitions de classes DS dans vos CSS locaux. La regle : ne jamais redefinir une classe DS — customiser via les variables CSS (`var(--token)`).
 
