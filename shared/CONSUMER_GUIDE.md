@@ -933,3 +933,7 @@ L'élément cible (`id="main-content"`) doit exister dans la page.
 ### Note consumers existants (AKSY, aksyva...)
 
 Si votre app implémente un skip link local, vous pouvez retirer votre override après synchronisation DS v2.62.0 avec `shared/sync.sh`.
+
+## Fond des boutons pleins (#944)
+
+Les boutons `.btn-primary`, `.btn-danger`, `.btn-success`, `.btn-warning`, `.login-submit`, `.login-compact button` et `.login-authentik-btn` peignent leur fond avec 8 tokens dédiés : `--btn-{primary,danger,success,warning}-bg-{start,end}`. Ils ne dérivent **plus** de `--gradient-1`, `--danger`, `--success` ni `--warning` : surcharger ces derniers ne change plus la couleur d'un bouton. Pour recolorer un bouton, surcharger les tokens `--btn-*-bg-*` **et vérifier le contraste du texte (≥ 4.5:1) au repos et au survol** — les valeurs du DS sont réglées pour ça (`DS-PRINCIPLES` §3.3). `check-sync.sh` compare `tokens.css` et `themes.css` : relancer `sync.sh` après mise à jour du DS.
