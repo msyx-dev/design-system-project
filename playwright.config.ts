@@ -60,6 +60,7 @@ export default defineConfig({
     "**/sticky-regression.spec.ts",
     "**/card-floating-panel-clip.spec.ts",
     "**/floating-surface-stacking.spec.ts",
+    "**/button-contrast.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
