@@ -569,6 +569,29 @@ Autres classes du même module (`buttons.css`), hors ces trois familles :
 
 ---
 
+## Textarea + compteur de caracteres (#952)
+
+Classes DS (`forms.css`) : `.input-footer` (ligne sous le champ : aide ou erreur a gauche, compteur a droite), `.input-counter`, `.input-counter--over` (valeur au-dela de `maxlength`). Comportement : `initInputCounters()` (`components.js`, appele par `reinitAll()`) ; un consommateur statique l'appelle apres avoir pose le markup.
+
+```html
+<div class="input-group">
+  <label class="input-label" for="wish">Liste de souhaits</label>
+  <textarea class="input" id="wish" rows="4" maxlength="2000"
+            aria-describedby="wish-hint wish-counter"></textarea>
+  <div class="input-footer">
+    <span class="input-hint" id="wish-hint">Liens http(s) acceptes.</span>
+    <span class="input-counter" id="wish-counter">0 / 2000</span>
+    <span class="sr-only" aria-live="polite"></span>
+  </div>
+</div>
+<script>window.__initInputCounters();</script>
+```
+
+- L'unite est `value.length` (UTF-16), la meme mesure que le `maxlength` natif : un emoji compte pour 2, un retour a la ligne pour 1. Un controle cote serveur doit utiliser la meme mesure.
+- La region `.sr-only[aria-live]` doit exister des le rendu ; elle n'annonce « Limite de caracteres atteinte » qu'a la limite, jamais a chaque frappe.
+- Avec une erreur : `.input-error-msg` remplace `.input-hint` dans `.input-footer`, `aria-invalid="true"` + `.input-error` sur le champ. Sans compteur, le markup reste celui d'un `.input` (aide ou erreur enfants directs de `.input-group`, sans `.input-footer`).
+- Le compteur suit le `reset` du formulaire. Une ecriture imperative `field.value = …` n'emet aucun evenement `input` : declencher `field.dispatchEvent(new Event('input'))` pour resynchroniser.
+
 ## Mapping aksy DS-EXCEPTION → DS msyx.fr (v2.27.0+)
 
 Les variantes destructives suivantes utilisees en aksy sont couvertes par le DS standard :
