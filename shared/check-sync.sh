@@ -10,6 +10,7 @@ set -euo pipefail
 # Mode par défaut : vérifie les fichiers DS distribués par sync.sh
 #   ds-tokens.css, ds-themes.css, ds-utilities.css, ds-base.css  -> version ET contenu (sha256)
 #   ds-layout.css, ds-components.css                            -> version @ds-version seule
+#   assets/logo-*.svg (logos de marque, #954)                   -> contenu (sha256), cf. plus bas
 # Le POURQUOI de cette asymétrie est expliqué au-dessus du tableau FILE_PAIRS (#951).
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -217,6 +218,46 @@ for PAIR in "${FILE_PAIRS[@]}"; do
     else
         printf "  OK       %-22s — v%s (en-tête seul : fichier transformé par sync.sh)\n" "$LOCAL_NAME" "$LOCAL_VERSION"
     fi
+done
+
+# ─── Logos de marque distribués par sync.sh (#954) : sha256 ──────────────────
+# sync.sh copie les logos À L'IDENTIQUE (`cp`) vers <local>/assets/ : le régime « content »
+# s'applique donc sans risque de faux DRIFT. Pas d'en-tête @ds-version dans un SVG : le
+# contenu est le seul signal.
+#   - MSYX est TOUJOURS attendue : un consommateur synchronisé avant #954 sort MISSING
+#     (et exit 1) jusqu'à sa prochaine synchro — voulu, même logique que ds-base.css (#951).
+#   - Une charte cliente (acssi…) n'est vérifiée que si au moins un de ses fichiers est
+#     présent localement : c'est la trace d'un `sync.sh --assets=<c>`. Limite assumée : une
+#     charte retirée ou renommée côté DS n'est plus signalée chez le consommateur.
+#   - Un fichier local sans équivalent source (logo propre à l'app) est ignoré : on parcourt
+#     les fichiers SOURCE, jamais ceux du consommateur.
+# Les chartes se déduisent des fichiers (même règle que sync.sh : logo-<c>.svg, <c> en
+# ^[a-z0-9]+$ ; fichiers d'une charte = logo-<c>.svg + logo-<c>-*.svg, racine seulement).
+# Si sync.sh change ce qu'il distribue dans assets/, changer ICI dans le même commit.
+ASSETS_SRC="$(dirname "$SCRIPT_DIR")/assets"
+for SRC_MAIN in "$ASSETS_SRC"/logo-*.svg; do
+    [ -f "$SRC_MAIN" ] || continue
+    C="$(basename "$SRC_MAIN" .svg)"; C="${C#logo-}"
+    [[ "$C" =~ ^[a-z0-9]+$ ]] || continue            # logo-msyx-dark.svg = variante, pas une charte
+    if [ "$C" != "msyx" ] && ! compgen -G "$CSS_LOCAL_DIR/assets/logo-$C.svg" > /dev/null \
+                          && ! compgen -G "$CSS_LOCAL_DIR/assets/logo-$C-*.svg" > /dev/null; then
+        continue                                      # charte cliente non demandée
+    fi
+    for SRC in "$SRC_MAIN" "$ASSETS_SRC"/logo-"$C"-*.svg; do
+        [ -f "$SRC" ] || continue
+        NAME="assets/$(basename "$SRC")"; LOCAL="$CSS_LOCAL_DIR/$NAME"
+        if [ ! -f "$LOCAL" ]; then
+            printf "  MISSING  %-26s — absent (resynchroniser : sync.sh%s)\n" "$NAME" \
+                "$([ "$C" = "msyx" ] || echo " --assets=$C")"
+            DRIFT=$((DRIFT + 1))
+        elif [ "$(short_sha "$SRC")" != "$(short_sha "$LOCAL")" ]; then
+            printf "  DRIFT    %-26s — contenu différent  (sha256 local %s ≠ source %s)\n" \
+                "$NAME" "$(short_sha "$LOCAL")" "$(short_sha "$SRC")"
+            DRIFT=$((DRIFT + 1))
+        else
+            printf "  OK       %-26s — contenu identique\n" "$NAME"
+        fi
+    done
 done
 
 echo ""

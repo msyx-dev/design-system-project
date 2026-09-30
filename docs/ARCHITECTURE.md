@@ -83,9 +83,9 @@ shared/
       motion.css        #   MOTION REFERENCE PAGE (durations, easings, 6 patterns — v2.35.0)
       access-denied.css #   ACCESS DENIED / 403 page (v2.58.0)
       theme-toggle.css  #   Theme toggle / mode switch UI (v2.60.0)
-  sync.sh                    # Synchronise les 4 fichiers CSS vers un projet consommateur (--no-showcase via marqueurs @strip + awk)
+  sync.sh                    # Synchronise le DS vers un projet consommateur : CSS (tokens, themes, base, utilities, layout, components) + fonts + sprite + shell JS, et les logos de marque dans <cible>/assets/ (MSYX toujours, charte cliente opt-in via --assets=<charte>[,…], copie non destructive, #954) ; --no-showcase via marqueurs @strip + awk
   sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
-  check-sync.sh              # Vérifie version + contenu (sha256) des ds-*.css copiés à l'identique, version seule pour layout/components (transformés par sync.sh) + mode --check-overrides (#951)
+  check-sync.sh              # Vérifie version + contenu (sha256) des ds-*.css copiés à l'identique, version seule pour layout/components (transformés par sync.sh), sha256 des logos distribués dans assets/ (MSYX toujours attendue, charte cliente vérifiée si un de ses fichiers est présent, #954) + mode --check-overrides (#951)
   check-components.sh        # Lint consommateurs — détecte composants custom hors DS + passe orphelins opt-in `--orphans=<src>` (livré par sync.sh mais jamais monté, #938)
   build.sh                   # Minification assets CSS (csso) + JS (terser) → dist/
   consumers.json             # Registre des projets consommateurs pour sync-all.sh
