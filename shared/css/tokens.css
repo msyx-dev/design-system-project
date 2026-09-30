@@ -330,6 +330,13 @@
     --btn-on-success: #ffffff;      /* AA — 4.55:1 sur #22c55e (large text) */
     --btn-on-warning: #1a0f00;      /* AAA — 11.7:1 sur #f59e0b (noir chaud sur ambre) */
     --btn-shadow-alpha: 35%;
+    /* Fond des boutons pleins — tokens dédiés (#944) : hex littéral, JAMAIS dérivé du dégradé de marque ni des
+       sémantiques (partagés hors boutons). Déclarés dans les 4 couches (DS-PRINCIPLES §2), réglés à la mesure
+       (visual-tests/button-contrast.spec.ts). */
+    --btn-primary-bg-start: #3b82f6;  --btn-primary-bg-end: #8b5cf6;
+    --btn-danger-bg-start: #ef4444;  --btn-danger-bg-end: #dc2626;
+    --btn-success-bg-start: #22c55e;  --btn-success-bg-end: #16a34a;
+    --btn-warning-bg-start: #f59e0b;  --btn-warning-bg-end: #d97706;
 
     /* Alert messaging — alphas surchargeables par modificateur (#519) */
     --alert-bg-alpha: 8%;       /* fond par défaut (.alert variantes) */
@@ -439,6 +446,13 @@
     --btn-on-success: #ffffff;      /* AA — 4.85:1 sur #15803d */
     --btn-on-warning: #ffffff;      /* AA — 4.71:1 sur #c2410c */
     --btn-shadow-alpha: 22%;        /* ombres adoucies en light */
+    /* Fond des boutons pleins — tokens dédiés (#944) : hex littéral, JAMAIS dérivé du dégradé de marque ni des
+       sémantiques (partagés hors boutons). Déclarés dans les 4 couches (DS-PRINCIPLES §2), réglés à la mesure
+       (visual-tests/button-contrast.spec.ts). */
+    --btn-primary-bg-start: #3b82f6;  --btn-primary-bg-end: #8b5cf6;
+    --btn-danger-bg-start: #dc2626;  --btn-danger-bg-end: #dc2626;
+    --btn-success-bg-start: #15803d;  --btn-success-bg-end: #16a34a;
+    --btn-warning-bg-start: #c2410c;  --btn-warning-bg-end: #d97706;
 
     /* Echelle categorielle — MSYX light (#800). Contraste vs --surface-solid #ffffff. */
     --cat-1: #056eff;

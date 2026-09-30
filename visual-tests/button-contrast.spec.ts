@@ -46,6 +46,8 @@
  */
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 const FIXTURE = "/visual-tests/fixtures/button-contrast-944.html";
 const CONTRAST_MIN = 4.5;
@@ -64,6 +66,19 @@ const SOLID = [
 ];
 // Cas en rapport seul (fond translucide ou transparent) :
 const REPORT_ONLY = ["btn-secondary", "btn-ghost", "btn-outline-danger"];
+
+// Tokens de fond dedies (#944 T2) — NOMS FIGES par la spec. Hex litteral dans les
+// 4 couches de cascade, jamais derives (--gradient-*, --danger*, ... sont partages hors boutons).
+const BTN_BG_TOKENS = [
+  "--btn-primary-bg-start",
+  "--btn-primary-bg-end",
+  "--btn-danger-bg-start",
+  "--btn-danger-bg-end",
+  "--btn-success-bg-start",
+  "--btn-success-bg-end",
+  "--btn-warning-bg-start",
+  "--btn-warning-bg-end",
+] as const;
 
 type Theme = "msyx" | "acssi" | "nhood" | "auchan" | "noel";
 type Mode = "dark" | "light";
@@ -513,5 +528,124 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
         }
       }
     }
+  });
+
+  // --- T2 : completude des tokens dedies (Node pur, une seule fois) ---
+  test("completude : 8 tokens --btn-*-bg-* declares en hex dans les 4 couches (#944 T2)", async ({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "msyx-dark-desktop",
+      "test Node pur (fs) : independant du theme, joue une seule fois",
+    );
+    const errors: string[] = [];
+    const read = (rel: string): string =>
+      fs.readFileSync(path.resolve(__dirname, "..", rel), "utf8");
+
+    /** `--nom: valeur;` -> { "--nom": "valeur" } (commentaires retires). */
+    const decls = (body: string): Record<string, string> => {
+      const out: Record<string, string> = {};
+      const clean = body.replace(/\/\*[\s\S]*?\*\//g, "");
+      for (const m of clean.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
+        out[m[1]] = m[2].trim();
+      }
+      return out;
+    };
+    /** Corps du bloc CSS de premier niveau dont le selecteur est exactement `selector`. */
+    const cssBlock = (css: string, selector: string): string | null => {
+      const esc = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const m = css.match(new RegExp(`^${esc}\\s*\\{([\\s\\S]*?)^\\}`, "m"));
+      return m ? m[1] : null;
+    };
+    const pick = (b: string | null): Record<string, string> | null =>
+      b === null ? null : decls(b);
+    const HEX = /^#[0-9a-f]{6}$/i;
+    /** Les 8 noms figes doivent etre declares en hex litteral dans `found`. */
+    const check = (where: string, found: Record<string, string> | null) => {
+      if (found === null) {
+        errors.push(`${where}: bloc introuvable`);
+        return;
+      }
+      for (const token of BTN_BG_TOKENS) {
+        const v = found[token];
+        if (v === undefined) errors.push(`${where}: ${token} absent`);
+        else if (!HEX.test(v))
+          errors.push(
+            `${where}: ${token} = "${v}" n'est pas un hex litteral (jamais var() ni color-mix())`,
+          );
+      }
+    };
+    /** Deux copies d'un meme token doivent porter la meme valeur. */
+    const same = (
+      where: string,
+      a: Record<string, string> | null | undefined,
+      b: Record<string, string> | null | undefined,
+      against: string,
+    ) => {
+      for (const token of BTN_BG_TOKENS) {
+        const x = a?.[token];
+        const y = b?.[token];
+        if (
+          x !== undefined &&
+          y !== undefined &&
+          x.toLowerCase() !== y.toLowerCase()
+        )
+          errors.push(`${where}: ${token} = ${x} != ${y} (${against})`);
+      }
+    };
+
+    // Couches 1 et 3 — MSYX : tokens.css (build-themes.js ignore msyx.json).
+    const tokens = read("shared/css/tokens.css");
+    const msyx: Record<Mode, Record<string, string> | null> = {
+      dark: pick(cssBlock(tokens, ":root")),
+      light: pick(cssBlock(tokens, '[data-mode="light"]')),
+    };
+    check("shared/css/tokens.css :root (MSYX dark)", msyx.dark);
+    check('shared/css/tokens.css [data-mode="light"] (MSYX light)', msyx.light);
+
+    // Miroir themes/msyx.json : memes valeurs que tokens.css (sinon scaffold-theme.sh propage du faux).
+    const mirror = JSON.parse(read("themes/msyx.json")).modes as Record<
+      Mode,
+      Record<string, string>
+    >;
+    for (const mode of ["dark", "light"] as Mode[]) {
+      check(`themes/msyx.json modes.${mode}`, mirror[mode] ?? null);
+      same(
+        `themes/msyx.json modes.${mode}`,
+        mirror[mode],
+        msyx[mode],
+        "shared/css/tokens.css",
+      );
+    }
+
+    // Couches 2 et 4 — autres themes : JSON (source) ET themes.css (autogenere, doit suivre).
+    const themesCss = read("shared/css/themes.css");
+    for (const theme of ["acssi", "nhood", "auchan", "noel"]) {
+      const json = JSON.parse(read(`themes/${theme}.json`)).modes as Record<
+        Mode,
+        Record<string, string>
+      >;
+      for (const mode of ["dark", "light"] as Mode[]) {
+        check(`themes/${theme}.json modes.${mode}`, json[mode] ?? null);
+        const selector =
+          mode === "dark"
+            ? `[data-theme="${theme}"]`
+            : `[data-theme="${theme}"][data-mode="light"]`;
+        const built = pick(cssBlock(themesCss, selector));
+        check(
+          `shared/css/themes.css ${selector} (node shared/build-themes.js relance ?)`,
+          built,
+        );
+        same(
+          `shared/css/themes.css ${selector}`,
+          built,
+          json[mode],
+          `themes/${theme}.json`,
+        );
+      }
+    }
+
+    expect(
+      errors,
+      `tokens de fond de bouton incomplets :\n${errors.join("\n")}`,
+    ).toEqual([]);
   });
 });
