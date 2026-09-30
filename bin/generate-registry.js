@@ -13,6 +13,13 @@
  * .classname et produit shared/components-registry.json enrichi.
  * Préserve les composants existants déclarés à la main (merge intelligent).
  *
+ * Champs dérivés (JAMAIS saisis à la main, recalculés à chaque passe) :
+ *   module[]       chemins des modules CSS, depuis cssClasses (#506)
+ *   reactExports   noms importables de @msyx-dev/react, depuis packages/react/src/index.ts
+ *                  (bin/lib/react-exports.js) — présent ssi react:"ported" (#938)
+ * Champ saisi à la main, validé par --check :
+ *   structural     true = composant structurant (kind≠module + ≥ 1 classe simple) (#938)
+ *
  * Catégorisation par fichier source :
  *   shared/css/utilities.css       → utility
  *   shared/css/layout.css          → layout
@@ -31,6 +38,7 @@ const {
   hasMainClassCitation,
   findPhantomDataAttrs,
 } = require('./lib/validate-example');
+const { deriveReactExports, validateReactFields } = require('./lib/react-exports');
 
 // ─── Chemins ──────────────────────────────────────────────────────────────────
 
@@ -907,6 +915,37 @@ if (!process.argv.includes('--skip-validate') && fs.existsSync(REACT_SRC_ROOT)) 
   }
 }
 
+// ─── Exports React (#938) : noms que le consommateur importe ─────────────────
+// `reactExports` est DERIVE de packages/react/src/index.ts par
+// bin/lib/react-exports.js — jamais saisi a la main (meme precedent que
+// `module[]` ci-dessus, DS-PRINCIPLES §8.2). Present ssi react:"ported", sinon
+// supprime (idempotent). Il sert la passe « orphelins » de check-components.sh,
+// qui cherche ces noms dans le code du consommateur : REACT_TO_REGISTRY mappe des
+// DOSSIERS, pas les noms importes, et vit dans une constante JS illisible du shell.
+// Place ICI et non juste apres module[] : REACT_TO_REGISTRY/REACT_COVERED_BY sont
+// des `const` declarees plus haut que ce point seulement (zone morte temporelle).
+const REACT_INDEX_PATH = path.join(REACT_SRC_BASE, 'index.ts');
+let reactExportsPopulated = 0;
+if (fs.existsSync(REACT_INDEX_PATH)) {
+  const derivedReactExports = deriveReactExports({
+    indexSrc: fs.readFileSync(REACT_INDEX_PATH, 'utf8'),
+    reactToRegistry: REACT_TO_REGISTRY,
+    reactCoveredBy: REACT_COVERED_BY,
+  });
+  for (const comp of newComponents) {
+    const names = derivedReactExports.get(comp.name);
+    if (comp.react === 'ported' && names && names.length > 0) {
+      comp.reactExports = names;
+      reactExportsPopulated++;
+    } else {
+      delete comp.reactExports; // ported sans export = erreur remontee par validateReactFields
+    }
+  }
+}
+const reactFieldErrors = validateReactFields(newComponents);
+const structuralCount = newComponents.filter(c => c.structural === true).length;
+const reactExportsLine = `Exports React  : ${reactExportsPopulated} entrées avec reactExports (dérivé de index.ts) · ${structuralCount} structurelle(s)`;
+
 // ─── Construction du nouveau registry ─────────────────────────────────────────
 
 const newRegistry = {
@@ -1045,6 +1084,14 @@ if (process.argv.includes('--check')) {
     process.exit(1);
   }
   console.log('Pont module[]      : OK (0 incohérence)');
+  console.log(reactExportsLine);
+  if (reactFieldErrors.length > 0) {
+    console.error('\n❌ Champs reactExports / structural (#938) — incohérences :');
+    for (const e of reactFieldErrors) console.error('   - ' + e);
+    console.error('\nCorrigez : `reactExports` est dérivé (jamais saisi) — régénérez le registre (`npm run generate-registry`) ; `structural` est la seule saisie manuelle et exige kind≠module + au moins une classe simple.');
+    process.exit(1);
+  }
+  console.log('reactExports/structural : OK (0 incohérence)');
   if (isIdempotent) {
     console.log('Idempotence       : OK (registre à jour)');
   } else {
@@ -1100,6 +1147,14 @@ if (reactPhantoms.length > 0 || reactDrift.length > 0) {
   process.exit(1);
 }
 
+// ─── Rapport reactExports / structural (#938) — meme regime que la parite React ─
+if (reactFieldErrors.length > 0) {
+  console.error('\n❌ Champs reactExports / structural (#938) :');
+  for (const e of reactFieldErrors) console.error('   - ' + e);
+  console.error('\nCorrigez : `reactExports` est dérivé (jamais saisi) ; `structural` exige kind≠module + au moins une classe simple.');
+  process.exit(1);
+}
+
 // ─── Rapport ──────────────────────────────────────────────────────────────────
 
 const totalComponents = newComponents.length;
@@ -1112,6 +1167,7 @@ console.log(`Total composants  : ${totalComponents}`);
 console.log(`Total classes CSS : ${totalClasses}`);
 console.log(reactParityLine);
 console.log(modulePontLine);
+console.log(reactExportsLine);
 if (addedGroups > 0 || addedClasses > 0) {
   console.log(`Nouveaux groupes  : +${addedGroups}`);
   console.log(`Nouvelles classes : +${addedClasses}`);

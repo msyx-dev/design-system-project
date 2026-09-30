@@ -142,6 +142,10 @@ jobs:
         run: |
           chmod +x tests/test-validate-example.sh
           ./tests/test-validate-example.sh
+      # reactExports (derive de packages/react/src/index.ts) + structural (saisi,
+      # valide par --check) : la passe orphelins de check-components.sh en depend (#938).
+      - name: Registry reactExports / structural generator tests (#938)
+        run: npm run test:registry-react-exports
       # Parsing statique pur (node, zéro navigateur, zéro dépendance) — < 5s.
       - name: Nav sections manifest validation (#528)
         run: node bin/generate-nav-sections.js --check
