@@ -40,6 +40,13 @@
  * echantillonnes, garde-fou pixel >= arret) restent actives. T3 passe
  * ENFORCE a true, apres reglage des tokens a la mesure.
  *
+ * Tranche T2 (#944) : un 2e test, Node pur (fs), verifie la COMPLETUDE des 8
+ * tokens `--btn-{primary,danger,success,warning}-bg-{start,end}` : declares en
+ * hex litteral dans les 4 couches (tokens.css `:root` + `[data-mode="light"]`,
+ * `modes.dark`/`modes.light` des themes/*.json, blocs correspondants de
+ * themes.css autogenere, miroir themes/msyx.json). Joue une seule fois
+ * (projet `msyx-dark-desktop`), les autres projets le sautent.
+ *
  * Tourne dans les 10 projets desktop de playwright.config.ts (theme/mode lus
  * dans le nom du projet, comme visual.spec.ts) ; skip sur les 2 *-mobile
  * (le contraste ne depend pas du viewport).
