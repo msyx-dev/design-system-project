@@ -70,6 +70,77 @@ describe("ActionMenu — structure", () => {
   });
 });
 
+describe("ActionMenu — libellé du déclencheur (#936)", () => {
+  // Le CSS DS dimensionne `.action-menu-trigger` en carré de 32px avec
+  // `white-space: normal` : un libellé en text node nu y déborde. jsdom ne
+  // mesure aucune mise en page — on asserte donc les CLASSES dont dépend le CSS
+  // (masquage `.sr-only`, variante `.action-menu-trigger--labeled`) et la
+  // présence de l'enveloppe, jamais le débordement lui-même.
+  it("avec icon + label : le libellé est enveloppé dans .sr-only et nomme le bouton", () => {
+    render(
+      <ActionMenu
+        icon={<svg data-testid="trigger-icon" />}
+        label="Actions"
+        items={ITEMS}
+      />,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Actions" });
+    const label = screen.getByText("Actions");
+
+    // Enveloppe : le texte n'est plus un text node nu du bouton.
+    expect(label).not.toBe(trigger);
+    expect(label).toHaveClass("sr-only");
+    expect(trigger).toContainElement(label);
+    // Le bouton reste le carré d'icône : pas de variante à libellé visible.
+    expect(trigger).toHaveClass("action-menu-trigger");
+    expect(trigger).not.toHaveClass("action-menu-trigger--labeled");
+    expect(screen.getByTestId("trigger-icon")).toBeInTheDocument();
+  });
+
+  it("sans icon : le libellé est visible (sans .sr-only), enveloppé, et le trigger porte la variante", () => {
+    render(<ActionMenu label="Actions" items={ITEMS} />);
+
+    const trigger = screen.getByRole("button", { name: "Actions" });
+    const label = screen.getByText("Actions");
+
+    expect(label).not.toBe(trigger);
+    expect(label.tagName).toBe("SPAN");
+    expect(label).not.toHaveClass("sr-only");
+    expect(trigger).toContainElement(label);
+    expect(trigger).toHaveClass(
+      "action-menu-trigger",
+      "action-menu-trigger--labeled",
+    );
+  });
+
+  it("avec trigger personnalisé : contenu libre non enveloppé, pas de variante (le consommateur en répond)", () => {
+    render(
+      <ActionMenu
+        trigger={<span data-testid="custom-trigger">⋮</span>}
+        label="Actions"
+        items={ITEMS}
+      />,
+    );
+
+    const trigger = screen.getByRole("button");
+    expect(trigger).toHaveClass("action-menu-trigger");
+    expect(trigger).not.toHaveClass("action-menu-trigger--labeled");
+    expect(screen.getByTestId("custom-trigger")).toBeInTheDocument();
+    expect(document.querySelector(".sr-only")).not.toBeInTheDocument();
+  });
+
+  it("sans label : aucune enveloppe de libellé vide", () => {
+    render(
+      <ActionMenu icon={<svg data-testid="trigger-icon" />} items={ITEMS} />,
+    );
+
+    const trigger = screen.getByRole("button");
+    expect(trigger).not.toHaveClass("action-menu-trigger--labeled");
+    expect(trigger.querySelector("span")).toBeNull();
+  });
+});
+
 describe("ActionMenu — ouverture / fermeture", () => {
   it("clic sur le trigger ouvre le menu et reflète aria-expanded", async () => {
     const user = userEvent.setup();
