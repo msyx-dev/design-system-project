@@ -3128,7 +3128,7 @@
       "jsInit": null,
       "reactComponent": "PageHeader",
       "reactPackage": "@msyx-dev/react",
-      "example": "<section class=\"section-header\">\n  <nav class=\"section-header-breadcrumb\" aria-label=\"Fil d'ariane\">\n    <a href=\"/\">Accueil</a>\n  </nav>\n  <div class=\"section-header-row\">\n    <div class=\"section-header-text\">\n      <span class=\"overline\">ACCUEIL</span>\n      <h1>Aksyva</h1>\n      <p class=\"lead\">Suite d'outils de pilotage</p>\n    </div>\n    <div class=\"section-header-actions\">\n      <button class=\"btn-primary\">Action</button>\n    </div>\n  </div>\n</section>",
+      "example": "<section class=\"section-header\">\n  <div class=\"section-header-breadcrumb\">\n    <nav class=\"breadcrumbs\" aria-label=\"Fil d'Ariane\">\n      <ol>\n        <li><a href=\"/\">Accueil</a></li>\n      </ol>\n    </nav>\n  </div>\n  <div class=\"section-header-row\">\n    <div class=\"section-header-text\">\n      <span class=\"overline\">ACCUEIL</span>\n      <h1>Aksyva</h1>\n      <p class=\"lead\">Suite d'outils de pilotage</p>\n    </div>\n    <div class=\"section-header-actions\">\n      <button class=\"btn-primary\">Action</button>\n    </div>\n  </div>\n</section>",
       "react": "ported",
       "module": [
         "shared/css/components/brand.css",
