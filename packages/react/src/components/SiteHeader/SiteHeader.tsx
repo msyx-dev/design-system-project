@@ -21,6 +21,10 @@ import { ThemeSwitcher } from "../ThemeSwitcher/ThemeSwitcher";
 import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
 import { useTheme } from "../ThemeSwitcher/useTheme";
 import {
+  FestiveDecor,
+  FestiveSnowToggle,
+} from "../FestiveDecor/FestiveDecor";
+import {
   UserFeedbackButton,
   type UserFeedbackButtonProps,
 } from "../UserFeedback/UserFeedbackButton";
@@ -90,6 +94,15 @@ export interface SiteHeaderProps {
    * `<ThemeToggle>` seul.
    */
   paletteSwitch?: boolean;
+  /**
+   * Décor festif du thème Noël (#950), opt-in. Monte `<FestiveSnowToggle>` (bouton
+   * flocon, WCAG 2.2.2) au début de la zone utilisateur et `<FestiveDecor>` (neige,
+   * guirlande, ornements sous le header, givre, sapin) comme FRÈRE du `<header>` :
+   * `.site-header` porte un `backdrop-filter`, qui deviendrait le bloc conteneur des
+   * enfants `position: fixed` du décor. Ne rend rien hors `data-theme="noel"`.
+   * Ne pas monter en plus un `<FestiveDecor>` soi-même (décor en double).
+   */
+  festive?: boolean;
   /** Burger mobile — affiché seulement si fourni. */
   onMenuToggle?: () => void;
   className?: string;
@@ -172,6 +185,7 @@ export function SiteHeader({
   feedback,
   versionNotes,
   paletteSwitch,
+  festive,
   onMenuToggle,
   className,
 }: SiteHeaderProps) {
@@ -181,6 +195,7 @@ export function SiteHeader({
   const { mode, toggleMode, isModeLocked } = useTheme();
 
   return (
+    <>
     <header className={rootClasses}>
       {onMenuToggle && (
         <button
@@ -226,13 +241,16 @@ export function SiteHeader({
       {/* Feedback + identité groupés dans UNE .header-user-zone (gap space-sm,
           position:relative pour le dropdown UserMenu). Sibling de la zone bell
           — pas de nesting de .header-user-zone. */}
-      {(feedbackNode != null || identityNode != null) && (
+      {(festive || feedbackNode != null || identityNode != null) && (
         <div className="header-user-zone">
+          {festive && <FestiveSnowToggle />}
           {feedbackNode}
           {identityNode}
         </div>
       )}
     </header>
+    {festive && <FestiveDecor />}
+    </>
   );
 }
 

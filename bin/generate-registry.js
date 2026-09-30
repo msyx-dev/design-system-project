@@ -603,6 +603,7 @@ function resolveReactCompDir(key) {
 // Mise à jour requise à chaque nouveau portage React.
 const REACT_TO_REGISTRY = {
   MarkdownEditor: 'markdown-editor', // #854
+  FestiveDecor: 'festif',  // #950 — décor Noël (neige, guirlande, ornements, givre, sapin) + FestiveSnowToggle co-localisé
   Button:      'buttons',
   PageHeader:  'page-header',
   'icons/Icon': 'icon',  // #870 — primitif hors src/components/ (src/icons/Icon.tsx)
