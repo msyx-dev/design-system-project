@@ -16,6 +16,15 @@
 .input-success { border-color: var(--success) !important; }
 .input-disabled { opacity: 0.5; pointer-events: none; }
 textarea.input { min-height: 90px; resize: vertical; }
+/* Compteur de caracteres (#952) — ligne sous le champ : aide/erreur a gauche,
+   compteur a droite. .input-footer n'est rendu QUE si un compteur est affiche ;
+   sans compteur, .input-hint/.input-error-msg restent enfants directs de
+   .input-group (markup inchange). margin-left:auto garde le compteur a droite
+   meme sans aide ni erreur. --over : valeur initiale/programmatique au-dela de
+   maxlength (la saisie clavier est bloquee par le maxlength natif). */
+.input-footer { display: flex; align-items: flex-start; gap: var(--space-2); }
+.input-counter { margin-left: auto; flex-shrink: 0; font-size: 0.75rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.input-counter--over { color: var(--danger-light, var(--danger)); }
 select.input { appearance: none; background-image: var(--chevron-select); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
 .input-with-icon { position: relative; }
 .input-with-icon .input { padding-left: 2.5rem; }

@@ -1,7 +1,7 @@
 {
   "version": "2.141.1",
   "generated": {
-    "at": "2026-09-30T16:09:48.383Z",
+    "at": "2026-09-30T16:30:45.193Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -3895,6 +3895,25 @@
       "reactExports": [
         "FestiveDecor",
         "FestiveSnowToggle"
+      ]
+    },
+    {
+      "name": "textarea",
+      "kind": "component",
+      "page": "formulaires",
+      "cssClasses": [
+        ".input-footer",
+        ".input-counter",
+        ".input-counter--over"
+      ],
+      "jsInit": "initInputCounters",
+      "example": "<div class=\"input-group\">\n  <label class=\"input-label\" for=\"example-textarea\">Description</label>\n  <textarea class=\"input\" id=\"example-textarea\" rows=\"4\" maxlength=\"200\" aria-describedby=\"example-textarea-hint example-textarea-counter\"></textarea>\n  <div class=\"input-footer\">\n    <span class=\"input-hint\" id=\"example-textarea-hint\">200 caractères maximum.</span>\n    <span class=\"input-counter\" id=\"example-textarea-counter\">0 / 200</span>\n    <span class=\"sr-only\" aria-live=\"polite\"></span>\n  </div>\n</div>",
+      "react": "ported",
+      "module": [
+        "shared/css/components/forms.css"
+      ],
+      "reactExports": [
+        "Textarea"
       ]
     }
   ]
