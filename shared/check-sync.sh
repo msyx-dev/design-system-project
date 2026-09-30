@@ -7,8 +7,10 @@ set -euo pipefail
 #         ./check-sync.sh --check-overrides <répertoire-css-projet>
 # Exit 0 = OK, Exit 1 = désynchronisé ou overrides détectés
 #
-# Mode par défaut : vérifie la version @ds-version sur les fichiers DS distribués
-#   ds-tokens.css, ds-themes.css, ds-utilities.css, ds-layout.css, ds-components.css
+# Mode par défaut : vérifie les fichiers DS distribués par sync.sh
+#   ds-tokens.css, ds-themes.css, ds-utilities.css, ds-base.css  -> version ET contenu (sha256)
+#   ds-layout.css, ds-components.css                            -> version @ds-version seule
+# Le POURQUOI de cette asymétrie est expliqué au-dessus du tableau FILE_PAIRS (#951).
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DS_TOKENS="$SCRIPT_DIR/css/tokens.css"
@@ -123,27 +125,69 @@ echo "=== check-sync.sh — version DS source : v${DS_VERSION} ==="
 echo "Répertoire local : $CSS_LOCAL_DIR"
 echo ""
 
-# Chaque fichier distribué est comparé au @ds-version RÉELLEMENT présent dans SON
-# fichier source (#367-373). themes.css (autogénéré) et tokens.css peuvent porter des
-# versions distinctes : comparer tout à tokens.css produirait un faux DRIFT permanent
-# sur ds-themes.css. fonts.css n'a pas de @ds-version → exclu du check de version.
-# Format : "<source-css>:<nom-local>"
+# ─── Comparaison par fichier : DEUX régimes (#951) ───────────────────────────
+#
+# Historique : ce script ne comparait que l'en-tête @ds-version. Un fichier dont le
+# contenu change sans que son en-tête bouge passait donc pour « à jour ». C'est ce qui
+# est arrivé à themes.css : autogénéré, son en-tête était figé à 2.67.0 par
+# build-themes.js, donc source et copie consommateur affichaient la même version quel
+# que soit leur contenu — la ligne ds-themes.css restait « OK » alors que les thèmes
+# Auchan et Noël manquaient. Une comparaison d'en-têtes est muette dès que l'en-tête
+# n'est plus bumpé avec le contenu ; seul le contenu est un signal fiable.
+#
+# Régime « content » — sha256 du fichier entier. RÉSERVÉ aux fichiers que sync.sh copie
+#   À L'IDENTIQUE (`cp`) : tokens, themes, utilities, base. Copie fidèle => tout octet
+#   qui diffère est une vraie désynchronisation ; aucun faux positif possible.
+#
+# Régime « header » — comparaison de @ds-version seule. Pour les fichiers que sync.sh
+#   TRANSFORME selon les options du consommateur. Un hash brut y sortirait en faux
+#   DRIFT PERMANENT chez tous ceux qui utilisent l'option (et le remède serait pire que
+#   le mal : plus personne ne croirait le script) :
+#     - ds-layout.css     : amputé de ses règles showcase (awk @strip:showcase-*)
+#                           quand le consommateur a synchronisé avec --no-showcase ;
+#     - ds-components.css : régénéré selon le mode — complet (copie), --components=core
+#                           (components-core.css ré-estampillé par sed), --components=a,b
+#                           (barrel généré à la volée) : il n'existe pas UN contenu source.
+#   ds-fonts.css (url() réécrites, aucun en-tête) reste exclu, comme avant.
+#
+# Pourquoi PAS la voie « rejouer la transformation côté source avant de hasher » : ce
+#   serait recopier ici la logique de sync.sh (awk showcase, trois modes de components,
+#   sed de version). Deux copies d'une même transformation finissent par diverger, et
+#   une divergence fabrique exactement le faux DRIFT permanent qu'on cherche à éviter.
+#   Coût assumé : layout et components restent couverts par l'en-tête seul. C'est sûr tant
+#   que leur en-tête est bumpé avec leur contenu, ce que garantit check-versions.sh
+#   (tokens, utilities, components, layout, base et themes y figurent tous depuis #951).
+#
+# Si sync.sh se met à transformer un fichier « content » (ou cesse de transformer un
+# fichier « header »), changer son régime ICI dans le même commit.
+#
+# Format : "<source-css>:<nom-local>:<régime>"
 SOURCE_DIR="$SCRIPT_DIR/css"
 FILE_PAIRS=(
-    "tokens.css:ds-tokens.css"
-    "themes.css:ds-themes.css"
-    "utilities.css:ds-utilities.css"
-    "layout.css:ds-layout.css"
-    "components.css:ds-components.css"
+    "tokens.css:ds-tokens.css:content"
+    "themes.css:ds-themes.css:content"
+    "utilities.css:ds-utilities.css:content"
+    "base.css:ds-base.css:content"
+    "layout.css:ds-layout.css:header"
+    "components.css:ds-components.css:header"
 )
 
 DRIFT=0
 
+# sha256 d'un fichier, tronqué à 12 caractères pour l'affichage.
+short_sha() {
+    sha256sum "$1" | cut -c1-12
+}
+
 for PAIR in "${FILE_PAIRS[@]}"; do
-    SRC_NAME="${PAIR%%:*}"
-    LOCAL_NAME="${PAIR##*:}"
+    IFS=: read -r SRC_NAME LOCAL_NAME REGIME <<< "$PAIR"
     SRC_PATH="$SOURCE_DIR/$SRC_NAME"
     LOCAL_PATH="$CSS_LOCAL_DIR/$LOCAL_NAME"
+
+    if [ ! -f "$SRC_PATH" ]; then
+        echo "ERREUR: fichier source DS introuvable : $SRC_PATH" >&2
+        exit 1
+    fi
 
     # Version source de CE fichier (fallback sur la version tokens si absente)
     SRC_VERSION=$(grep -oP '@ds-version:\s*\K[\d.]+' "$SRC_PATH" 2>/dev/null | head -1 || echo "")
@@ -160,11 +204,18 @@ for PAIR in "${FILE_PAIRS[@]}"; do
     if [ -z "$LOCAL_VERSION" ]; then
         printf "  NO-TAG   %-22s — @ds-version absent dans le fichier local\n" "$LOCAL_NAME"
         DRIFT=$((DRIFT + 1))
-    elif [ "$SRC_VERSION" = "$LOCAL_VERSION" ]; then
-        printf "  OK       %-22s — v%s\n" "$LOCAL_NAME" "$LOCAL_VERSION"
-    else
+    elif [ "$SRC_VERSION" != "$LOCAL_VERSION" ]; then
         printf "  DRIFT    %-22s — local v%s  (DS source : v%s)\n" "$LOCAL_NAME" "$LOCAL_VERSION" "$SRC_VERSION"
         DRIFT=$((DRIFT + 1))
+    elif [ "$REGIME" = "content" ] && [ "$(short_sha "$SRC_PATH")" != "$(short_sha "$LOCAL_PATH")" ]; then
+        # Même en-tête, contenu différent : le cas que la comparaison d'en-têtes ne voyait pas.
+        printf "  DRIFT    %-22s — contenu différent à en-tête identique v%s  (sha256 local %s ≠ source %s)\n" \
+            "$LOCAL_NAME" "$LOCAL_VERSION" "$(short_sha "$LOCAL_PATH")" "$(short_sha "$SRC_PATH")"
+        DRIFT=$((DRIFT + 1))
+    elif [ "$REGIME" = "content" ]; then
+        printf "  OK       %-22s — v%s (contenu identique)\n" "$LOCAL_NAME" "$LOCAL_VERSION"
+    else
+        printf "  OK       %-22s — v%s (en-tête seul : fichier transformé par sync.sh)\n" "$LOCAL_NAME" "$LOCAL_VERSION"
     fi
 done
 

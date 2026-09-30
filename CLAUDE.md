@@ -16,7 +16,7 @@ Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
 - **Anti-FOUC** — script synchrone inline `<head>`, lit `msyx-theme` + `msyx-mode` (jamais de naming divergent)
 - **Anti-double-bind JS** — pattern `dataset.bound` sur tous les event listeners
 - **Pas d'override de classe DS** — customiser via variables CSS, jamais redéfinir
-- **Version bump synchrone** — 8 sources verifiees par `shared/check-versions.sh` (`@ds-version` dans `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `nav.js` + `const VERSION` de `nav.js` + `version` de `shared/components-registry.json` + `version` de `package.json` racine)
+- **Version bump synchrone** — 10 sources verifiees par `shared/check-versions.sh` (`@ds-version` dans `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `base.css`, `themes.css`, `nav.js` + `const VERSION` de `nav.js` + `version` de `shared/components-registry.json` + `version` de `package.json` racine). `themes.css` est autogenere : son en-tete est derive de `tokens.css` par `node shared/build-themes.js` (relancer apres chaque bump, #951)
 - **Checklist anti-dette** — 9 dimensions à valider par composant (HTML/CSS/JS/A11y/Perf/Doc/Version/Registre/VR)
 - **Jamais de donnée consumer concaténée dans `innerHTML`** — construire les nœuds (`createElement`/`setAttribute`/`textContent`) ; `escapeHTML` ne protège qu'un contexte texte, jamais un attribut (voir `docs/DS-PRINCIPLES.md` §11)
 
@@ -63,7 +63,7 @@ shared/
                          #   interactive, templates, media, _responsive, tracker, quiz, _a11y,
                          #   pricing, notifications, motion, access-denied, theme-toggle (v2.60.0), section-header
   sync.sh                    # Sync CSS vers un projet consommateur (--no-showcase, --components=core|list, --with-graph moteur graph.global.js+graph.css v2.100.0 #666, + vendor/graph-layered.js+LICENSE-*/NOTICE v2.102.0 #670)
-  check-sync.sh              # Vérifie version (@ds-version) + mode --check-overrides
+  check-sync.sh              # Vérifie un consommateur : version ET contenu (sha256) des fichiers copiés à l'identique (tokens, themes, utilities, base), version seule pour ceux que sync.sh transforme (layout --no-showcase, components) — #951 ; + mode --check-overrides
   check-components.sh        # Lint projets consommateurs — détecte composants custom hors DS
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
   version-notes.json         # Données curées {next, released[]} des notes de version — éditées à la main, inlinées au build par bin/generate-version-notes.js (v2.96.0 #645)
@@ -165,7 +165,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Pattern `dataset.bound` anti-double-bind sur les event listeners
    - Appel dans le bloc `reinitAll()` pour compatibilite SPA
 4. **Compteur** : mettre a jour le nombre dans `site.html` (hero + hub cards si applicable)
-5. **Version** : bumper `@ds-version`/`version` sur les **8 sources** verifiees par `shared/check-versions.sh` : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/nav.js` (le commentaire `@ds-version` **et** `const VERSION`), `shared/components-registry.json` (`version`), `package.json` racine (`version`)
+5. **Version** : bumper `@ds-version`/`version` sur les **10 sources** verifiees par `shared/check-versions.sh` : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/css/base.css`, `shared/css/themes.css` (**autogenere** : ne pas le bumper a la main, relancer `node shared/build-themes.js` qui lit `@ds-version` dans `tokens.css` et echoue si elle est illisible), `shared/nav.js` (le commentaire `@ds-version` **et** `const VERSION`), `shared/components-registry.json` (`version`), `package.json` racine (`version`)
    - Feature : minor (2.31 → 2.32)
    - Fix : patch (2.31.0 → 2.31.1)
    - Convention validee Sprint 16 + 17 (memory.md 2026-05-01), gate `shared/check-versions.sh` (issue #377)

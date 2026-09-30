@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # check-versions.sh — garde-fou de coherence des versions DS (issue #377)
-# Verifie que TOUTES les sources de version sont identiques :
-#   - @ds-version dans shared/css/{tokens,utilities,components,layout}.css
+# Verifie que TOUTES les sources de version sont identiques (10 sources) :
+#   - @ds-version dans shared/css/{tokens,utilities,components,layout,base,themes}.css
+#     (base.css et themes.css ajoutes par #951 : themes.css est AUTOGENERE, son
+#     en-tete est derive de tokens.css par build-themes.js ; sans ce gate, sa version
+#     figee a 2.67.0 n'a jamais pu etre detectee, cf. #951)
 #   - @ds-version dans shared/nav.js
 #   - const VERSION dans shared/nav.js
 #   - "version" (top-level) dans shared/components-registry.json
@@ -10,7 +13,7 @@
 #
 # Garde-fou complementaire (issue #811) : entrypoint.sh ne doit JAMAIS
 # contenir de version figee en dur (VERSION="X.Y.Z"). Elle est deliberement
-# EXCLUE des 8 sources ci-dessus : depuis #811 elle est derivee au demarrage
+# EXCLUE des 10 sources ci-dessus : depuis #811 elle est derivee au demarrage
 # du container (package.json deja copie dans l'image), donc n'a plus de
 # valeur figee a comparer — seule son ABSENCE de valeur codee en dur est
 # verifiee.
@@ -38,8 +41,10 @@ record() {
   VERSIONS+=("$value")
 }
 
-# --- @ds-version dans les 4 fichiers CSS (format "@ds-version: X.Y.Z") ---
-for f in tokens utilities components layout; do
+# --- @ds-version dans les 6 fichiers CSS (format "@ds-version: X.Y.Z") ---
+# themes.css : autogenere par `node shared/build-themes.js` (version lue dans tokens.css).
+# Un bump de tokens.css sans regeneration de themes.css fait donc echouer ce gate — voulu.
+for f in tokens utilities components layout base themes; do
   path="$ROOT/shared/css/$f.css"
   if [ -f "$path" ]; then
     line=$(grep -m1 '@ds-version' "$path" || true)
@@ -89,7 +94,7 @@ fi
 # l'ABSENCE d'une assignation VERSION=X.Y.Z codee en dur — quotee ("X.Y.Z" /
 # 'X.Y.Z') ou non (X.Y.Z est une assignation sh valide sans espace). Le motif
 # exclut deliberement VERSION=$(...) (derivation dynamique attendue).
-# Fichier absent (ex. fixtures de test qui ne modelisent que les 8 sources
+# Fichier absent (ex. fixtures de test qui ne modelisent que les 10 sources
 # ci-dessus) -> check ignore, ce n'est pas son role.
 ENTRYPOINT_EXIT=0
 ENTRYPOINT_SH="$ROOT/entrypoint.sh"
@@ -118,7 +123,8 @@ if [ "$MISMATCH" -eq 1 ] || [ "$EXIT" -ne 0 ]; then
     printf '  %-48s %s\n' "${LABELS[$i]}" "$v"
   done
   echo ""
-  echo "Aligner les 8 sources sur une seule version (bump synchrone, cf. CLAUDE.md)."
+  echo "Aligner les 10 sources sur une seule version (bump synchrone, cf. CLAUDE.md)."
+  echo "themes.css est autogenere : relancer 'node shared/build-themes.js' apres avoir bumpe tokens.css."
   exit 1
 fi
 
@@ -126,5 +132,5 @@ if [ "$ENTRYPOINT_EXIT" -ne 0 ]; then
   exit 1
 fi
 
-echo "OK : 8 sources de version alignees sur $REF ; entrypoint.sh sans version figee (issue #811)"
+echo "OK : 10 sources de version alignees sur $REF ; entrypoint.sh sans version figee (issue #811)"
 exit 0

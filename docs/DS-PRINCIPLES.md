@@ -456,12 +456,17 @@ après bascule explicite (dépendance #508 — bascule tracée dans ce document)
 ## Section 7 — Versioning (@ds-version)
 
 ### Règle
-**Chaque ajout/modif visible côté consumer** = bump `@ds-version` synchronisé sur 5 fichiers :
+**Chaque ajout/modif visible côté consumer** = bump synchronisé sur **10 sources** vérifiées par `shared/check-versions.sh` :
 1. `shared/css/tokens.css`
 2. `shared/css/utilities.css`
 3. `shared/css/components.css`
 4. `shared/css/layout.css`
-5. `shared/nav.js` (header-version)
+5. `shared/css/base.css`
+6. `shared/css/themes.css` — **AUTOGÉNÉRÉ** : ne pas le bumper à la main, relancer `node shared/build-themes.js` (il lit `@ds-version` dans `tokens.css` et échoue si elle est illisible). Sa version était figée à 2.67.0 en dur dans le générateur jusqu'à #951.
+7. `shared/nav.js` — commentaire `@ds-version`
+8. `shared/nav.js` — `const VERSION`
+9. `shared/components-registry.json` — `version`
+10. `package.json` racine — `version`
 
 ### Convention semver
 - **Feature** (ajout composant, nouveau token) → bump **minor** (2.55 → 2.56)
@@ -472,7 +477,7 @@ après bascule explicite (dépendance #508 — bascule tracée dans ce document)
 Si un sprint touche `@ds-version` sur 3+ issues, le parent `/sprint` **pré-alloue les versions** et les injecte dans le prompt `/dev` de chaque issue. Garantit zéro conflit git sur les bumps. Validé Sprint 17 (0 conflit vs 2 attendus en S16).
 
 ### Garde-fou
-- Script `check-sync.sh` (consumers) vérifie le drift de version
+- Script `check-sync.sh` (consumers) vérifie le drift de version ET le contenu (sha256) des fichiers que `sync.sh` copie à l'identique (`ds-tokens/themes/utilities/base.css`) ; `ds-layout.css` et `ds-components.css`, transformés par `sync.sh` (`--no-showcase`, `--components=…`), restent comparés par leur seul en-tête (#951)
 - CI sur DS vérifie cohérence inter-fichiers
 
 ---
@@ -519,7 +524,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 - [ ] Compteur composants dans `site.html` mis à jour (hero + hub cards)
 
 ### Versioning
-- [ ] `@ds-version` bumpé sur les 5 fichiers (cf Section 7)
+- [ ] `@ds-version` bumpé sur les 10 sources (cf Section 7 ; `themes.css` via `node shared/build-themes.js`)
 - [ ] Tag git aligné si release
 
 ### Registre
@@ -735,7 +740,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 ### Scripts disponibles
 | Script | Usage |
 |---|---|
-| `shared/check-sync.sh` | Vérifie version sync sur consumer |
+| `shared/check-sync.sh` | Vérifie version + contenu (fichiers copiés à l'identique) sur consumer |
 | `shared/check-components.sh` | Détecte composants custom hors DS sur consumer |
 | `shared/check-diacritics.sh` | Vérifie accents français corrects |
 | `shared/perf-budget.sh` | Mesure budget gzip |
