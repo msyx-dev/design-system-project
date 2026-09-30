@@ -33,7 +33,8 @@ docker run -d --name design-system -p 8080:80 design-system
 
 Le site est servi sur `http://localhost:8080`. La terminaison TLS/reverse-proxy (Caddy, Traefik,
 Nginx…) est à la charge de l'opérateur — voir `Caddyfile.container` pour les routes exposées par le
-container (`/health.json`, `/version.json`, catch-all SPA `try_files {path} /site.html`).
+container (`/health` et `/version` — chemins du contrat —, leurs formes `/health.json` et
+`/version.json`, catch-all SPA `try_files {path} /site.html`).
 
 Deux routes du `Caddyfile.container` sont spécifiques au déploiement msyx et supposent un outpost
 Authentik forward_auth en amont (voir section Profil d'auth) :
@@ -101,9 +102,9 @@ dans l'image elle-même, reconstruite à chaque déploiement. Rien n'est écrit 
 
 ## Healthcheck
 
-- `GET /health.json` → `{"status":"ok"}` (fichier statique — c'est aussi la sonde du `HEALTHCHECK`
-  Docker interne à l'image, cf. `Dockerfile`)
-- `GET /version.json` → `{"version":"<dérivée de package.json>","sha":"<SOURCE_COMMIT ou "unknown">","built_at":"<figé au build>"}`,
+- `GET /health` (et `/health.json`) → `{"status":"ok"}`, `application/json` (fichier statique — `/health` est
+  aussi la sonde du `HEALTHCHECK` Docker interne à l'image, cf. `Dockerfile`)
+- `GET /version` (et `/version.json`) → `{"version":"<dérivée de package.json>","sha":"<SOURCE_COMMIT ou "unknown">","built_at":"<figé au build>"}`,
   généré par `entrypoint.sh` à chaque démarrage du container. `version` est **extraite de
   `/srv/package.json`** (déjà copié dans l'image par `COPY . /srv`, non exclu par
   `.dockerignore`) au démarrage — jamais saisie en dur (issue #811 ; avant correctif, `VERSION=`
@@ -113,13 +114,14 @@ dans l'image elle-même, reconstruite à chaque déploiement. Rien n'est écrit 
   `package.json` racine. `shared/check-versions.sh` garantit l'absence de récidive (contrôle
   dédié, cf. commentaire du script).
 
-**Écart de nommage à connaître** : les chemins réels sont `/health.json` et `/version.json` (avec
-extension), pas `/health`/`/version` nus. Ces derniers ne sont **pas** des routes dédiées dans
-`Caddyfile.container` : ils tombent dans le catch-all SPA (`try_files {path} /site.html`) et
-renvoient du HTML avec un statut `200`, pas un JSON de santé — vérifié en direct sur la préprod.
-C'est un écart par rapport à la convention `/health`+`/version` (sans extension) du parc
-(`global-config/docs/conventions/health-version.md`) ; hors périmètre de ce ticket, qui porte sur le
-profil d'auth — nommé ici plutôt que masqué.
+**Deux formes, un seul fichier** : `/health` et `/version` (chemins du contrat du parc,
+`global-config/docs/conventions/health-version.md`) sont réécrits en interne par `Caddyfile.container`
+(`@contract`, `rewrite * {path}.json`) vers `/srv/health.json` et `/srv/version.json`, avec
+`Content-Type: application/json`. Les formes suffixées `.json` restent servies à l'identique (monitors
+Uptime Kuma et sondes existantes). Avant le correctif (#958), `/health` et `/version` nus ne
+correspondaient à aucune route : ils tombaient dans le catch-all SPA et rendaient `site.html` avec un
+`200` `text/html`, ce qui faisait croire à une app saine à toute sonde ne lisant que le code HTTP.
+Seuls ces deux chemins exacts sont réécrits : `/health/` ou `/healthz` restent du ressort du catch-all SPA.
 
 ## Backup / sauvegarde
 

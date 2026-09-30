@@ -6,9 +6,24 @@
 :80 {
     encode gzip
 
-    # Healthchecks publics (Uptime Kuma + Coolify probes)
+    # Healthchecks publics (Uptime Kuma + Coolify probes) — formes suffixées, conservées
+    # a l'identique pour les sondes existantes.
     @public path /health.json /version.json
     handle @public {
+        root * /srv
+        file_server
+    }
+
+    # Chemins du CONTRAT du parc (_global/docs/conventions/health-version.md) : /health et
+    # /version en application/json. Reecriture interne vers les fichiers statiques
+    # /srv/health.json et /srv/version.json (ce dernier regenere au demarrage par
+    # entrypoint.sh). Sans cette route, ces chemins tombaient dans le fallback SPA ci-dessous
+    # et rendaient site.html avec un 200 : une sonde qui ne lit que le code HTTP croyait
+    # l'app saine (#958). Doit rester AVANT le `handle` fallback.
+    @contract path /health /version
+    handle @contract {
+        rewrite * {path}.json
+        header Content-Type application/json
         root * /srv
         file_server
     }
