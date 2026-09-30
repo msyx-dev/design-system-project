@@ -34,7 +34,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 # Nombre d'assertions attendu : garde-fou contre une suite « verte » qui a saute des cas.
-EXPECTED_CHECKS=41
+EXPECTED_CHECKS=44
 
 PASS=0
 FAIL=0
@@ -121,7 +121,10 @@ any_of()    { printf '^ORPHELIN(-STRUCTUREL|-ACCEPTÉ)? +%s( |$)' "$1"; }
 echo "Preparation : sync.sh reel (defaut) + sync.sh --components=core..."
 make_template full
 HIST_FULL="$TEMPLATE_HIST_WARNINGS"
-make_template core --components=core
+# Le template core ne sert qu'au cas I : saute quand CASES l'exclut (rejeu de mutation).
+if [ -z "${CASES:-}" ] || [[ " $CASES " == *" I "* ]]; then
+  make_template core --components=core
+fi
 echo "  passe historique sur dossier synchronise : $HIST_FULL WARNING (defaut preexistant, isole par .ds-allowlist genere)"
 
 case_A() {
@@ -138,6 +141,15 @@ check "A4 .btn-maison local -> rc=1" rc_is 1
 check "A5 WARNING sur .btn-maison, et sur elle seule (Avertissements : 1)" has '^  Classe  : \.btn-maison$'
 check "A6 un seul avertissement : la passe historique isolee par l'allowlist" has '^Avertissements : 1$'
 check "A7 toujours aucune section « Passe orphelins »" lacks 'Passe orphelins'
+# Variante de la spec (« sans CSS local ») : sans les copies components/, la passe historique ne
+# trouve aucun CSS hors ds-*.css et sort par la branche « INFO : aucun fichier CSS » — un AUTRE
+# garde du drapeau que celui de la fin du script.
+A0="$(new_consumer A0 full)"
+rm -rf "$A0/styles/components"
+run_plain "$A0"
+check "A8 sans CSS local, sans drapeau : INFO aucun fichier CSS" has '^INFO: aucun fichier CSS'
+check "A8b sans CSS local, sans drapeau : rc=0 (le garde du drapeau sort avant la passe orphelins)" rc_is 0
+check "A9 sans CSS local, sans drapeau : aucune section « Passe orphelins »" lacks 'Passe orphelins'
 }
 
 case_B() {
@@ -260,8 +272,8 @@ check "H2 garde-fou : les 3 classes sont listees par user-feedback et partagees 
 case_I() {
 # --- Cas I : --components=core ----------------------------------------------------------
 echo "Cas I: sync.sh --components=core — une entree hors core n'est pas « livree »"
-# kanban : non structurel, aucune de ses classes n'est dans les copies core (garde-fou ci-dessous).
-ENTRY=kanban
+# lightbox : non structurel, aucune de ses classes simples n'est definie dans les copies core (garde-fou I5). kanban, essaye d'abord, ne convenait pas : le garde-fou I5 a montre qu'une de ses classes est deja definie dans les copies toujours livrees.
+ENTRY=lightbox
 I1="$(new_consumer I1 full)"; app_with_prop "$I1"
 run_orphans "$I1"
 check "I1 garde-fou : en sync complet, $ENTRY est ORPHELIN (livre, non monte)" has "$(orphan_of $ENTRY)"
