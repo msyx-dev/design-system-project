@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contraste du texte des boutons — sonde #944</title>
+<!--
+  Fixture de la sonde `visual-tests/button-contrast.spec.ts` (#944).
+
+  Un bouton par cas, chacun marque `data-probe="<cas>"`. La sonde mesure le
+  contraste du texte contre les PIXELS RENDUS sous le texte (capture du bouton
+  texte masque), au repos puis au survol — pas seulement contre un arret de
+  degrade calcule.
+
+  Markup = celui des pages du DS et des consommateurs :
+  - `.btn-primary.btn-danger` : la demo de pages/composants.html#buttons ;
+  - `.btn-danger` seul : ce que `@msyx-dev/react` <Button variant="danger">
+    emet (`btn-${variant}`) ;
+  - les 3 boutons de connexion qui peignent le meme couple que `.btn-primary`.
+
+  Pas de nav.js, pas de components.js : aucun header, aucune sidebar, aucun
+  script qui fasse bouger la mise en page pendant la mesure. Les valeurs de
+  `data-probe` doivent rester egales a SOLID + REPORT_ONLY du spec.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  body { margin: 0; }
+  /* Fond opaque connu sous les boutons : la sonde s'en sert pour recomposer
+     le texte des boutons dont l'opacite change au survol (.login-submit). */
+  #bench { background: var(--primary); padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; max-width: 640px; }
+  .row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .login-slot { width: 320px; }
+</style>
+</head>
+<body>
+<main id="bench">
+  <div class="row">
+    <button type="button" class="btn-primary" data-probe="btn-primary">Enregistrer</button>
+    <button type="button" class="btn-danger" data-probe="btn-danger">Supprimer</button>
+    <button type="button" class="btn-success" data-probe="btn-success">Valider</button>
+    <button type="button" class="btn-warning" data-probe="btn-warning">Avertir</button>
+  </div>
+  <div class="row">
+    <button type="button" class="btn-primary btn-danger" data-probe="btn-primary-btn-danger">Supprimer</button>
+  </div>
+  <div class="row">
+    <button type="button" class="btn-secondary" data-probe="btn-secondary">Annuler</button>
+    <button type="button" class="btn-ghost" data-probe="btn-ghost">Ignorer</button>
+    <button type="button" class="btn-outline-danger" data-probe="btn-outline-danger">Retirer</button>
+  </div>
+  <div class="login-slot">
+    <button type="button" class="login-submit" data-probe="login-submit">Se connecter</button>
+  </div>
+  <div class="login-slot">
+    <div class="login-compact">
+      <input type="text" aria-label="Identifiant" placeholder="Identifiant">
+      <button type="button" data-probe="login-compact">Entrer</button>
+    </div>
+  </div>
+  <div class="login-slot">
+    <button type="button" class="login-authentik-btn" data-probe="login-authentik">Continuer avec Authentik</button>
+  </div>
+</main>
+</body>
+</html>

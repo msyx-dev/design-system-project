@@ -329,7 +329,15 @@
     --btn-on-danger: #ffffff;       /* AA — 4.83:1 sur #ef4444 */
     --btn-on-success: #ffffff;      /* AA — 4.55:1 sur #22c55e (large text) */
     --btn-on-warning: #1a0f00;      /* AAA — 11.7:1 sur #f59e0b (noir chaud sur ambre) */
+    --btn-on-primary: var(--text-on-accent); /* texte des boutons primaires (#944) — alias de --text-on-accent : le rendu ne change nulle part, sauf Auchan sombre qui le surcharge (blanc). Une seule déclaration : :root et [data-mode="light"] sont le même <html>, le var() résout avec le --text-on-accent du thème/mode actif. */
     --btn-shadow-alpha: 35%;
+    /* Fond des boutons pleins — tokens dédiés (#944) : hex littéral, JAMAIS dérivé du dégradé de marque ni des
+       sémantiques (partagés hors boutons). Déclarés dans les 4 couches (DS-PRINCIPLES §2), réglés à la mesure
+       (visual-tests/button-contrast.spec.ts). */
+    --btn-primary-bg-start: #165fd0;  --btn-primary-bg-end: #642ac5;
+    --btn-danger-bg-start: #ce1d28;  --btn-danger-bg-end: #bb0010;
+    --btn-success-bg-start: #007231;  --btn-success-bg-end: #006328;
+    --btn-warning-bg-start: #f59e0b;  --btn-warning-bg-end: #d97706;
 
     /* Alert messaging — alphas surchargeables par modificateur (#519) */
     --alert-bg-alpha: 8%;       /* fond par défaut (.alert variantes) */
@@ -439,6 +447,13 @@
     --btn-on-success: #ffffff;      /* AA — 4.85:1 sur #15803d */
     --btn-on-warning: #ffffff;      /* AA — 4.71:1 sur #c2410c */
     --btn-shadow-alpha: 22%;        /* ombres adoucies en light */
+    /* Fond des boutons pleins — tokens dédiés (#944) : hex littéral, JAMAIS dérivé du dégradé de marque ni des
+       sémantiques (partagés hors boutons). Déclarés dans les 4 couches (DS-PRINCIPLES §2), réglés à la mesure
+       (visual-tests/button-contrast.spec.ts). */
+    --btn-primary-bg-start: #165fd0;  --btn-primary-bg-end: #642ac5;
+    --btn-danger-bg-start: #d1141b;  --btn-danger-bg-end: #bb0010;
+    --btn-success-bg-start: #007031;  --btn-success-bg-end: #007e35;
+    --btn-warning-bg-start: #ad3500;  --btn-warning-bg-end: #a75900;
 
     /* Echelle categorielle — MSYX light (#800). Contraste vs --surface-solid #ffffff. */
     --cat-1: #056eff;

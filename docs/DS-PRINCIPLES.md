@@ -103,6 +103,13 @@ Trois categories de valeurs hardcodees **legitimement tokenisees** sans lien au 
 - Cascade CSS 4 couches : `:root` → `[data-theme]` → `[data-mode="light"]` → `[data-theme][data-mode]`.
 - Tout composant doit être **testable** sur les **10 combos** (MSYX dark+light, ACSSI dark+light, Nhood dark+light, Auchan dark+light, Noël dark+light — `THEME_CONFIG` de `shared/components.js` donne bien `['dark','light']` aux 5 themes ; `playwright.config.ts` génère 5×2×2=20 projets, cf. correction #800 + #849 + #939 — l'ancien chiffre « 5 combos » était déjà stale, puis « 8 combos » l'est devenu à son tour).
 
+### Tokens de fond des boutons pleins (#944)
+- Le fond de `.btn-primary`, `.btn-danger`, `.btn-success`, `.btn-warning` (et des 3 boutons de connexion `.login-submit`, `.login-compact button`, `.login-authentik-btn`, qui peignent le même couple que `.btn-primary`) est un dégradé `linear-gradient(135deg, var(--btn-<variante>-bg-start), var(--btn-<variante>-bg-end))`.
+- Les **8 tokens** `--btn-{primary,danger,success,warning}-bg-{start,end}` sont **dédiés** : hex littéral à 6 chiffres, déclarés dans les **4 couches** (`tokens.css` `:root` + `[data-mode="light"]`, `themes/<nom>.json` `modes.dark` + `modes.light` → `themes.css` autogénéré), **jamais dérivés** (`var(--gradient-1)`, `var(--danger)`, `color-mix()` interdits) : ces valeurs sont partagées hors boutons (logo, badges, alertes, graphiques) et ne peuvent pas être assombries pour un bouton sans dégrader le reste.
+- Ils sont **réglés à la mesure** (contraste ≥ 4,6:1 visé, voir §3.3), thème par thème, en OKLCh : teinte conservée, chroma ramenée dans le gamut sRGB, L par pas de 0,01 en s'éloignant de la couleur du texte ; ΔL(OKLCh) entre début et fin ≥ 0,04 pour garder un dégradé visible. La couleur de texte (`--text-on-accent`, `--btn-on-*`) n'est pas touchée par ce réglage des fonds.
+- **Texte des boutons pleins** : `--btn-on-{primary,danger,success,warning}`. `--btn-on-primary` (couleur du texte de `.btn-primary`, `.login-submit`, `.login-compact button`, `.login-authentik-btn`) est déclaré dans `tokens.css` `:root` comme alias `var(--text-on-accent)` : rendu identique partout. Seul **Auchan sombre** le surcharge (`themes/auchan.json` `modes.dark`, `#ffffff`) : son `--text-on-accent` est sombre (`#1a0a0b`) et est partagé par 43 règles hors boutons (toggle, badges, etc.) — il ne doit pas changer ; le bouton primaire passe donc en texte blanc sur un rouge foncé (`--btn-primary-bg-start/-end` d'Auchan sombre réglés en conséquence, ΔL ≥ 0,04). Un thème dont le texte d'accent ne convient pas à un fond de bouton surcharge `--btn-on-primary`, jamais `--text-on-accent`.
+- Un thème ajouté doit déclarer les 8 tokens dans ses 2 modes : le test de complétude de `visual-tests/button-contrast.spec.ts` échoue en nommant le fichier, le mode et le token manquant.
+
 ### Variables RGB pour rgba()
 Pour les declinaisons opaques :
 ```css
@@ -265,9 +272,26 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 
 **Référence** : décision Mike 2026-07-26, issue #613, v2.116.0.
 
+### 3.3 — Contraste des boutons à fond plein : mesuré sur les pixels, bloquant (#944)
+
+**Règle** : le texte d'un bouton à fond plein (dégradé) respecte **4,5:1 minimum** (valeur visée **≥ 4,6** : l'anticrénelage et le tramage du dégradé font bouger la mesure de quelques centièmes) sur **trois mesures**, dans les **10 combos** thème/mode, au repos **et** au survol :
+1. le **pire arrêt** du dégradé (`stopMin`) ;
+2. le **pire pixel rendu** sous le texte au repos ;
+3. le **pire pixel rendu** sous le texte au survol — le reflet `::before` (`--overlay-white-15`) éclaircit le fond **et** le texte sombre (peint au-dessus de lui) : un texte sombre n'est pas « gratuit » au survol.
+
+**Pourquoi pas axe** : sur un fond en dégradé, `color-contrast` ne rend qu'un `incomplete` — il ne voit ni le dégradé ni le reflet. Seule la capture voit ce que l'utilisateur lit. La sonde `visual-tests/button-contrast.spec.ts` est **bloquante** (`ENFORCE = true`) : chaque cellule fautive est nommée (`<projet> <cas> stop|rest|hover = X:1 < 4.5`).
+
+**Règles de conception** :
+- Les fonds des boutons pleins sont les tokens dédiés `--btn-*-bg-*` (§2), **jamais dérivés** du dégradé de marque ni des couleurs sémantiques.
+- Le survol d'un bouton plein ne change **jamais l'opacité** de l'élément (elle mélange texte et fond avec le fond de page : le contraste dépendrait du contexte). Mécanisme unique : reflet `::before` + élévation, celui de `.btn-primary` — repris par `.login-submit` et `.login-authentik-btn`.
+- **Ne jamais** baisser `CONTRAST_MIN` ni retirer un cas de `SOLID` pour faire passer la sonde : on règle le token.
+- Nouveau bouton plein (nouvelle variante, nouveau composant peignant un fond plein) : ajouter un `data-probe` dans `visual-tests/fixtures/button-contrast-944.html` et le cas dans `SOLID`.
+- Hors périmètre bloquant (rapport seul, `REPORT_ONLY`) : `.btn-secondary`, `.btn-ghost`, `.btn-outline-danger` (fond translucide ou transparent).
+
 ### Garde-fou
 - Audit `@axe-core/playwright` sur 54 pages × 6 themes (cf `docs/audit-a11y-*.md`)
 - Objectif : 0 violation WCAG A/AA/AA21 (atteint depuis v2.52.0)
+- **Boutons à fond plein** : sonde pixels `visual-tests/button-contrast.spec.ts`, **bloquante** (§3.3) — axe `color-contrast` reste en rapport (non bloquant)
 
 ---
 

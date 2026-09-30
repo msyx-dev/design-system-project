@@ -177,6 +177,18 @@ Filet de regression visuel automatique via Playwright. Detaille dans le README.
 - **CI** : `.github/workflows/visual.yml` — bloque les PR si diff > seuil, timeout 30 min
 - **Pas d'impact prod** : Caddy `file_server` ignore `node_modules/`, `package.json`, `playwright.config.ts`. Le runtime DS reste 100% static.
 
+## Contraste des boutons à fond plein (depuis #944)
+
+Sonde par **échantillonnage des pixels rendus** : axe ne rend qu'un `incomplete` sur un fond en dégradé et ne voit pas le reflet de survol.
+
+- **Spec** : `visual-tests/button-contrast.spec.ts` (+ fixture `visual-tests/fixtures/button-contrast-944.html`, un bouton par cas `data-probe`). Listée dans le `testMatch` de `playwright.config.ts`, donc jouée par `test:visual` dans les 10 projets desktop (les 2 `*-mobile` la sautent : le contraste ne dépend pas du viewport).
+- **Méthode** : par bouton et par état (`rest`, `hover`) — lit la couleur de texte réellement peinte (le reflet `::before` éclaircit un texte sombre), capture le bouton texte masqué, décode la capture dans la page (canvas) et calcule le contraste WCAG minimal entre le texte et chaque pixel sous la boîte du texte (`pixelMin`) ; au repos, calcule aussi le contraste du pire arrêt du dégradé (`stopMin`).
+- **Cas** : `SOLID` (bloquants, `ENFORCE = true`, seuil 4,5:1 — valeurs visées ≥ 4,6) = `btn-primary`, `btn-danger`, `btn-success`, `btn-warning`, `btn-primary.btn-danger` (markup de la démo `composants.html`), `.login-submit`, `.login-compact button`, `.login-authentik-btn` ; `REPORT_ONLY` : `btn-secondary`, `btn-ghost`, `btn-outline-danger`. `disabled` et `.btn-loading` exclus (composants inactifs, exemptés par WCAG).
+- **Garde-fous de la sonde** (toujours actifs) : texte opaque, ≥ 2 arrêts opaques, pixels échantillonnés, pixel rendu ≥ pire arrêt − 0,05, couleur peinte au repos = couleur calculée.
+- **Tokens** : les fonds des boutons pleins sont les 8 tokens `--btn-{primary,danger,success,warning}-bg-{start,end}` (hex littéral, 4 couches, jamais dérivés — `DS-PRINCIPLES` §2), réglés à la mesure par la sonde. Le texte des boutons pleins suit les tokens `--btn-on-{primary,danger,success,warning}` ; `--btn-on-primary` est un alias de `--text-on-accent` (`tokens.css`), surchargé en blanc par Auchan sombre seul (`themes/auchan.json`), pour que `--text-on-accent` — consommé par 43 autres règles — reste inchangé. Un 2e test de la spec (Node pur, projet `msyx-dark-desktop` seul) vérifie leur **complétude** dans `tokens.css`, `themes/*.json`, `themes.css` et le miroir `themes/msyx.json`.
+- **Survol des boutons de connexion** : `.login-submit` et `.login-authentik-btn` utilisent le reflet + l'élévation de `.btn-primary` (plus d'opacité au survol : elle rendait le contraste dépendant du fond de page). `.login-compact button` n'a pas d'état de survol.
+- **Règle complète** : `docs/DS-PRINCIPLES.md` §3.3.
+
 ## A11y audit (depuis v2.52.0 — #242)
 
 Infrastructure d'audit d'accessibilité automatisé via axe-core.
