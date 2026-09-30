@@ -4,12 +4,34 @@ set -euo pipefail
 # check-components.sh — Lint des projets consommateurs
 # Détecte les classes CSS composant-like définies en dehors du Design System
 #
-# Usage : ./check-components.sh <répertoire-css-projet>
-# Exit  : 0 = propre, 1 = avertissements détectés
+# Usage : ./check-components.sh [--orphans=<répertoire-source>] <répertoire-css-projet>
+# Exit  : 0 = propre, 1 = avertissements détectés (ou orphelin structurel, ou erreur d'usage)
+#
+# --orphans=<src> (opt-in, #938) : ajoute la passe « orphelins » — composants LIVRÉS par
+#   sync.sh (classes définies dans les copies ds-*.css / components/*.css) mais jamais
+#   montés dans le code source <src> du consommateur. Moteur : bin/lib/check-orphans.js
+#   (Node). Seuls les composants « structurants » (`structural: true` au registre) font
+#   échouer (exit 1) ; les autres sont listés à titre informatif. Échappatoire : une ligne
+#   `orphelin:<nom-entrée>` dans le .ds-allowlist. Sans le drapeau, sortie et code retour
+#   sont identiques à ceux d'avant #938 (skill audit-ds-compliance, ci.yml).
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REGISTRY="$SCRIPT_DIR/components-registry.json"
-CSS_DIR="${1:?Usage: $0 <répertoire-css-projet>}"
+
+# Drapeau opt-in : seul `--orphans=` est extrait. Tout le reste reste positionnel, donc
+# sans ce drapeau le premier argument est lu exactement comme avant (CSS_DIR).
+ORPHANS_SRC=""
+ORPHANS_ON=false
+POSITIONAL=()
+for ARG in "$@"; do
+    case "$ARG" in
+        --orphans=*) ORPHANS_ON=true; ORPHANS_SRC="${ARG#--orphans=}" ;;
+        *) POSITIONAL+=("$ARG") ;;
+    esac
+done
+set -- ${POSITIONAL[@]+"${POSITIONAL[@]}"}
+
+CSS_DIR="${1:?Usage: $0 [--orphans=<répertoire-source>] <répertoire-css-projet>}"
 
 if [ ! -d "$CSS_DIR" ]; then
     echo "ERREUR: répertoire inexistant : $CSS_DIR" >&2
@@ -20,6 +42,26 @@ if [ ! -f "$REGISTRY" ]; then
     echo "ERREUR: components-registry.json introuvable : $REGISTRY" >&2
     exit 1
 fi
+
+if $ORPHANS_ON; then
+    if [ -z "$ORPHANS_SRC" ] || [ ! -d "$ORPHANS_SRC" ]; then
+        echo "ERREUR: --orphans= exige un répertoire source existant : ${ORPHANS_SRC:-<vide>}" >&2
+        exit 1
+    fi
+    ORPHANS_ENGINE="$SCRIPT_DIR/../bin/lib/check-orphans.js"
+    if ! command -v node &>/dev/null || [ ! -f "$ORPHANS_ENGINE" ]; then
+        echo "ERREUR: --orphans exige node (>= 20) et un clone complet du DS (bin/lib/check-orphans.js)" >&2
+        exit 1
+    fi
+fi
+
+# Passe orphelins (#938) : relaie la sortie du moteur Node.
+# Retour : 0 = aucun orphelin structurel, 1 = au moins un, 2 = erreur du moteur.
+run_orphan_pass() {
+    local rc=0
+    node "$ORPHANS_ENGINE" --css="$CSS_DIR" --src="$ORPHANS_SRC" || rc=$?
+    return $rc
+}
 
 # Fichier allowlist optionnel dans le projet
 ALLOWLIST="$CSS_DIR/.ds-allowlist"
@@ -111,7 +153,18 @@ CSS_FILES=$(find "$CSS_DIR" -name "*.css" ! -name "ds-*.css" -type f 2>/dev/null
 
 if [ -z "$CSS_FILES" ]; then
     echo "INFO: aucun fichier CSS trouvé dans $CSS_DIR (hors ds-*.css)"
-    exit 0
+    if ! $ORPHANS_ON; then
+        exit 0
+    fi
+    # Passe orphelins demandée : pas de CSS local à comparer au registre, on l'enchaîne.
+    echo ""
+    ORPHANS_RC=0
+    run_orphan_pass || ORPHANS_RC=$?
+    if [ "$ORPHANS_RC" -ge 2 ]; then
+        echo "ERREUR: la passe orphelins a échoué (code $ORPHANS_RC)" >&2
+        exit 1
+    fi
+    exit "$ORPHANS_RC"
 fi
 
 WARNINGS=0
@@ -192,9 +245,26 @@ if [ $WARNINGS -gt 0 ]; then
     echo "Workflow : créer le composant dans le DS → sync.sh → consommer les classes DS"
     echo ""
     echo "Pour les cas légitimes, ajouter les classes dans $CSS_DIR/.ds-allowlist"
-    exit 1
+    HIST_RC=1
 else
     echo ""
     echo "OK — aucun composant custom hors DS détecté"
-    exit 0
+    HIST_RC=0
 fi
+
+# Sans --orphans : code retour de la passe historique, strictement inchangé.
+if ! $ORPHANS_ON; then
+    exit $HIST_RC
+fi
+
+echo ""
+ORPHANS_RC=0
+run_orphan_pass || ORPHANS_RC=$?
+if [ "$ORPHANS_RC" -ge 2 ]; then
+    echo "ERREUR: la passe orphelins a échoué (code $ORPHANS_RC)" >&2
+    exit 1
+fi
+if [ $HIST_RC -ne 0 ] || [ "$ORPHANS_RC" -ne 0 ]; then
+    exit 1
+fi
+exit 0
