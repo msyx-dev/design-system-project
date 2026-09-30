@@ -80,12 +80,22 @@ cp "$SHARED_DIR/icons/sprite.svg" "$TARGET/icons/sprite.svg"
 #   - ds-nav.js        : header, sidebar, scroll-spy, navigation SPA, LazyLoader
 #   - ds-components.js : composants interactifs (toasts, modals, sliders, ...)
 #   - ds-styles.css    : agrégateur @import des modules CSS
-# styles.css importe css/<mod>.css (relatif à shared/). Côté consumer les
-# modules sont distribués en ds-<mod>.css à la racine de TARGET, donc on
-# réécrit css/<mod>.css → ds-<mod>.css pour que les @import résolvent.
+# styles.css importe css/<mod>.css (relatif à shared/) sous la forme
+# `@import 'css/<mod>.css';` — SANS url(). Côté consumer les modules sont
+# distribués en ds-<mod>.css à la racine de TARGET, donc on réécrit en
+# `@import './ds-<mod>.css';` (#951).
+# Deux pièges, tous deux déjà rencontrés :
+#   - la substitution ciblait `url('css/…')` : styles.css n'utilise pas url(), le
+#     sed ne transformait RIEN et ds-styles.css livrait 7 @import vers un dossier
+#     css/ inexistant chez le consumer. On vise donc `@import '…'` (et on garde la
+#     forme url('…') au cas où styles.css l'adopterait un jour).
+#   - le chemin doit être RELATIF EXPLICITE (`./ds-x.css`) : un specifier nu
+#     (`'ds-x.css'`) n'est pas résolu par le bundler Next/webpack des consumers.
+# Garde-fou : tests/test-sync-styles.sh (aucun `css/` résiduel, 7 `./ds-*.css`).
 cp "$SHARED_DIR/nav.js"        "$TARGET/ds-nav.js"
 cp "$SHARED_DIR/components.js" "$TARGET/ds-components.js"
-sed "s#url('css/\([a-z0-9_-]*\)\.css')#url('ds-\1.css')#g" \
+sed -e "s#@import 'css/\([a-z0-9_-]*\)\.css'#@import './ds-\1.css'#g" \
+    -e "s#url('css/\([a-z0-9_-]*\)\.css')#url('./ds-\1.css')#g" \
     "$SHARED_DIR/styles.css" > "$TARGET/ds-styles.css"
 
 # graph-lib.global.js : window.__pointerDrag/__svg — REQUIS par ds-components.js
