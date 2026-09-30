@@ -939,8 +939,20 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem;">Libellé visible (sans icône)</div>
+                    <div class="action-menu-wrap">
+                        <button class="action-menu-trigger action-menu-trigger--labeled" aria-haspopup="menu" aria-expanded="false"><span>Actions</span></button>
+                        <div class="action-menu" role="menu">
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-edit"/></svg></span> Éditer</button>
+                            <button class="action-menu-item" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-copy"/></svg></span> Dupliquer</button>
+                            <div class="action-menu-divider" role="separator"></div>
+                            <button class="action-menu-item danger" role="menuitem"><span class="action-menu-icon"><svg class="icon"><use href="/shared/icons/sprite.svg#i-trash"/></svg></span> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p class="demo-note-last" style="margin-top:1rem;">Fermeture : clic extérieur ou touche Escape. JS : <code class="code-inline">initActionMenu()</code>.</p>
+            <p class="demo-note-last" style="margin-top:1rem;">Fermeture : clic extérieur ou touche Escape. JS : <code class="code-inline">initActionMenu()</code>. Trigger sans icône : <code class="code-inline">.action-menu-trigger--labeled</code> (libellé enveloppé, largeur <code class="code-inline">auto</code>) ; avec icône, le libellé reste dans un <code class="code-inline">.sr-only</code> et le bouton garde le carré de 32px.</p>
         </div>
     </div>
 </section>

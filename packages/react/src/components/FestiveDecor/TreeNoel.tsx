@@ -7,8 +7,8 @@
 // ni les tokens de couleur du thème ni l'animation `.tree-lights` de
 // `festive.css` ne l'atteignent (mesure de `shared/nav.js` : 0 capture sur 4
 // diffère en `<img>`, contre 4 sur 4 pour la guirlande). Bénéfice collatéral :
-// `sync.sh` ne distribue aucun fichier de `assets/` (#954), une variante en
-// `<img>` serait cassée chez le consommateur.
+// `sync.sh` ne distribue pas `tree-noel.svg` (#954), une variante en `<img>`
+// serait cassée chez le consommateur.
 //
 // Pourquoi `useId()` : les `id` d'un SVG (`tn-fol`, `tn-pot`, `tn-glow`,
 // `tn-bauble`) sont **globaux au document** et référencés en `url(#…)`. Deux

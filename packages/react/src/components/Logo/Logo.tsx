@@ -1,8 +1,8 @@
 import type { ImgHTMLAttributes, ReactElement } from "react";
 
 /**
- * Variante d'asset SVG résolue depuis `assets/` (racine du repo DS,
- * NON distribuée par `shared/sync.sh` — cf. docstring `Logo` ci-dessous).
+ * Variante d'asset SVG résolue depuis `assets/` (racine du repo DS, déposée
+ * par `shared/sync.sh` dans `<cible>/assets/` — cf. docstring `Logo` ci-dessous).
  */
 export type LogoVariant = "default" | "mark" | "dark" | "light";
 
@@ -29,11 +29,10 @@ export interface LogoProps extends Omit<
   /** Fichier SVG résolu. @default "default" (logo-msyx.svg, mark PRIMARY) */
   variant?: LogoVariant;
   /**
-   * Chemin de base des assets SVG, SANS slash final. Le DS ne distribue PAS
-   * `assets/` via `shared/sync.sh` (uniquement le CSS) — c'est précisément
-   * ce qui casse chez les consumers React selon leur bundler/base URL. Le
-   * consumer doit copier les 4 SVG (`logo-msyx*.svg`) sous ce chemin dans
-   * son propre app (ou pointer vers une URL absolue, CDN par ex.).
+   * Chemin de base des assets SVG, SANS slash final. `shared/sync.sh` dépose
+   * les 4 SVG (`logo-msyx*.svg`) dans `<cible>/assets/` (#954) : le consumer
+   * doit les servir sous ce chemin selon son bundler/base URL (ou pointer
+   * vers une URL absolue, CDN par ex.).
    * @default "/assets"
    */
   basePath?: string;
@@ -58,11 +57,11 @@ export interface LogoProps extends Omit<
  *
  * **Rôle principal : résoudre le chemin de l'asset SVG.** Les 4 fichiers
  * (`logo-msyx.svg`/`-mark`/`-dark`/`-light`) vivent dans `assets/` à la
- * racine du repo DS — un dossier que `shared/sync.sh` ne distribue PAS
- * (seul le CSS l'est). Selon le bundler et la base URL du consumer, un
- * chemin absolu codé en dur casse. `basePath` isole ce point de friction
- * dans une seule prop plutôt que de laisser chaque consumer le découvrir
- * à l'usage.
+ * racine du repo DS — `shared/sync.sh` les dépose dans `<cible>/assets/`
+ * (#954), mais le DS ne les référence depuis aucun CSS : le consumer doit
+ * les servir. Selon le bundler et la base URL du consumer, un chemin
+ * absolu codé en dur casse. `basePath` isole ce point de friction dans une
+ * seule prop plutôt que de laisser chaque consumer le découvrir à l'usage.
  *
  * Rendu nu par défaut (`<img>` seul, ex. mark seul en login/favicon).
  * Avec `href`, reproduit le lockup header exact : `<a class="header-logo">

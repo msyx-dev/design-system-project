@@ -500,7 +500,7 @@ après bascule explicite (dépendance #508 — bascule tracée dans ce document)
 Si un sprint touche `@ds-version` sur 3+ issues, le parent `/sprint` **pré-alloue les versions** et les injecte dans le prompt `/dev` de chaque issue. Garantit zéro conflit git sur les bumps. Validé Sprint 17 (0 conflit vs 2 attendus en S16).
 
 ### Garde-fou
-- Script `check-sync.sh` (consumers) vérifie le drift de version ET le contenu (sha256) des fichiers que `sync.sh` copie à l'identique (`ds-tokens/themes/utilities/base.css`) ; `ds-layout.css` et `ds-components.css`, transformés par `sync.sh` (`--no-showcase`, `--components=…`), restent comparés par leur seul en-tête (#951)
+- Script `check-sync.sh` (consumers) vérifie le drift de version ET le contenu (sha256) des fichiers que `sync.sh` copie à l'identique (`ds-tokens/themes/utilities/base.css`) ; `ds-layout.css` et `ds-components.css`, transformés par `sync.sh` (`--no-showcase`, `--components=…`), restent comparés par leur seul en-tête (#951) ; il couvre aussi les logos de marque que `sync.sh` dépose dans `assets/` (sha256, `OK`/`DRIFT`/`MISSING` par fichier, #954)
 - CI sur DS vérifie cohérence inter-fichiers
 
 ---
@@ -555,6 +555,8 @@ Avant de merger un nouveau composant, valider TOUS les points :
   - `name`, `page`, `cssClasses` (toutes les classes principales), `jsInit` (ou null), `example`
   - `react` : statut de portage React — `ported` (wrapper `@msyx-dev/react` existe) / `pending` (portable, pas encore porté) / `n-a` (non portable : token, layout, primitive). **Défaut auto = `pending` pour tout `kind:component`** ; à passer `ported` uniquement avec le wrapper React dans le mapping `REACT_TO_REGISTRY` de `bin/generate-registry.js`.
   - `module` : **NE PAS SAISIR À LA MAIN** — champ `string[]` auto-dérivé par `generate-registry.js` à partir de `cssClasses` (voir Section 8.2 — Pont module[] ci-dessous).
+  - `reactExports` : **NE PAS SAISIR À LA MAIN** — `string[]` trié, dérivé par `generate-registry.js` depuis `packages/react/src/index.ts` (noms que le consommateur importe de `@msyx-dev/react`) ; présent ssi `react: "ported"` (supprimé sinon, comme `module[]`). Alimente le signal S2 de la passe orphelins de `check-components.sh` (#938). `--check` échoue si une entrée `ported` n'en a pas.
+  - `structural` : saisie manuelle, `true` sur une liste courte (aujourd'hui `version-notes` et `site-header`). Critère d'admission : le composant est un standard parc que tout consommateur doit monter (convention versioning-releases §8.4, header standard #716). `--check` exige `kind` ≠ `module` et au moins une classe simple dans `cssClasses`. Un orphelin structurel fait échouer `check-components.sh --orphans=`.
 - [ ] `version` global du registry mis à jour
 
 ### Tests visuels (Visual Regression)
@@ -764,7 +766,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 | Script | Usage |
 |---|---|
 | `shared/check-sync.sh` | Vérifie version + contenu (fichiers copiés à l'identique) sur consumer |
-| `shared/check-components.sh` | Détecte composants custom hors DS sur consumer |
+| `shared/check-components.sh` (+ passe orphelins opt-in `--orphans=`, #938) | Détecte composants custom hors DS sur consumer |
 | `shared/check-diacritics.sh` | Vérifie accents français corrects |
 | `shared/perf-budget.sh` | Mesure budget gzip |
 | `bin/check-innerhtml.js` | Bloque tout `innerHTML =` concaténé à une variable sans dérogation justifiée (#758) |

@@ -15,6 +15,12 @@
 # Test F : ds-base.css absent (consommateur ancien)                      -> exit 1, MISSING
 # Test G : contenu modifie ET en-tete different                          -> exit 1, DRIFT (versions)
 # Test H : ds-layout.css modifie a en-tete egal -> non detecte (regime "header" assume) -> exit 0
+# --- logos de marque (#954, T3) ---
+# Test I : apres sync.sh, 4 lignes OK assets/logo-msyx*.svg, aucune ligne acssi    -> exit 0
+# Test J : logo-msyx.svg modifie -> DRIFT ; logo-msyx-dark.svg supprime -> MISSING -> exit 1
+# Test K : sync --assets=acssi puis logo-acssi-light.svg modifie -> DRIFT sur ce fichier -> exit 1
+# Test L : fichier local etranger (assets/logo-monapp.svg) -> aucune ligne, exit 0
+# Test M : consommateur sans assets/ (synchro anterieure a #954) -> 4 MISSING msyx -> exit 1
 #
 # Les fixtures sont produites par le vrai sync.sh (pas de copie a la main) : si sync.sh
 # change ce qu'il transforme, ce test le voit.
@@ -22,6 +28,9 @@ set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+# Variable CHECK_SH (optionnelle) : chemin d'un autre check-sync.sh (dans un shared/ dont le
+# parent contient assets/), pour le rejouer MUTE et prouver que ce test echoue.
+CHECK_SH="${CHECK_SH:-shared/check-sync.sh}"
 
 PASS=0
 FAIL=0
@@ -40,7 +49,7 @@ new_tmp() {
 # Les assertions utilisent `grep -q ... <<< "$OUT"`, jamais `echo "$OUT" | grep -q` : sous
 # pipefail, grep -q quitte au 1er match, echo prend SIGPIPE et le pipeline vaut 141 (test flaky).
 run_check() {
-  OUT="$(bash shared/check-sync.sh "$1" 2>&1)"
+  OUT="$(bash "$CHECK_SH" "$1" 2>&1)"
   RC=$?
 }
 
@@ -133,6 +142,56 @@ sync_into "$H"
 printf '\n/* divergence locale */\n' >> "$H/ds-layout.css"
 run_check "$H"
 if [ "$RC" -eq 0 ]; then pass; else fail "ds-layout.css est en regime header : le contenu n'est pas compare (rc=$RC)"; fi
+
+# --- Test I : logos MSYX a jour -> 4 OK, aucune ligne acssi ---
+echo "Test I: apres sync.sh, 4 lignes OK assets/logo-msyx*.svg et aucune ligne acssi (exit 0 attendu)..."
+run_check "$A"
+NOK="$(grep -cE '^ +OK +assets/logo-msyx(-mark|-dark|-light)?\.svg ' <<< "$OUT" || true)"
+if [ "$RC" -eq 0 ] && [ "$NOK" = "4" ] && ! grep -q 'logo-acssi' <<< "$OUT"; then pass; else fail "attendu 4 OK logo-msyx et 0 acssi, obtenu $NOK OK (rc=$RC)"; fi
+
+# --- Test J : logo modifie -> DRIFT, logo supprime -> MISSING ---
+echo "Test J: logo-msyx.svg modifie (DRIFT) et logo-msyx-dark.svg supprime (MISSING) -> exit 1..."
+J="$(new_tmp)"
+sync_into "$J"
+printf '\n<!-- divergence locale -->\n' >> "$J/assets/logo-msyx.svg"
+rm -f "$J/assets/logo-msyx-dark.svg"
+run_check "$J"
+if [ "$RC" -eq 1 ] && grep -qE '^ +DRIFT +assets/logo-msyx\.svg ' <<< "$OUT" \
+   && grep -qE '^ +MISSING +assets/logo-msyx-dark\.svg ' <<< "$OUT" \
+   && grep -qE '^ +OK +assets/logo-msyx-mark\.svg ' <<< "$OUT"; then pass; else fail "DRIFT sur logo-msyx.svg + MISSING sur logo-msyx-dark.svg + OK sur mark attendus (rc=$RC)"; fi
+
+# --- Test K : charte cliente opt-in verifiee, a son tour ---
+echo "Test K: sync --assets=acssi puis logo-acssi-light.svg modifie -> DRIFT sur ce fichier (exit 1)..."
+K="$(new_tmp)"
+sync_into "$K" --assets=acssi
+run_check "$K"
+KOK="$(grep -cE '^ +OK +assets/logo-acssi(-mark|-dark|-light)?\.svg ' <<< "$OUT" || true)"
+if [ "$RC" -ne 0 ] || [ "$KOK" != "4" ]; then
+  fail "apres --assets=acssi, 4 OK logo-acssi et exit 0 attendus (obtenu $KOK OK, rc=$RC)"
+else
+  printf '\n<!-- divergence locale -->\n' >> "$K/assets/logo-acssi-light.svg"
+  run_check "$K"
+  if [ "$RC" -eq 1 ] && grep -qE '^ +DRIFT +assets/logo-acssi-light\.svg ' <<< "$OUT" \
+     && ! grep -qE '^ +DRIFT +assets/logo-(msyx|acssi-(dark|mark))' <<< "$OUT"; then pass; else fail "DRIFT sur logo-acssi-light.svg seul attendu (rc=$RC)"; fi
+fi
+
+# --- Test L : fichier local etranger ignore ---
+echo "Test L: assets/logo-monapp.svg (sans equivalent source) -> aucune ligne, exit 0..."
+L="$(new_tmp)"
+sync_into "$L"
+echo '<svg id="monapp"/>' > "$L/assets/logo-monapp.svg"
+echo '<svg id="monapp-dark"/>' > "$L/assets/logo-monapp-dark.svg"
+run_check "$L"
+if [ "$RC" -eq 0 ] && ! grep -q 'monapp' <<< "$OUT"; then pass; else fail "un logo propre a l'app ne doit produire ni ligne ni exit 1 (rc=$RC)"; fi
+
+# --- Test M : consommateur synchronise avant #954 (aucun assets/) ---
+echo "Test M: consommateur sans assets/ -> 4 MISSING logo-msyx, exit 1, rien d'acssi..."
+M="$(new_tmp)"
+sync_into "$M"
+rm -rf "$M/assets"
+run_check "$M"
+NMISS="$(grep -cE '^ +MISSING +assets/logo-msyx(-mark|-dark|-light)?\.svg ' <<< "$OUT" || true)"
+if [ "$RC" -eq 1 ] && [ "$NMISS" = "4" ] && ! grep -q 'acssi' <<< "$OUT"; then pass; else fail "attendu 4 MISSING logo-msyx et exit 1 (obtenu $NMISS, rc=$RC)"; fi
 
 echo ""
 echo "Resultats : $PASS PASS, $FAIL FAIL"

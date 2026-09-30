@@ -25,7 +25,7 @@ Le fichier `shared/components-registry.json` liste tous les composants disponibl
 
 ### Scripts de verification
 
-Trois scripts sont disponibles pour detecter les drifts :
+Quatre commandes sont disponibles pour detecter les drifts :
 
 ```bash
 # 1. Verifier que la copie locale du DS est a jour
@@ -36,9 +36,21 @@ Trois scripts sont disponibles pour detecter les drifts :
 
 # 3. Detecter les overrides de classes DS
 ./check-sync.sh --check-overrides /chemin/projet/styles/
+
+# 4. Detecter les composants LIVRES par sync.sh mais jamais MONTES (opt-in, #938)
+./check-components.sh --orphans=/chemin/projet/src /chemin/projet/styles/
 ```
 
 **check-components.sh** detecte les classes CSS avec des prefixes composant-like (`.btn-`, `.card-`, `.modal-`, etc.) qui ne sont pas dans le registre DS. Pour les cas legitimes (ex : Tailwind, librairie tierce), ajouter les classes dans un fichier `.ds-allowlist` (une classe par ligne) a la racine du dossier CSS analyse.
+
+**check-components.sh --orphans=<src>** (opt-in : sans le drapeau, sortie et code retour sont inchanges) ajoute la passe « orphelins », qui repond a l'autre question : un composant que `sync.sh` a copie dans le projet est-il reellement monte ? Le cas d'ecole est `<SiteHeader>` monte sans la prop `versionNotes` : le badge de version est livre et absent de l'ecran. Un consommateur se controle par appel (chemins explicites, aucun registre du VPS n'est lu).
+
+- **Livre** : au moins une classe simple du composant est definie dans les copies DS du projet (`ds-*.css`, `components/*.css`). Un `sync.sh --components=core` ne livre donc que les modules core.
+- **Consomme** : au moins un de ces 4 signaux dans les sources de `<src>` (les `*.test.*`, `*.spec.*`, `node_modules`, `dist`, etc. sont exclus) : **S1** une classe propre au composant (les classes partagees avec une autre entree du registre ne comptent pas) ; **S2** un import `import { Nom } from '@msyx-dev/react'` (alias accepte, `import type` refuse) ; **S3** la prop de composition homonyme, par exemple `versionNotes={` ; **S4** le shell `ds-nav.js` est charge (sa simple presence sur disque ne compte pas). En cas de doute, le composant compte comme consomme.
+- **Structurant** : entree du registre marquee `structural: true` (aujourd'hui `version-notes` et `site-header`). Seuls les structurants font echouer.
+- **Sortie** : lignes `ORPHELIN-STRUCTUREL`, `ORPHELIN` (informatif), `ORPHELIN-ACCEPTÉ`, `NON-MESURABLE`, puis un bilan chiffre.
+- **Assumer un ecart** : une ligne `orphelin:<nom-entree>` (par exemple `orphelin:site-header`) dans le `.ds-allowlist`, avec un commentaire `#` qui justifie. L'ecart reste visible (`ORPHELIN-ACCEPTÉ`) sans bloquer.
+- **Codes retour** : `0` propre ; `1` classe hors DS, orphelin structurel, ou erreur d'usage (dossier source inexistant, `node` absent).
 
 **check-sync.sh --check-overrides** detecte les redefinitions de classes DS dans vos CSS locaux. La regle : ne jamais redefinir une classe DS — customiser via les variables CSS (`var(--token)`).
 
@@ -182,7 +194,7 @@ ou le modal par défaut pour le détail.
 # Copier les fichiers DS dans votre projet
 ./sync.sh /chemin/vers/projet/styles/
 
-# Verifier si votre copie est a jour (4 fichiers verifies)
+# Verifier si votre copie est a jour (6 fichiers CSS + les logos de marque, #954)
 ./check-sync.sh /chemin/vers/projet/styles/
 ```
 
@@ -190,6 +202,7 @@ Le script `sync.sh` copie les fichiers DS avec le prefixe `ds-` :
 - `ds-tokens.css`, `ds-themes.css`, `ds-base.css`, `ds-utilities.css`, `ds-layout.css`, `ds-components.css`
 - `ds-fonts.css` (+ `fonts/*.woff2`) et `icons/sprite.svg` (self-hosted). **Le sprite est reference en chemin absolu `/shared/icons/sprite.svg` par `ds-nav.js` et `ds-components.js`** : si vous utilisez ce JS (Niveau C), servez votre copie `icons/sprite.svg` a cette URL exacte (montez ou routez le dossier sous `/shared/icons/`) — meme contrainte que `graph/vendor/graph-layered.js` avec `--with-graph`.
 - **Niveau C (#372)** : `ds-styles.css` (agregateur), `ds-nav.js`, `ds-components.js` (shell JS)
+- `assets/` (#954) : les logos de marque MSYX (`logo-msyx.svg`, `-mark`, `-dark`, `-light`), copies **a l'identique** dans `<cible>/assets/` — `--assets=<charte>` ajoute une charte cliente, voir [Assets de marque](#assets-de-marque--logos-954)
 
 ### Sync automatique (tous les consommateurs)
 
@@ -238,6 +251,69 @@ Editer `shared/consumers.json` et ajouter une entree :
 
 Le champ `css_dir` indique le chemin relatif depuis `path` ou se trouvent
 les fichiers `ds-*.css`. Valeur par defaut : `src/styles`.
+
+## Assets de marque — logos (#954)
+
+`sync.sh` depose les logos de marque dans **`<cible>/assets/`** (la `<cible>` est le dossier passe en argument, typiquement `src/styles/`). Le DS ne les reference depuis **aucun CSS** : c'est le HTML ou le JSX du consommateur qui les pointe, et qui doit donc les servir (`public/assets/` en Next, import bundler, route statique…).
+
+### Chartes et option `--assets=`
+
+- **MSYX est toujours copiee** : `assets/logo-msyx.svg`, `logo-msyx-mark.svg`, `logo-msyx-dark.svg`, `logo-msyx-light.svg`.
+- Une **charte cliente est opt-in** : `--assets=<charte>[,<charte>…]` (virgules, sans espaces). `--assets=msyx` est accepte sans effet, et plusieurs `--assets=` se cumulent.
+
+```bash
+# MSYX seule (defaut)
+./shared/sync.sh --no-showcase /path/vers/votre-projet/src/styles/
+
+# MSYX + la charte ACSSI
+./shared/sync.sh --no-showcase --assets=acssi /path/vers/votre-projet/src/styles/
+```
+
+- Une charte `<c>` est reconnue si `assets/logo-<c>.svg` existe a la racine du DS (liste deduite des fichiers, rien n'est code en dur) et si son nom respecte `^[a-z0-9]+$`. Ses fichiers sont `logo-<c>.svg` et `logo-<c>-*.svg`, a la racine seulement.
+- Une charte inconnue est une **erreur explicite** (`ERREUR: charte inconnue pour --assets : '<c>' (disponibles : …)`, exit 1), levee **avant toute copie** : la cible reste intacte.
+- `sync.sh` **ne supprime jamais** rien dans `<cible>/assets/` : un logo propre a votre app peut y cohabiter.
+
+### Pointer le logo
+
+Vanilla (HTML) :
+
+```html
+<img src="/assets/logo-msyx.svg" alt="Nom de votre application" width="40" height="40">
+```
+
+React (`@msyx-dev/react`) : `<Logo>` resout `${basePath}/logo-msyx*.svg`, avec `basePath` a `"/assets"` par defaut. Servez donc le dossier copie sous cette URL, ou passez `basePath` :
+
+```tsx
+<Logo variant="dark" basePath="/brand" alt="Nom de votre application" />
+```
+
+**Header vanilla (`ds-nav.js`)** : sans configuration, le header pointe sur `/assets/sources/logoMSYX.png` (`shared/nav.js`), un fichier qui **n'est pas distribue** (`sources/` reste dans le DS). Posez `window.MSYX_HEADER.brand.logoSrc` sur l'URL ou vous servez `assets/logo-msyx.svg` :
+
+```html
+<script>
+window.MSYX_HEADER = { brand: { logoSrc: '/assets/logo-msyx.svg' } };
+</script>
+```
+
+### Ce qui n'est pas distribue
+
+- **`tree-noel.svg`** (sapin du theme Noel) n'est jamais copie. Un SVG charge en `<img>` est **opaque au CSS de la page** : ni les tokens du theme, ni l'animation `.tree-lights` de `festive.css` ne l'atteignent, donc une copie distribuee s'afficherait figee et aux mauvaises couleurs. Le decor festif inline le sapin : utilisez `<SiteHeader festive />` (React) ou `ensureFestiveDecor()` de `ds-nav.js` (vanilla).
+- `assets/sources/` (PNG source) et `assets/explorations/` (historique de conception) : sources internes du DS.
+
+### Verification
+
+`check-sync.sh` compare les logos par **sha256** et sort une ligne `OK` / `DRIFT` / `MISSING` par fichier, comptee dans le meme exit 1 que les CSS :
+
+```bash
+./shared/check-sync.sh /chemin/vers/votre-projet/src/styles/
+#   MISSING  assets/logo-msyx.svg   — absent (resynchroniser : sync.sh)
+#   DRIFT    assets/logo-msyx.svg   — contenu different
+```
+
+- MSYX est **toujours attendue** : un consommateur synchronise avant #954 sort 4 `MISSING` jusqu'a sa prochaine synchro.
+- Une charte cliente n'est verifiee que si au moins un de ses fichiers est present localement (trace d'un `--assets=<c>`). Limite assumee : une charte retiree ou renommee cote DS n'est plus signalee chez le consommateur.
+- Un fichier local sans equivalent dans le DS (logo propre a l'app) est ignore.
+- `sync-all.sh` ne relaie pas `--assets=` : pour une charte cliente, lancer `sync.sh --assets=<c>` directement sur le consommateur.
 
 ## Regles d'or
 
@@ -568,6 +644,29 @@ Autres classes du même module (`buttons.css`), hors ces trois familles :
 ```
 
 ---
+
+## Textarea + compteur de caracteres (#952)
+
+Classes DS (`forms.css`) : `.input-footer` (ligne sous le champ : aide ou erreur a gauche, compteur a droite), `.input-counter`, `.input-counter--over` (valeur au-dela de `maxlength`). Comportement : `initInputCounters()` (`components.js`, appele par `reinitAll()`) ; un consommateur statique l'appelle apres avoir pose le markup.
+
+```html
+<div class="input-group">
+  <label class="input-label" for="wish">Liste de souhaits</label>
+  <textarea class="input" id="wish" rows="4" maxlength="2000"
+            aria-describedby="wish-hint wish-counter"></textarea>
+  <div class="input-footer">
+    <span class="input-hint" id="wish-hint">Liens http(s) acceptes.</span>
+    <span class="input-counter" id="wish-counter">0 / 2000</span>
+    <span class="sr-only" aria-live="polite"></span>
+  </div>
+</div>
+<script>window.__initInputCounters();</script>
+```
+
+- L'unite est `value.length` (UTF-16), la meme mesure que le `maxlength` natif : un emoji compte pour 2, un retour a la ligne pour 1. Un controle cote serveur doit utiliser la meme mesure.
+- La region `.sr-only[aria-live]` doit exister des le rendu ; elle n'annonce « Limite de caracteres atteinte » qu'a la limite, jamais a chaque frappe.
+- Avec une erreur : `.input-error-msg` remplace `.input-hint` dans `.input-footer`, `aria-invalid="true"` + `.input-error` sur le champ. Sans compteur, le markup reste celui d'un `.input` (aide ou erreur enfants directs de `.input-group`, sans `.input-footer`).
+- Le compteur suit le `reset` du formulaire. Une ecriture imperative `field.value = …` n'emet aucun evenement `input` : declencher `field.dispatchEvent(new Event('input'))` pour resynchroniser.
 
 ## Mapping aksy DS-EXCEPTION → DS msyx.fr (v2.27.0+)
 
