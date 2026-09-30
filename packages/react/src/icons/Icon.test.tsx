@@ -71,6 +71,8 @@ const ALL_NAMES: IconName[] = [
   "git-branch",
   "zap",
   "rocket",
+  // #950 — glyphe du décor festif, absent de <Icon> avant ce ticket.
+  "snowflake",
 ];
 
 describe("Icon — primitif inline auto-contenu (#713)", () => {

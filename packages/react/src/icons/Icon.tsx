@@ -82,7 +82,10 @@ export type IconName =
   | "command"
   | "git-branch"
   | "zap"
-  | "rocket";
+  | "rocket"
+  // #950 — présent dans le sprite depuis v2.140.0 (#946) mais absent d'ici : le
+  // décor festif (`<FestiveDecor>`, bouton flocon) ne compilait pas sans lui.
+  | "snowflake";
 
 /**
  * Enfants SVG de chaque glyphe — copie FIDÈLE des `<symbol id="i-…">` de
@@ -441,6 +444,22 @@ const ICON_CHILDREN: Record<IconName, ReactElement> = {
       <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" />
       <path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" />
       <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" />
+    </>
+  ),
+  snowflake: (
+    <>
+      <path d="m10 20-1.25-2.5L6 18" />
+      <path d="M10 4 8.75 6.5 6 6" />
+      <path d="m14 20 1.25-2.5L18 18" />
+      <path d="m14 4 1.25 2.5L18 6" />
+      <path d="m17 21-3-6h-4" />
+      <path d="m17 3-3 6 1.5 3" />
+      <path d="M2 12h6.5L10 9" />
+      <path d="m20 10-1.5 2 1.5 2" />
+      <path d="M22 12h-6.5L14 15" />
+      <path d="m4 10 1.5 2L4 14" />
+      <path d="m7 21 3-6-1.5-3" />
+      <path d="m7 3 3 6h4" />
     </>
   ),
 };

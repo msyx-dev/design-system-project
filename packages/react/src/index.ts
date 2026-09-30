@@ -643,3 +643,16 @@ export type {
   AccessDeniedProps,
   AccessDeniedUser,
 } from "./components/AccessDenied/AccessDenied";
+
+// ─── FestiveDecor (v3.0.0-alpha.59) — #950 ───
+// Décor saisonnier du thème Noël (neige, guirlande, ornements, givre, sapin) +
+// bouton flocon (WCAG 2.2.2). Port de ensureFestiveDecor()/updateFestiveDecor()
+// de shared/nav.js ; rend RIEN hors data-theme="noel".
+export {
+  FestiveDecor,
+  FestiveSnowToggle,
+} from "./components/FestiveDecor/FestiveDecor";
+export type {
+  FestiveDecorProps,
+  FestiveSnowToggleProps,
+} from "./components/FestiveDecor/FestiveDecor";
