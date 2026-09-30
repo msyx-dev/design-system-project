@@ -77,6 +77,19 @@ function isDivider(item: ActionMenuItem): item is ActionMenuDividerEntry {
  * </div>
  * ```
  *
+ * **Libellé du déclencheur (#936)** : `label` n'est JAMAIS rendu en text node
+ * nu dans `.action-menu-trigger` — le CSS DS dimensionne ce bouton en carré de
+ * 32px (`white-space: normal`), un texte nu y déborde. Deux cas, selon `icon` :
+ * - `icon` + `label` : le libellé est enveloppé dans un `<span class="sr-only">`
+ *   (classe utilitaire DS de masquage visuel) — le bouton reste le carré de
+ *   l'icône et son nom accessible est le libellé ;
+ * - `label` seul (aucune icône rendue) : le libellé est visible, enveloppé dans
+ *   un `<span>`, et le déclencheur porte `.action-menu-trigger--labeled`
+ *   (variante DS `overlays.css` : largeur `auto`, `white-space: nowrap`).
+ * Le composant ne rend aucune icône par défaut : la règle « libellé visible »
+ * s'applique donc dès que `icon` est absent. `trigger` (contenu libre) reste
+ * prioritaire et n'est ni enveloppé ni classé — le consommateur en répond.
+ *
  * **Non-contrôlé** : état d'ouverture interne (`useState`), pas de prop
  * `open`/`onOpenChange` — comme un menu déroulant classique.
  *
@@ -247,6 +260,17 @@ export function ActionMenu({
 
   const wrapClasses = ["action-menu-wrap", className].filter(Boolean).join(" ");
 
+  // Libellé du déclencheur (#936) — jamais en text node nu, cf. JSDoc.
+  const hasIcon = Boolean(icon);
+  const hasLabel = label != null && label !== "";
+  const labeledTrigger = trigger == null && !hasIcon && hasLabel;
+  const triggerClasses = [
+    "action-menu-trigger",
+    labeledTrigger && "action-menu-trigger--labeled",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   // Portail #856 — cf. JSDoc du composant.
   // Cible du portail (#934) : le plus proche `<dialog open>` qui CONTIENT le
   // déclencheur, sinon `document.body`. Un `<dialog>` ouvert par `showModal()`
@@ -266,7 +290,7 @@ export function ActionMenu({
       <button
         type="button"
         ref={triggerRef}
-        className="action-menu-trigger"
+        className={triggerClasses}
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
@@ -274,7 +298,9 @@ export function ActionMenu({
         {trigger ?? (
           <>
             {icon}
-            {label}
+            {hasLabel && (
+              <span className={hasIcon ? "sr-only" : undefined}>{label}</span>
+            )}
           </>
         )}
       </button>

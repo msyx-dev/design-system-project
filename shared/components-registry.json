@@ -1,7 +1,7 @@
 {
   "version": "2.141.1",
   "generated": {
-    "at": "2026-09-30T12:58:21.781Z",
+    "at": "2026-09-30T13:57:22.202Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1662,6 +1662,7 @@
       "cssClasses": [
         ".action-menu-wrap",
         ".action-menu-trigger",
+        ".action-menu-trigger--labeled",
         ".action-menu",
         ".action-menu-item",
         ".action-menu-divider",
