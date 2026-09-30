@@ -1,0 +1,5 @@
+logo-msyx.svg          FAIL  IoU alpha=0.9996  IoU zones=0.4629  dE00 galet moy=42.86 p99=57.55  interieur moy=42.93 max=58.18  degrades moy=42.85  1074 o
+logo-msyx-mark.svg     FAIL  IoU alpha=0.9996  IoU zones=0.4629  dE00 galet moy=42.86 p99=57.55  interieur moy=42.93 max=58.18  degrades moy=42.85  1079 o
+logo-msyx-dark.svg     FAIL  IoU alpha=0.9996  IoU zones=0.4629  dE00 galet moy=42.86 p99=57.55  interieur moy=42.93 max=58.18  degrades moy=42.85  1071 o
+logo-msyx-light.svg    FAIL  IoU alpha=0.9996  IoU zones=0.4629  dE00 galet moy=47.57 p99=65.62  interieur moy=47.58 max=66.12  degrades moy=42.73  1080 o  (couleurs assombries volontairement : dE non juge)
+exit=1
