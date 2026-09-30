@@ -1,7 +1,7 @@
 {
   "version": "2.141.1",
   "generated": {
-    "at": "2026-09-30T14:21:09.096Z",
+    "at": "2026-09-30T16:09:48.383Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -401,7 +401,6 @@
     {
       "name": "site-header",
       "kind": "component",
-      "structural": true,
       "page": "navigation",
       "cssClasses": [
         ".site-header",
@@ -424,6 +423,7 @@
         "shared/css/components/section-header.css",
         "shared/css/layout.css"
       ],
+      "structural": true,
       "reactExports": [
         "SiteHeader"
       ]
@@ -1905,6 +1905,7 @@
       "cssClasses": [
         ".action-menu-wrap",
         ".action-menu-trigger",
+        ".action-menu-trigger--labeled",
         ".action-menu",
         ".action-menu-item",
         ".action-menu-divider",
@@ -3796,7 +3797,6 @@
     {
       "name": "version-notes",
       "kind": "component",
-      "structural": true,
       "page": "overlays",
       "cssClasses": [
         ".version-badge",
@@ -3813,6 +3813,7 @@
         "shared/css/components/version-notes.css",
         "shared/css/layout.css"
       ],
+      "structural": true,
       "reactExports": [
         "VersionBadge",
         "VersionNotes"
