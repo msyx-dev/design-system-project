@@ -21,6 +21,7 @@
     "test:check-sync": "bash tests/test-check-sync.sh",
     "test:sync-styles": "bash tests/test-sync-styles.sh",
     "test:sync-assets": "bash tests/test-sync-assets.sh",
+    "test:sync-all": "bash tests/test-sync-all.sh",
     "test:graph-lib": "node tests/regression/graph-lib.test.js",
     "test:graph-model": "node tests/regression/graph-model.test.js",
     "test:graph-layout": "node tests/regression/graph-layout.test.js",

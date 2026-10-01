@@ -79,6 +79,8 @@ jobs:
         run: npm run test:sync-styles
       - name: Run sync.sh --assets tests — distribution des logos de marque (anti-regression #954)
         run: npm run test:sync-assets
+      - name: Run sync-all.sh tests — parc de consommateurs et options par consommateur (anti-regression #970)
+        run: npm run test:sync-all
       - name: nav.js syntax regression (#206, #378)
         run: npm run test:syntax
       - name: Check innerHTML anti-XSS gate (#758)
