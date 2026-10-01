@@ -11,6 +11,7 @@
       "--border-hover": "rgba(var(--accent-rgb), 0.25)",
       "--btn-danger-bg-end": "#bb0010",
       "--btn-danger-bg-start": "#ce1d28",
+      "--btn-outline-danger-fg": "#f87171",
       "--btn-primary-bg-end": "#642ac5",
       "--btn-primary-bg-start": "#165fd0",
       "--btn-success-bg-end": "#006328",
@@ -68,6 +69,7 @@
     "light": {
       "--btn-danger-bg-end": "#bb0010",
       "--btn-danger-bg-start": "#d1141b",
+      "--btn-outline-danger-fg": "#cd0b17",
       "--btn-primary-bg-end": "#642ac5",
       "--btn-primary-bg-start": "#165fd0",
       "--btn-success-bg-end": "#007e35",

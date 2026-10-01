@@ -10,6 +10,7 @@
     --border-hover: rgba(var(--accent-rgb), 0.35);
     --btn-danger-bg-end: #bb0010;
     --btn-danger-bg-start: #ce1d28;
+    --btn-outline-danger-fg: #ff8a87;
     --btn-primary-bg-end: #b8a51a;
     --btn-primary-bg-start: #e0cd1e;
     --btn-success-bg-end: #006328;
@@ -114,6 +115,7 @@
     --border-hover: rgba(var(--accent-rgb), 0.30);
     --btn-danger-bg-end: #b91c1c;
     --btn-danger-bg-start: #d51b1f;
+    --btn-outline-danger-fg: #ca0012;
     --btn-primary-bg-end: #827600;
     --btn-primary-bg-start: #00345f;
     --btn-success-bg-end: #006029;
@@ -213,6 +215,7 @@
     --btn-danger-bg-end: #913d00;
     --btn-danger-bg-start: #a54600;
     --btn-on-primary: #ffffff;
+    --btn-outline-danger-fg: #ffa170;
     --btn-primary-bg-end: #ba0c07;
     --btn-primary-bg-start: #c9251a;
     --btn-success-bg-end: #00622f;
@@ -315,6 +318,7 @@
     --border-hover: rgba(var(--accent-rgb), 0.30);
     --btn-danger-bg-end: #86300b;
     --btn-danger-bg-start: #a33b0e;
+    --btn-outline-danger-fg: #a33b0e;
     --btn-primary-bg-end: #a33b0e;
     --btn-primary-bg-start: #e0001a;
     --btn-success-bg-end: #006029;
@@ -411,6 +415,7 @@
     --border-hover: rgba(var(--accent-rgb), 0.35);
     --btn-danger-bg-end: #bb0010;
     --btn-danger-bg-start: #ce1d28;
+    --btn-outline-danger-fg: #f87171;
     --btn-primary-bg-end: #237b55;
     --btn-primary-bg-start: #00702c;
     --btn-success-bg-end: #006328;
@@ -512,6 +517,7 @@
     --border-hover: rgba(var(--accent-rgb), 0.35);
     --btn-danger-bg-end: #bb0010;
     --btn-danger-bg-start: #d1141b;
+    --btn-outline-danger-fg: #cd0b17;
     --btn-primary-bg-end: #008535;
     --btn-primary-bg-start: #006e2c;
     --btn-success-bg-end: #007e35;
@@ -601,6 +607,7 @@
     --border-hover: rgba(255, 210, 80, 0.6);
     --btn-danger-bg-end: #854700;
     --btn-danger-bg-start: #994e00;
+    --btn-outline-danger-fg: #fdb474;
     --btn-primary-bg-end: #ffd250;
     --btn-primary-bg-start: #ff4757;
     --btn-success-bg-end: #00622f;
@@ -705,6 +712,7 @@
     --border-hover: rgba(146, 100, 0, 0.45);
     --btn-danger-bg-end: #8f4207;
     --btn-danger-bg-start: #a84b00;
+    --btn-outline-danger-fg: #a94b00;
     --btn-primary-bg-end: #7a0a1b;
     --btn-primary-bg-start: #a80f26;
     --btn-success-bg-end: #0f7d3a;

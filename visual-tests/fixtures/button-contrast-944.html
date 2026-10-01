@@ -16,7 +16,10 @@
   - `.btn-primary.btn-danger` : la demo de pages/composants.html#buttons ;
   - `.btn-danger` seul : ce que `@msyx-dev/react` <Button variant="danger">
     emet (`btn-${variant}`) ;
-  - les 3 boutons de connexion qui peignent le meme couple que `.btn-primary`.
+  - les 3 boutons de connexion qui peignent le meme couple que `.btn-primary` ;
+  - `.btn-outline-danger.btn-sm` (pages/overlays.html, popover de confirmation) ET
+    `.btn-secondary.btn-outline-danger` (pages/composants.html#buttons) : les 2 markups
+    du DS, bloquants (#968) ; la classe nue (`-bare`, sans padding) reste en rapport.
 
   Pas de nav.js, pas de components.js : aucun header, aucune sidebar, aucun
   script qui fasse bouger la mise en page pendant la mesure. Les valeurs de
@@ -47,7 +50,9 @@
   <div class="row">
     <button type="button" class="btn-secondary" data-probe="btn-secondary">Annuler</button>
     <button type="button" class="btn-ghost" data-probe="btn-ghost">Ignorer</button>
-    <button type="button" class="btn-outline-danger" data-probe="btn-outline-danger">Retirer</button>
+    <button type="button" class="btn-outline-danger btn-sm" data-probe="btn-outline-danger">Retirer</button>
+    <button type="button" class="btn-outline-danger" data-probe="btn-outline-danger-bare">Retirer</button>
+    <button type="button" class="btn-secondary btn-outline-danger" data-probe="btn-secondary-btn-outline-danger">Retirer</button>
   </div>
   <div class="login-slot">
     <button type="button" class="login-submit" data-probe="login-submit">Se connecter</button>

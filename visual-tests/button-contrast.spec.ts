@@ -47,6 +47,12 @@
  * themes.css autogenere, miroir themes/msyx.json). Joue une seule fois
  * (projet `msyx-dark-desktop`), les autres projets le sautent.
  *
+ * #968 : `.btn-outline-danger` (fond transparent, teinte `--danger` 8 % au survol)
+ * passe de REPORT_ONLY a SOLID, sur ses 2 markups (seul : pages/overlays.html ;
+ * combine a `.btn-secondary` : pages/composants.html). Son texte lit le token
+ * dedie `--btn-outline-danger-fg` (jamais `--danger-light`, partage avec les
+ * statuts) ; le test de completude le couvre dans les memes 4 couches.
+ *
  * Tourne dans les 10 projets desktop de playwright.config.ts (theme/mode lus
  * dans le nom du projet, comme visual.spec.ts) ; skip sur les 2 *-mobile
  * (le contraste ne depend pas du viewport).
@@ -70,12 +76,26 @@ const SOLID = [
   "login-submit",
   "login-compact",
   "login-authentik",
+  // #968 : `.btn-outline-danger` (fond transparent, teinte au survol) — les 2 markups que le DS livre :
+  // `.btn-outline-danger.btn-sm` (pages/overlays.html, popover de confirmation) et
+  // `.btn-secondary.btn-outline-danger` (pages/composants.html#buttons).
+  "btn-outline-danger",
+  "btn-secondary-btn-outline-danger",
 ];
+// Cas SOLID a fond TRANSPARENT (aucun degrade) : pas d'arrets a lire, seul le pixel rendu est mesure.
+// Garde-fou : un fond qui deviendrait un degrade doit sortir de cette liste (sinon stopMin ne serait plus verifie).
+const FLAT_BG = ["btn-outline-danger", "btn-secondary-btn-outline-danger"];
 // Cas en rapport seul (fond translucide ou transparent) :
-const REPORT_ONLY = ["btn-secondary", "btn-ghost", "btn-outline-danger"];
+// - `btn-outline-danger-bare` : la classe NUE (aucun markup du DS ne l'emet) — `.btn-outline-danger` ne pose
+//   ni padding ni display, le texte touche donc la bordure et la boite du texte arrondie a l'entier avale la
+//   colonne de pixels de la bordure (teinte --danger 30/50 %) : la mesure y lit le contraste de la bordure,
+//   pas celui du fond. Mesure et rapport conserves, non bloquants (cf. docs/DS-PRINCIPLES.md §3.3).
+const REPORT_ONLY = ["btn-secondary", "btn-ghost", "btn-outline-danger-bare"];
 
 // Tokens de fond dedies (#944 T2) — NOMS FIGES par la spec. Hex litteral dans les
 // 4 couches de cascade, jamais derives (--gradient-*, --danger*, ... sont partages hors boutons).
+// + `--btn-outline-danger-fg` (#968) : texte de `.btn-outline-danger`, meme forme (hex litteral,
+// 10 combos) car `--danger-light` est partage avec les statuts et ne peut pas etre regle pour un bouton.
 const BTN_BG_TOKENS = [
   "--btn-primary-bg-start",
   "--btn-primary-bg-end",
@@ -85,6 +105,7 @@ const BTN_BG_TOKENS = [
   "--btn-success-bg-end",
   "--btn-warning-bg-start",
   "--btn-warning-bg-end",
+  "--btn-outline-danger-fg",
 ] as const;
 
 type Theme = "msyx" | "acssi" | "nhood" | "auchan" | "noel";
@@ -499,6 +520,15 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
         )
         .toBeLessThanOrEqual(4);
       if (!r.solid) continue;
+      if (FLAT_BG.includes(r.probe)) {
+        expect
+          .soft(
+            r.rest.stopCount,
+            `${projectName} ${r.probe}: classe en FLAT_BG mais backgroundImage porte des arrets ("${r.rest.bgImage}") — la retirer de FLAT_BG pour que stopMin soit verifie`,
+          )
+          .toBe(0);
+        continue;
+      }
       expect
         .soft(
           r.rest.stopCount,
@@ -538,7 +568,7 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
   });
 
   // --- T2 : completude des tokens dedies (Node pur, une seule fois) ---
-  test("completude : 8 tokens --btn-*-bg-* declares en hex dans les 4 couches (#944 T2)", async ({}, testInfo) => {
+  test("completude : 9 tokens --btn-*-bg-* + --btn-outline-danger-fg declares en hex dans les 4 couches (#944 T2, #968)", async ({}, testInfo) => {
     test.skip(
       testInfo.project.name !== "msyx-dark-desktop",
       "test Node pur (fs) : independant du theme, joue une seule fois",
@@ -565,7 +595,7 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
     const pick = (b: string | null): Record<string, string> | null =>
       b === null ? null : decls(b);
     const HEX = /^#[0-9a-f]{6}$/i;
-    /** Les 8 noms figes doivent etre declares en hex litteral dans `found`. */
+    /** Les 9 noms figes doivent etre declares en hex litteral dans `found`. */
     const check = (where: string, found: Record<string, string> | null) => {
       if (found === null) {
         errors.push(`${where}: bloc introuvable`);
