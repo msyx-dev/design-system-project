@@ -84,11 +84,11 @@ shared/
       access-denied.css #   ACCESS DENIED / 403 page (v2.58.0)
       theme-toggle.css  #   Theme toggle / mode switch UI (v2.60.0)
   sync.sh                    # Synchronise le DS vers un projet consommateur : CSS (tokens, themes, base, utilities, layout, components) + fonts + sprite + shell JS, et les logos de marque dans <cible>/assets/ (MSYX toujours, charte cliente opt-in via --assets=<charte>[,…], copie non destructive, #954) ; --no-showcase via marqueurs @strip + awk
-  sync-all.sh                # Sync scalable — synchronise vers tous les consommateurs enregistrés (consumers.json)
+  sync-all.sh                # Sync scalable — racine obligatoire (`--root=<dir>` ou `DS_CONSUMERS_ROOT`), liste `--consumers=<fichier>` (défaut consumers.json) ; relaie à sync.sh les options par consommateur (`--no-showcase`, `--assets=`, `--components=`, `--with-graph`) ; `--dry-run` affiche la commande sync.sh exacte ; `--check` = lecture seule, contrôle la LISTE (OK/ABSENT/UNLISTED/INVALID, exit 1 si dérive, #970). Sur le VPS msyx : `--check`/`--dry-run` seulement, le resync passe par le pipeline du consommateur
   check-sync.sh              # Vérifie version + contenu (sha256) des ds-*.css copiés à l'identique, version seule pour layout/components (transformés par sync.sh), sha256 des logos distribués dans assets/ (MSYX toujours attendue, charte cliente vérifiée si un de ses fichiers est présent, #954) + mode --check-overrides (#951)
   check-components.sh        # Lint consommateurs — détecte composants custom hors DS + passe orphelins opt-in `--orphans=<src>` (livré par sync.sh mais jamais monté, #938)
   build.sh                   # Minification assets CSS (csso) + JS (terser) → dist/
-  consumers.json             # Registre des projets consommateurs pour sync-all.sh
+  consumers.json             # Parc des consommateurs DS pour sync-all.sh — schéma 2 versionné : `dir` relatif à la racine passée en argument, options par consommateur (`css_dir`, `no_showcase`, `assets`, `components`, `with_graph`), `path` absolu refusé, clé inconnue = INVALID (#970)
   components-registry.json   # Registre de tous les composants DS (classes CSS, init JS, page)
   version-notes.json         # Données curées {next, released[]} des notes de version — source unique éditée à la main, inlinée au build par bin/generate-version-notes.js (v2.96.0 #645)
   CONSUMER_GUIDE.md          # Guide d'integration + règle d'or + scripts de vérification
