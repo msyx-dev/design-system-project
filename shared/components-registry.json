@@ -157,7 +157,8 @@
         ".chip-group",
         ".chip-input-wrapper",
         ".chip-input-item",
-        ".chip-input-field"
+        ".chip-input-field",
+        ".chip-icon"
       ],
       "jsInit": "initChips",
       "example": "<div class=\"chip-group\">\n  <span class=\"chip\">Feature</span>\n  <span class=\"chip chip-accent\">Sprint:18</span>\n  <span class=\"chip chip-warning\">3 SP</span>\n  <span class=\"chip chip-success\">Done</span>\n</div>\n\n<!-- chip-input @deprecated : alias rétro-compat de tag-input (suppression v3). Utiliser tag-input. -->\n<div class=\"chip-input-wrapper\">\n  <span class=\"chip chip-input-item\">React <button class=\"chip-close\" aria-label=\"Supprimer React\">&times;</button></span>\n  <input class=\"chip-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>",
@@ -578,7 +579,10 @@
       "page": "overlays",
       "cssClasses": [
         ".tooltip-wrap",
-        ".tooltip"
+        ".tooltip",
+        ".tooltip--bottom",
+        ".tooltip--left",
+        ".tooltip--right"
       ],
       "jsInit": null,
       "example": "<div class=\"tooltip-wrap\">\n  <button class=\"btn-icon\" aria-describedby=\"tt-example\" aria-label=\"Paramètres\">&#9881;</button>\n  <span class=\"tooltip\" id=\"tt-example\" role=\"tooltip\">Paramètres</span>\n</div>",
@@ -942,7 +946,9 @@
       "cssClasses": [
         ".number-input-wrap",
         ".number-input-btn",
-        ".number-input-field"
+        ".number-input-field",
+        ".number-input--compact",
+        ".number-input--disabled"
       ],
       "jsInit": "initNumberInputs",
       "example": "<div class=\"number-input-wrap\">\n  <button class=\"number-input-btn\" data-action=\"decrement\" aria-label=\"Diminuer\">&#8722;</button>\n  <input class=\"number-input-field\" type=\"number\" value=\"1\" min=\"0\" max=\"99\" aria-label=\"Quantité\">\n  <button class=\"number-input-btn\" data-action=\"increment\" aria-label=\"Augmenter\">&#43;</button>\n</div>",
