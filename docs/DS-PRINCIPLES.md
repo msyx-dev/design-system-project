@@ -286,7 +286,8 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 - Le survol d'un bouton plein ne change **jamais l'opacité** de l'élément (elle mélange texte et fond avec le fond de page : le contraste dépendrait du contexte). Mécanisme unique : reflet `::before` + élévation, celui de `.btn-primary` — repris par `.login-submit` et `.login-authentik-btn`.
 - **Ne jamais** baisser `CONTRAST_MIN` ni retirer un cas de `SOLID` pour faire passer la sonde : on règle le token.
 - Nouveau bouton plein (nouvelle variante, nouveau composant peignant un fond plein) : ajouter un `data-probe` dans `visual-tests/fixtures/button-contrast-944.html` et le cas dans `SOLID`.
-- Hors périmètre bloquant (rapport seul, `REPORT_ONLY`) : `.btn-secondary`, `.btn-ghost`, `.btn-outline-danger` (fond translucide ou transparent).
+- **`.btn-outline-danger`** (#968) : bloquant (`SOLID`, fond transparent donc `FLAT_BG` : pas d'arrêts de dégradé, seul le pixel rendu est mesuré), sur les deux markups que le DS livre — `.btn-outline-danger.btn-sm` (`overlays.html`) et `.btn-secondary.btn-outline-danger` (`composants.html`). Son texte lit le token dédié `--btn-outline-danger-fg` (famille `--btn-on-*`, hex littéral dans les 4 couches, réglé en OKLCh à teinte de `--danger` conservée, ≥ 4,6:1 au pire pixel, repos ET survol teinté `--danger` 8 %). Il ne lit **jamais** `--danger-light`, partagé avec les statuts. Le test de complétude couvre ce token comme les 8 fonds.
+- Hors périmètre bloquant (rapport seul, `REPORT_ONLY`) : `.btn-secondary`, `.btn-ghost` (fond translucide ou transparent) et `btn-outline-danger-bare` (la classe nue, sans padding : aucun markup du DS ne l'émet ; la boîte du texte avale la colonne de pixels de la bordure, la mesure y lit la bordure et non le fond).
 
 ### Garde-fou
 - Audit `@axe-core/playwright` sur 54 pages × 6 themes (cf `docs/audit-a11y-*.md`)
