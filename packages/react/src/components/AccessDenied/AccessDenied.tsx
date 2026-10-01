@@ -21,7 +21,7 @@ export interface AccessDeniedProps {
   logoutLabel?: ReactNode;
   /** Utilisateur connecté — affiche `.access-denied-user` si `name` ou `email` fourni. */
   user?: AccessDeniedUser;
-  /** Chemin du logo msyx (PNG officiel). @default "/assets/sources/logoMSYX.png" */
+  /** Chemin du logo msyx (SVG officiel, distribué par sync.sh). @default "/assets/logo-msyx.svg" */
   logoSrc?: string;
   /** Titre principal. @default "Accès refusé" */
   title?: ReactNode;
@@ -66,7 +66,7 @@ export function AccessDenied({
   logoutUrl = "/auth/logout",
   logoutLabel = "Se déconnecter",
   user,
-  logoSrc = "/assets/sources/logoMSYX.png",
+  logoSrc = "/assets/logo-msyx.svg",
   title = "Accès refusé",
   className,
 }: AccessDeniedProps): ReactElement {

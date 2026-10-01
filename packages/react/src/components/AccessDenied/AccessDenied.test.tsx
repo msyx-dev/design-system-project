@@ -25,7 +25,7 @@ describe("AccessDenied — structure canonique", () => {
   it("logo : img.access-denied-logo avec src par défaut", () => {
     render(<AccessDenied />);
     const img = document.querySelector(".access-denied-logo img")!;
-    expect(img).toHaveAttribute("src", "/assets/sources/logoMSYX.png");
+    expect(img).toHaveAttribute("src", "/assets/logo-msyx.svg");
     expect(img).toHaveAttribute("alt", "msyx");
   });
 
