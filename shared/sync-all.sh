@@ -2,13 +2,14 @@
 set -euo pipefail
 
 # sync-all.sh — Synchronise le design system vers les consommateurs listés dans consumers.json (schéma 2)
-# Usage : ./sync-all.sh --root=<dir> [--consumers=<fichier>] [--dry-run]
+# Usage : ./sync-all.sh --root=<dir> [--consumers=<fichier>] [--check | --dry-run]
 #                       [--no-showcase] [--components=<core|liste>] [--assets=<c>[,<c>…]] [--with-graph]
-# Exemple : ./sync-all.sh --dry-run --root=/home/deployer/projects/prod
+# Exemples : ./sync-all.sh --check --root=/home/deployer/projects/prod
+#            ./sync-all.sh --dry-run --root=/home/deployer/projects/prod
 #
-# Sur le VPS msyx, l'usage est --dry-run : écrire dans ~/projects/prod/* depuis ce script serait un
-# hotfix hors pipeline (N1). Le resync réel se rejoue dans le pipeline de chaque consommateur, avec la
-# commande `sync.sh` exacte affichée par --dry-run.
+# Sur le VPS msyx, l'usage est --check / --dry-run : écrire dans ~/projects/prod/* depuis ce script
+# serait un hotfix hors pipeline (N1). Le resync réel se rejoue dans le pipeline de chaque consommateur,
+# avec la commande `sync.sh` exacte affichée par --dry-run.
 #
 # --root=<dir>        racine des `dir` de consumers.json. OBLIGATOIRE, sans défaut : à défaut de
 #                     --root, la variable d'environnement DS_CONSUMERS_ROOT. Ni l'une ni l'autre :
@@ -16,7 +17,20 @@ set -euo pipefail
 #                     .claude/worktrees/ quand on lance depuis un worktree).
 # --consumers=<fichier> liste des consommateurs (défaut : consumers.json à côté de ce script). Un hôte
 #                     hors msyx garde ainsi sa propre liste hors du dépôt DS.
+# --check             lecture seule, sync.sh n'est PAS appelé : contrôle la LISTE, dans les deux sens.
+#                     Une ligne par constat, libellé en début de ligne :
+#                       OK       [<name>]  <cible>   le dossier existe (« (jamais synchronisé) » si la
+#                                                    cible n'a pas de ds-tokens.css)
+#                       ABSENT   [<name>]  <cible>   <root>/<dir>/<css_dir> n'existe pas
+#                       UNLISTED <dossier>           un ds-tokens.css sous la racine (profondeur 2 à 6,
+#                                                    hors node_modules, worktrees, .next, dist, .git)
+#                                                    dont le dossier n'est la cible d'aucune entrée
+#                       INVALID  [<name>]  <raison>  entrée invalide (cf. ci-dessous)
+#                     Exit 1 dès qu'il y a au moins un ABSENT, UNLISTED ou INVALID, 0 sinon. Il ne
+#                     vérifie PAS la fraîcheur des copies : c'est le rôle de check-sync.sh, et la
+#                     version locale se lit dans --dry-run. Les options de synchro sont sans effet.
 # --dry-run           n'écrit rien ; affiche, par consommateur, la commande `sync.sh` exacte à rejouer.
+#                     Incompatible avec --check (exit 2).
 #
 # Options globales, combinées avec celles de l'entrée du consommateur :
 # --no-showcase       OU avec `no_showcase` de l'entrée
@@ -25,9 +39,13 @@ set -euo pipefail
 # --assets=<c>[,<c>…] UNION avec `assets` de l'entrée (cumulable, comme dans sync.sh)
 #
 # Le fichier consumers.json est validé EN ENTIER avant toute copie (même principe que sync.sh) :
-# une seule entrée INVALID suffit à ne synchroniser aucun consommateur (exit 1).
+# une seule entrée INVALID suffit à ne rien faire (exit 1), dans tous les modes. Est INVALID : un
+# schema différent de 2, le champ `path` (obsolète), une clé inconnue (faute de frappe comme `asset`),
+# un name absent / hors ^[a-z0-9-]+$ / en double, un dir ou css_dir absolu ou contenant `..`, une
+# charte de `assets` sans assets/logo-<c>.svg.
 #
-# Codes de sortie : 0 OK · 1 échec ou entrée INVALID · 2 erreur d'usage (racine, option inconnue)
+# Codes de sortie : 0 OK · 1 échec, dérive (--check) ou entrée INVALID · 2 erreur d'usage (racine,
+# option inconnue, --check avec --dry-run)
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SYNC_SH="$SCRIPT_DIR/sync.sh"
@@ -36,6 +54,7 @@ DS_TOKENS="$SCRIPT_DIR/css/tokens.css"
 ASSETS_SRC="$(dirname "$SCRIPT_DIR")/assets"
 
 ROOT=""
+CHECK=false
 DRY_RUN=false
 NO_SHOWCASE=false
 WITH_GRAPH=false
@@ -44,7 +63,7 @@ ASSETS_GLOBAL=""      # Cumulatif : plusieurs --assets= s'ajoutent, comme dans s
 
 usage_error() {
     echo "ERREUR: $1" >&2
-    echo "Usage : $0 --root=<dir> [--consumers=<fichier>] [--dry-run] [--no-showcase] [--components=<core|liste>] [--assets=<c>[,<c>…]] [--with-graph]" >&2
+    echo "Usage : $0 --root=<dir> [--consumers=<fichier>] [--check | --dry-run] [--no-showcase] [--components=<core|liste>] [--assets=<c>[,<c>…]] [--with-graph]" >&2
     exit 2
 }
 
@@ -52,6 +71,7 @@ for ARG in "$@"; do
     case "$ARG" in
         --root=*)          ROOT="${ARG#--root=}" ;;
         --consumers=*)     CONSUMERS_JSON="${ARG#--consumers=}" ;;
+        --check)           CHECK=true ;;
         --dry-run)         DRY_RUN=true ;;
         --no-showcase)     NO_SHOWCASE=true ;;
         --with-graph)      WITH_GRAPH=true ;;
@@ -60,6 +80,10 @@ for ARG in "$@"; do
         *)                 usage_error "option ou argument inconnu : $ARG" ;;
     esac
 done
+
+if $CHECK && $DRY_RUN; then
+    usage_error "--check et --dry-run sont exclusifs : --check contrôle la liste, --dry-run affiche les commandes sync.sh"
+fi
 
 # ─── Racine : --root, puis DS_CONSUMERS_ROOT, sinon erreur (pas de défaut) ──
 if [ -z "$ROOT" ]; then
@@ -130,6 +154,7 @@ def boolcheck($e; $key; $label):
     if ($e | has($key)) and (($e[$key] | type) != "boolean")
     then f($label; "\($key) : booléen attendu (true ou false)") else empty end;
 ($avail | split(",")) as $chartes
+| ["name", "dir", "css_dir", "no_showcase", "assets", "components", "with_graph"] as $allowed
 | if type != "object" then f("[fichier]"; "objet JSON attendu à la racine")
   else
     . as $r
@@ -151,6 +176,9 @@ def boolcheck($e; $key; $label):
                 else empty end),
                (if $e | has("path")
                 then f($label; "champ `path` obsolète : utiliser `dir` relatif à --root") else empty end),
+               ($e | keys_unsorted[] | select(. != "path") | . as $k
+                | select(any($allowed[]; . == $k) | not)
+                | f($label; "clé inconnue \"\($k)\" (clés autorisées : \($allowed | join(", ")))")),
                (if $e | has("dir") | not
                 then f($label; "dir absent : chemin relatif à --root attendu")
                 else ($e.dir | relcheck("dir"; $label)) end),
@@ -194,12 +222,17 @@ if [ -n "$INVALID_LINES" ]; then
         printf '%-8s %s  %s\n' "INVALID" "$LABEL" "$REASON"
     done <<< "$INVALID_LINES"
     echo ""
-    echo "FAIL — $CONSUMERS_JSON invalide : aucun consommateur synchronisé"
+    if $CHECK; then
+        echo "FAIL — $CONSUMERS_JSON invalide : contrôle impossible tant que la liste n'est pas corrigée"
+    else
+        echo "FAIL — $CONSUMERS_JSON invalide : aucun consommateur synchronisé"
+    fi
     exit 1
 fi
 
 echo "=== sync-all.sh — Design System v${DS_VERSION} ==="
 echo "Racine : $ROOT"
+if $CHECK; then echo "(mode --check : lecture seule, contrôle de la liste)"; fi
 if $DRY_RUN; then echo "(mode --dry-run : aucune modification)"; fi
 echo ""
 
@@ -220,6 +253,69 @@ mapfile -t FIELDS < <(jq -r '.consumers[] | [
     ((.with_graph // false) | tostring)
 ] | .[]' "$CONSUMERS_JSON")
 CONSUMER_COUNT=$(( ${#FIELDS[@]} / 7 ))
+
+# ─── --check : contrôle de la LISTE, dans les deux sens (lecture seule) ────
+# sync.sh n'est PAS appelé et rien n'est écrit. La fraîcheur des copies n'est pas contrôlée ici :
+# c'est le rôle de check-sync.sh (un consommateur en retard ne doit pas faire échouer le contrôle
+# de la liste) ; la version locale se lit dans --dry-run.
+if $CHECK; then
+    # normpath <chemin> : écrase `//`, `/./` et le `/` ou `/.` final. La validation a déjà refusé les
+    # `..` et les chemins absolus : une comparaison de chaînes suffit, sans realpath (GNU seulement).
+    normpath() {
+        local p="$1"
+        while [[ "$p" == *"//"* ]]; do p="${p//\/\//\/}"; done
+        while [[ "$p" == *"/./"* ]]; do p="${p//\/.\//\/}"; done
+        p="${p%/.}"; p="${p%/}"
+        printf '%s' "$p"
+    }
+
+    N_OK=0
+    N_ABSENT=0
+    N_UNLISTED=0
+    LISTED=$'\n'    # cibles listées, normalisées, une par ligne
+
+    for ((i = 0; i < CONSUMER_COUNT; i++)); do
+        NAME="${FIELDS[$((i * 7))]}"
+        TARGET="$ROOT/${FIELDS[$((i * 7 + 1))]}/${FIELDS[$((i * 7 + 2))]}"
+        LISTED+="$(normpath "$TARGET")"$'\n'
+        if [ -d "$TARGET" ]; then
+            NOTE=""
+            [ -f "$TARGET/ds-tokens.css" ] || NOTE=" (jamais synchronisé)"
+            printf '%-8s [%s]  %s%s\n' "OK" "$NAME" "$TARGET" "$NOTE"
+            N_OK=$((N_OK + 1))
+        else
+            printf '%-8s [%s]  %s\n' "ABSENT" "$NAME" "$TARGET"
+            N_ABSENT=$((N_ABSENT + 1))
+        fi
+    done
+
+    # Consommateurs présents mais non listés : un ds-tokens.css sous la racine (profondeur 2 à 6, hors
+    # node_modules / worktrees / .next / dist / .git) dont le dossier n'est la cible d'aucune entrée.
+    # -mindepth 1 et non 2 : avec -mindepth 2, find n'applique pas -prune au niveau 1 et descendrait
+    # dans <racine>/node_modules ou <racine>/dist ; la profondeur 2 est donc filtrée ci-dessous.
+    while IFS= read -r -d '' F; do
+        D="$(dirname "$F")"
+        [ "$D" != "$ROOT" ] || continue
+        case "$LISTED" in *$'\n'"$D"$'\n'*) continue ;; esac
+        printf '%-8s %s\n' "UNLISTED" "$D"
+        N_UNLISTED=$((N_UNLISTED + 1))
+    done < <(find "$ROOT" -mindepth 1 -maxdepth 6 \( -name node_modules -o -name worktrees -o -name .next -o -name dist -o -name .git \) -prune -o -name ds-tokens.css -type f -print0 | sort -z)
+
+    echo ""
+    echo "─── Récapitulatif (--check) ─────────────────────────────────"
+    echo "  Consommateurs listés      : $CONSUMER_COUNT"
+    echo "  OK                        : $N_OK"
+    echo "  ABSENT                    : $N_ABSENT"
+    echo "  UNLISTED                  : $N_UNLISTED"
+    echo "  INVALID                   : 0"
+    echo ""
+    if [ $((N_ABSENT + N_UNLISTED)) -gt 0 ]; then
+        echo "Dérive — $N_ABSENT ABSENT, $N_UNLISTED UNLISTED : corriger la liste (ou le dossier) dans $CONSUMERS_JSON"
+        exit 1
+    fi
+    echo "Parc conforme — les $CONSUMER_COUNT consommateur(s) listés sont présents, aucun n'est hors liste"
+    exit 0
+fi
 
 for ((i = 0; i < CONSUMER_COUNT; i++)); do
     NAME="${FIELDS[$((i * 7))]}"

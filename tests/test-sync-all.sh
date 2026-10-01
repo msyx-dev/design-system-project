@@ -15,9 +15,11 @@
 #   Test B (CA2) : no_showcase / with_graph / components relayes ; --components= global l'emporte
 #   Test C (CA3) : --dry-run n'ecrit rien et affiche la commande sync.sh exacte
 #   Test D (CA4) : racine obligatoire (exit 2), DS_CONSUMERS_ROOT, option inconnue (exit 2)
-#   Test E (CA5) : entree INVALID -> exit 1 AVANT toute copie, dans tous les modes
+#   Test E (CA5) : entree INVALID (dont cle inconnue) -> exit 1 AVANT toute copie, dans tous les modes
 #   Test F       : SKIP non bloquant, fichier introuvable / illisible
 #   Test G (CA8) : le consumers.json versionne est valide et liste le parc attendu
+#   Test H (CA6) : --check sur un parc juste -> OK par entree, exit 0, rien d'ecrit
+#   Test I (CA7) : --check sur un parc derive -> ABSENT / UNLISTED, exit 1, faux positifs ecartes
 #
 # Variable SYNC_ALL (optionnelle) : chemin d'un autre sync-all.sh, pour rejouer ce test contre un
 # sync-all.sh MUTE et prouver qu'il echoue (preuve par mutation, decision permanente du depot).
@@ -64,6 +66,10 @@ snapshot() { find "$1" | sort; }
 # has <texte> <regex> : une ligne du texte correspond a l'expression reguliere etendue
 has() { printf '%s\n' "$1" | grep -Eq -- "$2"; }
 hasf() { printf '%s\n' "$1" | grep -Fq -- "$2"; }
+# hasx <texte> <ligne> : une ligne du texte est EXACTEMENT la ligne donnee
+hasx() { printf '%s\n' "$1" | grep -Fxq -- "$2"; }
+# count <texte> <regex> : nombre de lignes du texte qui correspondent
+count() { printf '%s\n' "$1" | grep -Ec -- "$2"; }
 
 # run <args...> : lance sync-all.sh ; renseigne OUT (stdout), ERR (stderr), RC (exit)
 run() {
@@ -197,12 +203,16 @@ for OPT in --bogus --assetz=acssi --no-showcas "$R"; do
   run --root="$R" --consumers="$CF" --dry-run "$OPT"
   [ "$RC" = 2 ] || BAD="$BAD [$OPT : exit $RC au lieu de 2]"
 done
+# --check et --dry-run sont exclusifs.
+run --root="$R" --consumers="$CF" --check --dry-run
+[ "$RC" = 2 ] || BAD="$BAD [--check --dry-run : exit $RC au lieu de 2]"
+case "$ERR" in *--check*--dry-run*) ;; *) BAD="$BAD [--check --dry-run : stderr ne cite pas les deux options : ${ERR:-vide}]" ;; esac
 # Aucune de ces erreurs d'usage ne doit avoir copie quoi que ce soit.
 [ -z "$(find "$R" -type f)" ] || BAD="$BAD [une erreur d'usage a laisse des fichiers dans la racine]"
 if [ -z "$BAD" ]; then pass; else fail "$BAD"; fi
 
 # --- Test E (CA5) : INVALID avant toute copie ---
-echo "Test E: entree INVALID -> exit 1, ligne INVALID [name], AUCUN consommateur synchronise (ecriture et --dry-run)..."
+echo "Test E: entree INVALID -> exit 1, ligne INVALID [name], AUCUN consommateur synchronise (ecriture, --dry-run et --check)..."
 BAD=""
 # check_invalid <libelle> <regex etiquette> <regex raison> <json du fichier>
 # Fixtures : <base>/root contient les consommateurs ok, bad, dup2 ; <base>/x/src/styles est un dossier
@@ -210,7 +220,7 @@ BAD=""
 # suffit : le consommateur valide `ok` ne doit pas etre synchronise, ni rien d'autre sous <base>.
 check_invalid() {
   local label="$1" re_label="$2" re_reason="$3" json="$4" mode BASE R CF
-  for mode in "" "--dry-run"; do
+  for mode in "" "--dry-run" "--check"; do
     BASE="$(mkroot)"; R="$BASE/root"
     mkstyles "$R" ok/src/styles bad/src/styles dup2/src/styles; mkstyles "$BASE" x/src/styles
     CF="$(mkcf "${json//@R@/$R}")"
@@ -219,6 +229,10 @@ check_invalid() {
     [ "$RC" = 1 ] || BAD="$BAD [$label${mode:+ $mode}: exit $RC au lieu de 1]"
     has "$OUT" "^INVALID +$re_label +.*$re_reason" || BAD="$BAD [$label${mode:+ $mode}: ligne INVALID attendue absente : ${OUT:-vide}]"
     [ -z "$(find "$BASE" -type f)" ] || BAD="$BAD [$label${mode:+ $mode}: des fichiers ont ete copies malgre l'entree INVALID]"
+    # --check : une liste invalide n'est pas controlee (ni OK, ni ABSENT, ni UNLISTED).
+    if [ "$mode" = "--check" ] && has "$OUT" '^(OK|ABSENT|UNLISTED) '; then
+      BAD="$BAD [$label --check: statuts OK/ABSENT/UNLISTED emis malgre l'entree INVALID]"
+    fi
   done
 }
 OKENTRY='{"name":"ok","dir":"ok"}'
@@ -243,6 +257,12 @@ check_invalid "schema absent" '\[schema\]' 'schema'        '{"consumers":['"$OKE
 check_invalid "no_showcase texte" '\[bad\]' 'no_showcase'  '{"schema":2,"consumers":['"$OKENTRY"',{"name":"bad","dir":"bad","no_showcase":"true"}]}'
 check_invalid "with_graph texte" '\[bad\]' 'with_graph'    '{"schema":2,"consumers":['"$OKENTRY"',{"name":"bad","dir":"bad","with_graph":1}]}'
 check_invalid "components .." '\[bad\]' 'components'       '{"schema":2,"consumers":['"$OKENTRY"',{"name":"bad","dir":"bad","components":"../x"}]}'
+# Cle inconnue (decision du parent, #970 T1 : une faute de frappe comme `asset` etait ignoree en silence,
+# le logo n'arrivait jamais). Meme traitement que `path` : INVALID, dans tous les modes.
+check_invalid "cle inconnue asset" '\[bad\]' 'cl. inconnue "asset"' '{"schema":2,"consumers":['"$OKENTRY"',{"name":"bad","dir":"bad","asset":["acssi"]}]}'
+check_invalid "cle inconnue Dir" '\[bad\]' 'cl. inconnue "Dir"' '{"schema":2,"consumers":['"$OKENTRY"',{"name":"bad","dir":"bad","Dir":"bad"}]}'
+check_invalid "cle inconnue comment" '\[bad\]' 'cl. inconnue "comment"' '{"schema":2,"consumers":['"$OKENTRY"',{"name":"bad","dir":"bad","comment":"parc 2026"}]}'
+check_invalid "cle inconnue, name illisible" '\[#1\]' 'cl. inconnue "note"' '{"schema":2,"consumers":['"$OKENTRY"',{"name":"Bad_Name","dir":"bad","note":"x"}]}'
 # La seule entree fautive est la DERNIERE : les valides qui la precedent ne sont pas synchronisees pour autant
 # (deja couvert ci-dessus par `ok` en tete). Cas inverse : la fautive en tete, la valide ensuite.
 check_invalid "fautive en tete" '\[bad\]' 'path.*obsol'    '{"schema":2,"consumers":[{"name":"bad","path":"/x","dir":"bad"},'"$OKENTRY"']}'
@@ -289,6 +309,106 @@ done
 # Sur une racine vide, le fichier reste valide : les 4 sont SKIP, aucun INVALID.
 run --root="$(mkroot)" --dry-run
 has "$OUT" '^INVALID' && BAD="$BAD [racine vide : ligne INVALID]"
+# Meme controle en --check : racine avec les 4 consommateurs = 4 OK, exit 0 ; racine vide = 4 ABSENT,
+# exit 1, aucun INVALID (le fichier est valide, c'est le disque qui diverge).
+run --root="$R" --check
+[ "$RC" = 0 ] || BAD="$BAD [--check, parc complet : exit $RC au lieu de 0 : $OUT $ERR]"
+[ "$(count "$OUT" '^OK +\[(cap-transfo|feedbacks|keepthread|tirokado)\] ')" = 4 ] || BAD="$BAD [--check, parc complet : 4 lignes OK attendues]"
+has "$OUT" '^INVALID' && BAD="$BAD [--check : ligne INVALID sur le fichier versionne]"
+run --root="$(mkroot)" --check
+[ "$RC" = 1 ] || BAD="$BAD [--check, racine vide : exit $RC au lieu de 1]"
+[ "$(count "$OUT" '^ABSENT +\[(cap-transfo|feedbacks|keepthread|tirokado)\] ')" = 4 ] || BAD="$BAD [--check, racine vide : 4 lignes ABSENT attendues]"
+has "$OUT" '^INVALID' && BAD="$BAD [--check, racine vide : ligne INVALID]"
+if [ -z "$BAD" ]; then pass; else fail "$BAD"; fi
+
+# --- Test H (CA6) : --check sur un parc juste ---
+echo "Test H (CA6): --check sur un parc juste -> une ligne OK par entree, exit 0, '(jamais synchronise)' si pas de ds-tokens.css, rien d'ecrit..."
+BAD=""
+R="$(mkroot)"; mkstyles "$R" a/src/styles web/b/css autre
+direct "$R/a/src/styles" --no-showcase       # a : consommateur synchronise (ds-tokens.css present)
+echo "notes" > "$R/notes.txt"                 # un fichier, un dossier sans ds-tokens.css : pas des consommateurs
+CF="$(mkcf '{"schema":2,"consumers":[
+  {"name":"a","dir":"a"},
+  {"name":"b","dir":"web/b","css_dir":"css"}]}')"
+BEFORE="$(snapshot "$R")"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 0 ] || BAD="$BAD [exit $RC au lieu de 0 : $OUT $ERR]"
+hasx "$OUT" "OK       [a]  $R/a/src/styles" || BAD="$BAD [ligne OK de a absente ou sans le format exact : $OUT]"
+hasx "$OUT" "OK       [b]  $R/web/b/css (jamais synchronisé)" || BAD="$BAD [ligne OK de b sans '(jamais synchronisé)' : $OUT]"
+[ "$(count "$OUT" '^OK ')" = 2 ] || BAD="$BAD [2 lignes OK attendues, obtenu $(count "$OUT" '^OK ')]"
+has "$OUT" '^(ABSENT|UNLISTED|INVALID) ' && BAD="$BAD [statut de derive sur un parc juste]"
+# --check n'ecrit rien et n'appelle pas sync.sh : b (dossier vide) reste vide.
+[ "$(snapshot "$R")" = "$BEFORE" ] || BAD="$BAD [--check a modifie la racine]"
+# La fraicheur n'est PAS controlee (c'est le role de check-sync.sh) : une copie en retard reste OK.
+printf '/* @ds-version: 1.0.0 */\n' > "$R/a/src/styles/ds-tokens.css"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 0 ] && hasx "$OUT" "OK       [a]  $R/a/src/styles" || BAD="$BAD [copie en retard (v1.0.0) : OK/exit 0 attendus, exit $RC]"
+# Les options de synchro sont sans effet en --check.
+run --root="$R" --consumers="$CF" --check --assets=acssi --no-showcase --with-graph --components=core
+[ "$RC" = 0 ] && [ "$(snapshot "$R")" = "$BEFORE" ] || BAD="$BAD [options de synchro avec --check : exit $RC ou racine modifiee]"
+# Un chemin ecrit autrement ("./a/", "src/styles/") designe la meme cible : pas de faux UNLISTED.
+CF2="$(mkcf '{"schema":2,"consumers":[{"name":"a","dir":"./a/","css_dir":"src/styles/"},{"name":"b","dir":"web//b","css_dir":"./css"}]}')"
+run --root="$R" --consumers="$CF2" --check
+[ "$RC" = 0 ] || BAD="$BAD [chemins non normalises : exit $RC au lieu de 0 : $OUT]"
+has "$OUT" '^UNLISTED ' && BAD="$BAD [chemins non normalises : faux UNLISTED]"
+# DS_CONSUMERS_ROOT suffit aussi en --check.
+OUT="$(DS_CONSUMERS_ROOT="$R" bash "$SYNC_ALL" --consumers="$CF" --check 2>&1)"; RC=$?
+[ "$RC" = 0 ] && [ "$(count "$OUT" '^OK ')" = 2 ] || BAD="$BAD [DS_CONSUMERS_ROOT en --check : exit $RC]"
+if [ -z "$BAD" ]; then pass; else fail "$BAD"; fi
+
+# --- Test I (CA7) : --check sur un parc derive ---
+echo "Test I (CA7): --check sur un parc derive -> ABSENT et UNLISTED chacun exit 1, node_modules/worktrees/dist ecartes, rien d'ecrit..."
+BAD=""
+# I1 : ABSENT seul (aucun UNLISTED) -> exit 1.
+R="$(mkroot)"; mkstyles "$R" a/src/styles; direct "$R/a/src/styles"
+CF="$(mkcf '{"schema":2,"consumers":[{"name":"a","dir":"a"},{"name":"gone","dir":"gone"}]}')"
+BEFORE="$(snapshot "$R")"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 1 ] || BAD="$BAD [ABSENT seul : exit $RC au lieu de 1]"
+hasx "$OUT" "ABSENT   [gone]  $R/gone/src/styles" || BAD="$BAD [ABSENT seul : ligne ABSENT [gone] absente ou format inexact : $OUT]"
+hasx "$OUT" "OK       [a]  $R/a/src/styles" || BAD="$BAD [ABSENT seul : la ligne OK de a doit rester emise]"
+has "$OUT" '^UNLISTED ' && BAD="$BAD [ABSENT seul : UNLISTED emis a tort]"
+[ "$(snapshot "$R")" = "$BEFORE" ] || BAD="$BAD [ABSENT seul : --check a modifie la racine (dossier cree ?)]"
+# I2 : UNLISTED seul (aucun ABSENT) -> exit 1 ; la ligne porte le dossier du ds-tokens.css.
+R="$(mkroot)"; mkstyles "$R" a/src/styles autre/src/styles; direct "$R/a/src/styles"; direct "$R/autre/src/styles"
+CF="$(mkcf '{"schema":2,"consumers":[{"name":"a","dir":"a"}]}')"
+BEFORE="$(snapshot "$R")"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 1 ] || BAD="$BAD [UNLISTED seul : exit $RC au lieu de 1]"
+hasx "$OUT" "UNLISTED $R/autre/src/styles" || BAD="$BAD [UNLISTED seul : ligne UNLISTED attendue absente ou format inexact : $OUT]"
+has "$OUT" '^ABSENT ' && BAD="$BAD [UNLISTED seul : ABSENT emis a tort]"
+[ "$(count "$OUT" '^UNLISTED ')" = 1 ] || BAD="$BAD [UNLISTED seul : 1 seule ligne UNLISTED attendue]"
+[ "$(snapshot "$R")" = "$BEFORE" ] || BAD="$BAD [UNLISTED seul : --check a modifie la racine]"
+# I3 : ABSENT + UNLISTED ensemble -> exit 1, les deux lignes et les comptes du recapitulatif.
+CF="$(mkcf '{"schema":2,"consumers":[{"name":"a","dir":"a"},{"name":"gone","dir":"gone"}]}')"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 1 ] || BAD="$BAD [ABSENT + UNLISTED : exit $RC au lieu de 1]"
+has "$OUT" '^ABSENT +\[gone\] ' && has "$OUT" '^UNLISTED ' || BAD="$BAD [ABSENT + UNLISTED : les deux statuts attendus]"
+has "$OUT" '^ +ABSENT +: 1$' && has "$OUT" '^ +UNLISTED +: 1$' && has "$OUT" '^ +OK +: 1$' || BAD="$BAD [recapitulatif : comptes OK 1 / ABSENT 1 / UNLISTED 1 attendus : $OUT]"
+# I4 : le dossier existe mais le ds-tokens.css est sous un AUTRE css_dir que celui declare -> UNLISTED.
+R="$(mkroot)"; mkstyles "$R" a/src/styles a/web/css; direct "$R/a/web/css"
+CF="$(mkcf '{"schema":2,"consumers":[{"name":"a","dir":"a"}]}')"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 1 ] && hasx "$OUT" "UNLISTED $R/a/web/css" || BAD="$BAD [css_dir different du declare : UNLISTED $R/a/web/css attendu, exit $RC : $OUT]"
+# I5 : un ds-tokens.css sous node_modules/, .claude/worktrees/, .next/, dist/, .git/ n'est PAS signale
+# (y compris quand le dossier exclu est directement sous la racine) ; ni un ds-tokens.css a la racine.
+R="$(mkroot)"; mkstyles "$R" a/src/styles
+direct "$R/a/src/styles"
+for D in a/node_modules/pkg a/.claude/worktrees/wt/src/styles a/.next/static a/dist/css a/.git/x node_modules/pkg dist/x; do
+  mkdir -p "$R/$D"; cp "$R/a/src/styles/ds-tokens.css" "$R/$D/ds-tokens.css"
+done
+cp "$R/a/src/styles/ds-tokens.css" "$R/ds-tokens.css"
+CF="$(mkcf '{"schema":2,"consumers":[{"name":"a","dir":"a"}]}')"
+BEFORE="$(snapshot "$R")"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 0 ] || BAD="$BAD [dossiers exclus : exit $RC au lieu de 0 (faux UNLISTED ?) : $OUT]"
+has "$OUT" '^UNLISTED ' && BAD="$BAD [dossiers exclus : UNLISTED emis a tort : $OUT]"
+[ "$(snapshot "$R")" = "$BEFORE" ] || BAD="$BAD [dossiers exclus : --check a modifie la racine]"
+# Garde anti-test-vide : le meme ds-tokens.css, hors dossier exclu, EST signale.
+mkdir -p "$R/vrai/src/styles"; cp "$R/a/src/styles/ds-tokens.css" "$R/vrai/src/styles/ds-tokens.css"
+run --root="$R" --consumers="$CF" --check
+[ "$RC" = 1 ] && hasx "$OUT" "UNLISTED $R/vrai/src/styles" || BAD="$BAD [garde anti-test-vide : UNLISTED $R/vrai/src/styles attendu, exit $RC]"
+[ "$(count "$OUT" '^UNLISTED ')" = 1 ] || BAD="$BAD [garde anti-test-vide : exactement 1 UNLISTED attendu : $OUT]"
 if [ -z "$BAD" ]; then pass; else fail "$BAD"; fi
 
 echo ""
