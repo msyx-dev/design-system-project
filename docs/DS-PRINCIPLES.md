@@ -737,6 +737,62 @@ invoquer pour ajouter une section) :
 4. Générer les baselines desktop du nouveau thème pour les sections listées
    via soft-harvest CI (jamais en local, cf pièges connus du repo).
 
+### Tolérance de comparaison (#969)
+
+Jusqu'à 2.142.0, `toHaveScreenshot` tolérait `threshold: 0.2` +
+`maxDiffPixelRatio: 0.01`. La PR 962 (#944) a changé la couleur de tous les
+boutons pleins sur les 10 combos thème/mode et le job `visual` est resté vert :
+la VR ne voyait que les ruptures de mise en page, pas les couleurs.
+
+**Réglage en vigueur** (`playwright.config.ts`, bloc `expect.toHaveScreenshot`) :
+
+| Option | Valeur | Rôle |
+|---|---|---|
+| `threshold` | `0.05` | distance de couleur par pixel (pixelmatch, espace YIQ ; les pixels d'anticrénelage sont ignorés) |
+| `maxDiffPixels` | `50` | plafond absolu de pixels différents |
+| `maxDiffPixelRatio` | `0.01` | plafond relatif, conservé |
+
+**Règle du minimum.** Quand `maxDiffPixels` et `maxDiffPixelRatio` sont tous
+deux posés, Playwright retient le **plus petit** des deux plafonds. La plus
+petite section capturée fait 135 750 px (1 % = 1 357 px) : `maxDiffPixels: 50`
+gouverne donc toutes les sections actuelles, et le ratio est inerte tant qu'une
+section ne descend pas sous 5 000 px.
+
+**Mesures du groom (2026-10-01)**, section `composants-buttons`
+msyx-dark-desktop = 1 852 320 px (budget 1 % = 18 523 px) :
+
+| Cas | Seuil 0.2 | Seuil 0.1 | Seuil 0.05 |
+|---|---|---|---|
+| M1 : inverse exact de #944 | 4 180 px (< 18 523 : vert à tort) | 48 852 px | au moins 8 519 px sur les 12 combos |
+| M5 : glissement de teinte ΔE≈6 (`--btn-danger-bg-start` `#ce1d28` → `#e0323c`) | 0 px | 0 px | 4 219 px |
+| Bruit de re-rendu local (même code, deux rendus) | 0 px | 0 px | 0 px |
+
+Au seuil 0.1, M5 passerait vert et l'inverse de #944 ne fait que 83 px sur
+auchan-light (marge trop mince) : c'est la raison de `0.05` plutôt que `0.1`.
+Le bruit de re-rendu d'un run CI à l'autre n'a pas été mesuré à `0.05` : seul
+le bruit local (0 px) et l'écart local/CI (9 captures dans la tranche 1-50 px)
+l'ont été, d'où le plafond de 50 px.
+
+**Règle de re-baseline.** Tout changement **voulu** de couleur sur une section
+capturée se re-baseline par **récolte CI** (jamais en local, cf. checklist
+ci-dessus) **dans la même PR** que le changement : sans cela, `visual` est
+rouge. La récolte couvre les **5** `THEMES` de `playwright.config.ts`
+(msyx, acssi, nhood, auchan, noel), pas seulement les trois premiers. Aucune
+conséquence pour les consumers : seules les baselines du dépôt DS sont
+concernées.
+
+**Repli préétabli.** Si le run de validation, relancé une fois sur le même SHA,
+n'est pas vert deux fois au seuil `0.05` (bruit CI), le seuil passe à `0.1`
+sans nouvelle spec. Conséquence assumée : M5 (glissement ΔE≈6) n'est alors plus
+détecté (0 px), seules les dérives franches de couleur le sont. Le repli doit
+être tracé dans la PR et écrit ici.
+
+**Le critère de sentinelle ne change pas.** Resserrer la tolérance rend la VR
+sensible à la couleur *dans les sections déjà capturées* ; cela n'élargit
+pas `SENTINEL_SECTIONS`. Une section n'est toujours sentinelle que si un token
+de thème peut s'y exprimer **structurellement** (taille, bordure, espacement) ;
+la couleur seule n'est toujours pas un critère de sélection (cf. ci-dessus).
+
 ### Garde-fou en CI
 
 `visual.spec.ts` vérifie à l'exécution que chaque id listé dans

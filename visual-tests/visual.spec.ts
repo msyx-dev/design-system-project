@@ -210,7 +210,7 @@ test.describe("Visual regression — full matrix (par section)", () => {
         // alors en "Failed to take two consecutive stable screenshots".
         // On attend ici que la hauteur soit identique sur 2 mesures
         // consécutives avant de capturer : stabilisation déterministe,
-        // ciblée, SANS toucher threshold/maxDiffPixelRatio.
+        // ciblée, SANS toucher threshold/maxDiffPixels/maxDiffPixelRatio.
         let prevH = -1;
         for (let i = 0; i < 10; i++) {
           const box = await section.boundingBox();
