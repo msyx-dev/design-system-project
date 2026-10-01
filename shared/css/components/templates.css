@@ -92,13 +92,13 @@
 .cal-grid > [role="row"] { display: contents; }
 .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.82rem; color: var(--text); cursor: pointer; transition: background 0.15s; position: relative; gap: 2px; }
 .cal-day:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
-.cal-day.today { background: var(--accent); color: var(--text-on-accent); font-weight: 600; }
+.cal-day.today { background: var(--accent-surface); color: var(--text-on-accent); font-weight: 600; }
 .cal-day.today:hover { background: color-mix(in srgb, var(--accent) 88%, white); }
 .cal-day.selected { background: color-mix(in srgb, var(--accent) 20%, transparent); border: 1px solid var(--accent); font-weight: 600; }
 .cal-day.other-month { color: var(--text-dim); } /* Fix 5 — opacity: 0.4 retiré, ratio 4.76+ WCAG AA (était blend ≈1.70 KO) */
 .cal-day.range { background: color-mix(in srgb, var(--accent) 10%, transparent); border-radius: 0; }
-.cal-day.range-start { background: var(--accent); color: var(--text-on-accent); font-weight: 600; border-radius: 8px 0 0 8px; }
-.cal-day.range-end { background: var(--accent); color: var(--text-on-accent); font-weight: 600; border-radius: 0 8px 8px 0; }
+.cal-day.range-start { background: var(--accent-surface); color: var(--text-on-accent); font-weight: 600; border-radius: 8px 0 0 8px; }
+.cal-day.range-end { background: var(--accent-surface); color: var(--text-on-accent); font-weight: 600; border-radius: 0 8px 8px 0; }
 .cal-dots { display: flex; gap: 3px; }
 .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
 .cal-dot.blue { background: var(--accent); }

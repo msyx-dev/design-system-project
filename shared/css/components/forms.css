@@ -200,7 +200,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     user-select: none;
 }
 .number-input-btn:hover:not(:disabled) {
-    background: var(--accent);
+    background: var(--accent-surface);
     color: var(--text-on-accent);
 }
 .number-input-btn:active:not(:disabled) {

@@ -54,7 +54,7 @@ a[aria-disabled="true"] {
     left: var(--space-2, 0.75rem);
     z-index: var(--z-skip-link);
     padding: var(--space-2, 0.75rem) var(--space-md, 1rem);
-    background: var(--accent);
+    background: var(--accent-surface);
     color: var(--text-on-accent);
     border-radius: var(--radius-sm, 8px);
     text-decoration: none;
