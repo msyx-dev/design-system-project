@@ -75,9 +75,15 @@ export default defineConfig({
     animations: "disabled",
     caret: "hide",
   },
+  // Tolérance VR (#969) — doit faire échouer un changement de couleur de bouton.
+  // threshold = distance de couleur par pixel (pixelmatch YIQ, anticrénelage
+  // ignoré) ; maxDiffPixels = plafond absolu. Playwright retient le MIN avec
+  // maxDiffPixelRatio : 50 px gouverne toutes les sections actuelles (la plus
+  // petite fait 135 750 px, 1 % = 1 357). Mesures et doctrine : DS-PRINCIPLES §8.3.
   expect: {
     toHaveScreenshot: {
-      threshold: 0.2,
+      threshold: 0.05,
+      maxDiffPixels: 50,
       maxDiffPixelRatio: 0.01,
     },
   },
