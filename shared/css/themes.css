@@ -517,7 +517,7 @@
     --border-hover: rgba(var(--accent-rgb), 0.35);
     --btn-danger-bg-end: #bb0010;
     --btn-danger-bg-start: #d1141b;
-    --btn-outline-danger-fg: #d1141b;
+    --btn-outline-danger-fg: #cd0b17;
     --btn-primary-bg-end: #008535;
     --btn-primary-bg-start: #006e2c;
     --btn-success-bg-end: #007e35;
@@ -712,7 +712,7 @@
     --border-hover: rgba(146, 100, 0, 0.45);
     --btn-danger-bg-end: #8f4207;
     --btn-danger-bg-start: #a84b00;
-    --btn-outline-danger-fg: #ad4d00;
+    --btn-outline-danger-fg: #a94b00;
     --btn-primary-bg-end: #7a0a1b;
     --btn-primary-bg-start: #a80f26;
     --btn-success-bg-end: #0f7d3a;

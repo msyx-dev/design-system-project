@@ -82,6 +82,9 @@ const SOLID = [
   "btn-outline-danger",
   "btn-secondary-btn-outline-danger",
 ];
+// Cas SOLID a fond TRANSPARENT (aucun degrade) : pas d'arrets a lire, seul le pixel rendu est mesure.
+// Garde-fou : un fond qui deviendrait un degrade doit sortir de cette liste (sinon stopMin ne serait plus verifie).
+const FLAT_BG = ["btn-outline-danger", "btn-secondary-btn-outline-danger"];
 // Cas en rapport seul (fond translucide ou transparent) :
 // - `btn-outline-danger-bare` : la classe NUE (aucun markup du DS ne l'emet) — `.btn-outline-danger` ne pose
 //   ni padding ni display, le texte touche donc la bordure et la boite du texte arrondie a l'entier avale la
@@ -517,6 +520,15 @@ test.describe("Contraste du texte des boutons — sonde pixel (#944)", () => {
         )
         .toBeLessThanOrEqual(4);
       if (!r.solid) continue;
+      if (FLAT_BG.includes(r.probe)) {
+        expect
+          .soft(
+            r.rest.stopCount,
+            `${projectName} ${r.probe}: classe en FLAT_BG mais backgroundImage porte des arrets ("${r.rest.bgImage}") — la retirer de FLAT_BG pour que stopMin soit verifie`,
+          )
+          .toBe(0);
+        continue;
+      }
       expect
         .soft(
           r.rest.stopCount,

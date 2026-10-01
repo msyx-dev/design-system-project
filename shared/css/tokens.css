@@ -458,7 +458,7 @@
     --btn-danger-bg-start: #d1141b;  --btn-danger-bg-end: #bb0010;
     --btn-success-bg-start: #007031;  --btn-success-bg-end: #007e35;
     --btn-warning-bg-start: #ad3500;  --btn-warning-bg-end: #a75900;
-    --btn-outline-danger-fg: #d1141b; /* #968 — 4,64:1 au pire pixel (survol teinté sur --primary) ; --danger-light #dc2626 donnait 4,09:1 */
+    --btn-outline-danger-fg: #cd0b17; /* #968 — 4,86:1 au pire fond calculé (survol teinté) ; --danger-light #dc2626 donnait 4,09:1 */
 
     /* Echelle categorielle — MSYX light (#800). Contraste vs --surface-solid #ffffff. */
     --cat-1: #056eff;
