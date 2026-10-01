@@ -8,6 +8,13 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Fixed
+- **`.btn-outline-danger` au contraste AA, au repos et au survol, sur les 10 combinaisons thème × mode (#968)** — `shared/css/tokens.css`, `themes/*.json`, `shared/css/themes.css`, `shared/css/components/buttons.css`, `visual-tests/button-contrast.spec.ts`. Texte porté par un token dédié `--btn-outline-danger-fg` (`--danger-light`, partagé avec les statuts, inchangé) ; pire cas 4,69:1 (avant 3,81:1, et 1,82:1 au survol selon le markup). Le bouton devient un cas bloquant de la sonde de contraste, sur ses deux markups.
+- **`check-components.sh` échouait sur tout consommateur synchronisé (#967)** — `shared/components-registry.json`, `.github/workflows/ci.yml`, `tests/test-check-components.sh`. Six modificateurs du DS écrits en sélecteur composé (`.chip-icon`, `.number-input--compact`, `.number-input--disabled`, `.tooltip--bottom/--left/--right`) manquaient au registre : un dossier fraîchement synchronisé repasse à 0 avertissement sans resynchronisation. Le contrôle CI du registre devient bloquant.
+
+### Changed
+- **`shared/consumers.json` schéma 2 et `sync-all.sh` (#970)** — `shared/consumers.json`, `shared/sync-all.sh`, `tests/test-sync-all.sh`, `shared/CONSUMER_GUIDE.md`. La liste décrit le parc réel (cap-transfo, feedbacks, keepthread, tirokado) avec les options de chaque consommateur (`assets`, `components`, `no_showcase`, `with_graph`) ; racine obligatoire (`--root=` / `DS_CONSUMERS_ROOT`), `--dry-run` qui affiche la commande exacte, nouveau mode `--check` en lecture seule (`OK`/`ABSENT`/`UNLISTED`/`INVALID`) ; une clé inconnue ou un chemin absolu est refusé avant toute copie.
+
 ### Added
 - **`@msyx-dev/react` 3.0.0-alpha.59 : `<FestiveDecor>`, `<FestiveSnowToggle>`, `<SiteHeader festive>` et `<Icon name="snowflake">` (#950).** `packages/react/src/components/FestiveDecor/`, `SiteHeader.tsx`, `icons/Icon.tsx`, `index.ts`, `shared/components-registry.json` (`festif.react` `pending` → `ported`), `bin/generate-registry.js`. Portage React du décor Noël de `nav.js` : sapin en SVG inline JSX natif (`id` préfixés par `useId()`), neige pilotée par `msyx-festive` (seule la valeur `"off"` la coupe), rendu uniquement sous `data-theme="noel"`, réactif au changement de thème. Aucun changement du DS CSS ni de sa version.
 
