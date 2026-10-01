@@ -51,7 +51,7 @@
 .pricing-badge {
     font-size: 0.68rem;
     font-weight: var(--fw-semibold);
-    color: var(--success);
+    color: var(--status-success-text);
     background: color-mix(in srgb, var(--success) 12%, transparent);
     border: 1px solid color-mix(in srgb, var(--success) 25%, transparent);
     border-radius: var(--radius-xs);

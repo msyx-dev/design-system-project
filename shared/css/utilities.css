@@ -9,10 +9,10 @@
 .text-dim { color: var(--text-dim); }
 .text-accent { color: var(--accent); }
 .text-accent-light { color: var(--accent-light); }
-.text-success { color: var(--success); }
-.text-warning { color: var(--warning); }
-.text-danger { color: var(--danger); }
-.text-info { color: var(--info); }
+.text-success { color: var(--status-success-text); }
+.text-warning { color: var(--status-warn-text); }
+.text-danger { color: var(--status-error-text); }
+.text-info { color: var(--status-info-text); }
 .text-on-accent { color: var(--text-on-accent); }
 .text-success-light { color: var(--success-light); }
 .text-warning-light { color: var(--warning-light); }

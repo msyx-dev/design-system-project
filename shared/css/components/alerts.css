@@ -5,10 +5,10 @@
 /* ===== ALERT (primitive messaging canonique #519) ===== */
 .alert { padding: 0.9rem 1.2rem; border-radius: var(--radius-sm); display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.88rem; line-height: 1.5; }
 .alert-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
-.alert-info    { background: color-mix(in srgb, var(--info)    var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--info)    var(--alert-border-alpha), transparent); color: var(--info-light); }
-.alert-success { background: color-mix(in srgb, var(--success) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); color: var(--success-light); }
-.alert-warning { background: color-mix(in srgb, var(--warning) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); color: var(--warning-light); }
-.alert-danger  { background: color-mix(in srgb, var(--danger)  var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); color: var(--danger-light); }
+.alert-info    { background: color-mix(in srgb, var(--info)    var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--info)    var(--alert-border-alpha), transparent); color: var(--status-info-fg); }
+.alert-success { background: color-mix(in srgb, var(--success) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); color: var(--status-success-fg); }
+.alert-warning { background: color-mix(in srgb, var(--warning) var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); color: var(--status-warn-fg); }
+.alert-danger  { background: color-mix(in srgb, var(--danger)  var(--alert-bg-alpha),     transparent); border: 1px solid color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); color: var(--status-error-fg); }
 /* Variante NON semantique (#923) — un indicateur qui ne signale rien ne doit
    pas etre peint. Un compteur a zero rendu en `info` affiche du vert/cyan la
    ou il n'y a rien a traiter, et la couleur perd sa valeur de signal partout
@@ -88,10 +88,10 @@
 .alert--kpi.alert-warning { border-left-color: color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); }
 .alert--kpi.alert-danger  { border-left-color: color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); }
 .alert--kpi.alert-neutral { border-left-color: color-mix(in srgb, var(--text-muted) var(--alert-border-alpha), transparent); }
-.alert--kpi.alert-info    .alert-title, .alert--kpi.alert-info    .alert-value { color: var(--info-light); }
-.alert--kpi.alert-success .alert-title, .alert--kpi.alert-success .alert-value { color: var(--success-light); }
-.alert--kpi.alert-warning .alert-title, .alert--kpi.alert-warning .alert-value { color: var(--warning-light); }
-.alert--kpi.alert-danger  .alert-title, .alert--kpi.alert-danger  .alert-value { color: var(--danger-light); }
+.alert--kpi.alert-info    .alert-title, .alert--kpi.alert-info    .alert-value { color: var(--status-info-fg); }
+.alert--kpi.alert-success .alert-title, .alert--kpi.alert-success .alert-value { color: var(--status-success-fg); }
+.alert--kpi.alert-warning .alert-title, .alert--kpi.alert-warning .alert-value { color: var(--status-warn-fg); }
+.alert--kpi.alert-danger  .alert-title, .alert--kpi.alert-danger  .alert-value { color: var(--status-error-fg); }
 .alert--kpi.alert-neutral .alert-title, .alert--kpi.alert-neutral .alert-value { color: var(--text-muted); }
 
 /* ===== ALERT --cta (ex-upgrade-banner #519, migré depuis pricing.css) — alerte actionnable ===== */
@@ -117,13 +117,13 @@
 .zone-banner .zone-value { font-size: 1.8rem; font-weight: 700; font-family: var(--font-display); margin-bottom: var(--space-xs); }
 .zone-banner .zone-desc { font-size: 0.85rem; color: var(--text-muted); }
 .zone-loss    { background: color-mix(in srgb, var(--danger)  var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--danger)  var(--alert-border-alpha), transparent); }
-.zone-loss    .zone-title, .zone-loss    .zone-value { color: var(--danger-light); }
+.zone-loss    .zone-title, .zone-loss    .zone-value { color: var(--status-error-fg); }
 .zone-warning { background: color-mix(in srgb, var(--warning) var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--warning) var(--alert-border-alpha), transparent); }
-.zone-warning .zone-title, .zone-warning .zone-value { color: var(--warning-light); }
+.zone-warning .zone-title, .zone-warning .zone-value { color: var(--status-warn-fg); }
 .zone-profit  { background: color-mix(in srgb, var(--success) var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--success) var(--alert-border-alpha), transparent); }
-.zone-profit  .zone-title, .zone-profit  .zone-value { color: var(--success-light); }
+.zone-profit  .zone-title, .zone-profit  .zone-value { color: var(--status-success-fg); }
 .zone-info    { background: color-mix(in srgb, var(--info)    var(--alert-bg-alpha), transparent); border-left-color: color-mix(in srgb, var(--info)    var(--alert-border-alpha), transparent); }
-.zone-info    .zone-title, .zone-info    .zone-value { color: var(--info-light); }
+.zone-info    .zone-title, .zone-info    .zone-value { color: var(--status-info-fg); }
 
 /* --- upgrade-banner → .alert.alert--cta --- */
 /* @deprecated v2.77.0 — utiliser .alert.alert--cta + .alert-{variant}. Suppression v3. */
