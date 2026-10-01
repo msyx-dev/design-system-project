@@ -19,6 +19,9 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-report-a11y", open: "never" }],
+    // Seul producteur de docs/audit-a11y-<date>.md et de test-results-a11y/a11y-runs.json (#976).
+    // Ne JAMAIS passer `--reporter=…` en CLI : l'option remplace cette liste.
+    ["./visual-tests/reporters/a11y-report.ts"],
   ],
   use: {
     baseURL: `http://localhost:${PORT}`,

@@ -195,11 +195,12 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 - **Outils** : `@axe-core/playwright` v4.x (devDep) — API Deque officielle `AxeBuilder`
 - **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les baselines VR
-- **Matrice** : 9 pages × 5 thèmes × 2 modes = 90 runs (même couverture que VR sans viewport ; `auchan` et `noel` ajoutés en #939 — `auchan` n'y avait jamais été ajouté)
+- **Matrice** : 10 pages × 5 thèmes × 2 modes = 100 runs (même couverture que VR sans viewport ; `auchan` et `noel` ajoutés en #939 — `auchan` n'y avait jamais été ajouté ; `user-feedback` ajoutée en #976)
 - **Règles** : `wcag2a`, `wcag2aa`, `wcag21aa` (WCAG 2.0 + 2.1 A/AA)
 - **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001, séparé du pipeline VR
 - **Mode dry-run** : ne fait jamais échouer le test sur violation (logger seulement)
-- **Rapport** : `docs/audit-a11y-<date>.md` — généré en `afterAll`, tableau par règle + détail par run
+- **Rapport** : `docs/audit-a11y-<date>.md` (tableau par règle + détail par run, « Runs rapportés N / total ») et export `test-results-a11y/a11y-runs.json` (tableau de `A11yRun`, avec `fg`/`bg`/`ratio` par nœud `color-contrast`) — produits par le **reporter Playwright** `visual-tests/reporters/a11y-report.ts` (processus du runner, insensible aux redémarrages de worker : chaque test attache son résultat, plus de tampon global ni d'`afterAll`, #976). Ne jamais passer `--reporter=…` à la CLI : il remplace les reporters de la config.
+- **Banc hermétique** : les requêtes hors `localhost` sont abandonnées (`page.route`) et le chargement attend `load`, pas `networkidle` — une ressource tierce (avatar de démo de `navigation.html`) ne ralentit ni ne fait expirer un run (#976)
 - **CI** : `.github/workflows/a11y.yml` — séparé de `visual.yml`, `continue-on-error: true`, artifact uploadé
 - **Scripts npm** : `test:a11y` (run) + `test:a11y:report` (open report HTML)
 - **Résultat initial** (v2.52.0, 2026-05-09) : « 0 violations / 54 runs » — **faux négatif** : le flag `-s` de `serve` faisait auditer `index.html` (issue #286). Rapport régénéré sur le vrai contenu en v2.56.1 : **141 violations réelles** (60 critical, 81 serious) sur 7 règles distinctes — défauts a11y DS pré-existants, tickets de suivi séparés (hors scope #286).

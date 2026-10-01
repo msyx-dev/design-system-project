@@ -290,8 +290,8 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 - Hors périmètre bloquant (rapport seul, `REPORT_ONLY`) : `.btn-secondary`, `.btn-ghost` (fond translucide ou transparent) et `btn-outline-danger-bare` (la classe nue, sans padding : aucun markup du DS ne l'émet ; la boîte du texte avale la colonne de pixels de la bordure, la mesure y lit la bordure et non le fond).
 
 ### Garde-fou
-- Audit `@axe-core/playwright` sur 54 pages × 6 themes (cf `docs/audit-a11y-*.md`)
-- Objectif : 0 violation WCAG A/AA/AA21 (atteint depuis v2.52.0)
+- Audit `@axe-core/playwright` sur 10 pages × 5 thèmes × 2 modes = 100 runs (`docs/audit-a11y-*.md`, `test-results-a11y/a11y-runs.json`, produits par le reporter `visual-tests/reporters/a11y-report.ts`)
+- État : `color-contrast` reste en rapport (non bloquant) et MSYX porte encore des nœuds en violation (206 mesurés le 2026-10-01) ; le passage bloquant sur MSYX dark + light est prévu une fois le rapport propre (#976)
 - **Boutons à fond plein** : sonde pixels `visual-tests/button-contrast.spec.ts`, **bloquante** (§3.3) — axe `color-contrast` reste en rapport (non bloquant)
 
 ---

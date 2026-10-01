@@ -1,16 +1,27 @@
 /**
  * a11y.spec.ts — Axe-core dry-run audit
- * DS v2.52.0 — issue #242
+ * DS v2.52.0 — issue #242 ; banc fiabilisé en #976
  *
- * Matrice : 9 pages × 5 thèmes × 2 modes = 90 runs
- * Mode dry-run : ne fait PAS échouer le test sur violation.
- * Produit docs/audit-a11y-2026-05-09.md après tous les runs.
+ * Matrice : 10 pages × 5 thèmes × 2 modes = 100 runs
+ * Mode dry-run : ne fait PAS échouer le test sur violation (seule une erreur
+ * de run — chargement, titre, axe — fait échouer le test).
+ *
+ * Aucun état n'est gardé ici : chaque test ATTACHE son résultat (`A11Y_ATTACHMENT`)
+ * et le reporter `reporters/a11y-report.ts` (processus du runner, insensible aux
+ * redémarrages de worker) produit docs/audit-a11y-<date>.md et
+ * test-results-a11y/a11y-runs.json.
+ *
+ * Banc hermétique : les requêtes hors localhost sont abandonnées (le DS n'a pas de
+ * dépendance externe) et le chargement attend `load`, pas `networkidle`.
  */
 
 import { test, expect } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
-import * as fs from "fs";
-import * as path from "path";
+import {
+  A11Y_ATTACHMENT,
+  type A11yContrast,
+  type A11yRun,
+} from "./reporters/a11y-report";
 
 // BASE_URL est fourni par playwright.a11y.config.ts via baseURL
 // → utiliser des chemins relatifs dans page.goto()
@@ -27,6 +38,11 @@ const PAGES = [
   { slug: "data", path: "/pages/data.html", title: "Data" },
   { slug: "templates", path: "/pages/templates.html", title: "Templates" },
   { slug: "feedback", path: "/pages/feedback.html", title: "Feedback" },
+  {
+    slug: "user-feedback",
+    path: "/pages/user-feedback.html",
+    title: "User Feedback",
+  },
   { slug: "overlays", path: "/pages/overlays.html", title: "Overlays" },
   // divers.html : le <title> du <head> est "Avancé — msyx.design" (et non "Divers")
   { slug: "divers", path: "/pages/divers.html", title: "Avancé" },
@@ -45,26 +61,6 @@ const THEME_COMBOS: Array<{ theme: string; mode: string }> = [
   { theme: "noel", mode: "dark" },
   { theme: "noel", mode: "light" },
 ];
-
-// --- Buffer des résultats pour le rapport afterAll ---
-interface RunResult {
-  page: string;
-  theme: string;
-  mode: string;
-  violations: AxeViolation[];
-  error?: string;
-}
-
-interface AxeViolation {
-  id: string;
-  impact: string | null;
-  description: string;
-  help: string;
-  helpUrl: string;
-  nodes: Array<{ html: string; target: string[] }>;
-}
-
-const allResults: RunResult[] = [];
 
 // ---- Helpers ----
 
@@ -86,18 +82,47 @@ async function setThemeAndMode(
   );
 }
 
+type AxeNode = Awaited<
+  ReturnType<AxeBuilder["analyze"]>
+>["violations"][number]["nodes"][number];
+
+// Données de la vérification axe `color-contrast` d'un nœud en violation
+// (n.any[id="color-contrast"].data) : couleurs lues, ratio mesuré et attendu.
+function pickContrast(n: AxeNode): A11yContrast | undefined {
+  const d = n.any.find((c) => c.id === "color-contrast")?.data;
+  if (!d) return undefined;
+  return {
+    fg: d.fgColor,
+    bg: d.bgColor,
+    ratio: d.contrastRatio,
+    expected: d.expectedContrastRatio,
+    fontSize: d.fontSize,
+    fontWeight: d.fontWeight,
+  };
+}
+
 // ---- Tests ----
 
-test.describe("A11y audit — dry-run (90 runs)", () => {
+test.describe(`A11y audit — dry-run (${PAGES.length * THEME_COMBOS.length} runs)`, () => {
+  test.beforeEach(async ({ page }) => {
+    // Banc hermétique : le DS n'a pas de dépendance externe ; une ressource tierce
+    // (avatar de démo navigation.html:1003) ne doit ni ralentir ni faire expirer l'audit.
+    await page.route(
+      (url) => url.hostname !== "localhost" && url.hostname !== "127.0.0.1",
+      (route) => route.abort(),
+    );
+  });
+
   for (const { slug, path: pagePath, title } of PAGES) {
     for (const { theme, mode } of THEME_COMBOS) {
+      // Contrat avec le reporter : titre « <slug> [<theme>-<mode>] » (TITLE_RE).
       const runLabel = `${slug} [${theme}-${mode}]`;
 
-      test(runLabel, async ({ page }) => {
+      test(runLabel, async ({ page }, testInfo) => {
         await setThemeAndMode(page, theme, mode);
 
         await page.goto(pagePath, {
-          waitUntil: "networkidle",
+          waitUntil: "load",
           timeout: 30_000,
         });
 
@@ -118,15 +143,14 @@ test.describe("A11y audit — dry-run (90 runs)", () => {
           });
         await page.waitForTimeout(500);
 
-        let violations: AxeViolation[] = [];
-        let runError: string | undefined;
+        const run: A11yRun = { page: slug, theme, mode, violations: [] };
 
         try {
           const results = await new AxeBuilder({ page })
             .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
             .analyze();
 
-          violations = results.violations.map((v) => ({
+          run.violations = results.violations.map((v) => ({
             id: v.id,
             impact: v.impact ?? null,
             description: v.description,
@@ -137,251 +161,32 @@ test.describe("A11y audit — dry-run (90 runs)", () => {
               target: n.target.map((t) =>
                 typeof t === "string" ? t : JSON.stringify(t),
               ),
+              contrast: v.id === "color-contrast" ? pickContrast(n) : undefined,
             })),
           }));
         } catch (err) {
-          runError = String(err);
-          console.warn(`[a11y] Erreur sur ${runLabel}: ${runError}`);
+          run.error = String(err);
+          console.warn(`[a11y] Erreur sur ${runLabel}: ${run.error}`);
         }
 
-        allResults.push({
-          page: slug,
-          theme,
-          mode,
-          violations,
-          error: runError,
+        // Le reporter (processus du runner) agrège : un attachement par test.
+        await testInfo.attach(A11Y_ATTACHMENT, {
+          body: JSON.stringify(run),
+          contentType: "application/json",
         });
 
-        // Dry-run : on ne fait PAS échouer ici
+        // Dry-run : on ne fait PAS échouer ici sur violation
         // On log juste le nombre de violations pour visibilité dans le reporter
-        if (violations.length > 0) {
+        if (run.violations.length > 0) {
           console.log(
-            `[a11y] ${runLabel}: ${violations.length} violation(s) — ` +
-              violations.map((v) => `${v.id}(${v.impact})`).join(", "),
+            `[a11y] ${runLabel}: ${run.violations.length} violation(s) — ` +
+              run.violations.map((v) => `${v.id}(${v.impact})`).join(", "),
           );
         }
 
-        // Assertion soft : toujours passer (dry-run)
-        expect(runError).toBeUndefined();
+        // Seule une erreur de run (axe) fait échouer le test
+        expect(run.error).toBeUndefined();
       });
     }
   }
-});
-
-// ---- Rapport afterAll ----
-
-test.afterAll(async () => {
-  // --- Calculs ---
-  const totalRuns = allResults.length;
-  const totalViolations = allResults.reduce(
-    (sum, r) => sum + r.violations.length,
-    0,
-  );
-  const totalNodes = allResults.reduce(
-    (sum, r) => sum + r.violations.reduce((s2, v) => s2 + v.nodes.length, 0),
-    0,
-  );
-  const errors = allResults.filter((r) => r.error);
-
-  // --- Agrégat par règle ---
-  const ruleMap = new Map<
-    string,
-    { count: number; nodeCount: number; impact: string | null; help: string }
-  >();
-  for (const run of allResults) {
-    for (const v of run.violations) {
-      const existing = ruleMap.get(v.id);
-      if (existing) {
-        existing.count += 1;
-        existing.nodeCount += v.nodes.length;
-      } else {
-        ruleMap.set(v.id, {
-          count: 1,
-          nodeCount: v.nodes.length,
-          impact: v.impact,
-          help: v.help,
-        });
-      }
-    }
-  }
-
-  // Tri par count décroissant
-  const sortedRules = [...ruleMap.entries()].sort(
-    (a, b) => b[1].count - a[1].count,
-  );
-
-  // --- Comptage par sévérité ---
-  const severityCount: Record<string, number> = {
-    critical: 0,
-    serious: 0,
-    moderate: 0,
-    minor: 0,
-    unknown: 0,
-  };
-  for (const run of allResults) {
-    for (const v of run.violations) {
-      const key = v.impact ?? "unknown";
-      severityCount[key] = (severityCount[key] ?? 0) + 1;
-    }
-  }
-
-  // --- Génération Markdown ---
-  const lines: string[] = [];
-
-  const reportDate = new Date().toISOString().slice(0, 10);
-  lines.push("# Audit A11y — Design System MSYX");
-  lines.push("");
-  lines.push(`**Date** : ${reportDate}`);
-  lines.push(
-    "**Version DS** : v2.56.1 (issue #286 — régénération sur vrai contenu)",
-  );
-  lines.push(
-    "**Scope** : WCAG 2.0 A/AA + WCAG 2.1 AA (`wcag2a`, `wcag2aa`, `wcag21aa`)",
-  );
-  lines.push("**Outil** : `@axe-core/playwright` v4.x (Deque axe-core)");
-  lines.push("**Mode** : Dry-run — aucun test ne fail sur violation");
-  lines.push("");
-  lines.push("---");
-  lines.push("");
-  lines.push("## Résumé exécutif");
-  lines.push("");
-  lines.push(`| Métrique | Valeur |`);
-  lines.push(`|---|---|`);
-  lines.push(`| Runs exécutés | ${totalRuns} / 54 |`);
-  lines.push(`| Erreurs de run | ${errors.length} |`);
-  lines.push(`| Règles violées (instances) | ${totalViolations} |`);
-  lines.push(`| Noeuds HTML impactés | ${totalNodes} |`);
-  lines.push(`| Règles distinctes violées | ${ruleMap.size} |`);
-  lines.push("");
-  lines.push("### Violations par sévérité");
-  lines.push("");
-  lines.push(`| Sévérité | Count |`);
-  lines.push(`|---|---|`);
-  for (const [sev, count] of Object.entries(severityCount)) {
-    if (count > 0) {
-      lines.push(`| ${sev} | ${count} |`);
-    }
-  }
-  lines.push("");
-  lines.push("---");
-  lines.push("");
-  lines.push("## Tableau par règle");
-  lines.push("");
-  lines.push("| Règle (id) | Sévérité | Runs touchés | Noeuds | Description |");
-  lines.push("|---|---|---|---|---|");
-  for (const [ruleId, info] of sortedRules) {
-    lines.push(
-      `| \`${ruleId}\` | ${info.impact ?? "unknown"} | ${info.count} | ${info.nodeCount} | ${info.help} |`,
-    );
-  }
-  lines.push("");
-  lines.push("---");
-  lines.push("");
-  lines.push("## Détail par run");
-  lines.push("");
-
-  // Groupe par page
-  const pageOrder = PAGES.map((p) => p.slug);
-  for (const slug of pageOrder) {
-    const pageRuns = allResults.filter((r) => r.page === slug);
-    if (pageRuns.length === 0) continue;
-
-    const pageViolationCount = pageRuns.reduce(
-      (s, r) => s + r.violations.length,
-      0,
-    );
-    lines.push(
-      `### Page : \`${slug}\` — ${pageViolationCount} violation(s) sur ${pageRuns.length} runs`,
-    );
-    lines.push("");
-
-    for (const run of pageRuns) {
-      const runId = `${run.theme}-${run.mode}`;
-      lines.push(`#### ${runId}`);
-      lines.push("");
-
-      if (run.error) {
-        lines.push(`> **Erreur de run** : \`${run.error}\``);
-        lines.push("");
-        continue;
-      }
-
-      if (run.violations.length === 0) {
-        lines.push("Aucune violation WCAG 2.0/2.1 A/AA détectée.");
-        lines.push("");
-        continue;
-      }
-
-      lines.push(`${run.violations.length} violation(s) :`);
-      lines.push("");
-
-      for (const v of run.violations) {
-        lines.push(`**\`${v.id}\`** — impact : **${v.impact ?? "unknown"}**`);
-        lines.push("");
-        lines.push(`${v.help}`);
-        lines.push(`_Réf : ${v.helpUrl}_`);
-        lines.push("");
-
-        if (v.nodes.length > 0) {
-          lines.push(`Noeuds impactés (${v.nodes.length}) :`);
-          lines.push("");
-          for (const node of v.nodes.slice(0, 5)) {
-            // Limiter à 5 noeuds par règle pour lisibilité
-            const selector = node.target.join(" > ");
-            lines.push(`- \`${selector}\``);
-            const htmlSnippet = node.html.replace(/\n/g, " ").substring(0, 120);
-            lines.push(`  \`\`\`html`);
-            lines.push(`  ${htmlSnippet}`);
-            lines.push(`  \`\`\``);
-          }
-          if (v.nodes.length > 5) {
-            lines.push(`  _(… +${v.nodes.length - 5} noeuds non affichés)_`);
-          }
-          lines.push("");
-        }
-      }
-    }
-  }
-
-  if (errors.length > 0) {
-    lines.push("---");
-    lines.push("");
-    lines.push("## Erreurs de run");
-    lines.push("");
-    for (const r of errors) {
-      lines.push(`- **${r.page} [${r.theme}-${r.mode}]** : \`${r.error}\``);
-    }
-    lines.push("");
-  }
-
-  lines.push("---");
-  lines.push("");
-  lines.push("## Notes");
-  lines.push("");
-  lines.push(
-    "- Ce rapport est un **dry-run**. Aucune correction n'a été appliquée.",
-  );
-  lines.push(
-    "- Limites d'affichage : 5 noeuds max par règle par run (rapport concis).",
-  );
-  lines.push(
-    "- Prochaine étape : créer issue #238-fix avec estimation basée sur ce rapport.",
-  );
-  lines.push(
-    "- `color-contrast` peut varier selon le rendu GPU/OS — vérifier manuellement les cas limites.",
-  );
-  lines.push("");
-
-  // --- Écriture fichier ---
-  const reportFile = `audit-a11y-${reportDate}.md`;
-  const reportPath = path.resolve(__dirname, `../docs/${reportFile}`);
-  const content = lines.join("\n");
-
-  fs.writeFileSync(reportPath, content, "utf8");
-
-  console.log(`\n[a11y] Rapport écrit : docs/${reportFile}`);
-  console.log(
-    `[a11y] ${totalRuns} runs — ${totalViolations} violations — ${ruleMap.size} règles distinctes`,
-  );
-  console.log(`[a11y] Sévérités :`, severityCount);
 });
