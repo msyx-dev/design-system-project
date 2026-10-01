@@ -366,7 +366,7 @@
 }
 .rail-item.active {
     background: var(--sidebar-link-active-bg);
-    color: var(--accent-light);
+    color: var(--accent-text-strong);
 }
 .rail-item-icon {
     width: 20px;
@@ -833,7 +833,7 @@
     font-weight: 600;
 }
 .segmented--subtle .segmented-item.active {
-    color: var(--accent-light);
+    color: var(--accent-text-strong);
 }
 .segmented-item svg {
     flex-shrink: 0;

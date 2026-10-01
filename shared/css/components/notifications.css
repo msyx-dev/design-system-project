@@ -89,7 +89,7 @@
     transition: color var(--duration-fast);
     font-family: var(--font-sans);
 }
-.notif-mark-all:hover { color: var(--accent); }
+.notif-mark-all:hover { color: var(--accent-text); }
 .notif-list {
     overflow-y: auto;
     max-height: 320px;

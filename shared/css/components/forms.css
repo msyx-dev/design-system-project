@@ -108,7 +108,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 /* ===== SLIDER / RANGE ===== */
 .slider-group { display: flex; flex-direction: column; gap: 0.6rem; }
 .slider-header { display: flex; justify-content: space-between; align-items: center; }
-.slider-value-display { font-size: 0.85rem; font-weight: 600; color: var(--accent); font-family: var(--font-mono); min-width: 2.5ch; text-align: right; }
+.slider-value-display { font-size: 0.85rem; font-weight: 600; color: var(--accent-text); font-family: var(--font-mono); min-width: 2.5ch; text-align: right; }
 .slider-row { display: flex; gap: 0.8rem; align-items: center; }
 .slider-value { width: 68px !important; text-align: center; padding: 0.4rem 0.5rem !important; font-family: var(--font-mono); font-size: 0.85rem; }
 .slider-value-wrap { display: flex; align-items: center; gap: 0.3rem; }
@@ -384,7 +384,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     border-radius: 20px;
     background: color-mix(in srgb, var(--accent) 12%, transparent);
     border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-    color: var(--accent-light);
+    color: var(--accent-text-strong);
     font-size: 0.8rem;
     font-family: var(--font-sans);
     white-space: nowrap;
@@ -552,10 +552,10 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .login-strength-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; }
 .login-cgu { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted); margin-top: var(--space-xs); }
 .login-cgu input[type="checkbox"] { margin-top: 0.15rem; accent-color: var(--accent); flex-shrink: 0; }
-.login-cgu a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.login-cgu a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 2px; }
 .login-success-msg { text-align: center; padding: var(--space-md); color: var(--success); background: color-mix(in srgb, var(--success) 8%, transparent); border: 1px solid color-mix(in srgb, var(--success) 30%, transparent); border-radius: var(--radius-md); font-size: 0.9rem; display: none; }
 .login-success-msg.show { display: block; }
-.login-back-link { background: none; border: none; cursor: pointer; color: var(--accent); font-size: 0.82rem; text-decoration: underline; text-underline-offset: 2px; padding: 0; margin-top: var(--space-xs); display: inline-block; }
+.login-back-link { background: none; border: none; cursor: pointer; color: var(--accent-text); font-size: 0.82rem; text-decoration: underline; text-underline-offset: 2px; padding: 0; margin-top: var(--space-xs); display: inline-block; }
 
 /* ===== PASSWORD FIELD (toggle révélation) ===== */
 .password-field { position: relative; }
@@ -723,7 +723,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .comment-text { font-size: 0.88rem; color: var(--text); line-height: 1.55; }
 .comment-actions { display: flex; align-items: center; gap: var(--space-sm); margin-top: 0.4rem; }
 .comment-action-btn { background: none; border: none; cursor: pointer; font-size: 0.78rem; color: var(--text-muted); padding: 0.2rem 0.4rem; border-radius: var(--radius-xs); transition: color 0.15s, background 0.15s; display: inline-flex; align-items: center; gap: 0.25rem; }
-.comment-action-btn:hover { color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.comment-action-btn:hover { color: var(--accent-text); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .comment-action-btn.active { color: var(--danger); }
 .comment-thread { padding-left: var(--space-lg); position: relative; margin-top: 0; }
 .comment-thread::before { content: ''; position: absolute; left: 18px; top: 0; bottom: var(--space-sm); width: 2px; background: var(--border-color); border-radius: 1px; }

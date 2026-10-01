@@ -13,6 +13,11 @@
     --accent-rgb: 59, 130, 246;
     --accent-light: #60a5fa;
     --accent-glow: rgba(var(--accent-rgb), 0.12);
+    /* Accent en texte et aplat accent (#980) : tokens DÉDIÉS, hex littéraux, réglés à la mesure
+       (≥ 4,6:1 au pire fond mesuré), teinte de --accent conservée (seul L OKLCh bouge, Δh ≤ 0,5°).
+       JAMAIS var(--accent) en couleur de texte de taille normale ; JAMAIS --text-on-accent sur var(--accent). */
+    --accent-text: #4f91ff;         /* 4,61:1 sur #1a2b47 (voile --accent-glow), 5,37 sur #161f2f ; --accent : 3,86 / 4,49 */
+    --accent-text-strong: #91c1ff;  /* 4,60:1 sur #344d72 (.segmented--subtle actif), 5,53 sur #39414e ; --accent-light : 3,37 / 4,05 */
     --surface: rgba(30, 41, 59, 0.6);
     --surface-alt: rgba(255, 255, 255, 0.15);
     --surface-solid: #1e293b;
@@ -433,6 +438,8 @@
     --code-number: #b45309;    /* Fix 3 — 5.02:1 sur #fff WCAG AA (était #d97706 = 3.19 LARGE-only) */
     --accent-light: #2563eb;   /* Fix B — 5.17:1 sur #f8fafc WCAG AA (était #60a5fa = 2.43 KO) */
     --accent-glow: rgba(var(--accent-rgb), 0.08);
+    --accent-text: #2269db;         /* 4,62:1 sur #eef4fd, 4,88 sur #f8fafc, 5,06 sur #fefefe ; --accent : 3,33 / 3,52 / 3,65 */
+    --accent-text-strong: #114ed5;  /* 4,63:1 sur #c4d6f1, 5,06 sur #cddffc, 5,52 sur #e6e7e8 ; --accent-light : 3,50 / 3,83 / 4,17 */
     /* Fix C — semantic-light assombris pour WCAG AA texte normal sur fond clair */
     --success-light: #15803d;  /* 5.64:1 sur #fff (était #4ade80 = 1.52 KO) */
     --warning-light: #c2410c;  /* 4.72:1 sur #fff (était #fbbf24 = 1.44 KO) */

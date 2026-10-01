@@ -113,7 +113,7 @@
 .date-input-wrap input { padding-right: 2.5rem; }
 .date-input-wrap .date-icon { position: absolute; right: 0.8rem; color: var(--text-muted); pointer-events: none; font-size: 0.9rem; }
 .date-range-display { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.85rem; color: var(--text); }
-.date-range-display .arrow { color: var(--accent); font-weight: 600; }
+.date-range-display .arrow { color: var(--accent-text); font-weight: 600; }
 .cal-legend { display: flex; gap: var(--space-md); margin-top: 0.8rem; flex-wrap: wrap; }
 .cal-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
 .cal-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
