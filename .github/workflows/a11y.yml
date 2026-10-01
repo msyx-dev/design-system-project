@@ -34,7 +34,9 @@ jobs:
         run: npx playwright install chromium
 
       - name: Run a11y dry-run audit
-        run: npm run test:a11y -- --reporter=list
+        # PAS de `--reporter=…` : l'option CLI REMPLACE les reporters de la config
+        # (dont visual-tests/reporters/a11y-report.ts, seul producteur du rapport).
+        run: npm run test:a11y
         continue-on-error: true
         env:
           CI: true
@@ -44,5 +46,7 @@ jobs:
         if: always()
         with:
           name: audit-a11y-report
-          path: docs/audit-a11y-*.md
+          path: |
+            docs/audit-a11y-*.md
+            test-results-a11y/a11y-runs.json
           retention-days: 30
