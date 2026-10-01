@@ -236,3 +236,69 @@ test.describe("Visual regression — full matrix (par section)", () => {
     });
   }
 });
+
+// --- Capture dédiée du header (#977) ---
+// Les captures de sections masquent .site-header (#669, plus haut) : sans ce
+// bloc, le header n'est couvert par aucun test visuel. Recensement #977 : le
+// seul élément du header qui varie d'un run à l'autre est le numéro du badge
+// de version (const VERSION, shared/nav.js, rendu en nœud texte direct du
+// bouton .header-version-badge). On remplace ce texte par une constante AVANT
+// la capture : la largeur du badge ne dépend plus de la version, rien ne bouge.
+// `mask` de Playwright est écarté volontairement : sa boîte couvre la boîte
+// RÉELLE du badge, dont la largeur suit la chaîne de version (2.99 → 2.100,
+// police proportionnelle) — une release suffirait à dépasser maxDiffPixels.
+const HEADER_VERSION_PLACEHOLDER = "v0.0.0";
+
+const neutralizeVersionBadge = async (
+  page: import("@playwright/test").Page,
+) => {
+  const replaced = await page.evaluate((placeholder) => {
+    const badge = document.querySelector(".site-header .header-version-badge");
+    if (!badge) return 0;
+    let count = 0;
+    badge.childNodes.forEach((node) => {
+      if (
+        node.nodeType === Node.TEXT_NODE &&
+        /^\s*v\d+\.\d+\.\d+/.test(node.textContent ?? "")
+      ) {
+        node.textContent = placeholder;
+        count++;
+      }
+    });
+    return count;
+  }, HEADER_VERSION_PLACEHOLDER);
+  // Garde-fou : si nav.js restructure le badge (numéro déplacé dans un <span>,
+  // badge retiré…), on échoue ICI au lieu de capturer le vrai numéro en silence.
+  expect(
+    replaced,
+    "header : numéro de version introuvable dans .header-version-badge — neutralizeVersionBadge a dérivé de shared/nav.js (#977)",
+  ).toBe(1);
+};
+
+test.describe("Visual regression — header (#977)", () => {
+  test("header", async ({ page }, testInfo) => {
+    const { theme, mode } = parseProjectName(testInfo.project.name);
+    // Matrice de référence MSYX uniquement (dark/light × desktop/mobile) —
+    // le header mobile diffère réellement (layout.css, compaction < 640px).
+    test.skip(
+      theme !== "msyx",
+      "header : capturé sur la matrice de référence MSYX uniquement (#977)",
+    );
+
+    await setThemeAndMode(page, theme, mode);
+    // Page support : config MSYX_HEADER statique (user 'Preview', count 3).
+    await page.goto("/pages/navigation.html", { waitUntil: "networkidle" });
+    await expect(page).toHaveTitle(/^Navigation —/);
+    await page.waitForFunction(
+      () => document.fonts && document.fonts.status === "loaded",
+    );
+    await page.waitForTimeout(300);
+
+    // Header fixe + backdrop-filter : on capture à scrollY = 0, sans scroll.
+    await neutralizeVersionBadge(page);
+
+    await expect
+      .soft(page.locator(".site-header"))
+      .toHaveScreenshot("header__site-header.png", { timeout: 15_000 });
+  });
+});
