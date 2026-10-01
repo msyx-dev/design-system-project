@@ -4,6 +4,23 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.60 — 2026-10-01 — `<Textarea>`, ActionMenu et PageHeader corrigés (#952 #936 #937)
+
+> Release groupée du milestone #49, publiée avec le DS CSS **2.142.0** (mention croisée : le CSS de `.input-counter`, `.action-menu-trigger--labeled` et le contraste des boutons est décrit dans `../../RELEASES.md`).
+
+### Added
+- **`<Textarea>` (#952).** API alignée sur `Input` : `label`, `hint`, `error`, `showCount` + `maxLength`, `limitReachedLabel`. Modes contrôlé et non contrôlé (resynchronisé au `reset`), `aria-describedby` fusionné, région live annoncée une seule fois à la limite.
+
+### Fixed
+- **`ActionMenu` : le libellé débordait d'un déclencheur de 32 px (#936).** Libellé enveloppé : `.sr-only` avec icône (carré 32 px, nom accessible conservé), visible sans icône via `.action-menu-trigger--labeled`. cap-transfo peut retirer son contournement `font-size: 0`.
+- **`PageHeader` rendait un `<nav>` dans le `<nav>` du `Breadcrumb` (#937).** Un seul landmark « Fil d'Ariane » ; `.section-header-breadcrumb` devient un `<div>`, rendu inchangé. KeepThread peut retirer son `exact: true`.
+
+### Changed
+- **`AccessDenied` : `logoSrc` par défaut = `/assets/logo-msyx.svg`** (était `/assets/sources/logoMSYX.png`, fichier non distribué par `sync.sh`). Passer `logoSrc` reste possible ; un consommateur qui servait le PNG à ce chemin doit désormais servir `assets/logo-msyx.svg` (copié par `sync.sh`) ou fixer `logoSrc`.
+- **Test `graph-layered-vendor-built`** : délai propre de 30 s pour le test du manifeste `npm pack` (mesuré 5,5 s et 10,5 s sur machine chargée).
+
+`version` 3.0.0-alpha.59 → 3.0.0-alpha.60. Tag `react-v3.0.0-alpha.60` posé par le parent après le merge.
+
 ## v3.0.0-alpha.59 — 2026-09-30 — `<FestiveDecor>` : décor du thème Noël (#950)
 
 > Le CSS (`festive.css`) et le JS vanilla (`ensureFestiveDecor()`/`updateFestiveDecor()`) existent depuis v2.139.0/v2.141.0 ; ce lot ne livre que le portage React. Aucune modification du DS CSS.

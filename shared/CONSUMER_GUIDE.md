@@ -287,11 +287,11 @@ React (`@msyx-dev/react`) : `<Logo>` resout `${basePath}/logo-msyx*.svg`, avec `
 <Logo variant="dark" basePath="/brand" alt="Nom de votre application" />
 ```
 
-**Header vanilla (`ds-nav.js`)** : sans configuration, le header pointe sur `/assets/sources/logoMSYX.png` (`shared/nav.js`), un fichier qui **n'est pas distribue** (`sources/` reste dans le DS). Posez `window.MSYX_HEADER.brand.logoSrc` sur l'URL ou vous servez `assets/logo-msyx.svg` :
+**Header vanilla (`ds-nav.js`)** : sans configuration, le header pointe sur `/assets/logo-msyx.svg` (`shared/nav.js`), le logo MSYX fidele que `sync.sh` copie dans `<cible>/assets/` : servez ce dossier a la racine du site et rien d'autre n'est a poser. Pour un autre logo, ou une autre URL de service, posez `window.MSYX_HEADER.brand.logoSrc` :
 
 ```html
 <script>
-window.MSYX_HEADER = { brand: { logoSrc: '/assets/logo-msyx.svg' } };
+window.MSYX_HEADER = { brand: { logoSrc: '/brand/logo-acssi.svg' } };
 </script>
 ```
 

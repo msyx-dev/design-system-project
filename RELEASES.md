@@ -1,5 +1,26 @@
 # Releases
 
+## 2.142.0 — 2026-10-01 — Fiabilisation consumers ② : contraste des boutons, logos distribués, Textarea, orphelins (#944 #954 #952 #938 #936 #937 #958)
+
+> Touche `shared/css/tokens.css`, `themes/*.json`, `shared/css/themes.css`, `shared/css/components/{buttons,forms,overlays}.css`, `shared/components.js`, `shared/nav.js`, `shared/sync.sh`, `shared/check-sync.sh`, `shared/check-components.sh`, `assets/logo-msyx*.svg`, `pages/{formulaires,fondation,feedback,navigation}.html`, `access-denied.html`, `canonical-pages/login.html`, `Caddyfile.container`, `Dockerfile`, `shared/components-registry.json`, `shared/version-notes.json`. Mention croisée : **`@msyx-dev/react` 3.0.0-alpha.60** (`<Textarea>`, `ActionMenu`, `PageHeader`, défaut de `AccessDenied`) est publié par le même lot — son détail est dans `packages/react/RELEASES.md`.
+
+### Fixed
+- **Contraste AA des boutons à fond plein, sur les 10 combinaisons thème × mode (#944)** — 29 cellules sur 40 étaient sous 4,5:1 (jusqu'à 1,63:1). Fonds dédiés `--btn-{primary,danger,success,warning}-bg-{start,end}` réglés à la mesure (teinte conservée), texte des boutons primaires porté par `--btn-on-primary` (Auchan sombre : texte blanc sur rouge foncé, validé par Mike) ; pire cas désormais 4,63:1. Le survol des boutons de connexion reprend celui de `.btn-primary`. Sonde de contraste sur les pixels réellement rendus (`visual-tests/button-contrast.spec.ts`), **bloquante**.
+- **`/health` et `/version` rendaient la page HTML au lieu du JSON du contrat (#958)** — `Caddyfile.container`, `Dockerfile`. Les chemins du contrat répondent en `application/json`, les formes `.json` restent servies, le `HEALTHCHECK` sonde `/health`.
+- **`ActionMenu` et `PageHeader` (#936, #937)** — côté CSS, la variante `.action-menu-trigger--labeled` (libellé visible d'un déclencheur sans icône) ; le reste est dans `@msyx-dev/react` alpha.60.
+
+### Added
+- **Compteur de caractères sur les champs de saisie (#952)** — `.input-footer`, `.input-counter`, `.input-counter--over` (`forms.css`), `initInputCounters()` (`components.js`), section `#textarea` de `pages/formulaires.html`. Région live annoncée une seule fois à la limite.
+- **Logos de marque distribués par `sync.sh` (#954)** — les 4 SVG MSYX sont re-vectorisés depuis le logo officiel (l'ancien n'avait pas la découpe du « M ») ; `sync.sh` les copie dans `<cible>/assets/`, les chartes clientes sur demande (`--assets=acssi`) ; `check-sync.sh` signale un logo absent ou modifié (sha256). `tree-noel.svg` n'est pas distribué.
+- **`check-components.sh --orphans=<src>` : composants DS livrés mais jamais montés (#938)** — passe opt-in, informative, bloquante seulement sur les entrées `structural` ; registre enrichi de `reactExports` (dérivé) et `structural`. Sans le drapeau, sortie et code retour inchangés.
+
+### Changed
+- **Logo MSYX par défaut : `/assets/logo-msyx.svg`** au lieu de `/assets/sources/logoMSYX.png` — header (`nav.js`), page 403 (`access-denied.html`), gabarit `canonical-pages/login.html`, démos de `fondation`/`feedback`/`navigation`. Le PNG n'était pas distribué par `sync.sh` ; le SVG l'est et est désormais fidèle (#954). `assets/sources/logoMSYX.png` est conservé comme source. **Les sections de ces pages qui montrent le logo changent à l'image : baselines visuelles à récolter.**
+- **Test `graph-layered-vendor-built`** : délai propre de 30 s pour le test du manifeste `npm pack` (mesuré 5,5 s et 10,5 s sur machine chargée, délai par défaut 5 s).
+
+### Release
+`@ds-version` 2.141.1 → 2.142.0 (minor, 10 sources : `tokens`, `utilities`, `components`, `layout`, `base`, `themes` (régénéré par `build-themes.js`), `nav.js` ×2, `components-registry.json`, `package.json`), `shared/check-versions.sh` rc=0. Notes de version `shared/version-notes.json` alimentées et inlinées dans `nav.js`.
+
 ## 2.141.1 — 2026-09-30 — `check-sync.sh` : le contrôle de contenu, et la version de `themes.css` enfin bumpable (#951)
 
 > Touche `shared/build-themes.js`, `shared/sync.sh`, `shared/CONSUMER_GUIDE.md`, `tests/test-sync-styles.sh`, `shared/check-sync.sh`, `shared/check-versions.sh`, `shared/css/themes.css`, `shared/css/base.css`, `tests/test-check-sync.sh`, `tests/test-check-versions.sh`, `.github/workflows/ci.yml`.

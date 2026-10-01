@@ -14,6 +14,37 @@
   },
   "released": [
     {
+      "version": "2.142.0",
+      "date": "2026-10-01",
+      "titre": "Des boutons lisibles sur tous les thèmes",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Le texte de plusieurs boutons pleins était difficile à lire sur certains thèmes, jusqu'à devenir presque invisible. Les couleurs ont été ajustées pour que chaque bouton reste lisible, sur les cinq thèmes, en clair comme en sombre."
+        },
+        {
+          "type": "amelioration",
+          "text": "Le logo MSYX est désormais fidèle à l'original, avec la découpe de la lettre M, et il est fourni avec le design system : un projet n'a plus à le récupérer lui-même."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Une zone de texte multiligne est disponible, avec un compteur de caractères qui prévient une seule fois, y compris pour les lecteurs d'écran, quand la limite est atteinte."
+        },
+        {
+          "type": "correction",
+          "text": "Le libellé d'un menu d'actions ne déborde plus de son bouton lorsque celui-ci est petit."
+        },
+        {
+          "type": "correction",
+          "text": "Le fil d'Ariane d'un en-tête de page n'est plus annoncé deux fois par les lecteurs d'écran."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Un nouveau contrôle indique, pour un projet donné, quels composants du design system sont livrés mais jamais utilisés."
+        }
+      ]
+    },
+    {
       "version": "2.141.1",
       "date": "2026-09-30",
       "titre": "Le contrôle de synchronisation voit enfin les thèmes manquants",

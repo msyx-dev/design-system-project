@@ -98,7 +98,11 @@ describe("#942 - paquet @msyx-dev/react CONSTRUIT : vendor dagre publie + layout
     const files: Array<{ path: string }> = parsed[0].files;
     const paths = files.map((f) => f.path);
     expect(paths).toContain("vendor/graph-layered.js");
-  });
+    // Delai propre a ce test : il lance un vrai `npm pack --dry-run` (sous-processus npm,
+    // lecture du manifeste et du filtrage `files`). Mesure sur une machine chargee :
+    // 5,5 s puis 10,5 s, au-dessus du delai par defaut de 5 s (vert en CI, ~2 s). 30 s
+    // laisse une marge de 3x sur le pire cas mesure sans masquer une vraie regression.
+  }, 30_000);
 
   it("dist/ construit contient bien vendor/graph-layered.js a cote de dist/ (copie onSuccess de tsup.config.ts)", () => {
     expect(existsSync(DIST_ESM)).toBe(true);
