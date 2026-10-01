@@ -76,13 +76,18 @@ const SOLID = [
   "login-submit",
   "login-compact",
   "login-authentik",
-  // #968 : `.btn-outline-danger` (fond transparent, teinte au survol) — les 2 markups du DS :
-  // seul (pages/overlays.html) et combine a `.btn-secondary` (pages/composants.html).
+  // #968 : `.btn-outline-danger` (fond transparent, teinte au survol) — les 2 markups que le DS livre :
+  // `.btn-outline-danger.btn-sm` (pages/overlays.html, popover de confirmation) et
+  // `.btn-secondary.btn-outline-danger` (pages/composants.html#buttons).
   "btn-outline-danger",
   "btn-secondary-btn-outline-danger",
 ];
 // Cas en rapport seul (fond translucide ou transparent) :
-const REPORT_ONLY = ["btn-secondary", "btn-ghost"];
+// - `btn-outline-danger-bare` : la classe NUE (aucun markup du DS ne l'emet) — `.btn-outline-danger` ne pose
+//   ni padding ni display, le texte touche donc la bordure et la boite du texte arrondie a l'entier avale la
+//   colonne de pixels de la bordure (teinte --danger 30/50 %) : la mesure y lit le contraste de la bordure,
+//   pas celui du fond. Mesure et rapport conserves, non bloquants (cf. docs/DS-PRINCIPLES.md §3.3).
+const REPORT_ONLY = ["btn-secondary", "btn-ghost", "btn-outline-danger-bare"];
 
 // Tokens de fond dedies (#944 T2) — NOMS FIGES par la spec. Hex litteral dans les
 // 4 couches de cascade, jamais derives (--gradient-*, --danger*, ... sont partages hors boutons).

@@ -72,7 +72,9 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 30px color-mix(in srgb, var(--warning) var(--btn-shadow-alpha), transparent);
 }
-.btn-outline-danger { background: transparent; border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); color: var(--danger-light); }
+.btn-outline-danger { background: transparent; border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); color: var(--btn-outline-danger-fg); }
+/* Texte = token dédié (#968) : --danger-light est partagé avec les statuts et ne peut pas être réglé pour un
+   bouton. Le survol ne pose pas de couleur : il peint un fond teinté, et le token est réglé pour ce fond-là. */
 .btn-outline-danger:hover { background: color-mix(in srgb, var(--danger) 8%, transparent); border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
 
 /* Wrappers d'icône gauche/droite (#376) — émis par @msyx-dev/react Button (leftIcon/rightIcon).
