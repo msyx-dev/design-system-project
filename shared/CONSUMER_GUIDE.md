@@ -206,51 +206,103 @@ Le script `sync.sh` copie les fichiers DS avec le prefixe `ds-` :
 
 ### Sync automatique (tous les consommateurs)
 
-Le script `sync-all.sh` synchronise en une seule commande tous les projets
-enregistres dans `shared/consumers.json` :
+Le script `sync-all.sh` lit la liste des consommateurs dans `shared/consumers.json` (schema 2) et
+relaie a `sync.sh` les options propres a chacun, dont `--assets=`. La **racine** qui contient les
+projets est **obligatoire**, sans defaut : `--root=<dir>` ou la variable `DS_CONSUMERS_ROOT`
+(sinon exit 2, avec l'exemple a copier).
 
 ```bash
-# Synchroniser tous les consommateurs enregistres
-./sync-all.sh
+# Constater le parc : la liste est-elle juste ? (lecture seule, exit 1 si derive)
+./sync-all.sh --check --root=/home/deployer/projects/prod
 
-# Voir ce qui serait fait sans modifier quoi que ce soit
-./sync-all.sh --dry-run
+# Voir la commande sync.sh exacte, options comprises, a rejouer pour chaque consommateur
+./sync-all.sh --dry-run --root=/home/deployer/projects/prod
 
-# Synchroniser en mode --no-showcase (recommande pour projets hors DS)
-./sync-all.sh --no-showcase
+# Hote hors msyx : sa propre liste, hors du depot DS
+./sync-all.sh --root=/srv/apps --consumers=/srv/apps/ds-consumers.json
+
+# Options globales, combinees avec celles de chaque entree
+./sync-all.sh --root=/srv/apps --no-showcase --assets=acssi --with-graph --components=core
 ```
 
-Exemple de sortie :
+**Usage sur le VPS msyx : `--check` et `--dry-run` uniquement.** Lancer `sync-all.sh` sans l'un des
+deux sur `~/projects/prod` ecrirait directement dans les copies `main` des projets de production :
+c'est un hotfix hors pipeline, interdit. La resynchronisation d'un consommateur passe par **son**
+pipeline : son `/dev` rejoue, dans son worktree, la ligne `sync.sh ...` affichee par `--dry-run`.
+Le script ne l'interdit pas lui-meme (il doit rester portable : un hote client l'utilise en ecriture) ;
+seules cette regle et la racine explicite l'en empechent.
+
+Trois modes :
+
+| Mode | Effet |
+|---|---|
+| (aucun) | ecrit : appelle `sync.sh` pour chaque consommateur (`OK` / `FAIL` / `SKIP`) |
+| `--dry-run` | n'ecrit rien ; une ligne `DRY` par consommateur avec la commande `sync.sh` exacte |
+| `--check` | lecture seule, `sync.sh` n'est pas appele ; controle la **liste** dans les deux sens |
+
+`--check` rend la derive visible. Une ligne par constat, libelle en debut de ligne :
+
+- `OK [<name>]` : le dossier `<racine>/<dir>/<css_dir>` existe (` (jamais synchronise)` s'il n'a pas de `ds-tokens.css`)
+- `ABSENT [<name>]` : ce dossier n'existe pas
+- `UNLISTED <dossier>` : un `ds-tokens.css` existe sous la racine (profondeur 2 a 6, hors `node_modules`, `worktrees`, `.next`, `dist`, `.git`) sans qu'aucune entree ne designe son dossier
+- `INVALID [<name>]` : entree invalide (voir plus bas) ; le fichier n'est alors pas controle
+
+Exit 1 des qu'il y a au moins un `ABSENT`, `UNLISTED` ou `INVALID`, sinon 0. `--check` ne controle
+**pas** la fraicheur des copies : c'est le role de `check-sync.sh` (la version locale se lit dans
+`--dry-run`). Il ne faut donc pas s'attendre a ce qu'un consommateur en retard le fasse echouer.
+
+Exemple de sortie sur le parc msyx (`--check`) :
 
 ```
-=== sync-all.sh — Design System v2.18.0 ===
+=== sync-all.sh — Design System v2.142.0 ===
+Racine : /home/deployer/projects/prod
+(mode --check : lecture seule, contrôle de la liste)
 
-  OK    [acssi-core]    : v2.17.0 → v2.18.0
-  OK    [acssistender]  : v2.17.0 → v2.18.0
-  SKIP  [aksyva]        — répertoire absent : /home/.../src/styles
+OK       [cap-transfo]  /home/deployer/projects/prod/cap-transfo/src/styles
+OK       [feedbacks]  /home/deployer/projects/prod/feedbacks/src/styles
+OK       [keepthread]  /home/deployer/projects/prod/keepthread/src/styles
+OK       [tirokado]  /home/deployer/projects/prod/tirokado/src/styles
 
-─── Récapitulatif ───────────────────────────────────────────
-  Consommateurs enregistrés : 3
-  Synchronisés              : 2
-  Ignorés (absent)          : 1
-
-OK — 2 consommateur(s) synchronisé(s) vers v2.18.0
+Parc conforme — les 4 consommateur(s) listés sont présents, aucun n'est hors liste
 ```
+
+Codes de sortie : `0` OK, `1` echec de synchro, derive (`--check`) ou entree `INVALID`, `2` erreur
+d'usage (racine absente ou inexistante, option inconnue, `--check` avec `--dry-run`).
 
 ### Enregistrer un nouveau consommateur
 
-Editer `shared/consumers.json` et ajouter une entree :
+Ajouter une entree a `shared/consumers.json` (une PR DS : la liste est versionnee, `--check`
+signale `UNLISTED` un consommateur oublie). Schema 2 :
 
 ```json
 {
+  "schema": 2,
   "consumers": [
-    {"name": "mon-projet", "path": "/home/deployer/projects/prod/mon-projet", "css_dir": "src/styles"}
+    { "name": "mon-projet", "dir": "mon-projet", "css_dir": "src/styles", "no_showcase": true,
+      "assets": ["acssi"], "components": "", "with_graph": false }
   ]
 }
 ```
 
-Le champ `css_dir` indique le chemin relatif depuis `path` ou se trouvent
-les fichiers `ds-*.css`. Valeur par defaut : `src/styles`.
+| Cle | Role | Defaut |
+|---|---|---|
+| `name` | identifiant unique, `^[a-z0-9-]+$` | obligatoire |
+| `dir` | dossier du projet, **relatif a la racine** passee a l'appel (sans `/` initial ni `..`) | obligatoire |
+| `css_dir` | chemin relatif depuis `dir` ou se trouvent les `ds-*.css` | `"src/styles"` |
+| `no_showcase` | relaie `--no-showcase` | `false` |
+| `assets` | chartes clientes relayees en `--assets=` (`assets/logo-<c>.svg` present dans le DS) | `[]` |
+| `components` | relaie `--components=` : `""`, `"core"` ou `"mod1,mod2"` | `""` |
+| `with_graph` | relaie `--with-graph` | `false` |
+
+Une entree minimale `{name, dir}` equivaut a un `sync.sh` nu. Les options globales de la ligne de
+commande se combinent avec celles de l'entree : `--assets=` fait l'**union**, `--no-showcase` et
+`--with-graph` un **OU**, `--components=` **remplace** celui de l'entree.
+
+Le fichier est valide **en entier avant toute copie**, dans tous les modes. Est `INVALID` (exit 1,
+aucun consommateur touche) : un `schema` different de `2` ; le champ `path` (absolu, retire :
+utiliser `dir`) ; **toute cle inconnue** (une faute de frappe comme `"asset"` serait sinon ignoree et
+le logo n'arriverait jamais) ; un `name` absent, hors format ou en double ; un `dir` ou `css_dir`
+absolu ou contenant `..` ; une charte de `assets` sans fichier `assets/logo-<c>.svg` dans le DS.
 
 ## Assets de marque — logos (#954)
 
@@ -313,7 +365,7 @@ window.MSYX_HEADER = { brand: { logoSrc: '/brand/logo-acssi.svg' } };
 - MSYX est **toujours attendue** : un consommateur synchronise avant #954 sort 4 `MISSING` jusqu'a sa prochaine synchro.
 - Une charte cliente n'est verifiee que si au moins un de ses fichiers est present localement (trace d'un `--assets=<c>`). Limite assumee : une charte retiree ou renommee cote DS n'est plus signalee chez le consommateur.
 - Un fichier local sans equivalent dans le DS (logo propre a l'app) est ignore.
-- `sync-all.sh` ne relaie pas `--assets=` : pour une charte cliente, lancer `sync.sh --assets=<c>` directement sur le consommateur.
+- Pour une charte cliente, declarer la charte dans la cle `assets` de son entree `consumers.json` : `sync-all.sh` la relaie en `--assets=<c>` (voir [Enregistrer un nouveau consommateur](#enregistrer-un-nouveau-consommateur)).
 
 ## Regles d'or
 
@@ -801,7 +853,7 @@ Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `
 
 ### Dry-run (test sans modification)
 ```bash
-./sync-all.sh --components=buttons,cards --dry-run
+./sync-all.sh --root=/home/deployer/projects/prod --components=buttons,cards --dry-run
 # Affiche les fichiers qui seraient copiés sans rien modifier
 ```
 
