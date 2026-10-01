@@ -103,15 +103,16 @@ jobs:
           ./tests/test-check-categorical-palette.sh
       - name: Categorical palette unit tests (#800, #812)
         run: npm run test:categorical
-      # check-components.sh lint le registre / les consommateurs hors DS.
-      # Lance sur shared/css (CSS du DS) : 11 warnings de dette preexistante
-      # (classes modifier ex: .tooltip--left non enumerees dans le registre).
-      # continue-on-error tant que la dette n'est pas resorbee (cf. #378).
-      - name: check-components registry lint (#378, warn-only)
+      # check-components.sh sur shared/css : toute classe composant-like du CSS DS doit
+      # figurer dans les cssClasses du registre. Bloquant depuis #967 : sinon chaque
+      # consommateur synchronise echoue a check-components.sh (copies components/*.css).
+      # Si ce step rougit : ajouter la classe signalee aux cssClasses de l'entree CUREE
+      # du composant (generate-registry.js ne capte pas les modificateurs composes
+      # `.x.x--y`, cf. extractClasses). Ne pas creer de .ds-allowlist dans shared/css.
+      - name: check-components registry lint (#378, #967)
         run: |
           chmod +x shared/check-components.sh
           ./shared/check-components.sh shared/css
-        continue-on-error: true
       # Garde-fou « classe posee par le JS mais absente du CSS partage » (#765).
       # warn-only pour cette 1ere version (objectif = produire l'inventaire,
       # pas bloquer) — un passage --strict bloquant viendra une fois la dette
@@ -150,7 +151,7 @@ jobs:
         run: npm run test:registry-react-exports
       # Passe orphelins (#938) : moteur (registre synthetique + bout en bout) puis cas A a I sur
       # consommateurs synchronises par le VRAI sync.sh. Bloquants, sans continue-on-error ; le
-      # step warn-only « check-components registry lint » plus bas ne bouge pas.
+      # step bloquant « check-components registry lint » (#967), plus haut, ne bouge pas.
       - name: Run check-orphans engine smoke tests (#938)
         run: npm run test:check-orphans
       - name: Run check-components orphan-pass tests (#938)

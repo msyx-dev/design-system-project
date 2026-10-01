@@ -7,7 +7,7 @@
 # ne lisait que les CSS du consommateur et ne voyait pas ce sens-la. La passe est opt-in :
 # `check-components.sh --orphans=<src> <css>` (moteur : bin/lib/check-orphans.js).
 #
-# Cas A a I de la spec #938 (les fixtures sont reconstruites dans un tmp, le cas keepthread de
+# Cas A a I de la spec #938 (+ cas J, #967) (les fixtures sont reconstruites dans un tmp, le cas keepthread de
 # claude-config#435 n'est pas utilise) :
 #   A  sans --orphans : aucune section orphelins ; un .btn-maison local -> rc=1 + WARNING
 #   B  SiteHeader + versionNotes={...}            -> rc=0, pas de STRUCTUREL, liste informative non vide
@@ -19,22 +19,21 @@
 #   G  `import { Modal as M }` -> modal consomme ; `import type { VersionBadge }` seul -> reste orphelin
 #   H  source qui n'utilise que btn-icon/icon/header-notification -> user-feedback reste ORPHELIN
 #   I  sync.sh --components=core : entree dont aucune classe n'est dans les copies core -> non livree
+#   J  passe historique (#967) : copies DS propres en sync complet et core, step CI shared/css rc=0,
+#      et les copies components/ restent scannees (un modificateur non enregistre y est signale)
 #
 # FIXTURES PAR LE VRAI sync.sh : si sync.sh change ce qu'il distribue, ce test le voit.
 #
-# PASSE HISTORIQUE (defaut PREEXISTANT, hors perimetre de #938, signale dans la PR) : sur un
-# dossier produit par le vrai sync.sh, la passe SANS drapeau sort rc=1 avec 11 WARNING — elle
-# scanne aussi les copies DS `components/*.css` (`find $CSS_DIR -name '*.css' ! -name 'ds-*.css'`),
-# sur `main` aussi. Pour ISOLER ce que la passe orphelins ajoute, chaque fixture recoit un
-# `.ds-allowlist` GENERE A L'EXECUTION depuis la sortie de la passe historique (jamais des noms
-# figes en dur : si la dette est resorbee, l'allowlist se vide toute seule).
+# PASSE HISTORIQUE : depuis #967, elle sort rc=0 sur un dossier synchronise sans AUCUNE allowlist,
+# grace aux modificateurs composes (`.tooltip.tooltip--bottom`...) enregistres au registre. Le cas J
+# l'epingle et prouve que les copies `components/` restent scannees.
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 # Nombre d'assertions attendu : garde-fou contre une suite « verte » qui a saute des cas.
-EXPECTED_CHECKS=44
+EXPECTED_CHECKS=52
 
 PASS=0
 FAIL=0
@@ -70,14 +69,6 @@ make_template() {
   local dir="$WORK/tpl-$name"
   mkdir -p "$dir/styles"
   bash shared/sync.sh "$@" "$dir/styles" > /dev/null 2>&1
-  # .ds-allowlist genere a l'execution depuis la passe historique (cf. en-tete).
-  local hist
-  hist="$(bash shared/check-components.sh "$dir/styles" 2>&1)" || true
-  {
-    echo "# genere par tests/test-check-components.sh : classes signalees par la passe historique"
-    grep -oP '^  Classe  : \K\S+' <<< "$hist" | sort -u
-  } > "$dir/styles/.ds-allowlist"
-  TEMPLATE_HIST_WARNINGS="$(grep -oP '^Avertissements : \K[0-9]+' <<< "$hist")"
 }
 
 # new_consumer <nom-fixture> <template> : copie styles/ du template, cree src/
@@ -120,26 +111,25 @@ any_of()    { printf '^ORPHELIN(-STRUCTUREL|-ACCEPTÉ)? +%s( |$)' "$1"; }
 
 echo "Preparation : sync.sh reel (defaut) + sync.sh --components=core..."
 make_template full
-HIST_FULL="$TEMPLATE_HIST_WARNINGS"
-# Le template core ne sert qu'au cas I : saute quand CASES l'exclut (rejeu de mutation).
-if [ -z "${CASES:-}" ] || [[ " $CASES " == *" I "* ]]; then
+# Le template core ne sert qu'aux cas I et J : saute quand CASES les exclut (rejeu de mutation).
+if [ -z "${CASES:-}" ] || [[ " $CASES " == *" I "* ]] || [[ " $CASES " == *" J "* ]]; then
   make_template core --components=core
 fi
-echo "  passe historique sur dossier synchronise : $HIST_FULL WARNING (defaut preexistant, isole par .ds-allowlist genere)"
 
 case_A() {
 # --- Cas A : sans --orphans -----------------------------------------------------
 echo "Cas A: sans --orphans — consommateur synchronise, puis avec un .btn-maison local"
 A="$(new_consumer A full)"
 run_plain "$A"
-check "A1 consommateur synchronise (allowlist generee) -> rc=0" rc_is 0
+check "A1 consommateur synchronise, sans allowlist -> rc=0" rc_is 0
+check "A1b garde-fou : aucun .ds-allowlist dans la fixture" test ! -e "$A/styles/.ds-allowlist"
 check "A2 aucune section « Passe orphelins » sans le drapeau" lacks 'Passe orphelins'
 check "A3 aucun prefixe ORPHELIN sans le drapeau" lacks '^(ORPHELIN|NON-MESURABLE)'
 printf '.btn-maison { color: red; }\n' > "$A/styles/local.css"
 run_plain "$A"
 check "A4 .btn-maison local -> rc=1" rc_is 1
 check "A5 WARNING sur .btn-maison, et sur elle seule (Avertissements : 1)" has '^  Classe  : \.btn-maison$'
-check "A6 un seul avertissement : la passe historique isolee par l'allowlist" has '^Avertissements : 1$'
+check "A6 un seul avertissement (aucune allowlist) : .btn-maison seule" has '^Avertissements : 1$'
 check "A7 toujours aucune section « Passe orphelins »" lacks 'Passe orphelins'
 # Variante de la spec (« sans CSS local ») : sans les copies components/, la passe historique ne
 # trouve aucun CSS hors ds-*.css et sort par la branche « INFO : aucun fichier CSS » — un AUTRE
@@ -297,8 +287,30 @@ check "I5 garde-fou : aucune classe simple de $ENTRY n'est definie dans les copi
     process.exit(hit?1:0)' "$I2/styles" "$ENTRY"
 }
 
+case_J() {
+# --- Cas J : passe historique sur copies DS (#967) -----------------------------------------
+echo "Cas J: passe historique — copies DS propres, registre complet, copies toujours scannees"
+J1="$(new_consumer J1 full)"
+run_plain "$J1"
+check "J1 sync complet, sans allowlist -> rc=0" rc_is 0
+check "J2 sync complet : Avertissements : 0" has '^Avertissements : 0$'
+J3="$(new_consumer J3 core)"
+run_plain "$J3"
+check "J3 sync --components=core, sans allowlist -> rc=0" rc_is 0
+check "J4 sync core : Avertissements : 0" has '^Avertissements : 0$'
+OUT="$(bash shared/check-components.sh shared/css 2>&1)"; RC=$?
+check "J5 le step CI (check-components.sh shared/css) -> rc=0" rc_is 0
+# Garde-fou : les copies components/ restent scannees. Un modificateur DS non enregistre
+# dans une copie est signale ; c'est ce qui rend le step CI bloquant utile.
+J6="$(new_consumer J6 full)"
+printf '.tooltip.tooltip--top { top: 0; }\n' >> "$J6/styles/components/overlays.css"
+run_plain "$J6"
+check "J6 modificateur non enregistre dans une copie components/ -> rc=1" rc_is 1
+check "J7 WARNING nomme .tooltip--top dans components/overlays.css" has '^  Classe  : \.tooltip--top$'
+}
+
 # Execution : tous les cas, ou ceux de CASES (ex. CASES="B D") pour rejouer une mutation.
-for c in ${CASES:-A B C D E F G H I}; do "case_$c"; done
+for c in ${CASES:-A B C D E F G H I J}; do "case_$c"; done
 
 # --- Bilan -----------------------------------------------------------------------------------
 echo ""
