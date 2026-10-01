@@ -669,6 +669,27 @@ pas le volume ni le coût de stockage des baselines.
   ne garde le mobile que pour `msyx`) et **sections sentinelles uniquement**
   (`SENTINEL_SECTIONS` dans `visual-tests/visual.spec.ts`).
 
+### Capture dédiée du header (#977)
+
+Les captures de sections masquent `.site-header` (#669) : le header a donc sa
+propre capture, `header__site-header.png` (test `header`, fin de
+`visual-tests/visual.spec.ts`), sur `/pages/navigation.html` — **périmètre
+MSYX seul**, les 4 projets `msyx-{dark,light}-{desktop,mobile}` (mobile inclus :
+le header y diffère réellement, compaction sous 640px). Les thèmes secondaires
+ne sont **pas couverts** (`skip`) : un changement du header propre à un thème
+secondaire (typo Montserrat d'ACSSI dans le wordmark, bouton flocon de Noël)
+reste hors couverture visuelle, comme le veut la règle « MSYX = référence ».
+
+- ✅ **Do** : tout nouvel élément **volatil** du header (valeur qui change d'un
+  run à l'autre : numéro, date, compteur, état persisté) se neutralise dans
+  `neutralizeVersionBadge` ou dans un helper voisin, **avant** la capture, en
+  remplaçant le contenu par une constante, avec un garde-fou dur qui échoue si
+  l'élément n'est plus trouvé exactement une fois.
+- ❌ **Don't** : masquer avec `mask` de Playwright (ou `visibility: hidden`) un
+  élément dont la largeur suit le contenu. La boîte du masque est la boîte
+  réelle : une release (`2.99` → `2.100`) suffit à déplacer la mise en page et à
+  dépasser `maxDiffPixels`. Neutraliser le texte garde la largeur constante.
+
 ### Critère de sentinelle (ce qui rentre dans `SENTINEL_SECTIONS`, et ce qui n'y rentre pas)
 
 Une section est sentinelle si un token de thème peut s'y exprimer
