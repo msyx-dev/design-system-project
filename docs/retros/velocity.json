@@ -214,6 +214,17 @@
       "issues_done": 7,
       "issues_failed": 0,
       "issues_skipped": 0
+    },
+    {
+      "number": 50,
+      "title": "Fiabilisation consumers ③",
+      "planned_sp": 32,
+      "delivered_sp": 32,
+      "accuracy": 100,
+      "issues_total": 13,
+      "issues_done": 13,
+      "issues_failed": 0,
+      "issues_skipped": 0
     }
   ]
 }
