@@ -20,6 +20,7 @@
 
 import type {
   FullConfig,
+  FullResult,
   Reporter,
   Suite,
   TestCase,
@@ -131,7 +132,7 @@ export default class A11yReport implements Reporter {
     });
   }
 
-  onEnd(): void {
+  async onEnd(): Promise<{ status?: FullResult["status"] } | void> {
     // Ordre de la suite (PAGES × THEME_COMBOS), pas ordre d'arrivée.
     const runs: A11yRun[] = [];
     const missing: TestCase[] = [];
@@ -159,6 +160,15 @@ export default class A11yReport implements Reporter {
       `[a11y] ${runs.length} / ${this.tests.length} runs rapportés — ` +
         `${errors.length} en erreur — ${missing.length} manquants`,
     );
+
+    // Complétude du banc (#983) : un run sauté, manquant ou en erreur rend le job rouge,
+    // quel que soit le thème. Le dénominateur est `tests.length` — aucun « 100 » en dur.
+    if (errors.length > 0 || missing.length > 0) {
+      console.error(
+        `[a11y] banc incomplet — ${errors.length} en erreur, ${missing.length} manquant(s) : run en échec`,
+      );
+      return { status: "failed" };
+    }
   }
 }
 
@@ -224,7 +234,9 @@ function renderMarkdown(
     "**Scope** : WCAG 2.0 A/AA + WCAG 2.1 AA (`wcag2a`, `wcag2aa`, `wcag21aa`)",
   );
   lines.push("**Outil** : `@axe-core/playwright` v4.x (Deque axe-core)");
-  lines.push("**Mode** : Dry-run — aucun test ne fail sur violation");
+  lines.push(
+    "**Mode** : `color-contrast` bloquant sur MSYX dark + light (`BLOCKING_RULES` × `BLOCKING_COMBOS` de `a11y.spec.ts`), complétude du banc bloquante — le reste en rapport",
+  );
   lines.push(
     "**Producteur** : `visual-tests/reporters/a11y-report.ts` — export exhaustif : `test-results-a11y/a11y-runs.json`",
   );
@@ -366,7 +378,7 @@ function renderMarkdown(
   lines.push("## Notes");
   lines.push("");
   lines.push(
-    "- Ce rapport est un **dry-run**. Aucune correction n'a été appliquée.",
+    "- Seuls `color-contrast` sur MSYX dark + light et la complétude du banc font échouer le job ; le reste de ce rapport est informatif. Aucune correction n'a été appliquée.",
   );
   lines.push(
     `- Limites d'affichage : ${NODES_PER_RULE} noeuds max par règle par run (rapport concis) ; \`test-results-a11y/a11y-runs.json\` est exhaustif.`,

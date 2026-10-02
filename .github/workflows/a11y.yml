@@ -1,4 +1,4 @@
-name: A11y audit (dry-run)
+name: A11y audit
 
 on:
   push:
@@ -33,11 +33,10 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium
 
-      - name: Run a11y dry-run audit
+      - name: Run a11y audit (color-contrast bloquant MSYX dark + light)
         # PAS de `--reporter=…` : l'option CLI REMPLACE les reporters de la config
         # (dont visual-tests/reporters/a11y-report.ts, seul producteur du rapport).
         run: npm run test:a11y
-        continue-on-error: true
         env:
           CI: true
 
