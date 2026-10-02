@@ -5,10 +5,20 @@
 // aria-hidden), #festif-toggle-demo (bouton de bascule), [data-festif-density]
 // (boutons de variante). Persistance dans localStorage sous la cle
 // `msyx-festive`, partagee avec le dogfood du header (shared/nav.js,
-// ensureFestiveDecor()/updateFestiveDecor() -- hors scope de ce test, qui se
-// limite a la mecanique testable en isolation via components.js).
+// ensureFestiveDecor()/updateFestiveDecor()). Les 1ers blocs se limitent a la
+// mecanique de components.js ; le dernier (#993) charge nav.js lui-meme pour
+// verrouiller la validite du <svg> du sapin injecte par ensureFestiveDecor().
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import { JSDOM } from 'jsdom';
 import { describe, it, expect } from 'vitest';
 import { loadComponentsWindow, fireClick } from './helpers/load-components.js';
+
+const NAV_JS_PATH = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../shared/nav.js'
+);
 
 function festifHtml() {
   return `
@@ -147,9 +157,8 @@ describe('initFestiveDemo -- absence de markup', () => {
   });
 });
 
-// #946 — le DEFAUT de la neige. La regle vit dans updateFestiveDecor() (nav.js),
-// non chargeable ici ; on verrouille donc la SEMANTIQUE de la cle partagee, qui
-// est ce qui a change : avant, il fallait 'on' pour voir la neige ; desormais
+// #946 — le DEFAUT de la neige. La regle vit dans updateFestiveDecor() (nav.js) ;
+// ce bloc-ci verrouille la SEMANTIQUE de la cle partagee, qui est ce qui a change : avant, il fallait 'on' pour voir la neige ; desormais
 // seule la valeur 'off' la coupe. Un test de la valeur, pas du DOM.
 describe('festive — semantique de la cle msyx-festive (#946)', () => {
   const neigeVisible = (valeur) => valeur !== 'off';
@@ -162,5 +171,49 @@ describe('festive — semantique de la cle msyx-festive (#946)', () => {
     expect(neigeVisible('off')).toBe(false);
     expect(neigeVisible('on')).toBe(true);
     expect(neigeVisible('nimporte quoi')).toBe(true);
+  });
+});
+
+// #993 — le <svg> du sapin injecte par ensureFestiveDecor() (nav.js) portait
+// height="auto", valeur INVALIDE pour un attribut SVG : le navigateur journalise
+// `<svg> attribute height: Expected length, "auto"` sur toutes les pages, ce qui
+// fait echouer le smoke DOM (0 erreur console tolere). On charge le VRAI nav.js
+// (script classique, evalue dans une fenetre jsdom comme le fait components.js).
+// DOMContentLoaded est neutralise : buildHeader()/buildSidebar() n'ont rien a
+// faire ici et tourneraient apres la fin du test.
+describe('ensureFestiveDecor (nav.js) -- <svg> du sapin valide (#993)', () => {
+  function loadNavWindow() {
+    const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+      url: 'https://design-system.miklaw.fr/',
+      runScripts: 'outside-only',
+      pretendToBeVisual: true,
+    });
+    const { document } = dom.window;
+    const realAdd = document.addEventListener.bind(document);
+    document.addEventListener = (type, ...rest) =>
+      type === 'DOMContentLoaded' ? undefined : realAdd(type, ...rest);
+    dom.window.eval(readFileSync(NAV_JS_PATH, 'utf8'));
+    return dom.window;
+  }
+
+  // Longueur SVG valide : nombre, avec unite optionnelle. `auto` n'en est pas une.
+  const LONGUEUR_SVG = /^\d+(\.\d+)?(px|em|rem|%)?$/;
+
+  it('le <svg> inline du sapin est injecte dans #ds-festive-tree', () => {
+    const win = loadNavWindow();
+    win.ensureFestiveDecor();
+    expect(win.document.querySelector('#ds-festive-tree svg')).not.toBeNull();
+  });
+
+  it('le <svg> du sapin ne porte pas height="auto" (ni aucune longueur invalide)', () => {
+    const win = loadNavWindow();
+    win.ensureFestiveDecor();
+    const svg = win.document.querySelector('#ds-festive-tree svg');
+    expect(svg.getAttribute('height')).not.toBe('auto');
+    for (const attr of ['width', 'height']) {
+      const valeur = svg.getAttribute(attr);
+      // absent = valide (le viewBox donne le ratio) ; present = longueur SVG valide
+      expect(valeur === null || LONGUEUR_SVG.test(valeur)).toBe(true);
+    }
   });
 });
