@@ -22,7 +22,7 @@ assets/                 # Brand assets SVG (v2.43.0)
   explorations/         #   Historique conception S23 (NE PAS SUPPRIMER)
     wordmark-monogram-a.svg  #   Exploration A — sommets aigus
     wordmark-monogram-b.svg  #   Exploration B — sommets arrondis
-index.html              # Page login auth gate
+index.html              # Redirection minimale vers site.html (meta refresh + lien) — ex-page login auth gate legacy retirée en #997 ; /auth/logout (déconnexion Authentik) reste servi par Caddyfile.container
 site.html               # Hub principal + lazy-loader des 10 categories
 pages/
   getting-started.html  # Installation (3 niveaux), premiers pas, theming, tokens, bonnes pratiques

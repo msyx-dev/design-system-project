@@ -94,9 +94,9 @@ Les 4 tokens `--lh-*` (tight 1.1, snug 1.3, base 1.5, relaxed 1.7) sont dans `to
 
 ## Tests E2E DS — interception redirect SPA mode
 
-**Symptôme** : le test Playwright tombe sur une page inattendue (page de login / auth gate) alors que le markup est correct — les sélecteurs ne trouvent rien.
+**Symptôme** : le test Playwright tombe sur une page inattendue (la redirection `index.html`) alors que le markup est correct — les sélecteurs ne trouvent rien.
 
-**Cause** : `serve` v14 avec le flag `-s` (SPA mode) renvoie un redirect 301 sur les URLs `.html` (clean URL), ce qui déclenche le SPA fallback → `index.html` (page login auth gate). Le test atterrit sur la mauvaise page.
+**Cause** : `serve` v14 avec le flag `-s` (SPA mode) renvoie un redirect 301 sur les URLs `.html` (clean URL), ce qui déclenche le SPA fallback → `index.html` (simple redirection vers `site.html` depuis #997, ex-page de login auth gate). Le test atterrit sur la mauvaise page.
 
 **Pattern** : intercepter la redirection côté Playwright avec `page.route()` **avant** de naviguer :
 
@@ -108,7 +108,7 @@ await page.route('**/pages/feedback.html', route =>
 await page.goto('/pages/feedback.html');
 ```
 
-**Quand l'utiliser** : tout test E2E qui charge une URL `pages/*.html` via `page.goto()`. Sans ce pattern, `serve -s` redirige vers `index.html` (auth gate) et les sélecteurs échouent silencieusement.
+**Quand l'utiliser** : tout test E2E qui charge une URL `pages/*.html` via `page.goto()`. Sans ce pattern, `serve -s` redirige vers `index.html` (redirection vers `site.html`) et les sélecteurs échouent silencieusement.
 
 **Référence** : commit `a4aab54` — fix(test): bypasser le clean-URL redirect de serve v14 dans modal-focus E2E (Sprint 23, #204).
 

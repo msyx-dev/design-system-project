@@ -35,7 +35,10 @@
         respond `{"name":"{http.request.header.X-Authentik-Name}","email":"{http.request.header.X-Authentik-Email}","username":"{http.request.header.X-Authentik-Username}","groups":"{http.request.header.X-Authentik-Groups}","uid":"{http.request.header.X-Authentik-Uid}"}` 200
     }
 
-    # Bouton logout DS (UserMenu fait POST /auth/logout) -> redirige vers sign_out natif outpost
+    # Déconnexion ACTIVE du DS (pas un reste de l'auth gate legacy, retirée en #997) : appelée par
+    # le UserMenu (site.html, défaut de shared/components.js), la page 403 (access-denied.html) et
+    # les démos de pages/navigation.html, couverte par l'E2E « logout flow » de validate-preprod.sh.
+    # Redirige vers le sign_out natif de l'outpost Authentik — NE PAS RETIRER (casserait la déconnexion).
     # Note: syntaxe `redir * <url> <code>` obligatoire pour éviter l'ambiguité Caddy
     # (sans matcher, Caddy parse le premier arg comme un path matcher)
     handle /auth/logout {
