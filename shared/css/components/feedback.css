@@ -38,7 +38,7 @@
 .pagination { display: flex; align-items: center; gap: 0.3rem; }
 .page-btn { min-width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: border-color 0.2s var(--ease-standard), color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: var(--font-sans); }
 .page-btn:hover { border-color: var(--border-hover); color: var(--text); }
-.page-btn.active { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
+.page-btn.active { background: var(--accent-surface); color: var(--text-on-accent); border-color: var(--accent); }
 .page-btn:disabled { opacity: 0.4; pointer-events: none; }
 .page-btn.nav { padding: 0 0.8rem; }
 .page-ellipsis { color: var(--text-dim); font-size: 0.82rem; padding: 0 0.3rem; }
@@ -98,7 +98,7 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--accent-surface);
     color: var(--text-on-accent);
     border: none;
     cursor: pointer;
@@ -148,8 +148,8 @@
     border-radius: 28px;
     padding: 0 var(--space-lg);
     gap: var(--space-sm);
-    font-size: 1rem;      /* Fix 8 — 16px large text (WCAG 1.4.11 AA-Large justifié, bg=accent 3.68:1) */
-    font-weight: 700;     /* Fix 8 — bold large text AA-Large WCAG 1.4.11 UI control */
+    font-size: 1rem;      /* 16px gras ≠ texte large WCAG : contraste ≥ 4,5:1 assuré par --accent-surface (#980) */
+    font-weight: 700;     /* #980 — graisse 700 ; le contraste vient du fond --accent-surface, pas d'un statut « texte large » */
     font-family: var(--font-sans);
     letter-spacing: 0.01em;
     white-space: nowrap;

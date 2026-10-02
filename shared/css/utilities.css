@@ -7,7 +7,7 @@
 .text-default { color: var(--text); }
 .text-muted { color: var(--text-muted); }
 .text-dim { color: var(--text-dim); }
-.text-accent { color: var(--accent); }
+.text-accent { color: var(--accent-text); }
 .text-accent-light { color: var(--accent-light); }
 .text-success { color: var(--status-success-text); }
 .text-warning { color: var(--status-warn-text); }

@@ -135,7 +135,7 @@ Cf. issue #314 (convention décidée 2026-05-25, option A).
 - Variables RGB semantiques : `--success-rgb`, `--warning-rgb`, `--danger-rgb`, `--info-rgb`
 - **Ajouter un theme** (source de verite depuis v2.39.0 — PAS d'edition manuelle de bloc CSS) :
   1. `./shared/scaffold-theme.sh <nom>` — cree `themes/<nom>.json` depuis `themes/msyx.json`
-  2. Remplir les 2 modes (`dark`/`light`) dans ce JSON — s'aligner sur `themes/acssi.json` (couverture la plus complete, 111 cles dark / 105 light — acssi, auchan et noel declarent aussi `--text-on-accent`)
+  2. Remplir les 2 modes (`dark`/`light`) dans ce JSON — s'aligner sur `themes/acssi.json` (couverture la plus complete, 114 cles dark / 108 light — acssi, auchan et noel declarent aussi `--text-on-accent`)
   3. Un theme peut aussi porter sa TYPO : `--font-display`/`--font-sans` sont surchargeables depuis le JSON (acssi = Montserrat, #948). Police auto-hebergee dans `shared/fonts/` + `@font-face` dans `fonts.css`, jamais un CDN tiers.
   3bis. `node shared/build-themes.js` — regenere `shared/css/themes.css` (**AUTOGENERE, ne jamais l'editer a la main**)
   4. `--cat-1..8`/`--chart-1..5` : arbitres par `node bin/check-categorical-palette.js --scale=cat|chart`, pas a l'oeil

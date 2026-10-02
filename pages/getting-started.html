@@ -36,9 +36,9 @@
     <div class="subsection">
         <span class="demo-label">Etape 1 — Synchroniser les fichiers CSS</span>
         <div class="demo-box">
-            <p style="color:var(--text-muted);margin:0 0 0.75rem;">Depuis le repertoire <code style="color:var(--accent);background:rgba(var(--accent-rgb),0.1);padding:0.1em 0.4em;border-radius:4px;">shared/</code> du design system, lancer le script de sync :</p>
+            <p style="color:var(--text-muted);margin:0 0 0.75rem;">Depuis le repertoire <code style="color:var(--accent-text);background:rgba(var(--accent-rgb),0.1);padding:0.1em 0.4em;border-radius:4px;">shared/</code> du design system, lancer le script de sync :</p>
             <div class="code-block">./sync.sh /chemin/vers/votre-projet/src/styles/</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Cela copie les fichiers prefixes <code style="color:var(--accent);">ds-</code> dans votre dossier styles : CSS (tokens, themes, utilities, layout, components), fonts + sprite self-hosted, le shell JS du Niveau C (<code style="color:var(--accent);">ds-styles.css</code>, <code style="color:var(--accent);">ds-nav.js</code>, <code style="color:var(--accent);">ds-components.js</code>), et les logos MSYX dans <code style="color:var(--accent);">assets/</code> (<code style="color:var(--accent);">--assets=&lt;charte&gt;</code> ajoute une charte cliente).</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Cela copie les fichiers prefixes <code style="color:var(--accent-text);">ds-</code> dans votre dossier styles : CSS (tokens, themes, utilities, layout, components), fonts + sprite self-hosted, le shell JS du Niveau C (<code style="color:var(--accent-text);">ds-styles.css</code>, <code style="color:var(--accent-text);">ds-nav.js</code>, <code style="color:var(--accent-text);">ds-components.js</code>), et les logos MSYX dans <code style="color:var(--accent-text);">assets/</code> (<code style="color:var(--accent-text);">--assets=&lt;charte&gt;</code> ajoute une charte cliente).</p>
         </div>
     </div>
 
@@ -47,7 +47,7 @@
         <div class="demo-box">
             <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Acces aux variables CSS uniquement. Ideal si vous avez votre propre systeme de composants.</p>
             <div class="code-block">@import url('./styles/ds-tokens.css');</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Donne acces a <code style="color:var(--accent);">var(--accent)</code>, <code style="color:var(--accent);">var(--surface)</code>, <code style="color:var(--accent);">var(--text-muted)</code>, spacing, radius, shadows...</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Donne acces a <code style="color:var(--accent-text);">var(--accent)</code>, <code style="color:var(--accent-text);">var(--surface)</code>, <code style="color:var(--accent-text);">var(--text-muted)</code>, spacing, radius, shadows...</p>
         </div>
     </div>
 
@@ -58,21 +58,21 @@
             <div class="code-block">@import url('./styles/ds-tokens.css');
 @import url('./styles/ds-utilities.css');
 @import url('./styles/ds-components.css');</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Donne acces a toutes les classes : <code style="color:var(--accent);">.btn-primary</code>, <code style="color:var(--accent);">.card</code>, <code style="color:var(--accent);">.badge-success</code>, <code style="color:var(--accent);">.text-muted</code>...</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Donne acces a toutes les classes : <code style="color:var(--accent-text);">.btn-primary</code>, <code style="color:var(--accent-text);">.card</code>, <code style="color:var(--accent-text);">.badge-success</code>, <code style="color:var(--accent-text);">.text-muted</code>...</p>
         </div>
     </div>
 
     <div class="subsection mt-md">
         <span class="demo-label">Niveau C — CSS + JS (shell complet, reproductible)</span>
         <div class="demo-box">
-            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Integration complete avec layout, composants interactifs (modals, toasts, sliders...) et header avec gestion utilisateur. <code style="color:var(--accent);">sync.sh</code> distribue le shell JS (<code style="color:var(--accent);">ds-nav.js</code>, <code style="color:var(--accent);">ds-components.js</code>) et l'agregateur (<code style="color:var(--accent);">ds-styles.css</code>) — <strong>aucune dependance a design-system.msyx.fr</strong>.</p>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Integration complete avec layout, composants interactifs (modals, toasts, sliders...) et header avec gestion utilisateur. <code style="color:var(--accent-text);">sync.sh</code> distribue le shell JS (<code style="color:var(--accent-text);">ds-nav.js</code>, <code style="color:var(--accent-text);">ds-components.js</code>) et l'agregateur (<code style="color:var(--accent-text);">ds-styles.css</code>) — <strong>aucune dependance a design-system.msyx.fr</strong>.</p>
             <div class="code-block">&lt;!-- Dans &lt;head&gt; : agregateur (importe tous les ds-*.css) --&gt;
 &lt;link rel="stylesheet" href="/styles/ds-styles.css"&gt;
 
 &lt;!-- En fin de &lt;body&gt; : shell JS distribue --&gt;
 &lt;script src="/styles/ds-nav.js"&gt;&lt;/script&gt;
 &lt;script src="/styles/ds-components.js"&gt;&lt;/script&gt;</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">L'agregateur <code style="color:var(--accent);">ds-styles.css</code> reecrit ses <code style="color:var(--accent);">@import</code> vers les <code style="color:var(--accent);">ds-*.css</code> voisins du dossier styles. Les fichiers JS sont distribues byte-identiques a la source DS.</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">L'agregateur <code style="color:var(--accent-text);">ds-styles.css</code> reecrit ses <code style="color:var(--accent-text);">@import</code> vers les <code style="color:var(--accent-text);">ds-*.css</code> voisins du dossier styles. Les fichiers JS sont distribues byte-identiques a la source DS.</p>
         </div>
     </div>
 </section>
@@ -125,7 +125,7 @@
     <div class="subsection mt-md">
         <span class="demo-label">Configurer le theme</span>
         <div class="demo-box">
-            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Deux attributs HTML controlent l'apparence. Les placer sur <code style="color:var(--accent);">&lt;html&gt;</code> :</p>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Deux attributs HTML controlent l'apparence. Les placer sur <code style="color:var(--accent-text);">&lt;html&gt;</code> :</p>
             <div class="code-block">&lt;!-- Theme par defaut --&gt;
 &lt;html data-theme="msyx" data-mode="dark"&gt;
 
@@ -179,7 +179,7 @@
     <div class="subsection">
         <span class="demo-label">Configuration window.MSYX_HEADER</span>
         <div class="demo-box">
-            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Definir cet objet <strong>avant</strong> le chargement de <code style="color:var(--accent);">nav.js</code> pour activer la zone utilisateur :</p>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 0.75rem;">Definir cet objet <strong>avant</strong> le chargement de <code style="color:var(--accent-text);">nav.js</code> pour activer la zone utilisateur :</p>
             <div class="code-block">&lt;script&gt;
 window.MSYX_HEADER = {
   auth: true,
@@ -201,7 +201,7 @@ window.MSYX_HEADER = {
 };
 &lt;/script&gt;
 &lt;script src="/shared/nav.js"&gt;&lt;/script&gt;</div>
-            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Sans <code style="color:var(--accent);">window.MSYX_HEADER</code> ou avec <code style="color:var(--accent);">auth: false</code> : logo + toggle dark/light + cloche notifications. Le switcher theme est opt-in (<code style="color:var(--accent);">themeSwitcher: true</code>) ; le profil necessite <code style="color:var(--accent);">auth: true</code>.</p>
+            <p style="color:var(--text-dim);font-size:0.8rem;margin:0.5rem 0 0;">Sans <code style="color:var(--accent-text);">window.MSYX_HEADER</code> ou avec <code style="color:var(--accent-text);">auth: false</code> : logo + toggle dark/light + cloche notifications. Le switcher theme est opt-in (<code style="color:var(--accent-text);">themeSwitcher: true</code>) ; le profil necessite <code style="color:var(--accent-text);">auth: true</code>.</p>
         </div>
     </div>
 </section>
@@ -285,7 +285,7 @@ var(--space-2xl)  /* 3rem    */</div>
     <div class="subsection mt-md">
         <span class="demo-label">Regle d'or</span>
         <div class="demo-box">
-            <p style="color:var(--text-muted);margin:0 0 0.5rem;"><strong style="color:var(--text);">Jamais de composant reimplemente hors DS.</strong> Si un composant manque, ouvrir une issue avec le label <code style="color:var(--accent);">composant</code> sur le repo <code style="color:var(--accent);">design-system-project</code>. Le composant est cree dans le DS, puis consomme via <code style="color:var(--accent);">sync.sh</code>.</p>
+            <p style="color:var(--text-muted);margin:0 0 0.5rem;"><strong style="color:var(--text);">Jamais de composant reimplemente hors DS.</strong> Si un composant manque, ouvrir une issue avec le label <code style="color:var(--accent-text);">composant</code> sur le repo <code style="color:var(--accent-text);">design-system-project</code>. Le composant est cree dans le DS, puis consomme via <code style="color:var(--accent-text);">sync.sh</code>.</p>
             <a href="/shared/CONSUMER_GUIDE.md" target="_blank" class="btn-secondary btn-sm">Lire le CONSUMER_GUIDE.md complet</a>
         </div>
     </div>

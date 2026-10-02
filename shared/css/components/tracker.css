@@ -187,11 +187,11 @@
     transition: background 0.2s, color 0.2s;
 }
 .dtree-choice:hover {
-    background: var(--accent);
+    background: var(--accent-surface);
     color: var(--text-on-accent);
 }
 .dtree-choice.selected {
-    background: var(--accent);
+    background: var(--accent-surface);
     color: var(--text-on-accent);
 }
 .dtree-connector {
@@ -293,7 +293,7 @@
     transition: background-color 0.3s var(--ease-standard), border-color 0.3s var(--ease-standard), color 0.3s var(--ease-standard), box-shadow 0.3s var(--ease-standard);
 }
 .wizard-step.active .wizard-step-dot {
-    background: var(--accent);
+    background: var(--accent-surface);
     border-color: var(--accent);
     color: var(--text-on-accent);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
