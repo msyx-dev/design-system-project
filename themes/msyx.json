@@ -7,6 +7,9 @@
       "--accent-glow": "rgba(var(--accent-rgb), 0.12)",
       "--accent-light": "#60a5fa",
       "--accent-rgb": "59, 130, 246",
+      "--accent-surface": "#2a70e3",
+      "--accent-text": "#4f91ff",
+      "--accent-text-strong": "#91c1ff",
       "--border-color": "rgba(var(--accent-rgb), 0.08)",
       "--border-hover": "rgba(var(--accent-rgb), 0.25)",
       "--btn-danger-bg-end": "#bb0010",
@@ -67,6 +70,9 @@
       "--text-on-accent": "#ffffff"
     },
     "light": {
+      "--accent-surface": "#2a70e3",
+      "--accent-text": "#2269db",
+      "--accent-text-strong": "#114ed5",
       "--btn-danger-bg-end": "#bb0010",
       "--btn-danger-bg-start": "#d1141b",
       "--btn-outline-danger-fg": "#cd0b17",

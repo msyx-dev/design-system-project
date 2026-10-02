@@ -289,9 +289,23 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 - **`.btn-outline-danger`** (#968) : bloquant (`SOLID`, fond transparent donc `FLAT_BG` : pas d'arrêts de dégradé, seul le pixel rendu est mesuré), sur les deux markups que le DS livre — `.btn-outline-danger.btn-sm` (`overlays.html`) et `.btn-secondary.btn-outline-danger` (`composants.html`). Son texte lit le token dédié `--btn-outline-danger-fg` (famille `--btn-on-*`, hex littéral dans les 4 couches, réglé en OKLCh à teinte de `--danger` conservée, ≥ 4,6:1 au pire pixel, repos ET survol teinté `--danger` 8 %). Il ne lit **jamais** `--danger-light`, partagé avec les statuts. Le test de complétude couvre ce token comme les 8 fonds.
 - Hors périmètre bloquant (rapport seul, `REPORT_ONLY`) : `.btn-secondary`, `.btn-ghost` (fond translucide ou transparent) et `btn-outline-danger-bare` (la classe nue, sans padding : aucun markup du DS ne l'émet ; la boîte du texte avale la colonne de pixels de la bordure, la mesure y lit la bordure et non le fond).
 
+### Accent en texte et aplat accent (#980)
+Le défaut est le couple token/rôle, pas un composant : `--accent` (`#3b82f6` en MSYX) en couleur de texte de taille normale échoue 4,5:1 sur toute surface claire (3,5 à 3,7:1) et sur le voile `--accent-glow` en sombre ; le blanc posé sur `--accent` donne 3,68:1. Trois tokens dédiés (hex littéraux, réglés à la mesure à ≥ 4,6:1 au pire fond mesuré, teinte de `--accent` conservée), définis dans `tokens.css` (`:root` + `[data-mode="light"]`) et recopiés avec la valeur ACTUELLE dans `themes/*.json` (rendu inchangé hors MSYX) :
+- `--accent-text` : accent en texte de taille normale, sur surface neutre ou voile `--accent-glow` ;
+- `--accent-text-strong` : accent en texte sur une teinte accent ≥ 12 % (puces, tags, segmented subtle) ou sur un fond relevé gris ;
+- `--accent-surface` : aplat accent qui porte du texte `--text-on-accent` (le texte reste `--text-on-accent`, inchangé).
+
+**Règles** : jamais `var(--accent)` en `color:` de texte de taille normale ; jamais `--text-on-accent` sur `var(--accent)` en fond plein. Exceptions : texte large (≥ 24 px, ou ≥ 18,66 px gras : 3:1), icônes et glyphes de contrôle (WCAG 1.4.11, 3:1), teintes accent ≤ 8 % (`--accent-light` ≥ 4,5:1), `a:hover` sur `--accent-light`. Les préfixes `--accent-text-*` et `--accent-surface*` sont réservés. Si l'accent d'un thème change, re-régler ces tokens à la mesure : ne pas les remplacer par `var(--accent)`.
+
+```css
+/* ❌ Don't */ .tag { color: var(--accent); }        .pill.active { background: var(--accent); color: var(--text-on-accent); }
+/* ✅ Do    */ .tag { color: var(--accent-text); }   .pill.active { background: var(--accent-surface); color: var(--text-on-accent); }
+```
+Preuve : décompte axe `color-contrast` MSYX F1/F2 avant/après et mutations des 3 tokens, consignés dans la PR #980.
+
 ### Garde-fou
 - Audit `@axe-core/playwright` sur 10 pages × 5 thèmes × 2 modes = 100 runs (`docs/audit-a11y-*.md`, `test-results-a11y/a11y-runs.json`, produits par le reporter `visual-tests/reporters/a11y-report.ts`)
-- État : `color-contrast` reste en rapport (non bloquant) et MSYX porte encore des nœuds en violation (206 mesurés le 2026-10-01) ; le passage bloquant sur MSYX dark + light est prévu une fois le rapport propre (#976)
+- État : `color-contrast` reste en rapport (non bloquant) et MSYX porte encore des nœuds en violation (206 mesurés le 2026-10-01, avant #980 qui solde les familles F1 et F2 ; restent F3 à F7) ; le passage bloquant sur MSYX dark + light est prévu une fois le rapport propre (#976)
 - **Boutons à fond plein** : sonde pixels `visual-tests/button-contrast.spec.ts`, **bloquante** (§3.3) — axe `color-contrast` reste en rapport (non bloquant)
 
 ---

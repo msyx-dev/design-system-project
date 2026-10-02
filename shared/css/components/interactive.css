@@ -41,7 +41,7 @@
     color: var(--text-dim); opacity: 0; transition: opacity 0.2s, color 0.2s, border-color 0.2s, background 0.2s;
 }
 .code-block-wrap:hover .copy-btn--inline { opacity: 1; }
-.code-block-wrap .copy-btn--inline:hover { color: var(--accent-light); border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.code-block-wrap .copy-btn--inline:hover { color: var(--accent-text-strong); border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .code-block-wrap .copy-btn--inline.copy-btn--success { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, transparent); background: color-mix(in srgb, var(--success) 8%, transparent); opacity: 1; }
 
 /* Tooltip "Copié !" */

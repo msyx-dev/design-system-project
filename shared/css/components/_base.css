@@ -8,9 +8,9 @@
 
 /* Liens natifs <a> sans classe DS
    Probleme : couleur user-agent #0000ee — ratio 1.35:1 sur fond ACSSI dark (#00345f).
-   Solution : var(--accent) theme-aware garantit >= 4.5:1 dans tous les themes (WCAG 1.4.3). */
+   Solution : var(--accent-text) — token dédié, ≥ 4,6:1 sur MSYX (#980) ; recopie de --accent dans les autres thèmes (WCAG 1.4.3). */
 a {
-    color: var(--accent);
+    color: var(--accent-text);
     text-decoration: underline;
     text-underline-offset: 0.15em;
     transition: color var(--duration-base, 150ms) var(--ease-standard, ease);

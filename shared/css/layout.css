@@ -242,6 +242,8 @@
 .main .subgroup-header .subgroup-desc { color: var(--text-muted); font-size: 0.875rem; margin: 0; line-height: 1.5; }
 .main .subsection:last-child { margin-bottom: 0; }
 .main .demo-label { font-size: 0.72rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: var(--space-md); display: block; }
+/* #980 — étiquette de démo sur panneau de splitter (fond relevé gris) : accent renforcé, ≥ 4,6:1 */
+.main .split-panel .demo-label { color: var(--accent-text-strong); }
 .main .demo-box { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); min-width: 0; }
 .main .demo-grid { display: grid; gap: var(--space-lg); }
 /* minmax(0, 1fr) : autorise les pistes à descendre sous leur max-content
