@@ -1,5 +1,18 @@
 # Releases
 
+## 2.143.2 — 2026-10-02 — Le sapin de Noël ne recouvre plus la fin des pages (#1005)
+
+> Touche `shared/css/components/festive.css`, `shared/css/layout.css`, `pages/fondation.html`, `docs/ARCHITECTURE.md`, `visual-tests/festive-clearance.spec.ts`, `visual-tests/fixtures/festive-clearance-1005.html` et `playwright.config.ts`. Aucun changement dans `packages/react` : `<FestiveDecor>` rend déjà `.festive-character`, le CSS couvre les deux implémentations.
+
+### Fixed
+- **Sapin du décor Noël (#1005)** — `.festive-character` est `position: fixed; bottom: 0` (hors flux) et aucun gabarit de page ne réservait sa hauteur : page défilée au maximum, il recouvrait la dernière ligne de contenu, à toutes les largeurs (mesuré à 375, 768, 1280 et 1600 px). `festive.css` pose `--festive-clearance` (largeur du sapin × 1,5 + `--space-lg`) en thème `noel` quand le sapin est dans le DOM ; `.main`, `.page-content` et `.content-grid` la consomment en `padding-bottom` (`max()` avec le dégagement de la bottom-nav pour les deux derniers). Hors Noël : aucune réserve, aucun changement.
+
+### Tests
+- **`visual-tests/festive-clearance.spec.ts`** — 21 cas en vrai navigateur (`msyx-dark-desktop`) : page défilée au maximum, aucune feuille de contenu sous le sapin, dernier contenu ≥ 7 px au-dessus, réserve = hauteur du sapin + `--space-lg`, témoin hors Noël. Preuve par mutation : réserve neutralisée → 20 rouges sur 21 ; clamp divergent → 8 rouges.
+
+### Release
+`@ds-version` 2.143.1 → 2.143.2 (patch, 10 sources), `check-versions.sh` rc=0 ; notes de version alimentées. Pas de release `@msyx-dev/react` (aucun changement du package).
+
 ## 2.143.1 — 2026-10-02 — Assainissement post-audit : login legacy retiré, N2 réécrit, VR Noël déterministe (#996 #997 #998 #999)
 
 > Touche `index.html`, `Caddyfile.container` (commentaire), `access-denied.html`, `CLAUDE.md`, `README.md`, `SKILL.md`, `docs/{ARCHITECTURE,DS-PRINCIPLES}.md`, `bin/generate-registry.js` (messages), `.github/workflows/ci.yml` (commentaire), `visual-tests/visual.spec.ts` et 4 baselines Noël.
