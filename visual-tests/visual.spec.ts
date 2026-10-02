@@ -131,6 +131,61 @@ const freezeJsAnimations = async (page: import("@playwright/test").Page) => {
   });
 };
 
+// --- Décor festif figé (#998) ---
+// Thème Noël : le décor (shared/nav.js ensureFestiveDecor) recouvre les sections
+// capturées — sapin `.festive-character` + lumières `.tree-lights`, guirlande
+// `.garland-bulb`, ornements `.ornament`, neige `.snowfall::before/::after`
+// (shared/css/components/festive.css : animations `infinite`, la plupart avec
+// `animation-delay`, dont `characterBob`/`snowfallDrift` pilotées en translate/
+// transform). `animations: "disabled"` ne les neutralise pas de façon fiable :
+// Playwright appelle `Animation.cancel()` sur chaque animation infinie à
+// l'instant de la capture puis `Animation.play()` au nettoyage
+// (playwright-core/lib/server/screenshotter.js, `infiniteAnimationsToResume`) —
+// l'état capturé dépend donc de la course entre ce cancel et le rendu, et
+// varie d'une exécution à l'autre (mesure : 3 captures distinctes du sapin
+// sur 40 sous `animations:"disabled"`, cf. PR #998).
+// On RETIRE donc les animations du décor de la feuille de style (`animation:
+// none`) au lieu de compter sur le cancel : l'état est alors une pure fonction
+// du CSS — celui du repos sans animation, qui est l'état qu'un cancel réussi
+// produit. Le décor reste VISIBLE (aucun `display:none`) : seules les animations
+// sont retirées, la VR couvre toujours sa forme et ses couleurs.
+// Sélecteurs ciblés (pas de `*`) : les autres animations du DS gardent le
+// traitement `animations: "disabled"` inchangé, leurs baselines aussi.
+const FESTIVE_DECOR_SELECTORS = [
+  ".snowfall",
+  ".snowfall::before",
+  ".snowfall::after",
+  ".garland-bulb",
+  ".ornament",
+  ".festive-character",
+  ".tree-lights circle",
+];
+const FESTIVE_CLOSEST =
+  "#ds-festive-decor, .snowfall, .garland, .ornaments, .festive-character, .tree-lights";
+
+const freezeFestiveDecor = async (page: import("@playwright/test").Page) => {
+  await page.addStyleTag({
+    content: `${FESTIVE_DECOR_SELECTORS.join(",\n")} { animation: none !important; }`,
+  });
+  // Garde-fou : si festive.css gagne une animation sur une classe que la liste
+  // ci-dessus ne couvre pas, on échoue ICI au lieu de réintroduire en silence
+  // une capture non déterministe (même esprit que neutralizeVersionBadge, #977).
+  const stillAnimated = await page.evaluate((closest) => {
+    return document
+      .getAnimations()
+      .filter((a) => {
+        if (!(a instanceof CSSAnimation)) return false;
+        const target = (a.effect as KeyframeEffect | null)?.target;
+        return target instanceof Element && !!target.closest(closest);
+      })
+      .map((a) => (a as CSSAnimation).animationName);
+  }, FESTIVE_CLOSEST);
+  expect(
+    stillAnimated,
+    "décor festif : animation(s) encore active(s) après freezeFestiveDecor — FESTIVE_DECOR_SELECTORS a dérivé de festive.css (#998)",
+  ).toEqual([]);
+};
+
 test.describe("Visual regression — full matrix (par section)", () => {
   for (const { slug, path, title } of PAGES) {
     test(`${slug}`, async ({ page }, testInfo) => {
@@ -160,6 +215,7 @@ test.describe("Visual regression — full matrix (par section)", () => {
       await page.addStyleTag({
         content: ".site-header { display: none !important; }",
       });
+      await freezeFestiveDecor(page);
 
       // --- Garde-fou anti-régression Bug 1 (#286) ---
       // index.html a un <title> different : si le flag -s revient ou que
