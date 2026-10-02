@@ -396,8 +396,8 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 ## Infrastructure
 
 - Servi par une image Docker (`caddy:2-alpine`, `Caddyfile.container` en `file_server`), déployée par Coolify en préprod uniquement
-- Auth gate via forward_auth Caddy + cookie HMAC msyx_auth
-- Security headers importes dans le Caddyfile
+- Authentification : forward_auth **Authentik** au Caddy edge (`*.miklaw.fr`, snippet `miklaw_auth`) — un visiteur non connecté est redirigé (302) vers `auth.msyx.fr` ; la déconnexion `/auth/logout` redirige vers le `sign_out` de l'outpost (`Caddyfile.container`). L'ancienne auth gate (cookie HMAC, page de login `index.html`) est retirée (#997).
+- En-têtes de sécurité posés par le Caddy edge (HSTS preload, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, CSP) — mesurés sur `https://design-system.miklaw.fr/health.json`
 - CSP : `script-src 'self' 'unsafe-inline'` (requis pour anti-FOUC)
 - Deploy : aucune compilation au déploiement ; auto-deploy Coolify désactivé, redéploiement par `~/.claude/scripts/pipeline/coolify-deploy.sh design-system --wait` (voir `README.md` et `CLAUDE.md` § Deploy)
 
