@@ -75,3 +75,6 @@ a:is(
 }
 .icon--sm { width: var(--icon-size-sm); height: var(--icon-size-sm); }
 .icon--lg { width: var(--icon-size-lg); height: var(--icon-size-lg); }
+
+/* MUTATION TEMPORAIRE #983 CA2 (M-A) — à reverter */
+html:not([data-theme]) .section-header p { color: var(--surface-light) !important; }
