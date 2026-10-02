@@ -170,7 +170,7 @@ Observations : toutes les combinaisons mesurees sont tres en dessous des seuils.
 |----------|---------|-------------|-------|
 | CI general | `.github/workflows/ci.yml` | push/PR → main | check-diacritics + perf-budget.sh |
 | Lighthouse | `.github/workflows/perf.yml` | push/PR → main | lhci autorun (6 URLs) |
-| A11y | `.github/workflows/a11y.yml` | push/PR → main | Playwright + axe-core (dry-run) |
+| A11y | `.github/workflows/a11y.yml` | push/PR → main | Playwright + axe-core (color-contrast bloquant MSYX) |
 | Visual | `.github/workflows/visual.yml` | push/PR → main | Playwright screenshots (108 baselines) |
 
 ### Interactions
@@ -183,7 +183,7 @@ push/PR
   └── visual.yml      → Playwright screenshots → compare 108 baselines
 ```
 
-Tous les workflows utilisent `continue-on-error: true` sur les etapes de mesure — ils passent toujours en vert meme si un seuil est depasse. Seul le workflow `visual.yml` peut bloquer sur regression visuelle detectee (diff non attendu).
+Les workflows de mesure de performance (`ci.yml`, `perf.yml`) utilisent `continue-on-error: true` sur les etapes de mesure — ils passent toujours en vert meme si un seuil est depasse. Seuls peuvent bloquer : `visual.yml` (regression visuelle detectee, diff non attendu) et `a11y.yml` (`color-contrast` sur MSYX dark + light, et completude du banc).
 
 ### Artefacts produits
 

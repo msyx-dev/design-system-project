@@ -1,10 +1,10 @@
 /**
- * a11y.spec.ts — Axe-core dry-run audit
- * DS v2.52.0 — issue #242 ; banc fiabilisé en #976
+ * a11y.spec.ts — Audit axe-core, `color-contrast` bloquant sur MSYX
+ * DS v2.52.0 — issue #242 ; banc fiabilisé en #976 ; verrou en #983
  *
- * Matrice : 10 pages × 5 thèmes × 2 modes = 100 runs
- * Mode dry-run : ne fait PAS échouer le test sur violation (seule une erreur
- * de run — chargement, titre, axe — fait échouer le test).
+ * Matrice 10 pages × 5 thèmes × 2 modes = 100 runs. Bloquant : `BLOCKING_RULES`
+ * sur `BLOCKING_COMBOS`, plus la complétude. Le reste est en rapport, produit par
+ * `reporters/a11y-report.ts`.
  *
  * Aucun état n'est gardé ici : chaque test ATTACHE son résultat (`A11Y_ATTACHMENT`)
  * et le reporter `reporters/a11y-report.ts` (processus du runner, insensible aux
@@ -62,6 +62,23 @@ const THEME_COMBOS: Array<{ theme: string; mode: string }> = [
   { theme: "noel", mode: "light" },
 ];
 
+// Périmètre bloquant (décision de Mike sur #944, #983). Tout le reste reste en rapport :
+// autres règles, autres thèmes, et résultats axe `incomplete` (jamais lus ici).
+const BLOCKING_COMBOS: ReadonlyArray<{ theme: string; mode: "dark" | "light" }> = [
+  { theme: "msyx", mode: "dark" },
+  { theme: "msyx", mode: "light" },
+];
+const BLOCKING_RULES: readonly string[] = ["color-contrast"];
+
+// Garde de matrice : un combo bloquant absent de THEME_COMBOS donnerait un périmètre vide, donc vert.
+for (const c of BLOCKING_COMBOS) {
+  if (!THEME_COMBOS.some((t) => t.theme === c.theme && t.mode === c.mode)) {
+    throw new Error(
+      `[a11y] BLOCKING_COMBOS ${c.theme}-${c.mode} absent de THEME_COMBOS`,
+    );
+  }
+}
+
 // ---- Helpers ----
 
 async function setThemeAndMode(
@@ -101,9 +118,27 @@ function pickContrast(n: AxeNode): A11yContrast | undefined {
   };
 }
 
+// Nœuds en violation d'une règle bloquante, sur un combo bloquant ; [] hors périmètre.
+function blockingNodes(run: A11yRun): string[] {
+  if (!BLOCKING_COMBOS.some((c) => c.theme === run.theme && c.mode === run.mode)) {
+    return [];
+  }
+  return run.violations
+    .filter((v) => BLOCKING_RULES.includes(v.id))
+    .flatMap((v) =>
+      v.nodes.map(
+        (n) =>
+          `${v.id} ${n.target.join(" ")}` +
+          (n.contrast
+            ? ` — ${n.contrast.fg} / ${n.contrast.bg} = ${n.contrast.ratio}:1 < ${n.contrast.expected}`
+            : ""),
+      ),
+    );
+}
+
 // ---- Tests ----
 
-test.describe(`A11y audit — dry-run (${PAGES.length * THEME_COMBOS.length} runs)`, () => {
+test.describe(`A11y audit — color-contrast bloquant MSYX (${PAGES.length * THEME_COMBOS.length} runs)`, () => {
   test.beforeEach(async ({ page }) => {
     // Banc hermétique : le DS n'a pas de dépendance externe ; une ressource tierce
     // (avatar de démo navigation.html:1003) ne doit ni ralentir ni faire expirer l'audit.
@@ -175,8 +210,7 @@ test.describe(`A11y audit — dry-run (${PAGES.length * THEME_COMBOS.length} run
           contentType: "application/json",
         });
 
-        // Dry-run : on ne fait PAS échouer ici sur violation
-        // On log juste le nombre de violations pour visibilité dans le reporter
+        // Visibilité dans le reporter : toutes les violations, bloquantes ou non.
         if (run.violations.length > 0) {
           console.log(
             `[a11y] ${runLabel}: ${run.violations.length} violation(s) — ` +
@@ -184,8 +218,16 @@ test.describe(`A11y audit — dry-run (${PAGES.length * THEME_COMBOS.length} run
           );
         }
 
-        // Seule une erreur de run (axe) fait échouer le test
-        expect(run.error).toBeUndefined();
+        // Complétude : un run en erreur (chargement, titre, axe) fait échouer le test.
+        expect(run.error, "[a11y] run en erreur — complétude du banc").toBeUndefined();
+
+        // Bloquant : BLOCKING_RULES sur BLOCKING_COMBOS. Posé APRÈS l'attachement,
+        // pour que le reporter reçoive le run même quand le test échoue.
+        const blocking = blockingNodes(run);
+        expect(
+          blocking,
+          `[a11y] ${runLabel} — ${blocking.length} nœud(s) ${BLOCKING_RULES.join(", ")} bloquant(s)`,
+        ).toEqual([]);
       });
     }
   }

@@ -324,9 +324,11 @@ Deux cas, deux règles — ne pas les confondre :
 Préfixe `--inactive-*` réservé à cette famille. Preuve : mutation M3 (retrait de la garde `tag-input-wrap--disabled` → 6 tests vanilla rouges, `tests/vanilla/tag-input.test.js`) et assertion React `aria-disabled` sur `TagInput`, consignées dans la PR #982.
 
 ### Garde-fou
-- Audit `@axe-core/playwright` sur 10 pages × 5 thèmes × 2 modes = 100 runs (`docs/audit-a11y-*.md`, `test-results-a11y/a11y-runs.json`, produits par le reporter `visual-tests/reporters/a11y-report.ts`)
-- État : `color-contrast` reste en rapport (non bloquant) et MSYX porte encore des nœuds en violation (206 mesurés le 2026-10-01, avant #980 qui solde les familles F1 et F2 ; restent F3 à F7) ; le passage bloquant sur MSYX dark + light est prévu une fois le rapport propre (#976)
-- **Boutons à fond plein** : sonde pixels `visual-tests/button-contrast.spec.ts`, **bloquante** (§3.3) — axe `color-contrast` reste en rapport (non bloquant)
+- Audit `@axe-core/playwright` : 10 pages × 5 thèmes × 2 modes = 100 runs (`visual-tests/a11y.spec.ts`). Le rapport `docs/audit-a11y-<date>.md` et l'export `test-results-a11y/a11y-runs.json` sont joints à l'artefact CI `audit-a11y-report`.
+- **Bloquant**, sur le job `a11y` : `color-contrast` sur MSYX dark + light (`BLOCKING_RULES` × `BLOCKING_COMBOS`), et la complétude du banc (chaque run rapporté, aucun en erreur).
+- **En rapport**, non bloquant : les autres règles, les autres thèmes, et les résultats axe `incomplete` (fonds en dégradé).
+- **Boutons à fond plein** : la sonde pixels `button-contrast.spec.ts` est bloquante (§3.3). Elle complète axe : elle mesure le pire pixel rendu sur un dégradé.
+- **Ne jamais**, pour faire passer le job : retirer un combo de `BLOCKING_COMBOS` ou une page de `PAGES`, ajouter un `exclude()` ou un `disableRules()` axe, ou remettre `continue-on-error`. On règle le token, selon la convention de #976 : token dédié, réglé à la mesure, teinte conservée.
 
 ---
 
@@ -733,7 +735,7 @@ la VR couvre et que rien d'autre ne couvre.
 
 **Ne sont PAS des critères de sélection** (déjà couverts ailleurs, ne pas les
 invoquer pour ajouter une section) :
-- le **contraste** → `axe-core` (CI a11y) ;
+- le **contraste** → `axe-core` (CI a11y : `color-contrast` bloquant sur MSYX dark + light, rapport sur les autres thèmes) ;
 - la **complétude des tokens** d'un thème → `shared/check-sync.sh` /
   scaffold + revue manuelle du JSON ;
 - la **séparabilité des teintes catégorielles** → `bin/check-categorical-palette.js`.
@@ -889,7 +891,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 ### CI workflows (DS repo)
 - Visual regression (Playwright — matrice réduite MSYX complet + sentinelles thèmes secondaires, cf Section 8.3 #851)
 - Perf budget warn
-- A11y axe-core dry-run
+- A11y axe-core (`color-contrast` bloquant sur MSYX dark + light, rapport sur les autres thèmes)
 - Lighthouse CI warn
 - Frontière page↔registre (#511) : `generate-registry.js --check` vérifie la réciprocité section↔entrée + l'exemption transverse/référence (warn-only jusqu'à bascule #508, puis bloquant via `--frontier-strict`). Sidebar dead-link couvert séparément par `generate-nav-sections.js --check` (#528).
 
