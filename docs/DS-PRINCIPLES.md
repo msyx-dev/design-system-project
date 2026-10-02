@@ -583,7 +583,7 @@ Avant de merger un nouveau composant, valider TOUS les points :
 
 ### Documentation
 - [ ] `docs/ARCHITECTURE.md` mis à jour (structure + section JS si init*)
-- [ ] `CLAUDE.md` mis à jour (description page)
+- [ ] `shared/components-registry.json` à jour (liste des composants, dérivée par `bin/generate-registry.js`) — `CLAUDE.md` n'est pas à éditer par composant
 - [ ] `RELEASES.md` entrée Added/Changed
 - [ ] Compteur composants dans `site.html` mis à jour (hero + hub cards)
 

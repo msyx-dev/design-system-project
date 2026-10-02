@@ -395,11 +395,11 @@ Les composants interactifs utilisent du JS vanilla avec pattern `dataset.bound` 
 
 ## Infrastructure
 
-- Servi par Caddy file_server (pas de Docker)
+- Servi par une image Docker (`caddy:2-alpine`, `Caddyfile.container` en `file_server`), déployée par Coolify en préprod uniquement
 - Auth gate via forward_auth Caddy + cookie HMAC msyx_auth
 - Security headers importes dans le Caddyfile
 - CSP : `script-src 'self' 'unsafe-inline'` (requis pour anti-FOUC)
-- Deploy : git push → visible immediatement (pas de build)
+- Deploy : aucune compilation au déploiement ; auto-deploy Coolify désactivé, redéploiement par `~/.claude/scripts/pipeline/coolify-deploy.sh design-system --wait` (voir `README.md` et `CLAUDE.md` § Deploy)
 
 ## Brand identity (depuis v2.42.0, mark officiel v2.43.0 #209)
 
@@ -453,7 +453,7 @@ Fichiers modifies pour chaque composant :
 5. **Bump `@ds-version` synchrone sur 5 fichiers** : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/nav.js` (`const VERSION`)
 6. `shared/components-registry.json` — entrée composant + champ `version` aligné sur le bump
 7. `docs/ARCHITECTURE.md` — structure + composants JS
-8. `CLAUDE.md` — description page + conventions
+8. Rien dans `CLAUDE.md` : la liste des composants vit dans `shared/components-registry.json` (dérivée par `bin/generate-registry.js`), le N2 n'est pas à éditer par composant
 9. `RELEASES.md` (racine) — changelog Added/Changed (artefact DS CSS ; **jamais** une entrée `@msyx-dev/react` ici)
 
 **Qualité** : tester les **10 combos** thème/mode (MSYX, ACSSI, Nhood, Auchan, Noël × dark + light), mobile-first (`@media (min-width: …)`), a11y baseline (aria-label icon-only, `:focus-visible`, contraste 4.5:1, target 44px mobile), anti-FOUC.
