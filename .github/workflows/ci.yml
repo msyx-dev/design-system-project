@@ -131,8 +131,10 @@ jobs:
       # par #781 (21 -> 0), puis les 3 residuels relevés au passage (fab,
       # context-menu, carousel) par #789. Registre propre -> bloquant desormais,
       # sinon la derive silencieuse (meme mecanisme que les 21 defauts
-      # initiaux) recommence. --frontier-strict reste warn-only (hors
-      # perimetre #789, cf. #508).
+      # initiaux) recommence. Frontiere page<->registre (#511) : controle
+      # informatif, bascule bloquante abandonnee le 2026-10-02 (retro du
+      # milestone #50, #999) ; --frontier-strict = diagnostic local opt-in,
+      # jamais passe en CI.
       - name: Registry validation — phantoms (#516) + React parity (#523) + frontière (#511) + example strict (#748/#789)
         run: node bin/generate-registry.js --check --example-strict
       - name: extractReactClasses BEM classes unit tests (#747)
