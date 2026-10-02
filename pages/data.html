@@ -647,6 +647,45 @@
 </section>
 
 
+<!-- TABLE CARDS -->
+<section id="table-cards">
+    <div class="section-header"><span class="overline">Data</span><h2>Tableau en cartes</h2><p>Sous 768&nbsp;px, chaque ligne devient une carte et chaque cellule affiche son libellé ; au-delà, tableau classique. CSS seul, aucun JS.</p></div>
+    <div class="demo-box">
+        <span class="demo-label">Suivi des participants</span>
+        <div class="table-wrap">
+            <table class="table-cards" role="table" aria-label="Participants du tirage">
+                <thead role="rowgroup">
+                    <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Statut</th><th scope="col" role="columnheader">Actions</th></tr>
+                </thead>
+                <tbody role="rowgroup">
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Alice Martin</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>alice.martin@exemple.fr</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="badge badge-success badge-xs">Lien ouvert</span></td>
+                        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien d'Alice Martin">Copier le lien</button></td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Bastien Leroy</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>bastien.leroy@exemple.fr</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="badge badge-warning badge-xs">Envoi en attente</span></td>
+                        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Bastien Leroy">Copier le lien</button></td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Jean-Baptiste de La Fontaine-Dupont</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="badge badge-danger badge-xs">Échec d'envoi</span></td>
+                        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Jean-Baptiste de La Fontaine-Dupont">Régénérer le lien</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="demo-note">Structure : <code class="code-inline">.table-wrap</code> &gt; <code class="code-inline">table.table-cards</code>. Chaque cellule de données commence par <code class="code-inline">&lt;span class="table-cards-label" aria-hidden="true"&gt;</code> (texte = en-tête de la colonne) ; la cellule d'actions porte <code class="code-inline">.table-cards-actions</code> et n'a pas de libellé.</p>
+        <p class="demo-note">Le libellé est un vrai nœud en <code class="code-inline">aria-hidden</code>, jamais un <code class="code-inline">::before</code> : l'en-tête de colonne (masqué à l'écran, lu par les lecteurs d'écran) reste le seul libellé annoncé. Les rôles ARIA (<code class="code-inline">table</code>, <code class="code-inline">rowgroup</code>, <code class="code-inline">row</code>, <code class="code-inline">columnheader</code>, <code class="code-inline">cell</code>) sont explicites : certains moteurs perdent la sémantique de tableau quand <code class="code-inline">display</code> change.</p>
+        <p class="demo-note-last">Pas de tri ni de filtre par en-tête en mode cartes (le <code class="code-inline">&lt;thead&gt;</code> est masqué) : pour un tableau triable, utiliser <code class="code-inline">.data-grid</code>, qui défile horizontalement. Opt-in : les tableaux sans <code class="code-inline">.table-cards</code> ne changent pas.</p>
+    </div>
+</section>
+
+
 <!-- COMPARISON TABLE -->
 <section id="comparison">
     <div class="section-header"><span class="overline">Data</span><h2>Comparison Table</h2><p>Tableaux comparatifs cote-a-cote pour plans, features, criteres.</p></div>
