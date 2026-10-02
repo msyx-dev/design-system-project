@@ -708,6 +708,7 @@ const REACT_TO_REGISTRY = {
   Logo: 'brand-logo-svg',                 // #878 — Lot 8 clôture : pictogramme SVG, résolution de chemin (basePath), absorbe brand-wordmark/brand-mark-ds (Wordmark/LogoMark co-localisés, cf. REACT_COVERED_BY)
   AccessDenied: 'access-denied',          // #878 — page 403 standalone (UC3, groupe app-{slug})
   Textarea: 'textarea',                   // #952 — label/hint/error/success + compteur .input-counter (showCount + maxLength), non contrôlé supporté (reset de formulaire)
+  TableCards: 'table-cards',              // #1007 — repli en cartes sous 768px ; TableCardsCell co-localisé (cellules du corps ET lignes du `footer`), libellé aria-hidden généré depuis `header`
 };
 
 // Entrées du registre couvertes par un wrapper React EXISTANT, sans dossier
