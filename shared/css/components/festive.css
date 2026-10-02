@@ -136,16 +136,37 @@
 .garland--steady .garland-bulb { animation: none; }
 /* prefers-reduced-motion global couvert par _a11y.css (flocons ET ampoules) */
 
+/* ===== DECALAGE LATERAL DU DECOR — seulement si une barre laterale est a l'ecran (#1011) =====
+   `.ornaments` et `.garland--header` pendent du header au-dessus du CONTENU, jamais
+   par-dessus la barre laterale : ils se decalent de sa largeur (`--festive-inset-start`).
+   Defaut : ils lisaient `--sidebar-w` tel que resolu a `:root` (260px), alors que le decor
+   est rendu HORS de `<main>` — `.main--no-rail` ne sature le token a 0 que sur `<main>`.
+   Un consumer sans sidebar ni rail (tirokado, `.page-content`) voyait donc guirlande et
+   boules decalees de 260px : hors ecran a 375px. `--sidebar-w` ne vaut jamais 0 a `:root`,
+   pas meme en mobile : la sidebar y est seulement poussee hors ecran (`translateX(-100%)`).
+   Le decalage n'est donc pose que si une barre laterale DS est dans le DOM ET a l'ecran :
+   - `.sidebar` (vanilla, layout.css) ou `.rail-sidebar--fixed` (`<Rail>` React, ancre au
+     bord de l'ecran ; le rail non fixe, dans le flux, ne pousse rien) ;
+   - au-dela de 768px : `(min-width: 768.02px)` est le complement exact du
+     `(max-width: 768px)` de layout.css / navigation.css qui les renvoie hors ecran
+     (un `769px` laisserait une bande ou la sidebar est la mais pas le decalage).
+   Repli 0 : mobile-first, sans barre laterale, le decor couvre toute la fenetre.
+   Garde : `visual-tests/festive-sans-rail.spec.ts`. */
+@media (min-width: 768.02px) {
+    :root:has(.sidebar, .rail-sidebar--fixed) {
+        --festive-inset-start: var(--sidebar-w, 0px);
+    }
+}
+
 /* ===== ORNEMENTS SUSPENDUS — boules accrochees sous le header (#940) =====
    Chaque boule pend d'un fil dore et se balance. Purement decoratif :
    aria-hidden + pointer-events:none cote consumer. */
 .ornaments {
     position: fixed;
     top: var(--ornaments-top, var(--header-h, 56px));
-    /* Les ornements pendent du header au-dessus du CONTENU, jamais par-dessus
-       la barre laterale : mesure au rendu, une boule se posait sur son champ
-       de filtre. `--sidebar-w` vaut 0 en mobile, la regle vaut donc partout. */
-    inset-inline-start: var(--sidebar-w, 0);
+    /* Au-dessus du CONTENU, jamais de la barre laterale (mesure au rendu : une boule se
+       posait sur son champ de filtre) — decalage pose plus haut, 0 sans barre laterale. */
+    inset-inline-start: var(--festive-inset-start, 0px);
     inset-inline-end: 0;
     height: 0;
     z-index: var(--z-sticky);
@@ -328,8 +349,8 @@
 .garland--header {
     position: fixed;
     top: var(--garland-top, var(--header-h, 56px));
-    /* meme cadrage que .ornaments : au-dessus du contenu, pas de la sidebar */
-    inset-inline-start: var(--sidebar-w, 0);
+    /* meme cadrage que .ornaments : au-dessus du contenu, pas de la sidebar (#1011) */
+    inset-inline-start: var(--festive-inset-start, 0px);
     inset-inline-end: 0;
     z-index: var(--z-sticky);
     padding-inline: var(--space-md, 1rem);
