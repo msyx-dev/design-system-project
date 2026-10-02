@@ -675,7 +675,7 @@ const REACT_TO_REGISTRY = {
   Rail: 'sidebar-rail',                   // #857 — rail compact + sidebar déployée (2 états d'1 composant), réutilise .sidebar-link-disabled (layout.css)
   Timeline: 'timeline',                   // #852 — fil vertical à deux niveaux, entièrement contrôlé, réutilise le vocabulaire .activity-* d'ActivityFeed (lists.css)
   SortableList: 'sortable-list',          // #853 — réordonnancement souris (DnD HTML5)/tactile (Pointer Events)/clavier (roving tabindex + Ctrl+↑/↓, contrat #836 inchangé)
-  Card: 'cards',                          // #871 — Lot 1 décoratifs A : .card + card-flat/compact/horizontal/muted, CardIcon (.card-icon--*)
+  Card: 'cards',                          // #871 — Lot 1 décoratifs A : .card + card-flat/compact/horizontal/muted, CardIcon (.card-icon--*); #1010 static/heading/headingLevel/region
   CardMedia: 'card-media',                // #871 — compose Card, ajoute .card-media/.card-thumb/.card-body
   Badge: 'badges',                        // #871 — .badge + 6 variantes sémantiques réelles (issue en annonçait 7, cf. RELEASES) + .badge-nav
   Avatar: 'avatar',                       // #871 — 5 tailles + .avatar-gradient + .avatar-status(online/busy/offline), AvatarGroup co-localisé
@@ -732,6 +732,7 @@ const REACT_COVERED_BY = {
   'brand-wordmark':    'Logo', // #878 — Wordmark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
   'brand-mark-ds':      'Logo', // #878 — LogoMark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
   'server-data-grid': 'DataGrid', // #878 — pagination serveur ajoutée à l'API DataGrid existante, pas de nouveau dossier — reactComponent: "DataGrid" dans le registre
+  'card-static': 'Card', // #1010 — .card-static/.card-title émis par Card (props static/heading) — reactComponent: "Card" dans le registre
 };
 
 // Expansions des variants dynamiques (unions TS fermées).
