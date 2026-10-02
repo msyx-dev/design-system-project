@@ -22,6 +22,10 @@
     --text: #f1f5f9;
     --text-muted: #94a3b8;
     --text-dim: #94a3b8;   /* Fix 7 — 7.45:1 sur #0a0f1e, 5.71:1 sur #1e293b WCAG AA (était #7c8db5 = 4.41 KO) */
+    /* Neutres en texte (#982 F4) : tokens DEDIES, hex litteraux, regles a la mesure (>= 4,6:1 au pire fond mesure).
+       --text-muted/--text-dim restent la base ; on-raised = texte secondaire sur fond sureleve, on-tint = texte attenue sur fond teinte. */
+    --neutral-text-on-raised: #9fafc4; /* F4 #982 — 4,64:1 sur #334155, 4,61 sur #39414e, 5,03 sous .card-muted ; --text-muted : 4,03 */
+    --neutral-text-on-tint: #94a3b8;   /* F4 #982 — = --text-dim (passe : 5,71 sur #1e293b) */
     /* Chevron SVG theme-aware pour select.input — couleur miroir de --text-dim */
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -398,6 +402,9 @@
     --text-muted: #475569;
     --text-muted-rgb: 71, 85, 105;
     --text-dim: #64748b;
+    /* Neutres en texte (#982 F4) — voir :root */
+    --neutral-text-on-raised: #475569; /* = --text-muted light (passe : 6,15 sur #e2e8f0) */
+    --neutral-text-on-tint: #5a6980;   /* 4,61:1 sur #ebe7fb (pire fond teinte mesure), 4,78 sur #e5eff5 ; --text-dim : 3,93 */
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --border-color: rgba(15, 23, 42, 0.08);
     --border-hover: rgba(15, 23, 42, 0.20);

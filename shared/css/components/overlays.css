@@ -340,7 +340,7 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 .cmd-item:hover, .cmd-item.active { background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .cmd-item-icon { color: var(--text-dim); font-size: 1rem; width: 20px; text-align: center; }
 .cmd-item-text { flex: 1; }
-.cmd-item-shortcut { font-size: 0.72rem; color: var(--text-dim); }
+.cmd-item-shortcut { font-size: 0.72rem; color: var(--neutral-text-on-tint); }
 .cmd-footer { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 1.2rem; border-top: 1px solid var(--border-color); font-size: 0.72rem; color: var(--text-dim); }
 .cmd-empty { padding: 1.5rem; text-align: center; color: var(--text-dim); font-size: 0.88rem; }
 .cmd-empty strong { color: var(--text); }

@@ -8,7 +8,7 @@
 .badge-warning { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning-light); border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent); }
 .badge-danger { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--danger-light); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
 .badge-info { background: color-mix(in srgb, var(--info) 10%, transparent); color: var(--info-light); border: 1px solid color-mix(in srgb, var(--info) 20%, transparent); }
-.badge-neutral { background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--text-muted); border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent); }
+.badge-neutral { background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--neutral-text-on-raised); border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent); }
 
 /* ===== BADGE-NAV (variante compacte sidebar/nav) ===== */
 .badge-nav {
@@ -39,7 +39,7 @@
 .chip-danger  { background: color-mix(in srgb, var(--danger) 12%, transparent);  border-color: color-mix(in srgb, var(--danger) 25%, transparent);  color: var(--danger-light); }
 
 .chip-icon-slot { font-size: 0.85rem; line-height: 1; flex-shrink: 0; }
-.chip-filter { cursor: pointer; background: var(--surface-light); border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.3rem 0.85rem; transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast); }
+.chip-filter { cursor: pointer; background: var(--surface-light); border: 1px solid var(--border-color); color: var(--neutral-text-on-raised); padding: 0.3rem 0.85rem; transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast); }
 .chip-filter:hover { border-color: var(--accent); color: var(--text); }
 .chip-filter.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent-light); }
 .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }

@@ -337,7 +337,7 @@
 .rail-section-title {
     padding: 0.8rem var(--space-md) 0.3rem;
     font-size: 0.68rem;
-    color: var(--text-dim);
+    color: var(--neutral-text-on-tint);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     font-weight: 600;
@@ -815,7 +815,7 @@
     padding: var(--space-2) var(--space-md);
     border: none;
     background: transparent;
-    color: var(--text-muted);
+    color: var(--neutral-text-on-raised);
     font-size: 0.85rem;
     font-weight: 500;
     font-family: var(--font-sans);

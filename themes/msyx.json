@@ -50,6 +50,8 @@
       "--hub-bg-success": "rgba(34, 197, 94, 0.12)",
       "--hub-bg-violet": "rgba(139, 92, 246, 0.12)",
       "--hub-bg-warning": "rgba(245, 158, 11, 0.12)",
+      "--neutral-text-on-raised": "#9fafc4",
+      "--neutral-text-on-tint": "#94a3b8",
       "--overlay": "rgba(0, 0, 0, 0.5)",
       "--overlay-heavy": "rgba(10, 15, 30, 0.8)",
       "--primary": "#0a0f1e",
@@ -75,7 +77,9 @@
       "--btn-success-bg-end": "#007e35",
       "--btn-success-bg-start": "#007031",
       "--btn-warning-bg-end": "#a75900",
-      "--btn-warning-bg-start": "#ad3500"
+      "--btn-warning-bg-start": "#ad3500",
+      "--neutral-text-on-raised": "#475569",
+      "--neutral-text-on-tint": "#5a6980"
     }
   }
 }

@@ -63,6 +63,8 @@
     --info-dark: #0e7490;
     --info-light: #7dd3fc;
     --info-rgb: 56, 189, 248;
+    --neutral-text-on-raised: #cbd5e1;
+    --neutral-text-on-tint: #9eb3c8;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(0, 30, 60, 0.85);
     --pink: var(--deco-pink);
@@ -163,6 +165,8 @@
     --info-dark: #0c6b88;
     --info-light: #0369a1;
     --info-rgb: 3, 105, 161;
+    --neutral-text-on-raised: #2c4358;
+    --neutral-text-on-tint: #4a6a84;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(240, 244, 248, 0.90);
     --primary: #f1f3f3;
@@ -266,6 +270,8 @@
     --info-dark: #167f8b;
     --info-light: #6fd8e4;
     --info-rgb: 34, 195, 214;
+    --neutral-text-on-raised: #d9bcba;
+    --neutral-text-on-tint: #a88c8a;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(22, 10, 11, 0.85);
     --pink: var(--deco-pink);
@@ -364,6 +370,8 @@
     --info-dark: #0c7a7d;
     --info-light: #0c7a7d;
     --info-rgb: 12, 122, 125;
+    --neutral-text-on-raised: #5b4b4b;
+    --neutral-text-on-tint: #7a6a6a;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(255, 250, 239, 0.90);
     --primary: #fffaef;
@@ -466,6 +474,8 @@
     --info-dark: #0e7490;
     --info-light: #7dd3fc;
     --info-rgb: 56, 189, 248;
+    --neutral-text-on-raised: #8fbfa0;
+    --neutral-text-on-tint: #6a9e7a;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(10, 26, 15, 0.85);
     --pink: var(--deco-pink);
@@ -561,6 +571,8 @@
     --info-dark: #0c6b88;
     --info-light: #0369a1;
     --info-rgb: 3, 105, 161;
+    --neutral-text-on-raised: #3d6b4a;
+    --neutral-text-on-tint: #4a7a58;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(245, 251, 247, 0.90);
     --primary: #f5fbf7;
@@ -658,6 +670,8 @@
     --info-dark: #2b6fbf;
     --info-light: #97e5ff;
     --info-rgb: 86, 212, 255;
+    --neutral-text-on-raised: #cbe8d5;
+    --neutral-text-on-tint: #92b8a0;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(8, 20, 13, 0.85);
     --pink: var(--deco-pink);
@@ -758,6 +772,8 @@
     --info-dark: #0b5ea8;
     --info-light: #0b5ea8;
     --info-rgb: 11, 94, 168;
+    --neutral-text-on-raised: #3d5545;
+    --neutral-text-on-tint: #597162;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(246, 250, 247, 0.90);
     --primary: #f1faf3;
