@@ -62,6 +62,7 @@ export default defineConfig({
     "**/floating-surface-stacking.spec.ts",
     "**/button-contrast.spec.ts",
     "**/header-festive-btn.spec.ts",
+    "**/festive-clearance.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
