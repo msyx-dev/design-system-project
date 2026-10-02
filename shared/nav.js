@@ -417,7 +417,7 @@ function ensureFestiveDecor() {
     tree.id = 'ds-festive-tree';
     tree.className = 'festive-character';
     tree.setAttribute('aria-hidden', 'true');
-    tree.innerHTML = `<svg viewBox="0 0 200 300" width="100%" height="auto" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    tree.innerHTML = `<svg viewBox="0 0 200 300" width="100%" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="tn-fol" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#3fa563"/><stop offset=".55" stop-color="#1f7a44"/><stop offset="1" stop-color="#0f4d2b"/>

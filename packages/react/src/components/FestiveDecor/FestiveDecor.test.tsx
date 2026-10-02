@@ -173,6 +173,20 @@ describe("Piège 2 — le sapin est du SVG inline en JSX natif", () => {
     expect(container.querySelector("img, object, embed")).toBeNull();
   });
 
+  it('le <svg> du sapin ne porte pas height="auto" (ni aucune longueur invalide) — #993', () => {
+    const { container } = render(<FestiveDecor />);
+    const svg = container.querySelector(".festive-character svg");
+    expect(svg).not.toBeNull();
+    expect(svg?.getAttribute("height")).not.toBe("auto");
+    // Longueur SVG valide : absent (le viewBox donne le ratio) ou nombre + unité.
+    for (const attr of ["width", "height"]) {
+      const value = svg?.getAttribute(attr) ?? null;
+      expect(value === null || /^\d+(\.\d+)?(px|em|rem|%)?$/.test(value)).toBe(
+        true,
+      );
+    }
+  });
+
   it("11 lumières .tree-lights peintes par les tokens du thème (donc thémables/animables par le CSS)", () => {
     const { container } = render(<FestiveDecor />);
     const lights = container.querySelectorAll(".tree-lights circle");
