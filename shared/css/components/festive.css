@@ -294,6 +294,26 @@
     50%      { translate: 0 -7px; }
 }
 
+/* ===== RESERVE DE FIN DE PAGE (#1005) ===== */
+/* Le sapin est `position: fixed` : hors flux, il n'ajoute aucune hauteur au document.
+   Sans reserve, en bas de page defilee au maximum il recouvre la derniere ligne de
+   contenu, a toutes les largeurs. --festive-clearance est la hauteur a degager ; les
+   trois gabarits de page (`.main`, `.page-content`, `.content-grid`, layout.css) la
+   consomment en padding-bottom, avec 0px de repli (`var(--festive-clearance, 0px)`).
+   - Ratio 1,5 : le viewBox du sapin est 200 x 300 (vanilla `ensureFestiveDecor()` et
+     `TreeNoel.tsx`), donc hauteur = largeur x 1,5.
+   - `+ var(--space-lg)` (24px) : absorbe le jeu de ligne sous le SVG inline (~8px) et
+     le balancement `characterBob` (7px).
+   - Garde de theme : le sapin vanilla reste dans le DOM hors Noel (`display: none`),
+     React ne le rend qu'en Noel. Hors Noel, rien a degager : la variable n'est pas posee.
+   - Le clamp DOIT rester identique a celui de `.festive-character` (largeur du sapin) :
+     `visual-tests/festive-clearance.spec.ts` le garde.
+   - Un `--character-width` sur-mesure se pose sur `:root` (ou `html`) pour que le sapin
+     ET la reserve le lisent ; pose sur `.festive-character` seul, il ne remonte pas. */
+:root[data-theme="noel"]:has(.festive-character) {
+    --festive-clearance: calc(var(--character-width, clamp(130px, 15vw, 210px)) * 1.5 + var(--space-lg));
+}
+
 /* Les lumieres du sapin scintillent au meme rythme que la guirlande */
 .tree-lights circle { animation: treeTwinkle var(--garland-cycle, 1.8s) ease-in-out infinite; }
 .tree-lights circle:nth-child(3n + 2) { animation-delay: 0.6s; }
