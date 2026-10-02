@@ -51,7 +51,7 @@
 .pricing-badge {
     font-size: 0.68rem;
     font-weight: var(--fw-semibold);
-    color: var(--success);
+    color: var(--status-success-text);
     background: color-mix(in srgb, var(--success) 12%, transparent);
     border: 1px solid color-mix(in srgb, var(--success) 25%, transparent);
     border-radius: var(--radius-xs);
@@ -164,9 +164,9 @@
     font-size: 0.85rem;
     color: var(--text);
 }
+/* #982 F6 — contenu inactif : --inactive-text, sans opacite sur le texte (l'opacite reste sur l'icone ci-dessous) */
 .pricing-feature--disabled {
-    color: var(--text-muted);
-    opacity: 0.5;
+    color: var(--inactive-text);
 }
 .pricing-feature-icon {
     width: 16px;
@@ -183,6 +183,7 @@
 .pricing-feature--disabled .pricing-feature-icon {
     background: color-mix(in srgb, var(--text-muted) 10%, transparent);
     color: var(--text-muted);
+    opacity: 0.5;
 }
 .pricing-cta {
     margin-top: var(--space-sm);

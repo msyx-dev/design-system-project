@@ -4,11 +4,11 @@
 /* ===== BADGES & TAGS ===== */
 .badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
 .badge-primary { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-light); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
-.badge-success { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success-light); border: 1px solid color-mix(in srgb, var(--success) 20%, transparent); }
-.badge-warning { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--warning-light); border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent); }
-.badge-danger { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--danger-light); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
-.badge-info { background: color-mix(in srgb, var(--info) 10%, transparent); color: var(--info-light); border: 1px solid color-mix(in srgb, var(--info) 20%, transparent); }
-.badge-neutral { background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--text-muted); border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent); }
+.badge-success { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--status-success-fg); border: 1px solid color-mix(in srgb, var(--success) 20%, transparent); }
+.badge-warning { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--status-warn-fg); border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent); }
+.badge-danger { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--status-error-fg); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
+.badge-info { background: color-mix(in srgb, var(--info) 10%, transparent); color: var(--status-info-fg); border: 1px solid color-mix(in srgb, var(--info) 20%, transparent); }
+.badge-neutral { background: color-mix(in srgb, var(--text-muted) 10%, transparent); color: var(--neutral-text-on-raised); border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent); }
 
 /* ===== BADGE-NAV (variante compacte sidebar/nav) ===== */
 .badge-nav {
@@ -34,12 +34,12 @@
 
 /* ===== CHIPS — Modificateurs sémantiques (v2.64.2 #274) ===== */
 .chip-accent  { background: color-mix(in srgb, var(--accent) 12%, transparent);  border-color: color-mix(in srgb, var(--accent) 25%, transparent);  color: var(--accent-light); }
-.chip-warning { background: color-mix(in srgb, var(--warning) 12%, transparent); border-color: color-mix(in srgb, var(--warning) 25%, transparent); color: var(--warning-light); }
-.chip-success { background: color-mix(in srgb, var(--success) 12%, transparent); border-color: color-mix(in srgb, var(--success) 25%, transparent); color: var(--success-light); }
-.chip-danger  { background: color-mix(in srgb, var(--danger) 12%, transparent);  border-color: color-mix(in srgb, var(--danger) 25%, transparent);  color: var(--danger-light); }
+.chip-warning { background: color-mix(in srgb, var(--warning) 12%, transparent); border-color: color-mix(in srgb, var(--warning) 25%, transparent); color: var(--status-warn-fg); }
+.chip-success { background: color-mix(in srgb, var(--success) 12%, transparent); border-color: color-mix(in srgb, var(--success) 25%, transparent); color: var(--status-success-fg); }
+.chip-danger  { background: color-mix(in srgb, var(--danger) 12%, transparent);  border-color: color-mix(in srgb, var(--danger) 25%, transparent);  color: var(--status-error-fg); }
 
 .chip-icon-slot { font-size: 0.85rem; line-height: 1; flex-shrink: 0; }
-.chip-filter { cursor: pointer; background: var(--surface-light); border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.3rem 0.85rem; transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast); }
+.chip-filter { cursor: pointer; background: var(--surface-light); border: 1px solid var(--border-color); color: var(--neutral-text-on-raised); padding: 0.3rem 0.85rem; transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast); }
 .chip-filter:hover { border-color: var(--accent); color: var(--text); }
 .chip-filter.active { background: color-mix(in srgb, var(--accent) 25%, transparent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent-text-strong); }
 .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -96,12 +96,15 @@ kbd { display: inline-flex; align-items: center; justify-content: center; min-wi
     color: var(--text-muted);
     margin-top: 0.25rem;
 }
-.achievement.locked {
+/* #982 F6 — contenu inactif : l'opacite et le gris portent sur l'icone seule (jamais d'opacity sur du texte) ;
+   titre et etat en --inactive-text (token dedie, >= 4,6:1 en MSYX, = --text-muted hors MSYX). */
+.achievement.locked .achievement-icon {
     opacity: 0.4;
     filter: grayscale(1);
 }
-.achievement.locked .achievement-icon {
-    filter: grayscale(1);
+.achievement.locked .achievement-title,
+.achievement.locked .achievement-state {
+    color: var(--inactive-text);
 }
 .achievement.new {
     animation: achievementGlow 2s infinite;

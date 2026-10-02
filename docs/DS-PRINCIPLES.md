@@ -287,6 +287,7 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 - **Ne jamais** baisser `CONTRAST_MIN` ni retirer un cas de `SOLID` pour faire passer la sonde : on règle le token.
 - Nouveau bouton plein (nouvelle variante, nouveau composant peignant un fond plein) : ajouter un `data-probe` dans `visual-tests/fixtures/button-contrast-944.html` et le cas dans `SOLID`.
 - **`.btn-outline-danger`** (#968) : bloquant (`SOLID`, fond transparent donc `FLAT_BG` : pas d'arrêts de dégradé, seul le pixel rendu est mesuré), sur les deux markups que le DS livre — `.btn-outline-danger.btn-sm` (`overlays.html`) et `.btn-secondary.btn-outline-danger` (`composants.html`). Son texte lit le token dédié `--btn-outline-danger-fg` (famille `--btn-on-*`, hex littéral dans les 4 couches, réglé en OKLCh à teinte de `--danger` conservée, ≥ 4,6:1 au pire pixel, repos ET survol teinté `--danger` 8 %). Il ne lit **jamais** `--danger-light`, partagé avec les statuts. Le test de complétude couvre ce token comme les 8 fonds.
+- **Texte sémantique** (#981) : sur un fond de statut teinté (badge, chip, alerte, KPI, zone), le texte prend `--status-{success,warn,error,info}-fg` ; hors fond de statut (utilitaires `.text-*`, titre « Zone danger », `.pricing-badge`), il prend `--status-{success,warn,error,info}-text`. `--success`, `--warning`, `--danger` et `--info` servent aux aplats, bordures et teintes, **jamais** au texte d'un nouveau composant. L'aplat de la pastille de notifications lit le token de composant `--notification-badge-bg`. Les deux familles coexistent parce que `--X` diffère de `--X-light` hors MSYX (acssi sombre : `#ef4444` contre `#f87171`) : les fusionner changerait le rendu des autres thèmes. Valeurs MSYX réglées à la mesure (≥ 4,6:1 sur teinte 12 % posée sur `#fff`/`#f8fafc`/`#f1f5f9`), hex littéral recopié dans les 4 JSON de thème. **Jamais d'`opacity` sur un texte** si elle le fait passer sous 4,5:1 (`.access-denied-code` : 5,97 → 4,27:1 avec `opacity: 0.8`).
 - Hors périmètre bloquant (rapport seul, `REPORT_ONLY`) : `.btn-secondary`, `.btn-ghost` (fond translucide ou transparent) et `btn-outline-danger-bare` (la classe nue, sans padding : aucun markup du DS ne l'émet ; la boîte du texte avale la colonne de pixels de la bordure, la mesure y lit la bordure et non le fond).
 
 ### Accent en texte et aplat accent (#980)
@@ -302,6 +303,25 @@ Le défaut est le couple token/rôle, pas un composant : `--accent` (`#3b82f6` e
 /* ✅ Do    */ .tag { color: var(--accent-text); }   .pill.active { background: var(--accent-surface); color: var(--text-on-accent); }
 ```
 Preuve : décompte axe `color-contrast` MSYX F1/F2 avant/après et mutations des 3 tokens, consignés dans la PR #980.
+
+### État inactif : contrôle désactivé ou contenu inactif (#982)
+Deux cas, deux règles — ne pas les confondre :
+- **Un contrôle désactivé** (champ, slider, sélecteur de couleur, tag-input) se balise `disabled` sur l'élément natif ; un contrôle **composite** (conteneur de plusieurs éléments) porte en plus `role="group" aria-disabled="true"` sur son conteneur. Il bénéficie alors de l'exemption de contraste WCAG 1.4.3 (composant d'interface inactif) et garde son apparence atténuée. Un contrôle désactivé n'est **jamais** réactivable par le JS du composant et reste hors de l'ordre de tabulation : `initTagInputs()` ne lie rien sur un `.tag-input-wrap--disabled`.
+- **Un contenu inactif** (succès verrouillé, fonctionnalité non incluse à un forfait : ce ne sont pas des contrôles, donc aucune exemption) prend le token `--inactive-text` (hex littéral réglé à ≥ 4,6:1 en MSYX ; égal à `--text-muted` dans les autres thèmes). **Jamais** d'`opacity` sur du texte : elle mélange le texte avec le fond de page, et aucune couleur ne tient plus 4,5:1 dessous. L'effet « grisé » reste porté par l'icône seule (`opacity` + `grayscale`), jamais par le libellé.
+
+```css
+/* ❌ Don't — contrôle : classe visuelle seule, rien ne déclare l'état (axe mesure le libellé à plein contraste) */
+/* <div class="slider-group slider-disabled"> … <input … disabled> */
+/* ✅ Do    — contrôle : même classe, état déclaré sur le conteneur (exemption 1.4.3) */
+/* <div class="slider-group slider-disabled" role="group" aria-disabled="true"> … <input … disabled> */
+
+/* ❌ Don't — contenu : l'opacité traverse le texte (3:1 au mieux) */
+.pricing-feature--disabled { color: var(--text-muted); opacity: 0.5; }
+/* ✅ Do    — contenu : token dédié sur le texte, opacité réservée à l'icône */
+.pricing-feature--disabled { color: var(--inactive-text); }
+.pricing-feature--disabled .pricing-feature-icon { opacity: 0.5; }
+```
+Préfixe `--inactive-*` réservé à cette famille. Preuve : mutation M3 (retrait de la garde `tag-input-wrap--disabled` → 6 tests vanilla rouges, `tests/vanilla/tag-input.test.js`) et assertion React `aria-disabled` sur `TagInput`, consignées dans la PR #982.
 
 ### Garde-fou
 - Audit `@axe-core/playwright` sur 10 pages × 5 thèmes × 2 modes = 100 runs (`docs/audit-a11y-*.md`, `test-results-a11y/a11y-runs.json`, produits par le reporter `visual-tests/reporters/a11y-report.ts`)

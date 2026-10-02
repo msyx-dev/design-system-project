@@ -28,6 +28,13 @@
     --text: #f1f5f9;
     --text-muted: #94a3b8;
     --text-dim: #94a3b8;   /* Fix 7 — 7.45:1 sur #0a0f1e, 5.71:1 sur #1e293b WCAG AA (était #7c8db5 = 4.41 KO) */
+    /* Neutres en texte (#982 F4) : tokens DEDIES, hex litteraux, regles a la mesure (>= 4,6:1 au pire fond mesure).
+       --text-muted/--text-dim restent la base ; on-raised = texte secondaire sur fond sureleve, on-tint = texte attenue sur fond teinte. */
+    --neutral-text-on-raised: #9fafc4; /* F4 #982 — 4,64:1 sur #334155, 4,61 sur #39414e, 5,03 sous .card-muted ; --text-muted : 4,03 */
+    --neutral-text-on-tint: #94a3b8;   /* F4 #982 — = --text-dim (passe : 5,71 sur #1e293b) */
+    /* Contenu inactif (#982 F6) : verrouille / non inclus, jamais un controle. Token DEDIE, hex litteral, regle a la mesure.
+       Le contenu perd son opacite (jamais d'opacity sur du texte) ; un controle desactive se balise disabled / aria-disabled. */
+    --inactive-text: #8292a8; /* F6 #982 — 4,62:1 sur #1e293b (pire), 4,86 sur #1b2536 */
     /* Chevron SVG theme-aware pour select.input — couleur miroir de --text-dim */
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -166,6 +173,14 @@
     --status-success-fg: var(--success-light);
     --status-success-bg: color-mix(in srgb, var(--success) 12%, transparent);
     --status-success-border: color-mix(in srgb, var(--success) 30%, transparent);
+
+    /* Texte semantique hors fond de statut (#981) : utilitaires .text-*, titres, pastilles qui employaient
+       la base --success/--warning/--danger/--info en texte. --X reste l'aplat/la bordure/la teinte. */
+    --status-success-text: #22c55e;
+    --status-warn-text: #f59e0b;
+    --status-error-text: #f87171;  /* #981 — 4,78:1 au pire fond sombre de reference ; --danger #ef4444 = 3,51 (3,88 mesure) */
+    --status-info-text: #06b6d4;
+    --notification-badge-bg: #dc2626; /* #981 — #fff 4,83:1 ; --danger #ef4444 = 3,76 */
 
     /* Semantic dark (gradient stops) */
     --success-dark: #16a34a;
@@ -311,6 +326,11 @@
     --avatar-size-lg: 3.5rem;   /* 56px */
     --avatar-size-xl: 5rem;     /* 80px */
 
+    /* Fonds d'avatar sous texte blanc (#982 F5) : tokens DEDIES (#fff >= 4,6:1), la teinte deco est conservee.
+       --deco-violet/--deco-cyan restent la base des graphiques (contrat check-categorical-palette) — non touches. */
+    --avatar-bg-violet: #8555ef; /* F5 #982 — #fff a 4,62:1 (--deco-violet #8b5cf6 = 4,23) ; dH -0,1° */
+    --avatar-bg-cyan: #007f9c;   /* F5 #982 — #fff a 4,65:1 (--deco-cyan #06b6d4 = 2,42) ; dH +6° (ecretage du gamut sRGB) */
+
     /* Card icons (v2.48.0) */
     --card-icon-size: 3.25rem;       /* 52px */
     --card-icon-size-sm: 2.5rem;     /* 40px — responsive ≤768px */
@@ -404,6 +424,14 @@
     --text-muted: #475569;
     --text-muted-rgb: 71, 85, 105;
     --text-dim: #64748b;
+    /* Neutres en texte (#982 F4) — voir :root */
+    --neutral-text-on-raised: #475569; /* = --text-muted light (passe : 6,15 sur #e2e8f0) */
+    --neutral-text-on-tint: #5a6980;   /* 4,61:1 sur #ebe7fb (pire fond teinte mesure), 4,78 sur #e5eff5 ; --text-dim : 3,93 */
+    /* Contenu inactif (#982 F6) — voir :root */
+    --inactive-text: #627083; /* 4,60:1 sur #f1f5f9 (pire), 4,73 sur #f4f8fe */
+    /* Fonds d'avatar (#982 F5) — voir :root */
+    --avatar-bg-violet: #8555ef;
+    --avatar-bg-cyan: #0e7490;   /* = --deco-cyan light, passe deja a 5,36:1 */
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --border-color: rgba(15, 23, 42, 0.08);
     --border-hover: rgba(15, 23, 42, 0.20);
@@ -447,11 +475,18 @@
     --warning-light: #c2410c;  /* 4.72:1 sur #fff (était #fbbf24 = 1.44 KO) */
     --danger-light: #dc2626;   /* 5.91:1 sur #fff (était #f87171 = 2.36 KO) */
     --info-light: #0369a1;     /* 4.87:1 sur #fff (était #22d3ee = 1.56 KO) */
-    /* Status tokens — light mode : fg = base semantique assombrie (AA), bg/border heritent des semantiques light via color-mix — #391 */
-    --status-warn-fg: var(--warning);
-    --status-error-fg: var(--danger);
-    --status-info-fg: var(--info);
-    --status-success-fg: var(--success);
+    /* Status tokens — light mode (#981) : regles a la mesure, >= 4,6:1 sur teinte 12 % de la semantique
+       posee sur #fff/#f8fafc/#f1f5f9 et sur les fonds mesures par axe ; teinte OKLCh conservee (ΔH <= 0,2°) */
+    --status-warn-fg: #b33802;     /* 4,63 au pire fond (etait #c2410c = 3,98) */
+    --status-error-fg: #c60414;    /* 4,65 (etait #dc2626 = 3,67) */
+    --status-info-fg: #0268a0;     /* 4,62 (etait #0369a1 = 4,56) */
+    --status-success-fg: #007433;  /* 4,63 (etait #15803d = 3,92) */
+    /* Texte semantique hors fond de statut (#981) : meme valeur que -fg en light (un seul texte par couleur) */
+    --status-success-text: #007433;
+    --status-warn-text: #b33802;
+    --status-error-text: #c60414;
+    --status-info-text: #0268a0;
+    --notification-badge-bg: #dc2626; /* inchange (= --danger light) : #fff 4,83:1 */
     /* Fix 13.1 — deco-cyan darken pour AA avatar fg sur fond clair */
     --deco-cyan: #0e7490;      /* 5.49:1 sur #fff WCAG AA (était #06b6d4 = 2.55 KO) */
     --deco-cyan-rgb: 14, 116, 144;

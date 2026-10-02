@@ -10,6 +10,8 @@
       "--accent-surface": "#2a70e3",
       "--accent-text": "#4f91ff",
       "--accent-text-strong": "#91c1ff",
+      "--avatar-bg-cyan": "#007f9c",
+      "--avatar-bg-violet": "#8555ef",
       "--border-color": "rgba(var(--accent-rgb), 0.08)",
       "--border-hover": "rgba(var(--accent-rgb), 0.25)",
       "--btn-danger-bg-end": "#bb0010",
@@ -53,6 +55,9 @@
       "--hub-bg-success": "rgba(34, 197, 94, 0.12)",
       "--hub-bg-violet": "rgba(139, 92, 246, 0.12)",
       "--hub-bg-warning": "rgba(245, 158, 11, 0.12)",
+      "--inactive-text": "#8292a8",
+      "--neutral-text-on-raised": "#9fafc4",
+      "--neutral-text-on-tint": "#94a3b8",
       "--overlay": "rgba(0, 0, 0, 0.5)",
       "--overlay-heavy": "rgba(10, 15, 30, 0.8)",
       "--primary": "#0a0f1e",
@@ -73,6 +78,8 @@
       "--accent-surface": "#2a70e3",
       "--accent-text": "#2269db",
       "--accent-text-strong": "#114ed5",
+      "--avatar-bg-cyan": "#0e7490",
+      "--avatar-bg-violet": "#8555ef",
       "--btn-danger-bg-end": "#bb0010",
       "--btn-danger-bg-start": "#d1141b",
       "--btn-outline-danger-fg": "#cd0b17",
@@ -81,7 +88,10 @@
       "--btn-success-bg-end": "#007e35",
       "--btn-success-bg-start": "#007031",
       "--btn-warning-bg-end": "#a75900",
-      "--btn-warning-bg-start": "#ad3500"
+      "--btn-warning-bg-start": "#ad3500",
+      "--inactive-text": "#627083",
+      "--neutral-text-on-raised": "#475569",
+      "--neutral-text-on-tint": "#5a6980"
     }
   }
 }

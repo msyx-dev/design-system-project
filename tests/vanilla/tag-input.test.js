@@ -254,3 +254,119 @@ describe('initTagInputs -- divers', () => {
     expect(wrap.querySelectorAll('.tag-item').length).toBe(4);
   });
 });
+
+// #982 F6 (CA6, mutation M3) -- un tag-input desactive est INERTE : updateInputState() le
+// reactivait (`input.disabled = false` des que count < maxTags), le champ devenait atteignable
+// au Tab et modifiable. Markup repris de pages/formulaires.html#tag-disabled / #tag-disabled-prefilled.
+function disabledHtml() {
+  return `
+    <label class="tag-input-label" for="tag-disabled">Tags</label>
+    <div class="tag-input-wrap tag-input-wrap--disabled" id="tag-disabled">
+      <input class="tag-input-field" type="text" placeholder="Non modifiable" aria-label="Champ desactive" disabled>
+    </div>
+    <label class="tag-input-label" for="tag-disabled-prefilled">Environnements</label>
+    <div class="tag-input-wrap tag-input-wrap--disabled" id="tag-disabled-prefilled">
+      <span class="tag-item">production</span>
+      <span class="tag-item">staging</span>
+      <input class="tag-input-field" type="text" placeholder="Non modifiable" aria-label="Champ desactive" disabled>
+    </div>
+  `;
+}
+
+describe('initTagInputs -- controle desactive (#982 F6)', () => {
+  let window;
+  let document;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    const dom = loadComponentsWindow(disabledHtml());
+    window = dom.window;
+    document = window.document;
+    window.__initTagInputs();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('le champ reste disabled apres initTagInputs (vide ET pre-rempli)', () => {
+    ['tag-disabled', 'tag-disabled-prefilled'].forEach(id => {
+      const input = document.getElementById(id).querySelector('.tag-input-field');
+      expect(input.disabled).toBe(true);
+    });
+  });
+
+  it("le champ est disabled meme si le markup source l'avait oublie (garde, pas simple attribut)", () => {
+    const dom = loadComponentsWindow(`
+      <div class="tag-input-wrap tag-input-wrap--disabled" id="tag-nodisabled-attr">
+        <input class="tag-input-field" type="text" placeholder="Non modifiable">
+      </div>`);
+    dom.window.__initTagInputs();
+    expect(dom.window.document.querySelector('.tag-input-field').disabled).toBe(true);
+  });
+
+  it('le wrap porte role="group" et aria-disabled="true"', () => {
+    ['tag-disabled', 'tag-disabled-prefilled'].forEach(id => {
+      const wrap = document.getElementById(id);
+      expect(wrap.getAttribute('aria-disabled')).toBe('true');
+      expect(wrap.getAttribute('role')).toBe('group');
+    });
+  });
+
+  it("un role deja pose sur le wrap n'est pas ecrase", () => {
+    const dom = loadComponentsWindow(`
+      <div class="tag-input-wrap tag-input-wrap--disabled" role="region">
+        <input class="tag-input-field" type="text" disabled>
+      </div>`);
+    dom.window.__initTagInputs();
+    const wrap = dom.window.document.querySelector('.tag-input-wrap');
+    expect(wrap.getAttribute('role')).toBe('region');
+    expect(wrap.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('le champ reste disabled apres tentative d\'ajout et apres suppression de tag', () => {
+    const wrap = document.getElementById('tag-disabled-prefilled');
+    const input = wrap.querySelector('.tag-input-field');
+    let added = 0;
+    wrap.addEventListener('tag:add', () => { added++; });
+
+    // Entree : aucun tag cree, champ toujours disabled
+    input.value = 'DevOps';
+    fireKeydown(window, input, 'Enter');
+    expect(wrap.querySelectorAll('.tag-item').length).toBe(2);
+    expect(added).toBe(0);
+    expect(input.disabled).toBe(true);
+
+    // Un tag-close injecte par un consommateur : cliquer ne declenche aucune liaison (controle inerte)
+    const extra = document.createElement('span');
+    extra.className = 'tag-item';
+    extra.appendChild(document.createTextNode('dev '));
+    const close = document.createElement('button');
+    close.className = 'tag-close';
+    close.textContent = '×';
+    extra.appendChild(close);
+    wrap.insertBefore(extra, input);
+    fireClick(window, close);
+    vi.advanceTimersByTime(150);
+
+    expect(wrap.querySelectorAll('.tag-item').length).toBe(3);
+    expect(input.disabled).toBe(true);
+    expect(wrap.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('reappeler initTagInputs() ne reactive pas le champ', () => {
+    window.__initTagInputs();
+    document.querySelectorAll('.tag-input-wrap--disabled .tag-input-field').forEach(input => {
+      expect(input.disabled).toBe(true);
+    });
+  });
+
+  it("un tag-input actif voisin n'est pas touche (ni role ni aria-disabled)", () => {
+    const dom = loadComponentsWindow(prefilledHtml());
+    dom.window.__initTagInputs();
+    const wrap = dom.window.document.getElementById('tag-prefilled');
+    expect(wrap.hasAttribute('aria-disabled')).toBe(false);
+    expect(wrap.hasAttribute('role')).toBe(false);
+    expect(wrap.querySelector('.tag-input-field').disabled).toBe(false);
+  });
+});

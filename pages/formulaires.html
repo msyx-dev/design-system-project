@@ -702,7 +702,7 @@
   <h3>Désactivé</h3>
   <div class="demo-grid demo-grid-2">
     <div class="demo-box">
-      <div class="slider-group slider-disabled">
+      <div class="slider-group slider-disabled" role="group" aria-disabled="true">
         <div class="slider-header">
           <label class="input-label" for="slider-disabled">Désactivé</label>
           <span class="slider-value-display">30</span>
@@ -1481,7 +1481,7 @@
     <span class="demo-label">Désactivé</span>
     <div class="input-group">
       <label class="input-label" for="color-disabled">Couleur (verrouillée)</label>
-      <div class="color-input color-input--disabled" data-color-input>
+      <div class="color-input color-input--disabled" data-color-input role="group" aria-disabled="true">
         <input type="color" id="color-disabled" value="#8b5cf6" disabled>
         <span class="color-input-value">#8B5CF6</span>
       </div>
@@ -1497,7 +1497,7 @@
 &lt;/div&gt;</div>
     <p class="demo-note">Wrapper <code class="code-inline">.color-input</code> autour d'un <code class="code-inline">&lt;input type="color"&gt;</code> natif (reset du chrome navigateur, focus-ring DS, carré 44px). Le label <code class="code-inline">.color-input-value</code> affiche le hex courant.</p>
     <p class="demo-note">Presets : boutons <code class="code-inline">.color-swatch</code> avec <code class="code-inline">data-color</code> + <code class="code-inline">aria-pressed</code>. <code class="code-inline">initColorInput()</code> synchronise input ↔ hex ↔ preset actif et émet l'événement natif <code class="code-inline">input</code> sur changement de preset.</p>
-    <p class="demo-note-last">État désactivé : <code class="code-inline">.color-input--disabled</code> + attribut <code class="code-inline">disabled</code> sur l'input.</p>
+    <p class="demo-note-last">État désactivé : <code class="code-inline">.color-input--disabled</code> + attribut <code class="code-inline">disabled</code> sur l'input + <code class="code-inline">role="group" aria-disabled="true"</code> sur le conteneur (exemption de contraste WCAG 1.4.3 des composants désactivés).</p>
   </div>
 </section>
 

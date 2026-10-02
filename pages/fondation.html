@@ -743,10 +743,10 @@
                     <div class="flex-center-gap"><span class="text-dim text-sm">.text-dim</span><code class="text-dim-auto">var(--text-dim)</code></div>
                     <div class="flex-center-gap"><span class="text-accent typo-small">.text-accent</span><code class="text-dim-auto">var(--accent)</code></div><!-- Fix 1 — .text-sm → .typo-small (évite violation text-accent sur surface) -->
                     <div class="flex-center-gap"><span class="text-accent-light text-sm">.text-accent-light</span><code class="text-dim-auto">var(--accent-light)</code></div>
-                    <div class="flex-center-gap"><span class="text-success text-sm">.text-success</span><code class="text-dim-auto">var(--success)</code></div>
-                    <div class="flex-center-gap"><span class="text-warning text-sm">.text-warning</span><code class="text-dim-auto">var(--warning)</code></div>
-                    <div class="flex-center-gap"><span class="text-danger text-sm">.text-danger</span><code class="text-dim-auto">var(--danger)</code></div>
-                    <div class="flex-center-gap"><span class="text-info text-sm">.text-info</span><code class="text-dim-auto">var(--info)</code></div>
+                    <div class="flex-center-gap"><span class="text-success text-sm">.text-success</span><code class="text-dim-auto">var(--status-success-text)</code></div>
+                    <div class="flex-center-gap"><span class="text-warning text-sm">.text-warning</span><code class="text-dim-auto">var(--status-warn-text)</code></div>
+                    <div class="flex-center-gap"><span class="text-danger text-sm">.text-danger</span><code class="text-dim-auto">var(--status-error-text)</code></div>
+                    <div class="flex-center-gap"><span class="text-info text-sm">.text-info</span><code class="text-dim-auto">var(--status-info-text)</code></div>
                 </div>
             </div>
             <div class="demo-box">
@@ -770,7 +770,7 @@
         <span class="demo-label">Avant / Apres</span>
         <div class="demo-grid demo-grid-2 gap-md">
             <div class="demo-box" style="border-color:rgba(239,68,68,0.3);">
-                <span class="demo-label" style="color:var(--danger);">Avant (inline)</span>
+                <span class="demo-label text-danger">Avant (inline)</span>
                 <div class="code-block text-xxs-lh"><span class="kw">style</span>={{ <span class="fn">color</span>: <span class="str">"var(--text-muted)"</span> }}<br><span class="kw">style</span>={{ <span class="fn">background</span>: <span class="str">"var(--accent)"</span> }}<br><span class="kw">style</span>={{ <span class="fn">color</span>: <span class="str">"var(--success)"</span> }}<br><span class="kw">style</span>={{ <span class="fn">border</span>: <span class="str">"1px solid var(--border-color)"</span> }}</div>
             </div>
             <div class="demo-box" style="border-color:rgba(34,197,94,0.3);">

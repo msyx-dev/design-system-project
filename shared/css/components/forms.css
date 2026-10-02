@@ -701,7 +701,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .settings-row-desc { font-size: 0.78rem; color: var(--text-muted); }
 .settings-row-control { flex-shrink: 0; }
 .settings-danger { border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
-.settings-danger .settings-section-title { color: var(--danger); background: color-mix(in srgb, var(--danger) 6%, transparent); border-bottom-color: color-mix(in srgb, var(--danger) 25%, transparent); }
+.settings-danger .settings-section-title { color: var(--status-error-text); background: color-mix(in srgb, var(--danger) 6%, transparent); border-bottom-color: color-mix(in srgb, var(--danger) 25%, transparent); }
 .settings-danger .settings-row { border-bottom-color: color-mix(in srgb, var(--danger) 20%, transparent); }
 .settings-row-input { background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.3rem 0.6rem; font-size: 0.85rem; color: var(--text); outline: none; width: 180px; }
 .settings-row-input:focus { border-color: var(--accent); }

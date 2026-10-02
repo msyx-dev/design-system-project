@@ -2301,6 +2301,14 @@ function initTagInputs() {
         var input = wrap.querySelector('.tag-input-field');
         if (!input) return;
 
+        if (wrap.classList.contains('tag-input-wrap--disabled')) {
+            // #982 F6 — contrôle désactivé : jamais réactivé par updateInputState ; exemption 1.4.3 portée par aria-disabled
+            input.disabled = true;
+            if (!wrap.hasAttribute('role')) wrap.setAttribute('role', 'group');
+            wrap.setAttribute('aria-disabled', 'true');
+            return;   // aucune liaison d'événement : le contrôle est inerte
+        }
+
         var maxTags = parseInt(wrap.dataset.max, 10) || Infinity;
 
         function getTags() {

@@ -196,6 +196,10 @@ export function TagInput({
       <div
         className={wrapClasses}
         data-max={hasMax ? max : undefined}
+        // #982 F6 — contrôle désactivé : exemption de contraste (WCAG 1.4.3) portée par le balisage,
+        // comme le vanilla (initTagInputs pose role="group" aria-disabled="true" sur .tag-input-wrap--disabled).
+        role={isDisabled ? "group" : undefined}
+        aria-disabled={isDisabled ? "true" : undefined}
         onClick={(event) => {
           const target = event.target as HTMLElement;
           if (

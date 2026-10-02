@@ -310,6 +310,20 @@ describe("TagInput — variantes disabled / error", () => {
     expect(document.querySelector(".tag-input-field")).toBeDisabled();
   });
 
+  it('disabled : le wrap porte role="group" aria-disabled="true" (exemption 1.4.3, #982 F6)', () => {
+    render(<TagInput values={["production"]} onChange={() => {}} disabled />);
+    const wrap = document.querySelector(".tag-input-wrap");
+    expect(wrap).toHaveAttribute("aria-disabled", "true");
+    expect(wrap).toHaveAttribute("role", "group");
+  });
+
+  it("actif : le wrap ne porte ni role ni aria-disabled", () => {
+    render(<TagInput values={[]} onChange={() => {}} />);
+    const wrap = document.querySelector(".tag-input-wrap");
+    expect(wrap).not.toHaveAttribute("aria-disabled");
+    expect(wrap).not.toHaveAttribute("role");
+  });
+
   it("pose .tag-input-wrap--error quand error est truthy (booléen)", () => {
     render(<TagInput values={[]} onChange={() => {}} error />);
     expect(document.querySelector(".tag-input-wrap")).toHaveClass(
