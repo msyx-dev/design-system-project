@@ -64,6 +64,7 @@
     --hub-bg-success: rgba(34, 197, 94, 0.12);
     --hub-bg-violet: rgba(0, 90, 158, 0.15);
     --hub-bg-warning: rgba(var(--accent-rgb), 0.12);
+    --inactive-text: #cbd5e1;
     --info: #38bdf8;
     --info-dark: #0e7490;
     --info-light: #7dd3fc;
@@ -176,6 +177,7 @@
     --hub-bg-success: rgba(22, 163, 74, 0.07);
     --hub-bg-violet: rgba(0, 90, 158, 0.08);
     --hub-bg-warning: rgba(224, 205, 30, 0.08);
+    --inactive-text: #2c4358;
     --info: #0369a1;
     --info-dark: #0c6b88;
     --info-light: #0369a1;
@@ -291,6 +293,7 @@
     --hub-bg-success: rgba(74, 222, 128, 0.12);
     --hub-bg-violet: rgba(201, 104, 196, 0.15);
     --hub-bg-warning: rgba(254, 186, 0, 0.12);
+    --inactive-text: #d9bcba;
     --info: #22c3d6;
     --info-dark: #167f8b;
     --info-light: #6fd8e4;
@@ -401,6 +404,7 @@
     --hub-bg-success: rgba(21, 128, 61, 0.07);
     --hub-bg-violet: rgba(138, 58, 134, 0.08);
     --hub-bg-warning: rgba(148, 98, 0, 0.08);
+    --inactive-text: #5b4b4b;
     --info: #0c7a7d;
     --info-dark: #0c7a7d;
     --info-light: #0c7a7d;
@@ -515,6 +519,7 @@
     --hub-bg-success: rgba(var(--accent-rgb), 0.15);
     --hub-bg-violet: rgba(124, 58, 237, 0.12);
     --hub-bg-warning: rgba(249, 115, 22, 0.12);
+    --inactive-text: #8fbfa0;
     --info: #38bdf8;
     --info-dark: #0e7490;
     --info-light: #7dd3fc;
@@ -622,6 +627,7 @@
     --hub-bg-success: rgba(var(--accent-rgb), 0.10);
     --hub-bg-violet: rgba(124, 58, 237, 0.07);
     --hub-bg-warning: rgba(249, 115, 22, 0.08);
+    --inactive-text: #3d6b4a;
     --info: #0369a1;
     --info-dark: #0c6b88;
     --info-light: #0369a1;
@@ -731,6 +737,7 @@
     --hub-bg-success: rgba(74, 222, 128, 0.12);
     --hub-bg-violet: rgba(167, 139, 250, 0.15);
     --hub-bg-warning: rgba(232, 185, 58, 0.12);
+    --inactive-text: #cbe8d5;
     --info: #56d4ff;
     --info-dark: #2b6fbf;
     --info-light: #97e5ff;
@@ -843,6 +850,7 @@
     --hub-bg-success: rgba(21, 128, 61, 0.07);
     --hub-bg-violet: rgba(109, 63, 184, 0.08);
     --hub-bg-warning: rgba(138, 97, 0, 0.08);
+    --inactive-text: #3d5545;
     --info: #0b6fa8;
     --info-dark: #0b5ea8;
     --info-light: #0b5ea8;

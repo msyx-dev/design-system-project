@@ -32,6 +32,9 @@
        --text-muted/--text-dim restent la base ; on-raised = texte secondaire sur fond sureleve, on-tint = texte attenue sur fond teinte. */
     --neutral-text-on-raised: #9fafc4; /* F4 #982 — 4,64:1 sur #334155, 4,61 sur #39414e, 5,03 sous .card-muted ; --text-muted : 4,03 */
     --neutral-text-on-tint: #94a3b8;   /* F4 #982 — = --text-dim (passe : 5,71 sur #1e293b) */
+    /* Contenu inactif (#982 F6) : verrouille / non inclus, jamais un controle. Token DEDIE, hex litteral, regle a la mesure.
+       Le contenu perd son opacite (jamais d'opacity sur du texte) ; un controle desactive se balise disabled / aria-disabled. */
+    --inactive-text: #8292a8; /* F6 #982 — 4,62:1 sur #1e293b (pire), 4,86 sur #1b2536 */
     /* Chevron SVG theme-aware pour select.input — couleur miroir de --text-dim */
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -424,6 +427,8 @@
     /* Neutres en texte (#982 F4) — voir :root */
     --neutral-text-on-raised: #475569; /* = --text-muted light (passe : 6,15 sur #e2e8f0) */
     --neutral-text-on-tint: #5a6980;   /* 4,61:1 sur #ebe7fb (pire fond teinte mesure), 4,78 sur #e5eff5 ; --text-dim : 3,93 */
+    /* Contenu inactif (#982 F6) — voir :root */
+    --inactive-text: #627083; /* 4,60:1 sur #f1f5f9 (pire), 4,73 sur #f4f8fe */
     /* Fonds d'avatar (#982 F5) — voir :root */
     --avatar-bg-violet: #8555ef;
     --avatar-bg-cyan: #0e7490;   /* = --deco-cyan light, passe deja a 5,36:1 */

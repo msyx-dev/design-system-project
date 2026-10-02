@@ -96,12 +96,15 @@ kbd { display: inline-flex; align-items: center; justify-content: center; min-wi
     color: var(--text-muted);
     margin-top: 0.25rem;
 }
-.achievement.locked {
+/* #982 F6 — contenu inactif : l'opacite et le gris portent sur l'icone seule (jamais d'opacity sur du texte) ;
+   titre et etat en --inactive-text (token dedie, >= 4,6:1 en MSYX, = --text-muted hors MSYX). */
+.achievement.locked .achievement-icon {
     opacity: 0.4;
     filter: grayscale(1);
 }
-.achievement.locked .achievement-icon {
-    filter: grayscale(1);
+.achievement.locked .achievement-title,
+.achievement.locked .achievement-state {
+    color: var(--inactive-text);
 }
 .achievement.new {
     animation: achievementGlow 2s infinite;

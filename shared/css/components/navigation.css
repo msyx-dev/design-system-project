@@ -835,6 +835,15 @@
 .segmented--subtle .segmented-item.active {
     color: var(--accent-text-strong);
 }
+/* #982 F7 — un segmented sans .segmented-indicator reporte l'aplat de l'indicateur sur l'item actif
+   (sinon : texte clair sur la piste, 1,23:1 en light ; ex. AM/PM du time-picker). Memes declarations
+   background que .segmented-indicator / .segmented--subtle .segmented-indicator ci-dessus. */
+.segmented:not(:has(> .segmented-indicator)) > .segmented-item.active {
+    background: var(--accent-surface);
+}
+.segmented--subtle:not(:has(> .segmented-indicator)) > .segmented-item.active {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
 .segmented-item svg {
     flex-shrink: 0;
 }
