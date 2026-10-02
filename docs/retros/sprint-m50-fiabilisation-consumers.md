@@ -50,7 +50,7 @@
 |---|---|---|---|
 | A1 | `validate-tree.sh` résout le projet depuis le dépôt, pas depuis le nom du répertoire | claude-config#537 | **Écrite** (ticket) |
 | A2 | `velocity-compute.sh` sans plafond silencieux (pagination, ou échec si le nombre lu atteint la limite) | claude-config#538 | **Écrite** (ticket) |
-| A3 | Neutraliser les animations du décor festif (sapin, guirlande) dans les captures VR Noël | — | **Retenue** : proposée au bilan ; pas de ticket ouvert de nuit, consigne « backlog vide » |
+| A3 | Neutraliser les animations du décor festif (sapin, guirlande) dans les captures VR Noël | #998 | **Mesurée** (décision de Mike, 2026-10-02) : décor figé (`animation: none`) dans `visual.spec.ts`, garde-fou qui fait échouer le test si une animation reste active ; 4 baselines Noël récoltées, 3 tentatives identiques |
 | A4 | Avant d'ouvrir une issue en cours de sprint, chercher le symptôme dans les issues ouvertes (`gh issue list --search`) | — | **Écrite** (mémoire) |
 | A5 | Contraste MSYX et tolérance VR | #969 #983 | **Mesurée** : job a11y bloquant sur MSYX (prouvé par mutation en CI) et VR à `maxDiffPixels: 50` (prouvé par mutation) |
 
@@ -60,5 +60,5 @@
 - A3 tolérance VR et axe bloquant : ✅ **Done** (#969, #976, #980 à #983).
 - A4 passe historique de `check-components.sh` : ✅ **Done** (#967).
 - A5 contraste des boutons pleins : ✅ déjà mesurée. #968 y ajoute `.btn-outline-danger`.
-- **Frontière strict** (violations nom/id en warn-only) : ⏳ **reportée une deuxième fois**. Selon la règle de `/retro`, une action répétée doit devenir une mesure ou être abandonnée explicitement : **à trancher par Mike**.
+- **Frontière strict** : ❌ **Abandonnée explicitement** (décision de Mike, 2026-10-02, #999). Le contrôle reste informatif, avec 44 violations tolérées et aucun défaut réel attribué. `--frontier-strict` devient un diagnostic local opt-in. La doc (DS-PRINCIPLES §6.1) et l'outil le disent désormais.
 - **`version.json` racine figé à 2.57.1** : ⏳ inchangé, sans effet au runtime (l'image sert `/version` = SHA de l'arbre, prouvé par `validate-tree`).

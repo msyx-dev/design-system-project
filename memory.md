@@ -11,7 +11,7 @@
 
 ## Prochaine étape
 - **Backlog DS vide, aucun milestone ouvert.** Pipeline : claude-config **#537** (validate-tree basename) et **#538** (velocity --limit 500).
-- **À trancher par Mike** (rétro #50) : neutraliser les animations du décor festif dans les captures VR Noël (source d'instabilité, pas de ticket ouvert de nuit) ; frontière strict nom/id (warn-only) reportée 2× → abandon ou gate.
+- **Tranché par Mike le 2026-10-02 (« go préco »)** : #998, décor festif figé dans la VR (Mesurée) ; #999, frontière page↔registre informative et bascule abandonnée. Issues **#996** (CLAUDE.md N2 périmé) et **#997** (retirer la page de login de l'auth gate legacy) ouvertes par une autre session, hors de ce sprint.
 - **Consommateurs** : resync recommandée partout (contraste MSYX, flocon, sapin) ; `check-sync.sh` signalera l'écart de version.
 - **Dette** : `CHANGELOG.md` `[Unreleased]` garde des entrées publiées non datées (antérieures à 2.119.1 + alpha.59) ; `version.json` racine figé 2.57.1 (sans effet runtime).
 
@@ -29,6 +29,8 @@
 - **Versioning DS** : bump synchrone 8 sources (`@ds-version` ×5 + package.json + nav.js VERSION + components-registry.json), validé `check-versions.sh`. Feature=minor, fix=patch. **Le bump est un tout indissociable** : 8 sources + `CHANGELOG.md` + `RELEASES.md` + `shared/version-notes.json` + `generate-version-notes.js` + `generate-counters.js` — les deux derniers ne sont couverts par **aucun hook** et font échouer `check-counters` ou mentir le badge du header s'ils sont oubliés.
 - **Pipeline** : hotfix prod interdit → worktree ; parent bloqué en Edit/Write direct sur repo prod (hook N1) ; hook `hook-changelog-on-merge` exige `CHANGELOG.md` (pas seulement RELEASES) ; hook anti-destructif bloque tout Bash contenant `msyx.fr` (apex OVH) → passer les valeurs par fichier ou utiliser Edit.
 - **A11y bloquante sur MSYX** (2026-10-02, #983) : job `a11y` sans `continue-on-error` ; `color-contrast` sur MSYX sombre+clair et complétude du banc (100 runs) bloquants, autres thèmes en rapport. Corriger un contraste = token dédié réglé à la mesure (luminance seule, ≥ 4,6:1 au pire fond), valeur actuelle recopiée dans les 4 autres thèmes ; jamais d'exemption axe. Contrôle désactivé = `role="group" aria-disabled="true"` ; contenu inactif = `--inactive-text`, jamais `opacity` sur du texte.
+- **Frontière page↔registre = informative** (2026-10-02, #999) : bascule bloquante `--frontier-strict` abandonnée (44 violations tolérées, aucun défaut réel attribué) ; le flag reste un diagnostic local opt-in. Ne pas la reproposer sans fait nouveau.
+- **Décor festif figé en VR** (2026-10-02, #998) : `visual.spec.ts` applique `animation: none` au décor (Playwright `animations: "disabled"` ne fait qu'un `cancel()` dont l'état varie) ; garde-fou si une animation reste active.
 
 ## Historique sessions (FIFO max 10)
 - 2026-10-01/02 — **Milestone #50 « Fiabilisation consumers ③ » soldé, backlog vide** (13 issues, 32 SP, DS **2.143.0** / react **alpha.61**, lot 2 de nuit en autonomie). Contraste MSYX 83/123 → 0/0 et axe bloquant ; branche commune #981+#982 (1 récolte au lieu de 3) ; 2 défauts trouvés en LISANT les mesures (flocon #990 sur une capture, sapin #993 dans la sortie du smoke DOM) ; quality-gate FAIL 13c puis PASS ; 2 défauts d'outillage ticketés (claude-config#537, #538) ; #993 ouverte en doublon de #973 (chercher avant d'ouvrir).
