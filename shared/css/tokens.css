@@ -309,6 +309,11 @@
     --avatar-size-lg: 3.5rem;   /* 56px */
     --avatar-size-xl: 5rem;     /* 80px */
 
+    /* Fonds d'avatar sous texte blanc (#982 F5) : tokens DEDIES (#fff >= 4,6:1), la teinte deco est conservee.
+       --deco-violet/--deco-cyan restent la base des graphiques (contrat check-categorical-palette) — non touches. */
+    --avatar-bg-violet: #8555ef; /* F5 #982 — #fff a 4,62:1 (--deco-violet #8b5cf6 = 4,23) ; dH -0,1° */
+    --avatar-bg-cyan: #007f9c;   /* F5 #982 — #fff a 4,65:1 (--deco-cyan #06b6d4 = 2,42) ; dH +6° (ecretage du gamut sRGB) */
+
     /* Card icons (v2.48.0) */
     --card-icon-size: 3.25rem;       /* 52px */
     --card-icon-size-sm: 2.5rem;     /* 40px — responsive ≤768px */
@@ -405,6 +410,9 @@
     /* Neutres en texte (#982 F4) — voir :root */
     --neutral-text-on-raised: #475569; /* = --text-muted light (passe : 6,15 sur #e2e8f0) */
     --neutral-text-on-tint: #5a6980;   /* 4,61:1 sur #ebe7fb (pire fond teinte mesure), 4,78 sur #e5eff5 ; --text-dim : 3,93 */
+    /* Fonds d'avatar (#982 F5) — voir :root */
+    --avatar-bg-violet: #8555ef;
+    --avatar-bg-cyan: #0e7490;   /* = --deco-cyan light, passe deja a 5,36:1 */
     --chevron-select: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     --border-color: rgba(15, 23, 42, 0.08);
     --border-hover: rgba(15, 23, 42, 0.20);
