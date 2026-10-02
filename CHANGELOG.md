@@ -273,6 +273,16 @@ Vague 4/N (#744) complète : 35 tests sur 4 composants (Tabs 7, `initTreeView` 7
 ### Fixed
 - **`shared/components.js` `initCommandPalette` — `aria-expanded` figé à `"false"` sur `.cmd-palette`** (#821) : constat trouvé pendant la vague 3 de #744, ticketé séparément (changement de comportement). L'élément porte `role="combobox"`, où `aria-expanded` est une propriété **requise** — une valeur codée en dur dans le markup injecté (jamais touchée par `openOverlay()`/`closeOverlay()`) était lue comme une information fiable par un lecteur d'écran : la palette était annoncée repliée en permanence, y compris grande ouverte avec le focus dedans. `openOverlay()` pose désormais `aria-expanded="true"`, `closeOverlay()` `"false"`. Test ajouté à `tests/vanilla/command-palette.test.js` (15e test, suite existante non réécrite) : état repos (`false`) → Ctrl+K ouvre (`true`) → Ctrl+K referme en toggle (`false`). Preuve par mutation (exécutée puis restaurée) : retrait des deux `setAttribute` → exactement 1/15 test rouge (celui dédié), les 14 autres inchangés. Audit du contrat `combobox` demandé par l'issue : la navigation clavier `ArrowUp`/`ArrowDown` pose déjà `aria-selected` sur l'option ET `aria-activedescendant` sur l'input dans `setActive()` (lignes préexistantes, non touchées ici) — écart déjà couvert, aucune correction ni ticket supplémentaire nécessaire.
 
+## [2.143.1] - 2026-10-02 — Assainissement post-audit (#996 #997 #998 #999)
+
+### Removed
+- **Page de login de l'auth gate legacy (#997)** — `index.html`, `Caddyfile.container`, `access-denied.html`, `SKILL.md`, `docs/ARCHITECTURE.md`. `index.html` n'est plus un formulaire mot de passe qui postait sur `/auth/login` (405 depuis le passage à Authentik) : c'est une redirection vers `site.html`. `/auth/logout` est **conservé** : c'est la déconnexion Authentik active (UserMenu, page 403), couverte par l'E2E de la préprod.
+
+### Changed
+- **`CLAUDE.md` (N2) réécrit sans archéologie (#996)** — déploiement réel (image Docker, Coolify en préprod, auto-deploy désactivé, `coolify-deploy.sh`), liste des composants renvoyée au registre (plus d'édition du N2 par composant), descriptions de pages réduites à leur rôle ; `README.md`, `docs/ARCHITECTURE.md` et `docs/DS-PRINCIPLES.md` alignés. Aucune règle retirée.
+- **Captures VR Noël déterministes (#998)** — `visual-tests/visual.spec.ts` fige le décor festif (`animation: none`) au lieu de compter sur le `cancel()` de Playwright, dont l'état variait d'un run à l'autre ; garde-fou si une animation reste active ; 4 baselines Noël récoltées.
+- **Frontière page↔registre informative (#999)** — `docs/DS-PRINCIPLES.md`, `bin/generate-registry.js`, `.github/workflows/ci.yml`. La bascule bloquante `--frontier-strict` est abandonnée (décision du 2026-10-02) ; le flag reste un diagnostic local opt-in. Comportement inchangé (44 violations rapportées, code retour identique).
+
 ## [2.143.0] - 2026-10-02 — Fiabilisation consumers ③ (milestone #50)
 
 ### Fixed

@@ -1,5 +1,19 @@
 # Releases
 
+## 2.143.1 — 2026-10-02 — Assainissement post-audit : login legacy retiré, N2 réécrit, VR Noël déterministe (#996 #997 #998 #999)
+
+> Touche `index.html`, `Caddyfile.container` (commentaire), `access-denied.html`, `CLAUDE.md`, `README.md`, `SKILL.md`, `docs/{ARCHITECTURE,DS-PRINCIPLES}.md`, `bin/generate-registry.js` (messages), `.github/workflows/ci.yml` (commentaire), `visual-tests/visual.spec.ts` et 4 baselines Noël.
+
+### Removed
+- **Page de login de l'auth gate legacy (#997)** — `index.html` devient une redirection vers `site.html` (plus de formulaire ni de `/auth/login`). `/auth/logout` conservé (déconnexion Authentik active).
+
+### Changed
+- **Documentation alignée sur le déploiement réel (#996)** — `CLAUDE.md`, `README.md`, `docs/ARCHITECTURE.md` (dont l'authentification Authentik et les en-têtes de sécurité posés par l'edge, mesurés), `docs/DS-PRINCIPLES.md`.
+- **VR Noël déterministe (#998)** et **frontière page↔registre informative (#999)** — outillage et doc, sans effet sur le CSS ni le JS distribués.
+
+### Release
+`@ds-version` 2.143.0 → 2.143.1 (patch, 10 sources), `check-versions.sh` rc=0 ; notes de version alimentées. Pas de release `@msyx-dev/react` (aucun changement du package).
+
 ## 2.143.0 — 2026-10-02 — Fiabilisation consumers ③ : contraste AA du thème MSYX, axe bloquant, VR resserrée (#967 #968 #969 #970 #976 #977 #980 #981 #982 #983 #990 #993)
 
 > Touche `shared/css/tokens.css`, `themes/*.json`, `shared/css/themes.css`, `shared/css/layout.css`, `shared/css/components/{badges,buttons,navigation,overlays,access-denied,theming,pricing,alerts,…}.css`, `shared/components.js`, `shared/nav.js`, `pages/*.html`, `assets/demo/avatar-akadmin.svg`, `shared/components-registry.json`, `shared/consumers.json`, `shared/sync-all.sh`, `playwright.config.ts`, `visual-tests/` (a11y, reporter, header, baselines), `.github/workflows/{a11y,ci}.yml`, `docs/DS-PRINCIPLES.md`, `docs/ARCHITECTURE.md`, `docs/PERF-BUDGET.md`.

@@ -14,6 +14,17 @@
   },
   "released": [
     {
+      "version": "2.143.1",
+      "date": "2026-10-02",
+      "titre": "Une entrée plus directe",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "L'ancienne page de connexion du design system, devenue inutile depuis la connexion unique, a été retirée : l'adresse d'accueil mène directement au hub."
+        }
+      ]
+    },
+    {
       "version": "2.143.0",
       "date": "2026-10-02",
       "titre": "Un thème MSYX lisible partout",
