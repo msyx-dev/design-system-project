@@ -4,6 +4,16 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.61 — 2026-10-02 — `TagInput` désactivé accessible, sapin sans erreur console (#982 #993)
+
+> Release groupée du milestone #50, publiée avec le DS CSS **2.143.0** (mention croisée : les tokens de contraste MSYX, le CSS des contenus inactifs et le balisage des contrôles désactivés sont décrits dans `../../RELEASES.md`).
+
+### Fixed
+- **`<TagInput disabled>` (#982).** Le conteneur porte `role="group"` et `aria-disabled="true"`, sauf si un `role` y est déjà posé. Il rejoint ainsi le contrat des contrôles composites désactivés du DS : exemption WCAG 1.4.3 portée par le balisage, et parité avec `initTagInputs()`, qui ne réactive plus le champ.
+- **`<FestiveDecor>` : erreur console sous le thème Noël (#993).** Le SVG du sapin (`TreeNoel`) ne porte plus l'attribut invalide `height="auto"`. Rendu inchangé.
+
+`version` 3.0.0-alpha.60 → 3.0.0-alpha.61. Tag `react-v3.0.0-alpha.61` posé par le parent après le merge.
+
 ## v3.0.0-alpha.60 — 2026-10-01 — `<Textarea>`, ActionMenu et PageHeader corrigés (#952 #936 #937)
 
 > Release groupée du milestone #49, publiée avec le DS CSS **2.142.0** (mention croisée : le CSS de `.input-counter`, `.action-menu-trigger--labeled` et le contraste des boutons est décrit dans `../../RELEASES.md`).

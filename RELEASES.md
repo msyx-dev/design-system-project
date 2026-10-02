@@ -1,5 +1,26 @@
 # Releases
 
+## 2.143.0 — 2026-10-02 — Fiabilisation consumers ③ : contraste AA du thème MSYX, axe bloquant, VR resserrée (#967 #968 #969 #970 #976 #977 #980 #981 #982 #983 #990 #993)
+
+> Touche `shared/css/tokens.css`, `themes/*.json`, `shared/css/themes.css`, `shared/css/layout.css`, `shared/css/components/{badges,buttons,navigation,overlays,access-denied,theming,pricing,alerts,…}.css`, `shared/components.js`, `shared/nav.js`, `pages/*.html`, `assets/demo/avatar-akadmin.svg`, `shared/components-registry.json`, `shared/consumers.json`, `shared/sync-all.sh`, `playwright.config.ts`, `visual-tests/` (a11y, reporter, header, baselines), `.github/workflows/{a11y,ci}.yml`, `docs/DS-PRINCIPLES.md`, `docs/ARCHITECTURE.md`, `docs/PERF-BUDGET.md`.
+
+### Fixed
+- **Contraste AA du thème MSYX, sombre et clair : 0 nœud `color-contrast` (avant : 83 en sombre, 123 en clair) (#980, #981, #982)** — mesuré par le banc axe (10 pages × 10 combinaisons, 100 runs sans erreur). Tokens dédiés réglés à la mesure (luminance seule, teinte conservée, ≥ 4,6:1 sur le pire fond rendu) : `--accent-text`, `--accent-text-strong`, `--accent-surface` (#980) ; `--status-*-fg`, `--status-*-text`, `--notification-badge-bg` (#981) ; `--neutral-text-on-raised`, `--neutral-text-on-tint`, `--avatar-bg-violet`, `--avatar-bg-cyan`, `--inactive-text` (#982). Les 4 autres thèmes reçoivent leur valeur actuelle (vérifié par valeur calculée, 0 écart sur 40) et leur décompte baisse partout. Contenus inactifs sans `opacity` sur le texte ; tag-input désactivé inerte au clavier (`role="group" aria-disabled="true"`, aussi sur slider et color-input désactivés) ; aplat de l'item actif d'un `.segmented` sans indicateur ; avatar de démo local (plus de `ui-avatars.com`).
+- **`color-contrast` bloquant sur MSYX sombre et clair (#983)** — le job `a11y` n'est plus masqué (`continue-on-error` retiré) : une violation sur MSYX, ou un run manquant ou en erreur, le fait échouer ; les autres thèmes restent en rapport. Prouvé par mutation en CI (20 tests MSYX rouges, 0 autre).
+- **Banc d'audit a11y fiable (#976)** — reporter dédié, banc hermétique (aucune requête tierce, attente `load`), page user-feedback auditée, export `test-results-a11y/a11y-runs.json` avec le contraste de chaque nœud.
+- **Bouton flocon du header visible hors Noël (#990)** — `.header-notification[hidden] { display: none; }` : `display: flex` écrasait `hidden` depuis la 2.140.0. Test en navigateur réel (10 combinaisons + bascule de thème).
+- **Erreur console du sapin de Noël sur toutes les pages (#993)** — `height="auto"` invalide retiré du SVG (`nav.js`, et `TreeNoel.tsx` côté React). Trouvé par le smoke DOM du quality-gate, joué pour la première fois sur l'image de l'arbre.
+- **`.btn-outline-danger` au contraste AA, repos et survol, 10 combinaisons (#968)** — token `--btn-outline-danger-fg`, pire cas 4,69:1 ; cas bloquant de la sonde de contraste.
+- **`check-components.sh` échouait sur tout consommateur synchronisé (#967)** — 6 modificateurs composés ajoutés au registre ; lint du registre bloquant en CI.
+
+### Changed
+- **Tolérance des tests visuels resserrée (#969)** — `threshold: 0.05`, `maxDiffPixels: 50`, `maxDiffPixelRatio: 0.01` ; un changement de couleur d'un composant entier fait désormais échouer la VR (4 219 px détectés par mutation, contre 0 à l'ancien réglage). Re-baseline complète.
+- **Capture visuelle dédiée du header MSYX (#977)** — badge de version neutralisé.
+- **`shared/consumers.json` schéma 2 et `sync-all.sh` (#970)** — parc réel avec options par consommateur, `--root=`, `--dry-run` explicite, nouveau `--check` en lecture seule.
+
+### Release
+`@ds-version` 2.142.0 → 2.143.0 (minor : nouveaux tokens publics ; 10 sources, `themes.css` régénéré par `build-themes.js`), `shared/check-versions.sh` rc=0. Notes de version `shared/version-notes.json` alimentées et inlinées (`bin/generate-version-notes.js`), compteurs régénérés (`bin/generate-counters.js`). Publié avec `@msyx-dev/react` **3.0.0-alpha.61** (mention croisée : `TagInput` et `TreeNoel`, voir `packages/react/RELEASES.md`).
+
 ## 2.142.0 — 2026-10-01 — Fiabilisation consumers ② : contraste des boutons, logos distribués, Textarea, orphelins (#944 #954 #952 #938 #936 #937 #958)
 
 > Touche `shared/css/tokens.css`, `themes/*.json`, `shared/css/themes.css`, `shared/css/components/{buttons,forms,overlays}.css`, `shared/components.js`, `shared/nav.js`, `shared/sync.sh`, `shared/check-sync.sh`, `shared/check-components.sh`, `assets/logo-msyx*.svg`, `pages/{formulaires,fondation,feedback,navigation}.html`, `access-denied.html`, `canonical-pages/login.html`, `Caddyfile.container`, `Dockerfile`, `shared/components-registry.json`, `shared/version-notes.json`. Mention croisée : **`@msyx-dev/react` 3.0.0-alpha.60** (`<Textarea>`, `ActionMenu`, `PageHeader`, défaut de `AccessDenied`) est publié par le même lot — son détail est dans `packages/react/RELEASES.md`.

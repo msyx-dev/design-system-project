@@ -14,6 +14,33 @@
   },
   "released": [
     {
+      "version": "2.143.0",
+      "date": "2026-10-02",
+      "titre": "Un thème MSYX lisible partout",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Sur le thème MSYX, en clair comme en sombre, tous les textes atteignent désormais le contraste recommandé : liens et boutons bleus, couleurs d'alerte et de statut, options inactives, avatars colorés. Le contrôle automatique d'accessibilité est devenu bloquant pour ce thème, pour que ces défauts ne reviennent pas."
+        },
+        {
+          "type": "amelioration",
+          "text": "Les succès verrouillés et les fonctionnalités non incluses d'une offre restent lisibles, sur tous les thèmes : seule leur icône signale qu'ils sont inactifs."
+        },
+        {
+          "type": "correction",
+          "text": "Un champ de saisie de tags désactivé ne peut plus être atteint ni modifié au clavier."
+        },
+        {
+          "type": "correction",
+          "text": "Le bouton flocon du header n'apparaît plus que sur le thème Noël, et le sapin n'affiche plus d'erreur dans la console du navigateur."
+        },
+        {
+          "type": "correction",
+          "text": "Le bouton « danger » à contour reste lisible au repos comme au survol, et la vérification des projets qui utilisent le design system ne signale plus de faux problèmes."
+        }
+      ]
+    },
+    {
       "version": "2.142.0",
       "date": "2026-10-01",
       "titre": "Des boutons lisibles sur tous les thèmes",
