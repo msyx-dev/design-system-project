@@ -405,6 +405,10 @@
     transition: border-color 0.2s var(--ease-standard), color 0.2s var(--ease-standard);
     font-family: inherit;
 }
+/* #990 : display:flex ci-dessus écrasait [hidden] (bouton flocon visible hors Noël) */
+.header-notification[hidden] {
+    display: none;
+}
 .header-notification:hover {
     border-color: var(--border-hover);
     color: var(--text);

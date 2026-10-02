@@ -61,6 +61,7 @@ export default defineConfig({
     "**/card-floating-panel-clip.spec.ts",
     "**/floating-surface-stacking.spec.ts",
     "**/button-contrast.spec.ts",
+    "**/header-festive-btn.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
