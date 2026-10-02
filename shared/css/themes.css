@@ -5,6 +5,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.12);
     --accent-light: #ead92e;
     --accent-rgb: 224, 205, 30;
+    --avatar-bg-cyan: #38bdf8;
+    --avatar-bg-violet: #005a9e;
     --border: var(--border-color);
     --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.35);
@@ -63,6 +65,8 @@
     --info-dark: #0e7490;
     --info-light: #7dd3fc;
     --info-rgb: 56, 189, 248;
+    --neutral-text-on-raised: #cbd5e1;
+    --neutral-text-on-tint: #9eb3c8;
     --notification-badge-bg: #ef4444;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(0, 30, 60, 0.85);
@@ -115,6 +119,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.10);
     --accent-light: #00457a;
     --accent-rgb: 0, 52, 95;
+    --avatar-bg-cyan: #38bdf8;
+    --avatar-bg-violet: #005a9e;
     --border: var(--border-color);
     --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.30);
@@ -168,6 +174,8 @@
     --info-dark: #0c6b88;
     --info-light: #0369a1;
     --info-rgb: 3, 105, 161;
+    --neutral-text-on-raised: #2c4358;
+    --neutral-text-on-tint: #4a6a84;
     --notification-badge-bg: #dc2626;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(240, 244, 248, 0.90);
@@ -219,6 +227,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.12);
     --accent-light: #ff8a80;
     --accent-rgb: 255, 52, 39;
+    --avatar-bg-cyan: #2dd4e0;
+    --avatar-bg-violet: #c968c4;
     --border: var(--border-color);
     --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.35);
@@ -276,6 +286,8 @@
     --info-dark: #167f8b;
     --info-light: #6fd8e4;
     --info-rgb: 34, 195, 214;
+    --neutral-text-on-raised: #d9bcba;
+    --neutral-text-on-tint: #a88c8a;
     --notification-badge-bg: #ff8a4c;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(22, 10, 11, 0.85);
@@ -328,6 +340,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.10);
     --accent-light: #e0001a;
     --accent-rgb: 224, 0, 26;
+    --avatar-bg-cyan: #2dd4e0;
+    --avatar-bg-violet: #c968c4;
     --border: var(--border-color);
     --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.30);
@@ -379,6 +393,8 @@
     --info-dark: #0c7a7d;
     --info-light: #0c7a7d;
     --info-rgb: 12, 122, 125;
+    --neutral-text-on-raised: #5b4b4b;
+    --neutral-text-on-tint: #7a6a6a;
     --notification-badge-bg: #a33b0e;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(255, 250, 239, 0.90);
@@ -430,6 +446,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.14);
     --accent-light: #73c69c;
     --accent-rgb: 0, 136, 55;
+    --avatar-bg-cyan: #06b6d4;
+    --avatar-bg-violet: #7c3aed;
     --border: var(--border-color);
     --border-color: rgba(var(--accent-rgb), 0.12);
     --border-hover: rgba(var(--accent-rgb), 0.35);
@@ -486,6 +504,8 @@
     --info-dark: #0e7490;
     --info-light: #7dd3fc;
     --info-rgb: 56, 189, 248;
+    --neutral-text-on-raised: #8fbfa0;
+    --neutral-text-on-tint: #6a9e7a;
     --notification-badge-bg: #ef4444;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(10, 26, 15, 0.85);
@@ -537,6 +557,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.10);
     --accent-light: #006e2c;
     --accent-rgb: 0, 110, 44;
+    --avatar-bg-cyan: #0e7490;
+    --avatar-bg-violet: #7c3aed;
     --border: var(--border-color);
     --border-color: rgba(var(--accent-rgb), 0.14);
     --border-hover: rgba(var(--accent-rgb), 0.35);
@@ -586,6 +608,8 @@
     --info-dark: #0c6b88;
     --info-light: #0369a1;
     --info-rgb: 3, 105, 161;
+    --neutral-text-on-raised: #3d6b4a;
+    --neutral-text-on-tint: #4a7a58;
     --notification-badge-bg: #dc2626;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(245, 251, 247, 0.90);
@@ -632,6 +656,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.12);
     --accent-light: #ff8791;
     --accent-rgb: 255, 71, 87;
+    --avatar-bg-cyan: #56d4ff;
+    --avatar-bg-violet: #b98cff;
     --border: var(--border-color);
     --border-color: rgba(255, 71, 87, 0.26);
     --border-hover: rgba(255, 210, 80, 0.6);
@@ -688,6 +714,8 @@
     --info-dark: #2b6fbf;
     --info-light: #97e5ff;
     --info-rgb: 86, 212, 255;
+    --neutral-text-on-raised: #cbe8d5;
+    --neutral-text-on-tint: #92b8a0;
     --notification-badge-bg: #fb923c;
     --overlay: rgba(0, 0, 0, 0.55);
     --overlay-heavy: rgba(8, 20, 13, 0.85);
@@ -742,6 +770,8 @@
     --accent-glow: rgba(var(--accent-rgb), 0.10);
     --accent-light: #a80f26;
     --accent-rgb: 168, 15, 38;
+    --avatar-bg-cyan: #56d4ff;
+    --avatar-bg-violet: #b98cff;
     --border: var(--border-color);
     --border-color: rgba(193, 20, 48, 0.20);
     --border-hover: rgba(146, 100, 0, 0.45);
@@ -793,6 +823,8 @@
     --info-dark: #0b5ea8;
     --info-light: #0b5ea8;
     --info-rgb: 11, 94, 168;
+    --neutral-text-on-raised: #3d5545;
+    --neutral-text-on-tint: #597162;
     --notification-badge-bg: #b45309;
     --overlay: rgba(0, 0, 0, 0.30);
     --overlay-heavy: rgba(246, 250, 247, 0.90);
