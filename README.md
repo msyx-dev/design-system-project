@@ -44,8 +44,9 @@ Authentik forward_auth en amont (voir section Profil d'auth) :
   derrière un outpost Authentik — à adapter (ou ignorer, le lien reste simplement mort) chez un
   tiers sans Authentik.
 
-Chez msyx : déploiement via Coolify, qui reconstruit l'image (`Dockerfile`) à chaque push sur
-`main`. Aucune action manuelle.
+Chez msyx : déploiement via Coolify, qui reconstruit l'image (`Dockerfile`). L'auto-deploy est
+désactivé (1 sprint = 1 déploiement) : un push sur `main` ne publie rien, le redéploiement est
+explicite par `~/.claude/scripts/pipeline/coolify-deploy.sh design-system --wait`.
 
 ## Profil d'auth
 
