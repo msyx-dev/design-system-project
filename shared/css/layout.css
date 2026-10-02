@@ -658,10 +658,12 @@ html.theme-transitioning * {
 /* Compaction mobile du header — corrige l'overflow horizontal < 640px (#711).
    À l'étroit, on masque le wordmark texte (le mark logo reste), le badge de version
    et le sélecteur de thème (opt-in), pour garder logo + burger + mode + cloche +
-   feedback + avatar. Interim : refactor mobile-first complet du header suivi dans #711. */
+   feedback + avatar. Le wordmark n'est masqué que s'il est accompagné d'un
+   pictogramme `.header-logo-img` (#1009) : sans pictogramme, il est la seule marque.
+   Interim : refactor mobile-first complet du header suivi dans #711. */
 @media (max-width: 640px) {
     .site-header { padding: 0 var(--space-md); gap: var(--space-sm); }
-    .site-header .brand-wordmark { display: none; }
+    .site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: none; }
     .site-header .version-badge { display: none; }
     .site-header .header-controls .theme-switcher { display: none; }
 }
