@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reserve de fin de page du sapin de Noel — fixture #1005</title>
+<!--
+  Fixture de `visual-tests/festive-clearance.spec.ts` (#1005).
+
+  Un gabarit de page consumer (`.page-content`, `.page-content--wide` ou
+  `.content-grid`) portant un contenu LONG — plus haut que toute fenetre testee —
+  dont chaque ligne finit par un badge a droite : c'est le motif du defaut releve
+  chez tirokado, ou le sapin de Noel (fixe, hors flux) recouvrait le badge de la
+  derniere ligne une fois la page defilee au maximum.
+
+  Le gabarit se choisit par `?gabarit=page-content|page-content--wide|content-grid`
+  (defaut : page-content). `.page-content` est une mesure typo de 72ch : a partir de
+  ~1280px le contenu ne passe plus sous le sapin ; `page-content--wide` (1440px) et
+  `content-grid` (1200px) le font, et c'est la qu'un recouvrement horizontal reel existe.
+
+  Markup = celui d'un consumer : header injecte par nav.js, gabarit DS, composants DS
+  (`.badge`). Pas de components.js : rien d'autre que le header et le decor festif
+  ne doit bouger la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  .fixture-rows { list-style: none; margin: 0; padding: 0; }
+  .fixture-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+</style>
+</head>
+<body>
+<header class="site-header" id="site-header"></header>
+<main id="gabarit" class="page-content">
+  <h1>Commandes en cours</h1>
+  <ul class="fixture-rows" id="rows"></ul>
+</main>
+<script>
+(function () {
+  // Choix du gabarit : liste blanche, jamais une classe issue de l'URL telle quelle.
+  var CLASSES = {
+    'page-content': 'page-content',
+    'page-content--wide': 'page-content page-content--wide',
+    'content-grid': 'content-grid'
+  };
+  var choice = new URLSearchParams(location.search).get('gabarit') || 'page-content';
+  document.getElementById('gabarit').className = CLASSES[choice] || CLASSES['page-content'];
+
+  // 40 lignes (libelle + badge de fin de ligne) : plus haut que 1600x900 a toute largeur.
+  var rows = document.getElementById('rows');
+  for (var i = 1; i <= 40; i++) {
+    var li = document.createElement('li');
+    li.className = 'fixture-row';
+    var label = document.createElement('span');
+    label.textContent = 'Commande n°' + (1000 + i);
+    var badge = document.createElement('span');
+    badge.className = 'badge badge-primary';
+    badge.textContent = i % 2 ? 'En cours' : 'Livree';
+    li.appendChild(label);
+    li.appendChild(badge);
+    rows.appendChild(li);
+  }
+}());
+</script>
+<script src="/shared/nav.js"></script>
+</body>
+</html>

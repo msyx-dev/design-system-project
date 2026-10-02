@@ -352,6 +352,7 @@
                 <p class="typo-xs text-muted">Sapin illustre en pied de page (<code class="code-inline">assets/tree-noel.svg</code>), largeur <code class="code-inline">--character-width</code>, modificateur <code class="code-inline">.festive-character--left</code> pour l'ancrer a gauche. Ses lumieres (<code class="code-inline">.tree-lights circle</code>) scintillent au <strong>meme rythme</strong> que la guirlande — meme variable <code class="code-inline">--garland-cycle</code>, les deux respirent ensemble.</p>
             </div>
         </div>
+        <p class="typo-xs text-muted mt-sm">Le sapin est <code class="code-inline">position: fixed</code> : il n'ajoute aucune hauteur au document. En Noel, <code class="code-inline">festive.css</code> pose donc une <strong>reserve de fin de page</strong>, <code class="code-inline">--festive-clearance</code> (hauteur du sapin + <code class="code-inline">--space-lg</code>), que <code class="code-inline">.main</code>, <code class="code-inline">.page-content</code> et <code class="code-inline">.content-grid</code> consomment en <code class="code-inline">padding-bottom</code> : defile au maximum, le dernier contenu reste au-dessus du sapin. Hors Noel, la reserve est nulle. Une largeur sur-mesure se pose sur <code class="code-inline">:root</code> (<code class="code-inline">--character-width</code>) pour que le sapin et la reserve la lisent.</p>
     </div>
 </section>
 
