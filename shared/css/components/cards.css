@@ -119,6 +119,24 @@
     border-color: var(--border-hover);
 }
 
+/* ===== CARD-STATIC — carte conteneur non interactive (#1010) =====
+   Carte qui CONTIENT des contrôles (formulaire, wizard) sans être cliquable :
+   aucun retour de survol (élévation, ombre, bordure, barre dégradée, icône).
+   Au repos, elle est identique à .card.
+   ORDRE : spécificité égale à .card:hover / .card-flat:hover / .card-muted:hover
+   → ce bloc DOIT rester APRÈS eux et AVANT .card-link (une carte-lien reste
+   interactive : .card-link:hover .card, (0,3,0), l'emporte). Ne pas cumuler
+   card-link et card-static. */
+.card-static:hover { transform: none; border-color: var(--border-color); box-shadow: none; }
+.card-static:hover::before { opacity: 0; }
+.card-static:hover .card-icon { transform: none; }
+/* Cumul card-muted : l'atténuation reste au survol (miroir des valeurs de repos de .card-muted) */
+.card-muted.card-static:hover { opacity: var(--opacity-muted); border-color: color-mix(in srgb, var(--border-color) 60%, transparent); }
+
+/* Titre de carte (motif « carte titrée », #1010) : même rendu de h2 à h6.
+   (0,2,0) l'emporte sur .card h3 (0,1,1). */
+.card .card-title { font-family: var(--font-display); font-size: var(--type-20); font-weight: var(--fw-semibold); line-height: var(--lh-snug); color: var(--text); margin-bottom: var(--space-md); }
+
 /* ===== CARD-LINK (a11y wrapper for clickable cards) ===== */
 .card-link {
   display: block;
