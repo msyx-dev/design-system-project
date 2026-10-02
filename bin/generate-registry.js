@@ -6,8 +6,9 @@
  * Usage : node bin/generate-registry.js [--check] [--skip-validate] [--frontier-strict]
  *   --check            Valide le registre sans écrire (mode CI recommandé)
  *   --skip-validate    Saute la validation fantôme (développement uniquement)
- *   --frontier-strict  Active le mode bloquant pour la frontière page↔registre (#511)
- *                      (défaut : warn-only — bascule bloquante après #508 livré)
+ *   --frontier-strict  Diagnostic local opt-in : rend bloquante la frontière page↔registre (#511)
+ *                      (défaut : contrôle informatif/warn-only ; bascule bloquante abandonnée
+ *                      le 2026-10-02, #999 — jamais activé en CI)
  *
  * Scanne tous les .css dans shared/css/**\/*.css, extrait les sélecteurs
  * .classname et produit shared/components-registry.json enrichi.
@@ -1012,7 +1013,8 @@ const reactParityLine = `Parité React : ${reactCounts.ported} ported / ${reactP
 // kind:component dans le registre. Deux directions :
 //   (1) section sans entrée → "section-sans-entree"
 //   (2) entrée sans section → "entree-orpheline"
-// Warn-only par défaut ; bloquant avec --frontier-strict (après #508 livré).
+// Contrôle informatif (warn-only). Bascule bloquante abandonnée le 2026-10-02
+// (rétro du milestone #50, #999) ; --frontier-strict = diagnostic local opt-in.
 // Exemptions : TRANSVERSE_MODULES + REFERENCE_PAGES. Cf. DS-PRINCIPLES §6.1.
 
 const frontierErrors = [];
@@ -1050,7 +1052,7 @@ if (!process.argv.includes('--skip-validate')) {
 const frontierStrict = process.argv.includes('--frontier-strict');
 const frontierLine = frontierErrors.length === 0
   ? 'Frontière page↔registre : OK (0 violation)'
-  : `Frontière page↔registre : ⚠ ${frontierErrors.length} violation(s) (warn-only — bascule bloquante après #508)`;
+  : `Frontière page↔registre : ⚠ ${frontierErrors.length} violation(s) (informatif — --frontier-strict = diagnostic local opt-in)`;
 
 // ─── Validation du champ example (#748) — ligne de rapport ───────────────────
 const exampleStrict = process.argv.includes('--example-strict');
@@ -1109,7 +1111,7 @@ if (process.argv.includes('--check')) {
         console.error(`   [entrée orpheline]     ${e.page} → "${e.name}" sans <section id="${e.name}"> dans la page`);
     }
     console.error('\nCorrection : aligner sections et registre, ou utiliser sectionId (si name diverge de id), ou exempter (module transverse).');
-    console.error('Bascule bloquante : --frontier-strict (activer après #508 livré). Cf. DS-PRINCIPLES §6.1.');
+    console.error('Contrôle informatif (bascule bloquante abandonnée le 2026-10-02, #999) ; --frontier-strict = diagnostic local opt-in. Cf. DS-PRINCIPLES §6.1.');
     if (frontierStrict) {
       console.error('\n❌ Mode --frontier-strict actif : violations bloquantes.');
       process.exit(1);

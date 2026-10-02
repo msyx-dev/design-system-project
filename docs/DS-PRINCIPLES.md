@@ -509,8 +509,11 @@ Sont exemptés de la règle 1↔2 :
 ### Garde-fou
 La réciprocité est vérifiée en CI par `node bin/generate-registry.js --check`
 (voir Section 10). Toute section composant sans entrée, ou toute entrée fantôme,
-est signalée en warn-only (phase 1) et deviendra bloquante via `--frontier-strict`
-après bascule explicite (dépendance #508 — bascule tracée dans ce document). (#511)
+est signalée en **informatif** (warn-only, sans effet sur le code retour). La bascule
+bloquante a été **abandonnée le 2026-10-02** (rétro du milestone #50, #999) : aucun défaut
+réel n'a été attribué à cette règle depuis son introduction, 44 violations sont tolérées.
+`--frontier-strict` reste disponible comme **diagnostic local opt-in** (code retour 1 en cas
+de violation), sans bascule prévue et jamais passé en CI. (#511)
 
 ---
 
@@ -893,7 +896,7 @@ Ces patterns ont été repérés sur les apps consumers et **doivent être prosc
 - Perf budget warn
 - A11y axe-core (`color-contrast` bloquant sur MSYX dark + light, rapport sur les autres thèmes)
 - Lighthouse CI warn
-- Frontière page↔registre (#511) : `generate-registry.js --check` vérifie la réciprocité section↔entrée + l'exemption transverse/référence (warn-only jusqu'à bascule #508, puis bloquant via `--frontier-strict`). Sidebar dead-link couvert séparément par `generate-nav-sections.js --check` (#528).
+- Frontière page↔registre (#511) : `generate-registry.js --check` vérifie la réciprocité section↔entrée + l'exemption transverse/référence (contrôle informatif ; bascule bloquante abandonnée le 2026-10-02, rétro du milestone #50, #999 : aucun défaut réel attribué, 44 violations tolérées ; `--frontier-strict` = diagnostic local opt-in). Sidebar dead-link couvert séparément par `generate-nav-sections.js --check` (#528).
 
 ### Skills associés
 - `/audit-ds-compliance` — audit complet d'un consumer
