@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte statique : retour de survol — fixture #1010</title>
+<!--
+  Fixture de `visual-tests/card-static-hover.spec.ts` (#1010).
+
+  Six cartes DS réelles, chacune avec un `.card-icon`, un `<label for>` et un `<input>` :
+    - 3 TÉMOINS (`.card`, `.card-flat`, `.card-muted`) qui DOIVENT réagir au survol ;
+      s'ils ne bougent pas, la mesure est aveugle et un « statique neutre » ne prouverait rien ;
+    - 3 STATIQUES (mêmes variantes + `.card-static`) dont rien ne doit varier.
+
+  Aucun JavaScript du DS (ni nav.js ni components.js) : rien d'autre que la feuille de style
+  ne doit modifier ces cartes pendant la mesure. Les cartes sont empilées avec un grand
+  espacement vertical, pour que le survol de l'une (translateY) ne recouvre jamais sa voisine.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  .fixture-cards { display: flex; flex-direction: column; gap: var(--space-2xl); max-width: 360px; margin: var(--space-xl); }
+</style>
+</head>
+<body>
+<main class="fixture-cards">
+  <div class="card" id="temoin">
+    <div class="card-icon">&#9889;</div>
+    <label class="input-label" for="in-temoin">Témoin</label>
+    <input class="input" id="in-temoin" type="text" value="valeur">
+  </div>
+  <div class="card card-flat" id="temoin-flat">
+    <div class="card-icon">&#9889;</div>
+    <label class="input-label" for="in-temoin-flat">Témoin flat</label>
+    <input class="input" id="in-temoin-flat" type="text" value="valeur">
+  </div>
+  <div class="card card-muted" id="temoin-muted">
+    <div class="card-icon">&#9889;</div>
+    <label class="input-label" for="in-temoin-muted">Témoin muted</label>
+    <input class="input" id="in-temoin-muted" type="text" value="valeur">
+  </div>
+  <div class="card card-static" id="static">
+    <div class="card-icon">&#9889;</div>
+    <label class="input-label" for="in-static">Statique</label>
+    <input class="input" id="in-static" type="text" value="valeur">
+  </div>
+  <div class="card card-flat card-static" id="static-flat">
+    <div class="card-icon">&#9889;</div>
+    <label class="input-label" for="in-static-flat">Statique flat</label>
+    <input class="input" id="in-static-flat" type="text" value="valeur">
+  </div>
+  <div class="card card-muted card-static" id="static-muted">
+    <div class="card-icon">&#9889;</div>
+    <label class="input-label" for="in-static-muted">Statique muted</label>
+    <input class="input" id="in-static-muted" type="text" value="valeur">
+  </div>
+</main>
+</body>
+</html>

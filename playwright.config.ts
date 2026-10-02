@@ -63,6 +63,7 @@ export default defineConfig({
     "**/button-contrast.spec.ts",
     "**/header-festive-btn.spec.ts",
     "**/festive-clearance.spec.ts",
+    "**/card-static-hover.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
