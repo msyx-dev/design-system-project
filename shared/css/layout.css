@@ -231,9 +231,16 @@
 
 /* @strip:showcase-start */
 /* ===== SHOWCASE — scoped sous .main pour ne pas polluer les consommateurs ===== */
-.main section { padding: var(--space-3xl) var(--space-2xl); border-bottom: 1px solid var(--border-color); }
-.main section[id] { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
-.main section:last-of-type { border-bottom: none; }
+/* Sections de PAGE seulement : enfant direct de .main, ou du conteneur .lazy-loaded que le LazyLoader du hub
+   (site.html) injecte sous .main. Une <section> imbriquée dans une démo n'en est pas une : la carte titrée
+   `<section class="card card-static" aria-labelledby>` héritait sinon du padding et du filet de page (#1010).
+   `:where()` garde la spécificité d'origine (0,1,1) : l'ordre de cascade avec la règle mobile ne change pas. */
+.main > section,
+.main > :where(.lazy-loaded) > section { padding: var(--space-3xl) var(--space-2xl); border-bottom: 1px solid var(--border-color); }
+.main > section[id],
+.main > :where(.lazy-loaded) > section[id] { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
+.main > section:last-of-type,
+.main > :where(.lazy-loaded) > section:last-of-type { border-bottom: none; }
 .main .section-header { margin-bottom: var(--space-2xl); }
 .main .section-header .overline { font-size: 0.75rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-bottom: var(--space-sm); display: block; }
 .main .section-header h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: var(--space-sm); }
@@ -693,7 +700,8 @@ html.theme-transitioning * {
     .site-header .header-burger { display: flex; }
     .main { margin-inline-start: 0; }
     /* @strip:showcase-start */
-    .main section { padding: 3rem 1.5rem; }
+    .main > section,
+    .main > :where(.lazy-loaded) > section { padding: 3rem 1.5rem; }
     .main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: minmax(0, 1fr); }
     /* @strip:showcase-end */
 

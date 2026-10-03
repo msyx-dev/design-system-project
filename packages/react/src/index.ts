@@ -401,6 +401,7 @@ export type {
   CardProps,
   CardIconProps,
   CardIconVariant,
+  CardHeadingLevel,
 } from "./components/Card/Card";
 export {
   CardMedia,
