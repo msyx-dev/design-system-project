@@ -2115,7 +2115,10 @@ function initSegmentedControls() {
 
         function moveIndicator(item) {
             indicator.style.width = item.offsetWidth + 'px';
-            indicator.style.transform = 'translateX(' + item.offsetLeft + 'px)';
+            // #1021 : l'indicateur est deja pose a `left: 3px` (navigation.css) ; item.offsetLeft
+            // est mesure depuis le bord de padding de .segmented et compte donc deja ces 3 px.
+            // On translate de l'ECART, pas de la position absolue (sinon +3 px a droite de l'item).
+            indicator.style.transform = 'translateX(' + (item.offsetLeft - indicator.offsetLeft) + 'px)';
         }
 
         // Convention ARIA canonique : radiogroup (cf. DS-PRINCIPLES.md §3.2, #613)
@@ -2192,6 +2195,18 @@ function initSegmentedControls() {
             requestAnimationFrame(function() {
                 moveIndicator(activeItem);
             });
+        }
+
+        // #1021 : l'indicateur suit l'item actif quand la taille d'un item change (swap de
+        // police font-display:swap, redimensionnement). Mesure unique = indicateur trop court
+        // ou trop long apres le swap, et capture VR non deterministe. L'indicateur n'est pas
+        // observe : aucune boucle d'observation possible.
+        if (typeof ResizeObserver !== 'undefined') {
+            var resync = new ResizeObserver(function() {
+                var current = seg.querySelector('.segmented-item.active') || items[0];
+                if (current) moveIndicator(current);
+            });
+            items.forEach(function(i) { resync.observe(i); });
         }
     });
 }
