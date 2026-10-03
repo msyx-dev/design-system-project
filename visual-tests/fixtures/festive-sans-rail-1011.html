@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decor festif sans rail ni sidebar — fixture #1011</title>
+<!--
+  Fixture de `visual-tests/festive-sans-rail.spec.ts` (#1011).
+
+  Par defaut, un consumer SANS sidebar ni rail DS (cas tirokado) : header injecte par
+  nav.js, `<main class="main main--no-rail">`, decor festif injecte par nav.js
+  (`ensureFestiveDecor()`, hors de <main>). Aucun `.sidebar`, aucun `.rail-sidebar`.
+
+  Le defaut mesure : `.main--no-rail` ne sature `--sidebar-w: 0` que SUR <main>, or le
+  decor est rendu hors de <main> — `.garland--header` et `.ornaments` lisaient donc la
+  valeur de `:root` (260px) et se decalaient de la largeur d'une sidebar absente.
+
+  Variante `?rail=fixed|inline` : ajoute un `<Rail>` DS tel que le rend le package React
+  (`.rail-sidebar`), ancre au bord de l'ecran (`fixed`, `.rail-sidebar--fixed`) ou dans le
+  flux de la page (`inline`, ex. HelpNav de KeepThread) — seul le premier pousse le decor.
+
+  Markup = celui d'un consumer. Pas de components.js : rien d'autre que le header et le
+  decor festif ne doit bouger la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<header class="site-header" id="site-header"></header>
+<main class="main main--no-rail" id="gabarit">
+  <h1>Mes cadeaux</h1>
+  <p>Page d'un consumer sans rail ni sidebar.</p>
+</main>
+<script>
+(function () {
+  // Liste blanche : jamais une classe issue de l'URL telle quelle.
+  var RAILS = { fixed: 'rail-sidebar rail-sidebar--fixed', inline: 'rail-sidebar' };
+  var choice = new URLSearchParams(location.search).get('rail');
+  if (!RAILS[choice]) return;
+
+  var rail = document.createElement('aside');
+  rail.className = RAILS[choice];
+  rail.id = 'fixture-rail';
+  var nav = document.createElement('nav');
+  nav.className = 'rail-nav';
+  nav.setAttribute('aria-label', 'Navigation de la fixture');
+  var item = document.createElement('a');
+  item.className = 'rail-item';
+  item.href = '#';
+  item.textContent = 'Accueil';
+  nav.appendChild(item);
+  rail.appendChild(nav);
+  // Rail non fixe : dans le flux, apres le contenu. Rail fixe : hors flux, la place est sans importance.
+  document.getElementById('gabarit').appendChild(rail);
+}());
+</script>
+<script src="/shared/nav.js"></script>
+</body>
+</html>
