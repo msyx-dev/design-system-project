@@ -377,34 +377,11 @@
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">HTML</span>
-        <div class="code-block">&lt;!-- Carte titrée, région nommée --&gt;
-&lt;section class="card card-static" aria-labelledby="carte-lancement-titre"&gt;
-  &lt;h2 class="card-title" id="carte-lancement-titre"&gt;Lancement&lt;/h2&gt;
-  &lt;div class="input-group"&gt;
-    &lt;label class="input-label" for="nom"&gt;Nom du tirage&lt;/label&gt;
-    &lt;input class="input" id="nom" type="text"&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
-&lt;!-- Carte titrée sans région (cas d'une grille) --&gt;
-&lt;div class="card card-static"&gt;
-  &lt;h3 class="card-title"&gt;Préférences&lt;/h3&gt;
-  &lt;p&gt;Contenu.&lt;/p&gt;
-&lt;/div&gt;</div>
+        <div class="code-block"><span class="cm">&lt;!-- Carte titrée, région nommée --&gt;</span><br><span class="kw">&lt;section</span> <span class="fn">class</span>=<span class="str">"card card-static"</span> <span class="fn">aria-labelledby</span>=<span class="str">"carte-lancement-titre"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;h2</span> <span class="fn">class</span>=<span class="str">"card-title"</span> <span class="fn">id</span>=<span class="str">"carte-lancement-titre"</span><span class="kw">&gt;</span>Lancement<span class="kw">&lt;/h2&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"input-group"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;label</span> <span class="fn">class</span>=<span class="str">"input-label"</span> <span class="fn">for</span>=<span class="str">"nom"</span><span class="kw">&gt;</span>Nom du tirage<span class="kw">&lt;/label&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;input</span> <span class="fn">class</span>=<span class="str">"input"</span> <span class="fn">id</span>=<span class="str">"nom"</span> <span class="fn">type</span>=<span class="str">"text"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;/div&gt;</span><br><span class="kw">&lt;/section&gt;</span><br><br><span class="cm">&lt;!-- Carte titrée sans région (cas d'une grille) --&gt;</span><br><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"card card-static"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;h3</span> <span class="fn">class</span>=<span class="str">"card-title"</span><span class="kw">&gt;</span>Préférences<span class="kw">&lt;/h3&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;p</span><span class="kw">&gt;</span>Contenu.<span class="kw">&lt;/p&gt;</span><br><span class="kw">&lt;/div&gt;</span></div>
     </div>
     <div class="subsection mt-md">
         <span class="demo-label">React</span>
-        <div class="code-block">import { Card } from "@msyx-dev/react";
-
-// Région nommée : &lt;section class="card card-static" aria-labelledby&gt;
-&lt;Card static region heading="Lancement"&gt;
-  …
-&lt;/Card&gt;
-
-// Titre h3, sans région
-&lt;Card static heading="Préférences" headingLevel="h3"&gt;
-  …
-&lt;/Card&gt;</div>
+        <div class="code-block"><span class="kw">import</span> { Card } <span class="kw">from</span> <span class="str">"@msyx-dev/react"</span>;<br><br><span class="cm">// Région nommée : &lt;section class="card card-static" aria-labelledby&gt;</span><br><span class="kw">&lt;Card</span> <span class="fn">static</span> <span class="fn">region</span> <span class="fn">heading</span>=<span class="str">"Lancement"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;…<br><span class="kw">&lt;/Card&gt;</span><br><br><span class="cm">// Titre h3, sans région</span><br><span class="kw">&lt;Card</span> <span class="fn">static</span> <span class="fn">heading</span>=<span class="str">"Préférences"</span> <span class="fn">headingLevel</span>=<span class="str">"h3"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;…<br><span class="kw">&lt;/Card&gt;</span></div>
     </div>
 </section>
 
