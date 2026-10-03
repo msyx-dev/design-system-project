@@ -16,7 +16,7 @@ Rappels condensés (la version complète est dans `docs/DS-PRINCIPLES.md`) :
 - **Anti-FOUC** — script synchrone inline `<head>`, lit `msyx-theme` + `msyx-mode` (jamais de naming divergent)
 - **Anti-double-bind JS** — pattern `dataset.bound` sur tous les event listeners
 - **Pas d'override de classe DS** — customiser via variables CSS, jamais redéfinir
-- **Version bump synchrone** — 10 sources verifiees par `shared/check-versions.sh` (`@ds-version` dans `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `base.css`, `themes.css`, `nav.js` + `const VERSION` de `nav.js` + `version` de `shared/components-registry.json` + `version` de `package.json` racine). `themes.css` est autogenere : son en-tete est derive de `tokens.css` par `node shared/build-themes.js` (relancer apres chaque bump)
+- **Version bump synchrone** — 10 sources verifiees par `shared/check-versions.sh` (`@ds-version` dans `tokens.css`, `utilities.css`, `components.css`, `layout.css`, `base.css`, `themes.css`, `nav.js` + `const VERSION` de `nav.js` + `version` de `shared/components-registry.json` + `version` de `package.json` racine). `themes.css` est autogenere : son en-tete est derive de `tokens.css` par `node shared/build-themes.js`. Le bump est fait par la release (`version-release.sh` → `scripts/release-bump.sh`), jamais par une PR
 - **Contraste des boutons pleins** — fonds = 8 tokens dédiés `--btn-{primary,danger,success,warning}-bg-{start,end}` (hex littéral, 4 couches, jamais dérivés), réglés à la mesure ; texte = `--btn-on-*` (`--btn-on-primary` = alias `--text-on-accent`, blanc en Auchan sombre) ; sonde pixels `visual-tests/button-contrast.spec.ts` **bloquante** (≥ 4.5:1, visé ≥ 4.6, repos + survol, 10 combos) ; jamais d'`opacity` au survol d'un bouton plein ; ne jamais baisser le seuil ni retirer un cas `SOLID` pour passer (§3.3)
 - **Checklist anti-dette** — 9 dimensions à valider par composant (HTML/CSS/JS/A11y/Perf/Doc/Version/Registre/VR)
 - **Jamais de donnée consumer concaténée dans `innerHTML`** — construire les nœuds (`createElement`/`setAttribute`/`textContent`) ; `escapeHTML` ne protège qu'un contexte texte, jamais un attribut (voir `docs/DS-PRINCIPLES.md` §11)
@@ -96,10 +96,12 @@ Le repo distribue **deux artefacts indépendants** :
 | DS CSS | `RELEASES.md` (racine) | SemVer aligné `package.json` racine (`msyx-design-system`) | Push sur `main`, puis redéploiement préprod (voir « Deploy ») |
 | `@msyx-dev/react` | `packages/react/RELEASES.md` | SemVer aligné `packages/react/package.json` (`3.x-alpha` en cours) | Tag `react-v*` → workflow `publish-react.yml` → GitHub Packages |
 
-**Règles d'écriture** :
-- **PR touchant uniquement `shared/css/**`, `shared/*.js`, `index.html`, `pages/**`, `site.html`** → entrée dans `RELEASES.md` racine, bump `package.json` racine.
-- **PR touchant uniquement `packages/react/**`** → entrée dans `packages/react/RELEASES.md`, bump `packages/react/package.json`. **Aucun bump DS racine**.
-- **PR touchant les deux** (cas rare) → 2 entrées (1 dans chaque RELEASES) avec mention croisée.
+**Règles d'écriture** (une PR ne bumpe **aucune** version) :
+- **PR DS** (`shared/css/**`, `shared/*.js`, `index.html`, `pages/**`, `site.html`) → entrée sous `## [Unreleased]` de `CHANGELOG.md`.
+- **PR React** (`packages/react/**`) → entrée sous `## [Unreleased]` de `packages/react/RELEASES.md`. **Sans entrée, elle ne sera pas publiée** : la release ne bumpe React que si cette section n'est pas vide.
+- **PR touchant les deux** (cas rare) → les 2 entrées, avec mention croisée.
+- **Release** : `version-release.sh` → `scripts/release-bump.sh` (`mode=pr`, `vtag=no`) bumpe les 10 sources, régénère `themes.css`, scelle les notes de version (bac `next` → `released[0]`), les compteurs, écrit l'entrée de `RELEASES.md` racine et bumpe la prérelease React si besoin ; le tag `react-v…` est posé par `--finalize`. Le `--title` de la release devient le titre affiché dans le badge des notes de version : l'écrire pour un utilisateur.
+- **Transition** : tant que la tranche 2 de claude-config#543 n'est pas sur `main`, la release reste consolidée à la main (précédent #1019/#1032).
 
 **Anti-pattern** : ne JAMAIS ajouter d'entrée `@msyx-dev/react` (composants React, versions `3.x-alpha`) dans le `RELEASES.md` racine. Inversement : ne JAMAIS ajouter d'entrée DS CSS (tokens, modules CSS, sync.sh) dans `packages/react/RELEASES.md`.
 
@@ -163,16 +165,11 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Pattern `dataset.bound` anti-double-bind sur les event listeners
    - Appel dans le bloc `reinitAll()` pour compatibilite SPA
 4. **Compteur** : mettre a jour le nombre dans `site.html` (hero + hub cards si applicable)
-5. **Version** : bumper `@ds-version`/`version` sur les **10 sources** verifiees par `shared/check-versions.sh` : `shared/css/tokens.css`, `shared/css/utilities.css`, `shared/css/components.css`, `shared/css/layout.css`, `shared/css/base.css`, `shared/css/themes.css` (**autogenere** : ne pas le bumper a la main, relancer `node shared/build-themes.js` qui lit `@ds-version` dans `tokens.css` et echoue si elle est illisible), `shared/nav.js` (le commentaire `@ds-version` **et** `const VERSION`), `shared/components-registry.json` (`version`), `package.json` racine (`version`)
-   - Feature : minor (2.31 → 2.32)
-   - Fix : patch (2.31.0 → 2.31.1)
-   - Gate : `shared/check-versions.sh`
-   - `bash shared/check-versions.sh` doit sortir `rc=0` avant de commiter le bump
-   - **Pre-allocation des versions** : pour les sprints multi-bumps (>2 issues touchant @ds-version), le parent /sprint pre-alloue les versions et les injecte dans le prompt /dev de chaque issue (« Ta version cible : v2.X.Y »). Garantit zero conflit git sur les bumps.
+5. **Version** : la PR ne bumpe **rien** (ni `@ds-version`, ni `package.json`, ni React). Elle écrit son entrée sous `## [Unreleased]` de `CHANGELOG.md` (DS) ou de `packages/react/RELEASES.md` (React). Le bump des **10 sources** de `shared/check-versions.sh` est fait par la release (voir « Convention RELEASES.md par package ») ; `bash shared/check-versions.sh` doit rester `rc=0`
 6. **Docs** :
    - `docs/ARCHITECTURE.md` : ajouter dans la structure + section composants JS si init*
    - **Ne PAS éditer `CLAUDE.md`** pour un composant : la liste des composants vit dans `shared/components-registry.json` (source unique, dérivée par `bin/generate-registry.js`)
-   - `RELEASES.md` : entree Added/Changed
+   - `CHANGELOG.md` `[Unreleased]` : entree Added/Changed (le `RELEASES.md` racine est écrit par la release)
 7. **Qualite** :
    - Anti-FOUC : le composant ne doit pas flasher au chargement (script inline <head>)
    - Accessibilite : aria-labels, role, keyboard navigation si interactif
@@ -182,7 +179,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
    - Déclarer le statut React : `react: "pending"` (défaut auto — laisser vide, le générateur le matérialise) ou `react: "ported"` si un wrapper `@msyx-dev/react` est créé dans la MEME PR (ajouter au mapping `REACT_TO_REGISTRY` dans `bin/generate-registry.js`). Voir politique `docs/DS-PRINCIPLES.md` Section 8.1.
    - **`module[]` : NE PAS saisir à la main** — auto-dérivé par `generate-registry.js` depuis `cssClasses`. Lancer `npm run generate-registry` après toute modif de `cssClasses`. Voir politique `docs/DS-PRINCIPLES.md` Section 8.2.
    - **Modificateur en sélecteur composé** (`.tooltip.tooltip--bottom`, `.chip.chip-icon`) : `generate-registry.js` ne le capte pas — le saisir à la main dans les `cssClasses` de l'entrée curée ; le step CI bloquant `check-components registry lint` le vérifie.
-   - Maintenir la version `"version"` en coherence avec le bump de `@ds-version`
+   - Ne pas toucher `"version"` : la release l'aligne avec `@ds-version`
 
 ## Deploy
 - Le DS est servi par l'image Docker décrite dans « Stack » (build/run autonome, variables, healthcheck et profil d'auth P0 : `README.md`). Rien n'est compilé dans l'image : `COPY . /srv` embarque les fichiers commités
