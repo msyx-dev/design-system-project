@@ -94,6 +94,32 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
   .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: auto; min-height: auto; justify-content: normal; }
 }
 
+/* ===== TABLE CARDS — SAISIE (#1008) =====
+   Modificateur .table-cards--editable (sur <table class="table-cards">) : champs et actions en cellule.
+   - Formulaire de ligne : <form id hidden> vide dans la cellule d'actions ; champs et
+     bouton d'envoi rattachés par form="<id>" (un <form> ne peut pas envelopper un <tr>).
+   - Cibles >= 44px à TOUTES les largeurs : le mode tableau commence à 768px (tablette
+     tactile). Même exception que .data-grid-pagination .page-btn (pas de token). Le sélecteur des
+     boutons doit battre la restauration de TABLE CARDS à 768px (0,4,0) : d'où .table-cards
+     doublé + :not(.btn-icon), (0,5,0), sans dépendre de l'ordre des règles.
+   - Messages d'erreur : contribution intrinsèque neutralisée (width:0 + min-width:100%),
+     sinon l'algorithme de tableau auto recalcule les colonnes à chaque erreur.
+   Ne pas poser de `display` sur `form` : il écraserait l'attribut [hidden] (cf. .input-group[hidden]). */
+.table-cards--editable .input { min-height: 44px; }
+.table-cards.table-cards--editable .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; }
+.table-cards--editable .input-error-msg,
+.table-cards-error { display: block; width: 0; min-width: 100%; overflow-wrap: anywhere; }
+.table-cards-error { margin: 0; font-size: 0.75rem; color: var(--status-error-text); text-align: start; } /* texte hors fond de statut : --status-error-text (DS-PRINCIPLES §3.3, #981) */
+.table-cards .table-cards-actions > .table-cards-error { flex-basis: 100%; } /* cartes : ligne à part, APRÈS les boutons */
+.table-cards--editable .table-cards-add-row { background: color-mix(in srgb, var(--accent) 4%, transparent); border-top: 2px dashed var(--border-hover); }
+
+@media (min-width: 768px) { /* --bp-md, même seuil que TABLE CARDS */
+  .table-cards--editable tbody td,
+  .table-cards--editable tfoot td { vertical-align: top; padding-block: var(--space-sm); } /* (0,1,2) > .table-cards td (0,1,1) */
+  .table-cards--editable .table-cards-add-row { border-top: 0; }
+  .table-cards--editable .table-cards-add-row > td { border-top: 2px dashed var(--border-hover); } /* bordure fusionnée : portée par les td */
+}
+
 /* ===== SERVER DATA-GRID — loading state ===== */
 .data-grid-wrap[aria-busy="true"] {
   opacity: 0.6;
