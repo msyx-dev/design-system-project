@@ -2,6 +2,7 @@ import {
   CSSProperties,
   KeyboardEvent,
   ReactNode,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -51,12 +52,24 @@ export interface SegmentedControlProps {
  * hormis la position mesurée de l'indicateur.
  *
  * **Indicateur glissant** : calque le calcul de `initSegmentedControls`
- * (`shared/components.js`) — `transform: translateX(item.offsetLeft)` +
- * `width: item.offsetWidth` mesurés sur l'item actif via ref, appliqués en
- * style inline de POSITION uniquement (aucune couleur/décoration ajoutée,
- * celles-ci restent portées par `.segmented-indicator` / `.segmented--subtle`
- * dans le CSS DS). Remesuré via `useLayoutEffect` à chaque changement de
- * `value`/`options` pour rester synchrone avec le layout avant paint.
+ * (`shared/components.js`) — `transform: translateX(item.offsetLeft -
+ * indicator.offsetLeft)` + `width: item.offsetWidth` mesurés sur l'item actif
+ * via ref (l'indicateur est déjà posé à `left: 3px`, et `offsetLeft` de l'item
+ * compte déjà ces 3 px de padding de `.segmented`), appliqués en style inline
+ * de POSITION uniquement (aucune couleur/décoration ajoutée, celles-ci restent
+ * portées par `.segmented-indicator` / `.segmented--subtle` dans le CSS DS).
+ * Remesuré via `useLayoutEffect` à chaque changement de `value`/`options` pour
+ * rester synchrone avec le layout avant paint, et par un `ResizeObserver` sur
+ * les items (swap de police `font-display: swap`, redimensionnement — qui
+ * arrivent souvent APRÈS l'hydratation).
+ *
+ * **Avant la première mesure** (rendu serveur, hydratation en cours) :
+ * l'indicateur est rendu SANS attribut `style` (aucune largeur). Le CSS DS
+ * (`navigation.css`, marqueur `.segmented-indicator:not([style*="width"])`)
+ * masque alors l'indicateur et peint l'aplat sur l'item actif, qui reste lisible
+ * (≥ 4,5:1). La toute première mesure s'écrit avec `transition: none` : le
+ * relais de l'aplat vers l'indicateur se fait sans saut ni glissement depuis 0.
+ * Les mesures suivantes glissent comme avant.
  *
  * **Navigation clavier WAI-ARIA radiogroup** : roving tabindex (`0` sur
  * l'option active, `-1` sinon), ←/→ et ↑/↓ déplacent la sélection en
@@ -83,7 +96,13 @@ export function SegmentedControl({
   className,
 }: SegmentedControlProps) {
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const indicatorRef = useRef<HTMLSpanElement>(null);
   const pendingFocusValueRef = useRef<string | null>(null);
+  // #1016 : vrai dès que l'indicateur a reçu une mesure — la toute première se fait sans transition.
+  const measuredOnceRef = useRef(false);
+  // Valeur courante lisible depuis le rappel du ResizeObserver (installé une fois par `options`).
+  const valueRef = useRef(value);
+  valueRef.current = value;
   const [indicatorStyle, setIndicatorStyle] = useState<CSSProperties>({});
 
   const enabledOptions = options.filter((option) => !option.disabled);
@@ -97,13 +116,32 @@ export function SegmentedControl({
     ? null
     : (enabledOptions[0]?.value ?? null);
 
-  useLayoutEffect(() => {
-    const activeEl = itemRefs.current[value];
-    if (!activeEl) return;
-    setIndicatorStyle({
+  // Mesure de l'item actif -> style inline de l'indicateur. Appelée par le useLayoutEffect (changement de
+  // `value`/`options`) et par le ResizeObserver (taille d'un item changée sans changement de props).
+  const measure = () => {
+    const activeEl = itemRefs.current[valueRef.current];
+    const indicatorEl = indicatorRef.current;
+    if (!activeEl || !indicatorEl) return;
+    const first = !measuredOnceRef.current;
+    measuredOnceRef.current = true;
+    const next: CSSProperties = {
       width: activeEl.offsetWidth,
-      transform: `translateX(${activeEl.offsetLeft}px)`,
-    });
+      // `.segmented-indicator` est posé à `left: 3px` et `offsetLeft` de l'item compte déjà ces 3 px :
+      // on translate de l'ÉCART (aligné sur `initSegmentedControls`, #1021), pas de la position absolue.
+      transform: `translateX(${activeEl.offsetLeft - indicatorEl.offsetLeft}px)`,
+      ...(first ? { transition: "none" } : null),
+    };
+    setIndicatorStyle((prev) =>
+      prev.width === next.width &&
+      prev.transform === next.transform &&
+      prev.transition === next.transition
+        ? prev
+        : next,
+    );
+  };
+
+  useLayoutEffect(() => {
+    measure();
 
     const pendingValue = pendingFocusValueRef.current;
     if (pendingValue !== null) {
@@ -112,6 +150,19 @@ export function SegmentedControl({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, options]);
+
+  // #1016 (A4 de #1021) : l'indicateur suit l'item actif quand la taille d'un item change sans que les props
+  // changent (swap de police, redimensionnement). On observe les ITEMS, jamais l'indicateur : aucune boucle
+  // d'observation possible. Garde SSR/jsdom : `ResizeObserver` peut être absent.
+  useEffect(() => {
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => measure());
+    Object.values(itemRefs.current).forEach((el) => {
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
 
   const focusAndSelect = (optionValue: string) => {
     pendingFocusValueRef.current = optionValue;
@@ -170,6 +221,7 @@ export function SegmentedControl({
   return (
     <div className={classes} role="radiogroup" aria-label={label}>
       <span
+        ref={indicatorRef}
         className="segmented-indicator"
         style={indicatorStyle}
         aria-hidden="true"

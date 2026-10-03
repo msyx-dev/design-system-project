@@ -2114,11 +2114,21 @@ function initSegmentedControls() {
         if (!indicator || !items.length) return;
 
         function moveIndicator(item) {
+            // #1016 : la 1re mesure (aucune largeur inline encore) se fait SANS transition. Avant elle,
+            // l'item actif porte l'aplat de l'indicateur (navigation.css, marqueur `:not([style*="width"])`) ;
+            // une transition ferait grandir l'indicateur depuis 0 en 0,3 s, a la place d'un passage de
+            // relais sans saut. Les mesures suivantes (clic, ResizeObserver #1021) glissent comme avant.
+            var first = !indicator.style.width;
+            if (first) indicator.style.transition = 'none';
             indicator.style.width = item.offsetWidth + 'px';
             // #1021 : l'indicateur est deja pose a `left: 3px` (navigation.css) ; item.offsetLeft
             // est mesure depuis le bord de padding de .segmented et compte donc deja ces 3 px.
             // On translate de l'ECART, pas de la position absolue (sinon +3 px a droite de l'item).
             indicator.style.transform = 'translateX(' + (item.offsetLeft - indicator.offsetLeft) + 'px)';
+            if (first) {
+                void indicator.offsetWidth; // valide le style sans transition avant de la restaurer
+                indicator.style.transition = '';
+            }
         }
 
         // Convention ARIA canonique : radiogroup (cf. DS-PRINCIPLES.md §3.2, #613)

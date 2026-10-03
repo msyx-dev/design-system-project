@@ -757,6 +757,9 @@
 
 /* ===== SEGMENTED CONTROL ===== */
 .segmented {
+    /* #1016 : ombre de l'indicateur, partagee avec l'item actif tant que l'indicateur n'est pas
+       mesure (voir « avant la 1re mesure » plus bas) -- une seule valeur, deux consommateurs. */
+    --segmented-indicator-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
     display: inline-flex;
     position: relative;
     background: var(--surface-light);
@@ -800,7 +803,7 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
     z-index: 0;
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
+    box-shadow: var(--segmented-indicator-shadow);
 }
 .segmented--subtle .segmented-indicator {
     background: color-mix(in srgb, var(--accent) 18%, transparent);
@@ -843,6 +846,25 @@
 }
 .segmented--subtle:not(:has(> .segmented-indicator)) > .segmented-item.active {
     background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+/* #1016 -- Avant la 1re mesure (rendu serveur, JS absent, hydratation en cours), l'indicateur n'a pas
+   de largeur INLINE : sans cette regle l'item actif (--text-on-accent) se lisait sur la piste
+   (--surface-light), 1,13 a 2,21:1 dans 8 combos sur 10 (mesure Chromium). L'item actif porte alors
+   l'aplat ET l'ombre de l'indicateur, et l'indicateur vide est masque. Le marqueur est la largeur
+   inline, ecrite par initSegmentedControls ET par <SegmentedControl> dans toutes leurs versions :
+   aucun contrat JS nouveau, aucun attribut data-*. `visibility` ne figure pas dans la transition
+   (transform, width) : le passage de l'aplat a l'indicateur se fait d'un coup, sans animation.
+   Meme specificite (0,5,0) pour les deux variantes : la subtile gagne par l'ordre. */
+.segmented-indicator:not([style*="width"]) {
+    visibility: hidden;
+}
+.segmented:has(> .segmented-indicator:not([style*="width"])) > .segmented-item.active {
+    background: var(--accent-surface);
+    box-shadow: var(--segmented-indicator-shadow);
+}
+.segmented--subtle:has(> .segmented-indicator:not([style*="width"])) > .segmented-item.active {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    box-shadow: none;
 }
 .segmented-item svg {
     flex-shrink: 0;
