@@ -571,7 +571,7 @@ Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (sk
 
 ## Tableau en cartes — `.table-cards` (#1007)
 
-Un tableau qui se replie en cartes sur mobile : sous 768 px (`--bp-md`) chaque ligne devient une carte et chaque cellule affiche son libellé au-dessus de sa valeur ; au-delà, c'est le tableau classique, identique à un `.table-wrap > table` nu. CSS seul, aucun JS, opt-in (les tableaux sans `.table-cards` ne changent pas).
+Un tableau qui se replie en cartes sur mobile : sous 768 px (`bp-md`) chaque ligne devient une carte et chaque cellule affiche son libellé au-dessus de sa valeur ; au-delà, c'est le tableau classique, identique à un `.table-wrap > table` nu. CSS seul, aucun JS, opt-in (les tableaux sans `.table-cards` ne changent pas).
 
 Markup vanilla minimal (module `tables.css`, importé par `components.css` ; absent de `components-core.css`) :
 

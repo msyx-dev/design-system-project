@@ -317,7 +317,7 @@
         ".table-cards-actions"
       ],
       "jsInit": null,
-      "notes": "Repli en cartes sous 768px (--bp-md), tableau au-delà ; CSS seul. Libellé = <span class=\"table-cards-label\" aria-hidden=\"true\"> (jamais ::before/data-label : double annonce). Rôles ARIA explicites. Tri/filtre/pagination : utiliser data-grid (qui défile, inchangé). #1007",
+      "notes": "Repli en cartes sous 768px (bp-md), tableau au-delà ; CSS seul. Libellé = <span class=\"table-cards-label\" aria-hidden=\"true\"> (jamais ::before/data-label : double annonce). Rôles ARIA explicites. Tri/filtre/pagination : utiliser data-grid (qui défile, inchangé). #1007",
       "example": "<div class=\"table-wrap\">\n  <table class=\"table-cards\" role=\"table\" aria-label=\"Participants\">\n    <thead role=\"rowgroup\"><tr role=\"row\"><th scope=\"col\" role=\"columnheader\">Nom</th><th scope=\"col\" role=\"columnheader\">Actions</th></tr></thead>\n    <tbody role=\"rowgroup\"><tr role=\"row\">\n      <td role=\"cell\"><span class=\"table-cards-label\" aria-hidden=\"true\">Nom</span>Alice Martin</td>\n      <td role=\"cell\" class=\"table-cards-actions\"><button type=\"button\" class=\"btn-secondary btn-sm\">Copier le lien</button></td>\n    </tr></tbody>\n  </table>\n</div>",
       "react": "ported",
       "module": [
@@ -3664,7 +3664,7 @@
       ],
       "jsInit": null,
       "react": "n-a",
-      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (--bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795). Variable --detail-grid-offset (0px par défaut) sur .detail-grid, à poser à var(--page-header-sticky-h) quand la page combine un .section-header--sticky, sinon l'aside passe sous l'en-tête (#797). Non portable — layout, s'applique en className (#870)."
+      "description": "Primitif de layout 2 colonnes contenu + aside pour pages de détail (ex. ticketing, #795). Bascule 1→2 colonnes à min-width:1024px (bp-lg). Aside : align-self:start + sticky (top/max-height/overflow-y) — nécessite body{overflow-x:clip} (#795). Variable --detail-grid-offset (0px par défaut) sur .detail-grid, à poser à var(--page-header-sticky-h) quand la page combine un .section-header--sticky, sinon l'aside passe sous l'en-tête (#797). Non portable — layout, s'applique en className (#870)."
     },
     {
       "name": "hidden-mobile",

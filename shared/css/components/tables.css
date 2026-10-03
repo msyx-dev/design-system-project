@@ -46,7 +46,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 /* ===== TABLE CARDS (#1007) =====
    Tableau qui se replie en cartes : une ligne = une carte sous 768px, tableau au-delà.
    Mobile-first : les cartes sont le DÉFAUT, le tableau est restauré à (min-width: 768px)
-   = --bp-md (DS-PRINCIPLES §4). Une media query ne lit pas de variable CSS : valeur
+   = bp-md (DS-PRINCIPLES §4). Une media query ne lit pas de variable CSS : valeur
    documentée ici, pas de token (précédent : `.detail-grid`, layout.css).
    Primitive sur le tableau simple (.table-wrap > table.table-cards), PAS un modificateur
    de .data-grid : en cartes le <thead> est masqué, le tri et les filtres de .data-grid
@@ -80,7 +80,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
    par la restauration ci-dessous. Contrat : <button> ou lien .btn-* (inline-flex centré). */
 .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; justify-content: center; }
 
-@media (min-width: 768px) { /* --bp-md (DS-PRINCIPLES §4) */
+@media (min-width: 768px) { /* bp-md (DS-PRINCIPLES §4) */
   .table-cards { display: table; }
   .table-cards caption { display: table-caption; }
   .table-cards thead { display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
@@ -115,7 +115,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .table-cards .table-cards-actions > .table-cards-error { flex-basis: 100%; } /* cartes : ligne à part, APRÈS les boutons */
 .table-cards--editable .table-cards-add-row { background: color-mix(in srgb, var(--accent) 4%, transparent); border-top: 2px dashed var(--border-hover); }
 
-@media (min-width: 768px) { /* --bp-md, même seuil que TABLE CARDS */
+@media (min-width: 768px) { /* bp-md, même seuil que TABLE CARDS */
   .table-cards--editable tbody td,
   .table-cards--editable tfoot td { vertical-align: top; padding-block: var(--space-sm); } /* (0,1,2) > .table-cards td (0,1,1) */
   .table-cards--editable .table-cards-add-row { border-top: 0; }
@@ -147,7 +147,8 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 }
 .comparison-table th,
 .comparison-table td {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.6rem; /* mobile d'abord (#1022) */
+    font-size: 0.82rem;
     text-align: center;
     border-bottom: 1px solid var(--border-color);
 }
@@ -181,11 +182,13 @@ tbody tr:last-child .comparison-recommended {
     color: var(--danger);
     opacity: 0.6;
 }
-@media (max-width: 640px) {
+@media (min-width: 640.02px) { /* seuil composant : 640px, complément exact de l'ancien seuil 640px (#1022) */
     .comparison-table th,
-    .comparison-table td {
-        padding: 0.5rem 0.6rem;
-        font-size: 0.82rem;
-    }
+    .comparison-table td { padding: 0.75rem 1rem; }
+    /* ATTENTION : tailles desktop recopiées de `th` (0.72rem) et `td` (0.88rem), tables.css:7-8.
+       Sans elles, le 0.82rem mobile de la base s'appliquerait à toutes les largeurs.
+       Si ces règles globales changent, mettre à jour ces deux lignes (arbitrage A6, #1022). */
+    .comparison-table th { font-size: 0.72rem; }
+    .comparison-table td { font-size: 0.88rem; }
 }
 

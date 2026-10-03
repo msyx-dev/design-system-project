@@ -23,9 +23,14 @@
   (b) `#avec-pictogramme` — le header standard du DS (markup de `buildHeader()`,
       nav.js) : pictogramme `.header-logo-img` + wordmark. Sous 640 px le wordmark
       est masque, le pictogramme porte la marque.
-  (c) `#autonome` — un `.brand-wordmark` HORS de tout `.header-logo` (demos de
-      `pages/navigation.html`, exemple du registre). Comportement actuel : masque
-      sous 640 px. Pose ici pour verrouiller qu'il ne change pas (VR : 0 diff).
+  (c) `#autonome` — un `.brand-wordmark` HORS de tout `.header-logo` (exemple du
+      registre, composition `<Logo href/>` + `<Wordmark/>` de `@msyx-dev/react`).
+      Comportement actuel : masque sous 640 px. Pose ici pour verrouiller qu'il ne
+      change pas. Les demos de `pages/navigation.html` n'en sont plus (#1022 : elles
+      portent `header-logo`, comme chez les consommateurs).
+  (d) `#picto-hors-site-header` — `.header-logo` AVEC `.header-logo-img` mais HORS de
+      `.site-header` (#1022) : seule la regle de brand.css decide, sans le renfort de
+      layout.css. C'est le cas qui porte la frontiere 640/641 de brand.css.
 
   `.site-header` est `position: fixed` : la fixture le neutralise (fixture seule,
   aucune regle DS n'est redefinie) pour empiler (a) et (b) dans le flux.
@@ -75,6 +80,10 @@
 
 <div class="fixture-autonome" id="hors-site-header">
   <a href="#" class="header-logo brand-wordmark" aria-label="tirokado — Accueil">tirokado</a>
+</div>
+
+<div class="fixture-autonome" id="picto-hors-site-header">
+  <a href="#" class="header-logo" aria-label="design-system — Accueil"><img src="/assets/logo-msyx.svg" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img"><span class="brand-wordmark">design-system</span></a>
 </div>
 
 <div class="fixture-autonome" id="autonome">

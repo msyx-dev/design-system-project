@@ -7,7 +7,7 @@
     position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 150;
     background: var(--sidebar-bg); backdrop-filter: blur(24px) saturate(1.5);
     border-bottom: 1px solid var(--border-color);
-    display: flex; align-items: center; padding: 0 var(--space-lg); gap: var(--space-md);
+    display: flex; align-items: center; padding: 0 var(--space-md); gap: var(--space-sm); /* mobile d'abord, enrichi au-delà de 640px (#711, #1022) */
 }
 .site-header .header-logo {
     text-decoration: none;
@@ -188,7 +188,7 @@
    Cas d'usage : pages de détail (ex. ticketing). Distinct de .split-pane
    (poignée JS redimensionnable, ne s'empile jamais), .sidebar (rail de
    navigation position:fixed) et .content-grid (conteneur large SANS
-   display:grid). Mobile-first : 1 colonne < 1024px (--bp-lg), 2 colonnes
+   display:grid). Mobile-first : 1 colonne < 1024px (bp-lg), 2 colonnes
    >= 1024px — cf. docs/DS-PRINCIPLES.md §4.
    Usage :
    <div class="detail-grid">
@@ -212,7 +212,7 @@
 .detail-grid-main { min-width: 0; }
 .detail-grid-aside { min-width: 0; }
 
-@media (min-width: 1024px) { /* --bp-lg (docs/DS-PRINCIPLES.md §4) */
+@media (min-width: 1024px) { /* bp-lg (docs/DS-PRINCIPLES.md §4) */
     .detail-grid {
         grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
     }
@@ -667,9 +667,14 @@ html.theme-transitioning * {
    et le sélecteur de thème (opt-in), pour garder logo + burger + mode + cloche +
    feedback + avatar. Le wordmark n'est masqué que s'il est accompagné d'un
    pictogramme `.header-logo-img` (#1009) : sans pictogramme, il est la seule marque.
-   Interim : refactor mobile-first complet du header suivi dans #711. */
-@media (max-width: 640px) {
-    .site-header { padding: 0 var(--space-md); gap: var(--space-sm); }
+   Mobile-first (#1022) : le `padding` et le `gap` compacts sont la BASE de `.site-header` ;
+   l'enrichissement vit dans le `min-width` (complément exact : 640 + 0.02 = 640.02px,
+   DS-PRINCIPLES §4). Seuls les 3 masquages restent en `max-width` : leur `display`
+   natif au retour ne s'écrit pas sans recopier celui d'un autre composant. */
+@media (min-width: 640.02px) { /* seuil composant : 640px, compaction du header #711 */
+    .site-header { padding: 0 var(--space-lg); gap: var(--space-md); }
+}
+@media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
     .site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: none; }
     .site-header .version-badge { display: none; }
     .site-header .header-controls .theme-switcher { display: none; }
