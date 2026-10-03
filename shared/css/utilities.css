@@ -211,7 +211,7 @@
    sémantiquement un concept max-width. */
 
 /* Masqué < 768px ; ≥ 768px l'élément retrouve son display natif (flex, grid…) */
-@media (max-width: 767.98px) {
+@media (max-width: 767.98px) { /* exception §4 : masquage sur une plage (.hidden-mobile), display natif non recopiable */
     .hidden-mobile { display: none !important; }
 }
 

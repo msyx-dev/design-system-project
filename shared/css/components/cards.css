@@ -2,7 +2,7 @@
 /* cards.css — extracted from components.css v2.35.0 */
 
 /* ===== HERO ===== */
-.hero { min-height: 70vh; display: flex; align-items: center; position: relative; overflow: hidden; padding: var(--space-3xl) var(--space-2xl); }
+.hero { min-height: auto; display: flex; align-items: center; position: relative; overflow: hidden; padding: 5rem 1.5rem 3rem; }
 .hero-bg { position: absolute; inset: 0; overflow: hidden; }
 .hero-bg .orb { --orb-blur: 80px; --orb-opacity: 1; }
 .hero-bg .orb-1 { width: 500px; height: 500px; top: -20%; right: -5%; background: color-mix(in srgb, var(--accent) 7%, transparent); animation: orbFloat 20s ease-in-out infinite; }
@@ -12,9 +12,13 @@
 .hero-inner { position: relative; z-index: 1; max-width: 700px; }
 .hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.2rem; letter-spacing: -0.03em; }
 .hero-subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: var(--space-xl); line-height: 1.8; max-width: 550px; }
-.hero-stats { display: flex; gap: var(--space-2xl); margin-bottom: var(--space-xl); }
+.hero-stats { display: flex; gap: 1.5rem; margin-bottom: var(--space-xl); }
 .hero-stat .number { font-family: var(--font-display); font-size: 2rem; font-weight: 700; background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .hero-stat .label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+@media (min-width: 768.02px) { /* bp-md */
+    .hero { min-height: 70vh; padding: var(--space-3xl) var(--space-2xl); }
+    .hero-stats { gap: var(--space-2xl); }
+}
 
 /* ===== CARDS ===== */
 .card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); will-change: transform; transition: transform 0.4s var(--ease-standard), border-color 0.4s var(--ease-standard), box-shadow 0.4s var(--ease-standard); position: relative; overflow: hidden; container-type: inline-size; }
@@ -37,7 +41,7 @@
 .card-horizontal .card-icon { margin-bottom: 0; flex-shrink: 0; }
 
 /* ===== HUB ===== */
-.hub-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; }
+.hub-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: 1200px; }
 .hub-card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); will-change: transform; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), border-color 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 0.8rem; }
 .hub-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-1); opacity: 0; transition: opacity 0.4s; }
 .hub-card:hover { transform: translateY(-6px); border-color: var(--border-hover); box-shadow: var(--shadow-lg); }
@@ -47,6 +51,12 @@
 .hub-card h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; }
 .hub-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
 .hub-card-count { font-size: 0.72rem; color: var(--accent-light); font-weight: 600; margin-top: auto; }
+@media (min-width: 768.02px) { /* bp-md */
+    .hub-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024.02px) { /* bp-lg */
+    .hub-grid { grid-template-columns: repeat(4, 1fr); }
+}
 
 /* ===== LAZY SECTIONS ===== */
 .lazy-section {

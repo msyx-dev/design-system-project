@@ -71,6 +71,7 @@ export default defineConfig({
     "**/segmented-indicator-sync.spec.ts",
     "**/segmented-prehydration-contrast.spec.ts",
     "**/segmented-touch-target.spec.ts",
+    "**/mobile-first-1023.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

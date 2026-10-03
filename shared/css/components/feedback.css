@@ -67,15 +67,15 @@
 .skeleton-cell { flex: 1; height: 14px; background: var(--skeleton-base); border-radius: 3px; animation: skeleton-shimmer 1.6s infinite linear; }
 .skeleton-cell--sm { max-width: 60px; }
 .skeleton-cell--md { max-width: 120px; }
-.skeleton-dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm); }
+.skeleton-dashboard { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-sm); }
 .skeleton-kpi { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-sm); display: flex; flex-direction: column; gap: 0.4rem; }
 .skeleton-profile { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-sm); }
 .skeleton-profile-meta { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
 .skeleton-form-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: var(--space-sm); }
 .skeleton-label { height: 10px; width: 80px; background: var(--skeleton-base); border-radius: 3px; animation: skeleton-shimmer 1.6s infinite linear; }
 .skeleton-field { height: 36px; background: var(--skeleton-base); border-radius: var(--radius-sm); animation: skeleton-shimmer 1.6s infinite linear; }
-@media (max-width: 600px) {
-    .skeleton-dashboard { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 600.02px) { /* seuil composant : 600px */
+    .skeleton-dashboard { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ===== FAB (Floating Action Button) ===== */
