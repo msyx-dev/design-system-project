@@ -74,7 +74,7 @@ shared/
       prose.css         #   PROSE — conteneur .prose scopé (:where()) pour HTML rendu depuis markdown (titres, listes, blockquote, code, hr ; tables/liens hérités DS) — CSS-only, 0 token — (#439)
       templates.css     #   TEMPLATES (kanban, sprint, roadmap, backlog)
       media.css         #   CAROUSEL, LIGHTBOX, VIDEO EMBED, BEFORE/AFTER SLIDER
-      _responsive.css   #   @media composants
+      _responsive.css   #   stub vide depuis #1023 (en-tête seul) : chaque règle responsive est co-localisée dans son module, mobile-first (DS-PRINCIPLES §4) ; fichier conservé car importé par components.css et copié par sync.sh
       tracker.css       #   PROGRESS TRACKER, DECISION TREE, WIZARD MULTI-STEP
       quiz.css          #   QUIZ / POLL
       _a11y.css         #   ACCESSIBILITY (focus-visible global, theme-transition, prefers-reduced-motion, disabled global v2.40.2)

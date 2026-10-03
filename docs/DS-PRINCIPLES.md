@@ -394,6 +394,15 @@ Un seuil qui n'est pas dans l'échelle (480 / 768 / 1024 / 1280 — par exemple 
 
 Tout autre `max-width` (padding, taille de police, gabarit, grille) est un défaut : on réécrit en mobile-first. Précédent de l'exception : `.hidden-mobile` (`utilities.css`).
 
+**`@container (max-width)` est permis, hors de l'exception et hors garde** : sans conteneur ancêtre, la requête ne s'applique pas et le rendu complet reste le défaut. Une réécriture en `min-width` inverserait ce défaut : toute carte hors conteneur passerait en rendu compact, chez tous les consommateurs. Le DS en compte 5 (`layout.css` : `card`, `demo-grid`, `stats-grid`, `kpi-grid` ; `cards.css`). Le doublon apparent `layout.css` / `cards.css` n'en est pas un : le premier interroge le conteneur nommé `card`, le second le conteneur le plus proche.
+
+### Garde-fou
+- `node bin/check-mobile-first.js` est **bloquant** en CI (job `lint`, sans `continue-on-error`). Il parcourt `shared/css/**/*.css` et `shared/styles.css`, et refuse tout `@media` à borne haute de largeur (`max-width`, ou la syntaxe de plage `width < N`, `width <= N`, `N > width`) dont la ligne du `{` ne porte pas la chaîne exacte `exception §4 :` suivie d'une raison. Il sort en liste `fichier:ligne`, exit 1.
+- **Déclarer une exception** = poser `/* exception §4 : <raison> */` sur la ligne qui ouvre le bloc (celle du `{` quand le prélude est coupé sur plusieurs lignes). Un marqueur sans raison, sur la ligne d'avant ou sur la première ligne d'un prélude coupé est refusé.
+- Le garde est en node et non en `grep` : il retire les commentaires en gardant les numéros de ligne, donc ni faux positif (un commentaire multi-lignes qui cite `(max-width: 768px)`), ni faux négatif (un prélude coupé sur deux lignes). Il échoue aussi si un chemin est introuvable, si la portée est vide ou si un commentaire n'est pas fermé (`fail-closed`).
+- Hors portée : `@container`, la propriété `max-width: …;`, et les bornes basses (`min-width`, `width >= N`). Tests : `npm run test:mobile-first` (`tests/regression/check-mobile-first.test.js`, dont la mutation « un `max-width` sans marqueur ajouté à `lists.css` » sur une copie de `shared/css`).
+- **Ne jamais**, pour le faire passer : poser le marqueur sur un enrichissement (padding, taille, grille) au lieu de le réécrire en mobile-first, ou retirer un fichier de la portée.
+
 ### Anti-patterns concrets
 
 ❌ **Don't** :

@@ -89,6 +89,14 @@ jobs:
         run: |
           chmod +x tests/test-check-innerhtml.sh
           ./tests/test-check-innerhtml.sh
+      # Mobile-first (#1023) : aucun @media a borne haute de largeur (max-width, plage
+      # `width < N`) sans le marqueur `exception §4 : <raison>` sur la ligne du `{`.
+      # BLOQUANT des la 1re version : les 6 exceptions existantes sont deja marquees.
+      # Les @container (max-width) sont hors garde (DS-PRINCIPLES §4).
+      - name: Check mobile-first — aucun @media max-width sans « exception §4 » (#1023)
+        run: node bin/check-mobile-first.js
+      - name: Run mobile-first gate tests (#1023)
+        run: npm run test:mobile-first
       # Contrat de l'echelle categorielle (#800) : separabilite + lisibilite
       # de --cat-1..8 sur les 6 combos theme/mode. BLOQUANT des la 1re version :
       # le gate nait avec sa palette, il n'y a aucune dette preexistante a resorber.
