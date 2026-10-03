@@ -1,5 +1,18 @@
 # Releases
 
+## 2.145.1 — 2026-10-03 — Panneau de notifications du header dans la fenêtre (#1028)
+
+> Correctif demandé par tirokado (tirokado#75). Aucun changement de `@msyx-dev/react` : `NotificationBell` consomme les classes du DS, la resynchronisation du CSS suffit.
+
+### Fixed
+- **Panneau de notifications du header hors fenêtre sur mobile (#1028)** — dans `.site-header`, ancré sur la fenêtre jusqu'à 640 px (marges `--space-md`, sous le header), sous la cloche au-delà. Avant : bord gauche à −74 px à 375 px dès qu'un contrôle se trouvait à droite de la cloche.
+
+### Changed
+- **CI `visual`** : l'artefact des captures est uploadé même quand l'étape dépasse son temps (`timeout-minutes: 47` d'étape, upload sur `failure() || cancelled()`).
+
+### Release
+`@ds-version` 2.145.0 → 2.145.1 (patch), `check-versions.sh` rc=0.
+
 ## 2.145.0 — 2026-10-03 — Fiabilisation consumers ⑤ : SegmentedControl en liens, vitrine, VR déterministe, mobile-first (#1016 #1020 #1021 #1022 #1023)
 
 > Milestone #52. #1016 vient de tirokado#105 (filtre par état d'une page serveur). Publiée avec **`@msyx-dev/react` 3.0.0-alpha.63** (mention croisée : le mode `as="link"` de `SegmentedControl` est décrit dans `packages/react/RELEASES.md`). Tout défaut trouvé pendant le sprint a été corrigé dans le sprint et tracé dans un seul ticket, #1023.

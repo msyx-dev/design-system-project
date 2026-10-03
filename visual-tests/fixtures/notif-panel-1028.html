@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panneau de notifications du header — fixture #1028</title>
+<!--
+  Fixture de `visual-tests/notif-panel-viewport-1028.spec.ts` (#1028).
+
+  Defaut : le panneau `.header-notif-panel` etait ancre sur le bord droit de la zone de la cloche
+  (`.header-user-zone`, `position: relative`), pas sur celui de la fenetre. Des qu'un controle se
+  trouve A DROITE de la cloche (bascule de mode, bouton flocon, retour, avatar), le bord droit de
+  la zone recule et le panneau — large de presque toute la fenetre sous 480 px — debordait a
+  gauche d'autant (bord gauche a -74 px a 375 px chez tirokado).
+
+  Trois topologies de header, choisies par `?topologie=` (liste blanche, jamais une valeur d'URL
+  telle quelle) :
+
+  (vanilla)               header injecte par `nav.js` (`buildHeader`) : UNE `.header-user-zone`
+                          qui regroupe flocon + cloche + retour + avatar. Cloche + panneau + avatar
+                          y sont freres : le panneau s'ancre sur la zone ENTIERE.
+  (react)                 markup rendu par `<SiteHeader>` de `@msyx-dev/react` : `<NotificationBell>`
+                          rend SA PROPRE `.header-user-zone` (cloche + panneau seuls), puis une
+                          SECONDE `.header-user-zone` porte flocon + retour + avatar. Bascule de
+                          mode avant la cloche. C'est la topologie qui deborde.
+  (react-mode-a-droite)   comme (react), mais la bascule de mode passe APRES la cloche : tout ce
+                          qui peut se trouver a droite de la cloche s'y trouve (pire cas).
+
+  Le markup (react*) est statique : il reprend les classes de `NotificationBell`, `ThemeToggle`,
+  `UserMenu` et `FestiveSnowToggle`. Le seul script de la fixture ouvre/ferme le panneau au clic
+  sur la cloche (l'etat `open` de `NotificationBell`) ; `nav.js` n'est PAS charge dans ces cas,
+  il reecrirait le header. En (vanilla), `nav.js` et `components.js` font le travail.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<header class="site-header" id="site-header"></header>
+
+<main class="page-content" style="padding-top: calc(var(--header-h) + var(--space-lg));">
+  <h1>Commandes en cours</h1>
+  <p>Contenu de page : le panneau de notifications s'ouvre par-dessus.</p>
+</main>
+
+<script>
+(function () {
+  var TOPOLOGIES = ['vanilla', 'react', 'react-mode-a-droite'];
+  var choice = new URLSearchParams(location.search).get('topologie') || 'vanilla';
+  if (TOPOLOGIES.indexOf(choice) === -1) choice = 'vanilla';
+  var header = document.getElementById('site-header');
+
+  if (choice === 'vanilla') {
+    // Config consommateur lue par nav.js : avatar (mode legacy, sans fetch) + 3 notifications.
+    window.MSYX_HEADER = {
+      auth: true,
+      user: { name: 'Mike Test', initials: 'MT' },
+      notifications: {
+        count: 3,
+        items: [
+          { icon: 'i', title: 'Nouveau composant disponible', desc: 'Header standard', time: '2 min', unread: true },
+          { icon: 'i', title: 'Deploy reussi', desc: 'design-system.miklaw.fr', time: '15 min', unread: true },
+          { icon: 'i', title: 'Revue terminee', desc: 'PR #1028', time: '1 h' }
+        ]
+      }
+    };
+    // Script parse-bloquant : nav.js enregistre son DOMContentLoaded avant l'evenement.
+    document.write('<script src="/shared/nav.js"><\/script><script src="/shared/components.js"><\/script>');
+    return;
+  }
+
+  var sprite = '/shared/icons/sprite.svg#';
+  function icon(name) {
+    return '<svg class="icon" aria-hidden="true"><use href="' + sprite + 'i-' + name + '"/></svg>';
+  }
+  var modeToggle =
+    '<div class="header-controls"><button type="button" class="mode-switch is-dark" role="switch" aria-checked="true" aria-label="Basculer mode clair/sombre">' +
+    '<span class="mode-switch-track"><span class="mode-switch-thumb"></span></span></button></div>';
+  var bellZone =
+    '<div class="header-user-zone" id="zone-cloche">' +
+      '<button type="button" class="header-notification" aria-label="Notifications" aria-haspopup="dialog" aria-expanded="false" aria-controls="panneau-react">' +
+        icon('bell') + '<span class="header-notification-badge" aria-hidden="true">3</span></button>' +
+      '<div id="panneau-react" class="header-notif-panel" role="dialog" aria-label="Centre de notifications">' +
+        '<div class="header-notif-panel-header"><span>Notifications</span><button type="button" class="header-notif-mark-read">Tout lire</button></div>' +
+        '<div class="header-notif-list">' +
+          '<div class="header-notif-item unread"><span class="header-notif-icon">i</span><div class="header-notif-body"><div class="header-notif-title">Nouveau composant disponible</div><div class="header-notif-desc">Header standard</div></div><span class="header-notif-time">2 min</span></div>' +
+          '<div class="header-notif-item unread"><span class="header-notif-icon">i</span><div class="header-notif-body"><div class="header-notif-title">Deploy reussi</div><div class="header-notif-desc">design-system.miklaw.fr</div></div><span class="header-notif-time">15 min</span></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  var rightZone =
+    '<div class="header-user-zone" id="zone-droite">' +
+      '<button type="button" class="header-notification" aria-pressed="true" aria-label="Arreter la neige">' + icon('snowflake') + '</button>' +
+      '<button type="button" class="header-notification" aria-haspopup="dialog" aria-label="Donner un retour">' + icon('message-circle') + '</button>' +
+      '<div class="user-menu"><button type="button" class="user-menu-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="Menu utilisateur">' +
+        '<span class="user-menu-avatar">MT</span></button></div>' +
+    '</div>';
+
+  var brand = '<a href="#" class="header-logo brand-wordmark" aria-label="tirokado — Accueil">tirokado</a><span class="header-spacer"></span>';
+  // Fixture seule : le markup est une constante ci-dessus, aucune donnee externe.
+  header.innerHTML = brand + (choice === 'react' ? modeToggle + bellZone : bellZone + modeToggle) + rightZone;
+
+  // Etat `open` de <NotificationBell> : clic cloche = bascule, rien d'autre.
+  var bell = header.querySelector('#zone-cloche .header-notification');
+  var panel = header.querySelector('#panneau-react');
+  bell.addEventListener('click', function () {
+    var open = !panel.classList.contains('open');
+    panel.classList.toggle('open', open);
+    bell.classList.toggle('active', open);
+    bell.setAttribute('aria-expanded', String(open));
+  });
+}());
+</script>
+</body>
+</html>
