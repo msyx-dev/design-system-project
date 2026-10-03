@@ -14,6 +14,33 @@
   },
   "released": [
     {
+      "version": "2.144.0",
+      "date": "2026-10-03",
+      "titre": "Des tableaux faits pour le téléphone",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Les tableaux peuvent désormais se replier en cartes sur téléphone : chaque ligne devient une carte lisible, avec le nom de chaque colonne, sans défilement horizontal."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Un tableau de saisie permet de modifier des lignes directement en place, d'en ajouter et d'afficher une erreur sur la ligne concernée, avec des boutons faciles à toucher."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Une carte peut rester immobile au survol, pour les formulaires, et porter un titre annoncé aux lecteurs d'écran."
+        },
+        {
+          "type": "correction",
+          "text": "Le nom de l'application reste visible dans l'en-tête sur téléphone quand il n'est pas accompagné d'un logo."
+        },
+        {
+          "type": "correction",
+          "text": "Sur le thème Noël, la guirlande et les boules ne sont plus décalées sur les pages sans barre latérale."
+        }
+      ]
+    },
+    {
       "version": "2.143.2",
       "date": "2026-10-02",
       "titre": "Le sapin ne cache plus la fin des pages",

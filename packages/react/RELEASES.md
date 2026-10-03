@@ -4,6 +4,17 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.62 — 2026-10-03 — `TableCards`, tableau de saisie, `Card` statique et titrée (#1007 #1008 #1010)
+
+> Release groupée du milestone #51, publiée avec le DS CSS **2.144.0** (mention croisée : le CSS `.table-cards*`, `.card-static`/`.card-title` et les correctifs header/décor sont décrits dans `../../RELEASES.md`).
+
+### Added
+- **`<TableCards>` et `<TableCardsCell>` (#1007).** Tableau responsive « lignes → cartes » : `columns` (`key`, `header: string`, `render?`, `hideLabel?`, `actions?`), `rows`, `getRowKey`, `caption?`, `aria-label?`, `emptyLabel?`, `getRowProps?`, `footer?` (rendu dans `<tfoot role="rowgroup">`). Libellés générés en `aria-hidden`, `role="row"` non écrasable. Types `TableCardsProps<T>`, `TableCardsColumn<T>`, `TableCardsCellProps` exportés.
+- **Tableau de saisie (#1008).** `TableCards` accepte `editable` (pose `.table-cards--editable`) et `renderRow` (une ligne = un composant, état par ligne) ; `TableCardsCell` accepte `error` (`p.table-cards-error` `role="alert"`). Aucun nouvel export ; motif documenté dans la JSDoc et `shared/CONSUMER_GUIDE.md`.
+- **`<Card>` statique et titrée (#1010).** Props `static` (aucun retour de survol), `heading` + `headingLevel` (`h2` par défaut, `h2`–`h6`), `region` (racine `<section aria-labelledby>`) ; `href` reste prioritaire. Ref élargie à `HTMLElement` (compatible avec une ref `HTMLDivElement`), type `CardHeadingLevel` exporté.
+
+`version` 3.0.0-alpha.61 → 3.0.0-alpha.62. Tag `react-v3.0.0-alpha.62` posé par le parent après le merge.
+
 ## v3.0.0-alpha.61 — 2026-10-02 — `TagInput` désactivé accessible, sapin sans erreur console (#982 #993)
 
 > Release groupée du milestone #50, publiée avec le DS CSS **2.143.0** (mention croisée : les tokens de contraste MSYX, le CSS des contenus inactifs et le balisage des contrôles désactivés sont décrits dans `../../RELEASES.md`).
