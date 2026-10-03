@@ -29,9 +29,12 @@
 .chart-donut-slice:hover { transform: scale(1.05); }
 .chart-point { transition: r 0.2s, filter 0.2s; cursor: pointer; }
 .chart-point:hover { r: 5; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 50%, transparent)); }
-.chart-legend { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: 0.75rem; }
+.chart-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-md); margin-top: 0.75rem; }
 .chart-legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; color: var(--text-muted); }
 .chart-legend-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; }
+@media (min-width: 768.02px) { /* bp-md */
+    .chart-legend { justify-content: normal; }
+}
 .chart-tooltip { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem 0.7rem; font-size: 0.75rem; color: var(--text); pointer-events: none; opacity: 0; transition: opacity 0.15s; white-space: nowrap; z-index: 10; box-shadow: var(--shadow); }
 .chart-tooltip.visible { opacity: 1; }
 .spark-row { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border-color); }

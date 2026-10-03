@@ -316,8 +316,11 @@ dialog.modal-dialog.modal-dialog--lg { --modal-w: var(--modal-w-lg); }
 .cmd-palette-preview { position: relative; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; background: var(--primary); min-height: 400px; display: flex; align-items: flex-start; justify-content: center; padding-top: 2rem; }
 .cmd-overlay { position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(4px); z-index: var(--z-modal); display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .cmd-overlay.open { opacity: 1; pointer-events: auto; }
-.cmd-palette { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-card); width: 100%; max-width: var(--cmd-palette-w); box-shadow: var(--shadow-lg); overflow: hidden; transform: translateY(-10px) scale(0.98); transition: transform 0.2s; }
+.cmd-palette { background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-card); width: 100%; max-width: var(--cmd-palette-w); margin: 0 1rem; box-shadow: var(--shadow-lg); overflow: hidden; transform: translateY(-10px) scale(0.98); transition: transform 0.2s; }
 .cmd-overlay.open .cmd-palette { transform: translateY(0) scale(1); }
+@media (min-width: 768.02px) { /* bp-md */
+    .cmd-palette { margin: 0; }
+}
 /* Palette montee dans une <dialog class="modal-dialog cmd-palette"> (#917).
    Deux corrections, toutes deux invisibles tant qu'on ne monte pas la palette
    en <dialog> — d'ou l'impasse cote consommateur :
@@ -349,19 +352,22 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 .drawer-preview { position: relative; border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; background: var(--primary); min-height: 350px; }
 .drawer-overlay { position: absolute; inset: 0; background: var(--overlay); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
 .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-.drawer-panel { position: absolute; top: 0; right: 0; bottom: 0; width: var(--drawer-w); background: var(--surface-solid); border-left: 1px solid var(--border-color); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 10; display: flex; flex-direction: column; }
+.drawer-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 85%; background: var(--surface-solid); border-left: 1px solid var(--border-color); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 10; display: flex; flex-direction: column; }
 .drawer-panel.open { transform: translateX(0); }
 /* Variante plein-écran : le panel et son overlay couvrent toute la fenêtre (position:fixed).
    Utile quand le drawer n'est pas enfant d'un .drawer-preview container.
    Usage : <div class="drawer-overlay drawer-overlay--fullscreen"> + <div class="drawer-panel drawer-panel--fullscreen"> */
 .drawer-overlay--fullscreen { position: fixed; inset: 0; z-index: var(--z-surface); }
-.drawer-panel--fullscreen { position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--z-surface-panel); }
+.drawer-panel--fullscreen { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; z-index: var(--z-surface-panel); }
+@media (min-width: 768.02px) { /* bp-md */
+    .drawer-panel, .drawer-panel--fullscreen { width: var(--drawer-w); }
+}
 /* Variante --lg : demi-fenetre desktop minimum (#912, arbitrage keepthread#176 — ecran de
    capture pendant une reunion, ne peut plus se contenter des 320px fixes). Mobile-first :
-   ne s'applique qu'a partir de 768px ; en dessous, le repli mobile existant (100%/85%,
-   _responsive.css) reste prioritaire et n'a pas besoin d'etre touche — meme comportement
-   plein ecran quelle que soit la variante desktop. Usage : <div class="drawer-panel drawer-panel--lg"> */
-@media (min-width: 768px) {
+   ne s'applique qu'au-dela de 768px (768.02px, complement exact du repli mobile de la regle
+   de base : 85%, ou 100% en plein ecran) ; en dessous, meme comportement plein ecran quelle
+   que soit la variante desktop. Usage : <div class="drawer-panel drawer-panel--lg"> */
+@media (min-width: 768.02px) { /* bp-md */
     .drawer-panel--lg { width: var(--drawer-w-lg); }
 }
 .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); }

@@ -3,8 +3,8 @@
 
 /* ===== TEMPLATES ===== */
 /* Kanban */
-.kanban-board { display: flex; gap: var(--space-md); overflow-x: auto; padding-bottom: var(--space-md); }
-.kanban-column { min-width: 260px; flex: 1; background: var(--primary-light); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: var(--space-md); display: flex; flex-direction: column; gap: 0.75rem; }
+.kanban-board { display: flex; gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: var(--space-md); }
+.kanban-column { min-width: 85vw; scroll-snap-align: start; flex: 1; background: var(--primary-light); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: var(--space-md); display: flex; flex-direction: column; gap: 0.75rem; }
 .kanban-column-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .kanban-column-title { font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 .kanban-count { font-size: 0.7rem; background: var(--surface); padding: 0.15rem 0.5rem; border-radius: 10px; color: var(--text-muted); }
@@ -15,6 +15,10 @@
 .kanban-card-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
 .kanban-card-footer { display: flex; justify-content: space-between; align-items: center; }
 .kanban-column.drag-over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 3%, transparent); }
+@media (min-width: 768.02px) { /* bp-md */
+    .kanban-board { scroll-snap-type: none; -webkit-overflow-scrolling: auto; }
+    .kanban-column { min-width: 260px; scroll-snap-align: none; }
+}
 
 /* ===== KANBAN PAGE LAYOUT (v2.64.2 #274) — promotion classes canonical-pages/dashboard-kanban.html ===== */
 .kanban-page { min-height: 100vh; background: var(--primary); display: flex; flex-direction: column; }
@@ -32,7 +36,10 @@
 /* Roadmap */
 .roadmap-container { overflow-x: auto; position: relative; padding-bottom: 1rem; }
 .roadmap-container::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 60px; background: linear-gradient(to right, transparent, var(--primary)); pointer-events: none; }
-.roadmap-track { display: flex; gap: 0; min-width: 900px; }
+.roadmap-track { display: flex; gap: 0; min-width: 700px; }
+@media (min-width: 768.02px) { /* bp-md */
+    .roadmap-track { min-width: 900px; }
+}
 .roadmap-quarter { flex: 1; padding: var(--space-lg); border-left: 2px solid var(--border-color); position: relative; }
 .roadmap-quarter:first-child { border-left: none; }
 .roadmap-quarter-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: var(--space-md); color: var(--text); }
@@ -66,11 +73,16 @@
 .backlog-points { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); font-size: 0.72rem; font-weight: 600; color: var(--accent-light); flex-shrink: 0; }
 
 /* Sprint */
-.sprint-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-xl); padding: var(--space-lg); background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); }
+.sprint-header { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-xl); padding: var(--space-lg); background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); }
 .sprint-header-info h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.3rem; }
 .sprint-header-info p { font-size: 0.78rem; color: var(--text-muted); }
-.sprint-stats { display: flex; gap: var(--space-xl); }
-.sprint-board { display: flex; gap: var(--space-md); overflow-x: auto; padding-bottom: var(--space-md); }
+.sprint-stats { display: flex; gap: 1rem; }
+.sprint-board { display: flex; gap: var(--space-md); overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: var(--space-md); }
+@media (min-width: 768.02px) { /* bp-md */
+    .sprint-header { flex-direction: row; align-items: center; }
+    .sprint-stats { gap: var(--space-xl); }
+    .sprint-board { scroll-snap-type: none; -webkit-overflow-scrolling: auto; }
+}
 .sprint-burndown { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: var(--space-lg); margin-top: var(--space-lg); }
 .sprint-burndown-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 .burndown-animated polyline { stroke-dasharray: 500; stroke-dashoffset: 500; }
@@ -85,11 +97,14 @@
 .cal-nav button:hover { border-color: var(--border-hover); color: var(--text); }
 .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px; }
 .cal-weekdays span { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; padding: 0.3rem 0; }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
 /* #864 — le wrapper <div role="row"> par semaine (React, a11y) devient sinon lui-même
    un item de grille (semaines en colonnes) ; display:contents le retire du modèle de
    boîte sans le retirer de l'arbre a11y — sans effet sur le rendu vanilla (pas de role="row"). */
 .cal-grid > [role="row"] { display: contents; }
+@media (min-width: 768.02px) { /* bp-md */
+    .cal-grid { gap: 2px; }
+}
 .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.82rem; color: var(--text); cursor: pointer; transition: background 0.15s; position: relative; gap: 2px; }
 .cal-day:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .cal-day.today { background: var(--accent-surface); color: var(--text-on-accent); font-weight: 600; }
