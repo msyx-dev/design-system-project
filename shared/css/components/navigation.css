@@ -835,8 +835,13 @@
     color: var(--text-on-accent);
     font-weight: 600;
 }
+/* #1016 T1b -- texte de l'item actif subtil : token DEDIE (hex litteral regle a la mesure pixel, >= 4,6:1
+   au pire fond, 10 combos), plus --accent-text-strong, partage avec puces, tags et rail dont le fond
+   et le reglage different (acssi sombre 3,87, nhood clair 4,34, auchan clair 2,93, noel clair 4,49).
+   Repli sur --accent-text-strong : un consommateur qui a synchronise ce module sans tokens/themes a jour
+   garde l'ancien rendu au lieu d'heriter une couleur au hasard. */
 .segmented--subtle .segmented-item.active {
-    color: var(--accent-text-strong);
+    color: var(--segmented-subtle-active-text, var(--accent-text-strong));
 }
 /* #982 F7 — un segmented sans .segmented-indicator reporte l'aplat de l'indicateur sur l'item actif
    (sinon : texte clair sur la piste, 1,23:1 en light ; ex. AM/PM du time-picker). Memes declarations
@@ -881,4 +886,29 @@
 .segmented--lg .segmented-item {
     padding: 0.6rem 1.4rem;
     font-size: 0.92rem;
+}
+/* #1016 T1b -- Cible tactile >= 44px de haut (WCAG 2.5.5, DS-PRINCIPLES §3), mobile-first : valable
+   pour le bouton ET le lien, toutes tailles. Mesure Chromium 375px AVANT : defaut 40px, --lg 37,2px,
+   --sm 24,6px (< 44). Deux mecanismes, pour garder l'encombrement des tailles courantes :
+   - ::after etend la zone cliquable de 3px en haut et en bas, soit exactement le padding de .segmented :
+     c'est le MAXIMUM possible sans deborder du conteneur (overflow-x:auto force overflow-y:auto, un
+     enfant qui depasse le padding box ferait defiler la piste) ; aucun effet visuel ;
+   - min-height ramene l'item a 44px moins ces 2 x 3px : le defaut (40px) et --subtle ne bougent pas,
+     --lg gagne 0,8px, --sm passe de 24,6 a 38px SUR MOBILE (la zone etendue ne peut pas le sauver).
+   Au-dela de 768px (pointeur fin) seul min-height est retire : --sm retrouve sa taille compacte. */
+.segmented {
+    --segmented-target: 44px;
+}
+.segmented-item {
+    min-height: calc(var(--segmented-target) - 6px);
+}
+.segmented-item::after {
+    content: "";
+    position: absolute;
+    inset: -3px 0;
+}
+@media (min-width: 768px) {
+    .segmented-item {
+        min-height: 0;
+    }
 }
