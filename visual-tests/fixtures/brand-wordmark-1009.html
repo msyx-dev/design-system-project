@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wordmark du header sans pictogramme — fixture #1009</title>
+<!--
+  Fixture de `visual-tests/brand-wordmark.spec.ts` (#1009).
+
+  Quatre cas, un par bloc, dans le MEME document pour qu'ils partagent exactement
+  les memes feuilles de style :
+
+  (a) `#sans-pictogramme` — `.header-logo.brand-wordmark` (MEME element) SANS
+      `.header-logo-img` : le cas du consommateur tirokado
+      (`<Link className="header-logo brand-wordmark">` seul dans le header). Sous
+      640 px la marque doit rester visible : c'est le seul element de marque du header.
+  (a') `#sans-pictogramme-imbrique` — `.header-logo` > `.brand-wordmark` (deux
+      elements) SANS `.header-logo-img` : le markup par defaut de `<SiteHeader>`
+      (@msyx-dev/react). Meme attendu que (a).
+  (a'') `#hors-site-header` — comme (a) mais HORS de `.site-header` : la regle de
+      layout.css (`.site-header ...`) ne s'applique pas, seule celle de brand.css
+      decide. Verrouille que brand.css garde a lui seul `.header-logo.brand-wordmark`.
+  (b) `#avec-pictogramme` — le header standard du DS (markup de `buildHeader()`,
+      nav.js) : pictogramme `.header-logo-img` + wordmark. Sous 640 px le wordmark
+      est masque, le pictogramme porte la marque.
+  (c) `#autonome` — un `.brand-wordmark` HORS de tout `.header-logo` (demos de
+      `pages/navigation.html`, exemple du registre). Comportement actuel : masque
+      sous 640 px. Pose ici pour verrouiller qu'il ne change pas (VR : 0 diff).
+
+  `.site-header` est `position: fixed` : la fixture le neutralise (fixture seule,
+  aucune regle DS n'est redefinie) pour empiler (a) et (b) dans le flux.
+  Pas de nav.js, pas de components.js : rien d'autre que les feuilles du DS ne doit
+  bouger la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  .fixture-header { position: relative; margin-bottom: var(--space-md); }
+  .fixture-autonome { padding: var(--space-md); }
+</style>
+</head>
+<body>
+<header class="site-header fixture-header" id="sans-pictogramme">
+  <button class="header-burger" aria-label="Ouvrir le menu">&#9776;</button>
+  <a href="#" class="header-logo brand-wordmark" aria-label="tirokado — Accueil">tirokado</a>
+  <span class="header-spacer"></span>
+  <div class="header-controls">
+    <button class="header-notification" aria-label="Notifications">
+      <svg class="icon" aria-hidden="true" width="20" height="20"><use href="/shared/icons/sprite.svg#i-bell"></use></svg>
+    </button>
+  </div>
+</header>
+
+<header class="site-header fixture-header" id="sans-pictogramme-imbrique">
+  <button class="header-burger" aria-label="Ouvrir le menu">&#9776;</button>
+  <span class="header-logo" aria-label="Accueil"><span class="brand-wordmark">design-system</span></span>
+  <span class="header-spacer"></span>
+  <div class="header-controls">
+    <button class="header-notification" aria-label="Notifications">
+      <svg class="icon" aria-hidden="true" width="20" height="20"><use href="/shared/icons/sprite.svg#i-bell"></use></svg>
+    </button>
+  </div>
+</header>
+
+<header class="site-header fixture-header" id="avec-pictogramme">
+  <button class="header-burger" aria-label="Ouvrir le menu">&#9776;</button>
+  <a href="#" class="header-logo" aria-label="design-system — Accueil"><img src="/assets/logo-msyx.svg" alt="" aria-hidden="true" width="40" height="40" class="header-logo-img"><span class="brand-wordmark">design-system</span></a>
+  <span class="header-spacer"></span>
+  <div class="header-controls">
+    <button class="header-notification" aria-label="Notifications">
+      <svg class="icon" aria-hidden="true" width="20" height="20"><use href="/shared/icons/sprite.svg#i-bell"></use></svg>
+    </button>
+  </div>
+</header>
+
+<div class="fixture-autonome" id="hors-site-header">
+  <a href="#" class="header-logo brand-wordmark" aria-label="tirokado — Accueil">tirokado</a>
+</div>
+
+<div class="fixture-autonome" id="autonome">
+  <span class="brand-wordmark">design-system</span>
+</div>
+</body>
+</html>
