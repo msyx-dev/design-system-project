@@ -24,11 +24,11 @@
  *
  * Assertions :
  *   - garde-fou de fixture : l'indicateur n'a pas d'attribut `style` en `pre` et il est masqué ;
- *   - hors `--subtle` : `pre` ≥ 4,5:1 (BLOQUANT) ;
+ *   - TOUS les cas, `--subtle` compris : `pre` ET `mes` ≥ 4,5:1 (BLOQUANT, T1b). Le texte de
+ *     l'item actif subtil lit le token dédié `--segmented-subtle-active-text`, réglé à la mesure
+ *     (≥ 4,6 visé) dans les 10 combos ;
  *   - tous les cas : `pre` égal à `mes` (±0,05) — la règle d'avant mesure reproduit exactement
- *     l'état mesuré, elle ne l'améliore ni ne le dégrade ;
- *   - `--subtle` : la valeur mesurée est RAPPORTÉE (l'item actif subtil est sous 4,5:1 dans
- *     certains combos dans l'état mesuré aussi : défaut préexistant, traité par la tranche T1b).
+ *     l'état mesuré, elle ne l'améliore ni ne le dégrade.
  *
  * Joué dans les 10 projets desktop de playwright.config.ts (thème/mode lus dans le nom du
  * projet) ; sauté sur les 2 `*-mobile` (le contraste ne dépend pas du viewport).
@@ -345,7 +345,7 @@ test.describe("Segmented — item actif lisible avant la première mesure (#1016
       return (
         `${projectName.padEnd(20)} ${r.probe.padEnd(15)} ` +
         `pre=${fmt(r.pre.pixelMin)}${flag} mesure=${fmt(r.mes.pixelMin)}${r.mes.pixelMin < CONTRAST_MIN ? "<" : " "} ` +
-        `${r.subtle ? "rapport (T1b)" : "BLOQUANT    "} texte=${hex(r.pre.shown)}`
+        `BLOQUANT texte=${hex(r.pre.shown)}`
       );
     });
     console.log(
@@ -424,14 +424,17 @@ test.describe("Segmented — item actif lisible avant la première mesure (#1016
         .toBeLessThanOrEqual(EQUAL_TOLERANCE);
     }
 
-    // --- Bloquant : hors --subtle, l'item actif est lisible avant la première mesure ---
-    for (const r of rows.filter((x) => !x.subtle)) {
-      expect
-        .soft(
-          r.pre.pixelMin >= CONTRAST_MIN,
-          `${projectName} ${r.probe} avant mesure = ${r.pre.pixelMin.toFixed(2)}:1 < ${CONTRAST_MIN}`,
-        )
-        .toBe(true);
+    // --- Bloquant : l'item actif est lisible avant la première mesure ET une fois mesuré, --subtle
+    // compris (T1b : token dédié --segmented-subtle-active-text, réglé à la mesure) ---
+    for (const r of rows) {
+      for (const state of ["pre", "mes"] as State[]) {
+        expect
+          .soft(
+            r[state].pixelMin >= CONTRAST_MIN,
+            `${projectName} ${r.probe} ${state === "pre" ? "avant mesure" : "mesuré"} = ${r[state].pixelMin.toFixed(2)}:1 < ${CONTRAST_MIN}`,
+          )
+          .toBe(true);
+      }
     }
   });
 });

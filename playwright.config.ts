@@ -70,6 +70,7 @@ export default defineConfig({
     "**/table-cards-editable.spec.ts",
     "**/segmented-indicator-sync.spec.ts",
     "**/segmented-prehydration-contrast.spec.ts",
+    "**/segmented-touch-target.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
