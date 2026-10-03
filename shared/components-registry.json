@@ -1,7 +1,7 @@
 {
   "version": "2.143.2",
   "generated": {
-    "at": "2026-10-02T23:46:28.048Z",
+    "at": "2026-10-03T01:14:07.263Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -33,6 +33,7 @@
         "shared/css/components/buttons.css",
         "shared/css/components/forms.css",
         "shared/css/components/graph.css",
+        "shared/css/components/tables.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
       ],
@@ -306,6 +307,27 @@
       ]
     },
     {
+      "name": "table-cards",
+      "kind": "component",
+      "page": "data",
+      "cssClasses": [
+        ".table-cards",
+        ".table-cards-label",
+        ".table-cards-actions"
+      ],
+      "jsInit": null,
+      "notes": "Repli en cartes sous 768px (--bp-md), tableau au-delà ; CSS seul. Libellé = <span class=\"table-cards-label\" aria-hidden=\"true\"> (jamais ::before/data-label : double annonce). Rôles ARIA explicites. Tri/filtre/pagination : utiliser data-grid (qui défile, inchangé). #1007",
+      "example": "<div class=\"table-wrap\">\n  <table class=\"table-cards\" role=\"table\" aria-label=\"Participants\">\n    <thead role=\"rowgroup\"><tr role=\"row\"><th scope=\"col\" role=\"columnheader\">Nom</th><th scope=\"col\" role=\"columnheader\">Actions</th></tr></thead>\n    <tbody role=\"rowgroup\"><tr role=\"row\">\n      <td role=\"cell\"><span class=\"table-cards-label\" aria-hidden=\"true\">Nom</span>Alice Martin</td>\n      <td role=\"cell\" class=\"table-cards-actions\"><button type=\"button\" class=\"btn-secondary btn-sm\">Copier le lien</button></td>\n    </tr></tbody>\n  </table>\n</div>",
+      "react": "ported",
+      "module": [
+        "shared/css/components/tables.css"
+      ],
+      "reactExports": [
+        "TableCards",
+        "TableCardsCell"
+      ]
+    },
+    {
       "name": "data-grid",
       "kind": "component",
       "page": "data",
@@ -368,6 +390,7 @@
         "shared/css/components/graph.css",
         "shared/css/components/interactive.css",
         "shared/css/components/overlays.css",
+        "shared/css/components/tables.css",
         "shared/css/components/theming.css",
         "shared/css/components/version-notes.css",
         "shared/css/layout.css",
@@ -1644,6 +1667,7 @@
       "example": "<div class=\"rail-sidebar\"><div class=\"rail-header\"><span class=\"rail-logo\">msyx.design</span><button class=\"rail-toggle\" aria-label=\"Reduire la sidebar\" aria-expanded=\"true\"><svg class=\"icon icon--sm\"><use href=\"/shared/icons/sprite.svg#i-chevron-left\"/></svg></button></div><nav class=\"rail-nav\" aria-label=\"Navigation principale\"><a class=\"rail-item active\" href=\"#\" aria-current=\"page\"><span class=\"rail-item-icon\">...</span><span class=\"rail-item-label\">Dashboard</span><span class=\"rail-tooltip\">Dashboard</span></a></nav></div>",
       "react": "ported",
       "module": [
+        "shared/css/components/festive.css",
         "shared/css/components/navigation.css",
         "shared/css/components/_base.css"
       ],
@@ -1863,6 +1887,7 @@
       "reactComponent": "Logo",
       "react": "ported",
       "module": [
+        "shared/css/components/brand.css",
         "shared/css/layout.css"
       ],
       "reactExports": [

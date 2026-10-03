@@ -43,6 +43,57 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .data-grid-body tr:hover td.data-grid-col-sticky-end { background: color-mix(in srgb, var(--accent) 3%, var(--surface-solid)); }
 .data-grid-body tr.selected td.data-grid-col-sticky-end { background: color-mix(in srgb, var(--accent) 7%, var(--surface-solid)); }
 
+/* ===== TABLE CARDS (#1007) =====
+   Tableau qui se replie en cartes : une ligne = une carte sous 768px, tableau au-delà.
+   Mobile-first : les cartes sont le DÉFAUT, le tableau est restauré à (min-width: 768px)
+   = --bp-md (DS-PRINCIPLES §4). Une media query ne lit pas de variable CSS : valeur
+   documentée ici, pas de token (précédent : `.detail-grid`, layout.css).
+   Primitive sur le tableau simple (.table-wrap > table.table-cards), PAS un modificateur
+   de .data-grid : en cartes le <thead> est masqué, le tri et les filtres de .data-grid
+   disparaîtraient. Opt-in : les règles nues table/th/td et .data-grid ne changent pas.
+   Libellé de cellule = nœud <span class="table-cards-label" aria-hidden="true">, JAMAIS
+   td::before { content: attr(…) } : le contenu généré entre dans le nom accessible de la
+   cellule, qui serait annoncé deux fois (en-tête de colonne + libellé). L'en-tête de
+   colonne (<th scope="col"> du <thead> masqué visuellement) est le canal accessible.
+   Rôles ARIA explicites sur le markup : certains moteurs abandonnent la sémantique de
+   tableau quand display change.
+   Portée : thead / tbody / tfoot — une ligne de <tfoot> devient aussi une carte.
+   Spécificité : `.table-cards td` (0,1,1) l'emporte sur une classe seule, d'où le
+   préfixe `.table-cards` devant chaque élément (0,2,0). */
+.table-cards,
+.table-cards caption,
+.table-cards tbody,
+.table-cards tfoot,
+.table-cards tr,
+.table-cards td { display: block; }
+.table-cards thead { /* masqué à l'œil, lu par les lecteurs d'écran : déclarations de .sr-only (_a11y.css) */
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.table-cards tr { padding: var(--space-sm) 0; border-top: 1px solid var(--border-color); }
+.table-cards tbody tr:first-child { border-top: 0; }
+.table-cards td { padding: var(--space-xs) var(--space-md); border-top: 0; overflow-wrap: anywhere; }
+.table-cards .table-cards-label { display: block; margin-bottom: var(--space-xs); font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; } /* typo de th, ci-dessus */
+.table-cards .table-cards-actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: flex-end; }
+/* Cibles tactiles >= 44px (WCAG 2.5.5, DS-PRINCIPLES §3) tant que la ligne est une carte.
+   .btn-sm (~31px) ne suffit pas ; .btn-icon porte déjà son 44px, exclu pour ne pas être réduit
+   par la restauration ci-dessous. Contrat : <button> ou lien .btn-* (inline-flex centré). */
+.table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; justify-content: center; }
+
+@media (min-width: 768px) { /* --bp-md (DS-PRINCIPLES §4) */
+  .table-cards { display: table; }
+  .table-cards caption { display: table-caption; }
+  .table-cards thead { display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+  .table-cards tbody { display: table-row-group; }
+  .table-cards tfoot { display: table-footer-group; }
+  .table-cards tr { display: table-row; padding: 0; border-top: 0; }
+  .table-cards td { display: table-cell; padding: 0.7rem 1.1rem; border-top: 1px solid var(--border-color); overflow-wrap: normal; } /* = td global, ci-dessus : le test « jumeau » (visual-tests/table-cards.spec.ts) garantit l'égalité des boîtes */
+  .table-cards .table-cards-label { display: none; }
+  .table-cards .table-cards-actions { display: table-cell; text-align: end; }
+  /* Le tableau reprend la taille native des contrôles (boîtes identiques au tableau sans .table-cards). */
+  .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: auto; min-height: auto; justify-content: normal; }
+}
+
 /* ===== SERVER DATA-GRID — loading state ===== */
 .data-grid-wrap[aria-busy="true"] {
   opacity: 0.6;

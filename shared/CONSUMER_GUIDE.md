@@ -569,6 +569,55 @@ Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (sk
 
 `<NotificationBell>` (composé par `<SiteHeader>`), et les composants `@msyx-dev/react` en général, rendent leurs icônes **inline** via le primitif interne `Icon` (#713) — **aucun sprite externe à servir** côté consumer. Contrairement au header vanilla (`shared/nav.js`, cf. section « Header avec utilisateur connecte ») qui dépend de `shared/icons/sprite.svg#i-bell`, la version React est autonome : pas de fichier sprite à copier, pas de chemin à adapter.
 
+## Tableau en cartes — `.table-cards` (#1007)
+
+Un tableau qui se replie en cartes sur mobile : sous 768 px (`--bp-md`) chaque ligne devient une carte et chaque cellule affiche son libellé au-dessus de sa valeur ; au-delà, c'est le tableau classique, identique à un `.table-wrap > table` nu. CSS seul, aucun JS, opt-in (les tableaux sans `.table-cards` ne changent pas).
+
+Markup vanilla minimal (module `tables.css`, importé par `components.css` ; absent de `components-core.css`) :
+
+```html
+<div class="table-wrap">
+  <table class="table-cards" role="table" aria-label="Participants">
+    <thead role="rowgroup">
+      <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">Actions</th></tr>
+    </thead>
+    <tbody role="rowgroup">
+      <tr role="row">
+        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Alice Martin</td>
+        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm">Copier le lien</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+Règles à respecter :
+
+- **Le libellé est un nœud `<span class="table-cards-label" aria-hidden="true">`, premier enfant de la cellule**, texte identique à l'en-tête de la colonne. Jamais `td::before { content: attr(data-label) }` : le contenu généré entre dans le nom accessible de la cellule, annoncé deux fois (« Nom, Nom Alice »). L'en-tête `<th scope="col">` reste le canal accessible : le CSS le masque à l'écran en mode cartes (déclarations de `.sr-only`) mais les lecteurs d'écran le lisent.
+- **La cellule d'actions** porte `.table-cards-actions` et n'a pas de libellé. En mode cartes ses boutons gardent une cible tactile d'au moins 44 px.
+- **Rôles ARIA explicites** (`table`, `rowgroup`, `row`, `columnheader`, `cell`) sur tout le markup : certains moteurs perdent la sémantique de tableau quand `display` change.
+- Une ligne de `<tfoot>` devient aussi une carte.
+
+Usage React (`@msyx-dev/react`), qui génère ce markup et les libellés depuis `header` :
+
+```tsx
+import { TableCards } from "@msyx-dev/react";
+
+<TableCards
+  aria-label="Participants"
+  rows={participants}
+  getRowKey={(p) => p.id}
+  columns={[
+    { key: "name", header: "Nom" },
+    { key: "email", header: "E-mail" },
+    { key: "actions", header: "Actions", actions: true,
+      render: (p) => <Button size="sm" variant="secondary">Copier le lien</Button> },
+  ]}
+/>
+```
+
+Quand préférer `DataGrid` : `.table-cards` n'a ni tri ni filtre ni pagination (en cartes l'en-tête est masqué, les contrôles de tri disparaîtraient) — le consommateur passe des lignes déjà triées et compose `<Pagination>` à côté. Pour un tableau triable ou filtrable, utiliser `.data-grid` / `DataGrid`, qui défile horizontalement sur mobile.
+
 ## Sécurité : APIs qui acceptent du HTML brut
 
 La plupart des composants DS échappent automatiquement les données que vous leur passez (texte affiché via `textContent`, attributs via `setAttribute`). **Trois API font exception, volontairement** — elles acceptent du HTML/JS brut inséré tel quel, et c'est **vous** (le consumer) qui êtes responsable d'échapper ce que vous y injectez si la donnée n'est pas de confiance :
