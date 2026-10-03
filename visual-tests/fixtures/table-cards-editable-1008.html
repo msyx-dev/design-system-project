@@ -16,6 +16,9 @@
   à 375px), une erreur de champ ET une erreur de ligne ; la ligne d'ajout a une erreur sur
   son champ Nom. Toutes les erreurs portent `data-err` : le test les masque (`hidden`) ou
   les affiche pour mesurer l'effet de leur apparition sur la mise en page.
+  Le message de champ de la ligne 2 est volontairement PLUS HAUT (plus de lignes) que
+  l'erreur de ligne de sa cellule d'actions : sans `vertical-align: top`, la cellule
+  d'actions (contenu plus court) serait centrée et ses boutons descendraient (mutation M4).
 
   Aucun écouteur ici : `submit` / `invalid` sont posés PAR LE TEST (page.evaluate), jamais
   par le DS. Pas de nav.js ni de components.js : rien d'autre que le CSS du DS ne doit
@@ -51,7 +54,7 @@
           <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
             <div class="input-group">
               <input class="input input-error" id="p2-email" form="p2" name="email" type="email" required aria-label="E-mail de Jean-Baptiste Dupont" aria-invalid="true" aria-describedby="p2-email-error" value="jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr">
-              <span class="input-error-msg" id="p2-email-error" data-err>Cette adresse est déjà utilisée dans ce tirage, choisissez-en une autre.</span>
+              <span class="input-error-msg" id="p2-email-error" data-err>Cette adresse est déjà utilisée dans ce tirage par un autre participant : choisissez-en une autre, ou retirez d'abord l'autre participant qui l'utilise avant de l'enregistrer ici, puis recommencez.</span>
             </div></td>
           <td role="cell" class="table-cards-actions">
             <form id="p2" hidden><input type="hidden" name="participantId" value="p2"></form>
