@@ -205,6 +205,37 @@ Pour un filtre dont chaque option est une **page** (rendu serveur, route statiqu
 - Aucun lien courant (URL hors options) : n'en marquer aucun, l'indicateur reste masqué.
 - Ne pas redéfinir `a.segmented-item` côté consommateur (soulignement, couleur, hauteur) : le DS les fixe pour que le lien rende comme un `<button>`.
 
+#### React / Next.js (`@msyx-dev/react`)
+
+`<SegmentedControl as="link">` rend **exactement** ce balisage (classes, attributs et ordre identiques à la vitrine : un test de recollement le verrouille). Depuis un **Server Component** Next.js, sans aucun JavaScript côté client :
+
+```tsx
+// app/exports/page.tsx — Server Component
+import { SegmentedControl } from "@msyx-dev/react";
+
+const FILTRES = [
+  { value: "tous", label: "Tous", href: "?filtre=tous" },
+  { value: "actifs", label: "Actifs", href: "?filtre=actifs" },
+  { value: "archives", label: "Archivés", href: "?filtre=archives", disabled: true }, // rendu sans href
+];
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ filtre?: string }>;
+}) {
+  const { filtre = "tous" } = await searchParams;
+  return (
+    <SegmentedControl as="link" label="Filtrer par état" value={filtre} options={FILTRES} />
+  );
+}
+```
+
+- `value` désigne le lien courant (`.active` + `aria-current="page"`) ; une `value` hors options = aucun lien courant, l'indicateur reste masqué. Une option `disabled` n'est jamais courante.
+- **`href` est requis** sur chaque option en mode liens (le compilateur le refuse sinon) ; `onChange` y est **optionnel**. Hors mode liens, rien ne change : `onChange` reste obligatoire.
+- **Navigation côté client (optionnelle)** : dans un Client Component, passer `onChange={(v) => router.push(`?filtre=${v}`)}`. Un clic gauche sans modificateur sur un autre lien fait alors `preventDefault()` puis `onChange(v)` ; **Ctrl/Meta/Maj/Alt+clic, clic milieu, ou `onChange` absent** laissent le navigateur naviguer (nouvel onglet, copie du lien, JavaScript désactivé). Il n'y a pas de prop `linkComponent` : un composant ne traverse pas la frontière Server/Client Component, et le DS ne dépend pas de Next.
+- **Avant l'hydratation**, l'indicateur est rendu sans `style` : le CSS DS peint alors l'aplat sur le lien courant (lisible, ≥ 4,5:1), et la première mesure se fait sans transition.
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)
