@@ -24,9 +24,10 @@ SYNC_SH="${SYNC_SH:-shared/sync.sh}"
 
 PASS=0
 FAIL=0
-TMPS=()
-cleanup() { for d in "${TMPS[@]:-}"; do [ -n "$d" ] && rm -rf "$d"; done; }
-trap cleanup EXIT
+# Un seul dossier racine, nettoyé en sortie : synced est appelé dans des $(…), donc dans
+# un sous-shell — une liste de dossiers tenue par le parent n'y serait jamais complétée.
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
 
 pass() { echo "  PASS"; PASS=$((PASS+1)); }
 fail() { echo "  FAIL: $1"; FAIL=$((FAIL+1)); }
@@ -34,8 +35,7 @@ fail() { echo "  FAIL: $1"; FAIL=$((FAIL+1)); }
 # synced <options...> : synchronise dans un dossier temporaire, affiche son chemin
 synced() {
   local d
-  d="$(mktemp -d)"
-  TMPS+=("$d")
+  d="$(mktemp -d "$WORK/cas.XXXXXX")"
   bash "$SYNC_SH" "$@" "$d" > /dev/null 2>&1
   printf '%s' "$d"
 }

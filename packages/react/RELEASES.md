@@ -4,6 +4,8 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## [Unreleased]
+
 ## v3.0.0-alpha.63 — 2026-10-03 — `SegmentedControl` en liens, avant hydratation lisible (#1016)
 
 > Release du milestone #52, publiée avec le DS CSS **2.145.0** (mention croisée : le CSS `.segmented` en liens, le marqueur d'avant hydratation, le token `--segmented-subtle-active-text` et la cible tactile sont décrits dans `../../RELEASES.md`).
