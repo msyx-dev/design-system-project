@@ -1,5 +1,30 @@
 # Releases
 
+## 2.145.0 — 2026-10-03 — Fiabilisation consumers ⑤ : SegmentedControl en liens, vitrine, VR déterministe, mobile-first (#1016 #1020 #1021 #1022 #1023)
+
+> Milestone #52. #1016 vient de tirokado#105 (filtre par état d'une page serveur). Publiée avec **`@msyx-dev/react` 3.0.0-alpha.63** (mention croisée : le mode `as="link"` de `SegmentedControl` est décrit dans `packages/react/RELEASES.md`). Tout défaut trouvé pendant le sprint a été corrigé dans le sprint et tracé dans un seul ticket, #1023.
+
+### Added
+- **SegmentedControl en liens, sans JavaScript (#1016)** — `<nav class="segmented" aria-label>` + `<a class="segmented-item" href>` : navigation native, lien courant `.active` + `aria-current="page"`, pas de radiogroup (exception écrite DS-PRINCIPLES §3.2). Vitrine `pages/composants.html#segmented-links`.
+- **Avant hydratation, l'option active d'un segmented est lisible (#1016)** — tant que l'indicateur n'est pas mesuré, l'item actif porte lui-même l'aplat : contraste de 1,13-2,21:1 à ≥ 4,54:1 sur les 10 combos ; 1re mesure sans transition.
+- **Garde CI mobile-first (#1023)** — `bin/check-mobile-first.js`, bloquant : tout `@media (max-width` doit porter `/* exception §4 : <raison> */`.
+
+### Changed
+- **Mobile-first (#1022, #1023)** — 31 `@media (max-width)` réécrits en base mobile + `min-width` à rendu identique (VR et sonde de styles calculés), 6 exceptions marquées ; `bp-*` deviennent des noms documentaires (aucun token `--bp-*` n'a jamais existé) ; `_responsive.css` vidé et co-localisé. À **exactement 640 px**, un wordmark avec pictogramme hors `.site-header` est désormais masqué.
+- **`.code-block` en `white-space: pre-wrap` (#1020)** — un bloc de code dont le texte contient des retours à la ligne les affiche ; `.demo-note` stylée.
+
+### Fixed
+- **Indicateur du segmented décalé de 3 px et capture VR instable (#1021)** — recalage `offsetLeft - indicator.offsetLeft`, resynchronisation `ResizeObserver`, garde-fou de banc ; 3 tentatives CI identiques à l'octet.
+- **Contraste `--subtle` et cible tactile du segmented (#1016)** — token dédié `--segmented-subtle-active-text` (≥ 4,62:1 sur les 10 combos ; jaune plus clair en ACSSI sombre, rouge plus foncé en Auchan clair) ; zone de frappe ≥ 44 px sur mobile (`--sm` 24,6 → 38 px sous 768 px).
+- **Champ de recherche de `.filter-bar` (240 px de haut sur mobile) et `.progress-tracker--sm` plus grand sur mobile (#1023).**
+- **Décor festif avec un rail fixe replié (#1022)** — démarre à 64 px au lieu de 260.
+
+### Tests
+- 8 nouvelles specs ou extensions navigateur (`segmented-indicator-sync`, `segmented-prehydration-contrast`, `segmented-touch-target`, `code-block-whitespace`, `demo-note`, `mobile-first-1023`, `brand-wordmark`, `festive-sans-rail`) et un test de régression du garde (54 cas), chacune prouvée par mutation. ~470 baselines VR récoltées depuis la CI (dont la cascade de décalage inférieur au pixel sous les blocs de code), toutes regardées avant récolte.
+
+### Release
+`@ds-version` 2.144.0 → 2.145.0 (minor), `check-versions.sh` rc=0. Quality-gate : PASS sur les deux lots. Un seul déploiement préprod.
+
 ## 2.144.0 — 2026-10-03 — Fiabilisation consumers ④ : tableaux en cartes et de saisie, carte statique (#1007 #1008 #1009 #1010 #1011)
 
 > Milestone #51, demandé par tirokado (refonte UX de l'écran organisateur). Publiée avec **`@msyx-dev/react` 3.0.0-alpha.62** (mention croisée : les composants React sont décrits dans `packages/react/RELEASES.md`). Les consommateurs reçoivent tout par une resynchronisation du CSS DS, sans CSS local.

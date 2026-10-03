@@ -14,6 +14,33 @@
   },
   "released": [
     {
+      "version": "2.145.0",
+      "date": "2026-10-03",
+      "titre": "Des filtres qui marchent sans JavaScript",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Le contrôle segmenté peut servir de filtre de page en liens : il fonctionne même sans JavaScript, et l'option active reste lisible pendant le chargement de la page."
+        },
+        {
+          "type": "amelioration",
+          "text": "Sur téléphone, chaque option du contrôle segmenté offre une zone de toucher d'au moins 44 px, et sa variante discrète affiche l'option active avec un contraste suffisant sur tous les thèmes."
+        },
+        {
+          "type": "correction",
+          "text": "Les exemples de code de la documentation s'affichent et se copient sur toutes leurs lignes, et les notes sous les démonstrations ont enfin un style lisible."
+        },
+        {
+          "type": "correction",
+          "text": "Sur téléphone, le champ de recherche des barres de filtres reprend la hauteur d'un champ normal, et la petite variante de l'anneau de progression garde sa taille."
+        },
+        {
+          "type": "correction",
+          "text": "L'indicateur du contrôle segmenté est exactement aligné sur l'option active, même quand la police arrive en retard."
+        }
+      ]
+    },
+    {
       "version": "2.144.0",
       "date": "2026-10-03",
       "titre": "Des tableaux faits pour le téléphone",

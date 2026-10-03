@@ -4,6 +4,19 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 > Pour l'historique du DS CSS distribué (`shared/css/*`, tokens, sync.sh), voir `../../RELEASES.md` à la racine du monorepo.
 
+## v3.0.0-alpha.63 — 2026-10-03 — `SegmentedControl` en liens, avant hydratation lisible (#1016)
+
+> Release du milestone #52, publiée avec le DS CSS **2.145.0** (mention croisée : le CSS `.segmented` en liens, le marqueur d'avant hydratation, le token `--segmented-subtle-active-text` et la cible tactile sont décrits dans `../../RELEASES.md`).
+
+### Added
+- **`<SegmentedControl as="link">` (#1016).** Union discriminée : `options` portent un `href` requis (types exportés `SegmentedControlLinkProps`, `SegmentedControlLinkOption`) ; rendu `<nav aria-label>` + `<a class="segmented-item" href>`, lien courant `.active` + `aria-current="page"`, option désactivée `<a aria-disabled="true">` sans `href`, jamais de `role`/`tabIndex`. Avec `onChange`, un clic simple sur un lien non courant est intercepté ; un clic avec modificateur (ou sans `onChange`) reste une navigation native. Utilisable depuis un Server Component (Next.js `searchParams`). **API additive** : `SegmentedControlProps`/`SegmentedControlOption` inchangés (ajout de `as?: "button"`), tests existants inchangés.
+
+### Fixed
+- **Indicateur rendu côté serveur sans largeur, puis mesuré sans glissade (#1016)** — l'indicateur SSR n'a pas d'attribut `style` (le CSS DS rend l'item actif lisible avant hydratation) ; 1re mesure sans transition ; recalage de 3 px (`offsetLeft - indicator.offsetLeft`) et resynchronisation `ResizeObserver` quand la police ou un libellé change de taille (#1021 pour le vanilla).
+- JSDoc de `TableCards` : `bp-md` (aucun token `--bp-*` n'existe, #1023).
+
+`version` 3.0.0-alpha.62 → 3.0.0-alpha.63. Tag `react-v3.0.0-alpha.63` posé par le parent après le merge.
+
 ## v3.0.0-alpha.62 — 2026-10-03 — `TableCards`, tableau de saisie, `Card` statique et titrée (#1007 #1008 #1010)
 
 > Release groupée du milestone #51, publiée avec le DS CSS **2.144.0** (mention croisée : le CSS `.table-cards*`, `.card-static`/`.card-title` et les correctifs header/décor sont décrits dans `../../RELEASES.md`).
