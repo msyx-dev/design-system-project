@@ -52,6 +52,8 @@ export { SegmentedControl } from "./components/SegmentedControl/SegmentedControl
 export type {
   SegmentedControlProps,
   SegmentedControlOption,
+  SegmentedControlLinkProps,
+  SegmentedControlLinkOption,
 } from "./components/SegmentedControl/SegmentedControl";
 export { ThemeSwitcher } from "./components/ThemeSwitcher/ThemeSwitcher";
 export type { ThemeSwitcherProps } from "./components/ThemeSwitcher/ThemeSwitcher";

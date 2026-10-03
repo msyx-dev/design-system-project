@@ -18,6 +18,10 @@
        JAMAIS var(--accent) en couleur de texte de taille normale ; JAMAIS --text-on-accent sur var(--accent). */
     --accent-text: #4f91ff;         /* 4,61:1 sur #1a2b47 (voile --accent-glow), 5,37 sur #161f2f ; --accent : 3,86 / 4,49 */
     --accent-text-strong: #91c1ff;  /* 4,60:1 sur #344d72 (.segmented--subtle actif), 5,53 sur #39414e ; --accent-light : 3,37 / 4,05 */
+    /* #1016 T1b — texte de l'item actif de .segmented--subtle : token DEDIE (pas --accent-text-strong, partage
+       avec puces/tags/rail). Hex litteral regle a la mesure pixel (sonde segmented-prehydration-contrast.spec.ts),
+       L OKLCh seule, au pire fond (teinte --accent 18 % sur --surface-light) : >= 4,6:1. */
+    --segmented-subtle-active-text: #94c3ff;  /* 4,69:1 sur #344c71 ; --accent-text-strong : 4,59 */
     --accent-surface: #2a70e3;      /* blanc dessus 4,64:1 ; --accent : 3,68 */
     --surface: rgba(30, 41, 59, 0.6);
     --surface-alt: rgba(255, 255, 255, 0.15);
@@ -469,6 +473,7 @@
     --accent-glow: rgba(var(--accent-rgb), 0.08);
     --accent-text: #2269db;         /* 4,62:1 sur #eef4fd, 4,88 sur #f8fafc, 5,06 sur #fefefe ; --accent : 3,33 / 3,52 / 3,65 */
     --accent-text-strong: #114ed5;  /* 4,63:1 sur #c4d6f1, 5,06 sur #cddffc, 5,52 sur #e6e7e8 ; --accent-light : 3,50 / 3,83 / 4,17 */
+    --segmented-subtle-active-text: #0e4cd2;  /* #1016 T1b : 4,69:1 sur #c3d4ef ; --accent-text-strong : 4,55 */
     --accent-surface: #2a70e3;      /* blanc dessus 4,64:1 */
     /* Fix C — semantic-light assombris pour WCAG AA texte normal sur fond clair */
     --success-light: #15803d;  /* 5.64:1 sur #fff (était #4ade80 = 1.52 KO) */

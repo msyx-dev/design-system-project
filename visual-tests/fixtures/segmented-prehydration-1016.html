@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segmented avant hydratation — sonde #1016</title>
+<!--
+  Fixture de la sonde `visual-tests/segmented-prehydration-contrast.spec.ts` (#1016).
+
+  Elle reproduit le balisage d'un segmented tel qu'il arrive AVANT toute mesure de l'indicateur :
+  rendu serveur de `<SegmentedControl>` (React), ou page statique dont `components.js` n'a pas
+  encore tourne. Dans les deux cas l'indicateur `.segmented-indicator` est present mais SANS
+  attribut `style` (aucune largeur) : c'est le marqueur `:not([style*="width"])` de
+  `navigation.css` qui fait porter l'aplat a l'item actif.
+
+  Un cas par `data-probe`, chacun sur le conteneur `.segmented` (la sonde lit l'item `.active`).
+  Les valeurs de `data-probe` doivent rester egales a PROBES du spec.
+    - `button-*` : mode bouton (role=radiogroup, role=radio) — ce que tirokado rend aujourd'hui ;
+    - `link-*`   : mode « liens » (nav + a[href] + aria-current="page") — T2/T3 de #1016. Le CSS
+                   de cette tranche ne depend pas du mode : seul le balisage change.
+
+  Pas de nav.js, pas de components.js : c'est tout le propos. Aucun script ne doit ecrire de
+  largeur sur l'indicateur ; le spec ne le fait que sur des COPIES (`data-measured`), pour
+  mesurer l'etat « mesure » de reference.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  body { margin: 0; }
+  #bench { background: var(--primary); padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; max-width: 640px; }
+  .row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+</style>
+</head>
+<body>
+<main id="bench">
+  <div class="row">
+    <div class="segmented" role="radiogroup" aria-label="Vue" data-probe="button-default">
+      <span class="segmented-indicator" aria-hidden="true"></span>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Semaine</button>
+      <button type="button" class="segmented-item active" role="radio" aria-checked="true" tabindex="0">Mois</button>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Annee</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="segmented segmented--sm" role="radiogroup" aria-label="Vue compacte" data-probe="button-sm">
+      <span class="segmented-indicator" aria-hidden="true"></span>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Semaine</button>
+      <button type="button" class="segmented-item active" role="radio" aria-checked="true" tabindex="0">Mois</button>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Annee</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="segmented segmented--lg" role="radiogroup" aria-label="Vue large" data-probe="button-lg">
+      <span class="segmented-indicator" aria-hidden="true"></span>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Semaine</button>
+      <button type="button" class="segmented-item active" role="radio" aria-checked="true" tabindex="0">Mois</button>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Annee</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="segmented segmented--subtle" role="radiogroup" aria-label="Vue subtile" data-probe="button-subtle">
+      <span class="segmented-indicator" aria-hidden="true"></span>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Semaine</button>
+      <button type="button" class="segmented-item active" role="radio" aria-checked="true" tabindex="0">Mois</button>
+      <button type="button" class="segmented-item" role="radio" aria-checked="false" tabindex="-1">Annee</button>
+    </div>
+  </div>
+  <div class="row">
+    <nav class="segmented" aria-label="Filtrer par etat" data-probe="link-default">
+      <span class="segmented-indicator" aria-hidden="true"></span>
+      <a class="segmented-item" href="?filtre=tous">Tous</a>
+      <a class="segmented-item active" href="?filtre=actifs" aria-current="page">Actifs</a>
+      <a class="segmented-item" href="?filtre=archives">Archives</a>
+    </nav>
+  </div>
+  <div class="row">
+    <nav class="segmented segmented--subtle" aria-label="Filtrer par etat, subtil" data-probe="link-subtle">
+      <span class="segmented-indicator" aria-hidden="true"></span>
+      <a class="segmented-item" href="?filtre=tous">Tous</a>
+      <a class="segmented-item active" href="?filtre=actifs" aria-current="page">Actifs</a>
+      <a class="segmented-item" href="?filtre=archives">Archives</a>
+    </nav>
+  </div>
+</main>
+</body>
+</html>
