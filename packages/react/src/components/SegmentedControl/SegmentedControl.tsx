@@ -1,6 +1,7 @@
 import {
   CSSProperties,
   KeyboardEvent,
+  MouseEvent,
   ReactNode,
   useEffect,
   useLayoutEffect,
@@ -28,10 +29,36 @@ export interface SegmentedControlProps {
   size?: "sm" | "lg";
   /** Variante subtile — indicateur moins saillant (`.segmented--subtle`). */
   subtle?: boolean;
-  /** Label accessible du `role="radiogroup"` (`aria-label`). */
+  /** Label accessible (`aria-label`) du `role="radiogroup"`, ou du `<nav>` en mode liens. */
   label?: string;
   /** Classes additionnelles sur le conteneur `.segmented`. */
   className?: string;
+  /** #1016 — mode d'affichage ; défaut `"button"` (radiogroup). Pour des liens, voir `SegmentedControlLinkProps`. */
+  as?: "button";
+}
+
+/** #1016 — option du mode « liens » : `href` requis (sauf à la rendre `disabled`, auquel cas il n'est pas rendu). */
+export interface SegmentedControlLinkOption extends SegmentedControlOption {
+  /** Cible du lien (`<a href>`). Échappée par React ; jamais interprétée par le composant. */
+  href: string;
+}
+
+/**
+ * #1016 — mode « liens » : `<nav>` + `<a href>`, utilisable sans JavaScript et
+ * sérialisable depuis un Server Component. `as: "link"` est le discriminant.
+ */
+export interface SegmentedControlLinkProps
+  extends Omit<SegmentedControlProps, "as" | "options" | "onChange"> {
+  as: "link";
+  /** Liens (ordre d'affichage), `href` requis sur chaque option. */
+  options: SegmentedControlLinkOption[];
+  /**
+   * Optionnel. Fourni : un clic gauche sans modificateur sur un lien fait
+   * `preventDefault()` puis `onChange(value)` (le lien courant n'appelle rien) —
+   * navigation côté client par l'appelant. Absent, ou clic avec Ctrl/Meta/Maj/Alt
+   * ou clic milieu : navigation native du navigateur.
+   */
+  onChange?: (value: string) => void;
 }
 
 /**
@@ -83,19 +110,59 @@ export interface SegmentedControlProps {
  * atteignable au clavier. Si toutes les options sont `disabled`, aucun
  * `tabIndex={0}` n'est posé — groupe inerte, comportement attendu.
  *
+ * **Mode liens (`as="link"`, #1016)** : un filtre de page statique ou rendue
+ * par le serveur n'est pas un radiogroup (exception écrite à DS-PRINCIPLES §3.2).
+ * Le rendu est identique au balisage de la vitrine (`composants.html`
+ * #segmented-links), attribut pour attribut :
+ * ```html
+ * <nav class="segmented" aria-label="Filtrer par état">
+ *   <span class="segmented-indicator" aria-hidden="true"></span>
+ *   <a class="segmented-item active" href="?filtre=tous" aria-current="page">Tous</a>
+ *   <a class="segmented-item" href="?filtre=actifs">Actifs</a>
+ *   <a class="segmented-item" aria-disabled="true">Archivés</a>
+ * </nav>
+ * ```
+ * ```tsx
+ * // Server Component (Next.js) : aucun JavaScript, la navigation est native.
+ * <SegmentedControl
+ *   as="link"
+ *   label="Filtrer par état"
+ *   value={filtre}
+ *   options={[
+ *     { value: "tous", label: "Tous", href: "?filtre=tous" },
+ *     { value: "actifs", label: "Actifs", href: "?filtre=actifs" },
+ *   ]}
+ * />
+ * ```
+ * - **Courant** : `value` désigne le lien courant (`.active` + `aria-current="page"`) ;
+ *   aucune `value` correspondante = aucun lien courant, l'indicateur reste masqué.
+ * - **Option `disabled`** : `<a aria-disabled="true">` SANS `href` — ni focalisable ni
+ *   activable, jamais courante (ni `.active`, ni `aria-current`, ni indicateur).
+ * - **Ni `role`, ni `aria-checked`, ni `tabIndex`, ni `onKeyDown`** : Tab et Entrée sont
+ *   natifs ; un `role="radio"` ferait de chaque lien un faux radio.
+ * - **Interception progressive (A5)** : avec `onChange`, un clic gauche sans modificateur
+ *   fait `preventDefault()` puis `onChange(value)` (le lien courant n'appelle rien) — pour
+ *   une navigation côté client (`router.push`). Sans `onChange`, ou avec Ctrl/Meta/Maj/Alt
+ *   ou un clic milieu, la navigation reste native. Pas de prop `linkComponent` : un
+ *   composant ne traverse pas la frontière Server/Client Component, et le DS ne dépend
+ *   pas de Next.
+ * - **Avant hydratation** : l'indicateur est rendu sans `style` (marqueur de
+ *   pré-hydratation, voir plus haut) ; la mesure, 1re mesure sans transition et
+ *   `ResizeObserver` compris, est celle du mode bouton.
+ *
  * SSR-safe : aucun accès à `document`/`window` en dehors des effets
  * (`useLayoutEffect`/refs), qui ne s'exécutent que côté client.
  */
-export function SegmentedControl({
-  options,
-  value,
-  onChange,
-  size,
-  subtle,
-  label,
-  className,
-}: SegmentedControlProps) {
-  const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+export function SegmentedControl(
+  props: SegmentedControlProps | SegmentedControlLinkProps,
+) {
+  const { value, size, subtle, label, className } = props;
+  // Les deux unions partagent `SegmentedControlOption` : `href` n'est lu qu'en mode liens.
+  const options: SegmentedControlOption[] = props.options;
+  const onChange = props.onChange;
+  const itemRefs = useRef<
+    Record<string, HTMLButtonElement | HTMLAnchorElement | null>
+  >({});
   const indicatorRef = useRef<HTMLSpanElement>(null);
   const pendingFocusValueRef = useRef<string | null>(null);
   // #1016 : vrai dès que l'indicateur a reçu une mesure — la toute première se fait sans transition.
@@ -166,7 +233,25 @@ export function SegmentedControl({
 
   const focusAndSelect = (optionValue: string) => {
     pendingFocusValueRef.current = optionValue;
-    onChange(optionValue);
+    onChange?.(optionValue);
+  };
+
+  // Mode liens (#1016, A5) : intercepter seulement quand l'appelant a fourni `onChange` ET que le
+  // clic est un clic gauche « simple ». Tout le reste (Ctrl/Meta/Maj/Alt, clic milieu, `onChange`
+  // absent, événement déjà traité) laisse le navigateur naviguer : ouvrir dans un nouvel onglet,
+  // copier le lien et naviguer sans JavaScript doivent continuer de fonctionner.
+  const handleLinkClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    optionValue: string,
+  ) => {
+    if (!onChange) return;
+    if (event.defaultPrevented) return;
+    if (event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    event.preventDefault();
+    if (optionValue !== value) onChange(optionValue);
   };
 
   const handleKeyDown = (
@@ -218,6 +303,51 @@ export function SegmentedControl({
     .filter(Boolean)
     .join(" ");
 
+  if (props.as === "link") {
+    return (
+      <nav className={classes} aria-label={label}>
+        <span
+          ref={indicatorRef}
+          className="segmented-indicator"
+          style={indicatorStyle}
+          aria-hidden="true"
+        />
+        {props.options.map((option) => {
+          // Une option désactivée n'est jamais courante : pas de `href`, donc rien à « être là ».
+          const isActive = !option.disabled && option.value === value;
+          const itemClassName = ["segmented-item", isActive ? "active" : null]
+            .filter(Boolean)
+            .join(" ");
+          if (option.disabled) {
+            return (
+              <a
+                key={option.value}
+                className={itemClassName}
+                aria-disabled="true"
+              >
+                {option.label}
+              </a>
+            );
+          }
+          return (
+            <a
+              key={option.value}
+              ref={(el) => {
+                itemRefs.current[option.value] = el;
+              }}
+              className={itemClassName}
+              href={option.href}
+              aria-current={isActive ? "page" : undefined}
+              onClick={(event) => handleLinkClick(event, option.value)}
+            >
+              {option.label}
+            </a>
+          );
+        })}
+      </nav>
+    );
+  }
+
   return (
     <div className={classes} role="radiogroup" aria-label={label}>
       <span
@@ -245,7 +375,7 @@ export function SegmentedControl({
             aria-checked={isActive}
             tabIndex={isRovingFocus ? 0 : -1}
             disabled={option.disabled}
-            onClick={() => !option.disabled && onChange(option.value)}
+            onClick={() => !option.disabled && onChange?.(option.value)}
             onKeyDown={(event) => handleKeyDown(event, option.value)}
           >
             {option.label}

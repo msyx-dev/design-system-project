@@ -2,10 +2,17 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { useState } from "react";
-import { SegmentedControl, SegmentedControlOption } from "./SegmentedControl";
+import {
+  SegmentedControl,
+  SegmentedControlLinkOption,
+  SegmentedControlOption,
+} from "./SegmentedControl";
 import { act } from "@testing-library/react";
 import { afterEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const OPTIONS: SegmentedControlOption[] = [
   { value: "week", label: "Semaine" },
@@ -468,5 +475,547 @@ describe("SegmentedControl — mesure de l'indicateur (#1016)", () => {
         <SegmentedControl options={OPTIONS} value="week" onChange={() => {}} />,
       ),
     ).not.toThrow();
+  });
+});
+// ---------------------------------------------------------------------------
+// #1016 (T3) — mode « liens » : as="link" -> <nav> + <a href>
+// ---------------------------------------------------------------------------
+
+// Hrefs en hash : jsdom implémente les changements de hash, pas la navigation complète (un clic non
+// intercepté sur un autre href journalise « Not implemented: navigation »).
+const LINK_OPTIONS: SegmentedControlLinkOption[] = [
+  { value: "tous", label: "Tous", href: "#tous" },
+  { value: "actifs", label: "Actifs", href: "#actifs" },
+  { value: "archives", label: "Archives", href: "#archives" },
+];
+
+const LINK_OPTIONS_WITH_DISABLED: SegmentedControlLinkOption[] = [
+  { value: "tous", label: "Tous", href: "#tous" },
+  { value: "recents", label: "Récents", href: "#recents" },
+  { value: "archives", label: "Archivés", href: "#archives", disabled: true },
+];
+
+/** Clic « brut » : on maîtrise le bouton et les modificateurs, et on lit `defaultPrevented` après coup. */
+function click(target: Element, init: MouseEventInit = {}): MouseEvent {
+  const event = new MouseEvent("click", {
+    bubbles: true,
+    cancelable: true,
+    button: 0,
+    ...init,
+  });
+  act(() => {
+    target.dispatchEvent(event);
+  });
+  return event;
+}
+
+describe("SegmentedControl — mode liens : balisage (#1016)", () => {
+  it("rend nav.segmented[aria-label] > a.segmented-item[href], jamais un radiogroup", () => {
+    const { container } = render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        label="Filtrer par état"
+      />,
+    );
+
+    const nav = container.querySelector("nav.segmented");
+    expect(nav).not.toBeNull();
+    expect(nav).toHaveAttribute("aria-label", "Filtrer par état");
+    expect(container.querySelector("div.segmented")).toBeNull();
+
+    const items = container.querySelectorAll(
+      "nav.segmented > a.segmented-item",
+    );
+    expect(items).toHaveLength(3);
+    expect(container.querySelectorAll("button")).toHaveLength(0);
+    items.forEach((item, i) =>
+      expect(item).toHaveAttribute("href", LINK_OPTIONS[i].href),
+    );
+    // Premier enfant de la <nav> : l'indicateur, caché aux lecteurs d'écran.
+    expect(nav!.firstElementChild).toHaveClass("segmented-indicator");
+    expect(nav!.firstElementChild).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("n'émet ni role, ni aria-checked, ni tabindex (Tab et Entrée sont natifs)", () => {
+    const { container } = render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS_WITH_DISABLED}
+        value="tous"
+        label="Filtrer"
+      />,
+    );
+    expect(container.querySelector("[role]")).toBeNull();
+    expect(container.querySelector("[aria-checked]")).toBeNull();
+    expect(container.querySelector("[tabindex]")).toBeNull();
+  });
+
+  it('marque le lien courant .active + aria-current="page" ; les autres n\'ont aucun aria-current', () => {
+    const { container } = render(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="actifs" />,
+    );
+    const items = container.querySelectorAll<HTMLAnchorElement>("a");
+    expect(items[1]).toHaveClass("segmented-item", "active");
+    expect(items[1]).toHaveAttribute("aria-current", "page");
+    for (const other of [items[0], items[2]]) {
+      expect(other).toHaveClass("segmented-item");
+      expect(other).not.toHaveClass("active");
+      expect(other).not.toHaveAttribute("aria-current");
+    }
+    expect(container.querySelectorAll("[aria-current]")).toHaveLength(1);
+  });
+
+  it("value hors options : aucun lien courant, ni .active ni aria-current", () => {
+    const { container } = render(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="inconnu" />,
+    );
+    expect(container.querySelector(".active")).toBeNull();
+    expect(container.querySelector("[aria-current]")).toBeNull();
+  });
+
+  it('option désactivée : aria-disabled="true", aucun href, jamais courante', () => {
+    const { container } = render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS_WITH_DISABLED}
+        value="tous"
+      />,
+    );
+    const disabled = screen.getByText("Archivés");
+    expect(disabled.tagName).toBe("A");
+    expect(disabled).toHaveAttribute("aria-disabled", "true");
+    expect(disabled).not.toHaveAttribute("href");
+    expect(disabled).not.toHaveAttribute("aria-current");
+    expect(disabled).not.toHaveAttribute("tabindex");
+    expect(disabled).toHaveClass("segmented-item");
+    // Les options activables, elles, gardent leur href et n'ont pas aria-disabled.
+    expect(screen.getByText("Récents")).toHaveAttribute("href", "#recents");
+    expect(screen.getByText("Récents")).not.toHaveAttribute("aria-disabled");
+    expect(container.querySelectorAll("[aria-disabled]")).toHaveLength(1);
+  });
+
+  it("une option désactivée désignée par value n'est ni .active ni aria-current", () => {
+    const { container } = render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS_WITH_DISABLED}
+        value="archives"
+      />,
+    );
+    expect(container.querySelector(".active")).toBeNull();
+    expect(container.querySelector("[aria-current]")).toBeNull();
+  });
+
+  it("applique size, subtle et className sur la <nav>", () => {
+    const { container, rerender } = render(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="tous" />,
+    );
+    const nav = container.querySelector("nav")!;
+    expect(nav.className).toBe("segmented");
+    expect(nav).not.toHaveAttribute("aria-label");
+
+    rerender(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        size="sm"
+        subtle
+        className="ma-classe"
+      />,
+    );
+    expect(nav.className).toBe(
+      "segmented segmented--sm segmented--subtle ma-classe",
+    );
+    rerender(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        size="lg"
+      />,
+    );
+    expect(nav.className).toBe("segmented segmented--lg");
+  });
+
+  it('as="button" explicite rend le radiogroup, comme sans `as`', () => {
+    const { container } = render(
+      <SegmentedControl
+        as="button"
+        options={OPTIONS}
+        value="week"
+        onChange={() => {}}
+      />,
+    );
+    expect(container.querySelector("div.segmented")).toHaveAttribute(
+      "role",
+      "radiogroup",
+    );
+    expect(container.querySelector("nav")).toBeNull();
+  });
+});
+
+describe("SegmentedControl — mode liens : interception progressive (#1016, A5)", () => {
+  it("clic gauche simple sur un autre lien : preventDefault puis onChange(value)", () => {
+    const onChange = vi.fn();
+    render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        onChange={onChange}
+      />,
+    );
+    const event = click(screen.getByText("Actifs"));
+    expect(event.defaultPrevented).toBe(true);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith("actifs");
+  });
+
+  it("Entrée au clavier (clic synthétique, button 0) est interceptée comme un clic", async () => {
+    const onChange = vi.fn();
+    render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        onChange={onChange}
+      />,
+    );
+    const user = userEvent.setup();
+    await user.tab();
+    await user.tab();
+    expect(screen.getByText("Actifs")).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(onChange).toHaveBeenCalledWith("actifs");
+  });
+
+  it.each([
+    ["Ctrl", { ctrlKey: true }],
+    ["Meta", { metaKey: true }],
+    ["Maj", { shiftKey: true }],
+    ["Alt", { altKey: true }],
+    ["clic milieu", { button: 1 }],
+    ["clic droit", { button: 2 }],
+  ])(
+    "%s + clic : navigation native, ni preventDefault ni onChange",
+    (_, init) => {
+      const onChange = vi.fn();
+      render(
+        <SegmentedControl
+          as="link"
+          options={LINK_OPTIONS}
+          value="tous"
+          onChange={onChange}
+        />,
+      );
+      const event = click(screen.getByText("Actifs"), init);
+      expect(event.defaultPrevented).toBe(false);
+      expect(onChange).not.toHaveBeenCalled();
+    },
+  );
+
+  it("sans onChange : le clic n'est pas empêché (navigation native)", () => {
+    render(<SegmentedControl as="link" options={LINK_OPTIONS} value="tous" />);
+    const event = click(screen.getByText("Actifs"));
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it("clic sur le lien courant : onChange n'est pas appelé", () => {
+    const onChange = vi.fn();
+    render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        onChange={onChange}
+      />,
+    );
+    const event = click(screen.getByText("Tous"));
+    expect(onChange).not.toHaveBeenCalled();
+    // L'appelant a pris la main sur la navigation : recharger la page courante serait surprenant.
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("un clic déjà traité (defaultPrevented) n'appelle pas onChange", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        onChange={onChange}
+      />,
+    );
+    // Écouteur de capture posé sur la <nav> : il s'exécute avant le gestionnaire React du lien.
+    container
+      .querySelector("nav")!
+      .addEventListener("click", (e) => e.preventDefault(), true);
+    click(screen.getByText("Actifs"));
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("une option désactivée n'appelle jamais onChange", () => {
+    const onChange = vi.fn();
+    render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS_WITH_DISABLED}
+        value="tous"
+        onChange={onChange}
+      />,
+    );
+    click(screen.getByText("Archivés"));
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("ne capte aucune touche de navigation (pas d'onKeyDown, pas de roving tabindex)", async () => {
+    const onChange = vi.fn();
+    render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        onChange={onChange}
+      />,
+    );
+    const user = userEvent.setup();
+    await user.tab();
+    expect(screen.getByText("Tous")).toHaveFocus();
+    await user.keyboard("{ArrowRight}");
+    expect(screen.getByText("Tous")).toHaveFocus();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+describe("SegmentedControl — mode liens : indicateur (#1016)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    FakeResizeObserver.instances = [];
+  });
+
+  it("mesure l'indicateur sur le lien courant, 1re mesure sans transition", () => {
+    const { container, rerender } = render(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="tous" />,
+    );
+    const indicator = container.querySelector<HTMLElement>(
+      ".segmented-indicator",
+    )!;
+    expect(indicator.style.width).not.toBe("");
+    expect(indicator.style.transition).toBe("none");
+    rerender(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="actifs" />,
+    );
+    expect(indicator.style.transition).toBe("");
+  });
+
+  it("recale par l'écart offsetLeft et suit un ResizeObserver, comme en mode bouton", () => {
+    vi.stubGlobal("ResizeObserver", FakeResizeObserver);
+    const { container } = render(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="actifs" />,
+    );
+    const indicator = container.querySelector<HTMLElement>(
+      ".segmented-indicator",
+    )!;
+    const active = container.querySelector<HTMLElement>("a.active")!;
+    Object.defineProperty(indicator, "offsetLeft", {
+      value: 3,
+      configurable: true,
+    });
+    Object.defineProperty(active, "offsetLeft", {
+      value: 50,
+      configurable: true,
+    });
+    Object.defineProperty(active, "offsetWidth", {
+      value: 90,
+      configurable: true,
+    });
+    act(() => FakeResizeObserver.instances[0].fire());
+    expect(indicator.style.transform).toBe("translateX(47px)");
+    expect(indicator.style.width).toBe("90px");
+    // Les liens sont observés, jamais l'indicateur.
+    expect(FakeResizeObserver.instances[0].observed).toHaveLength(3);
+    expect(FakeResizeObserver.instances[0].observed).not.toContain(indicator);
+  });
+
+  it("aucun lien courant : l'indicateur reste sans style (donc masqué par le CSS DS)", () => {
+    const { container } = render(
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="inconnu" />,
+    );
+    expect(
+      container.querySelector(".segmented-indicator")!.hasAttribute("style"),
+    ).toBe(false);
+  });
+
+  it("une option désactivée désignée par value ne reçoit pas l'indicateur", () => {
+    vi.stubGlobal("ResizeObserver", FakeResizeObserver);
+    const { container } = render(
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS_WITH_DISABLED}
+        value="archives"
+      />,
+    );
+    expect(
+      container.querySelector(".segmented-indicator")!.hasAttribute("style"),
+    ).toBe(false);
+    // Seuls les 2 liens activables sont observés.
+    expect(FakeResizeObserver.instances[0].observed).toHaveLength(2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Recollement (#1016, critère 9) : le rendu serveur React reproduit le balisage de la vitrine
+// `pages/composants.html` #segmented-links, classes, attributs et ordre compris. La vitrine est la
+// référence ; si l'un des deux bouge, ce test casse.
+// ---------------------------------------------------------------------------
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+
+/** Seule normalisation admise : les espaces entre balises (l'indentation de la page). */
+const normalize = (html: string) => html.replace(/>\s+</g, "><").trim();
+
+function vitrineNavs(): string[] {
+  const page = readFileSync(
+    path.resolve(here, "../../../../../pages/composants.html"),
+    "utf8",
+  );
+  const section = page.match(
+    /<section id="segmented-links">[\s\S]*?<\/section>/,
+  );
+  if (!section) throw new Error("section #segmented-links introuvable");
+  return (section[0].match(/<nav[\s\S]*?<\/nav>/g) ?? []).map(normalize);
+}
+
+describe("SegmentedControl — recollement avec la vitrine #segmented-links (#1016)", () => {
+  const navs = vitrineNavs();
+
+  it("la vitrine porte les 3 démos attendues", () => {
+    expect(navs).toHaveLength(3);
+  });
+
+  it("« Filtrer par état » — Tous/Actifs/Archives, défaut", () => {
+    const html = renderToStaticMarkup(
+      <SegmentedControl
+        as="link"
+        label="Filtrer par état"
+        value="tous"
+        options={[
+          {
+            value: "tous",
+            label: "Tous",
+            href: "?filtre=tous#segmented-links",
+          },
+          {
+            value: "actifs",
+            label: "Actifs",
+            href: "?filtre=actifs#segmented-links",
+          },
+          {
+            value: "archives",
+            label: "Archives",
+            href: "?filtre=archives#segmented-links",
+          },
+        ]}
+      />,
+    );
+    expect(normalize(html)).toBe(navs[0]);
+  });
+
+  it("« Afficher la période » — 7j/30j/90j, --subtle", () => {
+    const html = renderToStaticMarkup(
+      <SegmentedControl
+        as="link"
+        subtle
+        label="Afficher la période"
+        value="7j"
+        options={[
+          { value: "7j", label: "7j", href: "?periode=7j#segmented-links" },
+          { value: "30j", label: "30j", href: "?periode=30j#segmented-links" },
+          { value: "90j", label: "90j", href: "?periode=90j#segmented-links" },
+        ]}
+      />,
+    );
+    expect(normalize(html)).toBe(navs[1]);
+  });
+
+  it("« Filtrer les exports » — Tous/Récents + Archivés désactivé sans href", () => {
+    const html = renderToStaticMarkup(
+      <SegmentedControl
+        as="link"
+        label="Filtrer les exports"
+        value="tous"
+        options={[
+          {
+            value: "tous",
+            label: "Tous",
+            href: "?export=tous#segmented-links",
+          },
+          {
+            value: "recents",
+            label: "Récents",
+            href: "?export=recents#segmented-links",
+          },
+          {
+            value: "archives",
+            label: "Archivés",
+            href: "?export=archives#segmented-links",
+            disabled: true,
+          },
+        ]}
+      />,
+    );
+    expect(normalize(html)).toBe(navs[2]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Types (#1016, A4) : union discriminée sur `as`. Vérifié par `tsc --noEmit` (seul contrôle qui type
+// les *.test.tsx) ; le corps ne s'exécute que pour garder le fichier vivant côté vitest.
+// `@ts-expect-error` est posé juste avant la ligne JSX en cause.
+// ---------------------------------------------------------------------------
+
+describe("SegmentedControl — types de l'union discriminée (#1016)", () => {
+  it('l\'API existante compile telle quelle ; as="link" exige href ; onChange reste requis hors mode liens', () => {
+    // Appelants existants : aucun `as`, `onChange` requis.
+    const existing = (
+      <SegmentedControl options={OPTIONS} value="week" onChange={() => {}} />
+    );
+    const explicitButton = (
+      <SegmentedControl
+        as="button"
+        options={OPTIONS}
+        value="week"
+        onChange={() => {}}
+      />
+    );
+    // Mode liens : `onChange` optionnel, `href` requis sur chaque option.
+    const linkNoHandler = (
+      <SegmentedControl as="link" options={LINK_OPTIONS} value="tous" />
+    );
+    const linkWithHandler = (
+      <SegmentedControl
+        as="link"
+        options={LINK_OPTIONS}
+        value="tous"
+        onChange={(v: string) => void v}
+      />
+    );
+    const linkWithoutHref = (
+      // @ts-expect-error — une option sans `href` est refusée en mode liens
+      <SegmentedControl as="link" options={OPTIONS} value="week" />
+    );
+    // @ts-expect-error — `onChange` reste obligatoire hors mode liens (appelants existants)
+    const buttonNoHandler = <SegmentedControl options={OPTIONS} value="week" />;
+    expect([
+      existing,
+      explicitButton,
+      linkNoHandler,
+      linkWithHandler,
+      linkWithoutHref,
+      buttonNoHandler,
+    ]).toHaveLength(6);
   });
 });
