@@ -20,6 +20,7 @@
     "test:mobile-first": "node tests/regression/check-mobile-first.test.js",
     "test:check-components": "bash tests/test-check-components.sh",
     "test:check-sync": "bash tests/test-check-sync.sh",
+    "test:release-bump": "bash tests/test-release-bump.sh",
     "test:sync-styles": "bash tests/test-sync-styles.sh",
     "test:sync-assets": "bash tests/test-sync-assets.sh",
     "test:sync-all": "bash tests/test-sync-all.sh",

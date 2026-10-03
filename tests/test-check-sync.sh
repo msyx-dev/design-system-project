@@ -34,16 +34,12 @@ CHECK_SH="${CHECK_SH:-shared/check-sync.sh}"
 
 PASS=0
 FAIL=0
-TMPS=()
-cleanup() { for d in "${TMPS[@]:-}"; do [ -n "$d" ] && rm -rf "$d"; done; }
-trap cleanup EXIT
+# Un seul dossier racine, nettoyé en sortie : new_tmp est appelé dans des $(…), donc dans
+# un sous-shell — une liste de dossiers tenue par le parent n'y serait jamais complétée.
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
 
-new_tmp() {
-  local d
-  d="$(mktemp -d)"
-  TMPS+=("$d")
-  printf '%s' "$d"
-}
+new_tmp() { mktemp -d "$WORK/cas.XXXXXX"; }
 
 # run_check <dir> : lance check-sync.sh, stocke la sortie dans $OUT et le code dans $RC.
 # Les assertions utilisent `grep -q ... <<< "$OUT"`, jamais `echo "$OUT" | grep -q` : sous

@@ -73,6 +73,10 @@ jobs:
         run: |
           chmod +x tests/test-check-versions.sh
           ./tests/test-check-versions.sh
+      - name: Run release-bump hook tests (claude-config#543)
+        run: |
+          chmod +x tests/test-release-bump.sh
+          ./tests/test-release-bump.sh
       - name: Run check-sync script tests — comparaison de contenu (anti-regression #951)
         run: npm run test:check-sync
       - name: Run sync.sh ds-styles.css tests — imports relatifs ./ds-*.css (anti-regression #951)

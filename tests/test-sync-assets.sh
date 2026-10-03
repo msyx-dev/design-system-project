@@ -32,9 +32,10 @@ case "$SYNC_SH" in /*) ;; *) SYNC_SH="$ROOT/$SYNC_SH" ;; esac
 
 PASS=0
 FAIL=0
-TMPS=()
-cleanup() { for d in "${TMPS[@]:-}"; do [ -n "$d" ] && rm -rf "$d"; done; }
-trap cleanup EXIT
+# Un seul dossier racine, nettoyé en sortie : mktarget est appelé dans des $(…), donc dans
+# un sous-shell — une liste de dossiers tenue par le parent n'y serait jamais complétée.
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
 
 pass() { echo "  PASS"; PASS=$((PASS+1)); }
 fail() { echo "  FAIL: $1"; FAIL=$((FAIL+1)); }
@@ -42,7 +43,7 @@ fail() { echo "  FAIL: $1"; FAIL=$((FAIL+1)); }
 MSYX_FILES="logo-msyx-dark.svg logo-msyx-light.svg logo-msyx-mark.svg logo-msyx.svg"
 ACSSI_FILES="logo-acssi-dark.svg logo-acssi-light.svg logo-acssi-mark.svg logo-acssi.svg"
 
-mktarget() { local d; d="$(mktemp -d)"; TMPS+=("$d"); printf '%s' "$d"; }
+mktarget() { mktemp -d "$WORK/cible.XXXXXX"; }
 
 # listing <dossier> : noms des entrees de premier niveau, tries, sur une ligne
 listing() { ls -A "$1" 2>/dev/null | sort | tr '\n' ' ' | sed 's/ $//'; }
