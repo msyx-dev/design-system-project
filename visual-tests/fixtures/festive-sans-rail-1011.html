@@ -15,9 +15,11 @@
   decor est rendu hors de <main> — `.garland--header` et `.ornaments` lisaient donc la
   valeur de `:root` (260px) et se decalaient de la largeur d'une sidebar absente.
 
-  Variante `?rail=fixed|inline` : ajoute un `<Rail>` DS tel que le rend le package React
-  (`.rail-sidebar`), ancre au bord de l'ecran (`fixed`, `.rail-sidebar--fixed`) ou dans le
-  flux de la page (`inline`, ex. HelpNav de KeepThread) — seul le premier pousse le decor.
+  Variante `?rail=fixed|fixed-collapsed|inline` : ajoute un `<Rail>` DS tel que le rend le
+  package React (`.rail-sidebar`), ancre au bord de l'ecran (`fixed`, `.rail-sidebar--fixed`),
+  ancre ET replie (`fixed-collapsed`, `.rail-sidebar--fixed.collapsed`, #1022 : 64px, et
+  l'application ne resature PAS `--sidebar-w` a la racine) ou dans le flux de la page
+  (`inline`, ex. HelpNav de KeepThread) — seuls les deux premiers poussent le decor.
 
   Markup = celui d'un consumer. Pas de components.js : rien d'autre que le header et le
   decor festif ne doit bouger la mise en page pendant la mesure.
@@ -34,7 +36,11 @@
 <script>
 (function () {
   // Liste blanche : jamais une classe issue de l'URL telle quelle.
-  var RAILS = { fixed: 'rail-sidebar rail-sidebar--fixed', inline: 'rail-sidebar' };
+  var RAILS = {
+    fixed: 'rail-sidebar rail-sidebar--fixed',
+    'fixed-collapsed': 'rail-sidebar rail-sidebar--fixed collapsed',
+    inline: 'rail-sidebar'
+  };
   var choice = new URLSearchParams(location.search).get('rail');
   if (!RAILS[choice]) return;
 

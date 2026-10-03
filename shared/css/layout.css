@@ -188,7 +188,7 @@
    Cas d'usage : pages de détail (ex. ticketing). Distinct de .split-pane
    (poignée JS redimensionnable, ne s'empile jamais), .sidebar (rail de
    navigation position:fixed) et .content-grid (conteneur large SANS
-   display:grid). Mobile-first : 1 colonne < 1024px (--bp-lg), 2 colonnes
+   display:grid). Mobile-first : 1 colonne < 1024px (bp-lg), 2 colonnes
    >= 1024px — cf. docs/DS-PRINCIPLES.md §4.
    Usage :
    <div class="detail-grid">
@@ -212,7 +212,7 @@
 .detail-grid-main { min-width: 0; }
 .detail-grid-aside { min-width: 0; }
 
-@media (min-width: 1024px) { /* --bp-lg (docs/DS-PRINCIPLES.md §4) */
+@media (min-width: 1024px) { /* bp-lg (docs/DS-PRINCIPLES.md §4) */
     .detail-grid {
         grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
     }

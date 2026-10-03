@@ -46,7 +46,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 /* ===== TABLE CARDS (#1007) =====
    Tableau qui se replie en cartes : une ligne = une carte sous 768px, tableau au-delà.
    Mobile-first : les cartes sont le DÉFAUT, le tableau est restauré à (min-width: 768px)
-   = --bp-md (DS-PRINCIPLES §4). Une media query ne lit pas de variable CSS : valeur
+   = bp-md (DS-PRINCIPLES §4). Une media query ne lit pas de variable CSS : valeur
    documentée ici, pas de token (précédent : `.detail-grid`, layout.css).
    Primitive sur le tableau simple (.table-wrap > table.table-cards), PAS un modificateur
    de .data-grid : en cartes le <thead> est masqué, le tri et les filtres de .data-grid
@@ -80,7 +80,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
    par la restauration ci-dessous. Contrat : <button> ou lien .btn-* (inline-flex centré). */
 .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; justify-content: center; }
 
-@media (min-width: 768px) { /* --bp-md (DS-PRINCIPLES §4) */
+@media (min-width: 768px) { /* bp-md (DS-PRINCIPLES §4) */
   .table-cards { display: table; }
   .table-cards caption { display: table-caption; }
   .table-cards thead { display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
@@ -115,7 +115,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .table-cards .table-cards-actions > .table-cards-error { flex-basis: 100%; } /* cartes : ligne à part, APRÈS les boutons */
 .table-cards--editable .table-cards-add-row { background: color-mix(in srgb, var(--accent) 4%, transparent); border-top: 2px dashed var(--border-hover); }
 
-@media (min-width: 768px) { /* --bp-md, même seuil que TABLE CARDS */
+@media (min-width: 768px) { /* bp-md, même seuil que TABLE CARDS */
   .table-cards--editable tbody td,
   .table-cards--editable tfoot td { vertical-align: top; padding-block: var(--space-sm); } /* (0,1,2) > .table-cards td (0,1,1) */
   .table-cards--editable .table-cards-add-row { border-top: 0; }

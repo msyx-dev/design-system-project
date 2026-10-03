@@ -358,15 +358,41 @@ Préfixe `--inactive-*` réservé à cette famille. Preuve : mutation M3 (retrai
 ## Section 4 — Responsive (mobile-first)
 
 ### Règle
-**Mobile-first uniquement.** `@media (min-width: ...)` — jamais `max-width` (sauf cas exceptionnel documenté).
+**Mobile-first uniquement.** `@media (min-width: ...)` — jamais `max-width`, sauf l'exception unique codifiée ci-dessous.
 
 ### Breakpoints DS
-| Breakpoint | Largeur | Usage |
+| Nom | Largeur | Usage |
 |---|---|---|
-| `--bp-sm` | 480px | Téléphones larges |
-| `--bp-md` | 768px | Tablette portrait |
-| `--bp-lg` | 1024px | Tablette landscape / petit desktop |
-| `--bp-xl` | 1280px | Desktop standard |
+| `bp-sm` | 480px | Téléphones larges |
+| `bp-md` | 768px | Tablette portrait |
+| `bp-lg` | 1024px | Tablette landscape / petit desktop |
+| `bp-xl` | 1280px | Desktop standard |
+
+**Ce sont des noms, pas des propriétés CSS.** Il n'existe aucun `--bp-*` (rien dans `tokens.css`, et il ne faut pas en créer) : une condition `@media` ne lit pas `var()` — `@media (min-width: var(--bp-md))` est invalide, la règle ne s'applique jamais et rien ne le signale. `@custom-media` n'est géré nativement par aucun navigateur, et le DS est servi sans étape de build. La valeur s'écrit donc **en dur**, suivie du nom en commentaire sur la ligne de la media query : `@media (min-width: 768px) { /* bp-md */`.
+
+### Compléments exacts (réécrire sans changer le rendu)
+Une réécriture `max-width` → `min-width` doit rendre à l'identique à toute largeur, y compris sur la frontière. On prend le **complément exact** du seuil, à 0,02px près :
+
+| Avant | Après (rendu identique) |
+|---|---|
+| `max-width: Xpx` | base mobile + `min-width: (X + 0.02)px` |
+| `min-width: Xpx` | `max-width: (X − 0.02)px` |
+
+Arrondir à `(X + 1)px` décale la frontière d'un pixel entier et change le rendu à cette largeur (768px = iPad portrait). Précédents : `festive.css` (`768.02px`), `utilities.css` (`767.98px`).
+
+### Seuil hors échelle
+Un seuil qui n'est pas dans l'échelle (480 / 768 / 1024 / 1280 — par exemple 400, 600 ou 640) est un **seuil propre au composant**. On le commente sur place, par exemple `/* seuil composant : 640px, compaction du header #711 */`. On ne le réaligne pas sur l'échelle : ce serait un changement de rendu entre les deux valeurs.
+
+### Exception unique : masquer ou sortir du flux sur une plage
+`max-width` reste toléré pour **un masquage ou un hors-flux limité à une plage** (`display: none`, panneau hors écran avec voile), quand le retour au rendu natif ne s'écrit pas sans recopier le `display` d'un autre composant (`flex`, `grid`, `table`…). Le marqueur est **obligatoire**, sur la ligne de la media query, avec la chaîne exacte :
+
+```css
+@media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
+  .site-header .version-badge { display: none; }
+}
+```
+
+Tout autre `max-width` (padding, taille de police, gabarit, grille) est un défaut : on réécrit en mobile-first. Précédent de l'exception : `.hidden-mobile` (`utilities.css`).
 
 ### Anti-patterns concrets
 
@@ -387,7 +413,7 @@ Préfixe `--inactive-*` réservé à cette famille. Preuve : mutation M3 (retrai
   width: 100%;
   padding: var(--space-4);  /* compact par défaut */
 }
-@media (min-width: 768px) {  /* enrichit à mesure que l'écran grandit */
+@media (min-width: 768px) {  /* bp-md — enrichit à mesure que l'écran grandit */
   .card { padding: var(--space-6); }
 }
 ```

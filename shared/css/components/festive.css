@@ -150,11 +150,20 @@
    - au-dela de 768px : `(min-width: 768.02px)` est le complement exact du
      `(max-width: 768px)` de layout.css / navigation.css qui les renvoie hors ecran
      (un `769px` laisserait une bande ou la sidebar est la mais pas le decalage).
+   - rail fixe REPLIE (`.rail-sidebar--fixed.collapsed`, #1022) : la barre ne fait que
+     `--rail-w-collapsed` (64px), pas `--sidebar-w`. Le DS suit sa propre geometrie sans
+     attendre que l'application resature `--sidebar-w` a la racine (KeepThread le fait, un
+     consumer qui ne le fait pas voyait le decor demarrer a 260px, au-dessus de la bande
+     vide entre le rail et le contenu).
    Repli 0 : mobile-first, sans barre laterale, le decor couvre toute la fenetre.
    Garde : `visual-tests/festive-sans-rail.spec.ts`. */
 @media (min-width: 768.02px) {
     :root:has(.sidebar, .rail-sidebar--fixed) {
         --festive-inset-start: var(--sidebar-w, 0px);
+    }
+    /* Specificite 0,3,0 > 0,2,0 : l'emporte sur la regle precedente sans dependre de l'ordre. */
+    :root:has(.rail-sidebar--fixed.collapsed) {
+        --festive-inset-start: var(--rail-w-collapsed);
     }
 }
 

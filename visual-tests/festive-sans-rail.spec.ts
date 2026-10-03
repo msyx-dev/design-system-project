@@ -14,6 +14,12 @@
  * barre laterale DS (`.sidebar`, `.rail-sidebar--fixed`) est dans le DOM ET a l'ecran
  * (au-dela de 768px), consommee par `.garland--header` et `.ornaments` (repli 0).
  *
+ * Rail fixe REPLIE (#1022) : la barre ne fait que `--rail-w-collapsed` (64px) mais le
+ * decalage valait `--sidebar-w` (260px) tant que l'application ne resaturait pas ce token
+ * a la racine : guirlande et boules demarraient 196px trop loin, au-dessus de la bande
+ * vide entre le rail et le contenu. `:root:has(.rail-sidebar--fixed.collapsed)` pose
+ * `--festive-inset-start: var(--rail-w-collapsed)` : le DS suit sa propre geometrie.
+ *
  * Pourquoi un vrai navigateur et pas jsdom : un decalage est un fait de MISE EN PAGE
  * (`position: fixed`, cascade des proprietes personnalisees par element). jsdom ne
  * calcule aucune geometrie — il laisserait passer le defaut.
@@ -33,6 +39,9 @@
  * festive.css (le poser inconditionnellement a `var(--sidebar-w)`) rend rouges les cas
  * « sans rail », « rail non fixe » et « sidebar hors ecran » ; les cas « sidebar a
  * l'ecran » restent verts (c'est le comportement inchange).
+ * #1022 : retirer la regle `:root:has(.rail-sidebar--fixed.collapsed)` de festive.css rend
+ * rouge le seul cas « rail fixe replie @1280px » (260px mesures au lieu de 64) ; le rail
+ * fixe deploye, le rail replie hors ecran (375 / 768px) et les autres cas restent verts.
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -46,6 +55,8 @@ const ORNAMENT = ".ornament";
 
 // Largeur de la sidebar DS (`--sidebar-w`, tokens.css) et du rail deploye (`--rail-w`).
 const SIDEBAR_PX = 260;
+// Largeur du rail replie (`--rail-w-collapsed`, tokens.css).
+const RAIL_COLLAPSED_PX = 64;
 // Tolerance d'arrondi de la mise en page (sous-pixel).
 const EPS = 1;
 
@@ -158,16 +169,13 @@ function expectAlignedOnWindow(m: Measure) {
 }
 
 /** Decor decale de la largeur de la barre laterale : il commence a son bord droit. */
-function expectOffsetBySidebar(m: Measure) {
-  expect(m.garland.left, "bord gauche de la guirlande").toBeCloseTo(
-    SIDEBAR_PX,
-    0,
-  );
+function expectOffsetBySidebar(m: Measure, offset: number = SIDEBAR_PX) {
+  expect(m.garland.left, "bord gauche de la guirlande").toBeCloseTo(offset, 0);
   expect(m.garland.right, "bord droit de la guirlande").toBeCloseTo(
     m.innerWidth,
     0,
   );
-  expect(m.ornaments.left, "bord gauche des boules").toBeCloseTo(SIDEBAR_PX, 0);
+  expect(m.ornaments.left, "bord gauche des boules").toBeCloseTo(offset, 0);
   expect(m.ornaments.right, "bord droit des boules").toBeCloseTo(
     m.innerWidth,
     0,
@@ -262,6 +270,42 @@ test.describe("Decor festif — decale seulement si une barre laterale est a l'e
 
     expectAlignedOnWindow(m);
   });
+
+  // 3bis. Rail fixe REPLIE (#1022) : le DS suit la largeur de sa propre barre (64px), sans que
+  // l'application resature `--sidebar-w` (la fixture ne le fait pas : il vaut 260px a `:root`).
+  test("rail fixe replie @1280px : decor decale de la largeur du rail replie (64px)", async ({
+    page,
+  }) => {
+    await openPage(page, `${FIXTURE}?rail=fixed-collapsed`, 1280);
+    const m = await measure(page);
+
+    await expectDecorRendered(page, m);
+    expect(m.counts.rail, "un .rail-sidebar est rendu").toBe(1);
+    // Garde-fous : le rail est bien replie (64px, pas 260px)...
+    expect(m.barRight, "bord droit du rail replie").toBeCloseTo(
+      RAIL_COLLAPSED_PX,
+      0,
+    );
+    // ... et l'application n'a PAS resature le token : c'est la condition du defaut.
+    expect(m.rootSidebarW, "--sidebar-w a :root").toBe(`${SIDEBAR_PX}px`);
+
+    expectOffsetBySidebar(m, RAIL_COLLAPSED_PX);
+  });
+
+  for (const width of [375, 768]) {
+    test(`rail fixe replie @${width}px : rail hors ecran, le decor couvre la fenetre`, async ({
+      page,
+    }) => {
+      await openPage(page, `${FIXTURE}?rail=fixed-collapsed`, width);
+      const m = await measure(page);
+
+      await expectDecorRendered(page, m);
+      expect(m.counts.rail, "un .rail-sidebar est rendu").toBe(1);
+      expect(m.barRight, "rail replie hors ecran").toBeLessThanOrEqual(0);
+
+      expectAlignedOnWindow(m);
+    });
+  }
 
   test("rail non fixe (dans le flux) @1280px : ne pousse rien, le decor couvre la fenetre", async ({
     page,
