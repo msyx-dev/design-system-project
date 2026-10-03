@@ -69,6 +69,8 @@ export default defineConfig({
     "**/card-static-hover.spec.ts",
     "**/table-cards-editable.spec.ts",
     "**/segmented-indicator-sync.spec.ts",
+    "**/code-block-whitespace.spec.ts",
+    "**/demo-note.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

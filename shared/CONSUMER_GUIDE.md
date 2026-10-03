@@ -795,6 +795,15 @@ Classes DS (`forms.css`) : `.input-footer` (ligne sous le champ : aide ou erreur
 - Avec une erreur : `.input-error-msg` remplace `.input-hint` dans `.input-footer`, `aria-invalid="true"` + `.input-error` sur le champ. Sans compteur, le markup reste celui d'un `.input` (aide ou erreur enfants directs de `.input-group`, sans `.input-footer`).
 - Le compteur suit le `reset` du formulaire. Une ecriture imperative `field.value = …` n'emet aucun evenement `input` : declencher `field.dispatchEvent(new Event('input'))` pour resynchroniser.
 
+## Blocs de code — `.code-block` (#1020)
+
+Classe DS (`interactive.css`). Le source fait foi, selon la balise :
+
+- **`<div class="code-block">`** (et `<CodeBlock>` de `@msyx-dev/react`, qui émet ce `<div>`) : `white-space: pre-wrap`. Les retours à la ligne et l'indentation du texte sont gardés, les lignes longues se replient (`overflow-wrap: anywhere`, #250), il n'y a pas de défilement horizontal. Le bouton « Copier » (`initCopyButtons()`) lit `innerText` : il copie ce qui est affiché, ligne par ligne.
+- **`<pre class="code-block">`** : `white-space: pre` natif. Les lignes ne se replient pas, le bloc défile horizontalement.
+
+Écrire **soit** des retours à la ligne dans le source, **soit** des `<br>`, jamais les deux : avec `pre-wrap`, un saut de ligne suivi d'un `<br>` double l'interligne. Les `<br>` déjà posés par un consommateur restent rendus à l'identique ; seul un `<div class="code-block">` dont le texte contient `\n` change (il s'affiche désormais sur plusieurs lignes, ce qui est la correction attendue).
+
 ## Mapping aksy DS-EXCEPTION → DS msyx.fr (v2.27.0+)
 
 Les variantes destructives suivantes utilisees en aksy sont couvertes par le DS standard :
