@@ -321,10 +321,10 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     align-items: center;
 }
 .otp-digit {
-    width: 3rem;
-    height: 3.5rem;
+    width: 2.5rem;
+    height: 3rem;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-family: var(--font-mono);
     font-weight: 600;
     color: var(--text);
@@ -349,8 +349,8 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     opacity: 0.45;
     cursor: not-allowed;
 }
-@media (max-width: 480px) {
-    .otp-digit { width: 2.5rem; height: 3rem; font-size: 1rem; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .otp-digit { width: 3rem; height: 3.5rem; font-size: 1.2rem; }
 }
 
 /* ===== TAG INPUT ===== */
@@ -440,27 +440,32 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 /* ===== FILTER BAR ===== */
 /* Barre de filtres horizontale — pattern réutilisable pour vues master/listes filtrées */
 /* Extrait de aksy .chantiers-filter-bar (DS-EXCEPTION §4, issue #154) */
-.filter-bar { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; margin-bottom: var(--space-md); }
+.filter-bar { display: flex; flex-direction: column; flex-wrap: wrap; gap: var(--space-sm); align-items: stretch; margin-bottom: var(--space-md); }
 .filter-bar .input,
-.filter-bar select.input { min-width: 160px; flex: 0 1 auto; }
-.filter-bar .filter-bar-search,
-.filter-bar input[type="search"].input { flex: 1 1 240px; min-width: 200px; }
-.filter-bar .filter-bar-actions { margin-left: auto; display: flex; gap: var(--space-xs); align-items: center; }
-@media (max-width: 600px) {
-    .filter-bar { flex-direction: column; align-items: stretch; }
+.filter-bar select.input { min-width: 0; flex: 1 1 auto; }
+.filter-bar .filter-bar-search { min-width: 0; width: 100%; flex: 1 1 auto; }
+.filter-bar .filter-bar-actions { margin-left: 0; display: flex; justify-content: flex-end; gap: var(--space-xs); align-items: center; }
+@media (min-width: 600.02px) { /* seuil composant : 600px */
+    .filter-bar { flex-direction: row; align-items: center; }
     .filter-bar .input,
-    .filter-bar select.input,
-    .filter-bar .filter-bar-search { min-width: 0; width: 100%; flex: 1 1 auto; }
-    .filter-bar .filter-bar-actions { margin-left: 0; justify-content: flex-end; }
+    .filter-bar select.input { min-width: 160px; flex: 0 1 auto; }
+    /* Le sélecteur (0,3,1) du champ sans .filter-bar-search ne vit QUE dans ce bloc : posé en base, il battait le repli mobile (0,2,0) et gardait 240px en hauteur (#1023, A9) */
+    .filter-bar .filter-bar-search,
+    .filter-bar input[type="search"].input { min-width: 200px; flex: 1 1 240px; }
+    .filter-bar .filter-bar-search:not(.input) { width: auto; }
+    .filter-bar .filter-bar-actions { margin-left: auto; justify-content: normal; }
 }
 
 /* ===== LOGIN FORM / LOGINSCREEN ===== */
 /* Pattern d'authentification msyx. Card glassmorphism + orbes + gradient submit.        */
 /* LoginScreen (v2.57.0, #285) : bouton Authentik primary + slots providers + 3 variants. */
-.login-preview { background: var(--primary); border-radius: var(--radius-card); padding: var(--space-xl); min-height: 360px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; width: 100%; max-width: 100%; }
+.login-preview { background: var(--primary); border-radius: var(--radius-card); padding: var(--space-xl); min-height: 280px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; width: 100%; max-width: 100%; }
 .login-preview .orb { --orb-opacity: 0.15; }
 .login-preview .orb-1 { width: 300px; height: 300px; background: var(--accent); top: -80px; right: -60px; }
 .login-preview .orb-2 { width: 250px; height: 250px; background: var(--deco-violet); bottom: -60px; left: -60px; }
+@media (min-width: 768.02px) { /* bp-md */
+    .login-preview { min-height: 360px; }
+}
 .login-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); width: 100%; max-width: 360px; text-align: center; box-shadow: var(--shadow-lg); backdrop-filter: blur(20px); position: relative; z-index: 1; }
 .login-logo { width: 48px; height: 48px; margin: 0 auto var(--space-md); background: var(--gradient-1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; color: var(--text-on-accent); font-family: var(--font-display); }
 .login-card h3 { font-family: var(--font-display); color: var(--text); font-size: 1.2rem; margin-bottom: 0.4rem; }
@@ -534,10 +539,13 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 /* internal-with-fallback : form local en premier + Authentik si dispo (préprod/staging) */
 .login-card--internal-with-fallback .login-authentik-btn { margin-top: var(--space-md); }
 
-.login-compact { display: flex; gap: 0.5rem; align-items: center; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 0.8rem 1rem; backdrop-filter: blur(20px); }
+.login-compact { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 0.8rem 1rem; backdrop-filter: blur(20px); }
 .login-compact input { flex: 1; padding: 0.55rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--primary); color: var(--text); font-size: 0.82rem; outline: none; font-family: var(--font-sans); min-width: 0; }
 .login-compact input:focus-visible { border-color: var(--accent); }
 .login-compact button { padding: 0.55rem 1.2rem; border-radius: var(--radius-sm); border: none; background: linear-gradient(135deg, var(--btn-primary-bg-start), var(--btn-primary-bg-end)); color: var(--btn-on-primary); font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); white-space: nowrap; }
+@media (min-width: 768.02px) { /* bp-md */
+    .login-compact { flex-wrap: nowrap; }
+}
 
 /* ===== AUTH FLOWS ===== */
 .login-step { display: none; }
@@ -694,7 +702,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .settings-panel { display: flex; flex-direction: column; gap: var(--space-lg); }
 .settings-section { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; }
 .settings-section-title { padding: var(--space-sm) var(--space-md); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); background: color-mix(in srgb, var(--accent) 4%, transparent); border-bottom: 1px solid var(--border-color); }
-.settings-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--border-color); }
+.settings-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-xs); padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--border-color); }
 .settings-row:last-child { border-bottom: none; }
 .settings-row-info { display: flex; flex-direction: column; gap: 0.15rem; flex: 1; min-width: 0; }
 .settings-row-label { font-size: 0.9rem; font-weight: 500; color: var(--text); }
@@ -703,13 +711,14 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .settings-danger { border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
 .settings-danger .settings-section-title { color: var(--status-error-text); background: color-mix(in srgb, var(--danger) 6%, transparent); border-bottom-color: color-mix(in srgb, var(--danger) 25%, transparent); }
 .settings-danger .settings-row { border-bottom-color: color-mix(in srgb, var(--danger) 20%, transparent); }
-.settings-row-input { background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.3rem 0.6rem; font-size: 0.85rem; color: var(--text); outline: none; width: 180px; }
+.settings-row-input { background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.3rem 0.6rem; font-size: 0.85rem; color: var(--text); outline: none; width: 100%; }
 .settings-row-input:focus { border-color: var(--accent); }
-.settings-row-select { background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.3rem 0.6rem; font-size: 0.85rem; color: var(--text); outline: none; cursor: pointer; }
+.settings-row-select { background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.3rem 0.6rem; font-size: 0.85rem; color: var(--text); outline: none; cursor: pointer; width: 100%; }
 .settings-row-select:focus { border-color: var(--accent); }
-@media (max-width: 600px) {
-    .settings-row { flex-wrap: wrap; gap: var(--space-xs); }
-    .settings-row-input, .settings-row-select { width: 100%; }
+@media (min-width: 600.02px) { /* seuil composant : 600px */
+    .settings-row { flex-wrap: nowrap; gap: var(--space-md); }
+    .settings-row-input { width: 180px; }
+    .settings-row-select { width: auto; }
 }
 
 /* ===== COMMENTS / THREAD ===== */
@@ -725,15 +734,15 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .comment-action-btn { background: none; border: none; cursor: pointer; font-size: 0.78rem; color: var(--text-muted); padding: 0.2rem 0.4rem; border-radius: var(--radius-xs); transition: color 0.15s, background 0.15s; display: inline-flex; align-items: center; gap: 0.25rem; }
 .comment-action-btn:hover { color: var(--accent-text); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .comment-action-btn.active { color: var(--danger); }
-.comment-thread { padding-left: var(--space-lg); position: relative; margin-top: 0; }
-.comment-thread::before { content: ''; position: absolute; left: 18px; top: 0; bottom: var(--space-sm); width: 2px; background: var(--border-color); border-radius: 1px; }
+.comment-thread { padding-left: var(--space-md); position: relative; margin-top: 0; }
+.comment-thread::before { content: ''; position: absolute; left: 12px; top: 0; bottom: var(--space-sm); width: 2px; background: var(--border-color); border-radius: 1px; }
 .comment-reply-form { display: none; margin-top: var(--space-xs); }
 .comment-reply-form.open { display: flex; gap: var(--space-xs); align-items: flex-start; }
 .comment-reply-input { flex: 1; background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem 0.7rem; font-size: 0.85rem; color: var(--text); outline: none; resize: none; min-height: 36px; }
 .comment-reply-input:focus { border-color: var(--accent); }
-@media (max-width: 480px) {
-    .comment-thread { padding-left: var(--space-md); }
-    .comment-thread::before { left: 12px; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .comment-thread { padding-left: var(--space-lg); }
+    .comment-thread::before { left: 18px; }
 }
 
 /* FORM VALIDATION (#433) */

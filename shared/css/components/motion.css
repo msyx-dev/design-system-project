@@ -9,7 +9,8 @@
 .motion-duration-row,
 .motion-easing-row {
     display: grid;
-    grid-template-columns: 180px 260px 1fr auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
     align-items: center;
     gap: var(--space-md);
 }
@@ -27,6 +28,7 @@
 
 /* Barres de durée */
 .motion-bar {
+    grid-column: 1 / -1;
     height: 8px;
     background: var(--surface-light);
     border-radius: var(--radius-sm);
@@ -45,11 +47,13 @@
 
 /* Courbes easing */
 .motion-curve {
+    grid-column: 1 / -1;
     width: 80px;
     height: 80px;
     flex-shrink: 0;
 }
 .motion-ball-track {
+    grid-column: 1 / -1;
     height: 32px;
     background: var(--surface-light);
     border-radius: 16px;
@@ -172,19 +176,23 @@
 }
 
 /* Responsive 320px–768px */
-@media (max-width: 768px) {
+.motion-replay {
+    grid-column: 1 / -1;
+    justify-self: end;
+}
+@media (min-width: 768.02px) { /* bp-md */
     .motion-duration-row,
     .motion-easing-row {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto;
+        grid-template-columns: 180px 260px 1fr auto;
+        grid-template-rows: none;
     }
     .motion-bar,
     .motion-ball-track,
     .motion-curve {
-        grid-column: 1 / -1;
+        grid-column: auto;
     }
     .motion-replay {
-        grid-column: 1 / -1;
-        justify-self: end;
+        grid-column: auto;
+        justify-self: auto;
     }
 }

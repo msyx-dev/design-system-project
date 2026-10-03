@@ -295,6 +295,28 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 
 **Référence** : décision Mike 2026-07-26, issue #613, v2.116.0.
 
+#### Exception écrite — un filtre de page en liens n'est pas un radiogroup (#1016)
+
+Quand chaque option est une **page** (filtre rendu par le serveur, route statique) et non un état local, le groupe est un `<nav>` de liens :
+
+```html
+<nav class="segmented" aria-label="Filtrer par état">
+  <span class="segmented-indicator" aria-hidden="true"></span>
+  <a class="segmented-item active" href="?filtre=tous" aria-current="page">Tous</a>
+  <a class="segmented-item" href="?filtre=actifs">Actifs</a>
+  <a class="segmented-item" aria-disabled="true">Archivés</a>
+</nav>
+```
+
+- **Sémantique** : landmark `nav` + `aria-label` distinct par groupe ; le lien courant porte `aria-current="page"` **et** `.active` (le serveur pose les deux, le JS n'en pose aucun) ; **aucun** `role`, `aria-checked` ni `tabindex`.
+- **Pourquoi pas un radiogroup** : activer une option charge une autre URL. `role="radio"` annoncerait « sélectionné, 1 sur 3 » pour un contrôle qui navigue, retirerait le rôle `link` (clic milieu, Ctrl+clic, « ouvrir dans un nouvel onglet »), et le roving tabindex + les flèches casseraient l'attente clavier d'un lien (Tab de lien en lien, Entrée).
+- **Clavier natif** : Tab parcourt chaque lien, Entrée le suit. Le DS n'écoute ni le clic ni le clavier, donc ne fait **jamais** de `preventDefault()` ; pas de flèches.
+- **Option indisponible** : `<a aria-disabled="true">` **sans `href`** — ni focalisable ni activable.
+- **React** (`<SegmentedControl as="link">`, API additive : union discriminée sur `as`, `href` requis sur les options, `onChange` optionnel en mode liens seulement) : même balisage attribut pour attribut (test de recollement `renderToStaticMarkup` contre la vitrine). Le wrapper n'intercepte **que** si l'appelant fournit `onChange` ET que le clic est un clic gauche sans modificateur (`preventDefault()` puis `onChange(value)`, le lien courant n'appelle rien) ; sans `onChange`, ou avec Ctrl/Meta/Maj/Alt ou un clic milieu, la navigation reste native. Jamais de `role`, `tabIndex` ni `onKeyDown`. Pas de prop `linkComponent`.
+- **JS** : `initSegmentedControls` détecte `:scope > a.segmented-item` et ne fait que placer l'indicateur (`trackIndicator`). Sans JavaScript, la navigation fonctionne et le lien courant reste lisible (l'item actif porte l'aplat de l'indicateur tant qu'aucune largeur inline n'est posée).
+- **Rendu identique à un bouton** : `text-decoration: none` et `line-height: normal` sur `.segmented-item` (un `<a>` hérite `1.6` du body : 45,75 px contre 40 px). **Ne jamais** ajouter `.segmented-item` à `a:is(...)` de `_base.css` : son `color: inherit` (0,1,1) battrait la couleur des items inactifs (0,1,0) — piège A9.
+- **Preuves** : `visual-tests/segmented-indicator-sync.spec.ts` (cas 5 à 9 : JS coupé, balisage, clavier, hauteur, rendu) et `tests/vanilla/segmented-control.test.js`.
+
 ### 3.3 — Contraste des boutons à fond plein : mesuré sur les pixels, bloquant (#944)
 
 **Règle** : le texte d'un bouton à fond plein (dégradé) respecte **4,5:1 minimum** (valeur visée **≥ 4,6** : l'anticrénelage et le tramage du dégradé font bouger la mesure de quelques centièmes) sur **trois mesures**, dans les **10 combos** thème/mode, au repos **et** au survol :
@@ -393,6 +415,15 @@ Un seuil qui n'est pas dans l'échelle (480 / 768 / 1024 / 1280 — par exemple 
 ```
 
 Tout autre `max-width` (padding, taille de police, gabarit, grille) est un défaut : on réécrit en mobile-first. Précédent de l'exception : `.hidden-mobile` (`utilities.css`).
+
+**`@container (max-width)` est permis, hors de l'exception et hors garde** : sans conteneur ancêtre, la requête ne s'applique pas et le rendu complet reste le défaut. Une réécriture en `min-width` inverserait ce défaut : toute carte hors conteneur passerait en rendu compact, chez tous les consommateurs. Le DS en compte 5 (`layout.css` : `card`, `demo-grid`, `stats-grid`, `kpi-grid` ; `cards.css`). Le doublon apparent `layout.css` / `cards.css` n'en est pas un : le premier interroge le conteneur nommé `card`, le second le conteneur le plus proche.
+
+### Garde-fou
+- `node bin/check-mobile-first.js` est **bloquant** en CI (job `lint`, sans `continue-on-error`). Il parcourt `shared/css/**/*.css` et `shared/styles.css`, et refuse tout `@media` à borne haute de largeur (`max-width`, ou la syntaxe de plage `width < N`, `width <= N`, `N > width`) dont la ligne du `{` ne porte pas la chaîne exacte `exception §4 :` suivie d'une raison. Il sort en liste `fichier:ligne`, exit 1.
+- **Déclarer une exception** = poser `/* exception §4 : <raison> */` sur la ligne qui ouvre le bloc (celle du `{` quand le prélude est coupé sur plusieurs lignes). Un marqueur sans raison, sur la ligne d'avant ou sur la première ligne d'un prélude coupé est refusé.
+- Le garde est en node et non en `grep` : il retire les commentaires en gardant les numéros de ligne, donc ni faux positif (un commentaire multi-lignes qui cite `(max-width: 768px)`), ni faux négatif (un prélude coupé sur deux lignes). Il échoue aussi si un chemin est introuvable, si la portée est vide ou si un commentaire n'est pas fermé (`fail-closed`).
+- Hors portée : `@container`, la propriété `max-width: …;`, et les bornes basses (`min-width`, `width >= N`). Tests : `npm run test:mobile-first` (`tests/regression/check-mobile-first.test.js`, dont la mutation « un `max-width` sans marqueur ajouté à `lists.css` » sur une copie de `shared/css`).
+- **Ne jamais**, pour le faire passer : poser le marqueur sur un enrichissement (padding, taille, grille) au lieu de le réécrire en mobile-first, ou retirer un fichier de la portée.
 
 ### Anti-patterns concrets
 
@@ -936,6 +967,29 @@ désaligné sur 50 chargements nominaux et 20 avec 150 ms de délai sur les
 `.woff2`) : le correctif vise l'invariant (l'indicateur coïncide avec l'item
 actif), pas un mécanisme supposé. Un mécanisme résiduel donnera un échec
 explicite, jamais une variante silencieuse.
+
+### Segmented : avant hydratation, contraste `--subtle`, cible tactile (#1016)
+
+- **Avant la 1re mesure** (rendu serveur de `<SegmentedControl>`, JS absent, hydratation en cours),
+  `.segmented-indicator` est dans le DOM mais n'a aucune largeur : le texte de l'item actif
+  (`--text-on-accent`) se lisait sur la piste, 1,13 a 2,21:1 dans 8 combos sur 10. Le **marqueur** de
+  l'etat « non mesure » est l'absence de `width` INLINE : `.segmented-indicator:not([style*="width"])`
+  est masque et l'item actif porte l'aplat et l'ombre de l'indicateur. Les deux implementations ecrivent
+  deja `width` en inline, toutes versions : aucun attribut `data-*`, aucun contrat JS, et l'indicateur maison
+  d'un consumer (largeur inline) n'est pas vise. Regle JS associee : **la toute premiere mesure se fait sans
+  transition** (sinon l'indicateur grandit de 0 a sa largeur en 0,3 s au chargement), puis la transition est
+  restauree.
+- **Contraste de l'item actif `.segmented--subtle` = token dedie** `--segmented-subtle-active-text`, jamais
+  `--accent-text-strong` (partage avec puces, tags, rail, dont le fond et le reglage different). Hex litteral par
+  theme et par mode, regle a la mesure pixel (L OKLCh seule, teinte conservee), **>= 4,5:1 bloquant, vise >= 4,6**, avant
+  hydratation ET une fois mesure (`segmented-prehydration-contrast.spec.ts`, 10 combos). Un theme conforme recopie sa
+  valeur ; ne jamais baisser le seuil ni retirer un combo de la sonde.
+- **Cible tactile >= 44px de haut sur mobile**, bouton ET lien, toutes tailles (WCAG 2.5.5). `.segmented` porte
+  `overflow-x: auto`, donc `overflow-y` calcule a `auto` : une zone etendue ne peut pas depasser le padding de la
+  piste (3px) sans la faire defiler. D'ou deux mecanismes : `::after` (+3px en haut et en bas, sans effet visuel) et
+  `min-height: calc(var(--segmented-target) - 6px)` (38px), retire a `min-width: 768px`. Defaut et `--subtle` (40px) ne
+  bougent pas ; `--sm` passe de 24,6 a 38px **sur mobile seulement**. Preuve : balayage `elementFromPoint` +
+  `scrollHeight <= clientHeight` dans `segmented-touch-target.spec.ts`.
 
 ### Garde-fou en CI
 

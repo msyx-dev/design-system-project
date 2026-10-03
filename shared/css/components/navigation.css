@@ -101,7 +101,7 @@
 /* bc-ellipsis: hidden by default, shown on mobile for responsive variant */
 .bc-ellipsis { display: none !important; color: var(--text-dim); font-size: 0.82rem; padding: 0 0.2rem; user-select: none; align-items: center; gap: 0; }
 /* Responsive collapse: on mobile show only first, ellipsis, and last */
-@media (max-width: 640px) {
+@media (max-width: 640px) { /* exception §4 : masquage sur une plage, repli du fil d'Ariane */
     .breadcrumbs.bc-responsive li { display: none; }
     .breadcrumbs.bc-responsive li:first-child { display: flex; }
     .breadcrumbs.bc-responsive li:last-child { display: flex; }
@@ -233,14 +233,14 @@
 /* ===== SIDEBAR RAIL ===== */
 .rail-demo {
     display: flex;
-    height: 360px;
+    height: 300px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;
     background: var(--primary);
 }
 .rail-sidebar {
-    width: var(--rail-w);
+    width: 200px;
     background: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
     display: flex;
@@ -477,9 +477,9 @@
     color: var(--text-muted);
     line-height: 1.5;
 }
-@media (max-width: 480px) {
-    .rail-demo { height: 300px; }
-    .rail-sidebar { width: 200px; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .rail-demo { height: 360px; }
+    .rail-sidebar { width: var(--rail-w); }
 }
 
 /* Comportement hors-flux mobile (#906) — calque EXACT de .sidebar/.sidebar-overlay
@@ -489,7 +489,7 @@
    rien ne change pour lui). Le mode replie (icones) n'a pas de sens en panneau
    mobile plein ecran : l'etat replie est neutralise ici, le panneau ouvre toujours
    a --rail-w. */
-@media (max-width: 768px) {
+@media (max-width: 768px) { /* exception §4 : panneau hors écran avec voile (rail fixe) */
     .rail-sidebar--fixed {
         transform: translateX(-100%);
     }
@@ -623,8 +623,8 @@
 .user-menu-dropdown {
     position: absolute;
     top: calc(100% + 6px);
-    right: 0;
-    min-width: 220px; /* override : dropdown user plus large que le primitif (180px) */
+    right: -0.5rem;
+    min-width: min(260px, calc(100vw - 1rem)); /* override : dropdown user plus large que le primitif (180px), borné au viewport */
     z-index: var(--z-nav);
     overflow: hidden;
     opacity: 0;
@@ -748,15 +748,18 @@
 }
 
 /* Responsive : sur mobile le dropdown prend plus de largeur */
-@media (max-width: 480px) {
+@media (min-width: 480.02px) { /* bp-sm */
     .user-menu-dropdown {
-        right: -0.5rem;
-        min-width: min(260px, calc(100vw - 1rem));
+        right: 0;
+        min-width: 220px;
     }
 }
 
 /* ===== SEGMENTED CONTROL ===== */
 .segmented {
+    /* #1016 : ombre de l'indicateur, partagee avec l'item actif tant que l'indicateur n'est pas
+       mesure (voir « avant la 1re mesure » plus bas) -- une seule valeur, deux consommateurs. */
+    --segmented-indicator-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
     display: inline-flex;
     position: relative;
     background: var(--surface-light);
@@ -800,7 +803,7 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
     z-index: 0;
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
+    box-shadow: var(--segmented-indicator-shadow);
 }
 .segmented--subtle .segmented-indicator {
     background: color-mix(in srgb, var(--accent) 18%, transparent);
@@ -824,6 +827,15 @@
     white-space: nowrap;
     transition: color 0.2s;
     user-select: none;
+    /* #1016 T2 -- mode « liens » : a.segmented-item doit rendre comme button.segmented-item.
+       - text-decoration : la regle globale `a` (_base.css) souligne ; (0,1,0) bat son (0,0,1).
+         NE PAS ajouter .segmented-item a la liste `a:is(...)` de _base.css : son `color: inherit`
+         (0,1,1) battrait la couleur des items inactifs ci-dessus (0,1,0) -- arbitrage A9.
+       - line-height : un <button> a `normal` (feuille UA), un <a> herite du body (1.6) et mesurait
+         45,75 px contre 40 px (mesure Chromium, T1b). `normal` aligne les deux ; sans effet sur un
+         bouton, qui l'a deja. */
+    text-decoration: none;
+    line-height: normal;
 }
 .segmented-item:hover:not(.active) {
     color: var(--text);
@@ -832,8 +844,13 @@
     color: var(--text-on-accent);
     font-weight: 600;
 }
+/* #1016 T1b -- texte de l'item actif subtil : token DEDIE (hex litteral regle a la mesure pixel, >= 4,6:1
+   au pire fond, 10 combos), plus --accent-text-strong, partage avec puces, tags et rail dont le fond
+   et le reglage different (acssi sombre 3,87, nhood clair 4,34, auchan clair 2,93, noel clair 4,49).
+   Repli sur --accent-text-strong : un consommateur qui a synchronise ce module sans tokens/themes a jour
+   garde l'ancien rendu au lieu d'heriter une couleur au hasard. */
 .segmented--subtle .segmented-item.active {
-    color: var(--accent-text-strong);
+    color: var(--segmented-subtle-active-text, var(--accent-text-strong));
 }
 /* #982 F7 — un segmented sans .segmented-indicator reporte l'aplat de l'indicateur sur l'item actif
    (sinon : texte clair sur la piste, 1,23:1 en light ; ex. AM/PM du time-picker). Memes declarations
@@ -843,6 +860,25 @@
 }
 .segmented--subtle:not(:has(> .segmented-indicator)) > .segmented-item.active {
     background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+/* #1016 -- Avant la 1re mesure (rendu serveur, JS absent, hydratation en cours), l'indicateur n'a pas
+   de largeur INLINE : sans cette regle l'item actif (--text-on-accent) se lisait sur la piste
+   (--surface-light), 1,13 a 2,21:1 dans 8 combos sur 10 (mesure Chromium). L'item actif porte alors
+   l'aplat ET l'ombre de l'indicateur, et l'indicateur vide est masque. Le marqueur est la largeur
+   inline, ecrite par initSegmentedControls ET par <SegmentedControl> dans toutes leurs versions :
+   aucun contrat JS nouveau, aucun attribut data-*. `visibility` ne figure pas dans la transition
+   (transform, width) : le passage de l'aplat a l'indicateur se fait d'un coup, sans animation.
+   Meme specificite (0,5,0) pour les deux variantes : la subtile gagne par l'ordre. */
+.segmented-indicator:not([style*="width"]) {
+    visibility: hidden;
+}
+.segmented:has(> .segmented-indicator:not([style*="width"])) > .segmented-item.active {
+    background: var(--accent-surface);
+    box-shadow: var(--segmented-indicator-shadow);
+}
+.segmented--subtle:has(> .segmented-indicator:not([style*="width"])) > .segmented-item.active {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    box-shadow: none;
 }
 .segmented-item svg {
     flex-shrink: 0;
@@ -859,4 +895,29 @@
 .segmented--lg .segmented-item {
     padding: 0.6rem 1.4rem;
     font-size: 0.92rem;
+}
+/* #1016 T1b -- Cible tactile >= 44px de haut (WCAG 2.5.5, DS-PRINCIPLES §3), mobile-first : valable
+   pour le bouton ET le lien, toutes tailles. Mesure Chromium 375px AVANT : defaut 40px, --lg 37,2px,
+   --sm 24,6px (< 44). Deux mecanismes, pour garder l'encombrement des tailles courantes :
+   - ::after etend la zone cliquable de 3px en haut et en bas, soit exactement le padding de .segmented :
+     c'est le MAXIMUM possible sans deborder du conteneur (overflow-x:auto force overflow-y:auto, un
+     enfant qui depasse le padding box ferait defiler la piste) ; aucun effet visuel ;
+   - min-height ramene l'item a 44px moins ces 2 x 3px : le defaut (40px) et --subtle ne bougent pas,
+     --lg gagne 0,8px, --sm passe de 24,6 a 38px SUR MOBILE (la zone etendue ne peut pas le sauver).
+   Au-dela de 768px (pointeur fin) seul min-height est retire : --sm retrouve sa taille compacte. */
+.segmented {
+    --segmented-target: 44px;
+}
+.segmented-item {
+    min-height: calc(var(--segmented-target) - 6px);
+}
+.segmented-item::after {
+    content: "";
+    position: absolute;
+    inset: -3px 0;
+}
+@media (min-width: 768px) {
+    .segmented-item {
+        min-height: 0;
+    }
 }

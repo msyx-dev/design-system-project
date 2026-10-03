@@ -60,12 +60,12 @@
 }
 .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: var(--space-lg);
     align-items: start;
 }
-@media (max-width: 768px) {
-    .pricing-grid { grid-template-columns: 1fr; }
+@media (min-width: 768.02px) { /* bp-md */
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .pricing-card {
     background: var(--surface);

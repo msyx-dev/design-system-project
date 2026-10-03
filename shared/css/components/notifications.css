@@ -50,8 +50,10 @@
 .notif-panel {
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
-    width: 340px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 2rem);
     background: var(--surface-solid);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-card);
@@ -64,8 +66,8 @@
 .notif-panel.open {
     display: flex;
 }
-@media (max-width: 480px) {
-    .notif-panel { width: calc(100vw - 2rem); right: auto; left: 50%; transform: translateX(-50%); }
+@media (min-width: 480.02px) { /* bp-sm */
+    .notif-panel { width: 340px; right: 0; left: auto; transform: none; }
 }
 .notif-panel-header {
     display: flex;

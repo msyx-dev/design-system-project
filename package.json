@@ -17,6 +17,7 @@
     "test:version-notes": "node tests/regression/generate-version-notes.test.js",
     "test:registry-react-exports": "node tests/regression/generate-registry-react-exports.test.js",
     "test:check-orphans": "node tests/regression/check-orphans.test.js",
+    "test:mobile-first": "node tests/regression/check-mobile-first.test.js",
     "test:check-components": "bash tests/test-check-components.sh",
     "test:check-sync": "bash tests/test-check-sync.sh",
     "test:sync-styles": "bash tests/test-sync-styles.sh",

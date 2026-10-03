@@ -718,6 +718,50 @@
     </div>
 </section>
 
+<section id="segmented-links">
+    <div class="section-header">
+        <span class="overline">Composants</span>
+        <h2>Segmented Control — liens</h2>
+        <p>Le même contrôle pour un filtre de page statique ou rendue par le serveur : <code class="code-inline">&lt;nav&gt;</code> + <code class="code-inline">&lt;a href&gt;</code>. La navigation est native, donc elle fonctionne sans JavaScript. Ce n'est pas un radiogroup : on passe d'un lien à l'autre avec Tab, et le lien courant porte <code class="code-inline">aria-current="page"</code> en plus de <code class="code-inline">.active</code>.</p>
+    </div>
+    <div class="demo-grid demo-grid-2">
+
+        <div class="demo-box">
+            <span class="demo-label">Défaut — 3 liens</span>
+            <nav class="segmented" aria-label="Filtrer par état">
+                <span class="segmented-indicator" aria-hidden="true"></span>
+                <a class="segmented-item active" href="?filtre=tous#segmented-links" aria-current="page">Tous</a>
+                <a class="segmented-item" href="?filtre=actifs#segmented-links">Actifs</a>
+                <a class="segmented-item" href="?filtre=archives#segmented-links">Archives</a>
+            </nav>
+            <p class="typo-small" style="margin-top:1rem;">Le serveur pose <code class="code-inline">.active</code> et <code class="code-inline">aria-current="page"</code> selon l'URL ; cette vitrine statique fige la première option. Un clic suit le lien (<code class="code-inline">?filtre=…</code>), sans JavaScript.</p>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Variante subtile</span>
+            <nav class="segmented segmented--subtle" aria-label="Afficher la période">
+                <span class="segmented-indicator" aria-hidden="true"></span>
+                <a class="segmented-item active" href="?periode=7j#segmented-links" aria-current="page">7j</a>
+                <a class="segmented-item" href="?periode=30j#segmented-links">30j</a>
+                <a class="segmented-item" href="?periode=90j#segmented-links">90j</a>
+            </nav>
+            <p class="typo-small" style="margin-top:1rem;">Même balisage avec <code class="code-inline">.segmented--subtle</code> (et <code class="code-inline">--sm</code>, <code class="code-inline">--lg</code>).</p>
+        </div>
+
+        <div class="demo-box">
+            <span class="demo-label">Option indisponible</span>
+            <nav class="segmented" aria-label="Filtrer les exports">
+                <span class="segmented-indicator" aria-hidden="true"></span>
+                <a class="segmented-item active" href="?export=tous#segmented-links" aria-current="page">Tous</a>
+                <a class="segmented-item" href="?export=recents#segmented-links">Récents</a>
+                <a class="segmented-item" aria-disabled="true">Archivés</a>
+            </nav>
+            <p class="typo-small" style="margin-top:1rem;">Une option désactivée porte <code class="code-inline">aria-disabled="true"</code> et <strong>aucun</strong> <code class="code-inline">href</code> : elle n'est ni focalisable ni activable.</p>
+        </div>
+
+    </div>
+</section>
+
 <section id="sortable-list">
     <div class="section-header">
         <span class="overline">Composants</span>

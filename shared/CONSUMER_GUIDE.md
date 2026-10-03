@@ -186,6 +186,56 @@ l'utilisateur a déjà navigué (ne casse jamais une vue existante). Le tooltip 
 en flux normal, inadapté aux coordonnées SVG transformées) — passer par `opts.onSelect`
 ou le modal par défaut pour le détail.
 
+### Segmented control — filtre de page en liens (#1016)
+
+Pour un filtre dont chaque option est une **page** (rendu serveur, route statique), utiliser des liens et non des boutons. Balisage exact :
+
+```html
+<nav class="segmented" aria-label="Filtrer par état">
+  <span class="segmented-indicator" aria-hidden="true"></span>
+  <a class="segmented-item active" href="?filtre=tous" aria-current="page">Tous</a>
+  <a class="segmented-item" href="?filtre=actifs">Actifs</a>
+  <a class="segmented-item" aria-disabled="true">Archivés</a>
+</nav>
+```
+
+- Le **serveur** pose `.active` ET `aria-current="page"` sur le lien courant (le même élément). Aucun `role`, `aria-checked` ni `tabindex` : ce n'est pas un radiogroup, Tab et Entrée sont natifs.
+- `aria-label` distinct par groupe (chaque `nav` est un landmark). Option indisponible : `aria-disabled="true"` et **pas de `href`**.
+- Fonctionne sans JavaScript ; `initSegmentedControls()` (inclus dans `components.js`) ne fait que placer l'indicateur. Variantes `.segmented--subtle`, `--sm`, `--lg` inchangées.
+- Aucun lien courant (URL hors options) : n'en marquer aucun, l'indicateur reste masqué.
+- Ne pas redéfinir `a.segmented-item` côté consommateur (soulignement, couleur, hauteur) : le DS les fixe pour que le lien rende comme un `<button>`.
+
+#### React / Next.js (`@msyx-dev/react`)
+
+`<SegmentedControl as="link">` rend **exactement** ce balisage (classes, attributs et ordre identiques à la vitrine : un test de recollement le verrouille). Depuis un **Server Component** Next.js, sans aucun JavaScript côté client :
+
+```tsx
+// app/exports/page.tsx — Server Component
+import { SegmentedControl } from "@msyx-dev/react";
+
+const FILTRES = [
+  { value: "tous", label: "Tous", href: "?filtre=tous" },
+  { value: "actifs", label: "Actifs", href: "?filtre=actifs" },
+  { value: "archives", label: "Archivés", href: "?filtre=archives", disabled: true }, // rendu sans href
+];
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ filtre?: string }>;
+}) {
+  const { filtre = "tous" } = await searchParams;
+  return (
+    <SegmentedControl as="link" label="Filtrer par état" value={filtre} options={FILTRES} />
+  );
+}
+```
+
+- `value` désigne le lien courant (`.active` + `aria-current="page"`) ; une `value` hors options = aucun lien courant, l'indicateur reste masqué. Une option `disabled` n'est jamais courante.
+- **`href` est requis** sur chaque option en mode liens (le compilateur le refuse sinon) ; `onChange` y est **optionnel**. Hors mode liens, rien ne change : `onChange` reste obligatoire.
+- **Navigation côté client (optionnelle)** : dans un Client Component, passer `onChange={(v) => router.push(`?filtre=${v}`)}`. Un clic gauche sans modificateur sur un autre lien fait alors `preventDefault()` puis `onChange(v)` ; **Ctrl/Meta/Maj/Alt+clic, clic milieu, ou `onChange` absent** laissent le navigateur naviguer (nouvel onglet, copie du lien, JavaScript désactivé). Il n'y a pas de prop `linkComponent` : un composant ne traverse pas la frontière Server/Client Component, et le DS ne dépend pas de Next.
+- **Avant l'hydratation**, l'indicateur est rendu sans `style` : le CSS DS peint alors l'aplat sur le lien courant (lisible, ≥ 4,5:1), et la première mesure se fait sans transition.
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)
@@ -928,7 +978,7 @@ Copie un barrel généré à la volée + uniquement les modules listés dans `co
 `overlays`, `pricing`, `quiz`, `section-header`, `signature`, `tables`, `templates`, `theme-toggle`,
 `theming`, `tracker`.
 
-Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `_a11y` (focus-visible global), `_responsive`.
+Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `_a11y` (focus-visible global), `_responsive` (fichier conservé mais vide depuis #1023 : les règles responsive vivent dans leur module).
 
 ### Avertissement
 - **Cascade** : l'ordre est imposé par le barrel généré. Ne pas réordonner manuellement.
@@ -972,7 +1022,7 @@ Modules tries par poids decroissant.
 | `_a11y` | 876 B | Focus-visible global (inclus auto) |
 | `_base` | 714 B | Reset natif (inclus auto) |
 | `avatars` | 609 B | Avatars, initiales |
-| `_responsive` | 551 B | Media queries transverses (inclus auto) |
+| `_responsive` | vide | Stub conservé (#1023) : les règles responsive vivent dans leur module (inclus auto) |
 | `signature` | 360 B | Gradient underline overline |
 
 **Total modules non-transverses** : ~41 KB gzip (ensemble complet)

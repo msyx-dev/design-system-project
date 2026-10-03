@@ -734,6 +734,7 @@ const REACT_COVERED_BY = {
   'brand-mark-ds':      'Logo', // #878 — LogoMark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
   'server-data-grid': 'DataGrid', // #878 — pagination serveur ajoutée à l'API DataGrid existante, pas de nouveau dossier — reactComponent: "DataGrid" dans le registre
   'card-static': 'Card', // #1010 — .card-static/.card-title émis par Card (props static/heading) — reactComponent: "Card" dans le registre
+  'segmented-links': 'SegmentedControl', // #1016 — mode liens `as="link"` (<nav>/<a href>) du MÊME wrapper SegmentedControl, pas de nouveau dossier — reactComponent: "SegmentedControl" dans le registre
   'table-cards-editable': 'TableCards', // #1008 — tableau de saisie : props `editable`/`renderRow` + `TableCardsCell error` ajoutées à TableCards (#1007), pas de nouveau dossier — reactComponent: "TableCards" dans le registre
 };
 

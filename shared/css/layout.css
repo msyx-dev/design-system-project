@@ -22,7 +22,7 @@
 .site-header .header-spacer { flex: 1; }
 .site-header .header-controls { display: flex; align-items: center; gap: var(--space-sm); }
 .site-header .header-burger {
-    display: none; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; border-radius: var(--radius-sm);
     background: transparent; border: 1px solid var(--border-color); color: var(--text);
     cursor: pointer; font-size: 1.2rem; transition: background-color 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard);
@@ -107,7 +107,12 @@
 /* ===== MAIN ===== */
 /* padding-bottom : reserve de fin de page du sapin de Noel (fixe, hors flux) — posee par
    festive.css, 0px hors Noel (#1005). */
-.main { margin-inline-start: var(--sidebar-w); min-height: 100vh; padding-top: var(--header-h); padding-bottom: var(--festive-clearance, 0px); }
+.main { margin-inline-start: 0; min-height: 100vh; padding-top: var(--header-h); padding-bottom: var(--festive-clearance, 0px); }
+/* Mobile-first (#1023) : la marge du rail n'existe qu'au-dessus de 768 px (sous ce seuil la sidebar
+   est hors écran). Ce bloc reste AVANT `.main--no-rail` : à spécificité égale, la variante sans rail l'emporte. */
+@media (min-width: 768.02px) { /* bp-md */
+    .main { margin-inline-start: var(--sidebar-w); }
+}
 
 /* Variante sans sidebar (consumers sans rail — ex. mikpulse P0 public) (#567)
    Usage : <div class="main main--no-rail"> ou poser --sidebar-w:0 sur le root.
@@ -236,7 +241,7 @@
    `<section class="card card-static" aria-labelledby>` héritait sinon du padding et du filet de page (#1010).
    `:where()` garde la spécificité d'origine (0,1,1) : l'ordre de cascade avec la règle mobile ne change pas. */
 .main > section,
-.main > :where(.lazy-loaded) > section { padding: var(--space-3xl) var(--space-2xl); border-bottom: 1px solid var(--border-color); }
+.main > :where(.lazy-loaded) > section { padding: 3rem 1.5rem; border-bottom: 1px solid var(--border-color); }
 .main > section[id],
 .main > :where(.lazy-loaded) > section[id] { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
 .main > section:last-of-type,
@@ -264,10 +269,7 @@
 /* minmax(0, 1fr) : autorise les pistes à descendre sous leur max-content
    (sinon un enfant non-réductible — .login-preview/.demo-box — fait déborder
    la grille). Fix #529. */
-.main .demo-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.main .demo-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.main .demo-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.main .demo-grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: minmax(0, 1fr); }
 .main .demo-row { display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: center; }
 .gradient-text { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 /* @strip:showcase-end */
@@ -552,8 +554,8 @@
 .header-notif-panel {
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
-    width: 300px;
+    right: -1rem;
+    width: calc(100vw - 2rem);
     max-height: 380px;
     background: var(--surface-solid);
     border: 1px solid var(--border-color);
@@ -662,10 +664,10 @@ html.theme-transitioning * {
     transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease !important;
 }
 
-/* Mobile responsive — user zone */
-@media (max-width: 480px) {
-    .header-notif-panel { width: calc(100vw - 2rem); right: -1rem; }
-    .header-dropdown { min-width: 160px; }
+/* Mobile-first (#1023) — user zone : le panneau de notifications tient dans l'écran (BASE de
+   `.header-notif-panel`), il retrouve sa largeur fixe au-dessus de 480 px. */
+@media (min-width: 480.02px) { /* bp-sm */
+    .header-notif-panel { width: 300px; right: 0; }
 }
 
 /* Compaction mobile du header — corrige l'overflow horizontal < 640px (#711).
@@ -700,21 +702,27 @@ html.theme-transitioning * {
 /* @strip:showcase-end */
 
 /* ===== RESPONSIVE — Layout ===== */
-/* @strip:showcase-start */
-@media (max-width: 1024px) {
-    .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-/* @strip:showcase-end */
-@media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .site-header .header-burger { display: flex; }
-    .main { margin-inline-start: 0; }
+/* Mobile-first (#1023) : burger, marge de `.main` et gabarit de la vitrine sont des bases mobiles
+   enrichies ici ; seule la sidebar hors écran (avec son voile) reste en `max-width` ci-dessous. */
+@media (min-width: 768.02px) { /* bp-md */
+    .site-header .header-burger { display: none; }
     /* @strip:showcase-start */
     .main > section,
-    .main > :where(.lazy-loaded) > section { padding: 3rem 1.5rem; }
-    .main .demo-grid-2, .main .demo-grid-3, .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: minmax(0, 1fr); }
+    .main > :where(.lazy-loaded) > section { padding: var(--space-3xl) var(--space-2xl); }
+    .main .demo-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .main .demo-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .main .demo-grid-4, .main .demo-grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     /* @strip:showcase-end */
+}
+/* @strip:showcase-start */
+@media (min-width: 1024.02px) { /* bp-lg */
+    .main .demo-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .main .demo-grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+/* @strip:showcase-end */
+@media (max-width: 768px) { /* exception §4 : panneau hors écran avec voile (sidebar) */
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
 
     /* Sidebar overlay — mobile only */
     .sidebar-overlay {
