@@ -131,7 +131,7 @@ function defaultCellValue<T>(row: T, key: string): ReactNode {
  * TableCards — tableau qui se replie en cartes (`data.html` #table-cards, CSS
  * `components/tables.css` bloc TABLE CARDS, #1007).
  *
- * Sous 768 px (`--bp-md`) chaque ligne devient une carte et chaque cellule
+ * Sous 768 px (`bp-md`) chaque ligne devient une carte et chaque cellule
  * affiche son libellé ; au-delà, tableau classique. CSS seul, aucun état, aucun
  * tri : le consommateur passe des `rows` déjà triées/filtrées et compose
  * `<Pagination>` à côté si besoin. Pour un tableau triable ou filtrable, utiliser
