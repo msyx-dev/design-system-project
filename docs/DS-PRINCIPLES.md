@@ -217,6 +217,16 @@ Le DS expose une échelle dédiée `--cat-1` à `--cat-8` : elle ne veut rien di
 <button onclick="...">Cliquer</button>  <!-- button natif, focusable, keyboard -->
 ```
 
+❌ **Don't** (#1007) — libellé visuel qui duplique un en-tête de tableau, en contenu généré :
+```css
+.table-cards td::before { content: attr(data-label); }  /* entre dans le nom accessible : « Nom, Nom Alice » */
+```
+
+✅ **Do** — un nœud masqué aux technologies d'assistance, l'en-tête `<th>` restant le canal accessible :
+```html
+<td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Alice Martin</td>
+```
+
 ### 3.1 — Label vs aria-label : règle de décision (capitalisation Lot 3 a11y — #340)
 
 | Cas | Pattern recommandé | Exemple |

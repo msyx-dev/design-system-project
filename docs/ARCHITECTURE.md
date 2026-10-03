@@ -30,7 +30,7 @@ pages/
   composants.html       # Cards (+ .card-muted v2.78.0 #569), badges, boutons, chips, dividers, rating, avatars, alertes, modals, toasts, segmented control, theme switcher, sortable list, achievement badges
   navigation.html       # Tabs, breadcrumbs, stepper, bottom navigation, brand header configurable (window.MSYX_HEADER.brand — v2.78.0 #570)
   formulaires.html      # Inputs, selects, checkboxes, file upload, login, calendrier interactif single/range INLINE + time-picker 24h/12h (#432/#436), slider/range, search input, number input, OTP input, tag input, quiz/poll, filter-bar
-  data.html             # 16 sections en 5 familles (v2.71.0+) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats, animated-counters) · Jauges & progression (progress, progress-tracker, gauge, usage-meter) · Tabulaire (tables, comparison, data-grid, server-data-grid) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
+  data.html             # 16 sections en 5 familles (v2.71.0+) — Graphiques (charts, pie-donut) · Indicateurs chiffrés (stats, animated-counters) · Jauges & progression (progress, progress-tracker, gauge, usage-meter) · Tabulaire (tables, table-cards, comparison, data-grid, server-data-grid) · Listes & flux (tree-view, lists, activity-feed, risk-matrix)
   templates.html        # Kanban, roadmap, backlog, sprint board
   feedback.html         # 12 sections états — alertes (.alert--kpi ex-zone-banner, .alert--cta ex-upgrade-prompt #519), toasts, skeleton, empty states, spinners, auto-save, pagination, comments, access-denied (#514)
   user-feedback.html    # NOUVEAU (v2.110.0 #705) — 2 sections, catégorie « User Feedback » distincte du `feedback` système : contexte capturé par le Provider (#user-feedback-intro) + parcours complet bouton header→modale formulaire→envoi (#user-feedback-flow), mode connecté/anonyme (email conditionnel requis en anonyme), démo 100% vanilla dogfoodant les classes consommées par `@msyx-dev/react` UserFeedback* (#692-695). JS : `initUserFeedbackDemo()`
@@ -62,7 +62,7 @@ shared/
       forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR, PASSWORD TOGGLE, LOGIN / LOGINSCREEN (3 variants Authentik, slots providers, v2.57.0)
       data.css          #   PROGRESS, STATS, CHARTS, PIE, GAUGE, ANIMATED COUNTERS, RISK MATRIX
       avatars.css       #   .avatar, .avatar-img, .avatar-initials
-      tables.css        #   TABLE, DATA GRID, COMPARISON TABLE
+      tables.css        #   TABLE, TABLE CARDS, DATA GRID, COMPARISON TABLE
       lists.css         #   TREE VIEW, LIST, TIMELINE, ACCORDION, SORTABLE LIST, ACTIVITY FEED
       alerts.css        #   .alert (+ .alert--kpi ex-zone-banner, .alert--cta ex-upgrade-banner #519), .toast (+ .toast-message flex-grow v2.49.0) — alias @deprecated .zone-banner/.upgrade-banner (suppression v3)
       overlays.css      #   TOOLTIP, CONTEXT MENU, ACTION MENU
