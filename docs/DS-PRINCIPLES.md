@@ -937,6 +937,29 @@ désaligné sur 50 chargements nominaux et 20 avec 150 ms de délai sur les
 actif), pas un mécanisme supposé. Un mécanisme résiduel donnera un échec
 explicite, jamais une variante silencieuse.
 
+### Segmented : avant hydratation, contraste `--subtle`, cible tactile (#1016)
+
+- **Avant la 1re mesure** (rendu serveur de `<SegmentedControl>`, JS absent, hydratation en cours),
+  `.segmented-indicator` est dans le DOM mais n'a aucune largeur : le texte de l'item actif
+  (`--text-on-accent`) se lisait sur la piste, 1,13 a 2,21:1 dans 8 combos sur 10. Le **marqueur** de
+  l'etat « non mesure » est l'absence de `width` INLINE : `.segmented-indicator:not([style*="width"])`
+  est masque et l'item actif porte l'aplat et l'ombre de l'indicateur. Les deux implementations ecrivent
+  deja `width` en inline, toutes versions : aucun attribut `data-*`, aucun contrat JS, et l'indicateur maison
+  d'un consumer (largeur inline) n'est pas vise. Regle JS associee : **la toute premiere mesure se fait sans
+  transition** (sinon l'indicateur grandit de 0 a sa largeur en 0,3 s au chargement), puis la transition est
+  restauree.
+- **Contraste de l'item actif `.segmented--subtle` = token dedie** `--segmented-subtle-active-text`, jamais
+  `--accent-text-strong` (partage avec puces, tags, rail, dont le fond et le reglage different). Hex litteral par
+  theme et par mode, regle a la mesure pixel (L OKLCh seule, teinte conservee), **>= 4,5:1 bloquant, vise >= 4,6**, avant
+  hydratation ET une fois mesure (`segmented-prehydration-contrast.spec.ts`, 10 combos). Un theme conforme recopie sa
+  valeur ; ne jamais baisser le seuil ni retirer un combo de la sonde.
+- **Cible tactile >= 44px de haut sur mobile**, bouton ET lien, toutes tailles (WCAG 2.5.5). `.segmented` porte
+  `overflow-x: auto`, donc `overflow-y` calcule a `auto` : une zone etendue ne peut pas depasser le padding de la
+  piste (3px) sans la faire defiler. D'ou deux mecanismes : `::after` (+3px en haut et en bas, sans effet visuel) et
+  `min-height: calc(var(--segmented-target) - 6px)` (38px), retire a `min-width: 768px`. Defaut et `--subtle` (40px) ne
+  bougent pas ; `--sm` passe de 24,6 a 38px **sur mobile seulement**. Preuve : balayage `elementFromPoint` +
+  `scrollHeight <= clientHeight` dans `segmented-touch-target.spec.ts`.
+
 ### Garde-fou en CI
 
 `visual.spec.ts` vérifie à l'exécution que chaque id listé dans
