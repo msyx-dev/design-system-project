@@ -25,6 +25,21 @@
  *      mesure, l'indicateur coïncide déjà avec l'item actif (un groupe neuf, item actif non
  *      premier), puis la transition est restaurée pour les mesures suivantes.
  *
+ * #1016 — mode « liens » (`nav.segmented > a.segmented-item[href]`, section `#segmented-links`),
+ * mêmes ressorts (mise en page, clavier, JS coupé) que jsdom ne voit pas :
+ *   5. SANS JavaScript (`javaScriptEnabled: false`, ni `addInitScript` ni `waitForFunction`) : la page
+ *      se charge, 3 landmarks `nav` aux noms distincts, le clic puis Tab + Entrée suivent le lien
+ *      (URL `?filtre=actifs#segmented-links`), l'option désactivée (`<a aria-disabled>` sans href) est
+ *      sautée par Tab ;
+ *   6. AVEC JS : `nav` sans `role`, aucun `[role]`/`[aria-checked]`/`[tabindex]`, `.active` et
+ *      `[aria-current="page"]` = le même élément, indicateur aligné sur le lien courant (3 groupes ;
+ *      `freezeSegmentedIndicators` de `visual.spec.ts` couvre déjà ces groupes dans la VR mais n'est
+ *      pas exporté, d'où `attendreAligne` / `ecart` ici) ;
+ *   7. AVEC JS : clic, Tab (un arrêt par lien, pas de tabindex itinérant) et Entrée naviguent ;
+ *   8. hauteur : groupe de liens « Filtrer par état » = groupe de boutons « Vue » ±1 px, à 1280 ET 375 ;
+ *   9. rendu : `text-decoration-line: none` (repos et survol), couleurs d'un lien = celles d'un
+ *      `button.segmented-item` (actif ET inactif), `:focus-visible` = contour plein de 2 px.
+ *
  * Joué dans UN seul projet (`msyx-dark-desktop`) : la géométrie ne dépend ni du thème ni du mode,
  * les 10 projets de la matrice VR ne couvriraient rien de plus. La garde de
  * `visual.spec.ts` (`freezeSegmentedIndicators`) contrôle, elle, le même invariant sur chaque
@@ -35,7 +50,20 @@
  *   - `translateX(item.offsetLeft)` (sans soustraction) → cas 0 et 3 rouges ;
  *   - #1016 : `indicator.style.transition = 'none'` retiré de `moveIndicator` → cas 4 rouge
  *     (l'indicateur glisse depuis 0) ; `transition = ''` (restauration) retiré → cas 4 rouge
- *     (durée de transition computée 0s).
+ *     (durée de transition computée 0s) ;
+ *   - #1016, cas 0 : retirer la portée `#segmented-control` de l'énumération → rouge (8 labels, pas 5) ;
+ *   - #1016, un lien « Actifs » remplacé par un `<button>` dans composants.html → cas 5 (clic, Tab +
+ *     Entrée), cas 6 (balisage) et cas 7 rouges ;
+ *   - #1016, branche liens de `initSegmentedControls` neutralisée (`if (false)`) → cas 6 (balisage :
+ *     rôles `radio`), cas 7 Tab (tabindex -1), cas 7 Entrée (preventDefault : URL inchangée) et
+ *     cas 9 focus rouges ;
+ *   - #1016, `line-height: normal` retiré de `.segmented-item` → cas 8 rouge aux deux largeurs
+ *     (écart 5,75 px : 45,75 px contre 40 px) ;
+ *   - #1016, `text-decoration: none` retiré de `.segmented-item` → cas 9 rouge (soulignement, repos
+ *     et survol) ;
+ *   - #1016, `.segmented-item` ajouté à `a:is(...)` de `_base.css` (piège A9) → cas 9 rouge sur la
+ *     couleur (rgb(241,245,249) au lieu de rgb(159,175,196)) ;
+ *   - #1016, `outline: 1px solid` sur `.segmented-item:focus-visible` → cas 9 focus rouge (1px ≠ 2px).
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -303,10 +331,20 @@ const PERIODE = "Afficher la période"; // `--subtle`, 3 liens (7j / 30j / 90j)
 const EXPORTS = "Filtrer les exports"; // Tous / Récents / Archivés (désactivé : sans href)
 const GROUPES_LIENS = [FILTRE, PERIODE, EXPORTS];
 
+// Par rôle ARIA (nom accessible du landmark + du lien) : sert aux cas sans JS, où elle contrôle
+// aussi que les 3 `nav` ont des noms distincts et que l'option désactivée n'est pas un lien.
 const lien = (page: Page, groupe: string, nom: string) =>
   page
     .getByRole("navigation", { name: groupe, exact: true })
     .getByRole("link", { name: nom, exact: true });
+
+// Par CSS : indépendante du rôle. Les cas avec JS l'utilisent pour que le motif d'un échec soit le
+// COMPORTEMENT (lien non suivi, arrêt de tabulation perdu), pas « le rôle `link` a disparu » —
+// la branche radiogroup remplace le rôle des items par `radio`, ce qui rendrait `lien()` introuvable.
+const lienCss = (page: Page, groupe: string, nom: string) =>
+  page
+    .locator(`.segmented[aria-label="${groupe}"] a.segmented-item`)
+    .filter({ hasText: nom });
 
 test.describe("Segmented liens — sans JavaScript (#1016)", () => {
   test.use({ javaScriptEnabled: false });
@@ -462,22 +500,29 @@ test.describe("Segmented liens — avec JavaScript (#1016)", () => {
     page,
   }) => {
     await ouvrirLiens(page);
-    await lien(page, FILTRE, "Actifs").click();
+    await lienCss(page, FILTRE, "Actifs").click();
     await expect(page).toHaveURL(/\?filtre=actifs#segmented-links$/);
   });
 
-  test("cas 7 — Tab atteint chaque lien (pas de tabindex itinérant), Entrée navigue", async ({
+  test("cas 7 — Tab atteint chaque lien (pas de tabindex itinérant)", async ({
     page,
   }) => {
     await ouvrirLiens(page);
-    await lien(page, FILTRE, "Tous").focus();
+    await lienCss(page, FILTRE, "Tous").focus();
     await page.keyboard.press("Tab");
     // Un radiogroup n'offrirait qu'UN arrêt de tabulation : « Actifs » aurait `tabindex="-1"`.
-    await expect(lien(page, FILTRE, "Actifs")).toBeFocused();
+    await expect(lienCss(page, FILTRE, "Actifs")).toBeFocused();
     await page.keyboard.press("Tab");
-    await expect(lien(page, FILTRE, "Archives")).toBeFocused();
-    await lien(page, FILTRE, "Actifs").focus();
-    // Une branche bouton ferait `preventDefault()` sur Entrée : le lien ne serait pas suivi.
+    await expect(lienCss(page, FILTRE, "Archives")).toBeFocused();
+  });
+
+  test("cas 7 — Entrée sur un lien focalisé le suit (aucun preventDefault)", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    // Focus posé directement : ce cas ne dépend pas du cas Tab ci-dessus, il isole l'écouteur de
+    // clavier. La branche bouton ferait `preventDefault()` sur Entrée : le lien ne serait pas suivi.
+    await lienCss(page, FILTRE, "Actifs").focus();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\?filtre=actifs#segmented-links$/);
   });
@@ -552,8 +597,8 @@ test.describe("Segmented liens — avec JavaScript (#1016)", () => {
     page,
   }) => {
     await ouvrirLiens(page);
-    await lien(page, FILTRE, "Actifs").hover();
-    await expect(lien(page, FILTRE, "Actifs")).toHaveCSS(
+    await lienCss(page, FILTRE, "Actifs").hover();
+    await expect(lienCss(page, FILTRE, "Actifs")).toHaveCSS(
       "text-decoration-line",
       "none",
     );
@@ -563,9 +608,9 @@ test.describe("Segmented liens — avec JavaScript (#1016)", () => {
     page,
   }) => {
     await ouvrirLiens(page);
-    await lien(page, FILTRE, "Tous").focus();
+    await lienCss(page, FILTRE, "Tous").focus();
     await page.keyboard.press("Tab");
-    const actifs = lien(page, FILTRE, "Actifs");
+    const actifs = lienCss(page, FILTRE, "Actifs");
     await expect(actifs).toBeFocused();
     // Témoin : le focus est bien « visible » (navigation clavier), sinon l'outline mesuré serait nul.
     expect(await actifs.evaluate((el) => el.matches(":focus-visible"))).toBe(
