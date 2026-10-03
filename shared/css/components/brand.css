@@ -50,9 +50,16 @@
     white-space: nowrap;
 }
 
-/* Mobile : masquer le wordmark header, garder pictogramme + version */
+/* Mobile : masquer le wordmark header, garder pictogramme + version.
+   Le wordmark n'est masqué QUE s'il a un pictogramme à côté (#1009) : sans
+   `.header-logo-img` il est la seule marque du header — le masquer ne laisse
+   aucune identité sur téléphone. Cas gardés visibles : `.header-logo.brand-wordmark`
+   (même élément) et `.header-logo > .brand-wordmark` sans pictogramme.
+   Un `.brand-wordmark` hors de tout `.header-logo` (démos de navigation.html)
+   reste masqué : comportement inchangé. */
 @media (max-width: 639px) {
-    .brand-wordmark {
+    .header-logo:has(.header-logo-img) .brand-wordmark,
+    .brand-wordmark:not(.header-logo, .header-logo *) {
         display: none;
     }
 }
