@@ -13,7 +13,7 @@
 - **Antérieur** : milestone #49 (2.142.0 / alpha.60, contraste des boutons, logos, Textarea) ; parité React complète (août) ; d’autres sessions Claude poussent sous le compte gh « Kchigoki » de la machine.
 
 ## Prochaine étape
-- **Backlog DS (2026-10-03, après 2.144.0)** : #1020 vitrine (22 `.code-block` aplatis, `.demo-note` sans CSS — lot VR), #1021 capture `segmented-control` instable sur thèmes secondaires, #1022 résidus mobile-first (`max-width`, `--bp-*` absents, rail replié). #1005 en attente de confirmation de Mike. Pipeline : claude-config #537 et #538 fermées ; à proposer : réveil CI qui distingue « PR en conflit », release DS multi-sources dans `/sprint` §4e.
+- **Backlog DS (2026-10-03, après 2.144.0)** : #1020 vitrine (22 `.code-block` aplatis, `.demo-note` sans CSS — lot VR), #1021 capture `segmented-control` instable sur thèmes secondaires, #1022 résidus mobile-first (`max-width`, `--bp-*` absents, rail replié). #1005 en attente de confirmation de Mike. Pipeline : claude-config #537 et #538 fermées ; **ouvertes le 2026-10-03 (accord de Mike)** : claude-config#542 (réveil CI : une PR en conflit rend `CI_NO_CHECKS`), claude-config#543 (`/sprint` §4e : release DS impossible via `version-release.sh`).
 - **Consommateurs** : tirokado (en 2.141.0) doit resynchroniser le CSS DS + passer en react alpha.62 (tableaux #1007/#1008, carte #1010, wordmark #1009, décor #1011, sapin #1005) ; ajuster l'espacement de ses cartes `flex-col gap-md` avec la nouvelle `.card-title` (arbitrage A13 de #1010).
 - **Dette** : `CHANGELOG.md` `[Unreleased]` garde des entrées publiées non datées (antérieures à 2.119.1 + alpha.59) ; `version.json` racine figé 2.57.1 (sans effet runtime).
 
