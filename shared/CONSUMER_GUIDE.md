@@ -919,7 +919,7 @@ Copie un barrel généré à la volée + uniquement les modules listés dans `co
 `overlays`, `pricing`, `quiz`, `section-header`, `signature`, `tables`, `templates`, `theme-toggle`,
 `theming`, `tracker`.
 
-Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `_a11y` (focus-visible global), `_responsive`.
+Modules transverses (toujours inclus automatiquement) : `_base` (reset natif), `_a11y` (focus-visible global), `_responsive` (fichier conservé mais vide depuis #1023 : les règles responsive vivent dans leur module).
 
 ### Avertissement
 - **Cascade** : l'ordre est imposé par le barrel généré. Ne pas réordonner manuellement.
@@ -963,7 +963,7 @@ Modules tries par poids decroissant.
 | `_a11y` | 876 B | Focus-visible global (inclus auto) |
 | `_base` | 714 B | Reset natif (inclus auto) |
 | `avatars` | 609 B | Avatars, initiales |
-| `_responsive` | 551 B | Media queries transverses (inclus auto) |
+| `_responsive` | vide | Stub conservé (#1023) : les règles responsive vivent dans leur module (inclus auto) |
 | `signature` | 360 B | Gradient underline overline |
 
 **Total modules non-transverses** : ~41 KB gzip (ensemble complet)
