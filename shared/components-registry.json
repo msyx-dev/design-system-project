@@ -1,7 +1,7 @@
 {
   "version": "2.143.2",
   "generated": {
-    "at": "2026-10-03T01:40:27.741Z",
+    "at": "2026-10-03T01:43:30.399Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -106,6 +106,25 @@
         "CardBody",
         "CardMedia",
         "CardThumb"
+      ]
+    },
+    {
+      "name": "card-static",
+      "kind": "component",
+      "page": "composants",
+      "cssClasses": [
+        ".card-static",
+        ".card-title"
+      ],
+      "jsInit": null,
+      "example": "<section class=\"card card-static\" aria-labelledby=\"carte-lancement-titre\">\n  <h2 class=\"card-title\" id=\"carte-lancement-titre\">Lancement</h2>\n  <p>Contenu du formulaire.</p>\n</section>",
+      "react": "ported",
+      "reactComponent": "Card",
+      "module": [
+        "shared/css/components/cards.css"
+      ],
+      "reactExports": [
+        "Card"
       ]
     },
     {

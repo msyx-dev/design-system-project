@@ -66,6 +66,7 @@ export default defineConfig({
     "**/brand-wordmark.spec.ts",
     "**/festive-sans-rail.spec.ts",
     "**/table-cards.spec.ts",
+    "**/card-static-hover.spec.ts",
     "**/table-cards-editable.spec.ts",
   ],
   fullyParallel: true,

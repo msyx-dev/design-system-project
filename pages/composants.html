@@ -355,6 +355,36 @@
     </div>
 </section>
 
+<section id="card-static">
+    <div class="section-header"><span class="overline">Composants</span><h2>Card statique</h2><p>Carte conteneur non interactive : aucun retour de survol. Pour une carte qui contient un formulaire ou des contrôles. Motif de carte titrée et région nommée.</p></div>
+    <div class="subsection">
+        <span class="demo-label">Carte de formulaire titrée (région nommée)</span>
+        <div class="demo-grid demo-grid-2">
+            <section class="card card-static" aria-labelledby="demo-card-static-titre">
+                <h3 class="card-title" id="demo-card-static-titre">Lancement</h3>
+                <div class="input-group"><label class="input-label" for="demo-card-static-nom">Nom du tirage</label><input class="input" id="demo-card-static-nom" type="text" value="Noël 2026"></div>
+                <button class="btn-primary mt-md" type="button">Lancer le tirage</button>
+            </section>
+            <div class="card card-static">
+                <h3 class="card-title">Préférences</h3>
+                <div class="input-group"><label class="input-label" for="demo-card-static-lang">Langue</label><input class="input" id="demo-card-static-lang" type="text" value="Français"></div>
+            </div>
+        </div>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">Usage</span>
+        <p class="typo-small">Utiliser <code class="code-inline">card card-static</code> pour une carte qui contient un formulaire ou un assistant, mais qui n'est pas cliquable : ni élévation, ni ombre, ni bordure, ni barre dégradée, ni icône animée au survol. Elle se cumule avec <code class="code-inline">card-flat</code> et <code class="code-inline">card-muted</code> (l'atténuation reste). Ne pas la cumuler avec <code class="code-inline">card-link</code> : une carte-lien reste interactive. Le titre <code class="code-inline">card-title</code> rend h2 à h6 à l'identique ; en React, le défaut est <code class="code-inline">h2</code> (une carte est un bloc de page sous le <code class="code-inline">h1</code>). La région nommée (<code class="code-inline">&lt;section aria-labelledby&gt;</code>) est réservée aux blocs principaux et distincts d'une page, environ 5 au plus, jamais aux cartes répétées d'une grille. <code class="code-inline">aria-labelledby</code> sur un <code class="code-inline">&lt;div&gt;</code> sans rôle est ignoré : pas de région sans <code class="code-inline">&lt;section&gt;</code>.</p>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">HTML</span>
+        <div class="code-block"><span class="cm">&lt;!-- Carte titrée, région nommée --&gt;</span><br><span class="kw">&lt;section</span> <span class="fn">class</span>=<span class="str">"card card-static"</span> <span class="fn">aria-labelledby</span>=<span class="str">"carte-lancement-titre"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;h2</span> <span class="fn">class</span>=<span class="str">"card-title"</span> <span class="fn">id</span>=<span class="str">"carte-lancement-titre"</span><span class="kw">&gt;</span>Lancement<span class="kw">&lt;/h2&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"input-group"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;label</span> <span class="fn">class</span>=<span class="str">"input-label"</span> <span class="fn">for</span>=<span class="str">"nom"</span><span class="kw">&gt;</span>Nom du tirage<span class="kw">&lt;/label&gt;</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">&lt;input</span> <span class="fn">class</span>=<span class="str">"input"</span> <span class="fn">id</span>=<span class="str">"nom"</span> <span class="fn">type</span>=<span class="str">"text"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;/div&gt;</span><br><span class="kw">&lt;/section&gt;</span><br><br><span class="cm">&lt;!-- Carte titrée sans région (cas d'une grille) --&gt;</span><br><span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"card card-static"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;h3</span> <span class="fn">class</span>=<span class="str">"card-title"</span><span class="kw">&gt;</span>Préférences<span class="kw">&lt;/h3&gt;</span><br>&nbsp;&nbsp;<span class="kw">&lt;p</span><span class="kw">&gt;</span>Contenu.<span class="kw">&lt;/p&gt;</span><br><span class="kw">&lt;/div&gt;</span></div>
+    </div>
+    <div class="subsection mt-md">
+        <span class="demo-label">React</span>
+        <div class="code-block"><span class="kw">import</span> { Card } <span class="kw">from</span> <span class="str">"@msyx-dev/react"</span>;<br><br><span class="cm">// Région nommée : &lt;section class="card card-static" aria-labelledby&gt;</span><br><span class="kw">&lt;Card</span> <span class="fn">static</span> <span class="fn">region</span> <span class="fn">heading</span>=<span class="str">"Lancement"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;…<br><span class="kw">&lt;/Card&gt;</span><br><br><span class="cm">// Titre h3, sans région</span><br><span class="kw">&lt;Card</span> <span class="fn">static</span> <span class="fn">heading</span>=<span class="str">"Préférences"</span> <span class="fn">headingLevel</span>=<span class="str">"h3"</span><span class="kw">&gt;</span><br>&nbsp;&nbsp;…<br><span class="kw">&lt;/Card&gt;</span></div>
+    </div>
+</section>
+
 <section id="badges">
     <div class="section-header"><span class="overline">Composants</span><h2>Badges & Tags</h2><p>Indicateurs visuels pour statuts, categories et metadata.</p></div>
     <div class="demo-grid demo-grid-2">
