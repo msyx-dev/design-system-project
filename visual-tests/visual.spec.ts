@@ -186,6 +186,73 @@ const freezeFestiveDecor = async (page: import("@playwright/test").Page) => {
   ).toEqual([]);
 };
 
+// --- Indicateur de segmented figé (#1021) ---
+// `.segmented-indicator` est positionné en JS (shared/components.js
+// initSegmentedControls : `width` + `transform` mesurés sur l'item actif) puis
+// animé par `transition: transform/width 0.3s` (navigation.css). Deux sources de
+// non-déterminisme pour la capture `composants#segmented-control` :
+// 1. la transition : `animations: "disabled"` de Playwright ne neutralise que les
+//    animations en cours à l'instant de la capture, pas la valeur d'arrivée d'une
+//    transition relancée après coup (resynchronisation tardive) — on la RETIRE
+//    donc de la feuille de style (`transition: none`), comme `freezeFestiveDecor`
+//    (#998) retire les animations du décor ;
+// 2. la mesure : la largeur d'un item dépend de la police web (font-display:swap).
+//    Mesurée avant le swap, l'indicateur gardait la largeur de la police de repli
+//    (mesuré en CI : seul le bord droit de l'indicateur variait, 13 à 31 px de
+//    large, 7 à 9 fois plus sur ACSSI/Montserrat). Le composant se resynchronise
+//    désormais par ResizeObserver ; le banc NE recalcule PAS la géométrie à sa
+//    place (cela masquerait un défaut produit), il CONTRÔLE que l'indicateur
+//    coïncide avec l'item actif et échoue bruyamment sinon.
+// Contrat repris par #1016 (mode « liens ») : si le lien courant est marqué
+// autrement que par `.active` (ex. `aria-current`), étendre SEGMENTED_ACTIVE_SELECTOR
+// (liste de sélecteurs) au lieu de contourner le garde-fou.
+const SEGMENTED_INDICATOR_SELECTOR = ".segmented-indicator";
+const SEGMENTED_ACTIVE_SELECTOR = ".segmented-item.active";
+const SEGMENTED_INDICATOR_TOLERANCE_PX = 1;
+
+const freezeSegmentedIndicators = async (
+  page: import("@playwright/test").Page,
+) => {
+  await page.addStyleTag({
+    content: `${SEGMENTED_INDICATOR_SELECTOR} { transition: none !important; }`,
+  });
+  const drift = await page.evaluate(
+    async ({ ind, act, tol }) => {
+      // Deux frames : laisse passer les callbacks ResizeObserver en attente
+      // (livrés au rendu) avant de mesurer — sinon on contrôlerait l'état
+      // d'avant la resynchronisation, pas l'état qui sera capturé.
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+      return Array.from(document.querySelectorAll(".segmented")).flatMap(
+        (seg) => {
+          const i = seg.querySelector(`:scope > ${ind}`);
+          const a = seg.querySelector(act);
+          if (!i || !a) return [];
+          const ri = i.getBoundingClientRect();
+          const ra = a.getBoundingClientRect();
+          const dw = Math.abs(ri.width - ra.width);
+          const dx = Math.abs(ri.left - ra.left);
+          return dw > tol || dx > tol
+            ? [
+                `${seg.getAttribute("aria-label")}: dw=${dw.toFixed(1)} dx=${dx.toFixed(1)}`,
+              ]
+            : [];
+        },
+      );
+    },
+    {
+      ind: SEGMENTED_INDICATOR_SELECTOR,
+      act: SEGMENTED_ACTIVE_SELECTOR,
+      tol: SEGMENTED_INDICATOR_TOLERANCE_PX,
+    },
+  );
+  expect(
+    drift,
+    "segmented-control : indicateur désaligné de l'item actif avant capture (#1021)",
+  ).toEqual([]);
+};
+
 test.describe("Visual regression — full matrix (par section)", () => {
   for (const { slug, path, title } of PAGES) {
     test(`${slug}`, async ({ page }, testInfo) => {
@@ -229,6 +296,10 @@ test.describe("Visual regression — full matrix (par section)", () => {
       );
       // Stabilisation : laisse le scroll-spy + lazy-init JS se poser
       await page.waitForTimeout(300);
+
+      // #1021 : indicateur de segmented sans transition + contrôle de cohérence
+      // géométrique avant capture (no-op sur les pages sans indicateur).
+      await freezeSegmentedIndicators(page);
 
       // Énumère toutes les sections de la page (pattern HTML stable :
       // .main > section[id]). Une baseline par section.
