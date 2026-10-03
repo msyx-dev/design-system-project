@@ -444,13 +444,14 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .filter-bar .input,
 .filter-bar select.input { min-width: 0; flex: 1 1 auto; }
 .filter-bar .filter-bar-search { min-width: 0; width: 100%; flex: 1 1 auto; }
-.filter-bar input[type="search"].input { flex: 1 1 240px; min-width: 200px; }
 .filter-bar .filter-bar-actions { margin-left: 0; display: flex; justify-content: flex-end; gap: var(--space-xs); align-items: center; }
 @media (min-width: 600.02px) { /* seuil composant : 600px */
     .filter-bar { flex-direction: row; align-items: center; }
     .filter-bar .input,
     .filter-bar select.input { min-width: 160px; flex: 0 1 auto; }
-    .filter-bar .filter-bar-search { min-width: 200px; flex: 1 1 240px; }
+    /* Le sélecteur (0,3,1) du champ sans .filter-bar-search ne vit QUE dans ce bloc : posé en base, il battait le repli mobile (0,2,0) et gardait 240px en hauteur (#1023, A9) */
+    .filter-bar .filter-bar-search,
+    .filter-bar input[type="search"].input { min-width: 200px; flex: 1 1 240px; }
     .filter-bar .filter-bar-search:not(.input) { width: auto; }
     .filter-bar .filter-bar-actions { margin-left: auto; justify-content: normal; }
 }

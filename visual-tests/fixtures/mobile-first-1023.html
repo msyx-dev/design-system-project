@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile-first : filter-bar et ProgressTracker --sm — fixture #1023</title>
+<!--
+  Fixture de `visual-tests/mobile-first-1023.spec.ts` (#1023, points 7 et 9).
+
+  - Une `.filter-bar` dont le champ de recherche n'a PAS la classe `.filter-bar-search`
+    (`input[type="search"].input` seul) : c'est le cas que vise la règle de spécificité
+    (0,3,1) de `forms.css`. Le cas AVEC la classe se mesure sur la vitrine réelle
+    (`pages/formulaires.html`), pas ici.
+  - Trois anneaux de progression, balisage du wrapper React `ProgressTracker` (le `<svg>`
+    ne porte qu'un `viewBox`, aucun attribut width/height) : le TÉMOIN `.progress-tracker`
+    (120 px sous 600 px, 160 px au-dessus), la variante `--sm` (100 px à toute largeur) et
+    le multi `.progress-tracker-multi` (160 px puis 200 px). Les témoins rendent la mesure
+    capable d'échouer : une règle mobile retirée les ferait varier.
+
+  Aucun JavaScript du DS : seule la feuille de style agit.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  .fixture-page { display: flex; flex-direction: column; gap: var(--space-xl); margin: var(--space-md); }
+</style>
+</head>
+<body>
+<main class="fixture-page">
+  <div class="filter-bar" id="barre-sans-classe">
+    <select class="input" aria-label="Statut"><option>Statut — Tous</option><option>Actif</option></select>
+    <input type="search" class="input" placeholder="Rechercher…" aria-label="Recherche">
+  </div>
+
+  <div class="progress-tracker" id="anneau-md" role="img" aria-label="Anneau moyen">
+    <svg viewBox="0 0 160 160" aria-hidden="true">
+      <circle class="pt-track" cx="80" cy="80" r="62"></circle>
+      <circle class="pt-fill" cx="80" cy="80" r="62"></circle>
+    </svg>
+  </div>
+
+  <div class="progress-tracker progress-tracker--sm" id="anneau-sm" role="img" aria-label="Anneau petit">
+    <svg viewBox="0 0 160 160" aria-hidden="true">
+      <circle class="pt-track" cx="80" cy="80" r="62"></circle>
+      <circle class="pt-fill" cx="80" cy="80" r="62"></circle>
+    </svg>
+  </div>
+
+  <div class="progress-tracker-multi" id="anneau-multi" role="img" aria-label="Anneaux concentriques">
+    <svg viewBox="0 0 200 200" aria-hidden="true">
+      <circle class="pt-track" cx="100" cy="100" r="80"></circle>
+      <circle class="pt-fill" cx="100" cy="100" r="80"></circle>
+    </svg>
+  </div>
+</main>
+</body>
+</html>
