@@ -733,6 +733,7 @@ const REACT_COVERED_BY = {
   'brand-wordmark':    'Logo', // #878 — Wordmark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
   'brand-mark-ds':      'Logo', // #878 — LogoMark co-localisé dans components/Logo/ — reactComponent: "Logo" dans le registre
   'server-data-grid': 'DataGrid', // #878 — pagination serveur ajoutée à l'API DataGrid existante, pas de nouveau dossier — reactComponent: "DataGrid" dans le registre
+  'table-cards-editable': 'TableCards', // #1008 — tableau de saisie : props `editable`/`renderRow` + `TableCardsCell error` ajoutées à TableCards (#1007), pas de nouveau dossier — reactComponent: "TableCards" dans le registre
 };
 
 // Expansions des variants dynamiques (unions TS fermées).

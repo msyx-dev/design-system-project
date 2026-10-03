@@ -1,7 +1,7 @@
 {
   "version": "2.143.2",
   "generated": {
-    "at": "2026-10-03T01:15:34.490Z",
+    "at": "2026-10-03T01:40:27.741Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -321,9 +321,13 @@
       "jsInit": null,
       "notes": "Tableau de saisie sur .table-cards (#1007). Formulaire de ligne = <form id hidden> vide dans la cellule d'actions, champs et bouton d'envoi via form=. Cibles 44px. Erreur de champ = .input-error-msg sous le champ (Input error) ; erreur de ligne sans champ = .table-cards-error (role=alert) après les boutons. Jamais de champ nommé id. data-validate / useFormValidation non compatibles. #1008",
       "example": "<!-- ligne : voir pages/data.html#table-cards-editable -->\n<div class=\"table-wrap\">\n  <table class=\"table-cards table-cards--editable\" role=\"table\" aria-label=\"Participants\">\n    <thead role=\"rowgroup\"><tr role=\"row\"><th scope=\"col\" role=\"columnheader\">Nom</th><th scope=\"col\" role=\"columnheader\">Actions</th></tr></thead>\n    <tbody role=\"rowgroup\"><tr role=\"row\">\n      <td role=\"cell\"><span class=\"table-cards-label\" aria-hidden=\"true\">Nom</span><div class=\"input-group\"><input class=\"input\" form=\"p1\" name=\"name\" required aria-label=\"Nom de Alice Martin\" value=\"Alice Martin\"></div></td>\n      <td role=\"cell\" class=\"table-cards-actions\"><form id=\"p1\" hidden></form><button type=\"submit\" form=\"p1\" class=\"btn-secondary btn-sm\" aria-label=\"Enregistrer Alice Martin\">Enregistrer</button></td>\n    </tr></tbody>\n    <tfoot role=\"rowgroup\"><tr role=\"row\" class=\"table-cards-add-row\">\n      <td role=\"cell\"><span class=\"table-cards-label\" aria-hidden=\"true\">Nom</span><div class=\"input-group\"><input class=\"input\" form=\"p-new\" name=\"name\" required aria-label=\"Nom du nouveau participant\"></div></td>\n      <td role=\"cell\" class=\"table-cards-actions\"><form id=\"p-new\" hidden></form><button type=\"submit\" form=\"p-new\" class=\"btn-primary btn-sm\">Ajouter</button></td>\n    </tr></tfoot>\n  </table>\n</div>",
-      "react": "pending",
+      "reactComponent": "TableCards",
+      "react": "ported",
       "module": [
         "shared/css/components/tables.css"
+      ],
+      "reactExports": [
+        "TableCards"
       ]
     },
     {
