@@ -67,6 +67,7 @@ export default defineConfig({
     "**/festive-sans-rail.spec.ts",
     "**/table-cards.spec.ts",
     "**/card-static-hover.spec.ts",
+    "**/table-cards-editable.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

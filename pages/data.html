@@ -686,6 +686,108 @@
 </section>
 
 
+<!-- TABLE CARDS — SAISIE -->
+<section id="table-cards-editable">
+    <div class="section-header"><span class="overline">Data</span><h2>Tableau de saisie</h2><p>Le tableau en cartes avec des champs en cellule : un formulaire par ligne, cibles de 44&nbsp;px, erreurs sous le champ ou après les boutons, ligne d'ajout distincte. CSS seul, aucun JS.</p></div>
+    <div class="demo-box">
+        <span class="demo-label">Participants, avec une ligne en erreur</span>
+        <div class="table-wrap">
+            <table class="table-cards table-cards--editable" role="table" aria-label="Participants à modifier">
+                <thead role="rowgroup">
+                    <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Actions</th></tr>
+                </thead>
+                <tbody role="rowgroup">
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group"><input class="input" form="tce-p1" name="name" required aria-label="Nom de Alice Martin" value="Alice Martin"></div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group">
+                                <input class="input" form="tce-p1" name="email" type="email" required aria-label="E-mail de Alice Martin" value="alice.martin@exemple.fr">
+                            </div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tce-p1" method="dialog" hidden><input type="hidden" name="participantId" value="p1"></form>
+                            <button type="submit" form="tce-p1" class="btn-secondary btn-sm" aria-label="Enregistrer Alice Martin">Enregistrer</button>
+                            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Alice Martin">Retirer</button>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group"><input class="input" form="tce-p2" name="name" required aria-label="Nom de Jean-Baptiste Dupont" value="Jean-Baptiste Dupont"></div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group">
+                                <input class="input input-error" id="tce-p2-email" form="tce-p2" name="email" type="email" required aria-label="E-mail de Jean-Baptiste Dupont" aria-invalid="true" aria-describedby="tce-p2-email-error" value="jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr">
+                                <span class="input-error-msg" id="tce-p2-email-error">Cette adresse est déjà utilisée dans ce tirage.</span>
+                            </div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tce-p2" method="dialog" hidden><input type="hidden" name="participantId" value="p2"></form>
+                            <button type="submit" form="tce-p2" class="btn-secondary btn-sm" aria-label="Enregistrer Jean-Baptiste Dupont">Enregistrer</button>
+                            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Jean-Baptiste Dupont">Retirer</button>
+                            <p class="table-cards-error" role="alert">Impossible de retirer ce participant : le tirage est clos.</p>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group"><input class="input" form="tce-p3" name="name" required aria-label="Nom de Bastien Leroy" value="Bastien Leroy"></div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group">
+                                <input class="input" form="tce-p3" name="email" type="email" required aria-label="E-mail de Bastien Leroy" value="bastien.leroy@exemple.fr">
+                            </div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tce-p3" method="dialog" hidden><input type="hidden" name="participantId" value="p3"></form>
+                            <button type="submit" form="tce-p3" class="btn-secondary btn-sm" aria-label="Enregistrer Bastien Leroy">Enregistrer</button>
+                            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Bastien Leroy">Retirer</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot role="rowgroup">
+                    <tr role="row" class="table-cards-add-row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group">
+                                <input class="input" form="tce-new" name="name" required aria-label="Nom du nouveau participant">
+                            </div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group"><input class="input" form="tce-new" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tce-new" method="dialog" hidden></form>
+                            <button type="submit" form="tce-new" class="btn-primary btn-sm">Ajouter</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <span class="demo-label mt-xl">Tableau vide, ajout en erreur</span>
+        <div class="table-wrap">
+            <table class="table-cards table-cards--editable" role="table" aria-label="Participants à ajouter">
+                <thead role="rowgroup">
+                    <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Actions</th></tr>
+                </thead>
+                <tbody role="rowgroup">
+                    <tr role="row"><td role="cell" colspan="3">Aucun participant pour l'instant.</td></tr>
+                </tbody>
+                <tfoot role="rowgroup">
+                    <tr role="row" class="table-cards-add-row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group">
+                                <input class="input input-error" id="tce-new-empty-name" form="tce-new-empty" name="name" required aria-label="Nom du nouveau participant" aria-invalid="true" aria-describedby="tce-new-empty-name-error">
+                                <span class="input-error-msg" id="tce-new-empty-name-error">Ce champ est requis.</span>
+                            </div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group"><input class="input" form="tce-new-empty" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tce-new-empty" method="dialog" hidden></form>
+                            <button type="submit" form="tce-new-empty" class="btn-primary btn-sm">Ajouter</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <p class="demo-note text-muted text-sm mt-md">Structure : <code class="code-inline">table.table-cards.table-cards--editable</code>. Un <code class="code-inline">&lt;form&gt;</code> ne peut pas envelopper un <code class="code-inline">&lt;tr&gt;</code> (le parseur HTML le sort du tableau) : la cellule d'actions porte un <code class="code-inline">&lt;form id hidden&gt;</code> vide, et les champs comme le bouton d'envoi s'y rattachent par <code class="code-inline">form="id"</code>. Un champ ne s'appelle jamais <code class="code-inline">id</code>, <code class="code-inline">action</code>, <code class="code-inline">method</code>, <code class="code-inline">submit</code>, <code class="code-inline">reset</code> ni <code class="code-inline">elements</code> : il masquerait la propriété du formulaire.</p>
+        <p class="demo-note text-muted text-sm mt-sm">Nom accessible : <code class="code-inline">aria-label</code> = en-tête de colonne + identité enregistrée de la ligne (« Nom de Alice Martin »), car le libellé visible est en <code class="code-inline">aria-hidden</code>. Une erreur de champ s'affiche sous le champ (<code class="code-inline">.input-error-msg</code> relié par <code class="code-inline">aria-describedby</code>) ; une erreur qui ne concerne aucun champ s'affiche dans la cellule d'actions, après les boutons, avec <code class="code-inline">.table-cards-error</code> (<code class="code-inline">role="alert"</code>). Après un envoi refusé, déplacer le focus sur le premier champ en erreur de la ligne.</p>
+        <p class="demo-note-last text-muted text-sm mt-sm">Dans cette vitrine, les formulaires sont en <code class="code-inline">method="dialog"</code> : l'envoi ne fait rien. En production, le formulaire porte son <code class="code-inline">action</code> ou un gestionnaire d'envoi. <code class="code-inline">data-validate</code> (<code class="code-inline">initFormValidation</code>) et <code class="code-inline">useFormValidation</code> ne savent pas valider un formulaire de ligne : les champs sont hors du <code class="code-inline">&lt;form&gt;</code>.</p>
+    </div>
+</section>
+
+
 <!-- COMPARISON TABLE -->
 <section id="comparison">
     <div class="section-header"><span class="overline">Data</span><h2>Comparison Table</h2><p>Tableaux comparatifs cote-a-cote pour plans, features, criteres.</p></div>

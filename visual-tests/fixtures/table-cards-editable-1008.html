@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de saisie — fixture #1008</title>
+<!--
+  Fixture de `visual-tests/table-cards-editable.spec.ts` (#1008).
+
+  Un tableau de saisie `table.table-cards.table-cards--editable` dans un `.table-wrap` :
+  3 lignes de participants + une ligne d'ajout (`.table-cards-add-row`, dans le <tfoot>).
+  Chaque ligne porte un <form id hidden> VIDE (champs cachés seulement) dans sa cellule
+  d'actions ; champs et bouton d'envoi s'y rattachent par `form="<id>"`.
+
+  Erreurs : la ligne 2 a un e-mail long SANS point de coupure (le vrai risque de débordement
+  à 375px), une erreur de champ ET une erreur de ligne ; la ligne d'ajout a une erreur sur
+  son champ Nom. Toutes les erreurs portent `data-err` : le test les masque (`hidden`) ou
+  les affiche pour mesurer l'effet de leur apparition sur la mise en page.
+  Le message de champ de la ligne 2 est volontairement PLUS HAUT (plus de lignes) que
+  l'erreur de ligne de sa cellule d'actions : sans `vertical-align: top`, la cellule
+  d'actions (contenu plus court) serait centrée et ses boutons descendraient (mutation M4).
+
+  Aucun écouteur ici : `submit` / `invalid` sont posés PAR LE TEST (page.evaluate), jamais
+  par le DS. Pas de nav.js ni de components.js : rien d'autre que le CSS du DS ne doit
+  toucher la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<main class="page-content">
+  <h1>Participants du tirage</h1>
+
+  <div class="table-wrap" id="wrap">
+    <table class="table-cards table-cards--editable" id="t" role="table" aria-label="Participants à modifier">
+      <thead role="rowgroup">
+        <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Actions</th></tr>
+      </thead>
+      <tbody role="rowgroup">
+        <tr role="row" id="row-p1">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="p1" name="name" required aria-label="Nom de Alice Martin" value="Alice Martin"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="p1" name="email" type="email" required aria-label="E-mail de Alice Martin" value="alice.martin@exemple.fr"></div></td>
+          <td role="cell" class="table-cards-actions">
+            <form id="p1" hidden><input type="hidden" name="participantId" value="p1"></form>
+            <button type="submit" form="p1" class="btn-secondary btn-sm" aria-label="Enregistrer Alice Martin">Enregistrer</button>
+            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Alice Martin">Retirer</button>
+          </td>
+        </tr>
+        <tr role="row" id="row-p2">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="p2" name="name" required aria-label="Nom de Jean-Baptiste Dupont" value="Jean-Baptiste Dupont"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group">
+              <input class="input input-error" id="p2-email" form="p2" name="email" type="email" required aria-label="E-mail de Jean-Baptiste Dupont" aria-invalid="true" aria-describedby="p2-email-error" value="jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr">
+              <span class="input-error-msg" id="p2-email-error" data-err>Cette adresse est déjà utilisée dans ce tirage par un autre participant : choisissez-en une autre, ou retirez d'abord l'autre participant qui l'utilise avant de l'enregistrer ici, puis recommencez.</span>
+            </div></td>
+          <td role="cell" class="table-cards-actions">
+            <form id="p2" hidden><input type="hidden" name="participantId" value="p2"></form>
+            <button type="submit" form="p2" class="btn-secondary btn-sm" aria-label="Enregistrer Jean-Baptiste Dupont">Enregistrer</button>
+            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Jean-Baptiste Dupont">Retirer</button>
+            <p class="table-cards-error" role="alert" data-err>Impossible de retirer ce participant : le tirage est clos.</p>
+          </td>
+        </tr>
+        <tr role="row" id="row-p3">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="p3" name="name" required aria-label="Nom de Bastien Leroy" value="Bastien Leroy"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="p3" name="email" type="email" required aria-label="E-mail de Bastien Leroy" value="bastien.leroy@exemple.fr"></div></td>
+          <td role="cell" class="table-cards-actions">
+            <form id="p3" hidden><input type="hidden" name="participantId" value="p3"></form>
+            <button type="submit" form="p3" class="btn-secondary btn-sm" aria-label="Enregistrer Bastien Leroy">Enregistrer</button>
+            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Bastien Leroy">Retirer</button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot role="rowgroup">
+        <tr role="row" class="table-cards-add-row" id="row-new">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group">
+              <input class="input input-error" id="new-name" form="pnew" name="name" required aria-label="Nom du nouveau participant" aria-invalid="true" aria-describedby="new-name-error">
+              <span class="input-error-msg" id="new-name-error" data-err>Ce champ est requis.</span>
+            </div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="pnew" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+          <td role="cell" class="table-cards-actions">
+            <form id="pnew" hidden></form>
+            <button type="submit" form="pnew" class="btn-primary btn-sm">Ajouter</button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</main>
+</body>
+</html>

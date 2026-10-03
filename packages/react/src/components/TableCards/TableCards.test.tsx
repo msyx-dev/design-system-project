@@ -1,7 +1,10 @@
-import type { ReactNode } from "react";
-import { afterEach, describe, expect, it } from "vitest";
+import { useState, type ReactNode } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { axe } from "jest-axe";
+import * as publicApi from "../../index";
+import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
 import {
   TableCards,
   TableCardsCell,
@@ -138,9 +141,7 @@ describe("TableCards — libellés de carte", () => {
 
   it("le nom accessible de la cellule exclut le libellé (pas de double annonce)", () => {
     renderTable();
-    expect(
-      screen.getByRole("cell", { name: "Alice" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Alice" })).toBeInTheDocument();
     // « Nom Alice » (libellé + valeur) ne doit PAS être un nom de cellule.
     expect(screen.queryByRole("cell", { name: "Nom Alice" })).toBeNull();
     expect(
@@ -383,6 +384,273 @@ describe("TableCardsCell — seule", () => {
     const td = container.querySelector("td") as HTMLElement;
     expect(td).toHaveClass("extra");
     expect(td).not.toHaveClass("table-cards-actions");
+  });
+});
+
+describe("TableCards — tableau de saisie (#1008)", () => {
+  it("editable pose .table-cards--editable sur le <table> (pas sur .table-wrap) ; sans, pas de modificateur", () => {
+    const { container, rerender } = renderTable({ editable: true });
+    const table = container.querySelector("table") as HTMLElement;
+    expect(table).toHaveClass("table-cards", "table-cards--editable");
+    expect(container.firstElementChild).not.toHaveClass(
+      "table-cards--editable",
+    );
+    rerender(
+      <TableCards columns={columns} rows={rows} getRowKey={getRowKey} />,
+    );
+    expect(container.querySelector("table")).toHaveAttribute(
+      "class",
+      "table-cards",
+    );
+  });
+
+  it("renderRow : les <tr> du corps viennent de renderRow, dans l'ordre des rows, sans avertissement de clé", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    const render_ = vi.fn((row: Row, i: number) => (
+      <tr role="row" data-testid={`ligne-${i}`}>
+        <TableCardsCell colSpan={3}>Ligne de {row.name}</TableCardsCell>
+      </tr>
+    ));
+    const { container } = renderTable({ renderRow: render_ });
+    const trs = Array.from(container.querySelectorAll("tbody > tr"));
+    expect(trs.map((tr) => tr.textContent)).toEqual([
+      "Ligne de Alice",
+      "Ligne de Bastien",
+    ]);
+    expect(render_.mock.calls.map(([r, i]) => [r.id, i])).toEqual([
+      ["a", 0],
+      ["b", 1],
+    ]);
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
+
+  it("renderRow : columns[].render et getRowProps ne sont pas appelés pour le corps ; le thead vient de columns", () => {
+    const colRender = vi.fn(() => "x");
+    const getRowProps = vi.fn(() => ({ id: "ne-doit-pas-exister" }));
+    const { container } = renderTable({
+      columns: [
+        { key: "name", header: "Nom", render: colRender },
+        { key: "email", header: "E-mail" },
+      ],
+      getRowProps,
+      renderRow: (row) => (
+        <tr role="row">
+          <TableCardsCell>{row.name}</TableCardsCell>
+        </tr>
+      ),
+    });
+    expect(colRender).not.toHaveBeenCalled();
+    expect(getRowProps).not.toHaveBeenCalled();
+    expect(container.querySelector("#ne-doit-pas-exister")).toBeNull();
+    expect(
+      Array.from(container.querySelectorAll("thead th")).map(
+        (th) => th.textContent,
+      ),
+    ).toEqual(["Nom", "E-mail"]);
+  });
+
+  it("renderRow avec rows=[] : ligne vide emptyLabel, colspan = columns.length, renderRow non appelé", () => {
+    const renderRow = vi.fn(() => <tr role="row" />);
+    const { container } = renderTable({ rows: [], renderRow });
+    expect(renderRow).not.toHaveBeenCalled();
+    const trs = container.querySelectorAll("tbody > tr");
+    expect(trs).toHaveLength(1);
+    expect(trs[0].querySelector("td")).toHaveAttribute(
+      "colspan",
+      String(columns.length),
+    );
+    expect(trs[0]).toHaveTextContent("Aucun résultat");
+  });
+
+  it("TableCardsCell error : p.table-cards-error[role=alert] en DERNIER enfant, après les enfants", () => {
+    const { container } = render(
+      <table>
+        <tbody>
+          <tr>
+            <TableCardsCell
+              actions
+              error="Retrait refusé : le tirage est clos."
+            >
+              <button type="button">Retirer</button>
+            </TableCardsCell>
+          </tr>
+        </tbody>
+      </table>,
+    );
+    const td = container.querySelector("td") as HTMLElement;
+    const last = td.lastElementChild as HTMLElement;
+    expect(last.tagName).toBe("P");
+    expect(last).toHaveClass("table-cards-error");
+    expect(last).toHaveAttribute("role", "alert");
+    expect(last).toHaveTextContent("Retrait refusé : le tirage est clos.");
+    expect(last.previousElementSibling?.tagName).toBe("BUTTON");
+    expect(screen.getByRole("alert")).toBe(last);
+  });
+
+  it.each([
+    ["absent", undefined],
+    ["null", null],
+    ["chaîne vide", ""],
+  ])("TableCardsCell error %s : aucun <p> rendu", (_cas, error) => {
+    const { container } = render(
+      <table>
+        <tbody>
+          <tr>
+            <TableCardsCell actions error={error}>
+              x
+            </TableCardsCell>
+          </tr>
+        </tbody>
+      </table>,
+    );
+    expect(container.querySelector("p")).toBeNull();
+    expect(container.querySelector(".table-cards-error")).toBeNull();
+  });
+
+  it("aucun nouvel export : TableCards et TableCardsCell restent les seuls exports du composant", () => {
+    const exported = Object.keys(publicApi).filter((k) =>
+      /^TableCards/.test(k),
+    );
+    expect(exported.sort()).toEqual(["TableCards", "TableCardsCell"]);
+  });
+
+  /** Composition canonique : un composant de ligne avec son propre état (JSDoc de TableCards). */
+  function LigneParticipant({ p }: { p: Row }) {
+    const [erreur, setErreur] = useState<string | undefined>(
+      "Adresse déjà utilisée.",
+    );
+    const formId = `participant-${p.id}`;
+    return (
+      <tr role="row">
+        <TableCardsCell label="Nom">
+          <Input
+            form={formId}
+            name="name"
+            defaultValue={p.name}
+            required
+            aria-label={`Nom de ${p.name}`}
+          />
+        </TableCardsCell>
+        <TableCardsCell label="E-mail">
+          <Input
+            form={formId}
+            name="email"
+            type="email"
+            defaultValue={p.email}
+            required
+            aria-label={`E-mail de ${p.name}`}
+            error={p.id === "a" ? erreur : undefined}
+          />
+        </TableCardsCell>
+        <TableCardsCell actions error={p.id === "b" ? "Retrait refusé." : null}>
+          <form
+            id={formId}
+            hidden
+            onSubmit={(e) => {
+              e.preventDefault();
+              setErreur(undefined);
+            }}
+          >
+            <input type="hidden" name="participantId" value={p.id} />
+          </form>
+          <Button
+            type="submit"
+            form={formId}
+            variant="secondary"
+            size="sm"
+            aria-label={`Enregistrer ${p.name}`}
+          >
+            Enregistrer
+          </Button>
+        </TableCardsCell>
+      </tr>
+    );
+  }
+
+  function renderSaisie() {
+    return render(
+      <TableCards
+        editable
+        aria-label="Participants"
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        renderRow={(p) => <LigneParticipant p={p} />}
+        footer={
+          <tr role="row" className="table-cards-add-row">
+            <TableCardsCell colSpan={3}>
+              <Input
+                form="p-new"
+                name="name"
+                aria-label="Nom du nouveau participant"
+              />
+              <form id="p-new" hidden />
+              <Button type="submit" form="p-new" size="sm">
+                Ajouter
+              </Button>
+            </TableCardsCell>
+          </tr>
+        }
+      />,
+    );
+  }
+
+  it("composition canonique : champs et bouton rattachés par form=, <form hidden> dans la cellule d'actions, noms accessibles", () => {
+    const { container } = renderSaisie();
+    const rowA = container.querySelector("tbody > tr") as HTMLElement;
+    const form = rowA.querySelector("form") as HTMLFormElement;
+    expect(form).toHaveAttribute("id", "participant-a");
+    expect(form).toHaveAttribute("hidden");
+    expect(form.closest("td")).toHaveClass("table-cards-actions");
+    expect(form.querySelectorAll("input:not([type=hidden])")).toHaveLength(0);
+    for (const input of Array.from(
+      rowA.querySelectorAll("input:not([type=hidden])"),
+    )) {
+      expect(input).toHaveAttribute("form", "participant-a");
+    }
+    expect(
+      screen.getByRole("textbox", { name: "Nom de Alice" }),
+    ).toHaveAttribute("form", "participant-a");
+    expect(
+      screen.getByRole("button", { name: "Enregistrer Alice" }),
+    ).toHaveAttribute("form", "participant-a");
+    // Ligne d'ajout en footer.
+    expect(
+      container.querySelector("tfoot > tr.table-cards-add-row"),
+    ).not.toBeNull();
+  });
+
+  it("Input error : aria-invalid + aria-describedby vers le .input-error-msg ; erreur de ligne role=alert", () => {
+    renderSaisie();
+    const email = screen.getByRole("textbox", { name: "E-mail de Alice" });
+    expect(email).toHaveAttribute("aria-invalid", "true");
+    const msg = document.getElementById(
+      email.getAttribute("aria-describedby") as string,
+    );
+    expect(msg).toHaveClass("input-error-msg");
+    expect(msg).toHaveTextContent("Adresse déjà utilisée.");
+    expect(screen.getByRole("alert")).toHaveClass("table-cards-error");
+    expect(screen.getByRole("alert")).toHaveTextContent("Retrait refusé.");
+  });
+
+  it("jsdom résout form= : FormData du formulaire d'une ligne = les champs de cette ligne seulement", () => {
+    const { container } = renderSaisie();
+    const form = container.querySelector("#participant-b") as HTMLFormElement;
+    const names = Array.from(form.elements).map(
+      (el) => (el as HTMLInputElement).name,
+    );
+    // Le bouton d'envoi rattaché (name vide) fait partie de form.elements, comme en navigateur.
+    expect(names.sort()).toEqual(["", "email", "name", "participantId"]);
+    const data = new FormData(form);
+    expect(data.get("name")).toBe("Bastien");
+    expect(data.get("email")).toBe("bastien@exemple.fr");
+    expect(data.get("participantId")).toBe("b");
+  });
+
+  it("n'a aucune violation axe (composition en état d'erreur)", async () => {
+    const { container } = renderSaisie();
+    expect(await axe(container)).toHaveNoViolations();
   });
 });
 

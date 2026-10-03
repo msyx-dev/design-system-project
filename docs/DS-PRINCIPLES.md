@@ -227,6 +227,19 @@ Le DS expose une échelle dédiée `--cat-1` à `--cat-8` : elle ne veut rien di
 <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Alice Martin</td>
 ```
 
+❌ **Don't** (#1008) — `<form>` qui enveloppe un `<tr>` pour un tableau de saisie (le parseur HTML sort le `<form>` du tableau, la ligne n'est plus rattachée) :
+```html
+<table><tbody><form><tr><td><input name="name"></td><td><button>Enregistrer</button></td></tr></form></tbody></table>
+```
+
+✅ **Do** — `<form id hidden>` vide dans la cellule d'actions, champs et bouton rattachés par `form=` ; aucun champ nommé `id`/`action`/`method`/`submit`/`reset`/`elements` :
+```html
+<td role="cell" class="table-cards-actions">
+  <form id="p1" hidden><input type="hidden" name="participantId" value="p1"></form>
+  <button type="submit" form="p1" class="btn-secondary btn-sm" aria-label="Enregistrer Alice Martin">Enregistrer</button>
+</td>
+```
+
 ### 3.1 — Label vs aria-label : règle de décision (capitalisation Lot 3 a11y — #340)
 
 | Cas | Pattern recommandé | Exemple |

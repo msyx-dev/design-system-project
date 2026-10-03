@@ -618,6 +618,32 @@ import { TableCards } from "@msyx-dev/react";
 
 Quand préférer `DataGrid` : `.table-cards` n'a ni tri ni filtre ni pagination (en cartes l'en-tête est masqué, les contrôles de tri disparaîtraient) — le consommateur passe des lignes déjà triées et compose `<Pagination>` à côté. Pour un tableau triable ou filtrable, utiliser `.data-grid` / `DataGrid`, qui défile horizontalement sur mobile.
 
+## Tableau de saisie — `.table-cards--editable` (#1008)
+
+Champs et boutons en cellule du tableau en cartes ci-dessus : une ligne = un enregistrement modifiable. Vitrine : `data.html#table-cards-editable`. Le modificateur se pose sur le `<table>` (`class="table-cards table-cards--editable"`) ; il fournit cibles 44 px à toutes les largeurs, alignement haut des cellules et messages d'erreur sans effet sur la largeur des colonnes.
+
+**Formulaire de ligne** : un `<form>` ne peut pas envelopper un `<tr>` (le parseur HTML le sort du tableau). Poser un `<form id="p1" hidden>` VIDE (champs cachés seulement) dans la cellule d'actions, et rattacher champs et bouton d'envoi par `form="p1"`. Mesuré en navigateur : `form.elements`, `FormData`, validation native et touche Entrée restent limités à la ligne, l'ordre de tabulation est Nom → E-mail → actions → ligne suivante. Ne jamais ajouter de `display` sur `form` (il écraserait `[hidden]`).
+
+```html
+<tr role="row">
+  <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+    <div class="input-group"><input class="input" form="p1" name="name" required aria-label="Nom de Alice Martin"></div></td>
+  <td role="cell" class="table-cards-actions">
+    <form id="p1" hidden><input type="hidden" name="participantId" value="p1"></form>
+    <button type="submit" form="p1" class="btn-secondary btn-sm" aria-label="Enregistrer Alice Martin">Enregistrer</button>
+    <p class="table-cards-error" role="alert">Impossible de retirer ce participant.</p> <!-- erreur de ligne, si besoin -->
+  </td>
+</tr>
+```
+
+- **Interdit** : un champ nommé `id`, `action`, `method`, `submit`, `reset` ou `elements` (il masque la propriété homonyme de `form`).
+- **Nom accessible** d'un champ = en-tête de colonne + identité enregistrée (« Nom de Alice Martin »), unique dans le tableau et commençant par l'en-tête (WCAG 2.5.3, le libellé de carte est `aria-hidden`). Boutons : texte visible + identité (« Retirer Alice Martin »).
+- **Erreurs** : de champ → `.input-error-msg` sous le champ (`aria-invalid` + `aria-describedby`, comme `Input error`) ; sans champ (échec d'une action) → `.table-cards-error` (`role="alert"`) après les boutons de la cellule d'actions. Après un envoi refusé, déplacer le focus sur le premier champ en erreur de la ligne.
+- **Ligne d'ajout** : `<tr role="row" class="table-cards-add-row">` dans le `<tfoot role="rowgroup">` (fond teinté, bordure pointillée).
+- **Incompatibilités** : `data-validate` (`initFormValidation`) et `useFormValidation` ne savent pas valider un formulaire de ligne (champs hors du `<form>`) ; en React, `useFormStatus` ne voit pas un bouton rattaché par `form=` : utiliser le `isPending` de `useActionState`.
+
+React (`@msyx-dev/react`, aucun nouvel export) : `<TableCards editable renderRow={(row, i) => <MaLigne … />} footer={…} />`, où `MaLigne` rend un `<tr role="row">` de `<TableCardsCell>` avec son propre état (un `useActionState` par ligne). `TableCardsCell` accepte `error` (rendu `.table-cards-error`, après les enfants). Avec `renderRow`, `columns[].render`, `hideLabel`, `actions` et `getRowProps` sont ignorés pour le corps ; `columns` reste la source du `<thead>`. Exemple complet : JSDoc de `TableCards`.
+
 ## Sécurité : APIs qui acceptent du HTML brut
 
 La plupart des composants DS échappent automatiquement les données que vous leur passez (texte affiché via `textContent`, attributs via `setAttribute`). **Trois API font exception, volontairement** — elles acceptent du HTML/JS brut inséré tel quel, et c'est **vous** (le consumer) qui êtes responsable d'échapper ce que vous y injectez si la donnée n'est pas de confiance :
