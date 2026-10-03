@@ -2131,9 +2131,45 @@ function initSegmentedControls() {
             }
         }
 
+        indicator.setAttribute('aria-hidden', 'true');
+
+        // Place l'indicateur sur l'item courant (getCurrent) et le resynchronise quand la taille d'un
+        // item change. Commun aux deux modes ; l'ordre (rAF d'abord, observateur ensuite) est celui de
+        // la 1re mesure (#1016) : la mesure initiale precede tout callback ResizeObserver.
+        //   - #1016 : 1re mesure SANS transition (cf. moveIndicator), apres que le layout est pret.
+        //   - #1021 : l'indicateur suit l'item courant quand la taille d'un item change (swap de
+        //     police font-display:swap, redimensionnement). Mesure unique = indicateur trop court ou
+        //     trop long apres le swap, et capture VR non deterministe. L'indicateur n'est pas
+        //     observe : aucune boucle d'observation possible.
+        function trackIndicator(getCurrent) {
+            requestAnimationFrame(function() {
+                var current = getCurrent();
+                if (current) moveIndicator(current);
+            });
+            if (typeof ResizeObserver !== 'undefined') {
+                var resync = new ResizeObserver(function() {
+                    var current = getCurrent();
+                    if (current) moveIndicator(current);
+                });
+                items.forEach(function(i) { resync.observe(i); });
+            }
+        }
+
+        // #1016 -- Mode « liens » : un filtre de page statique ou serveur, pas un radiogroup (exception
+        // ecrite a DS-PRINCIPLES.md §3.2). Le balisage est nav.segmented > a.segmented-item[href] ; le
+        // serveur pose .active ET aria-current="page" sur le lien courant. Ni role, ni tabindex, ni
+        // ecouteur de clic ou de clavier : un role="radio" ou un preventDefault sur Entree ferait de
+        // chaque lien un faux radio et bloquerait son activation au clavier. La navigation reste
+        // NATIVE (Tab, Entree, clic milieu, Ctrl+clic) ; seul l'indicateur est place. Le JS ne lit ni
+        // n'ecrit aucun href. Aucun lien courant (URL hors options) : pas d'indicateur, aucun item
+        // n'est designe -- l'indicateur reste sans largeur, donc masque (navigation.css).
+        if (seg.querySelector(':scope > a.segmented-item')) {
+            trackIndicator(function() { return seg.querySelector('.segmented-item.active'); });
+            return;
+        }
+
         // Convention ARIA canonique : radiogroup (cf. DS-PRINCIPLES.md §3.2, #613)
         if (!seg.getAttribute('role')) seg.setAttribute('role', 'radiogroup');
-        indicator.setAttribute('aria-hidden', 'true');
 
         function enabledItems() {
             return Array.from(items).filter(function(i) { return !i.disabled; });
@@ -2201,23 +2237,12 @@ function initSegmentedControls() {
                 var firstFocusable = enabledItems()[0];
                 if (firstFocusable) firstFocusable.setAttribute('tabindex', '0');
             }
-            // Attendre que le layout soit pret (requestAnimationFrame)
-            requestAnimationFrame(function() {
-                moveIndicator(activeItem);
-            });
         }
 
-        // #1021 : l'indicateur suit l'item actif quand la taille d'un item change (swap de
-        // police font-display:swap, redimensionnement). Mesure unique = indicateur trop court
-        // ou trop long apres le swap, et capture VR non deterministe. L'indicateur n'est pas
-        // observe : aucune boucle d'observation possible.
-        if (typeof ResizeObserver !== 'undefined') {
-            var resync = new ResizeObserver(function() {
-                var current = seg.querySelector('.segmented-item.active') || items[0];
-                if (current) moveIndicator(current);
-            });
-            items.forEach(function(i) { resync.observe(i); });
-        }
+        // Attend que le layout soit pret (requestAnimationFrame), puis resynchronise (ResizeObserver).
+        trackIndicator(function() {
+            return seg.querySelector('.segmented-item.active') || items[0];
+        });
     });
 }
 window.__initSegmentedControls = initSegmentedControls;

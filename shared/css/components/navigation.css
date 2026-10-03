@@ -827,6 +827,15 @@
     white-space: nowrap;
     transition: color 0.2s;
     user-select: none;
+    /* #1016 T2 -- mode « liens » : a.segmented-item doit rendre comme button.segmented-item.
+       - text-decoration : la regle globale `a` (_base.css) souligne ; (0,1,0) bat son (0,0,1).
+         NE PAS ajouter .segmented-item a la liste `a:is(...)` de _base.css : son `color: inherit`
+         (0,1,1) battrait la couleur des items inactifs ci-dessus (0,1,0) -- arbitrage A9.
+       - line-height : un <button> a `normal` (feuille UA), un <a> herite du body (1.6) et mesurait
+         45,75 px contre 40 px (mesure Chromium, T1b). `normal` aligne les deux ; sans effet sur un
+         bouton, qui l'a deja. */
+    text-decoration: none;
+    line-height: normal;
 }
 .segmented-item:hover:not(.active) {
     color: var(--text);
