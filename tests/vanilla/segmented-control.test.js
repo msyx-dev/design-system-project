@@ -287,3 +287,127 @@ describe('initSegmentedControls -- 1re mesure sans transition (#1016)', () => {
     expect(indicator.style.transition).toBe('');
   });
 });
+
+/**
+ * #1016 -- mode « liens » : `<nav class="segmented">` + `<a class="segmented-item" href>`. Un filtre de
+ * page, pas un radiogroup (exception ecrite a DS-PRINCIPLES.md §3.2) : la navigation reste NATIVE, le JS
+ * ne place que l'indicateur. jsdom n'applique aucune mise en page (offsetWidth = 0) : on verifie le
+ * BALISAGE et l'absence d'interception ; la geometrie, le clavier reel et le rendu sans JS sont prouves en
+ * navigateur par `visual-tests/segmented-indicator-sync.spec.ts` (cas 5 a 9).
+ */
+describe('initSegmentedControls -- mode liens (#1016)', () => {
+  function linksHtml({ avecCourant = true } = {}) {
+    return `
+      <nav class="segmented" aria-label="Filtrer par etat">
+        <span class="segmented-indicator" aria-hidden="true"></span>
+        <a class="segmented-item${avecCourant ? ' active' : ''}" href="?filtre=tous#f"${avecCourant ? ' aria-current="page"' : ''}>Tous</a>
+        <a class="segmented-item" href="?filtre=actifs#f">Actifs</a>
+        <a class="segmented-item" aria-disabled="true">Archives</a>
+      </nav>
+    `;
+  }
+
+  // rAF synchrone : la mesure initiale a lieu pendant l'appel a __initSegmentedControls().
+  function setupLinks(html) {
+    const dom = loadComponentsWindow(html);
+    const { window } = dom;
+    window.requestAnimationFrame = (cb) => { cb(0); return 0; };
+    window.__initSegmentedControls();
+    const seg = window.document.querySelector('.segmented');
+    return {
+      window,
+      seg,
+      indicator: seg.querySelector('.segmented-indicator'),
+      items: Array.from(seg.querySelectorAll('.segmented-item')),
+    };
+  }
+
+  it("ne pose AUCUN role (nav ni items), ni tabindex, ni aria-checked", () => {
+    const { seg, items } = setupLinks(linksHtml());
+    expect(seg.hasAttribute('role')).toBe(false);
+    expect(seg.tagName).toBe('NAV');
+    for (const item of items) {
+      expect(item.hasAttribute('role')).toBe(false);
+      expect(item.hasAttribute('tabindex')).toBe(false);
+      expect(item.hasAttribute('aria-checked')).toBe(false);
+    }
+    expect(seg.querySelectorAll('[role], [aria-checked], [tabindex]').length).toBe(0);
+  });
+
+  it("conserve .active ET aria-current sur le meme lien, sans les deplacer", () => {
+    const { seg, items } = setupLinks(linksHtml());
+    expect(seg.querySelectorAll('.segmented-item.active').length).toBe(1);
+    expect(items[0].classList.contains('active')).toBe(true);
+    expect(items[0].getAttribute('aria-current')).toBe('page');
+    expect(items[1].hasAttribute('aria-current')).toBe(false);
+  });
+
+  it("cache l'indicateur aux lecteurs d'ecran (aria-hidden)", () => {
+    const { indicator } = setupLinks(linksHtml());
+    expect(indicator.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it("ne touche ni href ni l'option desactivee (pas de href, pas de tabindex)", () => {
+    const { items } = setupLinks(linksHtml());
+    expect(items[0].getAttribute('href')).toBe('?filtre=tous#f');
+    expect(items[1].getAttribute('href')).toBe('?filtre=actifs#f');
+    expect(items[2].hasAttribute('href')).toBe(false);
+    expect(items[2].getAttribute('aria-disabled')).toBe('true');
+    expect(items[2].hasAttribute('tabindex')).toBe(false);
+  });
+
+  it("un clic, Entree et Espace ne sont JAMAIS interceptes (pas de preventDefault) et ne deplacent pas .active", () => {
+    const { window, items } = setupLinks(linksHtml());
+    const click = new window.MouseEvent('click', { bubbles: true, cancelable: true });
+    items[1].dispatchEvent(click);
+    expect(click.defaultPrevented).toBe(false);
+    const enter = new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    items[1].dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(false);
+    const espace = new window.KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+    items[1].dispatchEvent(espace);
+    expect(espace.defaultPrevented).toBe(false);
+    // Le navigateur (ou le serveur) decide du lien courant : le JS ne le change pas.
+    expect(items[0].classList.contains('active')).toBe(true);
+    expect(items[1].classList.contains('active')).toBe(false);
+  });
+
+  it("n'emet segmented:change sur aucun clic (aucun etat n'est gere cote JS)", () => {
+    const { window, seg, items } = setupLinks(linksHtml());
+    let recu = 0;
+    seg.addEventListener('segmented:change', () => { recu++; });
+    fireClick(window, items[1]);
+    expect(recu).toBe(0);
+  });
+
+  it("pose la largeur de l'indicateur et laisse `style.transition` vide apres l'init", () => {
+    const { indicator } = setupLinks(linksHtml());
+    expect(indicator.style.width).not.toBe('');
+    expect(indicator.style.transform).not.toBe('');
+    // La 1re mesure coupe la transition le temps d'une frame puis la restaure (#1016 T1).
+    expect(indicator.style.transition).toBe('');
+  });
+
+  it("sans lien courant (URL hors options) : aucune largeur, l'indicateur reste masque par le CSS", () => {
+    const { indicator } = setupLinks(linksHtml({ avecCourant: false }));
+    expect(indicator.style.width).toBe('');
+    expect(indicator.hasAttribute('style')).toBe(false);
+  });
+
+  it("est idempotent : un 2e appel ne relie rien (dataset.bound) et ne pose aucun role", () => {
+    const { window, seg, indicator } = setupLinks(linksHtml());
+    expect(seg.dataset.bound).toBe('1');
+    const avant = indicator.getAttribute('style');
+    window.__initSegmentedControls();
+    expect(indicator.getAttribute('style')).toBe(avant);
+    expect(seg.querySelectorAll('[role], [aria-checked], [tabindex]').length).toBe(0);
+  });
+
+  it("ne change pas le mode bouton : un groupe de <button> garde radiogroup / radio / tabindex itinerant", () => {
+    const { seg, items } = setup(normalHtml());
+    expect(seg.getAttribute('role')).toBe('radiogroup');
+    expect(items[0].getAttribute('role')).toBe('radio');
+    expect(items[0].getAttribute('tabindex')).toBe('0');
+    expect(items[1].getAttribute('tabindex')).toBe('-1');
+  });
+});
