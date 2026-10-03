@@ -182,7 +182,7 @@ tbody tr:last-child .comparison-recommended {
     color: var(--danger);
     opacity: 0.6;
 }
-@media (min-width: 640.02px) { /* seuil composant : 640px, complément exact de l'ancien max-width: 640px (#1022) */
+@media (min-width: 640.02px) { /* seuil composant : 640px, complément exact de l'ancien seuil 640px (#1022) */
     .comparison-table th,
     .comparison-table td { padding: 0.75rem 1rem; }
     /* ATTENTION : tailles desktop recopiées de `th` (0.72rem) et `td` (0.88rem), tables.css:7-8.
