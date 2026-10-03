@@ -295,6 +295,27 @@ N'exprime ni l'exclusivité du choix ni la position « X sur N ». `aria-pressed
 
 **Référence** : décision Mike 2026-07-26, issue #613, v2.116.0.
 
+#### Exception écrite — un filtre de page en liens n'est pas un radiogroup (#1016)
+
+Quand chaque option est une **page** (filtre rendu par le serveur, route statique) et non un état local, le groupe est un `<nav>` de liens :
+
+```html
+<nav class="segmented" aria-label="Filtrer par état">
+  <span class="segmented-indicator" aria-hidden="true"></span>
+  <a class="segmented-item active" href="?filtre=tous" aria-current="page">Tous</a>
+  <a class="segmented-item" href="?filtre=actifs">Actifs</a>
+  <a class="segmented-item" aria-disabled="true">Archivés</a>
+</nav>
+```
+
+- **Sémantique** : landmark `nav` + `aria-label` distinct par groupe ; le lien courant porte `aria-current="page"` **et** `.active` (le serveur pose les deux, le JS n'en pose aucun) ; **aucun** `role`, `aria-checked` ni `tabindex`.
+- **Pourquoi pas un radiogroup** : activer une option charge une autre URL. `role="radio"` annoncerait « sélectionné, 1 sur 3 » pour un contrôle qui navigue, retirerait le rôle `link` (clic milieu, Ctrl+clic, « ouvrir dans un nouvel onglet »), et le roving tabindex + les flèches casseraient l'attente clavier d'un lien (Tab de lien en lien, Entrée).
+- **Clavier natif** : Tab parcourt chaque lien, Entrée le suit. Le DS n'écoute ni le clic ni le clavier, donc ne fait **jamais** de `preventDefault()` ; pas de flèches.
+- **Option indisponible** : `<a aria-disabled="true">` **sans `href`** — ni focalisable ni activable.
+- **JS** : `initSegmentedControls` détecte `:scope > a.segmented-item` et ne fait que placer l'indicateur (`trackIndicator`). Sans JavaScript, la navigation fonctionne et le lien courant reste lisible (l'item actif porte l'aplat de l'indicateur tant qu'aucune largeur inline n'est posée).
+- **Rendu identique à un bouton** : `text-decoration: none` et `line-height: normal` sur `.segmented-item` (un `<a>` hérite `1.6` du body : 45,75 px contre 40 px). **Ne jamais** ajouter `.segmented-item` à `a:is(...)` de `_base.css` : son `color: inherit` (0,1,1) battrait la couleur des items inactifs (0,1,0) — piège A9.
+- **Preuves** : `visual-tests/segmented-indicator-sync.spec.ts` (cas 5 à 9 : JS coupé, balisage, clavier, hauteur, rendu) et `tests/vanilla/segmented-control.test.js`.
+
 ### 3.3 — Contraste des boutons à fond plein : mesuré sur les pixels, bloquant (#944)
 
 **Règle** : le texte d'un bouton à fond plein (dégradé) respecte **4,5:1 minimum** (valeur visée **≥ 4,6** : l'anticrénelage et le tramage du dégradé font bouger la mesure de quelques centièmes) sur **trois mesures**, dans les **10 combos** thème/mode, au repos **et** au survol :

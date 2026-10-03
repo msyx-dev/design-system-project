@@ -186,6 +186,25 @@ l'utilisateur a déjà navigué (ne casse jamais une vue existante). Le tooltip 
 en flux normal, inadapté aux coordonnées SVG transformées) — passer par `opts.onSelect`
 ou le modal par défaut pour le détail.
 
+### Segmented control — filtre de page en liens (#1016)
+
+Pour un filtre dont chaque option est une **page** (rendu serveur, route statique), utiliser des liens et non des boutons. Balisage exact :
+
+```html
+<nav class="segmented" aria-label="Filtrer par état">
+  <span class="segmented-indicator" aria-hidden="true"></span>
+  <a class="segmented-item active" href="?filtre=tous" aria-current="page">Tous</a>
+  <a class="segmented-item" href="?filtre=actifs">Actifs</a>
+  <a class="segmented-item" aria-disabled="true">Archivés</a>
+</nav>
+```
+
+- Le **serveur** pose `.active` ET `aria-current="page"` sur le lien courant (le même élément). Aucun `role`, `aria-checked` ni `tabindex` : ce n'est pas un radiogroup, Tab et Entrée sont natifs.
+- `aria-label` distinct par groupe (chaque `nav` est un landmark). Option indisponible : `aria-disabled="true"` et **pas de `href`**.
+- Fonctionne sans JavaScript ; `initSegmentedControls()` (inclus dans `components.js`) ne fait que placer l'indicateur. Variantes `.segmented--subtle`, `--sm`, `--lg` inchangées.
+- Aucun lien courant (URL hors options) : n'en marquer aucun, l'indicateur reste masqué.
+- Ne pas redéfinir `a.segmented-item` côté consommateur (soulignement, couleur, hauteur) : le DS les fixe pour que le lien rende comme un `<button>`.
+
 ## Comment synchroniser
 
 ### Sync manuelle (un seul projet)
