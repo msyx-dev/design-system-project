@@ -384,7 +384,7 @@ Arrondir à `(X + 1)px` décale la frontière d'un pixel entier et change le ren
 Un seuil qui n'est pas dans l'échelle (480 / 768 / 1024 / 1280 — par exemple 400, 600 ou 640) est un **seuil propre au composant**. On le commente sur place, par exemple `/* seuil composant : 640px, compaction du header #711 */`. On ne le réaligne pas sur l'échelle : ce serait un changement de rendu entre les deux valeurs.
 
 ### Exception unique : masquer ou sortir du flux sur une plage
-`max-width` reste toléré pour **un masquage ou un hors-flux limité à une plage** (`display: none`, panneau hors écran avec voile), quand le retour au rendu natif ne s'écrit pas sans recopier le `display` d'un autre composant (`flex`, `grid`, `table`…). Le marqueur est **obligatoire**, sur la ligne de la media query, avec la chaîne exacte :
+`max-width` reste toléré pour **un masquage ou un hors-flux limité à une plage** (`display: none`, panneau hors écran avec voile), quand le retour au rendu natif ne s'écrit pas sans recopier le `display` d'un autre composant (`flex`, `grid`, `table`…). Le marqueur est **obligatoire**, sur la ligne de la media query, avec la forme exacte `/* exception §4 : <raison> */` :
 
 ```css
 @media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
