@@ -3,6 +3,10 @@
 
 /* ===== CODE ===== */
 .code-block { background: var(--primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem 1.5rem; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.8; overflow-x: auto; overflow-wrap: anywhere; min-width: 0; color: var(--text-muted); }
+/* #1020 — un <div class="code-block"> garde les retours à la ligne et l'indentation de son source (sinon
+   le code s'aplatit et « Copier » copie une ligne). pre-wrap, pas pre : les lignes longues continuent de se
+   replier (overflow-wrap: anywhere, #250). Un <pre class="code-block"> garde son white-space natif (pre). */
+.code-block:where(:not(pre)) { white-space: pre-wrap; }
 .code-block .kw { color: var(--code-keyword); }
 .code-block .str { color: var(--code-string); }
 .code-block .cm { color: var(--code-comment); font-style: italic; }

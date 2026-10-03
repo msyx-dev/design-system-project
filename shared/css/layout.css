@@ -258,6 +258,12 @@
 .main .demo-label { font-size: 0.72rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: var(--space-md); display: block; }
 /* #980 — étiquette de démo sur panneau de splitter (fond relevé gris) : accent renforcé, ≥ 4,6:1 */
 .main .split-panel .demo-label { color: var(--accent-text-strong); }
+/* #1020 — note d'usage sous une démo : texte secondaire, détachée du bloc précédent, serrée entre notes consécutives.
+   Valeurs = celles de .text-muted / .text-sm / .mt-md / .mt-sm, que #1007 et #1008 posaient note par note. */
+.main .demo-note,
+.main .demo-note-last { margin-top: var(--space-md); color: var(--text-muted); font-size: var(--type-14); }
+.main :is(.demo-note, .demo-note-last) + .demo-note,
+.main :is(.demo-note, .demo-note-last) + .demo-note-last { margin-top: var(--space-sm); }
 .main .demo-box { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-xl); min-width: 0; }
 .main .demo-grid { display: grid; gap: var(--space-lg); }
 /* minmax(0, 1fr) : autorise les pistes à descendre sous leur max-content

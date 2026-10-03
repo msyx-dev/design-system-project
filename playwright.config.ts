@@ -72,6 +72,8 @@ export default defineConfig({
     "**/segmented-prehydration-contrast.spec.ts",
     "**/segmented-touch-target.spec.ts",
     "**/mobile-first-1023.spec.ts",
+    "**/code-block-whitespace.spec.ts",
+    "**/demo-note.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
