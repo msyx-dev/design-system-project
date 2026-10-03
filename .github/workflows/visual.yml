@@ -34,10 +34,16 @@ jobs:
             playwright-${{ runner.os }}-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
+      # M52 (run 37117140266) : au-dela de ~250 captures en ecart le job depassait timeout-minutes (55)
+      # et etait ANNULE ; l'etape d'upload (if: failure()) ne tournait pas, donc aucun artefact a
+      # recolter. Un depassement de timeout d'ETAPE la fait echouer sans tuer le job : l'upload
+      # (failure() || cancelled()) tourne toujours, avec ce que Playwright a deja ecrit dans
+      # test-results/. 47 min = marge sous les 55 du job pour laisser le temps d'uploader.
       - name: Run visual tests
+        timeout-minutes: 47
         run: npm run test:visual
       - name: Upload diff artifacts on failure
-        if: failure()
+        if: ${{ failure() || cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: visual-diffs
