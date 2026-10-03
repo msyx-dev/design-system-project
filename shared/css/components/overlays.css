@@ -409,7 +409,7 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 
 /* ===== CONFIRM POPOVER ===== */
 .popover-confirm-wrap { position: relative; display: inline-block; }
-.popover-confirm { position: absolute; z-index: var(--z-floating); background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-md); min-width: 220px; box-shadow: var(--shadow-lg); display: none; }
+.popover-confirm { position: absolute; z-index: var(--z-floating); background: var(--surface-2); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-md); min-width: 180px; box-shadow: var(--shadow-lg); display: none; }
 .popover-confirm.open { display: block; animation: fadeInScale 0.15s ease; }
 .popover-confirm--top { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
 .popover-confirm--bottom { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); }
@@ -419,6 +419,6 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 .popover-confirm-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: var(--space-sm); line-height: 1.45; }
 .popover-confirm-actions { display: flex; gap: var(--space-xs); justify-content: flex-end; }
 @keyframes fadeInScale { from { opacity: 0; transform: translateX(-50%) scale(0.94); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
-@media (max-width: 480px) {
-    .popover-confirm { min-width: 180px; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .popover-confirm { min-width: 220px; }
 }

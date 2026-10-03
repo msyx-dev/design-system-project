@@ -29,7 +29,7 @@
     display: flex; align-items: center; gap: 0.7rem;
     padding: 0.8rem 1.2rem; border-radius: 12px;
     background: var(--surface-solid); border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-lg); font-size: 0.85rem; max-width: 360px;
+    box-shadow: var(--shadow-lg); font-size: 0.85rem; max-width: none;
     flex-shrink: 0;
     will-change: transform, opacity;
     transition: margin 0.25s var(--ease-standard);
@@ -45,24 +45,25 @@
 @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(110%); } }
 .toast-container {
     position: fixed;
-    top: calc(var(--header-h) + var(--space-md));
-    right: var(--space-md);
+    top: calc(var(--header-h) + var(--space-sm));
+    left: var(--space-sm);
+    right: var(--space-sm);
     z-index: var(--z-toast);
     display: flex; flex-direction: column;
     gap: var(--space-sm);
     pointer-events: none;
-    max-width: calc(100vw - 2 * var(--space-md));
+    max-width: none;
 }
 .toast-container .toast { pointer-events: auto; }
 
-@media (max-width: 480px) {
+@media (min-width: 480.02px) { /* bp-sm */
     .toast-container {
-        top: calc(var(--header-h) + var(--space-sm));
-        left: var(--space-sm);
-        right: var(--space-sm);
-        max-width: none;
+        top: calc(var(--header-h) + var(--space-md));
+        left: auto;
+        right: var(--space-md);
+        max-width: calc(100vw - 2 * var(--space-md));
     }
-    .toast { max-width: none; }
+    .toast { max-width: 360px; }
 }
 
 /* ===== TOAST-MESSAGE (wrapper texte flex grow) ===== */
@@ -98,14 +99,15 @@
 /* Anatomie upgrade-banner : flex icône lg, padding md, bg 8% / border 30%, radius-lg */
 .alert--cta {
     --alert-border-alpha: 30%;       /* bg reste 8% (default) ; border passe à 30% */
+    flex-direction: column;
     gap: var(--space-md);
     padding: var(--space-md);
     border-radius: var(--radius-lg);
 }
 .alert--cta .alert-icon { font-size: 1.6rem; line-height: 1; margin-top: 0; }
 .alert--cta .alert-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
-@media (max-width: 480px) {
-    .alert--cta { flex-direction: column; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .alert--cta { flex-direction: row; }
 }
 
 /* ===== ALIAS RÉTRO-COMPAT @deprecated (#519) — SUPPRESSION v3 ===== */
@@ -127,7 +129,7 @@
 
 /* --- upgrade-banner → .alert.alert--cta --- */
 /* @deprecated v2.77.0 — utiliser .alert.alert--cta + .alert-{variant}. Suppression v3. */
-.upgrade-banner { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-md); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: var(--radius-lg); }
+.upgrade-banner { display: flex; flex-direction: column; gap: var(--space-md); align-items: flex-start; padding: var(--space-md); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: var(--radius-lg); }
 .upgrade-banner-icon    { font-size: 1.6rem; flex-shrink: 0; line-height: 1; }
 .upgrade-banner-body    { flex: 1; min-width: 0; }
 .upgrade-banner-title   { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
@@ -135,7 +137,7 @@
 .upgrade-banner-actions { display: flex; gap: var(--space-xs); margin-top: var(--space-sm); flex-wrap: wrap; align-items: center; }
 .upgrade-banner--warning { background: color-mix(in srgb, var(--warning) 8%, transparent); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
 .upgrade-banner--danger  { background: color-mix(in srgb, var(--danger)  8%, transparent); border-color: color-mix(in srgb, var(--danger)  30%, transparent); }
-@media (max-width: 480px) {
-    .upgrade-banner { flex-direction: column; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .upgrade-banner { flex-direction: row; }
 }
 

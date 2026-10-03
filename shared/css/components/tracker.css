@@ -9,13 +9,14 @@
     justify-content: center;
 }
 .progress-tracker svg {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
     overflow: visible;
 }
+/* 120px sous 600px : la règle mobile historique l'emportait sur cette variante (rendu conservé, #1023) */
 .progress-tracker--sm svg {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
 }
 .progress-tracker-center {
     position: absolute;
@@ -24,7 +25,7 @@
 }
 .progress-tracker-value {
     display: block;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: 700;
     font-family: var(--font-display);
     color: var(--text);
@@ -68,8 +69,8 @@
     justify-content: center;
 }
 .progress-tracker-multi svg {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     overflow: visible;
 }
 .progress-tracker-multi .pt-track {
@@ -86,7 +87,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    margin-left: 1.5rem;
+    margin-left: 0.8rem;
 }
 .progress-tracker-multi-legend-item {
     display: flex;
@@ -128,11 +129,12 @@
     max-width: 90px;
 }
 
-@media (max-width: 600px) {
-    .progress-tracker svg { width: 120px; height: 120px; }
-    .progress-tracker-multi svg { width: 160px; height: 160px; }
-    .progress-tracker-multi-legend { margin-left: 0.8rem; }
-    .progress-tracker-value { font-size: 1.4rem; }
+@media (min-width: 600.02px) { /* seuil composant : 600px */
+    .progress-tracker svg { width: 160px; height: 160px; }
+    .progress-tracker--sm svg { width: 100px; height: 100px; }
+    .progress-tracker-multi svg { width: 200px; height: 200px; }
+    .progress-tracker-multi-legend { margin-left: 1.5rem; }
+    .progress-tracker-value { font-size: 1.8rem; }
 }
 
 /* ===== DECISION TREE ===== */

@@ -101,7 +101,7 @@
 /* bc-ellipsis: hidden by default, shown on mobile for responsive variant */
 .bc-ellipsis { display: none !important; color: var(--text-dim); font-size: 0.82rem; padding: 0 0.2rem; user-select: none; align-items: center; gap: 0; }
 /* Responsive collapse: on mobile show only first, ellipsis, and last */
-@media (max-width: 640px) {
+@media (max-width: 640px) { /* exception §4 : masquage sur une plage, repli du fil d'Ariane */
     .breadcrumbs.bc-responsive li { display: none; }
     .breadcrumbs.bc-responsive li:first-child { display: flex; }
     .breadcrumbs.bc-responsive li:last-child { display: flex; }
@@ -233,14 +233,14 @@
 /* ===== SIDEBAR RAIL ===== */
 .rail-demo {
     display: flex;
-    height: 360px;
+    height: 300px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;
     background: var(--primary);
 }
 .rail-sidebar {
-    width: var(--rail-w);
+    width: 200px;
     background: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
     display: flex;
@@ -477,9 +477,9 @@
     color: var(--text-muted);
     line-height: 1.5;
 }
-@media (max-width: 480px) {
-    .rail-demo { height: 300px; }
-    .rail-sidebar { width: 200px; }
+@media (min-width: 480.02px) { /* bp-sm */
+    .rail-demo { height: 360px; }
+    .rail-sidebar { width: var(--rail-w); }
 }
 
 /* Comportement hors-flux mobile (#906) — calque EXACT de .sidebar/.sidebar-overlay
@@ -489,7 +489,7 @@
    rien ne change pour lui). Le mode replie (icones) n'a pas de sens en panneau
    mobile plein ecran : l'etat replie est neutralise ici, le panneau ouvre toujours
    a --rail-w. */
-@media (max-width: 768px) {
+@media (max-width: 768px) { /* exception §4 : panneau hors écran avec voile (rail fixe) */
     .rail-sidebar--fixed {
         transform: translateX(-100%);
     }
@@ -623,8 +623,8 @@
 .user-menu-dropdown {
     position: absolute;
     top: calc(100% + 6px);
-    right: 0;
-    min-width: 220px; /* override : dropdown user plus large que le primitif (180px) */
+    right: -0.5rem;
+    min-width: min(260px, calc(100vw - 1rem)); /* override : dropdown user plus large que le primitif (180px), borné au viewport */
     z-index: var(--z-nav);
     overflow: hidden;
     opacity: 0;
@@ -748,10 +748,10 @@
 }
 
 /* Responsive : sur mobile le dropdown prend plus de largeur */
-@media (max-width: 480px) {
+@media (min-width: 480.02px) { /* bp-sm */
     .user-menu-dropdown {
-        right: -0.5rem;
-        min-width: min(260px, calc(100vw - 1rem));
+        right: 0;
+        min-width: 220px;
     }
 }
 
