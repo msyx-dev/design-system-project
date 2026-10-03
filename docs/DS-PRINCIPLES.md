@@ -855,6 +855,62 @@ pas `SENTINEL_SECTIONS`. Une section n'est toujours sentinelle que si un token
 de thème peut s'y exprimer **structurellement** (taille, bordure, espacement) ;
 la couleur seule n'est toujours pas un critère de sélection (cf. ci-dessus).
 
+### Indicateur de segmented figé (#1021)
+
+La capture `composants#segmented-control` n'était pas déterministe : d'un run CI à
+l'autre, 123 à 1 260 px différaient, **toujours** dans les trois bandes des
+démos et, dans chacune, sur une colonne de 13 à 31 px de large : le **bord droit
+de `.segmented-indicator`**. La seule grandeur qui variait était la largeur de
+l'indicateur (7 à 9 fois plus sur ACSSI, seul thème à changer de police).
+
+**Mécanisme.** L'indicateur est positionné en JS (`width` + `transform`, mesurés
+sur l'item actif par `initSegmentedControls`). La largeur d'un item dépend de la
+police web (`font-display: swap`) : mesurée avant le swap, la largeur gardait
+celle de la police de repli, et rien ne la remesurait. Le décalage de la police
+était donc figé dans le DOM puis capturé. `animations: "disabled"` ne couvre pas
+ce cas : Playwright ne neutralise que les animations en cours à l'instant de la
+capture, pas la valeur d'arrivée d'une transition relancée après coup.
+
+**Deux parties, deux propriétaires.**
+
+- **Composant** : `initSegmentedControls` observe ses items (`ResizeObserver`) et
+  recale l'indicateur sur l'item actif quand l'un d'eux change de taille. Ce
+  n'est pas qu'un défaut de banc : un utilisateur sur réseau lent voyait le même
+  indicateur trop court ou trop long après le swap de police ou un
+  redimensionnement. L'indicateur n'est pas observé (aucune boucle).
+- **Banc** : `freezeSegmentedIndicators(page)` (`visual-tests/visual.spec.ts`,
+  appelée après l'attente des polices) pose `transition: none` sur
+  `.segmented-indicator`, puis **contrôle** que, pour chaque `.segmented` muni
+  d'un indicateur, la largeur et la position de l'indicateur coïncident avec
+  celles de l'item actif à `SEGMENTED_INDICATOR_TOLERANCE_PX` (1 px) près. Sinon
+  le test échoue avec `segmented-control : indicateur désaligné de l'item actif
+  avant capture (#1021)`.
+
+- ✅ **Do** : pour tout futur composant dont la géométrie est **mesurée en JS**
+  (indicateur, rail, pastille, curseur), la resynchroniser par `ResizeObserver`
+  côté composant, et ajouter au banc un garde-fou de **cohérence** qui échoue
+  bruyamment.
+- ❌ **Don't** : faire recalculer la géométrie par le banc (recopier
+  `offsetWidth`/`offsetLeft` avant la capture). Cela fabrique une capture
+  stable à partir d'un composant faux, et masque le défaut produit. Le banc
+  contrôle, le composant corrige.
+
+**Recalage de 3 px (même ticket).** `.segmented-indicator` est posé à
+`left: 3px` ; `item.offsetLeft` se mesure depuis le bord de padding de
+`.segmented` et compte déjà ces 3 px. L'indicateur était donc décalé de 3 px à
+droite de l'item actif. `moveIndicator` translate maintenant de
+`item.offsetLeft - indicator.offsetLeft` ; le CSS est inchangé (un `left: 0`
+décalerait l'indicateur maison des consumers qui le positionnent eux-mêmes).
+Toutes les captures qui contiennent un `.segmented` avec indicateur bougent donc
+d'autant : récolte CI justifiée, seule différence admise = l'indicateur recalé
+sur l'item actif.
+
+**Limite connue.** La course n'a pas été reproduite en local (0 indicateur
+désaligné sur 50 chargements nominaux et 20 avec 150 ms de délai sur les
+`.woff2`) : le correctif vise l'invariant (l'indicateur coïncide avec l'item
+actif), pas un mécanisme supposé. Un mécanisme résiduel donnera un échec
+explicite, jamais une variante silencieuse.
+
 ### Garde-fou en CI
 
 `visual.spec.ts` vérifie à l'exécution que chaque id listé dans
