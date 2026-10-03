@@ -1,5 +1,25 @@
 # Releases
 
+## 2.144.0 — 2026-10-03 — Fiabilisation consumers ④ : tableaux en cartes et de saisie, carte statique (#1007 #1008 #1009 #1010 #1011)
+
+> Milestone #51, demandé par tirokado (refonte UX de l'écran organisateur). Publiée avec **`@msyx-dev/react` 3.0.0-alpha.62** (mention croisée : les composants React sont décrits dans `packages/react/RELEASES.md`). Les consommateurs reçoivent tout par une resynchronisation du CSS DS, sans CSS local.
+
+### Added
+- **Tableau responsive « lignes → cartes » (#1007)** — `.table-cards` (`tables.css`) : sous 768 px chaque ligne devient une carte, chaque cellule affiche son libellé (nœud `aria-hidden`, l'en-tête de colonne reste le seul libellé annoncé) ; au-delà, tableau classique. Rôles ARIA explicites, cibles de 44 px dans la cellule d'actions. Vitrine `pages/data.html#table-cards`.
+- **Tableau de saisie (#1008)** — `.table-cards--editable`, `.table-cards-add-row`, `.table-cards-error` : champs en cellule, un formulaire par ligne via `form=` (un `<form>` ne peut pas envelopper un `<tr>`), erreur sous le champ ou après les boutons, colonnes immobiles quand une erreur apparaît, ligne d'ajout distincte, 44 px partout. Vitrine `pages/data.html#table-cards-editable`.
+- **Carte statique et carte titrée (#1010)** — `.card-static` (aucun retour de survol, `flat`/`muted` compris) et `.card-title`. Vitrine `pages/composants.html#card-static`.
+
+### Fixed
+- **Mot-symbole du header visible sur téléphone sans pictogramme (#1009)** — `brand.css`, `layout.css`.
+- **Décor festif aligné chez un consommateur sans barre latérale (#1011)** — `festive.css` : le décalage `--sidebar-w` ne s'applique que si une `.sidebar` ou un rail fixe est à l'écran.
+- **Vitrine : une carte rendue en `<section>` n'hérite plus du padding des sections de page (#1010)** — `layout.css`, règles restreintes à `.main > section` et aux sections du hub.
+
+### Tests
+- 5 nouvelles specs navigateur (`table-cards`, `table-cards-editable`, `card-static-hover`, `brand-wordmark`, `festive-sans-rail`), chacune prouvée par mutation ; 49 tests React ajoutés (2 191 au total). Baselines VR récoltées depuis la CI pour les 3 nouvelles sections et leurs cascades.
+
+### Release
+`@ds-version` 2.143.2 → 2.144.0 (minor), `check-versions.sh` rc=0. Quality-gate du lot : PASS. Un seul déploiement préprod.
+
 ## 2.143.2 — 2026-10-02 — Le sapin de Noël ne recouvre plus la fin des pages (#1005)
 
 > Touche `shared/css/components/festive.css`, `shared/css/layout.css`, `pages/fondation.html`, `docs/ARCHITECTURE.md`, `visual-tests/festive-clearance.spec.ts`, `visual-tests/fixtures/festive-clearance-1005.html` et `playwright.config.ts`. Aucun changement dans `packages/react` : `<FestiveDecor>` rend déjà `.festive-character`, le CSS couvre les deux implémentations.
