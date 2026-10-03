@@ -109,6 +109,8 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .table-cards.table-cards--editable .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; }
 .table-cards--editable .input-error-msg,
 .table-cards-error { display: block; width: 0; min-width: 100%; overflow-wrap: anywhere; }
+.table-cards--editable .input-error-msg[hidden],
+.table-cards-error[hidden] { display: none; } /* display:block ci-dessus écraserait [hidden] (piège .input-group[hidden], forms.css) */
 .table-cards-error { margin: 0; font-size: 0.75rem; color: var(--status-error-text); text-align: start; } /* texte hors fond de statut : --status-error-text (DS-PRINCIPLES §3.3, #981) */
 .table-cards .table-cards-actions > .table-cards-error { flex-basis: 100%; } /* cartes : ligne à part, APRÈS les boutons */
 .table-cards--editable .table-cards-add-row { background: color-mix(in srgb, var(--accent) 4%, transparent); border-top: 2px dashed var(--border-hover); }
