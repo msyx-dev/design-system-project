@@ -1,7 +1,7 @@
 {
   "version": "2.144.0",
   "generated": {
-    "at": "2026-10-03T10:53:36.790Z",
+    "at": "2026-10-03T11:27:41.881Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1356,10 +1356,14 @@
       ],
       "jsInit": "initSegmentedControls",
       "example": "<nav class=\"segmented\" aria-label=\"Filtrer par état\">\n  <span class=\"segmented-indicator\" aria-hidden=\"true\"></span>\n  <a class=\"segmented-item active\" href=\"?filtre=tous\" aria-current=\"page\">Tous</a>\n  <a class=\"segmented-item\" href=\"?filtre=actifs\">Actifs</a>\n  <a class=\"segmented-item\" href=\"?filtre=archives\">Archives</a>\n</nav>",
-      "react": "pending",
+      "react": "ported",
+      "reactComponent": "SegmentedControl",
       "module": [
         "shared/css/components/buttons.css",
         "shared/css/components/navigation.css"
+      ],
+      "reactExports": [
+        "SegmentedControl"
       ]
     },
     {
