@@ -8,6 +8,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.145.2] - 2026-10-03
+
 ### Changed
 - **Release du DS outillée : hook `scripts/release-bump.sh`, les PR ne bumpent plus rien (Refs msyx-dev/claude-config#543)** — `scripts/release-bump.sh`, `tests/test-release-bump.sh`, `.github/workflows/ci.yml`, `package.json` (`test:release-bump`), `CHANGELOG.md`, `packages/react/RELEASES.md`, `shared/version-notes.json` (+ `shared/nav.js` régénéré), `CLAUDE.md`, `tests/test-check-sync.sh`, `tests/test-sync-assets.sh`, `tests/test-sync-styles.sh`. Le hook appelé par `version-release.sh` fait à la release ce que chaque PR faisait à la main : `config` (`mode=pr`, `vtag=no`), `apply` (les 10 sources de `check-versions.sh`, `themes.css`, notes de version, compteurs, `RELEASES.md`, prérelease React si la section `[Unreleased]` de `packages/react/RELEASES.md` n'est pas vide), `tags` (`react-v…` si `packages/react/package.json` a bougé dans le commit de release). Test branché en CI (11 cas, mutation prouvée). Migration unique des données : les entrées publiées sans version datée sont déplacées à l'identique sous `## [Antérieur]` en fin de fichier, `packages/react/RELEASES.md` gagne une section `## [Unreleased]`, le bac `next` des notes de version est vidé (Rail et Timeline React, publiés en alpha.32 et alpha.34). Les trois tests `sync`/`check-sync` laissaient leurs dossiers temporaires dans `/tmp` (créés dans un sous-shell, jamais nettoyés) : un dossier racine unique est supprimé en sortie. Ne pas utiliser ce hook pour publier une release avant que la tranche 2 de claude-config#543 soit sur `main`.
 

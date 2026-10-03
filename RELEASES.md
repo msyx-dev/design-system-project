@@ -1,5 +1,12 @@
 # Releases
 
+## 2.145.2 — 2026-10-03 — Release outillée du design system
+
+> Première release du design system produite entièrement par l'outil (`version-release.sh` → `scripts/release-bump.sh`), sans édition manuelle — preuve de bout en bout de msyx-dev/claude-config#543 (CA15). Aucun changement de rendu ni de `@msyx-dev/react`.
+
+### Changed
+- **Release outillée (#1034)** — `scripts/release-bump.sh` (`config` / `apply` / `tags`) et son test en CI ; les PR ne bumpent plus aucune version ; dette `[Unreleased]` du CHANGELOG rangée sous `## [Antérieur]` ; section `[Unreleased]` dans `packages/react/RELEASES.md` ; dossiers temporaires des tests de synchronisation nettoyés.
+
 ## 2.145.1 — 2026-10-03 — Panneau de notifications du header dans la fenêtre (#1028)
 
 > Correctif demandé par tirokado (tirokado#75). Aucun changement de `@msyx-dev/react` : `NotificationBell` consomme les classes du DS, la resynchronisation du CSS suffit.
