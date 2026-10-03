@@ -46,7 +46,7 @@ const TOLERANCE_PX = 1;
 // Écart (px) entre l'indicateur et l'item actif du groupe nommé par son aria-label.
 type Ecart = { dw: number; dx: number };
 
-async function ouvrir(page: Page) {
+async function ouvrir(page: Page, section = "#segmented-control") {
   await page.addInitScript(() => {
     try {
       localStorage.setItem("msyx-theme", "msyx");
@@ -57,7 +57,7 @@ async function ouvrir(page: Page) {
   await page.waitForFunction(
     () => document.fonts && document.fonts.status === "loaded",
   );
-  await page.locator("#segmented-control").scrollIntoViewIfNeeded();
+  await page.locator(section).scrollIntoViewIfNeeded();
 }
 
 async function ecart(page: Page, label: string): Promise<Ecart> {
@@ -108,10 +108,14 @@ test.describe("Segmented — l'indicateur suit l'item actif (#1021)", () => {
     await ouvrir(page);
     const labels = await page.evaluate(() =>
       Array.from(
-        document.querySelectorAll(".segmented:has(> .segmented-indicator)"),
+        document.querySelectorAll(
+          "#segmented-control .segmented:has(> .segmented-indicator)",
+        ),
       ).map((s) => s.getAttribute("aria-label") ?? ""),
     );
-    // Garde-fou : la page porte bien les 5 démos (sinon on ne contrôlerait rien).
+    // Garde-fou : la section porte bien les 5 démos (sinon on ne contrôlerait rien). Énumération
+    // SCOPÉE à `#segmented-control` : les 3 `nav.segmented` de `#segmented-links` (#1016) portent
+    // aussi un indicateur et feraient passer le décompte à 8 ; ils ont leurs propres cas (6 à 9).
     expect(labels.sort()).toEqual(
       ["Disposition", "Filtre", "Nature", "Periode", "Vue"].sort(),
     );
@@ -288,5 +292,287 @@ test.describe("Segmented — l'indicateur suit l'item actif (#1021)", () => {
     expect(res.dx).toBeLessThanOrEqual(TOLERANCE_PX);
     // La transition est restaurée : les mesures suivantes (clic, ResizeObserver) glissent.
     expect(res.dureeApres).toBe("0.3s, 0.3s");
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// #1016 — mode « liens » : `nav.segmented > a.segmented-item[href]` (section `#segmented-links`)
+// ---------------------------------------------------------------------------------------------
+const FILTRE = "Filtrer par état"; // défaut, 3 liens (Tous / Actifs / Archives)
+const PERIODE = "Afficher la période"; // `--subtle`, 3 liens (7j / 30j / 90j)
+const EXPORTS = "Filtrer les exports"; // Tous / Récents / Archivés (désactivé : sans href)
+const GROUPES_LIENS = [FILTRE, PERIODE, EXPORTS];
+
+const lien = (page: Page, groupe: string, nom: string) =>
+  page
+    .getByRole("navigation", { name: groupe, exact: true })
+    .getByRole("link", { name: nom, exact: true });
+
+test.describe("Segmented liens — sans JavaScript (#1016)", () => {
+  test.use({ javaScriptEnabled: false });
+  test.beforeEach(({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== PROJECT,
+      `géométrie indépendante du thème : un seul projet suffit (${PROJECT})`,
+    );
+  });
+
+  // Ni `addInitScript` ni `waitForFunction` ici : ils exigent du JavaScript. La page se charge
+  // sur l'événement `load`, les assertions passent par les locators (CDP), pas par la page.
+  test("cas 5 — la page se charge JS coupé : 3 liens nommés, aucun script n'a tourné", async ({
+    page,
+  }) => {
+    await page.goto(PAGE);
+    // Témoin de chargement : la section est là, avec ses 3 landmarks aux noms distincts.
+    await expect(page.locator("#segmented-links h2")).toHaveText(
+      "Segmented Control — liens",
+    );
+    for (const g of GROUPES_LIENS) {
+      await expect(
+        page.getByRole("navigation", { name: g, exact: true }),
+      ).toHaveCount(1);
+    }
+    // Témoin « JS coupé » : `initSegmentedControls` n'a posé ni largeur ni transform sur
+    // l'indicateur (sans cette garde, un test vert prouverait « avec JS », pas « sans »).
+    for (const g of GROUPES_LIENS) {
+      await expect(
+        page
+          .locator(`.segmented[aria-label="${g}"] > .segmented-indicator`)
+          .first(),
+      ).not.toHaveAttribute("style", /./);
+    }
+    // Le lien courant est lisible avant toute hydratation : l'aplat de l'indicateur est reporté
+    // sur l'item actif (marqueur « pas de largeur inline »), texte sur fond plein.
+    await expect(lien(page, FILTRE, "Tous")).not.toHaveCSS(
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
+    // L'option désactivée (`<a aria-disabled>` sans href) n'est pas exposée comme un lien.
+    await expect(lien(page, EXPORTS, "Archivés")).toHaveCount(0);
+  });
+
+  test("cas 5 — un clic sur « Actifs » navigue (URL ?filtre=actifs), sans JavaScript", async ({
+    page,
+  }) => {
+    await page.goto(PAGE);
+    await lien(page, FILTRE, "Actifs").click();
+    await expect(page).toHaveURL(/\?filtre=actifs#segmented-links$/);
+  });
+
+  test("cas 5 — Tab depuis « Tous » atteint « Actifs », Entrée navigue ; l'option désactivée est sautée", async ({
+    page,
+  }) => {
+    await page.goto(PAGE);
+    await lien(page, FILTRE, "Tous").focus();
+    await page.keyboard.press("Tab");
+    await expect(lien(page, FILTRE, "Actifs")).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\?filtre=actifs#segmented-links$/);
+
+    // Option désactivée : de « Récents », Tab ne s'arrête pas sur « Archivés » (aucun href).
+    await lien(page, EXPORTS, "Récents").focus();
+    await page.keyboard.press("Tab");
+    await expect(
+      page.locator(
+        '.segmented[aria-label="Filtrer les exports"] a[aria-disabled]',
+      ),
+    ).not.toBeFocused();
+  });
+});
+
+test.describe("Segmented liens — avec JavaScript (#1016)", () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== PROJECT,
+      `géométrie indépendante du thème : un seul projet suffit (${PROJECT})`,
+    );
+  });
+
+  // Attend l'hydratation (largeur inline posée par `initSegmentedControls`) des 3 groupes :
+  // sans elle les assertions suivantes porteraient sur le HTML statique, pas sur la branche JS.
+  async function ouvrirLiens(page: Page) {
+    await ouvrir(page, "#segmented-links");
+    for (const g of GROUPES_LIENS) {
+      await expect(
+        page
+          .locator(`.segmented[aria-label="${g}"] > .segmented-indicator`)
+          .first(),
+      ).toHaveAttribute("style", /width/);
+    }
+  }
+
+  test("cas 6 — balisage : nav sans role, aucun radio, aucun tabindex, .active = aria-current", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    for (const g of GROUPES_LIENS) {
+      const etat = await page.evaluate((l) => {
+        const nav = document.querySelector(`.segmented[aria-label="${l}"]`)!;
+        const actifs = Array.from(
+          nav.querySelectorAll(".segmented-item.active"),
+        );
+        const courants = Array.from(
+          nav.querySelectorAll('[aria-current="page"]'),
+        );
+        return {
+          tag: nav.tagName,
+          roleNav: nav.getAttribute("role"),
+          roles: nav.querySelectorAll("[role]").length,
+          radios: nav.querySelectorAll('[role="radio"]').length,
+          checked: nav.querySelectorAll("[aria-checked]").length,
+          tabindex: nav.querySelectorAll("[tabindex]").length,
+          items: nav.querySelectorAll("a.segmented-item").length,
+          indicateurCache:
+            nav
+              .querySelector(":scope > .segmented-indicator")!
+              .getAttribute("aria-hidden") === "true",
+          actifs: actifs.length,
+          courants: courants.length,
+          memeElement: actifs[0] !== undefined && actifs[0] === courants[0],
+        };
+      }, g);
+      expect(etat, g).toEqual({
+        tag: "NAV",
+        roleNav: null,
+        roles: 0,
+        radios: 0,
+        checked: 0,
+        tabindex: 0,
+        items: 3,
+        indicateurCache: true,
+        actifs: 1,
+        courants: 1,
+        memeElement: true,
+      });
+    }
+  });
+
+  test("cas 6 — l'indicateur coïncide avec le lien courant dans les 3 groupes", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    // `freezeSegmentedIndicators` (visual.spec.ts) contrôle déjà ces 3 groupes à chaque capture de
+    // la matrice VR, mais n'est pas exporté : on réutilise ici `attendreAligne` / `ecart`.
+    for (const g of GROUPES_LIENS) {
+      await attendreAligne(page, g);
+    }
+  });
+
+  test("cas 7 — un clic sur un lien navigue (rien n'est intercepté)", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    await lien(page, FILTRE, "Actifs").click();
+    await expect(page).toHaveURL(/\?filtre=actifs#segmented-links$/);
+  });
+
+  test("cas 7 — Tab atteint chaque lien (pas de tabindex itinérant), Entrée navigue", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    await lien(page, FILTRE, "Tous").focus();
+    await page.keyboard.press("Tab");
+    // Un radiogroup n'offrirait qu'UN arrêt de tabulation : « Actifs » aurait `tabindex="-1"`.
+    await expect(lien(page, FILTRE, "Actifs")).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(lien(page, FILTRE, "Archives")).toBeFocused();
+    await lien(page, FILTRE, "Actifs").focus();
+    // Une branche bouton ferait `preventDefault()` sur Entrée : le lien ne serait pas suivi.
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\?filtre=actifs#segmented-links$/);
+  });
+
+  for (const largeur of [1280, 375]) {
+    test(`cas 8 — hauteur d'un groupe de liens = groupe de boutons « Vue » ±1 px à ${largeur} px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: largeur, height: 800 });
+      await ouvrirLiens(page);
+      const h = await page.evaluate(() => {
+        const mesure = (sel: string) => {
+          const seg = document.querySelector(sel)!;
+          return {
+            piste: seg.getBoundingClientRect().height,
+            item: seg.querySelector(".segmented-item")!.getBoundingClientRect()
+              .height,
+          };
+        };
+        return {
+          liens: mesure('.segmented[aria-label="Filtrer par état"]'),
+          boutons: mesure('.segmented[aria-label="Vue"]'),
+        };
+      });
+      // Témoin : on mesure bien des boîtes non vides (un `display:none` donnerait 0 = 0).
+      expect(h.boutons.item).toBeGreaterThan(30);
+      // Un <a> hérite `line-height: 1.6` du body (45,75 px) quand un <button> a `normal` (40 px).
+      expect(Math.abs(h.liens.item - h.boutons.item)).toBeLessThanOrEqual(
+        TOLERANCE_PX,
+      );
+      expect(Math.abs(h.liens.piste - h.boutons.piste)).toBeLessThanOrEqual(
+        TOLERANCE_PX,
+      );
+    });
+  }
+
+  test("cas 9 — rendu : pas de soulignement, couleurs identiques à celles d'un bouton", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    const rendu = await page.evaluate(() => {
+      const css = (sel: string) =>
+        getComputedStyle(document.querySelector(sel)!);
+      const liens = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          "#segmented-links a.segmented-item",
+        ),
+      ).map((a) => getComputedStyle(a).textDecorationLine);
+      return {
+        liens,
+        // `a:is(...)` de _base.css (color: inherit) battrait `.segmented-item` s'il l'incluait (A9).
+        inactifLien: css(
+          '.segmented[aria-label="Filtrer par état"] a.segmented-item:not(.active)',
+        ).color,
+        inactifBouton: css(
+          '.segmented[aria-label="Vue"] button.segmented-item:not(.active)',
+        ).color,
+        actifLien: css('.segmented[aria-label="Filtrer par état"] a.active')
+          .color,
+        actifBouton: css('.segmented[aria-label="Vue"] button.active').color,
+      };
+    });
+    expect(rendu.liens).toHaveLength(9); // 3 groupes x 3 liens, y compris l'option désactivée (sans href)
+    for (const t of rendu.liens) expect(t).toBe("none");
+    // Témoin : inactif ≠ actif (le test ne compare pas deux valeurs identiques par construction).
+    expect(rendu.inactifBouton).not.toBe(rendu.actifBouton);
+    expect(rendu.inactifLien).toBe(rendu.inactifBouton);
+    expect(rendu.actifLien).toBe(rendu.actifBouton);
+  });
+
+  test("cas 9 — rendu : pas de soulignement au survol d'un lien", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    await lien(page, FILTRE, "Actifs").hover();
+    await expect(lien(page, FILTRE, "Actifs")).toHaveCSS(
+      "text-decoration-line",
+      "none",
+    );
+  });
+
+  test("cas 9 — rendu : :focus-visible = contour plein de 2 px après une navigation clavier", async ({
+    page,
+  }) => {
+    await ouvrirLiens(page);
+    await lien(page, FILTRE, "Tous").focus();
+    await page.keyboard.press("Tab");
+    const actifs = lien(page, FILTRE, "Actifs");
+    await expect(actifs).toBeFocused();
+    // Témoin : le focus est bien « visible » (navigation clavier), sinon l'outline mesuré serait nul.
+    expect(await actifs.evaluate((el) => el.matches(":focus-visible"))).toBe(
+      true,
+    );
+    await expect(actifs).toHaveCSS("outline-style", "solid");
+    await expect(actifs).toHaveCSS("outline-width", "2px");
+    await expect(actifs).toHaveCSS("outline-offset", "2px");
   });
 });
