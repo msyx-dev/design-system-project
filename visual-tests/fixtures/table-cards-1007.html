@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau en cartes — fixture #1007</title>
+<!--
+  Fixture de `visual-tests/table-cards.spec.ts` (#1007).
+
+  Deux tableaux de MEMES données dans un `.table-wrap` chacun :
+   - #cards : `table.table-cards` (libellés `.table-cards-label` en aria-hidden, rôles ARIA
+     explicites, <caption>, cellule d'actions) ;
+   - #twin  : le JUMEAU, sans `.table-cards`, sans libellés, sans rôles ni classe d'actions.
+  Au-dessus de 768px le test exige que les boîtes de #cards soient celles de #twin au
+  demi-pixel près : le tableau restauré ne dérive pas de la règle globale `td`.
+
+  Pas de nav.js ni de components.js : rien d'autre que le CSS du DS ne doit toucher la
+  mise en page pendant la mesure. Un e-mail long SANS point de coupure naturel
+  (jean-baptiste.de-la-fontaine-dupont@…) est le vrai risque de débordement à 375px.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<main class="page-content">
+  <h1>Suivi des participants</h1>
+
+  <div class="table-wrap" id="cards-wrap">
+    <table class="table-cards" id="cards" role="table" aria-label="Participants du tirage">
+      <caption>Participants du tirage</caption>
+      <thead role="rowgroup">
+        <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Statut</th><th scope="col" role="columnheader">Actions</th></tr>
+      </thead>
+      <tbody role="rowgroup">
+        <tr role="row">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Alice Martin</td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>alice.martin@exemple.fr</td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="badge badge-success badge-xs">Lien ouvert</span></td>
+          <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm">Copier le lien</button></td>
+        </tr>
+        <tr role="row">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Jean-Baptiste de La Fontaine-Dupont</td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr</td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="badge badge-danger badge-xs">Échec d'envoi</span></td>
+          <td role="cell" class="table-cards-actions"><a href="#regenerer" class="btn-ghost btn-sm">Régénérer le lien</a><button type="button" class="btn-secondary btn-sm">Copier le lien</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap" id="twin-wrap">
+    <table id="twin">
+      <caption>Participants du tirage</caption>
+      <thead>
+        <tr><th scope="col">Nom</th><th scope="col">E-mail</th><th scope="col">Statut</th><th scope="col">Actions</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Alice Martin</td>
+          <td>alice.martin@exemple.fr</td>
+          <td><span class="badge badge-success badge-xs">Lien ouvert</span></td>
+          <td><button type="button" class="btn-secondary btn-sm">Copier le lien</button></td>
+        </tr>
+        <tr>
+          <td>Jean-Baptiste de La Fontaine-Dupont</td>
+          <td>jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr</td>
+          <td><span class="badge badge-danger badge-xs">Échec d'envoi</span></td>
+          <td><a href="#regenerer" class="btn-ghost btn-sm">Régénérer le lien</a><button type="button" class="btn-secondary btn-sm">Copier le lien</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

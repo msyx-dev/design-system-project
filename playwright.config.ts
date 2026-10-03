@@ -65,6 +65,7 @@ export default defineConfig({
     "**/festive-clearance.spec.ts",
     "**/brand-wordmark.spec.ts",
     "**/festive-sans-rail.spec.ts",
+    "**/table-cards.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

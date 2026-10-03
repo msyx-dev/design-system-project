@@ -384,7 +384,8 @@ export type {
 } from "./components/Timeline/Timeline";
 
 // ─── SortableList — #853 (réordonnancement souris/tactile/clavier, contrôlé) ───
-export { SortableList ,
+export {
+  SortableList,
   resolveMoveModifier,
 } from "./components/SortableList/SortableList";
 export type {
@@ -660,3 +661,13 @@ export type {
 // ─── Textarea — #952 ───
 export { Textarea } from "./components/Textarea/Textarea";
 export type { TextareaProps } from "./components/Textarea/Textarea";
+
+// ─── TableCards — #1007 ───
+// Tableau qui se replie en cartes sous 768 px (CSS `.table-cards`, tables.css).
+// TableCardsCell est exporté pour composer les lignes du `footer`.
+export { TableCards, TableCardsCell } from "./components/TableCards/TableCards";
+export type {
+  TableCardsProps,
+  TableCardsColumn,
+  TableCardsCellProps,
+} from "./components/TableCards/TableCards";
