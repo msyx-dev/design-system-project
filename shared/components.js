@@ -2114,16 +2114,62 @@ function initSegmentedControls() {
         if (!indicator || !items.length) return;
 
         function moveIndicator(item) {
+            // #1016 : la 1re mesure (aucune largeur inline encore) se fait SANS transition. Avant elle,
+            // l'item actif porte l'aplat de l'indicateur (navigation.css, marqueur `:not([style*="width"])`) ;
+            // une transition ferait grandir l'indicateur depuis 0 en 0,3 s, a la place d'un passage de
+            // relais sans saut. Les mesures suivantes (clic, ResizeObserver #1021) glissent comme avant.
+            var first = !indicator.style.width;
+            if (first) indicator.style.transition = 'none';
             indicator.style.width = item.offsetWidth + 'px';
             // #1021 : l'indicateur est deja pose a `left: 3px` (navigation.css) ; item.offsetLeft
             // est mesure depuis le bord de padding de .segmented et compte donc deja ces 3 px.
             // On translate de l'ECART, pas de la position absolue (sinon +3 px a droite de l'item).
             indicator.style.transform = 'translateX(' + (item.offsetLeft - indicator.offsetLeft) + 'px)';
+            if (first) {
+                void indicator.offsetWidth; // valide le style sans transition avant de la restaurer
+                indicator.style.transition = '';
+            }
+        }
+
+        indicator.setAttribute('aria-hidden', 'true');
+
+        // Place l'indicateur sur l'item courant (getCurrent) et le resynchronise quand la taille d'un
+        // item change. Commun aux deux modes ; l'ordre (rAF d'abord, observateur ensuite) est celui de
+        // la 1re mesure (#1016) : la mesure initiale precede tout callback ResizeObserver.
+        //   - #1016 : 1re mesure SANS transition (cf. moveIndicator), apres que le layout est pret.
+        //   - #1021 : l'indicateur suit l'item courant quand la taille d'un item change (swap de
+        //     police font-display:swap, redimensionnement). Mesure unique = indicateur trop court ou
+        //     trop long apres le swap, et capture VR non deterministe. L'indicateur n'est pas
+        //     observe : aucune boucle d'observation possible.
+        function trackIndicator(getCurrent) {
+            requestAnimationFrame(function() {
+                var current = getCurrent();
+                if (current) moveIndicator(current);
+            });
+            if (typeof ResizeObserver !== 'undefined') {
+                var resync = new ResizeObserver(function() {
+                    var current = getCurrent();
+                    if (current) moveIndicator(current);
+                });
+                items.forEach(function(i) { resync.observe(i); });
+            }
+        }
+
+        // #1016 -- Mode « liens » : un filtre de page statique ou serveur, pas un radiogroup (exception
+        // ecrite a DS-PRINCIPLES.md §3.2). Le balisage est nav.segmented > a.segmented-item[href] ; le
+        // serveur pose .active ET aria-current="page" sur le lien courant. Ni role, ni tabindex, ni
+        // ecouteur de clic ou de clavier : un role="radio" ou un preventDefault sur Entree ferait de
+        // chaque lien un faux radio et bloquerait son activation au clavier. La navigation reste
+        // NATIVE (Tab, Entree, clic milieu, Ctrl+clic) ; seul l'indicateur est place. Le JS ne lit ni
+        // n'ecrit aucun href. Aucun lien courant (URL hors options) : pas d'indicateur, aucun item
+        // n'est designe -- l'indicateur reste sans largeur, donc masque (navigation.css).
+        if (seg.querySelector(':scope > a.segmented-item')) {
+            trackIndicator(function() { return seg.querySelector('.segmented-item.active'); });
+            return;
         }
 
         // Convention ARIA canonique : radiogroup (cf. DS-PRINCIPLES.md §3.2, #613)
         if (!seg.getAttribute('role')) seg.setAttribute('role', 'radiogroup');
-        indicator.setAttribute('aria-hidden', 'true');
 
         function enabledItems() {
             return Array.from(items).filter(function(i) { return !i.disabled; });
@@ -2191,23 +2237,12 @@ function initSegmentedControls() {
                 var firstFocusable = enabledItems()[0];
                 if (firstFocusable) firstFocusable.setAttribute('tabindex', '0');
             }
-            // Attendre que le layout soit pret (requestAnimationFrame)
-            requestAnimationFrame(function() {
-                moveIndicator(activeItem);
-            });
         }
 
-        // #1021 : l'indicateur suit l'item actif quand la taille d'un item change (swap de
-        // police font-display:swap, redimensionnement). Mesure unique = indicateur trop court
-        // ou trop long apres le swap, et capture VR non deterministe. L'indicateur n'est pas
-        // observe : aucune boucle d'observation possible.
-        if (typeof ResizeObserver !== 'undefined') {
-            var resync = new ResizeObserver(function() {
-                var current = seg.querySelector('.segmented-item.active') || items[0];
-                if (current) moveIndicator(current);
-            });
-            items.forEach(function(i) { resync.observe(i); });
-        }
+        // Attend que le layout soit pret (requestAnimationFrame), puis resynchronise (ResizeObserver).
+        trackIndicator(function() {
+            return seg.querySelector('.segmented-item.active') || items[0];
+        });
     });
 }
 window.__initSegmentedControls = initSegmentedControls;

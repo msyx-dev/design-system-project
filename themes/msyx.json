@@ -62,6 +62,7 @@
       "--overlay-heavy": "rgba(10, 15, 30, 0.8)",
       "--primary": "#0a0f1e",
       "--primary-light": "#0f172a",
+      "--segmented-subtle-active-text": "#94c3ff",
       "--sidebar-bg": "rgba(10, 15, 30, 0.85)",
       "--sidebar-link-active-bg": "rgba(var(--accent-rgb), 0.06)",
       "--sidebar-link-hover-bg": "rgba(var(--accent-rgb), 0.04)",
@@ -91,7 +92,8 @@
       "--btn-warning-bg-start": "#ad3500",
       "--inactive-text": "#627083",
       "--neutral-text-on-raised": "#475569",
-      "--neutral-text-on-tint": "#5a6980"
+      "--neutral-text-on-tint": "#5a6980",
+      "--segmented-subtle-active-text": "#0e4cd2"
     }
   }
 }

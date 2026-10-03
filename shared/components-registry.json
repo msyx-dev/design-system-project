@@ -1,7 +1,7 @@
 {
   "version": "2.144.0",
   "generated": {
-    "at": "2026-10-03T01:43:30.399Z",
+    "at": "2026-10-03T11:27:41.881Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -1336,6 +1336,28 @@
       "jsInit": "initSegmentedControls",
       "example": "<div class=\"segmented\" role=\"radiogroup\" aria-label=\"Vue\">\n  <div class=\"segmented-indicator\" aria-hidden=\"true\"></div>\n  <button class=\"segmented-item active\" type=\"button\" role=\"radio\" aria-checked=\"true\" tabindex=\"0\">Semaine</button>\n  <button class=\"segmented-item\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Mois</button>\n  <button class=\"segmented-item\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Année</button>\n</div>",
       "react": "ported",
+      "module": [
+        "shared/css/components/buttons.css",
+        "shared/css/components/navigation.css"
+      ],
+      "reactExports": [
+        "SegmentedControl"
+      ]
+    },
+    {
+      "name": "segmented-links",
+      "kind": "component",
+      "page": "composants",
+      "description": "Mode « liens » du segmented control (#1016) : nav + a[href] pour un filtre de page statique ou serveur, navigation native sans JavaScript, lien courant .active + aria-current=\"page\", option désactivée aria-disabled sans href. Pas de radiogroup (DS-PRINCIPLES §3.2, exception).",
+      "cssClasses": [
+        ".segmented",
+        ".segmented-indicator",
+        ".segmented-item"
+      ],
+      "jsInit": "initSegmentedControls",
+      "example": "<nav class=\"segmented\" aria-label=\"Filtrer par état\">\n  <span class=\"segmented-indicator\" aria-hidden=\"true\"></span>\n  <a class=\"segmented-item active\" href=\"?filtre=tous\" aria-current=\"page\">Tous</a>\n  <a class=\"segmented-item\" href=\"?filtre=actifs\">Actifs</a>\n  <a class=\"segmented-item\" href=\"?filtre=archives\">Archives</a>\n</nav>",
+      "react": "ported",
+      "reactComponent": "SegmentedControl",
       "module": [
         "shared/css/components/buttons.css",
         "shared/css/components/navigation.css"
