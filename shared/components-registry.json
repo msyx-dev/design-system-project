@@ -1094,8 +1094,7 @@
       "module": [
         "shared/css/components/overlays.css",
         "shared/css/components/theming.css",
-        "shared/css/components/_base.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/_base.css"
       ],
       "reactExports": [
         "CommandPalette"
@@ -1119,8 +1118,7 @@
       "example": "<div class=\"drawer-preview\" id=\"drawer-exemple\">\n  <div class=\"drawer-overlay\" onclick=\"this.closest('.drawer-preview').classList.remove('open')\"></div>\n  <div class=\"drawer-panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"drawer-titre\">\n    <div class=\"drawer-header\">\n      <h2 id=\"drawer-titre\">Titre du panneau</h2>\n      <button class=\"drawer-close\" aria-label=\"Fermer\">&#10005;</button>\n    </div>\n    <div class=\"drawer-body\">Contenu du drawer.</div>\n    <div class=\"drawer-footer\">\n      <button class=\"btn-ghost\">Annuler</button>\n      <button class=\"btn-primary\">Confirmer</button>\n    </div>\n  </div>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/overlays.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/overlays.css"
       ],
       "reactExports": [
         "Drawer"
@@ -1855,8 +1853,7 @@
       "module": [
         "shared/css/components/forms.css",
         "shared/css/components/theming.css",
-        "shared/css/layout.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/layout.css"
       ],
       "reactExports": [
         "LoginScreen"
@@ -2253,8 +2250,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/templates.css",
-        "shared/css/components/_base.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/_base.css"
       ],
       "reactExports": [
         "KanbanBoard",
@@ -2280,8 +2276,7 @@
       "version": "2.73.0",
       "react": "ported",
       "module": [
-        "shared/css/components/templates.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/templates.css"
       ],
       "reactExports": [
         "Roadmap"
@@ -2304,8 +2299,7 @@
       "version": "2.73.0",
       "react": "ported",
       "module": [
-        "shared/css/components/templates.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/templates.css"
       ],
       "reactExports": [
         "Backlog"
@@ -2327,8 +2321,7 @@
       "version": "2.73.0",
       "react": "ported",
       "module": [
-        "shared/css/components/templates.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/templates.css"
       ],
       "reactExports": [
         "SprintBoard"
@@ -2387,8 +2380,7 @@
       "version": "2.73.0",
       "react": "ported",
       "module": [
-        "shared/css/components/data.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/data.css"
       ],
       "reactExports": [
         "useChart",
@@ -3600,8 +3592,7 @@
       "module": [
         "shared/css/components/templates.css",
         "shared/css/components/theming.css",
-        "shared/css/components/_a11y.css",
-        "shared/css/components/_responsive.css"
+        "shared/css/components/_a11y.css"
       ],
       "reactExports": [
         "Calendar"
