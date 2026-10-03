@@ -336,7 +336,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 
 ### Sprint 7 (12 composants)
 - **Rating** (`initRating()`) : notation etoiles interactive, hover preview, read-only, 3 tailles, event custom
-- **Segmented Controls** (`initSegmentedControls()`) : indicateur slide anime (offsetLeft/offsetWidth), selection exclusive, requestAnimationFrame init
+- **Segmented Controls** (`initSegmentedControls()`) : indicateur slide anime (`translateX(item.offsetLeft - indicator.offsetLeft)` + `offsetWidth` : l'indicateur est deja pose a `left: 3px`, #1021), selection exclusive, requestAnimationFrame init, resynchronisation par `ResizeObserver` sur les items (swap de police, redimensionnement ; garde `typeof ResizeObserver`, l'indicateur n'est pas observe) ; coherence indicateur/item actif controlee avant chaque capture VR par `freezeSegmentedIndicators` (`visual-tests/visual.spec.ts`) et prouvee par `visual-tests/segmented-indicator-sync.spec.ts` (#1021)
 - **Bottom Nav** (`initBottomNav()`) : toggle actif, event custom bottomnav:change
 - **Number Inputs** (`initNumberInputs()`) : boutons +/-, clamp min/max/step, disable aux bornes, navigation clavier ArrowUp/Down
 - **FAB** (`initFAB()`) : menu radial toggle, rotation icone, fermeture clic exterieur/Escape, stagger animation
