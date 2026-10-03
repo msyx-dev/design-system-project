@@ -575,6 +575,20 @@
     transform: translateY(0) scale(1);
     pointer-events: auto;
 }
+/* #1028 — dans le header, le panneau s'ancre sur la FENETRE, pas sur la zone de la cloche.
+   Ancre sur `.header-user-zone`, il debordait a gauche d'autant que le header compte de controles
+   A DROITE de la cloche (bascule de mode, flocon, retour, avatar) : -74 px a 375 px. Mobile d'abord :
+   BASE = pleine largeur moins `--space-md` de chaque cote, sous le header (`--header-h`, sa hauteur
+   fixe : `top` vaut pareil que le bloc conteneur du `fixed` soit la fenetre ou le header, qui porte
+   un `backdrop-filter`). Le panneau reprend son ancrage sur la zone au-dessus de 640 px (bloc en fin
+   de fichier). Hors `.site-header` (demos de la vitrine), la regle `.header-notif-panel` reste seule. */
+.site-header .header-notif-panel {
+    position: fixed;
+    top: calc(var(--header-h) + var(--space-sm));
+    left: var(--space-md);
+    right: var(--space-md);
+    width: auto;
+}
 .header-notif-panel-header {
     display: flex;
     align-items: center;
@@ -665,9 +679,15 @@ html.theme-transitioning * {
 }
 
 /* Mobile-first (#1023) — user zone : le panneau de notifications tient dans l'écran (BASE de
-   `.header-notif-panel`), il retrouve sa largeur fixe au-dessus de 480 px. */
+   `.header-notif-panel`), il retrouve sa largeur fixe au-dessus de 480 px.
+   #1028 — dans `.site-header` (`.site-header .header-notif-panel`, plus spécifique) il reste ancré
+   sur la fenêtre jusqu'à 640 px : la bascule vers l'ancrage sur la zone de la cloche se fait au
+   seuil de compaction du header (bloc `640.02px` ci-dessous), là où il reste de la place à gauche
+   de la cloche même avec tous les contrôles à sa droite (mesuré : bord gauche -33 px à 481 px si
+   le seuil reste à 480 px). Entre 481 et 640 px : 300 px, aligné sur la marge droite de la fenêtre. */
 @media (min-width: 480.02px) { /* bp-sm */
     .header-notif-panel { width: 300px; right: 0; }
+    .site-header .header-notif-panel { left: auto; right: var(--space-md); width: 300px; }
 }
 
 /* Compaction mobile du header — corrige l'overflow horizontal < 640px (#711).
@@ -681,6 +701,9 @@ html.theme-transitioning * {
    natif au retour ne s'écrit pas sans recopier celui d'un autre composant. */
 @media (min-width: 640.02px) { /* seuil composant : 640px, compaction du header #711 */
     .site-header { padding: 0 var(--space-lg); gap: var(--space-md); }
+    /* #1028 : au-dessus de 640 px le panneau retrouve son ancrage sous la cloche, aligné à droite
+       de sa zone (300 px, hérités du bloc 480.02px ci-dessus). */
+    .site-header .header-notif-panel { position: absolute; top: calc(100% + var(--space-sm)); right: 0; }
 }
 @media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
     .site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: none; }
