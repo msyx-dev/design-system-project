@@ -152,3 +152,111 @@ for (const mode of ["dark", "light"] as const) {
     });
   });
 }
+
+/**
+ * Carte titrée en `<section>` : aucune règle de VITRINE ne la touche (#1010)
+ *
+ * `layout.css` donnait `padding` + `border-bottom` + `scroll-margin-top` à TOUTE
+ * `.main section`, donc aussi à `<section class="card card-static" aria-labelledby>` : sa
+ * marge intérieure était plus grande que celle de sa voisine en `<div>`, et le filet bas
+ * disparaissait (`:last-of-type`). Les règles ne visent plus que les sections de PAGE :
+ * enfant direct de `.main`, ou du conteneur `.lazy-loaded` que le LazyLoader du hub
+ * (`site.html`) injecte sous `.main` — 127 sections s'y trouvent, restreindre à
+ * `.main > section` seul les aurait privées de leur mise en page.
+ *
+ * Mesure `getComputedStyle` en vrai navigateur (jsdom n'applique aucune cascade).
+ * Preuve par mutation (consignée dans la PR) :
+ *   - `.main > section` remis en `.main section`         → le test des deux cartes est rouge ;
+ *   - `.main > :where(.lazy-loaded) > section` retiré    → le test du hub est rouge.
+ */
+async function ouvrirPage(page: Page, url: string) {
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("msyx-theme", "msyx");
+      localStorage.setItem("msyx-mode", "dark");
+    } catch {}
+  });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(url);
+  await page.waitForLoadState("networkidle");
+}
+
+/** Valeur calculée de `--space-3xl`, lue via un élément sonde (aucun nombre en dur). */
+async function paddingDePage(page: Page): Promise<string> {
+  return page.evaluate(() => {
+    const sonde = document.createElement("div");
+    sonde.style.paddingTop = "var(--space-3xl)";
+    document.body.appendChild(sonde);
+    const v = getComputedStyle(sonde).paddingTop;
+    sonde.remove();
+    return v;
+  });
+}
+
+test.describe("carte titrée en <section> : pas d'héritage de la vitrine (#1010)", () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== PROJECT,
+      "joué une seule fois : mesure de cascade, indépendante de la matrice VR",
+    );
+  });
+
+  test("la carte <section> et la carte <div> ont le même padding et le même filet bas", async ({
+    page,
+  }) => {
+    await ouvrirPage(page, "/pages/composants.html");
+    const mesure = (sel: string) =>
+      page.locator(sel).evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return {
+          padding: [
+            cs.paddingTop,
+            cs.paddingRight,
+            cs.paddingBottom,
+            cs.paddingLeft,
+          ],
+          borderBottom: [
+            cs.borderBottomWidth,
+            cs.borderBottomStyle,
+            cs.borderBottomColor,
+          ],
+        };
+      });
+    const region = await mesure("#card-static section.card-static");
+    const bloc = await mesure("#card-static div.card-static");
+    expect(region.padding).toEqual(bloc.padding);
+    expect(region.borderBottom).toEqual(bloc.borderBottom);
+    // Garde-fou : le filet bas existe bien (la vitrine le supprimait via :last-of-type).
+    expect(region.borderBottom[1]).not.toBe("none");
+  });
+
+  test("les sections de page de composants.html gardent le padding de vitrine", async ({
+    page,
+  }) => {
+    await ouvrirPage(page, "/pages/composants.html");
+    const attendu = await paddingDePage(page);
+    const lus = await page
+      .locator(".main > section[id]")
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).paddingTop));
+    expect(lus.length).toBeGreaterThan(10);
+    expect(new Set(lus)).toEqual(new Set([attendu]));
+  });
+
+  test("hub : les sections injectées par le LazyLoader gardent le padding de vitrine", async ({
+    page,
+  }) => {
+    await ouvrirPage(page, "/site.html");
+    await page.click("#load-all-sections");
+    await page.waitForFunction(
+      () =>
+        document.querySelectorAll(".lazy-section[data-page]").length === 0 &&
+        document.querySelectorAll(".lazy-loaded").length > 0,
+    );
+    const attendu = await paddingDePage(page);
+    const lus = await page
+      .locator(".main > .lazy-loaded > section[id]")
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).paddingTop));
+    expect(lus.length).toBeGreaterThan(100);
+    expect(new Set(lus)).toEqual(new Set([attendu]));
+  });
+});
