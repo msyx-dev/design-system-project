@@ -3250,7 +3250,9 @@
         ".subgroup-title",
         ".subsection",
         ".grid-auto-fit-",
-        ".header-version-badge"
+        ".header-version-badge",
+        ".demo-note",
+        ".demo-note-last"
       ],
       "jsInit": null,
       "generated": true,
