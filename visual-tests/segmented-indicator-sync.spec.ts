@@ -20,7 +20,10 @@
  *   2. taille de police des items augmentée (simule le swap de police) sur un item actif qui
  *      n'est PAS le premier → largeur ET position suivent — défaut 1 ;
  *   3. non-régression : un clic déplace toujours l'indicateur sur le nouvel item, et
- *      `segmented:change` est toujours émis avec `{ value, index }`.
+ *      `segmented:change` est toujours émis avec `{ value, index }` ;
+ *   4. (#1016) la TOUTE PREMIÈRE mesure se fait sans transition : dans la frame même de la
+ *      mesure, l'indicateur coïncide déjà avec l'item actif (un groupe neuf, item actif non
+ *      premier), puis la transition est restaurée pour les mesures suivantes.
  *
  * Joué dans UN seul projet (`msyx-dark-desktop`) : la géométrie ne dépend ni du thème ni du mode,
  * les 10 projets de la matrice VR ne couvriraient rien de plus. La garde de
@@ -29,7 +32,10 @@
  *
  * Preuve par mutation (consignée dans la PR) :
  *   - bloc `ResizeObserver` retiré                      → cas 1 et 2 rouges ;
- *   - `translateX(item.offsetLeft)` (sans soustraction) → cas 0 et 3 rouges.
+ *   - `translateX(item.offsetLeft)` (sans soustraction) → cas 0 et 3 rouges ;
+ *   - #1016 : `indicator.style.transition = 'none'` retiré de `moveIndicator` → cas 4 rouge
+ *     (l'indicateur glisse depuis 0) ; `transition = ''` (restauration) retiré → cas 4 rouge
+ *     (durée de transition computée 0s).
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -222,5 +228,65 @@ test.describe("Segmented — l'indicateur suit l'item actif (#1021)", () => {
         () => (window as unknown as { __segEvents: unknown[] }).__segEvents,
       ),
     ).toEqual([{ value: "Mois", index: 1 }]);
+  });
+
+  test("cas 4 — 1re mesure sans transition : l'indicateur coïncide avec l'item dès la frame de mesure (#1016)", async ({
+    page,
+  }) => {
+    await ouvrir(page);
+    // Groupe NEUF (jamais lié ni mesuré) dont l'item actif est le 3e : la translation à parcourir
+    // est > 0, une transition la rendrait visible. Construit nœud par nœud, comme un rendu serveur :
+    // indicateur SANS attribut style.
+    const res = await page.evaluate(
+      () =>
+        new Promise<{
+          dw: number;
+          dx: number;
+          largeur: number;
+          dureeApres: string;
+          styleAvant: string | null;
+        }>((resolve) => {
+          const seg = document.createElement("div");
+          seg.className = "segmented";
+          seg.setAttribute("aria-label", "Sans transition (1016)");
+          const ind = document.createElement("div");
+          ind.className = "segmented-indicator";
+          seg.appendChild(ind);
+          ["Premier", "Deuxième", "Troisième actif"].forEach((txt, i) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "segmented-item" + (i === 2 ? " active" : "");
+            b.textContent = txt;
+            seg.appendChild(b);
+          });
+          document.querySelector("#segmented-control")!.appendChild(seg);
+          const styleAvant = ind.getAttribute("style");
+          (
+            window as unknown as { __initSegmentedControls: () => void }
+          ).__initSegmentedControls();
+          // Enregistré APRÈS le requestAnimationFrame d'init : même frame, juste après la mesure.
+          requestAnimationFrame(() => {
+            const act = seg.querySelector(".segmented-item.active")!;
+            const ri = ind.getBoundingClientRect();
+            const ra = act.getBoundingClientRect();
+            resolve({
+              dw: Math.abs(ri.width - ra.width),
+              dx: Math.abs(ri.left - ra.left),
+              largeur: ra.width,
+              dureeApres: getComputedStyle(ind).transitionDuration,
+              styleAvant,
+            });
+          });
+        }),
+    );
+    // Garde-fou : le groupe testé est bien un état d'avant mesure (sinon le test ne prouve rien).
+    expect(res.styleAvant).toBeNull();
+    // Témoin : l'item actif a une vraie largeur (le test ne passe pas « à vide »).
+    expect(res.largeur).toBeGreaterThan(40);
+    // La mesure est déjà posée dans la frame de mesure : aucune glissade depuis 0.
+    expect(res.dw).toBeLessThanOrEqual(TOLERANCE_PX);
+    expect(res.dx).toBeLessThanOrEqual(TOLERANCE_PX);
+    // La transition est restaurée : les mesures suivantes (clic, ResizeObserver) glissent.
+    expect(res.dureeApres).toBe("0.3s, 0.3s");
   });
 });
