@@ -3,6 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { useState } from "react";
 import { SegmentedControl, SegmentedControlOption } from "./SegmentedControl";
+import { act } from "@testing-library/react";
+import { afterEach } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const OPTIONS: SegmentedControlOption[] = [
   { value: "week", label: "Semaine" },
@@ -329,5 +332,141 @@ describe("SegmentedControl — garde-fou roving tabindex (#743)", () => {
     document.querySelectorAll(".segmented-item").forEach((item) => {
       expect(item).toHaveAttribute("tabindex", "-1");
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// #1016 — avant la 1re mesure, première mesure sans transition, recalage et
+// resynchronisation ResizeObserver (A4 de #1021).
+// ---------------------------------------------------------------------------
+
+class FakeResizeObserver {
+  static instances: FakeResizeObserver[] = [];
+  observed: Element[] = [];
+  disconnect = vi.fn();
+  constructor(public callback: ResizeObserverCallback) {
+    FakeResizeObserver.instances.push(this);
+  }
+  observe(element: Element) {
+    this.observed.push(element);
+  }
+  unobserve() {}
+  /** Déclenche le rappel comme le ferait le navigateur après un changement de taille. */
+  fire() {
+    this.callback([], this as unknown as ResizeObserver);
+  }
+}
+
+describe("SegmentedControl — avant la 1re mesure (#1016)", () => {
+  it("le rendu serveur produit un indicateur SANS attribut style et un item .segmented-item.active", () => {
+    // Le CSS DS (navigation.css) tient son repli sur ce marqueur : `.segmented-indicator:not([style*="width"])`.
+    const html = renderToStaticMarkup(
+      <SegmentedControl options={OPTIONS} value="month" onChange={() => {}} />,
+    );
+    const host = document.createElement("div");
+    host.innerHTML = html;
+    const indicator = host.querySelector(".segmented-indicator");
+    expect(indicator).not.toBeNull();
+    expect(indicator!.hasAttribute("style")).toBe(false);
+    const active = host.querySelectorAll(".segmented-item.active");
+    expect(active).toHaveLength(1);
+    expect(active[0].textContent).toBe("Mois");
+  });
+});
+
+describe("SegmentedControl — mesure de l'indicateur (#1016)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    FakeResizeObserver.instances = [];
+  });
+
+  it("la 1re mesure porte `transition: none`, la suivante non", () => {
+    const { container, rerender } = render(
+      <SegmentedControl options={OPTIONS} value="week" onChange={() => {}} />,
+    );
+    const indicator = container.querySelector<HTMLElement>(
+      ".segmented-indicator",
+    )!;
+    // Largeur posée (= mesurée) ET aucune transition : l'aplat d'avant mesure passe la main sans glissade.
+    expect(indicator.style.width).not.toBe("");
+    expect(indicator.style.transition).toBe("none");
+
+    rerender(
+      <SegmentedControl options={OPTIONS} value="month" onChange={() => {}} />,
+    );
+    // 2e mesure : la transition du CSS DS s'applique de nouveau (aucun `transition` inline).
+    expect(indicator.style.transition).toBe("");
+    expect(indicator.style.width).not.toBe("");
+  });
+
+  it("recale l'indicateur : translateX(item.offsetLeft - indicator.offsetLeft), pas la position absolue", () => {
+    vi.stubGlobal("ResizeObserver", FakeResizeObserver);
+    const { container } = render(
+      <SegmentedControl options={OPTIONS} value="month" onChange={() => {}} />,
+    );
+    const indicator = container.querySelector<HTMLElement>(
+      ".segmented-indicator",
+    )!;
+    const active = container.querySelector<HTMLElement>(
+      ".segmented-item.active",
+    )!;
+    // jsdom ne fait aucune mise en page : on fixe la géométrie. L'indicateur est posé à left: 3px et
+    // offsetLeft de l'item compte déjà ces 3 px de padding.
+    Object.defineProperty(indicator, "offsetLeft", {
+      value: 3,
+      configurable: true,
+    });
+    Object.defineProperty(active, "offsetLeft", {
+      value: 50,
+      configurable: true,
+    });
+    act(() => FakeResizeObserver.instances[0].fire());
+    expect(indicator.style.transform).toBe("translateX(47px)");
+  });
+
+  it("un ResizeObserver déclenché après un changement de taille de l'item actif remet à jour la largeur", () => {
+    vi.stubGlobal("ResizeObserver", FakeResizeObserver);
+    const { container } = render(
+      <SegmentedControl options={OPTIONS} value="month" onChange={() => {}} />,
+    );
+    const indicator = container.querySelector<HTMLElement>(
+      ".segmented-indicator",
+    )!;
+    const active = container.querySelector<HTMLElement>(
+      ".segmented-item.active",
+    )!;
+    expect(FakeResizeObserver.instances).toHaveLength(1);
+    // Les items sont observés, jamais l'indicateur : aucune boucle d'observation possible.
+    const observed = FakeResizeObserver.instances[0].observed;
+    expect(observed).toHaveLength(OPTIONS.length);
+    expect(observed).not.toContain(indicator);
+
+    // Swap de police : l'item actif s'élargit sans que value ni options changent.
+    Object.defineProperty(active, "offsetWidth", {
+      value: 120,
+      configurable: true,
+    });
+    act(() => FakeResizeObserver.instances[0].fire());
+    expect(indicator.style.width).toBe("120px");
+  });
+
+  it("déconnecte le ResizeObserver au démontage", () => {
+    vi.stubGlobal("ResizeObserver", FakeResizeObserver);
+    const { unmount } = render(
+      <SegmentedControl options={OPTIONS} value="month" onChange={() => {}} />,
+    );
+    const observer = FakeResizeObserver.instances[0];
+    expect(observer.disconnect).not.toHaveBeenCalled();
+    unmount();
+    expect(observer.disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it("sans ResizeObserver (SSR, jsdom ancien), le composant se monte sans erreur", () => {
+    vi.stubGlobal("ResizeObserver", undefined);
+    expect(() =>
+      render(
+        <SegmentedControl options={OPTIONS} value="week" onChange={() => {}} />,
+      ),
+    ).not.toThrow();
   });
 });

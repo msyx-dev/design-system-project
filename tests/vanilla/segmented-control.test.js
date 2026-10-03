@@ -239,3 +239,51 @@ describe('.segmented -- CSS (#866, regression scrollbar entierement masquee)', (
     expect(active.getAttribute('tabindex')).toBe('0');
   });
 });
+
+/**
+ * #1016 -- la TOUTE PREMIERE mesure de l'indicateur se fait SANS transition. Avant elle, l'item actif
+ * porte l'aplat de l'indicateur (navigation.css, marqueur `.segmented-indicator:not([style*="width"])`) ;
+ * une transition ferait glisser/grandir l'indicateur depuis 0 au lieu d'un passage de relais sans saut.
+ * jsdom n'applique aucune mise en page ni transition : on observe donc l'ORDRE des ecritures de style
+ * (MutationObserver + oldValue) ; la coincidence geometrique reelle est prouvee en navigateur par
+ * `visual-tests/segmented-indicator-sync.spec.ts` (cas 4).
+ */
+describe('initSegmentedControls -- 1re mesure sans transition (#1016)', () => {
+  function setupObserved() {
+    const dom = loadComponentsWindow(normalHtml());
+    const { window } = dom;
+    // rAF synchrone : la mesure initiale a lieu pendant l'appel a __initSegmentedControls().
+    window.requestAnimationFrame = (cb) => { cb(0); return 0; };
+    const indicator = window.document.querySelector('.segmented-indicator');
+    const observer = new window.MutationObserver(() => {});
+    observer.observe(indicator, { attributes: true, attributeOldValue: true });
+    window.__initSegmentedControls();
+    return { window, indicator, observer, records: observer.takeRecords() };
+  }
+
+  it("ecrit `transition: none` AVANT la largeur, puis restaure la transition du CSS", () => {
+    const { indicator, records } = setupObserved();
+    const avantEcritures = records.map((r) => r.oldValue);
+    // Etat du style juste avant l'ecriture de la largeur : transition deja coupee, rien d'autre.
+    expect(avantEcritures).toContain('transition: none;');
+    // Apres l'init : plus de `transition` inline (la regle CSS reprend), mais une largeur est posee.
+    expect(indicator.style.transition).toBe('');
+    expect(indicator.style.width).not.toBe('');
+    expect(indicator.style.transform).not.toBe('');
+  });
+
+  it("les mesures SUIVANTES (clic) ne coupent pas la transition : l'indicateur glisse", () => {
+    const { window, indicator, observer } = setupObserved();
+    observer.takeRecords();
+    const mois = window.document.querySelectorAll('.segmented-item')[1];
+    // jsdom : offsetWidth vaut 0 partout, l'ecriture serait identique et ne produirait aucun enregistrement.
+    Object.defineProperty(mois, 'offsetWidth', { value: 80, configurable: true });
+    fireClick(window, mois);
+    const records = observer.takeRecords();
+    expect(records.length).toBeGreaterThan(0); // le clic a bien deplace l'indicateur
+    for (const r of records) {
+      expect(r.oldValue ?? '').not.toContain('transition');
+    }
+    expect(indicator.style.transition).toBe('');
+  });
+});
