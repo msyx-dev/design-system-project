@@ -153,3 +153,402 @@ test.describe("Echelle d'empilement servie = doctrine §12.1 (#1043)", () => {
     expect(tree).toBe(behind);
   });
 });
+/* ===================================================================================
+ * #1043, tranche t2 — les z-index LITTERAUX hors doctrine sont ranges dans l'echelle.
+ *
+ * Contexte : le retrait de la redeclaration (t1) sert --z-sticky a 150 au lieu de 100.
+ * Dix surfaces posees en litteral (99, 100, 120, 200, 50) passaient alors SOUS les couches
+ * --z-sticky (guirlande, ornements, .section-header--sticky). Elles sont rangees a leur
+ * place doctrinale (§12.1). Une seule s'ecarte du tableau de l'amendement n°2 :
+ * `.sidebar` / `.rail-sidebar--fixed` en colonne d'app-shell (> 768 px) restent en
+ * --z-sticky — en --z-surface-panel (201), la colonne serait peinte PAR-DESSUS le voile
+ * d'un drawer plein ecran (--z-surface, 200), donc nette et cliquable derriere lui.
+ * Le panneau mobile (<= 768 px) passe bien en --z-surface-panel.
+ *
+ * Mesure : `document.elementsFromPoint` (ordre de peinture reel, jamais jsdom), aux points
+ * ou les deux boites se chevauchent. Non-vacuite : le perdant est bien SOUS le point.
+ * La guirlande est `pointer-events: none` : le hit-test l'ignorerait, on la rend
+ * temporairement cliquable par une feuille injectee, le temps de la mesure.
+ *
+ * Preuve par mutation (jouee a l'ecriture, t2) : voir le corps de la PR.
+ * =================================================================================== */
+
+/** Sieges des z-index litteraux >= 50 toleres : `fichier relatif a shared/css` -> raison.
+ *  Vide : toute surface vit sur un jeton de §12.1. Une entree ajoutee ici se justifie. */
+const LITERAL_EXCEPTIONS: Record<string, string> = {};
+
+/** z-index entiers >= 50 d'une feuille, commentaires retires (lignes conservees). */
+function literalZ(css: string): Array<{ line: number; value: number }> {
+  const clean = css.replace(/\/\*[\s\S]*?\*\//g, (m) =>
+    m.replace(/[^\n]/g, " "),
+  );
+  const out: Array<{ line: number; value: number }> = [];
+  for (const m of clean.matchAll(/z-index\s*:\s*([^;}!]+)/g)) {
+    const v = m[1].trim();
+    if (!/^-?\d+$/.test(v) || Number(v) < 50) continue;
+    out.push({
+      line: clean.slice(0, m.index).split("\n").length,
+      value: Number(v),
+    });
+  }
+  return out;
+}
+
+function cssFiles(dir: string): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) return cssFiles(p);
+    return e.name.endsWith(".css") ? [p] : [];
+  });
+}
+
+const PE_DECOR =
+  ".garland--header, .garland--header * { pointer-events: auto !important; }";
+
+type Pt = { x: number; y: number };
+
+/** Trois points au coeur de l'intersection de deux boites, bornee a la fenetre ; [] si vide. */
+function overlapPoints(page: Page, a: string, b: string): Promise<Pt[]> {
+  return page.evaluate(
+    ([a, b]) => {
+      const ea = document.querySelector(a);
+      const eb = document.querySelector(b);
+      if (!ea || !eb) return [];
+      const ra = ea.getBoundingClientRect();
+      const rb = eb.getBoundingClientRect();
+      const l = Math.max(ra.left, rb.left, 0);
+      const r = Math.min(ra.right, rb.right, innerWidth);
+      const t = Math.max(ra.top, rb.top, 0);
+      const btm = Math.min(ra.bottom, rb.bottom, innerHeight);
+      if (r - l < 4 || btm - t < 4) return [];
+      const y = Math.round((t + btm) / 2);
+      return [0.25, 0.5, 0.75].map((f) => ({
+        x: Math.round(l + (r - l) * f),
+        y,
+      }));
+    },
+    [a, b],
+  );
+}
+
+/** Dans la pile `elementsFromPoint`, le premier element de `winner` precede celui de `loser`. */
+async function expectAbove(
+  page: Page,
+  winner: string,
+  loser: string,
+  pts: Pt[],
+  label: string,
+) {
+  expect(
+    pts.length,
+    `${label} : ${winner} et ${loser} ne se chevauchent pas — mesure vide`,
+  ).toBeGreaterThan(0);
+  for (const p of pts) {
+    const [w, l] = await page.evaluate(
+      ({ p, sels }) => {
+        const stack = document.elementsFromPoint(p.x, p.y);
+        return sels.map((s) => stack.findIndex((el) => el.closest(s) !== null));
+      },
+      { p, sels: [winner, loser] },
+    );
+    expect(
+      l,
+      `${label} : ${loser} absent sous (${p.x},${p.y})`,
+    ).toBeGreaterThanOrEqual(0);
+    expect(
+      w,
+      `${label} : ${winner} absent sous (${p.x},${p.y})`,
+    ).toBeGreaterThanOrEqual(0);
+    expect(
+      w,
+      `${label} : ${loser} peint AU-DESSUS de ${winner} en (${p.x},${p.y})`,
+    ).toBeLessThan(l);
+  }
+}
+
+/** Pose un `.section-header--sticky` en tete de `hostSel` (et un split-button ouvert juste avant). */
+function injectSticky(
+  page: Page,
+  hostSel: string,
+  id: string,
+  withSplit = false,
+) {
+  return page.evaluate(
+    ({ hostSel, id, withSplit }) => {
+      const host = document.querySelector(hostSel);
+      if (!host) throw new Error(`hote ${hostSel} absent`);
+      const mk = (tag: string, cls: string, text = "") => {
+        const n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (text) n.textContent = text;
+        return n;
+      };
+      const sec = mk("section", "section-header section-header--sticky");
+      sec.id = id;
+      sec.append(
+        mk("p", "overline", "Pile"),
+        mk("h2", "", "En-tete colle de test"),
+      );
+      host.prepend(sec);
+      if (withSplit) {
+        const wrap = mk("div", "split-button");
+        wrap.id = "t-split";
+        const menu = mk("div", "split-button__menu menu open");
+        menu.id = "t-split-menu";
+        for (const t of ["Dupliquer", "Archiver", "Exporter", "Supprimer"])
+          menu.append(mk("button", "menu-item", t));
+        wrap.append(
+          mk("button", "btn btn-primary", "Enregistrer"),
+          mk("button", "btn btn-primary", "v"),
+          menu,
+        );
+        host.prepend(wrap);
+      }
+    },
+    { hostSel, id, withSplit },
+  );
+}
+
+function injectRail(page: Page, open: boolean) {
+  return page.evaluate((open) => {
+    const rail = document.createElement("nav");
+    rail.className = "rail-sidebar rail-sidebar--fixed" + (open ? " open" : "");
+    rail.id = "t-rail";
+    rail.setAttribute("aria-label", "Rail de test");
+    rail.textContent = "Rail";
+    document.body.prepend(rail);
+    if (open) {
+      const ovl = document.createElement("div");
+      ovl.className = "rail-overlay active";
+      document.body.append(ovl);
+    }
+  }, open);
+}
+
+async function openThemed(
+  page: Page,
+  url: string,
+  vp: { width: number; height: number },
+  header?: object,
+) {
+  await page.setViewportSize(vp);
+  await page.addInitScript((h) => {
+    try {
+      localStorage.setItem("msyx-theme", "noel");
+      localStorage.setItem("msyx-mode", "dark");
+    } catch {}
+    if (h) (window as unknown as { MSYX_HEADER: object }).MSYX_HEADER = h;
+  }, header ?? null);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(url);
+  await page.waitForLoadState("networkidle");
+  await expect(page.locator(".garland--header")).toHaveCount(1);
+  await page.addStyleTag({ content: PE_DECOR });
+}
+
+const leftOf = (page: Page, sel: string) =>
+  page.evaluate(
+    (s) => Math.round(document.querySelector(s)!.getBoundingClientRect().left),
+    sel,
+  );
+
+test.describe("z-index litteraux ranges dans la doctrine §12.1 (#1043, t2)", () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== PROJECT,
+      `joue une seule fois, dans ${PROJECT}`,
+    );
+  });
+
+  test("garde statique : aucun z-index litteral >= 50 dans shared/css hors exceptions", () => {
+    // Auto-test du detecteur : un litteral compte ; un commentaire, un jeton et 49 non.
+    expect(
+      literalZ(
+        ".a{z-index: 100;} /* z-index: 999 */ .b{z-index:var(--z-floating)} .c{z-index:49}",
+      ),
+    ).toEqual([{ line: 1, value: 100 }]);
+    const root = path.resolve(__dirname, "..", "shared", "css");
+    const files = cssFiles(root);
+    expect(files.length, "shared/css lu vide").toBeGreaterThan(20);
+    let declarations = 0;
+    const offenders: string[] = [];
+    for (const f of files) {
+      const css = fs.readFileSync(f, "utf8");
+      declarations += (css.match(/z-index\s*:/g) ?? []).length;
+      const rel = path.relative(root, f);
+      for (const { line, value } of literalZ(css))
+        if (!(rel in LITERAL_EXCEPTIONS))
+          offenders.push(`${rel}:${line} z-index: ${value}`);
+    }
+    expect(
+      declarations,
+      "trop peu de declarations z-index lues",
+    ).toBeGreaterThan(30);
+    expect(
+      offenders,
+      "z-index litteral >= 50 : utiliser un jeton de DS-PRINCIPLES §12.1",
+    ).toEqual([]);
+  });
+
+  test("mobile 375 : la barre laterale ouverte et son voile passent au-dessus des couches --z-sticky", async ({
+    page,
+  }) => {
+    await openThemed(page, "/pages/composants.html", {
+      width: 375,
+      height: 812,
+    });
+    await injectSticky(page, ".main", "t-sticky");
+    await page.locator("#header-burger").click();
+    await expect(page.locator("#sidebar")).toHaveClass(/\bopen\b/);
+    await expect(page.locator("#sidebar-overlay")).toHaveClass(/\bactive\b/);
+    await expect.poll(() => leftOf(page, "#sidebar")).toBe(0);
+    await expectAbove(
+      page,
+      "#sidebar",
+      "#t-sticky",
+      await overlapPoints(page, "#sidebar", "#t-sticky"),
+      "sidebar/sticky",
+    );
+    await expectAbove(
+      page,
+      "#sidebar",
+      ".garland--header",
+      await overlapPoints(page, "#sidebar", ".garland--header"),
+      "sidebar/guirlande",
+    );
+    // Hors du panneau, le voile couvre la guirlande ET l'en-tete (choix doctrinal : surface > colle).
+    const out = await page.evaluate(() => {
+      const s = document.getElementById("sidebar")!.getBoundingClientRect();
+      const g = document
+        .querySelector(".garland--header")!
+        .getBoundingClientRect();
+      const x = Math.round((s.right + innerWidth) / 2);
+      return [
+        { x, y: Math.round((g.top + g.bottom) / 2) },
+        { x, y: 20 },
+      ];
+    });
+    await expectAbove(
+      page,
+      "#sidebar-overlay",
+      ".garland--header",
+      [out[0]],
+      "voile/guirlande",
+    );
+    await expectAbove(
+      page,
+      "#sidebar-overlay",
+      ".site-header",
+      [out[1]],
+      "voile/en-tete",
+    );
+  });
+
+  test("mobile 375 : le rail fixe ouvert passe au-dessus d'un en-tete colle et de la guirlande", async ({
+    page,
+  }) => {
+    await openThemed(
+      page,
+      "/visual-tests/fixtures/festive-clearance-1005.html",
+      { width: 375, height: 812 },
+    );
+    await injectSticky(page, "#gabarit", "t-sticky");
+    await injectRail(page, true);
+    await expect.poll(() => leftOf(page, "#t-rail")).toBe(0);
+    await expectAbove(
+      page,
+      "#t-rail",
+      "#t-sticky",
+      await overlapPoints(page, "#t-rail", "#t-sticky"),
+      "rail/sticky",
+    );
+    await expectAbove(
+      page,
+      "#t-rail",
+      ".garland--header",
+      await overlapPoints(page, "#t-rail", ".garland--header"),
+      "rail/guirlande",
+    );
+  });
+
+  test("desktop 1280 : la colonne d'app-shell reste SOUS le voile d'un drawer plein ecran", async ({
+    page,
+  }) => {
+    await openThemed(page, "/pages/composants.html", {
+      width: 1280,
+      height: 800,
+    });
+    await injectRail(page, false);
+    await page.evaluate(() => {
+      const ovl = document.createElement("div");
+      ovl.className = "drawer-overlay drawer-overlay--fullscreen open";
+      ovl.id = "t-drawer-ovl";
+      document.body.append(ovl);
+    });
+    await expectAbove(
+      page,
+      "#t-drawer-ovl",
+      "#sidebar",
+      await overlapPoints(page, "#t-drawer-ovl", "#sidebar"),
+      "voile drawer/sidebar",
+    );
+    await expectAbove(
+      page,
+      "#t-drawer-ovl",
+      "#t-rail",
+      await overlapPoints(page, "#t-drawer-ovl", "#t-rail"),
+      "voile drawer/rail",
+    );
+  });
+
+  test("desktop 1280 : le menu d'un split-button ouvert reste visible sur un en-tete colle", async ({
+    page,
+  }) => {
+    await openThemed(
+      page,
+      "/visual-tests/fixtures/festive-clearance-1005.html",
+      { width: 1280, height: 800 },
+    );
+    // Ordre : split-button PUIS en-tete colle ; le menu ouvert descend sur l'en-tete colle.
+    await injectSticky(page, "#gabarit", "t-sticky", true);
+    await expectAbove(
+      page,
+      "#t-split-menu",
+      "#t-sticky",
+      await overlapPoints(page, "#t-split-menu", "#t-sticky"),
+      "split/sticky",
+    );
+  });
+
+  test("desktop 1280 : le menu de l'en-tete passe au-dessus de l'en-tete colle et de la guirlande", async ({
+    page,
+  }) => {
+    await openThemed(
+      page,
+      "/visual-tests/fixtures/festive-clearance-1005.html",
+      { width: 1280, height: 800 },
+      {
+        auth: true,
+        user: { name: "Test Pile", initials: "TP" },
+      },
+    );
+    await injectSticky(page, "#gabarit", "t-sticky");
+    await page.evaluate(() => window.scrollTo(0, 300));
+    await page.locator("#header-avatar-btn").click();
+    await expect(page.locator("#header-dropdown")).toHaveClass(/\bopen\b/);
+    await expectAbove(
+      page,
+      "#header-dropdown",
+      "#t-sticky",
+      await overlapPoints(page, "#header-dropdown", "#t-sticky"),
+      "menu en-tete/sticky",
+    );
+    await expectAbove(
+      page,
+      "#header-dropdown",
+      ".garland--header",
+      await overlapPoints(page, "#header-dropdown", ".garland--header"),
+      "menu en-tete/guirlande",
+    );
+  });
+});

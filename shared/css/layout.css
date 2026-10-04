@@ -43,8 +43,16 @@
 .site-header .mode-switch { padding: 2px; min-width: auto; min-height: auto; }
 
 /* ===== SIDEBAR ===== */
+/* z-index (#1043, doctrine §12.1) : DEUX roles selon la largeur.
+   - Colonne fixe de l'app-shell (> 768 px) : --z-sticky, comme le chrome colle. Elle ne
+     chevauche ni l'en-tete (top: --header-h) ni la guirlande (decalee de --sidebar-w), et
+     reste SOUS le voile d'un drawer plein ecran (--z-surface) : en --z-surface-panel, elle
+     serait peinte et cliquable par-dessus ce voile.
+   - Panneau hors ecran mobile (<= 768 px, bloc plus bas) : --z-surface-panel, au-dessus de
+     son voile (--z-surface), des en-tetes colles et de la guirlande.
+   Garde : visual-tests/stacking-scale.spec.ts. */
 .sidebar {
-    position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); z-index: 100;
+    position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); z-index: var(--z-sticky);
     background: var(--sidebar-bg); backdrop-filter: blur(24px) saturate(1.5);
     border-inline-end: 1px solid var(--border-color); padding: var(--space-sm) 0;
     display: flex; flex-direction: column; overflow-y: auto;
@@ -750,7 +758,7 @@ html.theme-transitioning * {
 }
 /* @strip:showcase-end */
 @media (max-width: 768px) { /* exception §4 : panneau hors écran avec voile (sidebar) */
-    .sidebar { transform: translateX(-100%); }
+    .sidebar { transform: translateX(-100%); z-index: var(--z-surface-panel); /* #1043 : panneau au-dessus de son voile */ }
     .sidebar.open { transform: translateX(0); }
 
     /* Sidebar overlay — mobile only */
@@ -758,7 +766,7 @@ html.theme-transitioning * {
         position: fixed;
         inset: 0;
         background: var(--overlay-black-50);
-        z-index: 99;
+        z-index: var(--z-surface); /* #1043 : voile au-dessus des couches --z-sticky, sous le panneau */
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s;

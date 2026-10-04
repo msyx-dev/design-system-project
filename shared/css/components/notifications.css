@@ -58,7 +58,7 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-lg);
-    z-index: 200;
+    z-index: var(--z-surface); /* #1043 : jeton au lieu du litteral (meme valeur) */
     display: none;
     flex-direction: column;
     overflow: hidden;

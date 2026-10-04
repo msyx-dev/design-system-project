@@ -117,7 +117,7 @@
     align-items: stretch;
     background: var(--surface-solid);
     border-top: 1px solid var(--border-color);
-    z-index: 120;
+    z-index: var(--z-nav); /* #1043 : 120 litteral, sous --z-sticky (150) */
     padding: 0 var(--space-xs);
     /* Masquee sur desktop — visible uniquement mobile */
 }
@@ -266,15 +266,17 @@
    Drawer --fullscreen) plutot qu'impose par defaut, pour ne pas casser le
    rendu du showcase existant. */
 /* Geometrie d'app-shell (#906) : top:0 + height:100vh faisait passer le rail
-   SOUS .site-header (z-index 150 contre 100 ici) — les 56px hauts du rail
-   etaient recouverts par l'en-tete. Meme ancrage que .sidebar (layout.css) :
-   demarre sous le header, hauteur reduite d'autant. */
+   SOUS .site-header — les 56px hauts du rail etaient recouverts par l'en-tete.
+   Meme ancrage que .sidebar (layout.css) : demarre sous le header, hauteur
+   reduite d'autant. z-index (#1043) : memes deux roles que .sidebar — colonne
+   d'app-shell en --z-sticky (sous le voile d'un drawer plein ecran), panneau
+   mobile en --z-surface-panel (bloc <= 768 px plus bas). */
 .rail-sidebar--fixed {
     position: fixed;
     top: var(--header-h);
     left: 0;
     height: calc(100vh - var(--header-h));
-    z-index: 100;
+    z-index: var(--z-sticky);
 }
 .rail-header {
     display: flex;
@@ -415,7 +417,7 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.15s ease;
-    z-index: 100;
+    z-index: var(--z-floating); /* #1043 : surface ancree a son item */
     box-shadow: var(--shadow);
 }
 /* :focus-within ajoute (#857) : la navigation clavier seule (Tab, sans survol
@@ -492,6 +494,7 @@
 @media (max-width: 768px) { /* exception §4 : panneau hors écran avec voile (rail fixe) */
     .rail-sidebar--fixed {
         transform: translateX(-100%);
+        z-index: var(--z-surface-panel); /* #1043 : panneau au-dessus de son voile */
     }
     .rail-sidebar--fixed.collapsed {
         width: var(--rail-w);
@@ -503,7 +506,7 @@
         position: fixed;
         inset: 0;
         background: var(--overlay-black-50);
-        z-index: 99;
+        z-index: var(--z-surface); /* #1043 : voile sous le panneau (--z-surface-panel) */
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s;
