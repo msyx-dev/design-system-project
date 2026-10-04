@@ -1,5 +1,13 @@
 # Releases
 
+## 2.145.4 — 2026-10-04 — Le focus clavier n'est plus caché sous l'en-tête
+
+> Correctif d'accessibilité demandé par tirokado (#1039). Aucun changement de `@msyx-dev/react` : `SiteHeader` rend `.site-header`, la resynchronisation du CSS suffit.
+
+### Fixed
+- **Le contrôle qui reçoit le focus n'est plus caché sous l'en-tête collant (#1039)** — `scroll-padding-top` sur `html:has(.site-header)` (hauteur de l'en-tête + `--space-md`) : focus clavier qui remonte, `scrollIntoView({block:"nearest"})` et ancres `#…` s'arrêtent sous l'en-tête (WCAG 2.4.11). Sans en-tête collant, aucun décalage.
+- **Défilement non animé quand le système demande de réduire les animations (#1039)** — `scroll-behavior` neutralisé sous `prefers-reduced-motion: reduce`, y compris pour les défilements déclenchés par la navigation de la vitrine (`shared/nav.js`).
+
 ## 2.145.3 — 2026-10-04 — Améliorations internes
 
 > Release interne, produite entièrement par l'outil (preuve CA15 bis de msyx-dev/claude-config#543). Aucun changement visible ni de `@msyx-dev/react`.

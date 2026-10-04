@@ -1,18 +1,24 @@
 {
   "model": "dated",
   "next": {
-    "highlights": [
-      {
-        "type": "correction",
-        "text": "Au clavier, le champ ou le bouton qui reçoit le focus n'est plus caché sous l'en-tête quand la page remonte ; un lien vers une section l'affiche aussi juste sous l'en-tête."
-      },
-      {
-        "type": "correction",
-        "text": "Le défilement de la page n'est plus animé quand le système demande de réduire les animations."
-      }
-    ]
+    "highlights": []
   },
   "released": [
+    {
+      "version": "2.145.4",
+      "date": "2026-10-04",
+      "titre": "Le focus clavier n'est plus caché sous l'en-tête",
+      "highlights": [
+        {
+          "type": "correction",
+          "text": "Au clavier, le champ ou le bouton qui reçoit le focus n'est plus caché sous l'en-tête quand la page remonte ; un lien vers une section l'affiche aussi juste sous l'en-tête."
+        },
+        {
+          "type": "correction",
+          "text": "Le défilement de la page n'est plus animé quand le système demande de réduire les animations."
+        }
+      ]
+    },
     {
       "version": "2.145.3",
       "date": "2026-10-04",
