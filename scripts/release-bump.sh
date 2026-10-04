@@ -12,8 +12,14 @@
 #       Appelé APRÈS le bump de package.json par version-release.sh (idempotent ici).
 #       Écrit l'arbre, dans cet ordre :
 #         1. --version sur les 9 sources non autogénérées, puis node shared/build-themes.js
-#         2. shared/version-notes.json : next.highlights non vide -> released[0], next vidé ;
-#            puis node bin/generate-version-notes.js
+#         2. shared/version-notes.json -> released[0] = {version, date, titre: --title, highlights} :
+#            bac next.highlights non vide -> ses lignes, next vidé ; bac vide -> note de repli
+#            [{type: "amelioration", text: FALLBACK_TEXT}] (le badge annonce toujours la version
+#            servie, gate §8.6). Aucune lecture de [Unreleased] : le pré-vol de version-release.sh
+#            refuse déjà une release qui porte du visible avec un bac vide. Le badge affiche
+#            --title (obligatoire) : pour une release interne, « Améliorations internes ».
+#            released portant déjà --version -> rc 1, bac vide ou non. Puis
+#            node bin/generate-version-notes.js
 #         3. node bin/generate-counters.js
 #         4. RELEASES.md : « ## X.Y.Z — date — titre » + notes (H1/H2 -> H3), avant le 1er « ## »
 #         5. packages/react : bump 3.0.0-alpha.N -> alpha.N+1 SI « ## [Unreleased] » de
@@ -102,23 +108,27 @@ first_heading_line() {
 }
 
 # --- shared/version-notes.json : pré-vol (check) et estampille (write) ----------------------
+# Ligne de la note de repli (bac next vide) : texte figé par la décision de Mike sur
+# claude-config#543 (CA15), identique à l'entrée 2.145.2 posée à la main par la PR #1036.
+FALLBACK_TEXT="Améliorations internes, aucun changement visible."
 # Sérialisation JSON.stringify(…, null, 2) + "\n" : c'est le format exact du fichier (vérifié
 # par aller-retour au 2026-10-03), donc seul le bloc déplacé apparaît au diff.
 NOTES_JS='
 const fs = require("fs");
-const [mode, file, version, date, titre] = process.argv.slice(1);
+const [mode, file, version, date, titre, fallbackText] = process.argv.slice(1);
 const data = JSON.parse(fs.readFileSync(file, "utf8"));
 const hl = data && data.next && Array.isArray(data.next.highlights) ? data.next.highlights : null;
 if (!hl || !Array.isArray(data.released)) { console.error(file + " : next.highlights ou released absent"); process.exit(1); }
-if (hl.length === 0) { console.log("next.highlights vide : aucune entrée released"); process.exit(0); }
 if (data.released.some(function (r) { return r && r.version === version; })) {
   console.error(file + " : released porte déjà la version " + version); process.exit(1);
 }
 if (mode === "check") process.exit(0);
-data.released.unshift({ version: version, date: date, titre: titre, highlights: hl });
+const repli = hl.length === 0;
+const highlights = repli ? [{ type: "amelioration", text: fallbackText }] : hl;
+data.released.unshift({ version: version, date: date, titre: titre, highlights: highlights });
 data.next.highlights = [];
 fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n", "utf8");
-console.log("released[0] = " + version + " (" + hl.length + " highlight(s)), next vidé");
+console.log("released[0] = " + version + (repli ? " (bac next vide : note de repli)" : " (" + hl.length + " highlight(s)), next vidé"));
 '
 
 # react_unreleased_state : « absent », « vide » ou « rempli » (1re section ## [Unreleased]).
@@ -190,7 +200,7 @@ cmd_apply() {
   if grep -qE "^## ${VERSION//./\\.}([[:space:]]|$)" RELEASES.md; then
     die1 "RELEASES.md porte déjà une entrée « ## $VERSION » — rien écrit"
   fi
-  node -e "$NOTES_JS" check shared/version-notes.json "$VERSION" "$DATE" "$TITLE" >/dev/null \
+  node -e "$NOTES_JS" check shared/version-notes.json "$VERSION" "$DATE" "$TITLE" "$FALLBACK_TEXT" >/dev/null \
     || die1 "shared/version-notes.json refusé (voir ci-dessus) — rien écrit"
 
   local REACT_STATE REACT_CUR="" REACT_NEW=""
@@ -222,7 +232,7 @@ cmd_apply() {
   node shared/build-themes.js || die1 "étape 1 : node shared/build-themes.js"
 
   # ---- 2. notes de version produit --------------------------------------------------------
-  node -e "$NOTES_JS" write shared/version-notes.json "$VERSION" "$DATE" "$TITLE" || die1 "étape 2 : version-notes.json"
+  node -e "$NOTES_JS" write shared/version-notes.json "$VERSION" "$DATE" "$TITLE" "$FALLBACK_TEXT" || die1 "étape 2 : version-notes.json"
   node bin/generate-version-notes.js || die1 "étape 2 : node bin/generate-version-notes.js"
 
   # ---- 3. compteurs de site.html (dont « vX.Y.Z ») ------------------------------------------
