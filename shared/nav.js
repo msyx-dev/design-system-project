@@ -1042,6 +1042,17 @@ function updateActiveLink(targetUrl) {
     }
 }
 
+/**
+ * Comportement des défilements déclenchés par la navigation (#1039).
+ * Un scrollIntoView au comportement « smooth » passe outre le CSS
+ * `scroll-behavior` : sous prefers-reduced-motion: reduce, on défile
+ * sans animation. Évalué à chaque appel pour suivre un changement de
+ * préférence en cours de session.
+ */
+function scrollBehavior() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+}
+
 function bindSidebarClicks() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
@@ -1065,7 +1076,7 @@ function bindSidebarClicks() {
                     loadSection(container).then(function() {
                         setTimeout(function() {
                             var target = scrollTarget ? document.getElementById(scrollTarget) : container;
-                            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            if (target) target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
                         }, 100);
                     });
                     var slug = lazyId.replace('lazy-', '');
@@ -1079,7 +1090,7 @@ function bindSidebarClicks() {
             if (isSamePage && linkHash) {
                 // Same page: smooth scroll
                 const target = document.getElementById(linkHash);
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
                 history.replaceState(null, '', '#' + linkHash);
                 updateActiveLink();
                 closeSidebar();
@@ -1124,7 +1135,7 @@ async function navigateTo(url) {
         if (hash) {
             const target = document.getElementById(hash);
             if (target) {
-                setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+                setTimeout(() => target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' }), 50);
             }
         } else {
             window.scrollTo(0, 0);
@@ -1181,7 +1192,7 @@ function initScrollSpy() {
                         l.classList.add('active');
                         // Ne scroller que si l'élément actif est hors de la zone visible de la sidebar
                         if (!isSidebarLinkVisible(l)) {
-                            l.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                            l.scrollIntoView({ block: 'nearest', behavior: scrollBehavior() });
                         }
                     }
                 });
@@ -1309,7 +1320,7 @@ function handleInitialHash() {
         var container = document.getElementById('lazy-' + hash);
         if (container) {
             loadSection(container).then(function() {
-                setTimeout(function() { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+                setTimeout(function() { container.scrollIntoView({ behavior: scrollBehavior(), block: 'start' }); }, 100);
             });
         }
         return;
@@ -1329,7 +1340,7 @@ function handleInitialHash() {
                     loadSection(container).then(function() {
                         setTimeout(function() {
                             var target = document.getElementById(hash);
-                            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            if (target) target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
                         }, 150);
                     });
                 }
@@ -1357,7 +1368,7 @@ window.addEventListener('popstate', () => {
             reinitComponents();
             if (location.hash) {
                 const target = document.querySelector(location.hash);
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
             } else {
                 window.scrollTo(0, 0);
             }
@@ -1376,7 +1387,7 @@ document.addEventListener('click', e => {
             var container = document.getElementById(lazyId);
             if (container) {
                 loadSection(container).then(function() {
-                    setTimeout(function() { container.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+                    setTimeout(function() { container.scrollIntoView({ behavior: scrollBehavior(), block: 'start' }); }, 100);
                 });
                 history.replaceState(null, '', '#' + lazyId.replace('lazy-', ''));
                 return;

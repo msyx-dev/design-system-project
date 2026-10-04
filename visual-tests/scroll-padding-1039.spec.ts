@@ -300,18 +300,157 @@ test.describe("#1039 — scroll-padding-top sous l'en-tête fixe", () => {
  * `_a11y.css` → le cas « reduce » rougit (valeur `smooth`), le témoin reste vert.
  */
 test.describe("#1039 — défilement doux coupé sous prefers-reduced-motion", () => {
-  async function scrollBehavior(page: Page, reducedMotion: "reduce" | "no-preference") {
+  async function scrollBehavior(
+    page: Page,
+    reducedMotion: "reduce" | "no-preference",
+  ) {
     await page.emulateMedia({ reducedMotion });
     await page.goto(FIXTURE);
     await page.waitForLoadState("networkidle");
-    return page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+    return page.evaluate(
+      () => getComputedStyle(document.documentElement).scrollBehavior,
+    );
   }
 
   test("reduce : html { scroll-behavior } vaut auto", async ({ page }) => {
     expect(await scrollBehavior(page, "reduce")).toBe("auto");
   });
 
-  test("témoin no-preference : html { scroll-behavior } vaut smooth", async ({ page }) => {
+  test("témoin no-preference : html { scroll-behavior } vaut smooth", async ({
+    page,
+  }) => {
     expect(await scrollBehavior(page, "no-preference")).toBe("smooth");
+  });
+});
+
+/**
+ * Même défaut, côté JavaScript : `scrollIntoView({ behavior: "smooth" })` passe OUTRE le CSS
+ * `scroll-behavior` et reste animé quelle que soit la préférence. Les 8 défilements de la
+ * navigation de la vitrine (`shared/nav.js`) passent désormais par `scrollBehavior()`, qui rend
+ * `auto` sous `prefers-reduced-motion: reduce`.
+ *
+ * Chemin exercé : clic sur le dernier lien de la barre latérale qui vise la page courante
+ * (`bindSidebarClicks`, branche « même page »), sur une vraie page de la vitrine. Le clic passe
+ * par `HTMLElement.click()` : en mobile la barre latérale est hors écran, le gestionnaire est le
+ * même. Deux preuves indépendantes :
+ *  - l'option `behavior` réellement reçue par `scrollIntoView` (instrumenté par `addInitScript`) ;
+ *  - la position : lue juste après le clic, `scrollY` vaut déjà sa valeur stable (aucune animation).
+ * Le témoin `no-preference` montre que la mesure discrimine : `smooth`, et la position lue juste
+ * après le clic n'est pas encore la position finale.
+ *
+ * Mutation (consignée dans la PR) : remettre `behavior: 'smooth'` en dur dans l'appel de la
+ * branche « même page » de `bindSidebarClicks` → le cas « reduce » rougit, le témoin reste vert.
+ */
+test.describe("#1039 — défilements JS de la vitrine sous prefers-reduced-motion", () => {
+  const PAGE_NAV = "/pages/composants.html";
+
+  type Defilement = {
+    cible: string;
+    avant: number;
+    immediat: number;
+    stable: number;
+    appels: { id: string; behavior: string | null }[];
+  };
+
+  async function cliquerLienLointain(
+    page: Page,
+    reducedMotion: "reduce" | "no-preference",
+  ): Promise<Defilement> {
+    await page.emulateMedia({ reducedMotion });
+    await page.addInitScript(() => {
+      const w = window as unknown as {
+        __defilements: { id: string; behavior: string | null }[];
+      };
+      w.__defilements = [];
+      const origine = Element.prototype.scrollIntoView;
+      Element.prototype.scrollIntoView = function (
+        this: Element,
+        arg?: boolean | ScrollIntoViewOptions,
+      ) {
+        w.__defilements.push({
+          id: this.id,
+          behavior:
+            typeof arg === "object" && arg && arg.behavior
+              ? arg.behavior
+              : null,
+        });
+        return origine.call(this, arg as ScrollIntoViewOptions);
+      };
+    });
+    await page.goto(PAGE_NAV);
+    await page.waitForLoadState("networkidle");
+
+    const lien = page
+      .locator('.sidebar-link[data-href*="composants.html#"]')
+      .last();
+    await expect(lien, "barre latérale construite").toBeAttached();
+    const cible = (await lien.getAttribute("data-href"))!.split("#")[1];
+    expect(cible, "cible du lien").toBeTruthy();
+
+    const clic = await page.evaluate((id) => {
+      const a = Array.from(
+        document.querySelectorAll<HTMLElement>(".sidebar-link[data-href]"),
+      ).find((l) => (l.dataset.href || "").endsWith("#" + id))!;
+      const avant = window.scrollY;
+      a.click();
+      return { avant, immediat: window.scrollY };
+    }, cible);
+
+    // Position stable : 4 lectures égales à 100 ms d'intervalle (au plus 5 s).
+    const stable = await page.evaluate(
+      () =>
+        new Promise<number>((resolve) => {
+          let derniere = window.scrollY;
+          let egales = 0;
+          const debut = performance.now();
+          const tic = () => {
+            const y = window.scrollY;
+            egales = y === derniere ? egales + 1 : 0;
+            derniere = y;
+            if (egales >= 4 || performance.now() - debut > 5000) resolve(y);
+            else setTimeout(tic, 100);
+          };
+          setTimeout(tic, 100);
+        }),
+    );
+
+    const appels = await page.evaluate(
+      (id) =>
+        (
+          window as unknown as {
+            __defilements: { id: string; behavior: string | null }[];
+          }
+        ).__defilements.filter((c) => c.id === id),
+      cible,
+    );
+    return { cible, ...clic, stable, appels };
+  }
+
+  test("reduce : le clic de navigation défile sans animation", async ({
+    page,
+  }) => {
+    const d = await cliquerLienLointain(page, "reduce");
+    expect(d.avant, "départ en haut de page").toBe(0);
+    expect(d.stable, `la page a défilé vers #${d.cible}`).toBeGreaterThan(0);
+    expect(d.appels, "un seul scrollIntoView vers la cible").toHaveLength(1);
+    expect(d.appels[0].behavior, "option behavior reçue").toBe("auto");
+    expect(
+      d.immediat,
+      `position lue juste après le clic (${d.immediat}) = position stable (${d.stable})`,
+    ).toBe(d.stable);
+  });
+
+  test("témoin no-preference : le clic de navigation reste animé", async ({
+    page,
+  }) => {
+    const d = await cliquerLienLointain(page, "no-preference");
+    expect(d.avant, "départ en haut de page").toBe(0);
+    expect(d.stable, `la page a défilé vers #${d.cible}`).toBeGreaterThan(0);
+    expect(d.appels, "un seul scrollIntoView vers la cible").toHaveLength(1);
+    expect(d.appels[0].behavior, "option behavior reçue").toBe("smooth");
+    expect(
+      d.immediat,
+      `position lue juste après le clic (${d.immediat}) < position stable (${d.stable})`,
+    ).toBeLessThan(d.stable);
   });
 });
