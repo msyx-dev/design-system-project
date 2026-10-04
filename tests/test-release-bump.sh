@@ -17,17 +17,24 @@
 #             RELEASES.md : entrée en tête, H1/H2 -> H3 hors blocs de code,
 #             React alpha.N -> alpha.N+1, section scellée sous une [Unreleased] vide,
 #             CHANGELOG.md inchangé à l'octet ; puis `tags --commit HEAD` -> tag=react-v…
+# Test B1 / C1 : le contrôle §8.6 du runtime (~/.claude/scripts/pipeline/fil-de-leau-check.sh,
+#          appelé tel quel) passe sur la fixture après apply (bac rempli / bac vide). Runtime
+#          absent (CI GitHub) ou jq absent -> SKIP explicite, jamais un PASS
 # Test C : next vide + [Unreleased] React vide, package.json NON pré-bumpé
-#          -> rc 0, check-versions rc 0, aucune entrée released, React intact ; tags -> rien
+#          -> rc 0, check-versions rc 0, released[0] = 9.9.0 portant la seule note de repli
+#             (type amelioration), released +1, next vide, React intact ; tags -> rien
 # Test D : section [Unreleased] React absente -> rc 0, React intact
 # Test E : [Unreleased] React rempli + version React hors prérelease -> rc 1, rien écrit
 # Test F : un générateur écrit CHANGELOG.md -> apply rc 1 (garde fail-closed)
 # Test G : tags — <sha> invalide -> rc≠0 ; --commit absent -> rc 2
 # Test H : usage — sous-commande inconnue/absente, config avec argument, apply sans --title,
 #          --notes-file relatif, --version invalide -> rc 2, rien écrit
+# Test I : released porte déjà --version -> rc 1, rien écrit, bac vide comme bac rempli
 #
 # Variable RELEASE_BUMP_SH (optionnelle) : chemin d'un autre release-bump.sh, pour le rejouer
 # MUTÉ et prouver que ce test rougit (ex. `base` retiré de DS_CSS_SOURCES).
+# Variable FIL_DE_LEAU_SH (optionnelle) : chemin du contrôle §8.6 (défaut : celui du runtime),
+# pour prouver la branche SKIP (chemin inexistant).
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -36,6 +43,7 @@ HOOK_SH="${RELEASE_BUMP_SH:-scripts/release-bump.sh}"
 
 PASS=0
 FAIL=0
+SKIP=0
 # Un seul dossier racine, nettoyé en sortie : new_tmp est appelé dans des $(…), donc dans
 # un sous-shell — une liste de dossiers tenue par le parent n'y serait jamais complétée.
 WORK="$(mktemp -d)"
@@ -52,6 +60,9 @@ CUR="$(grep -m1 -E '"version"[[:space:]]*:' package.json | grep -oE '[0-9]+\.[0-
 REACT_FIX="9.0.0-alpha.41"   # hors historique réel : « ## v…alpha.42 » ne doit pas préexister
 REACT_EXP="9.0.0-alpha.42"
 HL='[{"type":"nouveaute","text":"Entree de fixture du bac next."}]'
+# Note de repli écrite par le hook quand le bac next est vide (précédent : 2.145.2, PR #1036)
+HL_REPLI='[{"type":"amelioration","text":"Améliorations internes, aucun changement visible."}]'
+FDL_SH="${FIL_DE_LEAU_SH:-$HOME/.claude/scripts/pipeline/fil-de-leau-check.sh}"
 
 NOTES_DIR="$(new_tmp)"
 NOTES="$NOTES_DIR/notes.md"
@@ -123,6 +134,16 @@ clean_tree() { [ -z "$(gitf "$1" status --porcelain)" ]; }
 # headings <fichier> : lignes « ## » hors blocs de code (un « ## » de bloc de code n'est pas un titre)
 headings() { awk '/^[ \t]*(```|~~~)/ { f = !f } !f && /^## /' "$1"; }
 
+# fil_de_leau <dir> : le contrôle §8.6 du runtime, appelé tel quel sur la fixture. Sa branche
+# « dated » exige jq : sans jq, il retomberait sur le contrôle « cut », muet ici (faux PASS).
+fil_de_leau() {
+  if [ ! -f "$FDL_SH" ]; then echo "  SKIP fil-de-leau-check : runtime absent ($FDL_SH)"; SKIP=$((SKIP+1)); return; fi
+  if ! command -v jq >/dev/null 2>&1; then echo "  SKIP fil-de-leau-check : jq absent"; SKIP=$((SKIP+1)); return; fi
+  local rc=0
+  OUT="$(bash "$FDL_SH" "$1" 2>&1)" || rc=$?
+  if [ "$rc" -eq 0 ]; then pass; else fail "fil-de-leau-check rc=$rc"; fi
+}
+
 # --- Test 0 -------------------------------------------------------------------------------
 echo "Test 0: scripts/release-bump.sh suivi par git et executable (100755)..."
 if git ls-files -s scripts/release-bump.sh | grep -q '^100755 '; then pass; else OUT="$(git ls-files -s scripts/release-bump.sh)"; fail "hook non suivi ou non executable"; fi
@@ -160,24 +181,34 @@ grep -qxF -- '- composant de fixture' "$B/packages/react/RELEASES.md" || why="$w
 cmp -s "$ROOT/CHANGELOG.md" "$B/CHANGELOG.md" || why="$why CHANGELOG.md modifie;"
 if [ -z "$why" ]; then pass; else fail "$why"; fi
 
+echo "Test B1: fil-de-leau-check.sh du runtime passe apres apply (bac rempli)..."
+fil_de_leau "$B"
+
 echo "Test B2: tags --commit sur le commit de release (React a bouge) -> tag=react-v$REACT_EXP..."
 gitf "$B" add -A && gitf "$B" commit -qm "release: v$NEW"
 run_hook "$B" tags --commit "$(gitf "$B" rev-parse HEAD)"
 if [ "$RC" -eq 0 ] && [ "$STDOUT" = "tag=react-v$REACT_EXP" ]; then pass; else fail "attendu tag=react-v$REACT_EXP (rc=$RC)"; fi
 
 # --- Test C -------------------------------------------------------------------------------
-echo "Test C: next vide + [Unreleased] React vide, package.json non pre-bumpe -> aucun bump React..."
+echo "Test C: next vide + [Unreleased] React vide, package.json non pre-bumpe -> note de repli, aucun bump React..."
 C="$(fixture vide vide "$REACT_FIX")"
-REL0="$(json "$C/shared/version-notes.json" 'd.released[0].version+"|"+d.released.length')"
+REL0="$(json "$C/shared/version-notes.json" 'd.released[0].version')"
+LEN0="$(json "$C/shared/version-notes.json" 'd.released.length')"
 run_apply "$C"
 why=""
 [ "$RC" -eq 0 ] || why="$why apply rc=$RC;"
 bash "$C/shared/check-versions.sh" "$C" >/dev/null 2>&1 || why="$why check-versions rc!=0;"
 grep -q "v$NEW" "$C/site.html" || why="$why site.html sans v$NEW;"
-[ "$(json "$C/shared/version-notes.json" 'd.released[0].version+"|"+d.released.length')" = "$REL0" ] || why="$why entree released ajoutee sur bac vide;"
+[ "$(json "$C/shared/version-notes.json" 'd.released[0].version+"|"+d.released[0].date+"|"+d.released[0].titre')" = "$NEW|$DATE|$TITLE" ] || why="$why released[0] faux (pas d'entree $NEW sur bac vide);"
+[ "$(json "$C/shared/version-notes.json" 'JSON.stringify(d.released[0].highlights)')" = "$HL_REPLI" ] || why="$why highlights != note de repli;"
+[ "$(json "$C/shared/version-notes.json" 'd.released.length+"|"+d.released[1].version')" = "$((LEN0 + 1))|$REL0" ] || why="$why released non decale d'une entree;"
+[ "$(json "$C/shared/version-notes.json" 'd.next.highlights.length')" = "0" ] || why="$why next non vide;"
 gitf "$C" diff --quiet -- packages/react || why="$why packages/react modifie;"
 cmp -s "$ROOT/CHANGELOG.md" "$C/CHANGELOG.md" || why="$why CHANGELOG.md modifie;"
 if [ -z "$why" ]; then pass; else fail "$why"; fi
+
+echo "Test C1: fil-de-leau-check.sh du runtime passe apres apply (bac vide)..."
+fil_de_leau "$C"
 
 echo "Test C2: tags --commit sur le commit de release (React immobile) -> rien..."
 gitf "$C" add -A && gitf "$C" commit -qm "release: v$NEW"
@@ -226,8 +257,23 @@ run_hook "$Hd" apply --version "v$NEW" --previous "$CUR" --type minor --date "$D
 clean_tree "$Hd" || bad="$bad arbre-modifie"
 if [ -z "$bad" ]; then pass; else fail "$bad"; fi
 
+# --- Test I -------------------------------------------------------------------------------
+echo "Test I: released porte deja $NEW -> rc 1, rien ecrit (bac vide et bac rempli)..."
+bad=""
+for next in vide rempli; do
+  Id="$(fixture "$next" vide "$REACT_FIX")"
+  node -e 'const fs=require("fs");const f=process.argv[1];const d=JSON.parse(fs.readFileSync(f,"utf8"));d.released.unshift({version:process.argv[2],date:"2099-01-01",titre:"Deja publiee",highlights:[{type:"amelioration",text:"Deja publiee."}]});fs.writeFileSync(f,JSON.stringify(d,null,2)+"\n")' \
+    "$Id/shared/version-notes.json" "$NEW"
+  (cd "$Id" && node bin/generate-version-notes.js >/dev/null) && gitf "$Id" add -A && gitf "$Id" commit -qm "deja $NEW"
+  run_apply "$Id"
+  [ "$RC" -eq 1 ] || bad="$bad $next:rc=$RC"
+  grep -q "released porte déjà la version $NEW" <<< "$OUT" || bad="$bad $next:message-absent"
+  clean_tree "$Id" || bad="$bad $next:arbre-modifie"
+done
+if [ -z "$bad" ]; then pass; else fail "$bad"; fi
+
 echo ""
-echo "Resultats : $PASS PASS, $FAIL FAIL"
+echo "Resultats : $PASS PASS, $FAIL FAIL, $SKIP SKIP"
 if [ "$FAIL" -gt 0 ]; then
   exit 1
 fi
