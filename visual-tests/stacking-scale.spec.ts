@@ -520,13 +520,13 @@ test.describe("z-index litteraux ranges dans la doctrine §12.1 (#1043, t2)", ()
     );
   });
 
-  test("desktop 1280 : le menu de l'en-tete passe au-dessus de l'en-tete colle et de la guirlande", async ({
+  test("desktop 900 : le menu de l'en-tete passe au-dessus de l'en-tete colle et de la guirlande", async ({
     page,
   }) => {
     await openThemed(
       page,
-      "/visual-tests/fixtures/festive-clearance-1005.html",
-      { width: 1280, height: 800 },
+      "/visual-tests/fixtures/festive-clearance-1005.html?gabarit=page-content--wide",
+      { width: 900, height: 800 },
       {
         auth: true,
         user: { name: "Test Pile", initials: "TP" },
