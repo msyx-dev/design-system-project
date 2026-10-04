@@ -220,7 +220,10 @@
 
 /* Le haut d'une boule = la longueur de son fil (#1042) : le `top` ne vit plus en ligne
    dans nav.js / FestiveDecor.tsx. Scope `.ornaments >` : une `.ornament` isolee garde
-   son `top` d'origine ; la demo de fondation.html pose ses valeurs en ligne et l'emporte. */
+   son `top` d'origine ; la demo de fondation.html pose ses valeurs en ligne et l'emporte.
+   Repli 40px = defaut du primitif, le meme que le fil (::before) et le pivot (transform-origin) :
+   sans --ornament-drop resolu (balisage tiers, tokens.css non resynchronise), la boule reste
+   au bout de son fil au lieu de retomber a `top: auto` sous un fil qui monte dans l'en-tete. */
 .ornaments > .ornament { top: var(--ornament-drop, 40px); }
 
 @keyframes ornamentSwing {

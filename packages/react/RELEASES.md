@@ -6,6 +6,12 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+> Mention croisée : la réserve haute du décor de Noël (`--festive-top-clearance`) et les tokens `--ornament-{drop,size}-1..3` sont décrits dans l'entrée #1042 de `../../CHANGELOG.md`.
+
+### Fixed
+- **`<FestiveDecor>` : la géométrie des boules vient des tokens du DS (#1042).** Chaque boule pose `--ornament-drop: var(--ornament-drop-N)` et `--ornament-size: var(--ornament-size-N)` (rang N = 1 à 3) au lieu de px calculés en ligne, et ne pose plus de `top` : c'est `festive.css` (`.ornaments > .ornament`) qui le lit. Les tokens du rang sont la source d'où le DS dérive la réserve haute du contenu, ce qui garantit que la réserve couvre toujours la boule la plus basse. Aucune prop ne change.
+- **⚠ Resynchronisation du CSS du DS OBLIGATOIRE avec cette version.** Un consommateur qui monte cette version de `@msyx-dev/react` sans resynchroniser `tokens.css` et `festive.css` (`shared/sync.sh`) obtient des boules collées sous l'en-tête : sans la règle `.ornaments > .ornament`, une boule n'a plus de `top` ; sans les tokens `--ornament-*-N`, toutes prennent la taille et la chute par défaut et la réserve haute vaut `0px`. Vérifier avec `shared/check-sync.sh`.
+
 ## v3.0.0-alpha.63 — 2026-10-03 — `SegmentedControl` en liens, avant hydratation lisible (#1016)
 
 > Release du milestone #52, publiée avec le DS CSS **2.145.0** (mention croisée : le CSS `.segmented` en liens, le marqueur d'avant hydratation, le token `--segmented-subtle-active-text` et la cible tactile sont décrits dans `../../RELEASES.md`).
