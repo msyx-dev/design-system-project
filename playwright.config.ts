@@ -79,6 +79,7 @@ export default defineConfig({
     "**/notif-panel-viewport-1028.spec.ts",
     "**/scroll-padding-1039.spec.ts",
     "**/stacking-scale.spec.ts",
+    "**/festive-under-content.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
