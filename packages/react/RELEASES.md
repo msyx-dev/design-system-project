@@ -6,6 +6,9 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+### Internal
+- **`Rail` : commentaire d'empilement à jour (#1043)** — `src/components/Rail/Rail.tsx`, commentaire seul, aucun changement de code ni d'API. Il citait encore le `z-index: 150` de `.site-header`, qui vaut désormais `calc(var(--z-sticky) + 1)`. Mention croisée : l'échelle d'empilement servie, le rangement de `.rail-sidebar--fixed` (`--z-sticky` sur desktop, `--z-surface-panel` en panneau mobile) et celui de `.rail-tooltip` (`--z-floating`) sont décrits dans `../../CHANGELOG.md`, `[Unreleased]`. Le composant les reçoit par le CSS synchronisé du DS.
+
 ## v3.0.0-alpha.63 — 2026-10-03 — `SegmentedControl` en liens, avant hydratation lisible (#1016)
 
 > Release du milestone #52, publiée avec le DS CSS **2.145.0** (mention croisée : le CSS `.segmented` en liens, le marqueur d'avant hydratation, le token `--segmented-subtle-active-text` et la cible tactile sont décrits dans `../../RELEASES.md`).

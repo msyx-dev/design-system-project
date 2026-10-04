@@ -126,7 +126,7 @@
        portail, pas l'empilement. */
     --z-decor: 1;            /* nappes decoratives translucides : .snowfall, .frost — peintes AU-DESSUS du contenu en flux (pointer-events: none) (#940) */
     --z-decor-behind: -1;    /* decor opaque peint SOUS tout le contenu : .festive-character (#1043) — au-dessus du fond de page (canevas), sous tout texte, controle ou carte */
-    --z-sticky: 150;       /* en-tetes colles : .site-header, .section-header--sticky */
+    --z-sticky: 150;         /* en-tetes colles : .site-header, .section-header--sticky */
     --z-surface: 200;        /* surfaces conteneurs : sidebar, overlay de drawer, panneau de notifs */
     --z-surface-panel: 201;  /* le panneau lui-meme, au-dessus de son propre overlay */
     --z-nav: 300;            /* .bottom-nav fixe */
