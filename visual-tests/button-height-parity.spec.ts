@@ -2,29 +2,38 @@
  * button-height-parity.spec.ts — Deux contrôles `.btn-*` voisins de même taille ont la
  * même hauteur, quels que soient leur élément et leur variante (#1044, tranche t2).
  *
- * Défaut mesuré avant correction (fixture `button-height-parity.html`, Chromium) :
- * - `.btn-secondary`, `.btn-danger`, `.btn-success`, `.btn-warning` et
- *   `.btn-outline-danger` portent une bordure de 1px, `.btn-primary` et `.btn-ghost`
- *   non, à `padding` égal : le bouton bordé est 2px plus haut que son voisin
- *   (« Enregistrer » à côté de « Retirer », cas réel du consommateur tirokado) ;
- * - `buttons.css` ne fixait aucun `line-height` : un `<a class="btn-*">` héritait de
- *   celui du corps (1.6), un `<button>` restait en `normal` (UA) — le lien était plus
- *   haut que le bouton de même variante.
+ * Trois défauts mesurés avant correction (fixture `button-height-parity.html`, Chromium,
+ * hauteurs en px pour la taille normale / `--sm` / `--lg`) :
+ * - bordure : `.btn-secondary`, `.btn-danger`, `.btn-success`, `.btn-warning` et
+ *   `.btn-outline-danger` portent 1px de bordure, `.btn-primary` et `.btn-ghost` aucune,
+ *   à `padding` égal : le bordé était 2px plus haut (43 contre 41 ; 31,38 contre 29,38 ;
+ *   54 contre 52) — « Enregistrer » à côté de « Retirer », cas du consommateur tirokado ;
+ * - `line-height` : `buttons.css` n'en fixait aucun ; un `<a class="btn-*">` héritait de
+ *   celui du corps (1.6), un `<button>` restait en `normal` (UA) : le lien était 6px plus
+ *   haut (47,05 contre 41 ; 34,84 contre 29,38 ; 57,59 contre 52) ;
+ * - ordre : `.btn-sm`, `.btn-lg` et `.btn-xs` étaient déclarées AVANT la coque
+ *   `.btn-danger, .btn-success, .btn-warning` (même spécificité) : un `.btn-danger.btn-sm`
+ *   gardait la taille normale (43 contre 31,38).
+ *
+ * Correctif (`buttons.css`) : `line-height: normal` sur les variantes ; une variante bordée
+ * retranche sa bordure de son `padding` vertical (taille normale, `--sm`, `--lg`) ; les
+ * tailles sont déclarées après toutes les variantes. `--xs` : `min-height: 32px` domine le
+ * contenu des deux familles, aucune compensation.
  *
  * Contrat : dans chaque rangée de la fixture (une par taille : normale, `--sm`, `--lg`,
  * `--xs`), max(hauteur) − min(hauteur) ≤ TOL, sur les 14 contrôles (7 variantes × `<a>`
  * et `<button>`). `.btn-icon` garde son minimum de 44px (cible tactile).
  *
  * Mesure de mise en page : Chromium seulement, jamais jsdom (règle N1). Jouée une seule
- * fois (projet `msyx-dark-desktop`) : les épaisseurs de bordure et le `line-height` ne
- * dépendent ni du thème ni du mode (aucune surcharge de bordure ou de `line-height` des
- * `.btn-*` dans `themes.css`).
+ * fois (projet `msyx-dark-desktop`) : ni `themes.css` ni `tokens.css` ne surchargent la
+ * bordure, le `padding` ou le `line-height` d'un `.btn-*`.
  *
- * Mutations qui doivent faire passer ce spec au rouge (preuve consignée dans la PR) :
- * - P1 : retirer `line-height: normal` de la base des boutons → les 4 tailles rougissent
- *   (le `<a>` dépasse le `<button>` de même variante) ;
- * - P2 : retirer la bordure transparente des variantes sans bordure → les 4 tailles
- *   rougissent (écart de 2px entre familles de bordure).
+ * Preuve par mutation (jouée sur le code réel, puis restaurée) :
+ * - P1 : retirer `line-height: normal` → 3 rouges (normale, `--sm`, `--lg`) ;
+ * - P2 : retirer la compensation de bordure → 3 rouges (écart de 2,00px) ;
+ * - P3 : remettre les tailles avant la coque → 3 rouges (`--sm`, `--lg`, `--xs`).
+ * Chaque taille rougit sous au moins une mutation ; `--xs` n'est gardée que par P3, la
+ * `min-height` y masquant P1 et P2.
  */
 import { test, expect, type Page } from "@playwright/test";
 
