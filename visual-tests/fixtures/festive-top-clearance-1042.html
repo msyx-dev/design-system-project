@@ -14,7 +14,7 @@
   les ornements suspendus sous l'en-tete (`position: fixed`, peints au-dessus du
   contenu) recouvraient le titre de page.
 
-  L'en-tete de page n'a AUCUNE marge haute (cas le plus defavorable) : seul le
+  L'en-tete de page n'a NI marge NI rembourrage haut (cas le plus defavorable) : seul le
   `padding-top` du gabarit (`--header-h` + `--festive-top-clearance`) l'ecarte des boules.
 
   Le gabarit se choisit par `?gabarit=page-content|page-content--wide|content-grid|main`
@@ -27,8 +27,10 @@
 <link rel="stylesheet" href="/shared/styles.css">
 <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
 <style>
-  /* Cas le plus defavorable : l'en-tete de page colle au haut du gabarit. */
-  #page-header { margin-top: 0; }
+  /* Cas le plus defavorable : l'en-tete de page colle au haut du gabarit, sans marge
+     ni rembourrage haut. Sous `.main`, une section recoit sinon le rembourrage de la
+     vitrine (48px), qui absorberait un deficit de reserve sans que la mesure le voie. */
+  #page-header { margin-top: 0; padding-top: 0; }
 </style>
 </head>
 <body>

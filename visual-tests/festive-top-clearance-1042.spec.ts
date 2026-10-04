@@ -343,16 +343,17 @@ test.describe("Decor de Noel — reserve haute sous l'en-tete (#1042)", () => {
       await expect(page.locator(".garland--header"), p.name).toHaveCount(1);
       await expect(page.locator(".garland--header"), p.name).toBeHidden();
 
+      // `expect.soft` : un ecart se signale sur CHAQUE page, pas seulement la premiere.
       const m = await measure(page, p.root);
-      expect(
-        m.clearanceProp,
-        `${p.name} : --festive-top-clearance hors Noel`,
-      ).toBe("");
-      expect(m.paddingTop, `${p.name} : padding-top hors Noel`).toBe(headerH);
-      expect(
-        m.scrollPaddingTop,
-        `${p.name} : scroll-padding-top hors Noel`,
-      ).toBe(scrollPad);
+      expect
+        .soft(m.clearanceProp, `${p.name} : --festive-top-clearance hors Noel`)
+        .toBe("");
+      expect
+        .soft(m.paddingTop, `${p.name} : padding-top hors Noel`)
+        .toBe(headerH);
+      expect
+        .soft(m.scrollPaddingTop, `${p.name} : scroll-padding-top hors Noel`)
+        .toBe(scrollPad);
     }
     expect(scrollPad, "valeur historique #1039").toBe(72);
   });
