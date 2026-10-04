@@ -291,3 +291,27 @@ test.describe("#1039 — scroll-padding-top sous l'en-tête fixe", () => {
     ).toBe(m.avant);
   });
 });
+
+/**
+ * Défaut voisin, corrigé dans la même PR : le bloc `prefers-reduced-motion: reduce` de `_a11y.css`
+ * coupait `animation` et `transition`, pas le `scroll-behavior: smooth` de `html` (base.css).
+ * Ces cas n'injectent AUCUN style : ils lisent la valeur calculée produite par le CSS du DS seul.
+ * Mutation (consignée dans la PR) : règle `html { scroll-behavior: auto !important }` retirée de
+ * `_a11y.css` → le cas « reduce » rougit (valeur `smooth`), le témoin reste vert.
+ */
+test.describe("#1039 — défilement doux coupé sous prefers-reduced-motion", () => {
+  async function scrollBehavior(page: Page, reducedMotion: "reduce" | "no-preference") {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto(FIXTURE);
+    await page.waitForLoadState("networkidle");
+    return page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
+  }
+
+  test("reduce : html { scroll-behavior } vaut auto", async ({ page }) => {
+    expect(await scrollBehavior(page, "reduce")).toBe("auto");
+  });
+
+  test("témoin no-preference : html { scroll-behavior } vaut smooth", async ({ page }) => {
+    expect(await scrollBehavior(page, "no-preference")).toBe("smooth");
+  });
+});

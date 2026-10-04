@@ -5,6 +5,10 @@
       {
         "type": "correction",
         "text": "Au clavier, le champ ou le bouton qui reçoit le focus n'est plus caché sous l'en-tête quand la page remonte ; un lien vers une section l'affiche aussi juste sous l'en-tête."
+      },
+      {
+        "type": "correction",
+        "text": "Le défilement de la page n'est plus animé quand le système demande de réduire les animations."
       }
     ]
   },
