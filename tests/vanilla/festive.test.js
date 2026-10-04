@@ -217,3 +217,106 @@ describe('ensureFestiveDecor (nav.js) -- <svg> du sapin valide (#993)', () => {
     }
   });
 });
+
+// #1042 — reserve haute du decor festif. La geometrie des boules a UNE source :
+// les tokens --ornament-{drop,size}-N de tokens.css. nav.js les reference par
+// var() (aucun px), festive.css en derive --festive-top-clearance par max(), et
+// les gabarits l'ajoutent a --header-h. jsdom ne prouve AUCUN recouvrement
+// (regle N1) : ces cas gardent la COHERENCE DES SOURCES ; la mesure est faite
+// dans Chromium par visual-tests/festive-top-clearance-1042.spec.ts.
+const CSS_DIR = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../shared/css'
+);
+/** CSS sans commentaires : les en-tetes citent les formules qu'ils expliquent. */
+const lireCss = (rel) =>
+  readFileSync(path.join(CSS_DIR, rel), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+const parNombre = (a, b) => a - b;
+/** Rangs declares dans tokens.css pour une dimension (`drop` ou `size`). */
+const rangsDeclares = (dim) =>
+  [...lireCss('tokens.css').matchAll(new RegExp(`--ornament-${dim}-(\\d+)\\s*:`, 'g'))]
+    .map((m) => Number(m[1]))
+    .sort(parNombre);
+
+describe('reserve haute du decor festif (#1042) -- coherence des sources', () => {
+  function chargerNav() {
+    const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+      url: 'https://design-system.miklaw.fr/',
+      runScripts: 'outside-only',
+      pretendToBeVisual: true,
+    });
+    const { document } = dom.window;
+    const realAdd = document.addEventListener.bind(document);
+    document.addEventListener = (type, ...rest) =>
+      type === 'DOMContentLoaded' ? undefined : realAdd(type, ...rest);
+    dom.window.eval(readFileSync(NAV_JS_PATH, 'utf8'));
+    return dom.window;
+  }
+
+  it('tokens.css declare une chute ET une taille pour chaque rang (1..N, sans trou)', () => {
+    const drops = rangsDeclares('drop');
+    expect(drops.length).toBeGreaterThan(0);
+    expect(rangsDeclares('size')).toEqual(drops);
+    expect(drops).toEqual(drops.map((_, i) => i + 1));
+  });
+
+  it('ensureFestiveDecor() : chaque boule reference les tokens de SON rang, sans px ni top en ligne', () => {
+    const rangs = rangsDeclares('drop').length;
+    const win = chargerNav();
+    win.ensureFestiveDecor();
+    const boules = [...win.document.querySelectorAll('#ds-festive-ornaments > .ornament')];
+    expect(boules).toHaveLength(7);
+    boules.forEach((boule, i) => {
+      const rang = (i % rangs) + 1;
+      expect(boule.style.getPropertyValue('--ornament-drop')).toBe(`var(--ornament-drop-${rang})`);
+      expect(boule.style.getPropertyValue('--ornament-size')).toBe(`var(--ornament-size-${rang})`);
+      expect(boule.style.top).toBe('');
+      expect(boule.getAttribute('style')).not.toMatch(/\d\s*px/);
+    });
+    // tous les rangs declares servent : un token orphelin gonflerait la reserve pour rien
+    const servis = new Set(boules.map((b) => b.style.getPropertyValue('--ornament-drop')));
+    expect(servis.size).toBe(rangs);
+  });
+
+  it('--festive-top-clearance = max() de chute + taille de TOUS les rangs, garde Noel + guirlande', () => {
+    const festive = lireCss('components/festive.css');
+    const bloc = festive.match(/:root\[data-theme="noel"\]:has\(\.garland--header\)\s*\{([^}]*)\}/);
+    expect(bloc).not.toBeNull();
+    const reserve = bloc[1].match(/--festive-top-clearance\s*:\s*max\(([\s\S]*?)\);/);
+    expect(reserve).not.toBeNull();
+    const termes = [
+      ...reserve[1].matchAll(/calc\(var\(--ornament-drop-(\d+)\) \+ var\(--ornament-size-(\d+)\)\)/g),
+    ];
+    termes.forEach((t) => expect(t[2]).toBe(t[1])); // chute et taille du MEME rang
+    expect(termes.map((t) => Number(t[1])).sort(parNombre)).toEqual(rangsDeclares('drop'));
+    // aucun chiffre pose a la main dans la reserve : elle ne derive que des tokens
+    expect(reserve[1].replace(/--ornament-(drop|size)-\d+/g, '')).not.toMatch(/\d/);
+    // une seule declaration : pas de seconde reserve sans garde ailleurs dans le module
+    expect(festive.match(/--festive-top-clearance\s*:/g)).toHaveLength(1);
+  });
+
+  it('le top des boules vient de leur chute (CSS), plus du JS', () => {
+    expect(lireCss('components/festive.css')).toMatch(
+      /\.ornaments > \.ornament\s*\{\s*top:\s*var\(--ornament-drop, 40px\);\s*\}/
+    );
+  });
+
+  it.each(['.main', '.page-content', '.content-grid'])(
+    '%s ajoute la reserve a --header-h, avec repli 0px (rien hors Noel)',
+    (gabarit) => {
+      const regle = lireCss('layout.css').match(
+        new RegExp(`(?:^|\\n)${gabarit.replace('.', '\\.')}\\s*\\{([^}]*)\\}`)
+      );
+      expect(regle).not.toBeNull();
+      expect(regle[1]).toMatch(
+        /padding-top:\s*calc\(var\(--header-h\) \+ var\(--festive-top-clearance, 0px\)\)/
+      );
+    }
+  );
+
+  it('scroll-padding-top ajoute la reserve entre --header-h et --space-md (#1039)', () => {
+    expect(lireCss('base.css')).toMatch(
+      /html:has\(\.site-header\)\s*\{\s*scroll-padding-top:\s*calc\(var\(--header-h\) \+ var\(--festive-top-clearance, 0px\) \+ var\(--space-md\)\);/
+    );
+  });
+});
