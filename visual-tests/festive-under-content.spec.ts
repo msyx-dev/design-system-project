@@ -26,9 +26,12 @@
  * festive-clearance.spec.ts.
  *
  * Preuves par mutation (rouge attendu, puis restauration) :
- *  - M1 : `z-index: var(--z-decor)` remis sur `.festive-character` -> cas 1 et 2 rouges ;
- *  - M2 : `html { background: var(--primary) }` dans la fixture -> cas 3 rouge (contrat
- *    consommateur : le fond de <body> se peint alors sur sa boite, par-dessus le sapin).
+ *  - M1 : `z-index: var(--z-decor)` remis sur `.festive-character` -> 5 rouges : la fixture aux
+ *    4 largeurs et composants.html (165 cibles peintes sous le sapin, 2026-10-05) ; cas 3 vert ;
+ *  - M2 : `html { background: var(--primary) }` dans la fixture -> cas 3 rouge, 0 px visible
+ *    (contrat consommateur : le fond de <body> se peint alors sur sa boite, par-dessus le sapin) ;
+ *  - M3 (garde voisine) : consommation de `--festive-clearance` retiree de layout.css ->
+ *    festive-clearance.spec.ts : 20 rouges sur 21 (seul le temoin hors Noel reste vert).
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -45,11 +48,11 @@ const VIEWPORTS = [
 
 /**
  * Seuil de visibilite du sapin (cas 3), en pixels qui changent quand on le masque.
- * Calibre au premier run (2026-10-05, Chromium, fixture a 1280x720, defilement maximal) :
- * SEUIL_MESURE px. SEUIL = 50 % de cette mesure. Sous M2 (fond pose sur <html>), le compte
- * tombe a SEUIL_M2 px.
+ * Calibre le 2026-10-05 (Chromium, fixture a 1280x720, defilement maximal, sapin de
+ * 192 x 296 px) : 19 871 a 19 873 px sur 24 runs consecutifs sous charge 15-17. SEUIL = 50 %
+ * de 19 873. Sous M2 (fond pose sur <html>), le compte tombe a 0 px.
  */
-const SEUIL = 0;
+const SEUIL = 9936;
 
 async function openPage(
   page: Page,
@@ -141,8 +144,9 @@ const mesurerPeintureDuSapin = (
         new Promise<void>((r) =>
           requestAnimationFrame(() => requestAnimationFrame(() => r())),
         );
-      const decrire = (el: HTMLElement) =>
-        `${el.tagName.toLowerCase()}${
+      // Index en tete : deux boutons de meme libelle restent deux cibles distinctes.
+      const decrire = (el: HTMLElement, i: number) =>
+        `#${i} ${el.tagName.toLowerCase()}${
           typeof el.className === "string" && el.className
             ? "." + el.className.trim().split(/\s+/).join(".")
             : ""
@@ -190,7 +194,7 @@ const mesurerPeintureDuSapin = (
                 const rangSapin = pile.findIndex((n) => tree.contains(n));
                 const rangCible = pile.findIndex((n) => el.contains(n));
                 if (rangSapin < 0 || rangCible < 0) continue;
-                if (rangSapin < rangCible) audessus.add(decrire(el));
+                if (rangSapin < rangCible) audessus.add(decrire(el, i));
               }
             }
           });
@@ -346,7 +350,6 @@ test.describe("Sapin de Noel — peint sous le contenu (#1043)", () => {
     await openPage(page, FIXTURE, { width: 1280, height: 720 });
     await attendreReserve(page, "#gabarit");
     const n = await pixelsVisiblesDuSapin(page);
-    console.log(`CALIBRAGE pixelsVisiblesDuSapin = ${n}`);
     expect(
       n,
       `pixels visibles du sapin (seuil ${SEUIL})`,
