@@ -83,7 +83,7 @@ export default defineConfig({
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: 0, // TEMPORAIRE récolte #1044 (job visual > 47 min avec retries:2) — rétabli au commit de récolte suivant
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
