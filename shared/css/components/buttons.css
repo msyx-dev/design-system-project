@@ -6,24 +6,17 @@
 .btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--overlay-white-15), transparent); opacity: 0; transition: opacity var(--duration-slow); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 35%, transparent); }
 .btn-primary:hover::before { opacity: 1; }
-.btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--text); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; border: 1px solid var(--border-color); transition: transform var(--duration-slow) var(--ease-standard), border-color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); cursor: pointer; font-family: var(--font-sans); }
+.btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--text); padding: calc(0.75rem - 1px) 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; border: 1px solid var(--border-color); transition: transform var(--duration-slow) var(--ease-standard), border-color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); cursor: pointer; font-family: var(--font-sans); }
 .btn-secondary:hover { border-color: var(--border-hover); background: color-mix(in srgb, var(--accent) 10%, transparent); transform: translateY(-1px); }
 .btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--accent-light); padding: 0.75rem 1.8rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--fw-semibold); font-size: 0.9rem; border: none; cursor: pointer; transition: color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); font-family: var(--font-sans); }
 .btn-ghost:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 6%, transparent); }
-.btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
-.btn-lg { padding: var(--space-md) var(--space-2xl); font-size: 1rem; border-radius: var(--radius-lg); }
-.btn-xs { padding: 0.3rem 0.7rem; font-size: 0.72rem; border-radius: var(--radius-xs); min-height: 32px; }
-.btn-icon { min-width: 44px; min-height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: border-color var(--duration-slow) var(--ease-standard), color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); font-size: 1rem; }
-.btn-icon:hover { border-color: var(--border-hover); color: var(--text); }
-.btn-icon--danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
-.btn-icon--danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: color-mix(in srgb, var(--danger) 50%, transparent); color: var(--danger-light); }
 
 /* Shell partage — boutons solides avec polish glassmorphism (v2.54.11, #266 theme-aware) */
 .btn-danger, .btn-success, .btn-warning {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.8rem;
+    padding: calc(0.75rem - 1px) 1.8rem; /* #1044 : bordure de 1px retranchée, même hauteur que .btn-primary */
     border-radius: var(--radius-md);
     text-decoration: none;
     font-weight: var(--fw-semibold);
@@ -76,6 +69,27 @@
 /* Texte = token dédié (#968) : --danger-light est partagé avec les statuts et ne peut pas être réglé pour un
    bouton. Le survol ne pose pas de couleur : il peint un fond teinté, et le token est réglé pour ce fond-là. */
 .btn-outline-danger:hover { background: color-mix(in srgb, var(--danger) 8%, transparent); border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
+
+/* Tailles — APRÈS toutes les variantes (#1044) : à spécificité égale, la dernière règle gagne.
+   Déclarées avant la coque .btn-danger/.btn-success/.btn-warning, elles perdaient contre elle :
+   un .btn-danger.btn-sm gardait la taille normale (43px au lieu de 31). .btn-icon reste après elles. */
+.btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
+.btn-lg { padding: var(--space-md) var(--space-2xl); font-size: 1rem; border-radius: var(--radius-lg); }
+.btn-xs { padding: 0.3rem 0.7rem; font-size: 0.72rem; border-radius: var(--radius-xs); min-height: 32px; }
+.btn-icon { min-width: 44px; min-height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: border-color var(--duration-slow) var(--ease-standard), color var(--duration-slow) var(--ease-standard), background-color var(--duration-slow) var(--ease-standard); font-size: 1rem; }
+.btn-icon:hover { border-color: var(--border-hover); color: var(--text); }
+.btn-icon--danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+.btn-icon--danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: color-mix(in srgb, var(--danger) 50%, transparent); color: var(--danger-light); }
+
+/* Parité de hauteur (#1044) : deux .btn-* voisins de même taille ont la même hauteur.
+   - Bordure : une variante bordée (1px) retranche sa bordure de son padding vertical — taille
+     normale dans sa propre règle, --sm et --lg ci-dessous (spécificité 0,2,0). --xs : min-height
+     de 32px, plus haut que le contenu des deux familles, aucune compensation nécessaire.
+   - line-height : un <button> est en `normal` (UA), un <a class="btn-*"> héritait de celui du
+     corps (1.6), 6px plus haut ; `normal` aligne le lien sur le bouton sans bouger les <button>. */
+.btn-primary, .btn-secondary, .btn-ghost, .btn-danger, .btn-success, .btn-warning, .btn-outline-danger { line-height: normal; }
+:is(.btn-secondary, .btn-danger, .btn-success, .btn-warning, .btn-outline-danger).btn-sm { padding-block: calc(0.45rem - 1px); }
+:is(.btn-secondary, .btn-danger, .btn-success, .btn-warning, .btn-outline-danger).btn-lg { padding-block: calc(var(--space-md) - 1px); }
 
 /* Wrappers d'icône gauche/droite (#376) — émis par @msyx-dev/react Button (leftIcon/rightIcon).
    Le gap entre icône et label est porté par le bouton parent (display:inline-flex; gap). */
