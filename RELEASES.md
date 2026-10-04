@@ -1,5 +1,13 @@
 # Releases
 
+## 2.145.3 — 2026-10-04 — Améliorations internes
+
+> Release interne, produite entièrement par l'outil (preuve CA15 bis de msyx-dev/claude-config#543). Aucun changement visible ni de `@msyx-dev/react`.
+
+### Internal
+- Convention `### Internal` du CHANGELOG et note de repli des releases internes (#1036).
+- Le hook `scripts/release-bump.sh` écrit toujours l'entrée `released` de la version, avec la ligne de repli quand le bac `next` est vide (#1037).
+
 ## 2.145.2 — 2026-10-03 — Release outillée du design system
 
 > Première release du design system produite entièrement par l'outil (`version-release.sh` → `scripts/release-bump.sh`), sans édition manuelle — preuve de bout en bout de msyx-dev/claude-config#543 (CA15). Aucun changement de rendu ni de `@msyx-dev/react`.

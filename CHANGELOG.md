@@ -8,6 +8,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+## [2.145.3] - 2026-10-04
+
 ### Internal
 - **Section `### Internal` du CHANGELOG et note de repli de la 2.145.2** — `CLAUDE.md` (convention : sections visibles `Added`/`Changed`/`Fixed`/`Removed`/`Security`, `Internal` pour l'outillage sans effet visible), `CHANGELOG.md` (l'entrée outillage de la 2.145.2 passe de `Changed` à `Internal`), `shared/version-notes.json` + `shared/nav.js` (entrée `released` 2.145.2 « Améliorations internes, aucun changement visible », sans laquelle le déploiement préprod de la 2.145.2 était refusé par le gate §8.6). Décision de Mike sur l'arbitrage de claude-config#543 (CA15).
 - **Le hook de release écrit la note de repli quand le bac `next` est vide (Refs msyx-dev/claude-config#543, tranche 5)** — `scripts/release-bump.sh`, `tests/test-release-bump.sh`, `CLAUDE.md`. `apply` pose désormais toujours `released[0]` pour la version publiée : les lignes du bac `next` s'il en porte (inchangé), sinon la seule ligne « Améliorations internes, aucun changement visible » (type `amelioration`), sous le `--title` de la release ; le badge des notes de version annonce ainsi la version servie. Le refus « `released` porte déjà X.Y.Z » vaut aussi bac vide (il était sauté). Test : bac vide ⇒ `released[0].version` = `--version` avec la note de repli, et le contrôle `fil-de-leau-check.sh` du runtime passe sur la fixture après `apply`, bac vide comme bac rempli (`SKIP` explicite si le runtime est absent, cas de la CI GitHub) ; mutation : écriture du repli neutralisée ⇒ 2 cas rouges. `CLAUDE.md` corrigé : `Security`/`Sécurité` ne compte pas comme visible, au même titre que `Internal`/`Interne`.

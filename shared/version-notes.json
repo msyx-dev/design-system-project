@@ -5,6 +5,17 @@
   },
   "released": [
     {
+      "version": "2.145.3",
+      "date": "2026-10-04",
+      "titre": "Améliorations internes",
+      "highlights": [
+        {
+          "type": "amelioration",
+          "text": "Améliorations internes, aucun changement visible."
+        }
+      ]
+    },
+    {
       "version": "2.145.2",
       "date": "2026-10-03",
       "titre": "Améliorations internes",
