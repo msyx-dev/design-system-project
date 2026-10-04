@@ -3,8 +3,14 @@
    Import : @import url('css/layout.css'); */
 
 /* ===== HEADER ===== */
+/* z-index : STRICTEMENT au-dessus de --z-sticky (#1043). L'en-tete forme un contexte
+   d'empilement : ses menus (.header-dropdown, .header-notif-panel, en --z-floating) sont
+   plafonnes a SA valeur. A egalite avec --z-sticky (150 depuis le retrait de la
+   redeclaration a 100), la guirlande, les ornements, .section-header--sticky et
+   .graph-toolbar — poses plus loin dans le DOM — seraient peints PAR-DESSUS ces menus.
+   +1 conserve l'ordre servi jusqu'ici (100 < 150) ; garde : visual-tests/stacking-scale.spec.ts. */
 .site-header {
-    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 150;
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: calc(var(--z-sticky) + 1);
     background: var(--sidebar-bg); backdrop-filter: blur(24px) saturate(1.5);
     border-bottom: 1px solid var(--border-color);
     display: flex; align-items: center; padding: 0 var(--space-md); gap: var(--space-sm); /* mobile d'abord, enrichi au-delà de 640px (#711, #1022) */

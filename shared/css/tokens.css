@@ -124,8 +124,9 @@
        d'un <dialog> ouvert par showModal(), qui est peint au-dessus de tout le
        document quel que soit le z-index (#934) — la reponse est alors le
        portail, pas l'empilement. */
-    --z-decor: 1;            /* couches decoratives ambiantes : .snowfall — au-dessus du fond, sous tout contenu interactif (#940) */
-    --z-sticky: 150;         /* en-tetes colles : .site-header, .section-header--sticky */
+    --z-decor: 1;            /* nappes decoratives translucides : .snowfall, .frost — peintes AU-DESSUS du contenu en flux (pointer-events: none) (#940) */
+    --z-decor-behind: -1;    /* decor opaque peint SOUS tout le contenu : .festive-character (#1043) — au-dessus du fond de page (canevas), sous tout texte, controle ou carte */
+    --z-sticky: 150;       /* en-tetes colles : .site-header, .section-header--sticky */
     --z-surface: 200;        /* surfaces conteneurs : sidebar, overlay de drawer, panneau de notifs */
     --z-surface-panel: 201;  /* le panneau lui-meme, au-dessus de son propre overlay */
     --z-nav: 300;            /* .bottom-nav fixe */
@@ -270,14 +271,19 @@
     --cat-7: #009d7a;
     --cat-8: #00dbfe;
 
-    /* Z-index scale */
+    /* Z-index — alias historiques HORS echelle doctrinale (#1043).
+       L'echelle qui fait foi est le bloc « Echelle d'empilement (#932/#934) »
+       plus haut, et le tableau §12.1 de docs/DS-PRINCIPLES.md. Ce bloc
+       redeclarait --z-sticky (100), --z-modal (800) et --z-lightbox (1500) dans
+       le MEME :root, apres l'echelle : il l'emportait, et le DS servait 100 et
+       800 la ou la doctrine annoncait 150 et 1000. Ne jamais y redeclarer un
+       jeton de l'echelle : visual-tests/stacking-scale.spec.ts compare les
+       valeurs calculees au tableau §12.1. Les alias restants ne sont consommes
+       par aucun composant du DS ; ils restent publics pour les consommateurs. */
     --z-dropdown: 50;
-    --z-sticky: 100;
     --z-header: 150;
     --z-overlay: 600;
-    --z-modal: 800;
     --z-cmd: 1000;
-    --z-lightbox: 1500;
     --z-max: 9000;
 
     /* Transitions */

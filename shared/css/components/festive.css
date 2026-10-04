@@ -305,13 +305,22 @@
 .btn-candy:hover { transform: translateY(-1px); }
 .btn-candy:active { transform: translateY(0); }
 
-/* ===== SAPIN / PERSONNAGE ILLUSTRE (#940) ===== */
+/* ===== SAPIN / PERSONNAGE ILLUSTRE (#940) =====
+   Peint SOUS le contenu (#1043, arbitrage B) : `--z-decor-behind` (-1) le range, dans le contexte
+   d'empilement racine, juste au-dessus du fond de page et sous tout le contenu, positionne ou non.
+   Aucun contexte d'empilement n'est cree sur le contenu, et l'echelle des surfaces flottantes
+   (DS-PRINCIPLES §12) est inchangee. Le sapin reste visible partout ou rien d'opaque n'est peint
+   au-dessus : fond de page, reserve de fin de page (#1005).
+   Contrat consommateur : le fond de page doit rester celui de <body>, propage au canevas.
+   - Un fond pose sur <html> se peint alors sur la boite de <body>, et donc par-dessus le sapin.
+   - Un ancetre qui forme un contexte d'empilement avec un fond opaque masque le sapin.
+   Garde : visual-tests/festive-under-content.spec.ts. */
 .festive-character {
     position: fixed;
     right: clamp(8px, 2vw, 32px);
     bottom: 0;
     width: var(--character-width, clamp(130px, 15vw, 210px));
-    z-index: var(--z-decor);
+    z-index: var(--z-decor-behind);
     pointer-events: none;
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35)); /* allow-hardcoded: ombre portee de l'illustration */
     animation: characterBob 5.5s ease-in-out infinite;
