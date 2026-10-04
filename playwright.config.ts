@@ -75,6 +75,7 @@ export default defineConfig({
     "**/code-block-whitespace.spec.ts",
     "**/demo-note.spec.ts",
     "**/notif-panel-viewport-1028.spec.ts",
+    "**/scroll-padding-1039.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

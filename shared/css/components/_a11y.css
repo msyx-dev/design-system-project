@@ -76,5 +76,7 @@ a[aria-disabled="true"] {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+    /* #1039 : le défilement doux de base.css (html) n'était pas coupé */
+    html { scroll-behavior: auto !important; }
 }
 
