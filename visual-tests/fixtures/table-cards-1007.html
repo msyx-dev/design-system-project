@@ -11,6 +11,10 @@
    - #cards : `table.table-cards` (libellés `.table-cards-label` en aria-hidden, rôles ARIA
      explicites, <caption>, cellule d'actions) ;
    - #twin  : le JUMEAU, sans `.table-cards`, sans libellés, sans rôles ni classe d'actions.
+     Jumeau = tableau nu + contrat de la cellule d'actions (#1044) : dès 768px, sa dernière
+     cellule reçoit, par le bloc <style> ci-dessous limité à #twin, les mêmes `nowrap`,
+     `vertical-align` et écart `--space-sm` que `.table-cards-actions`. Sans ce bloc, le
+     jumeau empile ses boutons et le test d'égalité des boîtes ne compare plus la même chose.
   Au-dessus de 768px le test exige que les boîtes de #cards soient celles de #twin au
   demi-pixel près : le tableau restauré ne dérive pas de la règle globale `td`.
 
@@ -19,6 +23,14 @@
   (jean-baptiste.de-la-fontaine-dupont@…) est le vrai risque de débordement à 375px.
 -->
 <link rel="stylesheet" href="/shared/styles.css">
+<style>
+  /* jumeau = tableau nu + contrat de la cellule d'actions (#1044) */
+  @media (min-width: 768px) {
+    #twin td:last-child { white-space: nowrap; }
+    #twin td:last-child > :is(button, a) { vertical-align: middle; }
+    #twin td:last-child > :is(button, a) ~ :is(button, a) { margin-inline-start: var(--space-sm); }
+  }
+</style>
 <script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
 </head>
 <body>
