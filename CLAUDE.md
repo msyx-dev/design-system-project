@@ -100,8 +100,9 @@ Le repo distribue **deux artefacts indépendants** :
 - **PR DS** (`shared/css/**`, `shared/*.js`, `index.html`, `pages/**`, `site.html`) → entrée sous `## [Unreleased]` de `CHANGELOG.md`.
 - **PR React** (`packages/react/**`) → entrée sous `## [Unreleased]` de `packages/react/RELEASES.md`. **Sans entrée, elle ne sera pas publiée** : la release ne bumpe React que si cette section n'est pas vide.
 - **PR touchant les deux** (cas rare) → les 2 entrées, avec mention croisée.
+- **Sections du `CHANGELOG.md`** : `### Added` / `### Changed` / `### Fixed` / `### Removed` / `### Security` = changement **visible** par un utilisateur du DS ; `### Internal` = outillage, CI, tests, docs internes, **sans effet visible**. Une release dont `[Unreleased]` ne porte que de l'`Internal` reçoit dans `shared/version-notes.json` la note de repli « Améliorations internes, aucun changement visible » ; une release qui porte du visible exige sa note produit dans le bac `next` avant d'être publiée (sinon le déploiement préprod est refusé, gate §8.6).
 - **Release** : `version-release.sh` → `scripts/release-bump.sh` (`mode=pr`, `vtag=no`) bumpe les 10 sources, régénère `themes.css`, scelle les notes de version (bac `next` → `released[0]`), les compteurs, écrit l'entrée de `RELEASES.md` racine et bumpe la prérelease React si besoin ; le tag `react-v…` est posé par `--finalize`. Le `--title` de la release devient le titre affiché dans le badge des notes de version : l'écrire pour un utilisateur.
-- **Transition** : tant que la tranche 2 de claude-config#543 n'est pas sur `main`, la release reste consolidée à la main (précédent #1019/#1032).
+- **Release outillée prouvée** (CA15 de claude-config#543, 2.145.2, PR #1035) : plus aucune release à la main.
 
 **Anti-pattern** : ne JAMAIS ajouter d'entrée `@msyx-dev/react` (composants React, versions `3.x-alpha`) dans le `RELEASES.md` racine. Inversement : ne JAMAIS ajouter d'entrée DS CSS (tokens, modules CSS, sync.sh) dans `packages/react/RELEASES.md`.
 
@@ -169,7 +170,7 @@ Checklist a suivre pour tout nouveau composant (agent coder ou humain) :
 6. **Docs** :
    - `docs/ARCHITECTURE.md` : ajouter dans la structure + section composants JS si init*
    - **Ne PAS éditer `CLAUDE.md`** pour un composant : la liste des composants vit dans `shared/components-registry.json` (source unique, dérivée par `bin/generate-registry.js`)
-   - `CHANGELOG.md` `[Unreleased]` : entree Added/Changed (le `RELEASES.md` racine est écrit par la release)
+   - `CHANGELOG.md` `[Unreleased]` : entree Added/Changed/Fixed si visible, `Internal` sinon (le `RELEASES.md` racine est écrit par la release)
 7. **Qualite** :
    - Anti-FOUC : le composant ne doit pas flasher au chargement (script inline <head>)
    - Accessibilite : aria-labels, role, keyboard navigation si interactif
