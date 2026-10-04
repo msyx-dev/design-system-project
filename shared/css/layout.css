@@ -242,8 +242,8 @@
    `:where()` garde la spécificité d'origine (0,1,1) : l'ordre de cascade avec la règle mobile ne change pas. */
 .main > section,
 .main > :where(.lazy-loaded) > section { padding: 3rem 1.5rem; border-bottom: 1px solid var(--border-color); }
-.main > section[id],
-.main > :where(.lazy-loaded) > section[id] { scroll-margin-top: calc(var(--header-h) + var(--space-md)); }
+/* Décalage des ancres de section sous l'en-tête : porté par `html:has(.site-header) { scroll-padding-top }`
+   (base.css, #1039) — l'ancien scroll-margin-top s'y serait ADDITIONNÉ (144 px au lieu de 72). */
 .main > section:last-of-type,
 .main > :where(.lazy-loaded) > section:last-of-type { border-bottom: none; }
 .main .section-header { margin-bottom: var(--space-2xl); }

@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "correction",
+        "text": "Au clavier, le champ ou le bouton qui reçoit le focus n'est plus caché sous l'en-tête quand la page remonte ; un lien vers une section l'affiche aussi juste sous l'en-tête."
+      }
+    ]
   },
   "released": [
     {

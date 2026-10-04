@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Fixed
+- **Un élément ramené à l'écran par le haut passait sous l'en-tête fixe (#1039)** — `shared/css/base.css`, `shared/css/layout.css`. `html` ne portait aucun `scroll-padding-top` : le navigateur ignorait `.site-header` (fixe, `--header-h`) quand il faisait défiler la page vers un élément — `scrollIntoView({ block: "nearest" })`, focus qui remonte par Maj+Tab, ancre `#…` — et le contrôle atterrissait derrière l'en-tête (WCAG 2.2 — 2.4.11 ; mesuré chez tirokado : `elementFromPoint` au centre du bouton renvoyait l'en-tête). `html:has(.site-header) { scroll-padding-top: calc(var(--header-h) + var(--space-md)) }` : ciblé par `:has()`, une page sans en-tête fixe ne subit aucun décalage. Le `scroll-margin-top` des sections de la vitrine (`.main > section[id]`, bloc showcase), qui s'y serait additionné (144 px au lieu de 72), est retiré : les ancres de la vitrine restent à 72 px. Test navigateur `visual-tests/scroll-padding-1039.spec.ts` (+ fixture), 375 et 1280 px : `scrollIntoView` « au plus près », Maj+Tab, ancre, page sans en-tête, ancres et scroll-spy de la vitrine ; mutation : règle retirée → 10 cas rouges sur 17 (l'élément reçu au centre du contrôle est l'en-tête), `scroll-margin-top` vitrine remis → 2 cas rouges (144 px).
+
 ## [2.145.3] - 2026-10-04
 
 ### Internal

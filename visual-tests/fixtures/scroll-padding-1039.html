@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>En-tête fixe et défilement vers un élément — fixture #1039</title>
+<!--
+  Fixture de `visual-tests/scroll-padding-1039.spec.ts` (#1039).
+
+  Défaut : `.site-header` est `position: fixed` (layout.css), haut de `--header-h`. Sans
+  `scroll-padding-top` sur `html`, le navigateur ignore l'en-tête quand il fait défiler la page
+  vers un élément : `scrollIntoView({ block: "nearest" })`, focus qui remonte par Maj+Tab, ancre
+  `#…`. Le contrôle atterrit en haut de la fenêtre, DERRIÈRE l'en-tête (mesuré chez tirokado :
+  `elementFromPoint` au centre du bouton renvoyait `<header class="site-header">`).
+
+  Le markup de l'en-tête reprend celui de `<SiteHeader>` (@msyx-dev/react) : marque, espaceur,
+  zone de contrôles. `nav.js` n'est PAS chargé : il réécrirait l'en-tête, et le défaut ne dépend
+  que du CSS du DS (`/shared/styles.css`).
+
+  `?entete=absent` (liste blanche) retire l'en-tête : la règle est ciblée
+  `html:has(.site-header)`, une page sans en-tête fixe ne doit subir aucun décalage.
+
+  Ordre de tabulation (document) : contrôle de l'en-tête, #ctrl-haut, #ctrl-bas, #lien-cible.
+  Les espaceurs rendent la page bien plus haute que la fenêtre aux deux largeurs testées.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+    .fixture-1039 { padding: calc(var(--header-h) + var(--space-lg)) var(--space-md) var(--space-lg); }
+    .fixture-1039 .espaceur { height: 150vh; }
+    .fixture-1039 .espaceur-court { height: 40vh; }
+</style>
+</head>
+<body>
+<header class="site-header">
+    <span class="header-logo" aria-label="Accueil"><span class="brand-wordmark">design-system</span></span>
+    <span class="header-spacer"></span>
+    <div class="header-controls">
+        <button type="button" class="btn btn-secondary btn-sm" id="ctrl-entete">Menu</button>
+    </div>
+</header>
+
+<main class="fixture-1039">
+    <p>Page longue : un contrôle, une cible d'ancre et un lien vers cette cible, séparés par des espaceurs.</p>
+    <div class="espaceur"></div>
+    <button type="button" class="btn btn-primary" id="ctrl-haut">Contrôle du haut</button>
+    <div class="espaceur-court"></div>
+    <button type="button" class="btn btn-secondary" id="ctrl-bas">Contrôle du bas</button>
+    <div class="espaceur"></div>
+    <h2 id="cible">Cible de l'ancre</h2>
+    <div class="espaceur"></div>
+    <p><a href="#cible" id="lien-cible">Remonter à la cible</a></p>
+    <div class="espaceur"></div>
+</main>
+
+<script>
+    if (new URLSearchParams(location.search).get('entete') === 'absent') {
+        document.querySelector('.site-header').remove();
+    }
+</script>
+</body>
+</html>
