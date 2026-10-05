@@ -203,6 +203,42 @@ async function ouvrir(page: Page, url: string, width: number, theme = "msyx") {
   }, theme);
   await page.goto(url, { waitUntil: "networkidle" });
   await page.evaluate(() => document.fonts.ready);
+  await rendusAsynchrones(page, url);
+}
+
+/** Délai d'attente des rendus asynchrones (la grille serveur répond en 600 ms). */
+const DELAI_RENDU = 10_000;
+
+/**
+ * Attend les rendus que la page termine APRÈS `networkidle`. Seul cas au 2026-10-05 : la grille
+ * serveur de `data.html` (`.data-grid[data-server]`) ne remplit sa pagination
+ * (`.data-grid-pagination`, vide dans le HTML) qu'au retour d'un fetch simulé par un
+ * `setTimeout` de 600 ms (`initServerDataGrid`, `shared/components.js`). `networkidle` ne compte
+ * que le réseau : la mesure partait parfois avant ce rendu (CA9 instable en CI, #1053) et CA7
+ * mesurait alors une pagination absente sans le voir. Aucune grille serveur : retour immédiat.
+ */
+async function rendusAsynchrones(page: Page, url: string) {
+  try {
+    await page.waitForFunction(
+      () =>
+        [
+          ...document.querySelectorAll<HTMLElement>(".data-grid[data-server]"),
+        ].every((g) => {
+          const wrap = g.closest(".data-grid-wrap");
+          return (
+            wrap !== null &&
+            wrap.getAttribute("aria-busy") === "false" &&
+            wrap.querySelector(".data-grid-pagination .page-btn") !== null
+          );
+        }),
+      undefined,
+      { timeout: DELAI_RENDU },
+    );
+  } catch {
+    throw new Error(
+      `${url} : grille serveur non rendue après ${DELAI_RENDU} ms (aria-busy ou pagination vide)`,
+    );
+  }
 }
 
 async function pointeur(page: Page) {
@@ -1211,6 +1247,24 @@ test.describe("Pointeur fin — rien ne change au bureau (#1051)", () => {
           coarse: false,
           fine: true,
         });
+        // Garde propre à CA9 (#1053) : le plancher de paginations RENDUES (largeur non nulle,
+        // boutons présents) est atteint avant la mesure, quel que soit le script qui les remplit.
+        // Le plancher lui-même ne bouge pas : le délai expiré échoue avec ce message.
+        try {
+          await page.waitForFunction(
+            (min) =>
+              [...document.querySelectorAll<HTMLElement>(".pagination")].filter(
+                (p) =>
+                  p.getBoundingClientRect().width > 0 && p.children.length > 0,
+              ).length >= min,
+            PLANCHER[url],
+            { timeout: DELAI_RENDU },
+          );
+        } catch {
+          throw new Error(
+            `${nom} : moins de ${PLANCHER[url]} pagination(s) rendue(s) après ${DELAI_RENDU} ms`,
+          );
+        }
         const r = await page.evaluate(() => {
           const out = {
             n: 0,
