@@ -47,6 +47,14 @@
  *     `chip-filter-active|*` (2,83 à 3,17) ;
  *   - M6 : `--chip-accent-fg` retiré de themes/acssi.json `modes.dark` → test 3 rouge, qui nomme
  *     « themes/acssi.json modes.dark : --chip-accent-fg absent ».
+ *   t3 (8 autres règles texte accent sur teinte accent, token `--accent-tint-fg` réglé à 14 %) :
+ *   - M7 : `.version-notes .timeline-content h4 .badge` remis sur `var(--accent-light)` → 8 sondes
+ *     rouges : msyx-light `version-notes-badge|*` (4,05 à 4,40), auchan-light (3,45 à 3,90) ;
+ *   - M8 : `.breadcrumbs a:hover` remis sur `var(--accent-light)` → 4 sondes rouges (preuve que le
+ *     SURVOL est bien mesuré) : msyx-light `breadcrumbs-link-hover|primary-light` (4,42), auchan-light
+ *     `|primary-light` (3,96), `|page` (4,34), `|surface` (4,49) ;
+ *   - M9 : `--accent-tint-fg` retiré de themes/auchan.json `modes.light` → test 3 rouge, qui nomme
+ *     « themes/auchan.json modes.light : --accent-tint-fg absent ».
  */
 import { test, expect } from "@playwright/test";
 import type { Page, TestInfo } from "@playwright/test";
