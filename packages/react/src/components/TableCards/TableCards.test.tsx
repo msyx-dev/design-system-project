@@ -17,7 +17,8 @@ import {
 // `.table-cards .table-cards-actions`) et sur le contrat a11y (libellé
 // `aria-hidden`, en-têtes exposés, rôles explicites). jsdom n'applique aucune
 // mise en page : le recouvrement et le seuil 768 px sont mesurés en vrai
-// navigateur par `visual-tests/table-cards.spec.ts`.
+// navigateur par `visual-tests/table-cards.spec.ts`, le seuil 1024 px de
+// `breakpoint="lg"` par `visual-tests/table-cards-lg-1052.spec.ts`.
 
 afterEach(cleanup);
 
@@ -651,6 +652,66 @@ describe("TableCards — tableau de saisie (#1008)", () => {
   it("n'a aucune violation axe (composition en état d'erreur)", async () => {
     const { container } = renderSaisie();
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe("TableCards — seuil des cartes (breakpoint, #1052)", () => {
+  // Seule la CLASSE est vérifiable ici : le seuil de 1024 px qu'elle déclenche
+  // est mesuré en vrai navigateur par `visual-tests/table-cards-lg-1052.spec.ts`.
+  it('par défaut et avec breakpoint="md" : class="table-cards" exactement, sans .table-cards--lg', () => {
+    const { container, rerender } = renderTable();
+    const table = () => container.querySelector("table") as HTMLElement;
+    expect(table()).toHaveAttribute("class", "table-cards");
+    expect(table()).not.toHaveClass("table-cards--lg");
+    rerender(
+      <TableCards
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        breakpoint="md"
+      />,
+    );
+    expect(table()).toHaveAttribute("class", "table-cards");
+    expect(container.querySelector(".table-cards--lg")).toBeNull();
+  });
+
+  it('breakpoint="lg" pose .table-cards--lg sur le <table>, jamais sur .table-wrap', () => {
+    const { container } = renderTable({
+      breakpoint: "lg",
+      className: "ma-classe",
+    });
+    const wrap = container.firstElementChild as HTMLElement;
+    const table = wrap.querySelector("table") as HTMLElement;
+    expect(table).toHaveAttribute("class", "table-cards table-cards--lg");
+    expect(wrap).toHaveAttribute("class", "table-wrap ma-classe");
+    expect(container.querySelectorAll(".table-cards--lg")).toHaveLength(1);
+  });
+
+  it('editable + breakpoint="lg" : les 3 classes sur le <table> ; editable + "md" : sans --lg', () => {
+    const { container, rerender } = renderTable({
+      editable: true,
+      breakpoint: "lg",
+    });
+    const table = () => container.querySelector("table") as HTMLElement;
+    expect(table()).toHaveClass(
+      "table-cards",
+      "table-cards--editable",
+      "table-cards--lg",
+    );
+    expect(container.firstElementChild).toHaveAttribute("class", "table-wrap");
+    rerender(
+      <TableCards
+        columns={columns}
+        rows={rows}
+        getRowKey={getRowKey}
+        editable
+        breakpoint="md"
+      />,
+    );
+    expect(table()).toHaveAttribute(
+      "class",
+      "table-cards table-cards--editable",
+    );
   });
 });
 
