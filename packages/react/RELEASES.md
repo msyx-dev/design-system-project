@@ -6,6 +6,8 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+## v3.0.0-alpha.65 — 2026-10-05 — Textes lisibles, cibles tactiles et tableaux larges
+
 > Mention croisée : le modificateur CSS `.table-cards--lg` (bloc de restauration à 1024 px, démo, limite avec barre latérale) est décrit dans l'entrée #1052 de `../../CHANGELOG.md`, `[Unreleased]`.
 
 ### Added
