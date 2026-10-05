@@ -32,7 +32,9 @@
  * brand.css s'applique). Preuve par mutation : remettre `639px` dans brand.css rend
  * rouge le cas 640 px (le wordmark reste visible), le cas 641 px reste vert.
  * Le `padding` / `gap` du `.site-header` (reecrits mobile-first, layout.css) sont
- * mesures aux memes largeurs : 640 px compact, 641 px enrichi.
+ * mesures : compacts a 640 et 768 px, enrichis a 769 px (#1051 : avec le burger, ils
+ * faisaient deborder l'en-tete entre 641 et 768 px). Pour la meme raison, DANS
+ * `.site-header`, le wordmark accompagne d'un pictogramme attend 769 px.
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -175,16 +177,17 @@ test.describe("#1009 — wordmark du header selon la presence d'un pictogramme",
     for (const selector of [
       WORDMARK_PICTO_HORS_SITE_HEADER,
       WORDMARK_AUTONOME,
-      WORDMARK_AVEC_PICTO,
     ]) {
       await expect(page.locator(selector), selector).toBeVisible();
       const b = await box(page, selector);
       expect(b!.width, `${selector} largeur`).toBeGreaterThan(0);
       expect(b!.height, `${selector} hauteur`).toBeGreaterThan(0);
     }
+    // #1051 : DANS `.site-header`, le wordmark accompagne d'un pictogramme attend 769 px.
+    await expect(page.locator(WORDMARK_AVEC_PICTO)).toBeHidden();
   });
 
-  test("640 / 641 px — .site-header : padding et gap compacts a 640 px, enrichis a 641 px (#1022)", async ({
+  test("640 / 768 / 769 px — .site-header : padding et gap compacts jusqu'a 768 px, enrichis a 769 px (#1022, #1051)", async ({
     page,
   }) => {
     // Valeurs attendues lues sur les tokens eux-memes (pas de px en dur ici).
@@ -215,7 +218,10 @@ test.describe("#1009 — wordmark du header selon la presence d'un pictogramme",
     expect(compact.paddingLeft).toBe(compact.md);
     expect(compact.paddingRight).toBe(compact.md);
     expect(compact.gap).toBe(compact.sm);
-    const rich = await read(SEUIL_PLUS_1);
+    const compact768 = await read({ width: 768, height: 800 });
+    expect(compact768.paddingLeft).toBe(compact768.md);
+    expect(compact768.gap).toBe(compact768.sm);
+    const rich = await read({ width: 769, height: 800 });
     expect(rich.paddingLeft).toBe(rich.lg);
     expect(rich.paddingRight).toBe(rich.lg);
     expect(rich.gap).toBe(rich.mdGap);

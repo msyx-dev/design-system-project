@@ -714,12 +714,17 @@ html.theme-transitioning * {
    et le sélecteur de thème (opt-in), pour garder logo + burger + mode + cloche +
    feedback + avatar. Le wordmark n'est masqué que s'il est accompagné d'un
    pictogramme `.header-logo-img` (#1009) : sans pictogramme, il est la seule marque.
-   Mobile-first (#1022) : le `padding` et le `gap` compacts sont la BASE de `.site-header` ;
-   l'enrichissement vit dans le `min-width` (complément exact : 640 + 0.02 = 640.02px,
-   DS-PRINCIPLES §4). Seuls les 3 masquages restent en `max-width` : leur `display`
-   natif au retour ne s'écrit pas sans recopier celui d'un autre composant. */
+   Mobile-first (#1022) : le `padding` et le `gap` compacts sont la BASE de `.site-header`.
+   #1051 : leur enrichissement et le wordmark (à côté d'un pictogramme) attendent le cran
+   768.02px (bloc bp-md, plus bas), où le burger disparaît. Avec le burger, wordmark + badge +
+   sélecteur de thème ne tenaient pas avant 738px (MSYX) et 780px (Noël) au pointeur fin :
+   l'en-tête débordait et le burger était écrasé jusqu'à 19px. Sans le wordmark (141px) ni
+   l'espacement large (56px), il reste 58px de marge à 641px en Noël (36 avec le
+   `.user-menu-trigger` de React). Le badge et le sélecteur reviennent toujours à 640.02px ; ces
+   2 masquages restent en `max-width` : leur `display` natif au retour ne s'écrit pas sans
+   recopier celui d'un autre composant. */
+.site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: none; } /* #1051 : rendu au cran 768.02px */
 @media (min-width: 640.02px) { /* seuil composant : 640px, compaction du header #711 */
-    .site-header { padding: 0 var(--space-lg); gap: var(--space-md); }
     /* #1028 : au-dessus de 640 px le panneau retrouve son ancrage sous la cloche, aligné à droite
        de sa zone (300 px, hérités du bloc 480.02px ci-dessus). */
     .site-header .header-notif-panel { position: absolute; top: calc(100% + var(--space-sm)); right: 0; }
@@ -727,11 +732,11 @@ html.theme-transitioning * {
 /* Pointeur grossier (#1051) — cibles de 44px dans l'en-tête de 56px (WCAG 2.5.5). Les boîtes
    elles-mêmes sont agrandies, pas une zone ::after : l'avatar porte `overflow: hidden` (elle y
    serait rognée) et une zone ajoutée chevaucherait la voisine. L'espacement se resserre pour
-   faire tenir 7 contrôles (thème Noël) dès 360px. Placé APRÈS le bloc 640.02px (spécificité
-   égale, ordre) : la compaction tient tant que le burger est affiché, car entre 640 et 768px le
-   wordmark, le badge et le sélecteur de thème reviennent (mesure : 52px de débordement à 768px
-   en Noël sans elle). Le bloc 768.02px rend le padding et le gap habituels. Limite : 320px à
-   7 contrôles ; bande 641-716px (Noël) déjà débordante au pointeur fin, hors #1051. */
+   faire tenir 7 contrôles (thème Noël) dès 360px. La compaction tient tant que le burger est
+   affiché : entre 640 et 768px, le badge et le sélecteur de thème reviennent (mesure : 52px de
+   débordement à 768px en Noël sans elle). Le bloc bp-md 768.02px, placé APRÈS (spécificité
+   égale, ordre), rend le padding et le gap habituels aux deux pointeurs. Limite : 320px à
+   7 contrôles (Noël). */
 @media (pointer: coarse) {
     .site-header { padding-inline: var(--space-sm); gap: var(--space-xs); }
     .site-header .header-user-zone { gap: var(--space-xs); }
@@ -739,12 +744,10 @@ html.theme-transitioning * {
     .site-header .theme-switcher-select { min-height: var(--touch-target); }
     .header-notification, .header-avatar-trigger { width: var(--touch-target); height: var(--touch-target); }
 }
-@media (pointer: coarse) and (min-width: 768.02px) { /* bp-md : le burger disparaît, l'espacement habituel revient */
-    .site-header { padding-inline: var(--space-lg); gap: var(--space-md); }
+@media (pointer: coarse) and (min-width: 768.02px) { /* bp-md : le burger disparaît, l'écart habituel de la zone utilisateur revient (padding et gap : bloc bp-md plus bas) */
     .site-header .header-user-zone { gap: var(--space-sm); }
 }
 @media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
-    .site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: none; }
     .site-header .version-badge { display: none; }
     .site-header .header-controls .theme-switcher { display: none; }
 }
@@ -767,6 +770,8 @@ html.theme-transitioning * {
    enrichies ici ; seule la sidebar hors écran (avec son voile) reste en `max-width` ci-dessous. */
 @media (min-width: 768.02px) { /* bp-md */
     .site-header .header-burger { display: none; }
+    .site-header { padding: 0 var(--space-lg); gap: var(--space-md); } /* #1051 : enrichi ici, plus à 640.02px (voir la compaction du header) */
+    .site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: inline-block; } /* #1051 : display de .brand-wordmark (brand.css) */
     /* @strip:showcase-start */
     .main > section,
     .main > :where(.lazy-loaded) > section { padding: var(--space-3xl) var(--space-2xl); }

@@ -359,6 +359,45 @@ function verifierEnTete(m: EnTete, cas: string, cibles = CIBLES_ENTETE) {
   expect.soft(m.hauteur, `${cas} : l'en-tête garde 56 px`).toBe(56);
 }
 
+/** Monte un `.user-menu-trigger` (identité de `<SiteHeader>` React, balisage de UserMenu.tsx,
+ *  nœud par nœud) à la place de l'avatar de nav.js. */
+async function monterUserMenu(page: Page) {
+  await page.evaluate(() => {
+    const avatar = document.querySelector(
+      ".site-header .header-avatar-trigger",
+    )!;
+    const menu = document.createElement("div");
+    menu.className = "user-menu";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "user-menu-trigger";
+    btn.setAttribute("aria-label", "Menu utilisateur — Preview");
+    const rond = document.createElement("span");
+    rond.className = "user-menu-avatar";
+    rond.textContent = "P";
+    const caret = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    caret.setAttribute("class", "user-menu-caret");
+    caret.setAttribute("viewBox", "0 0 16 16");
+    btn.append(rond, caret);
+    menu.append(btn);
+    avatar.replaceWith(menu);
+  });
+}
+
+/** CA8 — bande où le burger est affiché ET où le badge et le sélecteur de thème sont revenus. */
+const BANDE = [641, 700, 740, 767, 768];
+
+/** Le wordmark de l'en-tête est-il affiché ? */
+async function wordmarkVisible(page: Page) {
+  return page.evaluate(() => {
+    const w = document.querySelector<HTMLElement>(".site-header .brand-wordmark");
+    return !!w && w.checkVisibility() && w.getBoundingClientRect().width > 0;
+  });
+}
+
 test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", () => {
   test.use({ hasTouch: true, isMobile: true });
 
@@ -644,29 +683,7 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
     // (avatar 32 px + chevron) à la place de `.header-avatar-trigger`. On la monte à sa place,
     // avec le balisage de UserMenu.tsx, nœud par nœud.
     await ouvrir(page, "/pages/navigation.html", 375, "noel");
-    await page.evaluate(() => {
-      const avatar = document.querySelector(
-        ".site-header .header-avatar-trigger",
-      )!;
-      const menu = document.createElement("div");
-      menu.className = "user-menu";
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "user-menu-trigger";
-      btn.setAttribute("aria-label", "Menu utilisateur — Preview");
-      const rond = document.createElement("span");
-      rond.className = "user-menu-avatar";
-      rond.textContent = "P";
-      const caret = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg",
-      );
-      caret.setAttribute("class", "user-menu-caret");
-      caret.setAttribute("viewBox", "0 0 16 16");
-      btn.append(rond, caret);
-      menu.append(btn);
-      avatar.replaceWith(menu);
-    });
+    await monterUserMenu(page);
     const m = await enTete(page);
     expect(
       m.boites.filter((b) => b.sel === ".user-menu-trigger").length,
@@ -703,6 +720,89 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
       ]);
     }
   });
+  test("CA8. Bande 641-768 px (tactile) : en-tête sans débordement, burger à 44 px, wordmark reporté à 769 px", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    // Mesure t5 (2026-10-05, avant correctif) : Noël 683 px de contenu à 641 px, burger écrasé à
+    // 19 px jusqu'à ~700 px ; MSYX burger à 19 px à 641 px.
+    for (const theme of ["msyx", "noel"])
+      for (const width of BANDE) {
+        await ouvrir(page, "/pages/navigation.html", width, theme);
+        const m = await enTete(page);
+        const cas = `${theme} ${width} px (tactile)`;
+        expect(
+          m.boites.some((b) => b.sel === ".header-burger"),
+          `${cas} : burger affiché`,
+        ).toBe(true);
+        expect
+          .soft(await wordmarkVisible(page), `${cas} : wordmark reporté à 769 px`)
+          .toBe(false);
+        verifierEnTete(m, cas, [
+          ...CIBLES_ENTETE,
+          ".theme-switcher-select",
+          ".version-badge",
+        ]);
+      }
+  });
+
+  test("CA8. Croix de la recherche (375 px) : zone de 44 px en ::after, croix inchangée, champ cliquable hors de la zone", async ({
+    page,
+  }) => {
+    await ouvrir(page, "/pages/formulaires.html", 375);
+    expect((await pointeur(page)).coarse, "émulation tactile active").toBe(true);
+    const r = await page.evaluate(() => {
+      const out = {
+        n: 0,
+        boites: [] as string[],
+        zones: [] as string[],
+        champ: [] as string[],
+      };
+      for (const wrap of document.querySelectorAll<HTMLElement>(
+        ".search-input-wrap",
+      )) {
+        const input = wrap.querySelector<HTMLInputElement>(".search-input");
+        const btn = wrap.querySelector<HTMLElement>(".search-clear");
+        if (!input || !btn) continue;
+        // État « texte saisi » : components.js retire `hidden` (sans l'événement, aucune liste
+        // de suggestions ne s'ouvre par-dessus la recherche suivante).
+        btn.classList.remove("hidden");
+        wrap.scrollIntoView({ block: "center" });
+        const b = btn.getBoundingClientRect();
+        if (b.width === 0 || !btn.checkVisibility()) continue;
+        out.n++;
+        const nom = input.placeholder || input.getAttribute("aria-label") || "?";
+        if (Math.abs(b.width - 28) > 0.5 || Math.abs(b.height - 28) > 0.5)
+          out.boites.push(`${nom} ${b.width}×${b.height}`);
+        const cx = b.left + b.width / 2;
+        const cy = b.top + b.height / 2;
+        const sur = (x: number, y: number) =>
+          document.elementFromPoint(x, y)?.closest(".search-clear") === btn;
+        let h = 0;
+        let v = 0;
+        for (let d = -30; d <= 30; d += 0.5) {
+          if (sur(cx + d, cy)) h += 0.5;
+          if (sur(cx, cy + d)) v += 0.5;
+        }
+        if (h < 43.5 || v < 43.5) out.zones.push(`${nom} ${h}×${v}`);
+        // Le champ reste la cible 2 px à gauche de la zone, et en son centre.
+        const i = input.getBoundingClientRect();
+        for (const [x, y] of [
+          [cx - 24, cy],
+          [i.left + i.width / 2, i.top + i.height / 2],
+        ])
+          if (document.elementFromPoint(x, y) !== input)
+            out.champ.push(`${nom} (${x.toFixed(1)}, ${y.toFixed(1)})`);
+      }
+      return out;
+    });
+    console.log(`[touch-targets-1051 CA8] ${r.n} croix de recherche mesurées`);
+    expect(r.n, "croix de recherche mesurées (garde)").toBeGreaterThanOrEqual(4);
+    expect.soft(r.boites, "croix inchangée (28×28)").toEqual([]);
+    expect.soft(r.zones, `zone ≥ ${TARGET} px le long des médianes`).toEqual([]);
+    expect.soft(r.champ, "le champ reste cliquable hors de la zone").toEqual([]);
+  });
+
   test("CA7. Seconde passe (375 px) : interrupteurs, croix des tags, fichiers, recherche compacte, filtres et pagination", async ({
     page,
   }) => {
@@ -991,5 +1091,61 @@ test.describe("Pointeur fin — rien ne change au bureau (#1051)", () => {
       Math.abs(input!.h - INPUT_H),
       `.input : ${INPUT_H} px de haut (±1), mesuré ${input!.h}`,
     ).toBeLessThanOrEqual(1);
+  });
+
+  test("CA8. Bande 641-768 px (souris) : en-tête sans débordement, burger non écrasé ; 375, 769 et 1280 px inchangés", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    // Mesure t5 (2026-10-05, avant correctif) : contenu de 689 px (MSYX) et 731 px (Noël) à
+    // 641 px, burger écrasé à 19 px ; il fallait 738 px (MSYX) et 780 px (Noël) pour tout loger.
+    const CAS: { theme: string; width: number; react?: boolean }[] = [
+      ...["msyx", "noel"].flatMap((theme) =>
+        BANDE.map((width) => ({ theme, width })),
+      ),
+      // <SiteHeader> React : `.user-menu-trigger` (56 px) à la place de l'avatar (34 px).
+      { theme: "noel", width: 641, react: true },
+    ];
+    for (const c of CAS) {
+      await ouvrir(page, "/pages/navigation.html", c.width, c.theme);
+      if (c.react) await monterUserMenu(page);
+      const m = await enTete(page);
+      const nom = `${c.theme} ${c.width} px${c.react ? " React" : ""} (souris)`;
+      expect(m.coarse, `${nom} : pointeur fin`).toBe(false);
+      const burger = m.boites.find((b) => b.sel === ".header-burger");
+      expect(burger, `${nom} : burger affiché`).toBeDefined();
+      expect
+        .soft(burger!.w, `${nom} : burger non écrasé (44 px)`)
+        .toBeGreaterThanOrEqual(TARGET - 0.01);
+      expect
+        .soft(m.scrollWidth, `${nom} : .site-header ne déborde pas`)
+        .toBeLessThanOrEqual(m.clientWidth);
+      const droite = Math.max(...m.boites.map((b) => b.x + b.w));
+      expect
+        .soft(droite, `${nom} : dernier contrôle dans la marge droite`)
+        .toBeLessThanOrEqual(m.innerWidth - m.padEnd + 0.01);
+      expect
+        .soft(chevauchements(m.boites), `${nom} : aucune paire ne se chevauche`)
+        .toEqual([]);
+      expect
+        .soft(await wordmarkVisible(page), `${nom} : wordmark reporté à 769 px`)
+        .toBe(false);
+    }
+    // Bornes : 375 et 1280 px (largeurs de la VR) et 769 px gardent leurs valeurs d'avant t5.
+    for (const [width, pad, gap, wm] of [
+      [375, 16, 8, false],
+      [769, 24, 16, true],
+      [1280, 24, 16, true],
+    ] as const) {
+      await ouvrir(page, "/pages/navigation.html", width);
+      const s = await page.evaluate(() => {
+        const cs = getComputedStyle(document.querySelector(".site-header")!);
+        return [parseFloat(cs.paddingLeft), parseFloat(cs.columnGap)];
+      });
+      expect.soft(s, `${width} px : padding et gap de l'en-tête`).toEqual([pad, gap]);
+      expect
+        .soft(await wordmarkVisible(page), `${width} px : wordmark ${wm ? "affiché" : "masqué"}`)
+        .toBe(wm);
+    }
   });
 });

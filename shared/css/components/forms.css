@@ -303,6 +303,12 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 }
 .search-clear:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
 .search-clear.hidden { display: none; }
+/* Pointeur grossier (#1051) : croix inchangée (28×28), zone de 44px en ::after (le bouton est déjà
+   positionné). Elle touche le bord droit du champ et mord de 4px sur la zone de saisie, que le
+   padding droit de 2.5rem laisse libre : le champ reste cliquable hors de la zone. */
+@media (pointer: coarse) {
+  .search-clear::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+}
 .search-suggestions {
   position: absolute;
   top: calc(100% + 4px);
