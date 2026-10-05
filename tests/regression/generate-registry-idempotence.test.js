@@ -138,6 +138,69 @@ const graph = committed.components.find(c => c.name === 'graph');
 check('I4 graph.module ne contient pas layout.css',
   !!graph && !(graph.module || []).includes('shared/css/layout.css'), JSON.stringify(graph && graph.module));
 
+console.log('');
+console.log('II. Une classe citée en commentaire n\'est jamais réelle (#1053, correctif)');
+
+// Les cas ci-dessous ajoutent un commentaire ou une règle a la COPIE de
+// heatmap-calendar.css dans l'arborescence temporaire : ils ne dependent pas des
+// commentaires du depot, que n'importe quelle PR peut reecrire.
+const HC_CSS = root => path.join(root, 'shared', 'css', 'components', 'heatmap-calendar.css');
+const hcEntry = committed.components.find(c => c.name === 'heatmap-calendar');
+check('II0 garde-fou : heatmap-calendar est une entrée curée (kind:component)', !!hcEntry && hcEntry.kind === 'component');
+check('II0 registre committé : `.heatmap-tooltip.visible` en sélecteur composé, plus de `.visible` nue',
+  hcEntry.cssClasses.includes('.heatmap-tooltip.visible') && !hcEntry.cssClasses.includes('.visible'),
+  JSON.stringify(hcEntry.cssClasses));
+
+/** Registre committe dont l'entree heatmap-calendar cite en plus `extra`. */
+function withHeatmapClass(extra) {
+  const reg = JSON.parse(committedJson);
+  const e = reg.components.find(c => c.name === 'heatmap-calendar');
+  e.cssClasses = [...e.cssClasses, extra];
+  return reg;
+}
+
+// II1 — classe simple citee seulement en commentaire, et saisie dans cssClasses :
+// fantome. Avant le correctif, l'extraction brute la lisait dans le commentaire.
+const COMMENT_ONLY = '.zz-commentaire-seul-1053';
+const r1 = makeTree(withHeatmapClass(COMMENT_ONLY), []);
+fs.appendFileSync(HC_CSS(r1), `\n/* ${COMMENT_ONLY} : citée ici, déclarée nulle part */\n`);
+const c1 = run(r1, ['--check']);
+check('II1 classe citée seulement en commentaire → fantôme (--check rc=1, entrée et classe nommées)',
+  c1.rc === 1 && c1.out.includes(`heatmap-calendar → ${COMMENT_ONLY}`), 'rc=' + c1.rc + ' ' + c1.out.slice(-300));
+
+// II2 — la decouverte ne la reinjecte pas : regeneration du registre committe avec
+// le meme commentaire = registre committe (en extraction brute, elle etait ajoutee
+// a l'entree du groupe, heatmap-calendar).
+const r2 = makeTree(committed, []);
+fs.appendFileSync(HC_CSS(r2), `\n/* ${COMMENT_ONLY} : citée ici, déclarée nulle part */\n`);
+const g2 = run(r2, []);
+const after2 = fs.readFileSync(registryPath(r2), 'utf8');
+check('II2 régénération : la classe du commentaire n\'entre pas au registre',
+  g2.rc === 0 && !after2.includes(COMMENT_ONLY) && strip(after2) === strip(committedJson), 'rc=' + g2.rc);
+
+// II3 — selecteur compose present seulement en commentaire : fantome.
+const COMPOUND_COMMENT = '.heatmap-tooltip.zz-etat-1053';
+const r3 = makeTree(withHeatmapClass(COMPOUND_COMMENT), []);
+fs.appendFileSync(HC_CSS(r3), `\n/* ${COMPOUND_COMMENT} : citée ici, déclarée nulle part */\n`);
+const c3 = run(r3, ['--check']);
+check('II3 sélecteur composé cité seulement en commentaire → fantôme',
+  c3.rc === 1 && c3.out.includes(`heatmap-calendar → ${COMPOUND_COMMENT}`), 'rc=' + c3.rc + ' ' + c3.out.slice(-300));
+
+// II4 — prefixe d'un compose reel : `.heatmap-tooltip.vis` n'est pas
+// `.heatmap-tooltip.visible`.
+const r4 = makeTree(withHeatmapClass('.heatmap-tooltip.vis'), []);
+const c4 = run(r4, ['--check']);
+check('II4 préfixe d\'un sélecteur composé réel → fantôme',
+  c4.rc === 1 && c4.out.includes('heatmap-calendar → .heatmap-tooltip.vis'), 'rc=' + c4.rc + ' ' + c4.out.slice(-300));
+
+// II5 — temoin positif : le meme compose DECLARE par une regle est valide, et le
+// registre qui le cite reste idempotent.
+const COMPOUND_CODE = '.heatmap-tooltip.zz-ok-1053';
+const r5 = makeTree(withHeatmapClass(COMPOUND_CODE), []);
+fs.appendFileSync(HC_CSS(r5), `\n${COMPOUND_CODE} { color: inherit; }\n`);
+const c5 = run(r5, ['--check']);
+check('II5 sélecteur composé déclaré par une règle → valide (--check rc=0)', c5.rc === 0, c5.out.slice(-300));
+
 cleanup();
 
 console.log('');

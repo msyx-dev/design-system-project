@@ -91,9 +91,10 @@ function extractClasses(content, { ignoreComments = false } = {}) {
   let match;
   // ignoreComments (#1053) : une classe CITÉE en commentaire n'est pas déclarée par
   // le fichier (`.graph-toolbar`, nommé dans l'en-tête de layout.css, rattachait le
-  // composant graph à layout.css). Réservé à l'attribution module[] : la validation
-  // des fantômes garde l'extraction brute, dont dépend au moins une entrée
-  // (heatmap-calendar → `.visible`, cité seulement en commentaire hors sélecteur composé).
+  // composant graph à layout.css ; `.visible`, citée dans un commentaire de
+  // heatmap-calendar.css, rendait réelle une classe d'état qui n'existe qu'en
+  // sélecteur composé). Le scan des fichiers CSS ci-dessous passe toujours `true` :
+  // découverte des classes, module[] et validation des fantômes lisent le même code.
   const code = ignoreComments ? content.replace(/\/\*[\s\S]*?\*\//g, ' ') : content;
 
   while ((match = CLASS_RE.exec(code)) !== null) {
@@ -178,19 +179,23 @@ const groupMap = new Map();
 // Classes de CHAQUE fichier, sous son propre chemin (#1053). groupMap ne peut pas
 // servir de source : deux fichiers peuvent porter le même nom de groupe
 // (`base.css` et `components/_base.css` donnent tous deux « base »), et le groupe
-// fusionné ne garde qu'un seul sourceFile, le premier rencontré. Classes lues hors
-// commentaires : citer une classe ne la déclare pas.
+// fusionné ne garde qu'un seul sourceFile, le premier rencontré.
+// Classes lues HORS commentaires, pour la découverte comme pour module[] et la
+// validation des fantômes (#1053) : citer une classe ne la déclare pas. En
+// extraction brute, une classe retirée de cssClasses parce qu'elle n'existe qu'en
+// sélecteur composé (`.visible` → `.heatmap-tooltip.visible`) était aussitôt
+// redécouverte depuis son commentaire et réinjectée dans l'entrée.
 const fileClasses = [];
 
 for (const cssFile of cssFiles) {
   const content = fs.readFileSync(cssFile, 'utf8');
-  const classes = extractClasses(content);
+  const classes = extractClasses(content, { ignoreComments: true });
   if (classes.length === 0) continue;
 
   const cat = categorize(cssFile);
   const gn = groupName(cssFile);
   const relPath = path.relative(ROOT, cssFile).replace(/\\/g, '/');
-  fileClasses.push({ sourceFile: relPath, classes: extractClasses(content, { ignoreComments: true }) });
+  fileClasses.push({ sourceFile: relPath, classes });
 
   if (!groupMap.has(gn)) {
     groupMap.set(gn, { category: cat, sourceFile: relPath, classes: [] });
@@ -376,10 +381,36 @@ function loadPageClasses(pageName) {
 }
 
 // Set complet de toutes les classes CSS réelles (construit à partir du scan)
-// Note : on reconstruit ici depuis groupMap (toutes les classes vues dans TOUS les fichiers CSS)
+// Depuis #1053 : construit depuis fileClasses, c'est-à-dire HORS commentaires. Une classe
+// seulement CITÉE dans un commentaire n'est pas déclarée par le CSS : avant, l'extraction
+// brute la rendait « réelle » et la validation des fantômes ne la voyait pas
+// (heatmap-calendar → `.visible`, présente uniquement dans un commentaire et dans le
+// sélecteur composé `.heatmap-tooltip.visible`). Sert aux deux validations anti-fantômes :
+// cssClasses des entrées curées et classes émises par les composants React.
 const allCssClasses = new Set();
-for (const [, info] of groupMap.entries()) {
-  for (const cls of info.classes) allCssClasses.add(cls);
+for (const { classes } of fileClasses) {
+  for (const cls of classes) allCssClasses.add(cls);
+}
+
+// Code CSS de tous les fichiers scannés, commentaires retirés (#1053) : sert à valider
+// un sélecteur composé saisi à la main dans cssClasses (`.heatmap-tooltip.visible`),
+// que extractClasses ne capte pas en entier (le 2e token n'est précédé d'aucun séparateur).
+const allCssCode = cssFiles
+  .map(f => fs.readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, ' '))
+  .join('\n');
+// `.a.b` (au moins deux classes accolées, sans pseudo-classe ni attribut).
+const COMPOUND_CLASS_RE = /^(?:\.[a-zA-Z][a-zA-Z0-9_-]*){2,}$/;
+
+/**
+ * Un sélecteur composé est réel s'il figure tel quel dans le code CSS (hors
+ * commentaires), non suivi d'un caractère de nom de classe : `.a.b` ne valide
+ * pas `.a.bc`. Le début est déjà une frontière : le token commence par un point.
+ * @param {string} compound  ex. '.heatmap-tooltip.visible'
+ * @returns {boolean}
+ */
+function compoundInCss(compound) {
+  const escaped = compound.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(escaped + '(?![a-zA-Z0-9_-])').test(allCssCode);
 }
 
 // Validation : détecter les classes fantômes dans les kind:component
@@ -422,7 +453,9 @@ if (!process.argv.includes('--skip-validate')) {
       ...extractClassesFromHtml(comp.example),
     ]);
     for (const cls of cited) {
-      const inCss  = allCssClasses.has(cls);
+      // Sélecteur composé (#1053) : validé en entier contre le code CSS, jamais
+      // classe par classe (la classe d'état nue `.visible` n'existe qu'en composé).
+      const inCss  = COMPOUND_CLASS_RE.test(cls) ? compoundInCss(cls) : allCssClasses.has(cls);
       const inDemo = pageClasses.has(cls);
       const inWl   = WHITELIST.has(cls);
       if (!inCss && !inDemo && !inWl) {

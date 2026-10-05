@@ -3811,7 +3811,7 @@
         ".heatmap-tooltip",
         ".heatmap-tooltip-title",
         ".heatmap-tooltip-value",
-        ".visible"
+        ".heatmap-tooltip.visible"
       ],
       "jsInit": "initHeatmapCalendar",
       "react": "ported",
