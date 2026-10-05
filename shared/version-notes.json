@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "correction",
+        "text": "En mode clair, le texte des badges, des alertes, des puces, des étiquettes et des filtres actifs se lit mieux sur son fond coloré, dans tous les thèmes ; en thème ACSSI sombre, c'est aussi le cas des alertes d'erreur et d'avertissement. Les couleurs de fond ne changent pas."
+      }
+    ]
   },
   "released": [
     {
