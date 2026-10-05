@@ -46,9 +46,14 @@
  *     à 768px de TABLE CARDS -> 2 rouges : cas 3 (1024 et 1280px), paire #t-lg4 / #t-md4,
  *     `padding-block` de la saisie battu par `.table-cards:not(…) td` (0,2,1). Seul ce cas
  *     le voit : table-cards-editable.spec.ts reste vert sous M6 (arbitrage A4).
- *  Reportées à la tranche 2 : M3 (padding de td dans le bloc 1024 -> cas 3), M4 (bloc à
- *  `min-width: 1000px` -> cas 2), M5 (retrait des règles `.table-cards--editable` du bloc
- *  1024 -> cas 3 sur #t-lg4).
+ * Preuves par mutation (tranche 2, jouées le 2026-10-05) :
+ *  M3 `padding` de `td` du bloc à 1024px porté à `0.7rem 1.3rem` -> 3 rouges : cas 3 (1024
+ *     et 1280px) et cas 4 (1024px) ;
+ *  M4 bloc à `min-width: 1000px` -> 1 rouge : cas 2 (« t-lg6 à 1023px ») ;
+ *  M5 retrait des 4 règles `.table-cards--editable:where(.table-cards--lg)` du bloc à 1024px
+ *     -> 2 rouges : cas 3 (1024 et 1280px), hauteur du tableau #t-lg4.
+ *  Le cas 6 (démo) n'a pas de mutation propre (plafond de 3 par tranche) : il lit le même
+ *  mode d'affichage que les cas 1 et 2, prouvés par M1, M2 et M4.
  */
 import { test, expect, type Page } from "@playwright/test";
 
