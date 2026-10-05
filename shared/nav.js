@@ -393,10 +393,12 @@ function ensureFestiveDecor() {
         ball.className = 'ornament';
         ball.style.setProperty('--ornament-color', ornColors[o % ornColors.length]);
         ball.style.setProperty('--i', String(o));
-        ball.style.setProperty('--ornament-drop', (22 + (o % 3) * 20) + 'px');
-        ball.style.setProperty('--ornament-size', (20 + (o % 3) * 6) + 'px');
+        // Geometrie = tokens du rang (tokens.css, #1042) : aucun px ici, la reserve haute en derive.
+        // Le `top` n'est plus pose en ligne : `.ornaments > .ornament` (festive.css) le lit.
+        var rang = (o % 3) + 1;
+        ball.style.setProperty('--ornament-drop', 'var(--ornament-drop-' + rang + ')');
+        ball.style.setProperty('--ornament-size', 'var(--ornament-size-' + rang + ')');
         ball.style.left = ornLeft[o] + '%';
-        ball.style.top = (22 + (o % 3) * 20) + 'px';
         ornaments.appendChild(ball);
     }
 
