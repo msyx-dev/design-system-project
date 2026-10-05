@@ -41,9 +41,12 @@
  *   - M2 : `.badge-primary` remis sur `var(--accent-light)` → rouge sur msyx-light, auchan-light ;
  *   - M3 : `--badge-primary-fg` retiré de themes/noel.json `modes.light` → test 3 rouge.
  *   t2 (texte accent sur teinte accent : `.tag`, `.chip-accent`, `.chip-filter.active`) :
- *   - M4 : `.tag` remis sur `var(--accent-light)` → `tag|*` rouge sur msyx-light, auchan-light ;
- *   - M5 : Auchan clair `--accent-text-strong` remis à #e0001a → `chip-filter-active|*` rouge ;
- *   - M6 : `--chip-accent-fg` retiré de themes/acssi.json `modes.dark` → test 3 rouge.
+ *   - M4 : `.tag` remis sur `var(--accent-light)` → 5 sondes rouges : msyx-light `tag|primary-light`
+ *     (4,33), auchan-light `tag|*` (4 fonds, 3,83 à 4,35) ;
+ *   - M5 : Auchan clair `--accent-text-strong` remis à #e0001a → 4 sondes rouges : auchan-light
+ *     `chip-filter-active|*` (2,83 à 3,17) ;
+ *   - M6 : `--chip-accent-fg` retiré de themes/acssi.json `modes.dark` → test 3 rouge, qui nomme
+ *     « themes/acssi.json modes.dark : --chip-accent-fg absent ».
  */
 import { test, expect } from "@playwright/test";
 import type { Page, TestInfo } from "@playwright/test";
