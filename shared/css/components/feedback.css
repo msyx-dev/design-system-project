@@ -41,6 +41,12 @@
 .page-btn.active { background: var(--accent-surface); color: var(--text-on-accent); border-color: var(--accent); }
 .page-btn:disabled { opacity: 0.4; pointer-events: none; }
 .page-btn.nav { padding: 0 0.8rem; }
+/* Pointeur grossier (#1051) : boutons de page agrandis à 44×44 (des boîtes, pas de zone ajoutée).
+   La rangée passe à la ligne au lieu de déborder à 375px (déjà 4px de trop à 36px). */
+@media (pointer: coarse) {
+  .pagination { flex-wrap: wrap; }
+  .page-btn { min-width: var(--touch-target); height: var(--touch-target); }
+}
 .page-ellipsis { color: var(--text-dim); font-size: 0.82rem; padding: 0 0.3rem; }
 .pagination-info { font-size: 0.78rem; color: var(--text-muted); margin-left: 1rem; }
 

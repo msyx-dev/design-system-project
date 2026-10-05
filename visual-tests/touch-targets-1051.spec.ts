@@ -109,6 +109,36 @@ const SEL_HAUTEUR = [
 const SEL_LARGEUR = ".btn-sm, .btn-xs";
 /** Plancher de contrôles mesurés en hauteur (CA2), toutes pages confondues. */
 const CA2_FLOOR = 150;
+/** CA7 — contrôles dont la zone tactile vient d'un `::after` (taille visuelle inchangée). */
+const ZONES_T4 = [
+  ".toggle",
+  ".tag-close",
+  ".dropdown-tag button",
+  ".file-item-remove",
+];
+/** CA7 — voisins qu'une zone ne doit jamais capter : contrôles et éléments-puces. */
+const VOISINS_T4 = [
+  "a[href]",
+  "button",
+  'input:not([type="hidden"])',
+  "select",
+  "textarea",
+  "label",
+  "summary",
+  '[role="button"]',
+  '[tabindex]:not([tabindex="-1"])',
+  ".tag-item",
+  ".dropdown-tag",
+  ".file-item",
+  ".chip",
+].join(", ");
+/** CA7 — contrôles dont la BOÎTE fait 44 px (hauteur ; largeur aussi pour `.page-btn`). */
+const BOITES_T4 = [
+  ".search-compact .search-input",
+  ".filter-bar .input",
+  ".filter-bar button",
+  ".pagination .page-btn",
+].join(", ");
 
 const PAGES = [
   "/site.html",
@@ -654,6 +684,179 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
         ".version-badge",
       ]);
     }
+  });
+  test("CA7. Seconde passe (375 px) : interrupteurs, croix des tags, fichiers, recherche compacte, filtres et pagination", async ({
+    page,
+  }) => {
+    test.setTimeout(240_000);
+    const fautifs: string[] = [];
+    const zones: string[] = [];
+    const recouvrements = new Set<string>();
+    const debordements: string[] = [];
+    const tailles: Record<string, Set<string>> = {};
+    let cibles = 0;
+    let boitesMesurees = 0;
+    for (const url of [...PAGES, FIXTURE]) {
+      await ouvrir(page, url, 375);
+      expect(
+        (await pointeur(page)).coarse,
+        `${url} : l'émulation tactile n'est pas active (pointer: coarse faux)`,
+      ).toBe(true);
+      const r = await page.evaluate(
+        ({ zonesSel, voisinsSel, boitesSel, largeurSel, target }) => {
+          const PAS = 0.5;
+          const visible = (el: Element) => {
+            const b = el.getBoundingClientRect();
+            return (
+              b.width > 0 &&
+              b.height > 0 &&
+              (el as HTMLElement).checkVisibility({
+                checkOpacity: true,
+                visibilityProperty: true,
+              })
+            );
+          };
+          const nom = (el: Element) =>
+            (
+              el.getAttribute("aria-label") ??
+              el.querySelector("[aria-label]")?.getAttribute("aria-label") ??
+              el.textContent ??
+              ""
+            )
+              .replace("×", "")
+              .replace(/\s+/g, " ")
+              .trim()
+              .slice(0, 32);
+          const out = {
+            n: 0,
+            zones: [] as string[],
+            recouvrements: [] as string[],
+            tailles: [] as string[],
+            boites: [] as string[],
+            nBoites: 0,
+            debordements: [] as string[],
+          };
+          for (const sel of zonesSel) {
+            for (const el of document.querySelectorAll<HTMLElement>(sel)) {
+              if (!visible(el)) continue;
+              // `instant` : le DS pose `scroll-behavior: smooth`, et un défilement animé fausserait
+              // les coordonnées lues juste après (zones mesurées à 0,5 px, constaté le 2026-10-05).
+              el.scrollIntoView({
+                block: "center",
+                inline: "center",
+                behavior: "instant",
+              });
+              out.n++;
+              const b = el.getBoundingClientRect();
+              out.tailles.push(
+                `${sel}=${b.width.toFixed(1)}×${b.height.toFixed(1)}`,
+              );
+              const cx = b.left + b.width / 2;
+              const cy = b.top + b.height / 2;
+              const vers = (x: number, y: number) =>
+                document.elementFromPoint(x, y)?.closest(sel) ?? null;
+              // Étendue contiguë autour du centre, sur les deux médianes, au pas de 0,5 px.
+              const etendue = (dx: number, dy: number) => {
+                let k = 0;
+                while (
+                  k < 200 &&
+                  vers(cx + dx * (k + 1) * PAS, cy + dy * (k + 1) * PAS) === el
+                )
+                  k++;
+                return k * PAS;
+              };
+              const l = etendue(-1, 0) + etendue(1, 0) + PAS;
+              const h = etendue(0, -1) + etendue(0, 1) + PAS;
+              if (l < target - PAS || h < target - PAS)
+                out.zones.push(`${sel} « ${nom(el)} » : zone ${l}×${h}`);
+              // Recouvrement : aucun point d'un contrôle voisin (ni parent ni enfant de la
+              // cible), pris dans le carré de la zone élargi de 4 px, n'est résolu vers la cible.
+              const m = target / 2 + 4;
+              const R = { l: cx - m, r: cx + m, t: cy - m, b: cy + m };
+              for (const v of document.querySelectorAll<HTMLElement>(
+                voisinsSel,
+              )) {
+                if (v === el || v.contains(el) || el.contains(v) || !visible(v))
+                  continue;
+                const c = v.getBoundingClientRect();
+                const x0 = Math.max(c.left, R.l);
+                const x1 = Math.min(c.right, R.r);
+                const y0 = Math.max(c.top, R.t);
+                const y1 = Math.min(c.bottom, R.b);
+                if (x0 >= x1 || y0 >= y1) continue;
+                let capte = false;
+                for (let y = y0 + PAS / 2; y < y1 && !capte; y += PAS)
+                  for (let x = x0 + PAS / 2; x < x1 && !capte; x += PAS)
+                    capte = vers(x, y) === el;
+                if (capte)
+                  out.recouvrements.push(
+                    `${v.tagName.toLowerCase()}.${[...v.classList].join(".")} « ${nom(v)} » ← ${sel} « ${nom(el)} »`,
+                  );
+              }
+            }
+          }
+          for (const el of document.querySelectorAll<HTMLElement>(boitesSel)) {
+            if (!visible(el)) continue;
+            out.nBoites++;
+            const b = el.getBoundingClientRect();
+            const sig = `${el.tagName.toLowerCase()}.${[...el.classList].join(".")} « ${nom(el)} »`;
+            if (b.height < target - 0.01)
+              out.boites.push(`${sig} / hauteur ${b.height.toFixed(2)}px`);
+            if (el.matches(largeurSel) && b.width < target - 0.01)
+              out.boites.push(`${sig} / largeur ${b.width.toFixed(2)}px`);
+          }
+          for (const p of document.querySelectorAll<HTMLElement>(
+            ".pagination",
+          )) {
+            if (!visible(p)) continue;
+            if (p.scrollWidth > p.clientWidth + 1)
+              out.debordements.push(
+                `.pagination « ${nom(p)} » : ${p.scrollWidth} > ${p.clientWidth}px`,
+              );
+          }
+          window.scrollTo(0, 0);
+          return out;
+        },
+        {
+          zonesSel: ZONES_T4,
+          voisinsSel: VOISINS_T4,
+          boitesSel: BOITES_T4,
+          largeurSel: ".page-btn",
+          target: TARGET,
+        },
+      );
+      cibles += r.n;
+      boitesMesurees += r.nBoites;
+      for (const z of r.zones) zones.push(`${url} / ${z}`);
+      for (const z of r.recouvrements) recouvrements.add(`${url} / ${z}`);
+      for (const z of r.boites) fautifs.push(`${url} / ${z}`);
+      for (const z of r.debordements) debordements.push(`${url} / ${z}`);
+      for (const t of r.tailles) {
+        const [sel, dim] = t.split("=");
+        (tailles[sel] ??= new Set()).add(dim);
+      }
+    }
+    console.log(
+      `[touch-targets-1051 CA7] ${cibles} zones, ${boitesMesurees} boîtes ; tailles ${JSON.stringify(
+        Object.fromEntries(
+          Object.entries(tailles).map(([k, v]) => [k, [...v]]),
+        ),
+      )}`,
+    );
+    console.log(
+      JSON.stringify(
+        { zones, recouvrements: [...recouvrements], fautifs, debordements },
+        null,
+        1,
+      ),
+    );
+    expect(cibles, "plancher de zones mesurées").toBeGreaterThanOrEqual(30);
+    expect.soft(zones, `zone de chaque contrôle ≥ ${TARGET}px`).toEqual([]);
+    expect
+      .soft([...recouvrements], "aucune zone ne capte le toucher d'un voisin")
+      .toEqual([]);
+    expect.soft(fautifs, `boîtes sous ${TARGET}px`).toEqual([]);
+    expect(debordements, "pagination sans débordement").toEqual([]);
   });
 });
 

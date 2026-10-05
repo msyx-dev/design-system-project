@@ -23,6 +23,8 @@
   .touch-fixture { padding: var(--space-lg) var(--space-md); max-width: 22rem; }
   .touch-fixture > * + * { margin-block-start: var(--space-lg); }
   .touch-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-sm); }
+  .touch-toggles { display: flex; flex-direction: column; gap: var(--space-md); }
+  .touch-toggle-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; }
 </style>
 </head>
 <body>
@@ -59,6 +61,43 @@
     <button type="button" class="btn-secondary btn-sm" aria-label="Ajouter">+</button>
     <button type="button" class="btn-danger btn-sm" aria-label="Retirer">&times;</button>
     <a href="#" class="btn-secondary btn-outline-danger btn-sm">Non</a>
+  </div>
+
+  <!-- Tranche t4 : les contrôles que la première passe excluait, en situation de voisinage
+       (rangées qui passent à la ligne, listes empilées) pour éprouver les recouvrements. -->
+  <div class="tag-input-wrap" id="tags">
+    <span class="tag-item">Design <button type="button" class="tag-close" aria-label="Supprimer Design">&times;</button></span>
+    <span class="tag-item">Frontend <button type="button" class="tag-close" aria-label="Supprimer Frontend">&times;</button></span>
+    <span class="tag-item">Backend <button type="button" class="tag-close" aria-label="Supprimer Backend">&times;</button></span>
+    <span class="tag-item">Mobile <button type="button" class="tag-close" aria-label="Supprimer Mobile">&times;</button></span>
+    <span class="tag-item">Produit <button type="button" class="tag-close" aria-label="Supprimer Produit">&times;</button></span>
+    <span class="tag-item">Données <button type="button" class="tag-close" aria-label="Supprimer Données">&times;</button></span>
+    <span class="tag-item">Qualité <button type="button" class="tag-close" aria-label="Supprimer Qualité">&times;</button></span>
+    <input class="tag-input-field" type="text" placeholder="Ajouter un tag..." aria-label="Ajouter un tag">
+  </div>
+
+  <div class="dropdown-tags" id="dropdown-tags">
+    <span class="dropdown-tag">TypeScript <button type="button" aria-label="Retirer TypeScript">&times;</button></span>
+    <span class="dropdown-tag">React <button type="button" aria-label="Retirer React">&times;</button></span>
+    <span class="dropdown-tag">Tailwind <button type="button" aria-label="Retirer Tailwind">&times;</button></span>
+    <span class="dropdown-tag">GraphQL <button type="button" aria-label="Retirer GraphQL">&times;</button></span>
+    <span class="dropdown-tag">Prisma <button type="button" aria-label="Retirer Prisma">&times;</button></span>
+    <span class="dropdown-tag">Vue <button type="button" aria-label="Retirer Vue">&times;</button></span>
+    <span class="dropdown-tag">Svelte <button type="button" aria-label="Retirer Svelte">&times;</button></span>
+    <span class="dropdown-tag">Node <button type="button" aria-label="Retirer Node">&times;</button></span>
+  </div>
+
+  <div class="file-list" id="fichiers">
+    <div class="file-item"><div class="file-item-info"><div class="file-item-name">design-system.pdf</div><div class="file-item-size">2.4 Mo</div></div><button type="button" class="file-item-remove" aria-label="Retirer design-system.pdf">&times;</button></div>
+    <div class="file-item"><div class="file-item-info"><div class="file-item-name">capture.png</div><div class="file-item-size">856 Ko</div></div><button type="button" class="file-item-remove" aria-label="Retirer capture.png">&times;</button></div>
+    <div class="file-item"><div class="file-item-info"><div class="file-item-name">notes.txt</div><div class="file-item-size">4 Ko</div></div><button type="button" class="file-item-remove" aria-label="Retirer notes.txt">&times;</button></div>
+  </div>
+
+  <!-- Même empilement que la démo « Toggles » de formulaires.html (colonne, gap de 1rem). -->
+  <div class="touch-toggles" id="toggles">
+    <div class="touch-toggle-row"><span>Mode sombre</span><label class="toggle"><input type="checkbox" checked aria-label="Mode sombre"><span class="toggle-slider"></span></label></div>
+    <div class="touch-toggle-row"><span>Notifications</span><label class="toggle"><input type="checkbox" aria-label="Notifications"><span class="toggle-slider"></span></label></div>
+    <div class="touch-toggle-row"><span>Auto-deploy</span><label class="toggle"><input type="checkbox" checked aria-label="Auto-deploy"><span class="toggle-slider"></span></label></div>
   </div>
 </main>
 </body>
