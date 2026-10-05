@@ -21,7 +21,9 @@
  *  5. Cartes inchangées (375 et 767px) : cellule en `flex`, `white-space: normal`, aucune
  *     marge de début sur les contrôles.
  *  6. Démo réelle `pages/data.html` (768 et 1280px) : rangée dans #table-cards-editable,
- *     même hauteur dans #table-cards, aucun `.table-wrap` des deux sections ne défile.
+ *     même hauteur dans les tableaux restaurés de #table-cards (le suivi `.table-cards--lg`
+ *     de #1052 en est exclu : à 768px il est en cartes, ses cibles font 44px par contrat),
+ *     aucun `.table-wrap` des deux sections ne défile.
  *  7. Contrat A2 (1280px) : tableau trop large pour son conteneur -> les contrôles restent
  *     sur une rangée ET le `.table-wrap` défile.
  *
@@ -286,7 +288,10 @@ test.describe("table-cards : cellule d'actions sur une rangée (#1044)", () => {
             ),
           }));
         const heights = [
-          ...document.querySelectorAll("#table-cards td.table-cards-actions"),
+          // Hors `.table-cards--lg` (#1052) : en cartes jusqu'à 1023px, cibles de 44px.
+          ...document.querySelectorAll(
+            "#table-cards table:not(.table-cards--lg) td.table-cards-actions",
+          ),
         ].flatMap((td) =>
           ctrls(td).map((c) => c.getBoundingClientRect().height),
         );

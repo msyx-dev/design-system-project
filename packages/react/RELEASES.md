@@ -6,6 +6,11 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+> Mention croisée : le modificateur CSS `.table-cards--lg` (bloc de restauration à 1024 px, démo, limite avec barre latérale) est décrit dans l'entrée #1052 de `../../CHANGELOG.md`, `[Unreleased]`.
+
+### Added
+- **`<TableCards breakpoint>` : cartes jusqu'à 1024 px pour un tableau large (#1052).** Nouvelle prop `breakpoint?: "md" | "lg"` (défaut `"md"`). `"lg"` ajoute `table-cards--lg` au `<table>` (jamais au `.table-wrap`) : les cartes restent jusqu'à 1023 px, le tableau revient dès 1024 px. Se combine avec `editable` (`class="table-cards table-cards--editable table-cards--lg"`). **API additive** : avec `"md"` ou sans la prop, le rendu est identique octet pour octet à la version précédente. Classes en chaînes littérales, vues par le scanner du registre. 3 tests ajoutés dans `TableCards.test.tsx`. Action consommateur : poser `breakpoint="lg"` sur les tableaux larges (sans opt-in, rien ne change) et resynchroniser `tables.css` (`shared/sync.sh`) : sans le CSS du DS à jour, la classe n'a aucun effet.
+
 ## v3.0.0-alpha.64 — 2026-10-05 — Décor de Noël et boutons mieux alignés
 
 > Mention croisée : la réserve haute du décor de Noël (`--festive-top-clearance`) et les tokens `--ornament-{drop,size}-1..3` sont décrits dans l'entrée #1042 de `../../CHANGELOG.md`.

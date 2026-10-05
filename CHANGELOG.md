@@ -8,6 +8,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) · Versioning 
 
 ## [Unreleased]
 
+### Ajouté
+- **Tableau en cartes : modificateur `.table-cards--lg`, cartes jusqu'à 1024 px pour un tableau large (#1052)** — `shared/css/components/tables.css`, `pages/data.html#table-cards`, `packages/react/src/components/TableCards/` (prop `breakpoint`, voir `packages/react/RELEASES.md`), `shared/components-registry.json` (`cssClasses` et `notes` de `table-cards`), `visual-tests/table-cards-lg-1052.spec.ts` + `visual-tests/fixtures/table-cards-lg-1052.html`, `visual-tests/table-cards-actions-1044.spec.ts`, `playwright.config.ts`, `shared/CONSUMER_GUIDE.md`. Un tableau de 4 à 6 colonnes (ou avec des champs en cellule) ne tient pas à 768 px : son `.table-wrap` défilait ou ses champs n'affichaient que quelques caractères. Posé sur le `<table>` (`class="table-cards table-cards--lg"`), le modificateur garde les cartes jusqu'à 1023 px et rend le tableau dès 1024 px (`bp-lg`) ; il se combine avec `.table-cards--editable`. Les blocs de restauration à 768 px excluent `--lg` par `:where(:not(.table-cards--lg))` (spécificité nulle : aucune spécificité existante ne change) et un bloc à 1024 px reprend leurs déclarations à l'identique, parité gardée par un test de boîtes. **Opt-in** : un tableau sans le modificateur garde son seuil de 768 px. Limite connue : le seuil est celui de la fenêtre ; avec une barre latérale, un tableau `--lg` peut encore défiler entre 1024 et ~1150 px (contrat de #1044, aucun contenu perdu). Démo à 6 colonnes « Suivi détaillé des participants » dans `data.html#table-cards`. Preuve navigateur (6 cas, 768 / 900 / 1023 / 1024 / 1280 px) ; mutations CSS M1 à M6 → 3, 3, 3, 1, 2 et 2 rouges ; React : 3 tests, mutations M7 à M9 → 2, 3 et 2 rouges (raisonnées par lecture, vitest non installé localement). Mention croisée : la prop React est décrite dans `packages/react/RELEASES.md`, `[Unreleased]`.
+
 ## [2.145.5] - 2026-10-05
 
 ### Corrigé

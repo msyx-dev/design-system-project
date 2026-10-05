@@ -314,10 +314,11 @@
       "cssClasses": [
         ".table-cards",
         ".table-cards-label",
-        ".table-cards-actions"
+        ".table-cards-actions",
+        ".table-cards--lg"
       ],
       "jsInit": null,
-      "notes": "Repli en cartes sous 768px (bp-md), tableau au-delà ; CSS seul. Libellé = <span class=\"table-cards-label\" aria-hidden=\"true\"> (jamais ::before/data-label : double annonce). Rôles ARIA explicites. Tri/filtre/pagination : utiliser data-grid (qui défile, inchangé). #1007",
+      "notes": "Repli en cartes sous 768px (bp-md), tableau au-delà ; CSS seul. Libellé = <span class=\"table-cards-label\" aria-hidden=\"true\"> (jamais ::before/data-label : double annonce). Rôles ARIA explicites. Tri/filtre/pagination : utiliser data-grid (qui défile, inchangé). #1007 ; `.table-cards--lg` (prop React `breakpoint=\"lg\"`) : cartes jusqu'à 1024px (bp-lg), pour 4 à 6 colonnes, #1052",
       "example": "<div class=\"table-wrap\">\n  <table class=\"table-cards\" role=\"table\" aria-label=\"Participants\">\n    <thead role=\"rowgroup\"><tr role=\"row\"><th scope=\"col\" role=\"columnheader\">Nom</th><th scope=\"col\" role=\"columnheader\">Actions</th></tr></thead>\n    <tbody role=\"rowgroup\"><tr role=\"row\">\n      <td role=\"cell\"><span class=\"table-cards-label\" aria-hidden=\"true\">Nom</span>Alice Martin</td>\n      <td role=\"cell\" class=\"table-cards-actions\"><button type=\"button\" class=\"btn-secondary btn-sm\">Copier le lien</button></td>\n    </tr></tbody>\n  </table>\n</div>",
       "react": "ported",
       "module": [
