@@ -33,13 +33,16 @@
  *
  * Joué dans UN seul projet (`msyx-dark-desktop`) : la largeur est posée par le test.
  *
- * Preuves par mutation (tranche 1, à consigner dans la PR) :
- *  M1 retirer `:where(:not(.table-cards--lg))` du bloc à 768px de TABLE CARDS -> cas 1
- *     rouge (et cas 2 à 1023px) ;
- *  M2 supprimer le bloc `@media (min-width: 1024px)` -> cas 2 et 3 rouges ;
+ * Preuves par mutation (tranche 1, jouées le 2026-10-05, à consigner dans la PR) :
+ *  M1 retirer `:where(:not(.table-cards--lg))` du bloc à 768px de TABLE CARDS -> 3 rouges :
+ *     cas 1, cas 2 (1023px) et cas 5 (cellule d'actions en table-cell à 900px) ;
+ *  M2 supprimer le bloc `@media (min-width: 1024px)` -> 3 rouges : cas 2 (1024px) et cas 3
+ *     (1024 et 1280px). Le cas 4 reste vert, et c'est attendu : en cartes aussi le suivi
+ *     tient et les champs sont pleine largeur ; il mesure la lisibilité, pas le mode ;
  *  M6 remplacer `:where(:not(.table-cards--lg))` par `:not(.table-cards--lg)` dans le bloc
- *     à 768px de TABLE CARDS -> cas 3 rouge (#t-lg4 / #t-md4 : `padding-block` de la saisie
- *     battu par `.table-cards:not(…) td` (0,2,1)), ce qui justifie l'arbitrage A4.
+ *     à 768px de TABLE CARDS -> 2 rouges : cas 3 (1024 et 1280px), paire #t-lg4 / #t-md4,
+ *     `padding-block` de la saisie battu par `.table-cards:not(…) td` (0,2,1). Seul ce cas
+ *     le voit : table-cards-editable.spec.ts reste vert sous M6 (arbitrage A4).
  *  Reportées à la tranche 2 : M3 (padding de td dans le bloc 1024 -> cas 3), M4 (bloc à
  *  `min-width: 1000px` -> cas 2), M5 (retrait des règles `.table-cards--editable` du bloc
  *  1024 -> cas 3 sur #t-lg4).
