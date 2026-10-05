@@ -88,6 +88,20 @@
  *       (zones des interrupteurs empilés amputées, `.page-btn` à 36 px, `.pagination` qui déborde
  *       à 375 px — débordement déjà présent au pointeur fin, hors #1051).
  *
+ * CA8 (tranche 5) — défauts préexistants trouvés en sprint. En-tête entre 641 et 768 px (burger
+ *       affiché, badge et sélecteur de thème revenus), MSYX et Noël, au pointeur fin ET grossier :
+ *       aucun débordement, burger à 44 px (non écrasé), aucune paire de boîtes ne se chevauche,
+ *       wordmark reporté à 769 px ; cas React (`.user-menu-trigger`, Noël 641 px, souris) ; bornes
+ *       375, 769 et 1280 px inchangées (padding, gap, wordmark). `.search-clear` (375 px, tactile) :
+ *       croix 28×28 inchangée, zone ≥ 44 px le long des médianes, champ cliquable hors de la zone.
+ *
+ * Preuve par mutation (tranche 5, jouée le 2026-10-05) :
+ *   (n) masquage de base du wordmark retiré de `layout.css` → CA8 rouge, 2 cas (MSYX 641 px :
+ *       burger à 19 px, avatar hors de la marge, au pointeur fin comme grossier) ;
+ *   (o) padding/gap larges remis au cran 640.02px → CA8 souris rouge (Noël 641 px React : burger
+ *       écrasé ; l'écrasement masque le débordement, d'où l'assertion sur le burger) ;
+ *   (p) `::after` de `.search-clear` neutralisé → CA8 croix rouge (6 zones de 28,5×28,5 px).
+ *
  * Hors portée, signalé à part (annotation du rapport) : les champs dont la police est écrite en
  * style inline. Au 2026-10-05, 4 démos natives de `composants.html` (« Reset natif » et
  * « Disabled global », 13,6 px). La CSS du DS ne peut pas les battre sans `!important`, que la
@@ -767,7 +781,7 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
         // État « texte saisi » : components.js retire `hidden` (sans l'événement, aucune liste
         // de suggestions ne s'ouvre par-dessus la recherche suivante).
         btn.classList.remove("hidden");
-        wrap.scrollIntoView({ block: "center" });
+        wrap.scrollIntoView({ block: "center", behavior: "instant" }); // scroll-behavior: smooth sinon
         const b = btn.getBoundingClientRect();
         if (b.width === 0 || !btn.checkVisibility()) continue;
         out.n++;
