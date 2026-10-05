@@ -33,10 +33,10 @@
 - **Antérieur** : milestone #49 (2.142.0 / alpha.60, contraste des boutons, logos, Textarea) ; parité React complète (août) ; d’autres sessions Claude poussent sous le compte gh « Kchigoki » de la machine.
 
 ## Prochaine étape
-- **Backlog DS (2026-10-05, après 2.145.5)** : VIDE. Points à proposer à Mike (rétro M53) :
-  - A3 : plancher de `ci-wait-budget.sh` ≥ `timeout-minutes` du job `visual` (claude-config) ;
-  - A5 : réserves festives posées par une classe sur `<html>` plutôt que par `:root:has()` (#1045, ligne 7) ;
-  - A1 : résolveur de conflit pour le bloc `VERSION_NOTES` de `nav.js`.
+- **Backlog DS (2026-10-05, après 2.145.5)** : VIDE. Décisions de Mike sur la rétro M53 (« go préco sur les trois ») :
+  - A3 : plancher structurel de `ci-wait-budget.sh` = plus long `timeout-minutes` + 300 s (**claude-config#566**, DS 3600 s) ;
+  - A5 : réserves festives par `:root:has()` → **attendre** une observation hors machine de test avant de changer (#1045, ligne 7) ;
+  - A1 : résolveur du bloc `VERSION_NOTES` → **seulement à la récidive** (règle en mémoire).
 - **Consommateurs** : tirokado peut passer en **2.145.5** avec la prérelease React de `FestiveDecor`, en **resynchronisant le CSS en même temps** (`tokens.css`, `festive.css`, `layout.css`, `base.css`, `buttons.css`, `tables.css`). Effets visibles :
   - titre 94 px plus bas en Noël ;
   - sapin sous les cartes ;

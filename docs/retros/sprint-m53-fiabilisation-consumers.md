@@ -29,11 +29,11 @@
 
 | # | Action | Ticket | État |
 |---|---|---|---|
-| A1 | Recollement : un fichier dont seul un bloc AUTO-GENERATED est en conflit ne se résout jamais par un côté entier. On résout les marqueurs, puis on régénère (`node bin/generate-version-notes.js`). Ce serait **mesurable** par un résolveur dédié, à proposer à Mike | — | **Écrite** (cette rétro + mémoire) |
+| A1 | Recollement : un fichier dont seul un bloc AUTO-GENERATED est en conflit ne se résout jamais par un côté entier. On résout les marqueurs, puis on régénère (`node bin/generate-version-notes.js`). Décision de Mike (2026-10-05, « go préco ») : le résolveur dédié ne s'écrit **qu'à la récidive** | — | **Écrite** (cette rétro + mémoire `feedback-recollement-bloc-genere`) ; outillage à la 2e occurrence |
 | A2 | Tranches Playwright : ne pas mettre plus de 3 mutations par tranche `e2e`, et fournir dans l'addendum la forme qui marche sans `npm ci` (dépendances du dépôt principal, `PW_PORT` distinct par agent) | — | **Écrite** (addendum DS du parent) |
-| A3 | `ci-wait-budget.sh` : plancher par dépôt au moins égal au `timeout-minutes` du job le plus long (55 min pour `visual` du DS) | à proposer à Mike (claude-config) | **Retenue** → à mesurer dans le script |
+| A3 | `ci-wait-budget.sh` : plancher par dépôt au moins égal au `timeout-minutes` du job le plus long (55 min pour `visual` du DS). GO de Mike le 2026-10-05 | claude-config#566 | **Mesurée** : plancher structurel lu dans les workflows (DS 3600 s), test hermétique et mutation M2 |
 | A4 | `PW_PORT` : chaque agent qui joue Playwright reçoit un port distinct dans son mandat | — | **Mesurée** pour le défaut (port configurable, `EADDRINUSE` visible) ; **Écrite** pour l'attribution des ports |
-| A5 | Réserve via `:root:has()` en retard sous charge (#1045, ligne 7) : décider si le décor pose une classe sur `<html>` plutôt que de compter sur `:has()` | à arbitrer par Mike | **Retenue** |
+| A5 | Réserve via `:root:has()` en retard sous charge (#1045, ligne 7) : décider si le décor pose une classe sur `<html>` plutôt que de compter sur `:has()`. Décision de Mike (2026-10-05, « go préco ») : **attendre une observation hors machine de test** avant de changer le mécanisme | — | **Écrite** ; en veille, à rouvrir sur un signalement consommateur |
 
 ## Vérification des actions de la rétro précédente (`sprint-m52-fiabilisation-consumers.md`)
 - A1 artefact VR sur annulation / passe `retries: 0` : ✅ **Done**. `visual.yml` uploade sur `failure() || cancelled()` depuis 2.145.1. La passe `retries: 0` a resservi sur #1046.
