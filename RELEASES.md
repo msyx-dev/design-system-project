@@ -1,5 +1,19 @@
 # Releases
 
+## 2.145.5 — 2026-10-05 — Décor de Noël et boutons mieux alignés
+
+Release du milestone #53 « Fiabilisation consumers ⑥ », ouvert sur des retours du consommateur tirokado.
+
+- **Thème Noël** :
+  - les boules de la guirlande ne recouvrent plus le titre de page, grâce à une réserve haute `--festive-top-clearance` dérivée des tokens `--ornament-*` (#1042) ;
+  - le sapin passe sous le contenu et ne masque plus les contrôles de droite (#1043).
+- **Tableaux en cartes** : dès 768 px, les boutons d'une cellule d'actions restent sur une rangée (#1044).
+- **Boutons** : deux boutons voisins de même taille ont la même hauteur, qu'il s'agisse d'un lien ou d'un bouton, avec ou sans bordure. Les boutons danger, succès et alerte respectent désormais `.btn-sm`, `.btn-lg` et `.btn-xs` (#1044).
+- **Empilement** : l'échelle servie est celle de la doctrine §12.1 (`--z-sticky` 150, `--z-modal` 1000), et les z-index écrits en dur sont rangés dans les jetons. La barre latérale mobile, le rail, les menus et les popovers repassent au-dessus des en-têtes collés (#1043).
+- **Consommateurs React** : la nouvelle prérelease de `@msyx-dev/react` (`FestiveDecor`) exige de resynchroniser le CSS du DS (`tokens.css`, `festive.css`) en même temps.
+
+Défauts corrigés à la volée et tracés dans #1045.
+
 ## 2.145.4 — 2026-10-04 — Le focus clavier n'est plus caché sous l'en-tête
 
 > Correctif d'accessibilité demandé par tirokado (#1039). Aucun changement de `@msyx-dev/react` : `SiteHeader` rend `.site-header`, la resynchronisation du CSS suffit.

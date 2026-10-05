@@ -6,6 +6,8 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+## v3.0.0-alpha.64 — 2026-10-05 — Décor de Noël et boutons mieux alignés
+
 > Mention croisée : la réserve haute du décor de Noël (`--festive-top-clearance`) et les tokens `--ornament-{drop,size}-1..3` sont décrits dans l'entrée #1042 de `../../CHANGELOG.md`.
 
 ### Fixed
