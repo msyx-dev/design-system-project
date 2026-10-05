@@ -3,7 +3,8 @@
 
 /* ===== BADGES & TAGS ===== */
 .badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-.badge-primary { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-light); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+/* #1050 — texte de .badge-primary : token DEDIE regle a la mesure (>= 4,6:1 au pire fond, 10 combos) ; --accent-light reste partage (liens, .tag, .chip-accent). Repli = rendu d'avant pour un consommateur sans tokens a jour. */
+.badge-primary { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--badge-primary-fg, var(--accent-light)); border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
 .badge-success { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--status-success-fg); border: 1px solid color-mix(in srgb, var(--success) 20%, transparent); }
 .badge-warning { background: color-mix(in srgb, var(--warning) 10%, transparent); color: var(--status-warn-fg); border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent); }
 .badge-danger { background: color-mix(in srgb, var(--danger) 10%, transparent); color: var(--status-error-fg); border: 1px solid color-mix(in srgb, var(--danger) 20%, transparent); }
