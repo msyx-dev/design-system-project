@@ -116,6 +116,9 @@
 .theme-switcher-select { width: 100%; padding: 0.35rem 0.6rem; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text); font-size: 0.78rem; font-family: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: var(--chevron-select); background-repeat: no-repeat; background-position: right 0.6rem center; }
 .theme-switcher-select:hover { border-color: var(--border-hover); }
 .theme-switcher-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+@media (pointer: coarse) { /* #1051 : champs à 16px sous pointeur grossier (zoom iOS au focus), mêmes sélecteurs */
+    .sidebar-filter, .theme-switcher-select, .site-header .theme-switcher-select { font-size: var(--input-font-size-touch); }
+}
 
 
 /* ===== MAIN ===== */

@@ -83,6 +83,7 @@ export default defineConfig({
     "**/button-height-parity.spec.ts",
     "**/stacking-scale.spec.ts",
     "**/festive-under-content.spec.ts",
+    "**/touch-targets-1051.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

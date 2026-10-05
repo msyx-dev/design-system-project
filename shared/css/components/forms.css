@@ -888,3 +888,17 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .markdown-preview:empty { display: none; }
 .markdown-editor .markdown-preview :where(p, ul, ol):first-child { margin-block-start: 0; }
 .markdown-editor .markdown-preview :where(p, ul, ol):last-child { margin-block-end: 0; }
+
+/* ===== POINTEUR GROSSIER (#1051) — DS-PRINCIPLES §3.4 =====
+   Rien ne change au pointeur fin. Police : on reprend CHAQUE sélecteur qui fixe une police
+   sous 16px (ordre de cascade, spécificité égale) ; :where() couvre les champs restés à la
+   taille par défaut du navigateur, sans battre une classe (un !important réduirait .otp-digit). */
+@media (pointer: coarse) {
+  :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"]), select, textarea) { font-size: var(--input-font-size-touch); }
+  .input, .slider-value, .dropdown-search input, .number-input-field,
+  .number-input-wrap.number-input--compact .number-input-field,
+  .search-input, .search-compact .search-input, .tag-input-field,
+  .login-form input, .login-compact input, .settings-row-input, .settings-row-select,
+  .comment-reply-input, .color-input-value, .markdown-input { font-size: var(--input-font-size-touch); }
+  .input, .dropdown-trigger { min-height: var(--touch-target); }
+}

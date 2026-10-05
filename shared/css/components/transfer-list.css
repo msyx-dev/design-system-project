@@ -48,6 +48,10 @@
     padding: 0.4rem 0.7rem;
 }
 
+@media (pointer: coarse) { /* #1051 : champ à 16px sous pointeur grossier (zoom iOS au focus), même sélecteur */
+    .transfer-search input.input { font-size: var(--input-font-size-touch); }
+}
+
 .transfer-body {
     max-height: 280px;
     overflow-y: auto;
