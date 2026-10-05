@@ -54,6 +54,12 @@
 .chip-input-field::placeholder { color: var(--text-dim); }
 @media (pointer: coarse) { /* #1051 : champ à 16px sous pointeur grossier (zoom iOS au focus), même sélecteur */
   .chip-input-field { font-size: var(--input-font-size-touch); }
+  /* Croix des puces (section CHIPS, plus haut) : zone de 44px, taille visuelle inchangée (17,6px). */
+  .chip-close { position: relative; }
+  .chip-close::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+  /* .chip-sm ≈ 24px de haut : la zone dépasse de 10px en haut et en bas → 20px entre deux rangées,
+     aucun recouvrement. En largeur, elle dépasse le bord de la puce de 1 à 3,4px, moins que le gap (8px). */
+  .chip-group:has(.chip-close) { row-gap: var(--space-5); }
 }
 
 /* ===== KBD ===== */

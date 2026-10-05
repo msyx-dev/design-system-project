@@ -49,6 +49,29 @@ const FONT_MIN = 16;
 const FIELDS_FLOOR = 150;
 /** Hauteur de `.input` au pointeur fin, relevée sur `main` (86b50e8) avant #1051. */
 const INPUT_H = 43;
+/** Fixture : puces fermables qui passent à la ligne, boutons `.btn-xs`/`.btn-sm` à libellé court. */
+const FIXTURE = "/visual-tests/fixtures/touch-targets-1051.html";
+/** CA2 — hauteur ≥ 44 px : les 7 variantes, les tailles, les champs et les cases. */
+const SEL_HAUTEUR = [
+  ".btn-primary",
+  ".btn-secondary",
+  ".btn-ghost",
+  ".btn-danger",
+  ".btn-success",
+  ".btn-warning",
+  ".btn-outline-danger",
+  ".btn-sm",
+  ".btn-xs",
+  ".btn-lg",
+  ".input",
+  ".dropdown-trigger",
+  ".checkbox",
+  ".radio",
+].join(", ");
+/** CA2 — largeur ≥ 44 px : les tailles qui descendraient en dessous avec un libellé court. */
+const SEL_LARGEUR = ".btn-sm, .btn-xs";
+/** Plancher de contrôles mesurés en hauteur (CA2), toutes pages confondues. */
+const CA2_FLOOR = 150;
 
 const PAGES = [
   "/site.html",
@@ -177,50 +200,196 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
     ).toEqual([]);
   });
 
-  test("CA2 (tranche 1). 375 px : .input et .dropdown-trigger font 44 px de haut", async ({
-    page,
-  }) => {
-    test.setTimeout(120_000);
-    const fautifs: string[] = [];
-    let mesures = 0;
-    for (const url of [
-      "/pages/formulaires.html",
-      "/pages/user-feedback.html",
-    ]) {
-      await ouvrir(page, url, 375);
-      expect((await pointeur(page)).coarse, "pointer: coarse actif").toBe(true);
-      const boites = await page.evaluate(() =>
-        [...document.querySelectorAll<HTMLElement>(".input, .dropdown-trigger")]
-          .filter((el) => {
-            const r = el.getBoundingClientRect();
-            return (
-              r.width > 0 &&
-              r.height > 0 &&
-              el.checkVisibility({
-                checkOpacity: true,
-                visibilityProperty: true,
-              })
-            );
-          })
-          .map((el) => ({
-            sig: `${el.tagName.toLowerCase()}.${[...el.classList].join(".")}`,
-            h: el.getBoundingClientRect().height,
-          })),
-      );
-      mesures += boites.length;
-      for (const b of boites) {
-        if (b.h < TARGET - 0.01)
-          fautifs.push(`${url} / ${b.sig} / ${b.h.toFixed(2)}px`);
-      }
-    }
+test("CA2. 375 px : boutons, champs et cases font 44 px de haut, .btn-sm/.btn-xs 44 px de large", async ({
+  page,
+}) => {
+  test.setTimeout(180_000);
+  const fautifs: string[] = [];
+  let hauteurs = 0;
+  let largeurs = 0;
+  for (const url of [...PAGES, FIXTURE]) {
+    await ouvrir(page, url, 375);
     expect(
-      mesures,
-      "au moins 20 champs .input/.dropdown-trigger mesurés",
-    ).toBeGreaterThanOrEqual(20);
-    expect([...new Set(fautifs)], `boîtes sous ${TARGET}px de haut`).toEqual(
-      [],
+      (await pointeur(page)).coarse,
+      `${url} : l'émulation tactile n'est pas active (pointer: coarse faux)`,
+    ).toBe(true);
+    const boites = await page.evaluate(
+      ({ haut, large }) => {
+        const visibles = (sel: string) =>
+          [...document.querySelectorAll<HTMLElement>(sel)]
+            .filter((el) => {
+              const r = el.getBoundingClientRect();
+              return (
+                r.width > 0 &&
+                r.height > 0 &&
+                el.checkVisibility({
+                  checkOpacity: true,
+                  visibilityProperty: true,
+                })
+              );
+            })
+            .map((el) => ({
+              sig: `${el.tagName.toLowerCase()}.${[...el.classList].join(".")}`,
+              w: el.getBoundingClientRect().width,
+              h: el.getBoundingClientRect().height,
+            }));
+        return { haut: visibles(haut), large: visibles(large) };
+      },
+      { haut: SEL_HAUTEUR, large: SEL_LARGEUR },
     );
-  });
+    hauteurs += boites.haut.length;
+    largeurs += boites.large.length;
+    for (const b of boites.haut)
+      if (b.h < TARGET - 0.01)
+        fautifs.push(`${url} / ${b.sig} / hauteur ${b.h.toFixed(2)}px`);
+    for (const b of boites.large)
+      if (b.w < TARGET - 0.01)
+        fautifs.push(`${url} / ${b.sig} / largeur ${b.w.toFixed(2)}px`);
+  }
+  console.log(
+    `[touch-targets-1051 CA2] ${hauteurs} hauteurs et ${largeurs} largeurs mesurées, ${fautifs.length} fautifs`,
+  );
+  expect(
+    hauteurs,
+    `plancher : ${CA2_FLOOR} contrôles mesurés au moins (sinon le test passe à vide)`,
+  ).toBeGreaterThanOrEqual(CA2_FLOOR);
+  expect(
+    largeurs,
+    "plancher : les 7 boutons courts de la fixture au moins",
+  ).toBeGreaterThanOrEqual(7);
+  expect([...new Set(fautifs)], `cibles sous ${TARGET}px`).toEqual([]);
+});
+
+test("CA3. Tableau en cartes : actions à 44×44 en mode tableau (1280 px) comme en cartes (375 px)", async ({
+  page,
+}) => {
+  for (const [width, mode] of [
+    [1280, "table-cell"],
+    [375, "flex"],
+  ] as const) {
+    await ouvrir(page, "/pages/data.html", width);
+    expect((await pointeur(page)).coarse, "pointer: coarse actif").toBe(true);
+    const mesure = await page.evaluate(() =>
+      [
+        ...document.querySelectorAll<HTMLElement>(
+          '#table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon)',
+        ),
+      ].map((el) => ({
+        label: el.getAttribute("aria-label") ?? el.textContent?.trim(),
+        cell: getComputedStyle(el.closest(".table-cards-actions")!).display,
+        w: el.getBoundingClientRect().width,
+        h: el.getBoundingClientRect().height,
+      })),
+    );
+    expect(
+      mesure.length,
+      `${width}px : au moins 3 actions mesurées`,
+    ).toBeGreaterThanOrEqual(3);
+    for (const m of mesure) {
+      // Garde : sans elle, le cas « mode tableau » passerait en mode cartes (44 px depuis #1008).
+      expect(m.cell, `${width}px : cellule d'actions en ${mode}`).toBe(mode);
+      expect(
+        m.h,
+        `${width}px / ${m.label} : ${m.h}px de haut`,
+      ).toBeGreaterThanOrEqual(TARGET - 0.01);
+      expect(
+        m.w,
+        `${width}px / ${m.label} : ${m.w}px de large`,
+      ).toBeGreaterThanOrEqual(TARGET - 0.01);
+    }
+  }
+});
+
+test("CA4. Croix des puces : zone de 44 px, aucun recouvrement entre puces", async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await ouvrir(page, FIXTURE, 375);
+  expect((await pointeur(page)).coarse, "pointer: coarse actif").toBe(true);
+  const r = await page.evaluate((target) => {
+    const PAS = 0.5;
+    const nom = (chip: Element) => chip.textContent!.replace("×", "").trim();
+    const croixEn = (x: number, y: number) =>
+      document.elementFromPoint(x, y)?.closest(".chip-close") ?? null;
+    const zones: string[] = [];
+    const boites: string[] = [];
+    const recouvrements = new Set<string>();
+    const rangees: Record<string, number> = {};
+    for (const groupe of document.querySelectorAll(".chip-group")) {
+      rangees[groupe.id] = new Set(
+        [...groupe.querySelectorAll(".chip")].map((c) =>
+          Math.round(c.getBoundingClientRect().top),
+        ),
+      ).size;
+    }
+    for (const close of document.querySelectorAll<HTMLElement>(".chip-close")) {
+      const chip = close.closest(".chip")!;
+      const b = close.getBoundingClientRect();
+      // Taille VISUELLE inchangée : la zone vient du ::after, pas d'une boîte agrandie.
+      if (Math.abs(b.width - 17.6) > 1 || Math.abs(b.height - 17.6) > 1)
+        boites.push(`${nom(chip)} : ${b.width}×${b.height}`);
+      const cx = b.left + b.width / 2;
+      const cy = b.top + b.height / 2;
+      // Étendue contiguë autour du centre, sur les deux médianes de la croix, au pas de 0,5 px.
+      const etendue = (dx: number, dy: number) => {
+        let n = 0;
+        while (
+          n < 200 &&
+          croixEn(cx + dx * (n + 1) * PAS, cy + dy * (n + 1) * PAS) === close
+        )
+          n++;
+        return n * PAS;
+      };
+      const largeur = etendue(-1, 0) + etendue(1, 0) + PAS;
+      const hauteur = etendue(0, -1) + etendue(0, 1) + PAS;
+      if (largeur < target - PAS || hauteur < target - PAS)
+        zones.push(`${nom(chip)} : zone ${largeur}×${hauteur}`);
+    }
+    // Aucun point d'une puce B (croix comprise) ne doit être résolu vers la croix d'une puce A.
+    for (const chip of document.querySelectorAll<HTMLElement>(".chip")) {
+      const c = chip.getBoundingClientRect();
+      for (let y = c.top + PAS / 2; y < c.bottom; y += PAS)
+        for (let x = c.left + PAS / 2; x < c.right; x += PAS) {
+          const croix = croixEn(x, y);
+          if (croix && !chip.contains(croix))
+            recouvrements.add(
+              `${nom(chip)} ← croix de ${nom(croix.closest(".chip")!)}`,
+            );
+        }
+    }
+    return {
+      zones,
+      boites,
+      recouvrements: [...recouvrements],
+      rangees,
+      n: document.querySelectorAll(".chip-close").length,
+    };
+  }, TARGET);
+  console.log(
+    `[touch-targets-1051 CA4] ${r.n} croix, rangées ${JSON.stringify(r.rangees)}`,
+  );
+  expect(r.n, "18 croix dans la fixture").toBe(18);
+  // Garde : sans passage à la ligne, le recouvrement entre rangées ne serait jamais éprouvé.
+  expect(
+    r.rangees["chips-defaut"],
+    "puces par défaut sur 2 rangées au moins",
+  ).toBeGreaterThanOrEqual(2);
+  expect(
+    r.rangees["chips-sm"],
+    "puces .chip-sm sur 2 rangées au moins",
+  ).toBeGreaterThanOrEqual(2);
+  expect(
+    r.boites,
+    ".chip-close garde sa taille visuelle de 17,6×17,6 (±1)",
+  ).toEqual([]);
+  expect(r.zones, `zone de chaque croix ≥ ${TARGET}px (pas de 0,5 px)`).toEqual(
+    [],
+  );
+  expect(
+    r.recouvrements,
+    "aucune croix ne capte le toucher d'une autre puce",
+  ).toEqual([]);
+});
 });
 
 test.describe("Pointeur fin — rien ne change au bureau (#1051)", () => {

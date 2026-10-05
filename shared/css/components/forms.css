@@ -901,4 +901,5 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
   .login-form input, .login-compact input, .settings-row-input, .settings-row-select,
   .comment-reply-input, .color-input-value, .markdown-input { font-size: var(--input-font-size-touch); }
   .input, .dropdown-trigger { min-height: var(--touch-target); }
+  .checkbox, .radio { min-height: var(--touch-target); }
 }

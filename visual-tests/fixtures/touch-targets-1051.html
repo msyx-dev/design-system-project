@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cibles tactiles — fixture #1051</title>
+<!--
+  Fixture de `visual-tests/touch-targets-1051.spec.ts` (#1051, tranche t2).
+
+  - Deux `.chip-group` de puces fermables qui passent à la ligne à 375px : un en taille par
+    défaut, un en `.chip-sm` (la plus basse : c'est elle qui dépasse le plus d'une rangée à
+    l'autre). Un groupe par taille : dans un même `.chip-group`, l'étirement flex alignerait
+    une `.chip-sm` sur la hauteur d'une puce par défaut, et la mesure ne porterait plus sur
+    la `.chip-sm`.
+  - Une rangée de `.btn-xs` / `.btn-sm` à libellé court (« OK », « + »…), pour la largeur
+    minimale de 44px sous pointeur grossier.
+  Ni nav.js ni components.js : la mesure ne porte que sur le CSS du DS.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  /* Mise en page propre à la fixture : une colonne étroite, de la marge autour des zones. */
+  .touch-fixture { padding: var(--space-lg) var(--space-md); max-width: 22rem; }
+  .touch-fixture > * + * { margin-block-start: var(--space-lg); }
+  .touch-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-sm); }
+</style>
+</head>
+<body>
+<main class="touch-fixture">
+  <div class="chip-group" id="chips-defaut">
+    <span class="chip">Design<button type="button" class="chip-close" aria-label="Retirer Design">&times;</button></span>
+    <span class="chip">Produit<button type="button" class="chip-close" aria-label="Retirer Produit">&times;</button></span>
+    <span class="chip">Web<button type="button" class="chip-close" aria-label="Retirer Web">&times;</button></span>
+    <span class="chip">Mobile<button type="button" class="chip-close" aria-label="Retirer Mobile">&times;</button></span>
+    <span class="chip">Accessibilité<button type="button" class="chip-close" aria-label="Retirer Accessibilité">&times;</button></span>
+    <span class="chip">Thèmes<button type="button" class="chip-close" aria-label="Retirer Thèmes">&times;</button></span>
+    <span class="chip">CSS<button type="button" class="chip-close" aria-label="Retirer CSS">&times;</button></span>
+    <span class="chip">Jetons<button type="button" class="chip-close" aria-label="Retirer Jetons">&times;</button></span>
+  </div>
+
+  <div class="chip-group" id="chips-sm">
+    <span class="chip chip-sm">Alpha<button type="button" class="chip-close" aria-label="Retirer Alpha">&times;</button></span>
+    <span class="chip chip-sm">Bêta<button type="button" class="chip-close" aria-label="Retirer Bêta">&times;</button></span>
+    <span class="chip chip-sm">Gamma<button type="button" class="chip-close" aria-label="Retirer Gamma">&times;</button></span>
+    <span class="chip chip-sm">Delta<button type="button" class="chip-close" aria-label="Retirer Delta">&times;</button></span>
+    <span class="chip chip-sm">Epsilon<button type="button" class="chip-close" aria-label="Retirer Epsilon">&times;</button></span>
+    <span class="chip chip-sm">Zêta<button type="button" class="chip-close" aria-label="Retirer Zêta">&times;</button></span>
+    <span class="chip chip-sm">Êta<button type="button" class="chip-close" aria-label="Retirer Êta">&times;</button></span>
+    <span class="chip chip-sm">Thêta<button type="button" class="chip-close" aria-label="Retirer Thêta">&times;</button></span>
+    <span class="chip chip-sm">Iota<button type="button" class="chip-close" aria-label="Retirer Iota">&times;</button></span>
+    <span class="chip chip-sm">Kappa<button type="button" class="chip-close" aria-label="Retirer Kappa">&times;</button></span>
+  </div>
+
+  <div class="touch-row" id="boutons-courts">
+    <button type="button" class="btn-primary btn-xs">OK</button>
+    <button type="button" class="btn-secondary btn-xs" aria-label="Ajouter">+</button>
+    <a href="#" class="btn-ghost btn-xs">Lien</a>
+    <button type="button" class="btn-primary btn-sm">OK</button>
+    <button type="button" class="btn-secondary btn-sm" aria-label="Ajouter">+</button>
+    <button type="button" class="btn-danger btn-sm" aria-label="Retirer">&times;</button>
+    <a href="#" class="btn-secondary btn-outline-danger btn-sm">Non</a>
+  </div>
+</main>
+</body>
+</html>

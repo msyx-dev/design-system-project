@@ -131,6 +131,10 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
   .table-cards--editable .table-cards-add-row > td { border-top: 2px dashed var(--border-hover); } /* bordure fusionnée : portée par les td */
 }
 
+@media (pointer: coarse) { /* #1051 : cibles 44px aussi en mode tableau (tablette tactile) — même spécificité (0,4,0) que la restauration de TABLE CARDS à 768px, placé APRÈS elle */
+  .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: var(--touch-target); min-height: var(--touch-target); justify-content: center; }
+}
+
 /* ===== SERVER DATA-GRID — loading state ===== */
 .data-grid-wrap[aria-busy="true"] {
   opacity: 0.6;
