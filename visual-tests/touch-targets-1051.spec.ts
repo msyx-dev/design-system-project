@@ -70,6 +70,24 @@
  *   (j) compaction rendue à 640 px (bloc coarse avant le bloc 640.02px, sans le bloc 768.02px)
  *       → cas tablette rouge (Noël 768 : burger à 19 px, dernier contrôle hors marge).
  *
+ * CA7 (tranche 4) — à 375 px, sur les mêmes pages et la fixture, les contrôles que la première
+ *       passe excluait. Zones en `::after` (taille visuelle inchangée, boîte sous 44 px de haut) :
+ *       `.toggle`, `.tag-close`, `.dropdown-tag button`, `.file-item-remove` — étendue ≥ 44 px le
+ *       long des deux médianes (pas de 0,5 px), et aucun point d'un contrôle voisin (bouton, champ,
+ *       label, tag, puce, ligne de fichier) pris dans le carré de la zone n'est résolu vers elle.
+ *       Boîtes à 44 px : `.search-compact .search-input`, `.filter-bar .input`/`button` (déjà
+ *       conformes après t1-t2), `.pagination .page-btn` (44×44) ; aucune `.pagination` ne déborde.
+ *       Gardes : voisins effectivement balayés, tags et puces de liste de la fixture sur 2 rangées.
+ *
+ * Preuve par mutation (tranche 4, jouée le 2026-10-05) :
+ *   (k) `row-gap` de `.tag-input-wrap` retiré → CA7 rouge (zones des croix de tags amputées entre
+ *       deux rangées, et recouvrements : la croix d'une rangée capte le tag de la rangée voisine) ;
+ *   (l) écarts de `.dropdown-tags` retirés → CA7 rouge (zones amputées, recouvrements : la croix
+ *       d'une puce capte la puce suivante) ;
+ *   (m) marge verticale de `.toggle` retirée ET bloc coarse de la pagination neutralisé → CA7 rouge
+ *       (zones des interrupteurs empilés amputées, `.page-btn` à 36 px, `.pagination` qui déborde
+ *       à 375 px — débordement déjà présent au pointeur fin, hors #1051).
+ *
  * Hors portée, signalé à part (annotation du rapport) : les champs dont la police est écrite en
  * style inline. Au 2026-10-05, 4 démos natives de `composants.html` (« Reset natif » et
  * « Disabled global », 13,6 px). La CSS du DS ne peut pas les battre sans `!important`, que la
@@ -696,6 +714,9 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
     const tailles: Record<string, Set<string>> = {};
     let cibles = 0;
     let boitesMesurees = 0;
+    let paires = 0;
+    const agrandies: string[] = [];
+    let rangees: Record<string, number> = {};
     for (const url of [...PAGES, FIXTURE]) {
       await ouvrir(page, url, 375);
       expect(
@@ -735,7 +756,21 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
             boites: [] as string[],
             nBoites: 0,
             debordements: [] as string[],
+            agrandies: [] as string[],
+            paires: 0,
+            rangees: {} as Record<string, number>,
           };
+          // Fixture : la rangée de tags et celle des puces de liste passent-elles à la ligne ?
+          for (const [id, item] of [
+            ["tags", ".tag-item"],
+            ["dropdown-tags", ".dropdown-tag"],
+          ]) {
+            const items = document.querySelectorAll(`#${id} ${item}`);
+            if (items.length)
+              out.rangees[id] = new Set(
+                [...items].map((c) => Math.round(c.getBoundingClientRect().top)),
+              ).size;
+          }
           for (const sel of zonesSel) {
             for (const el of document.querySelectorAll<HTMLElement>(sel)) {
               if (!visible(el)) continue;
@@ -751,6 +786,12 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
               out.tailles.push(
                 `${sel}=${b.width.toFixed(1)}×${b.height.toFixed(1)}`,
               );
+              // Taille VISUELLE inchangée : la zone vient du ::after, la boîte reste sous 44 px
+              // de haut (l'interrupteur fait 44 de large depuis toujours).
+              if (b.height >= target - 1)
+                out.agrandies.push(
+                  `${sel} « ${nom(el)} » : ${b.width.toFixed(1)}×${b.height.toFixed(1)}`,
+                );
               const cx = b.left + b.width / 2;
               const cy = b.top + b.height / 2;
               const vers = (x: number, y: number) =>
@@ -784,6 +825,7 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
                 const y0 = Math.max(c.top, R.t);
                 const y1 = Math.min(c.bottom, R.b);
                 if (x0 >= x1 || y0 >= y1) continue;
+                out.paires++;
                 let capte = false;
                 for (let y = y0 + PAS / 2; y < y1 && !capte; y += PAS)
                   for (let x = x0 + PAS / 2; x < x1 && !capte; x += PAS)
@@ -826,6 +868,9 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
         },
       );
       cibles += r.n;
+      paires += r.paires;
+      for (const z of r.agrandies) agrandies.push(`${url} / ${z}`);
+      if (url === FIXTURE) rangees = r.rangees;
       boitesMesurees += r.nBoites;
       for (const z of r.zones) zones.push(`${url} / ${z}`);
       for (const z of r.recouvrements) recouvrements.add(`${url} / ${z}`);
@@ -837,20 +882,31 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
       }
     }
     console.log(
-      `[touch-targets-1051 CA7] ${cibles} zones, ${boitesMesurees} boîtes ; tailles ${JSON.stringify(
+      `[touch-targets-1051 CA7] ${cibles} zones, ${paires} voisins balayés, ${boitesMesurees} boîtes ; rangées ${JSON.stringify(rangees)} ; tailles ${JSON.stringify(
         Object.fromEntries(
           Object.entries(tailles).map(([k, v]) => [k, [...v]]),
         ),
       )}`,
     );
-    console.log(
-      JSON.stringify(
-        { zones, recouvrements: [...recouvrements], fautifs, debordements },
-        null,
-        1,
-      ),
-    );
     expect(cibles, "plancher de zones mesurées").toBeGreaterThanOrEqual(30);
+    // Gardes : sans voisin dans le carré d'une zone, ni sans passage à la ligne, le contrôle
+    // de recouvrement passerait à vide. 11 paires au 2026-10-05 : les écarts élargis par #1051
+    // sortent la plupart des voisins du carré, c'est attendu ; le plancher dit « jamais zéro ».
+    expect(
+      paires,
+      "voisins balayés dans le carré des zones",
+    ).toBeGreaterThanOrEqual(8);
+    expect(
+      rangees.tags ?? 0,
+      "fixture : tags sur 2 rangées au moins",
+    ).toBeGreaterThanOrEqual(2);
+    expect(
+      rangees["dropdown-tags"] ?? 0,
+      "fixture : puces de liste sur 2 rangées au moins",
+    ).toBeGreaterThanOrEqual(2);
+    expect
+      .soft(agrandies, "taille visuelle inchangée (zone en ::after)")
+      .toEqual([]);
     expect.soft(zones, `zone de chaque contrôle ≥ ${TARGET}px`).toEqual([]);
     expect
       .soft([...recouvrements], "aucune zone ne capte le toucher d'un voisin")
