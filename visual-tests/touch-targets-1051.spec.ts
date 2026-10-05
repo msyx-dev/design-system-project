@@ -55,6 +55,21 @@
  *       contre 8 px de gap, comme la spec le calculait), mais leurs zones se chevauchent dans
  *       l'interstice (amputées à 40 px de haut) : le cas de zone rougit aussi pour elles.
  *
+ * CA5 (tranche 3) — `pages/navigation.html` : en Noël à 375 et 360 px, en MSYX à 320 px, burger,
+ *       mode, flocon, cloche, feedback et avatar font 44×44 ; l'en-tête ne déborde pas, garde
+ *       56 px, aucune paire de boîtes ne se chevauche et un balayage `elementFromPoint` des
+ *       médianes de chaque cible ne tombe jamais sur une voisine. Même contrôle avec un
+ *       `.user-menu-trigger` (identité de `<SiteHeader>` React) monté à la place de l'avatar, et
+ *       sur tablette tactile à 768, 769 et 1024 px (sélecteur de thème et badge affichés).
+ *
+ * Preuve par mutation (tranche 3, jouée le 2026-10-05) :
+ *   (g) `.site-header .mode-switch` retiré du bloc coarse de `layout.css` → CA5 rouge sur les
+ *       7 cas (`.mode-switch` 60×36) ;
+ *   (h) compaction `padding-inline`/`gap` retirée → CA5 rouge (Noël 360 : débordement, burger
+ *       écrasé, avatar hors de la fenêtre ; MSYX 320 ; React 375 ; Noël 768) ;
+ *   (j) compaction rendue à 640 px (bloc coarse avant le bloc 640.02px, sans le bloc 768.02px)
+ *       → cas tablette rouge (Noël 768 : burger à 19 px, dernier contrôle hors marge).
+ *
  * Hors portée, signalé à part (annotation du rapport) : les champs dont la police est écrite en
  * style inline. Au 2026-10-05, 4 démos natives de `composants.html` (« Reset natif » et
  * « Disabled global », 13,6 px). La CSS du DS ne peut pas les battre sans `!important`, que la
