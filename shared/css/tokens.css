@@ -20,7 +20,7 @@
        4 fonds de reference, 10 combos) ; --accent-light reste partage. Repli cote composant = --accent-light. */
     --tag-fg: #60a5fa;  /* .tag (teinte 8 %) : 5,22:1 au pire fond (= --accent-light, rendu inchange) */
     --chip-accent-fg: #60a5fa;  /* .chip-accent (teinte 12 %) : 4,93:1 au pire fond (= --accent-light) */
-    /* #1050 t3 — texte ACCENT sur teinte accent des 8 autres regles (.dropdown-option.selected, .dropdown-tag,
+    /* #1050 t3 — texte ACCENT sur teinte accent des 8 autres regles (.dropdown-option.selected, .dropdown-tag et sa croix,
        .tree-item.selected, .activity-filter-chip.active, .activity-tag, .breadcrumbs a:hover,
        .backlog-filters .btn-filter.active, badge des notes de version) : UN token regle a la PIRE teinte
        de ses usages (14 %), donc valable de 6 a 14 %. Repli cote composant = --accent-light. */

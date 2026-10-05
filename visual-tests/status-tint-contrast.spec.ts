@@ -83,6 +83,7 @@ const VARIANTS = [
   // `--accent-tint-fg`, réglé à la pire teinte de ses usages (14 %, badge des notes de version).
   "dropdown-option-selected", // .dropdown-option.selected (8 %)
   "dropdown-tag", // .dropdown-tag (8 %)
+  "dropdown-tag-remove", // .dropdown-tag button (croix « × » de retrait, 8 % du parent) — t4
   "tree-leaf-selected", // .tree-item.selected.tree-leaf (12 %)
   "activity-filter-chip-active", // .activity-filter-chip.active (10 %)
   "activity-tag", // .activity-tag (10 %)
