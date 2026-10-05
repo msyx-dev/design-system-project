@@ -83,6 +83,8 @@ export default defineConfig({
     "**/button-height-parity.spec.ts",
     "**/stacking-scale.spec.ts",
     "**/festive-under-content.spec.ts",
+    "**/table-cards-lg-1052.spec.ts",
+    "**/status-tint-contrast.spec.ts",
     "**/touch-targets-1051.spec.ts",
   ],
   fullyParallel: true,

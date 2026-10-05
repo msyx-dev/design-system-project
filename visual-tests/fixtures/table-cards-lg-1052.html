@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau en cartes jusqu'à 1024px — fixture #1052</title>
+<!--
+  Fixture de `visual-tests/table-cards-lg-1052.spec.ts` (#1052).
+
+  `.table-cards--lg` décale la bascule cartes -> tableau de 768px (bp-md) à 1024px (bp-lg),
+  pour un tableau qui ne tient pas à 768px. Réplique de l'écran de suivi de tirokado :
+  `main.page-content.page-content--wide` > `section.card.card-static` > `.table-wrap` > table.
+
+  #wrap-lg6 > table.table-cards.table-cards--lg#t-lg6 : 6 colonnes (Participant, E-mail,
+    Mail, Consulté, Lien, Actions), 4 lignes. Actions = deux <form> contenant chacun un
+    bouton, sans blanc entre les balises (JSX).
+  #wrap-md6 > table.table-cards#t-md6 : le MÊME tableau sans --lg. Témoin du défaut (il
+    défile à 768px) et jumeau de parité (boîtes identiques dès 1024px).
+  #wrap-lg4 > table.table-cards.table-cards--editable.table-cards--lg#t-lg4 : saisie à
+    4 colonnes (Nom, E-mail, Exclusions, Actions), 3 lignes + une ligne d'ajout dans le
+    <tfoot>. Exclusions = .chip-group + « + Exclusion ». Actions = <form hidden>, puis
+    « Enregistrer » et « Retirer », sans blanc entre les balises.
+  #wrap-md4 > table#t-md4 : la MÊME saisie sans --lg (jumeau de parité).
+
+  Les jumeaux ne diffèrent que par la classe --lg, les identifiants de <form> et un
+  suffixe « (témoin) » dans les noms accessibles (aucun effet sur la mise en page).
+  Cellules en role="cell", libellés en aria-hidden, noms accessibles uniques, comme les
+  fixtures #1007, #1008 et #1044. Pas de nav.js ni de components.js : rien d'autre que le
+  CSS du DS ne doit toucher la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<main class="page-content page-content--wide">
+  <h1>Suivi du tirage</h1>
+
+  <section class="card card-static">
+    <h2>Suivi, cartes jusqu'à 1024px</h2>
+    <div class="table-wrap" id="wrap-lg6">
+      <table class="table-cards table-cards--lg" id="t-lg6" role="table" aria-label="Suivi des participants">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Participant</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Mail</th><th scope="col" role="columnheader">Consulté</th><th scope="col" role="columnheader">Lien</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🦊</span> Marie-Hélène de La Tour-Dupin</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>marie-helene.delatour-dupin@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 04/10/2026 à 18:42</div><div class="text-muted text-xs">Relancé le 05/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Marie-Hélène de La Tour-Dupin">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Marie-Hélène de La Tour-Dupin">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg6-p1-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Marie-Hélène de La Tour-Dupin">Régénérer le lien</button></form><form id="t-lg6-p1-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Marie-Hélène de La Tour-Dupin">Relancer</button></form></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🐻</span> Bastien Leroy-Kowalczyk</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>bastien.leroy-kowalczyk@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 03/10/2026 à 09:15</div><div class="text-muted text-xs">Relancé le 04/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Bastien Leroy-Kowalczyk">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Bastien Leroy-Kowalczyk">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg6-p2-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Bastien Leroy-Kowalczyk">Régénérer le lien</button></form><form id="t-lg6-p2-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Bastien Leroy-Kowalczyk">Relancer</button></form></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🦉</span> Jean-Baptiste Dupont</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>jean-baptiste.dupont@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 02/10/2026 à 21:07</div><div class="text-muted text-xs">Relancé le 05/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Jean-Baptiste Dupont">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Jean-Baptiste Dupont">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg6-p3-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Jean-Baptiste Dupont">Régénérer le lien</button></form><form id="t-lg6-p3-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Jean-Baptiste Dupont">Relancer</button></form></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🐢</span> Chloé Nguyen-Martineau</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>chloe.nguyen-martineau@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 01/10/2026 à 07:58</div><div class="text-muted text-xs">Relancé le 03/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Chloé Nguyen-Martineau">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Chloé Nguyen-Martineau">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg6-p4-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Chloé Nguyen-Martineau">Régénérer le lien</button></form><form id="t-lg6-p4-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Chloé Nguyen-Martineau">Relancer</button></form></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Suivi, témoin sans --lg</h2>
+    <div class="table-wrap" id="wrap-md6">
+      <table class="table-cards" id="t-md6" role="table" aria-label="Suivi des participants (témoin)">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Participant</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Mail</th><th scope="col" role="columnheader">Consulté</th><th scope="col" role="columnheader">Lien</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🦊</span> Marie-Hélène de La Tour-Dupin</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>marie-helene.delatour-dupin@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 04/10/2026 à 18:42</div><div class="text-muted text-xs">Relancé le 05/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Marie-Hélène de La Tour-Dupin (témoin)">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Marie-Hélène de La Tour-Dupin (témoin)">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md6-p1-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Marie-Hélène de La Tour-Dupin (témoin)">Régénérer le lien</button></form><form id="t-md6-p1-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Marie-Hélène de La Tour-Dupin (témoin)">Relancer</button></form></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🐻</span> Bastien Leroy-Kowalczyk</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>bastien.leroy-kowalczyk@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 03/10/2026 à 09:15</div><div class="text-muted text-xs">Relancé le 04/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Bastien Leroy-Kowalczyk (témoin)">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Bastien Leroy-Kowalczyk (témoin)">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md6-p2-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Bastien Leroy-Kowalczyk (témoin)">Régénérer le lien</button></form><form id="t-md6-p2-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Bastien Leroy-Kowalczyk (témoin)">Relancer</button></form></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🦉</span> Jean-Baptiste Dupont</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>jean-baptiste.dupont@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 02/10/2026 à 21:07</div><div class="text-muted text-xs">Relancé le 05/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Jean-Baptiste Dupont (témoin)">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Jean-Baptiste Dupont (témoin)">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md6-p3-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Jean-Baptiste Dupont (témoin)">Régénérer le lien</button></form><form id="t-md6-p3-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Jean-Baptiste Dupont (témoin)">Relancer</button></form></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span><span aria-hidden="true">🐢</span> Chloé Nguyen-Martineau</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>chloe.nguyen-martineau@exemple.test</td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Mail</span><span class="badge badge-success">E-mail envoyé</span></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Consulté</span><div>Lien consulté le 01/10/2026 à 07:58</div><div class="text-muted text-xs">Relancé le 03/10/2026</div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Chloé Nguyen-Martineau (témoin)">Copier</button> <button type="button" class="btn-ghost btn-sm" aria-label="Afficher le lien de Chloé Nguyen-Martineau (témoin)">Afficher le lien</button></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md6-p4-regen"><button type="submit" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Chloé Nguyen-Martineau (témoin)">Régénérer le lien</button></form><form id="t-md6-p4-relance"><button type="submit" class="btn-secondary btn-sm" aria-label="Relancer Chloé Nguyen-Martineau (témoin)">Relancer</button></form></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Saisie, cartes jusqu'à 1024px</h2>
+    <div class="table-wrap" id="wrap-lg4">
+      <table class="table-cards table-cards--editable table-cards--lg" id="t-lg4" role="table" aria-label="Participants à modifier">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Exclusions</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-lg4-q1" name="name" required aria-label="Nom de Marie-Hélène de La Tour-Dupin" value="Marie-Hélène de La Tour-Dupin"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-lg4-q1" name="email" type="email" required aria-label="E-mail de Marie-Hélène de La Tour-Dupin" value="marie-helene.delatour-dupin@exemple.test"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><div class="chip-group"><span class="chip">Bastien <button type="button" class="chip-close" aria-label="Retirer l'exclusion Bastien de Marie-Hélène de La Tour-Dupin">&times;</button></span><span class="chip">Chloé <button type="button" class="chip-close" aria-label="Retirer l'exclusion Chloé de Marie-Hélène de La Tour-Dupin">&times;</button></span><button type="button" class="btn-ghost btn-sm" aria-label="Ajouter une exclusion à Marie-Hélène de La Tour-Dupin">+ Exclusion</button></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg4-q1" hidden></form><form id="t-lg4-q1-retirer" hidden></form><button type="submit" form="t-lg4-q1" class="btn-secondary btn-sm" aria-label="Enregistrer Marie-Hélène de La Tour-Dupin">Enregistrer</button><button type="submit" form="t-lg4-q1-retirer" class="btn-danger btn-sm" aria-label="Retirer Marie-Hélène de La Tour-Dupin">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-lg4-q2" name="name" required aria-label="Nom de Bastien Leroy-Kowalczyk" value="Bastien Leroy-Kowalczyk"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-lg4-q2" name="email" type="email" required aria-label="E-mail de Bastien Leroy-Kowalczyk" value="bastien.leroy-kowalczyk@exemple.test"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><div class="chip-group"><span class="chip">Marie-Hélène <button type="button" class="chip-close" aria-label="Retirer l'exclusion Marie-Hélène de Bastien Leroy-Kowalczyk">&times;</button></span><button type="button" class="btn-ghost btn-sm" aria-label="Ajouter une exclusion à Bastien Leroy-Kowalczyk">+ Exclusion</button></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg4-q2" hidden></form><form id="t-lg4-q2-retirer" hidden></form><button type="submit" form="t-lg4-q2" class="btn-secondary btn-sm" aria-label="Enregistrer Bastien Leroy-Kowalczyk">Enregistrer</button><button type="submit" form="t-lg4-q2-retirer" class="btn-danger btn-sm" aria-label="Retirer Bastien Leroy-Kowalczyk">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-lg4-q3" name="name" required aria-label="Nom de Jean-Baptiste Dupont" value="Jean-Baptiste Dupont"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-lg4-q3" name="email" type="email" required aria-label="E-mail de Jean-Baptiste Dupont" value="jean-baptiste.dupont@exemple.test"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><div class="chip-group"><button type="button" class="btn-ghost btn-sm" aria-label="Ajouter une exclusion à Jean-Baptiste Dupont">+ Exclusion</button></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg4-q3" hidden></form><form id="t-lg4-q3-retirer" hidden></form><button type="submit" form="t-lg4-q3" class="btn-secondary btn-sm" aria-label="Enregistrer Jean-Baptiste Dupont">Enregistrer</button><button type="submit" form="t-lg4-q3-retirer" class="btn-danger btn-sm" aria-label="Retirer Jean-Baptiste Dupont">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-lg4-new" name="name" required aria-label="Nom du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-lg4-new" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><span class="text-muted text-xs">Après l'ajout</span></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg4-new" hidden></form><button type="submit" form="t-lg4-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Saisie, témoin sans --lg</h2>
+    <div class="table-wrap" id="wrap-md4">
+      <table class="table-cards table-cards--editable" id="t-md4" role="table" aria-label="Participants à modifier (témoin)">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Exclusions</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-md4-q1" name="name" required aria-label="Nom de Marie-Hélène de La Tour-Dupin (témoin)" value="Marie-Hélène de La Tour-Dupin"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-md4-q1" name="email" type="email" required aria-label="E-mail de Marie-Hélène de La Tour-Dupin (témoin)" value="marie-helene.delatour-dupin@exemple.test"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><div class="chip-group"><span class="chip">Bastien <button type="button" class="chip-close" aria-label="Retirer l'exclusion Bastien de Marie-Hélène de La Tour-Dupin (témoin)">&times;</button></span><span class="chip">Chloé <button type="button" class="chip-close" aria-label="Retirer l'exclusion Chloé de Marie-Hélène de La Tour-Dupin (témoin)">&times;</button></span><button type="button" class="btn-ghost btn-sm" aria-label="Ajouter une exclusion à Marie-Hélène de La Tour-Dupin (témoin)">+ Exclusion</button></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md4-q1" hidden></form><form id="t-md4-q1-retirer" hidden></form><button type="submit" form="t-md4-q1" class="btn-secondary btn-sm" aria-label="Enregistrer Marie-Hélène de La Tour-Dupin (témoin)">Enregistrer</button><button type="submit" form="t-md4-q1-retirer" class="btn-danger btn-sm" aria-label="Retirer Marie-Hélène de La Tour-Dupin (témoin)">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-md4-q2" name="name" required aria-label="Nom de Bastien Leroy-Kowalczyk (témoin)" value="Bastien Leroy-Kowalczyk"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-md4-q2" name="email" type="email" required aria-label="E-mail de Bastien Leroy-Kowalczyk (témoin)" value="bastien.leroy-kowalczyk@exemple.test"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><div class="chip-group"><span class="chip">Marie-Hélène <button type="button" class="chip-close" aria-label="Retirer l'exclusion Marie-Hélène de Bastien Leroy-Kowalczyk (témoin)">&times;</button></span><button type="button" class="btn-ghost btn-sm" aria-label="Ajouter une exclusion à Bastien Leroy-Kowalczyk (témoin)">+ Exclusion</button></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md4-q2" hidden></form><form id="t-md4-q2-retirer" hidden></form><button type="submit" form="t-md4-q2" class="btn-secondary btn-sm" aria-label="Enregistrer Bastien Leroy-Kowalczyk (témoin)">Enregistrer</button><button type="submit" form="t-md4-q2-retirer" class="btn-danger btn-sm" aria-label="Retirer Bastien Leroy-Kowalczyk (témoin)">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-md4-q3" name="name" required aria-label="Nom de Jean-Baptiste Dupont (témoin)" value="Jean-Baptiste Dupont"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-md4-q3" name="email" type="email" required aria-label="E-mail de Jean-Baptiste Dupont (témoin)" value="jean-baptiste.dupont@exemple.test"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><div class="chip-group"><button type="button" class="btn-ghost btn-sm" aria-label="Ajouter une exclusion à Jean-Baptiste Dupont (témoin)">+ Exclusion</button></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md4-q3" hidden></form><form id="t-md4-q3-retirer" hidden></form><button type="submit" form="t-md4-q3" class="btn-secondary btn-sm" aria-label="Enregistrer Jean-Baptiste Dupont (témoin)">Enregistrer</button><button type="submit" form="t-md4-q3-retirer" class="btn-danger btn-sm" aria-label="Retirer Jean-Baptiste Dupont (témoin)">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" form="t-md4-new" name="name" required aria-label="Nom du nouveau participant (témoin)"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" form="t-md4-new" name="email" type="email" required aria-label="E-mail du nouveau participant (témoin)"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Exclusions</span><span class="text-muted text-xs">Après l'ajout</span></td>
+            <td role="cell" class="table-cards-actions"><form id="t-md4-new" hidden></form><button type="submit" form="t-md4-new" class="btn-primary btn-sm" aria-label="Ajouter le participant (témoin)">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>

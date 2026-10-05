@@ -63,6 +63,9 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
    Portée : thead / tbody / tfoot — une ligne de <tfoot> devient aussi une carte.
    Dès 768 px, la cellule d'actions garde ses contrôles sur une rangée (`nowrap`). Si le
    tableau ne tient plus, le `.table-wrap` défile (#1044).
+   `.table-cards--lg` décale la bascule à 1024 px (bp-lg) pour les tableaux larges (#1052) :
+   bloc dédié plus bas. Les blocs à 768 px l'excluent par `:where(:not(.table-cards--lg))`,
+   de spécificité nulle : les spécificités ci-dessous ne changent pas.
    Spécificité : `.table-cards td` (0,1,1) l'emporte sur une classe seule, d'où le
    préfixe `.table-cards` devant chaque élément (0,2,0). */
 .table-cards,
@@ -86,21 +89,21 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; justify-content: center; }
 
 @media (min-width: 768px) { /* bp-md (DS-PRINCIPLES §4) */
-  .table-cards { display: table; }
-  .table-cards caption { display: table-caption; }
-  .table-cards thead { display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
-  .table-cards tbody { display: table-row-group; }
-  .table-cards tfoot { display: table-footer-group; }
-  .table-cards tr { display: table-row; padding: 0; border-top: 0; }
-  .table-cards td { display: table-cell; padding: 0.7rem 1.1rem; border-top: 1px solid var(--border-color); overflow-wrap: normal; } /* = td global, ci-dessus : le test « jumeau » (visual-tests/table-cards.spec.ts) garantit l'égalité des boîtes */
-  .table-cards .table-cards-label { display: none; }
-  .table-cards .table-cards-actions { display: table-cell; text-align: end; white-space: nowrap; } /* #1044 : contrôles sur UNE rangée, libellés entiers */
+  .table-cards:where(:not(.table-cards--lg)) { display: table; }
+  .table-cards:where(:not(.table-cards--lg)) caption { display: table-caption; }
+  .table-cards:where(:not(.table-cards--lg)) thead { display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+  .table-cards:where(:not(.table-cards--lg)) tbody { display: table-row-group; }
+  .table-cards:where(:not(.table-cards--lg)) tfoot { display: table-footer-group; }
+  .table-cards:where(:not(.table-cards--lg)) tr { display: table-row; padding: 0; border-top: 0; }
+  .table-cards:where(:not(.table-cards--lg)) td { display: table-cell; padding: 0.7rem 1.1rem; border-top: 1px solid var(--border-color); overflow-wrap: normal; } /* = td global, ci-dessus : le test « jumeau » (visual-tests/table-cards.spec.ts) garantit l'égalité des boîtes */
+  .table-cards:where(:not(.table-cards--lg)) .table-cards-label { display: none; }
+  .table-cards:where(:not(.table-cards--lg)) .table-cards-actions { display: table-cell; text-align: end; white-space: nowrap; } /* #1044 : contrôles sur UNE rangée, libellés entiers */
   /* #1044 : un <td> ne peut pas être flex sans cesser d'être une cellule (mesuré : cellule anonyme qui ne remplit plus la rangée).
      Rangée = nowrap ; écart = marge, car le JSX n'émet aucun blanc entre deux boutons ; centrage = vertical-align. */
-  .table-cards .table-cards-actions > :is(button, a, [role="button"]) { vertical-align: middle; }
-  .table-cards .table-cards-actions > :is(button, a, [role="button"]) ~ :is(button, a, [role="button"]) { margin-inline-start: var(--space-sm); }
+  .table-cards:where(:not(.table-cards--lg)) .table-cards-actions > :is(button, a, [role="button"]) { vertical-align: middle; }
+  .table-cards:where(:not(.table-cards--lg)) .table-cards-actions > :is(button, a, [role="button"]) ~ :is(button, a, [role="button"]) { margin-inline-start: var(--space-sm); }
   /* Le tableau reprend la taille native des contrôles (boîtes identiques au tableau sans .table-cards). */
-  .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: auto; min-height: auto; justify-content: normal; }
+  .table-cards:where(:not(.table-cards--lg)) .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: auto; min-height: auto; justify-content: normal; }
 }
 
 /* ===== TABLE CARDS — SAISIE (#1008) =====
@@ -108,8 +111,8 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
    - Formulaire de ligne : <form id hidden> vide dans la cellule d'actions ; champs et
      bouton d'envoi rattachés par form="<id>" (un <form> ne peut pas envelopper un <tr>).
    - Cibles >= 44px à TOUTES les largeurs : le mode tableau commence à 768px (tablette
-     tactile). Même exception que .data-grid-pagination .page-btn (pas de token). Le sélecteur des
-     boutons doit battre la restauration de TABLE CARDS à 768px (0,4,0) : d'où .table-cards
+     tactile), 1024px avec .table-cards--lg. Même exception que .data-grid-pagination .page-btn (pas de token). Le sélecteur des
+     boutons doit battre la restauration de TABLE CARDS à 768px ou 1024px (0,4,0) : d'où .table-cards
      doublé + :not(.btn-icon), (0,5,0), sans dépendre de l'ordre des règles.
    - Messages d'erreur : contribution intrinsèque neutralisée (width:0 + min-width:100%),
      sinon l'algorithme de tableau auto recalcule les colonnes à chaque erreur.
@@ -125,10 +128,37 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .table-cards--editable .table-cards-add-row { background: color-mix(in srgb, var(--accent) 4%, transparent); border-top: 2px dashed var(--border-hover); }
 
 @media (min-width: 768px) { /* bp-md, même seuil que TABLE CARDS */
-  .table-cards--editable tbody td,
-  .table-cards--editable tfoot td { vertical-align: top; padding-block: var(--space-sm); } /* (0,1,2) > .table-cards td (0,1,1) */
-  .table-cards--editable .table-cards-add-row { border-top: 0; }
-  .table-cards--editable .table-cards-add-row > td { border-top: 2px dashed var(--border-hover); } /* bordure fusionnée : portée par les td */
+  .table-cards--editable:where(:not(.table-cards--lg)) tbody td,
+  .table-cards--editable:where(:not(.table-cards--lg)) tfoot td { vertical-align: top; padding-block: var(--space-sm); } /* (0,1,2) > .table-cards td (0,1,1) */
+  .table-cards--editable:where(:not(.table-cards--lg)) .table-cards-add-row { border-top: 0; }
+  .table-cards--editable:where(:not(.table-cards--lg)) .table-cards-add-row > td { border-top: 2px dashed var(--border-hover); } /* bordure fusionnée : portée par les td */
+}
+
+/* ===== TABLE CARDS — BASCULE À bp-lg (#1052) =====
+   .table-cards--lg (sur <table class="table-cards">) : cartes jusqu'à 1023px, tableau dès 1024px.
+   Pour un tableau qui ne tient pas à 768px (4 à 6 colonnes, champs en cellule). Opt-in.
+   Mêmes déclarations que les deux blocs à 768px ci-dessus, sous :where(.table-cards--lg) :
+   spécificités identiques ; toute modification d'un bloc à 768px se reporte ici
+   (parité gardée par visual-tests/table-cards-lg-1052.spec.ts, cas 3).
+   Les règles hors média (cartes, saisie) ne changent pas : entre 768 et 1023px, un tableau
+   --lg garde ses cibles de 44px et sa cellule d'actions en flex. */
+@media (min-width: 1024px) { /* bp-lg (DS-PRINCIPLES §4) */
+  .table-cards:where(.table-cards--lg) { display: table; }
+  .table-cards:where(.table-cards--lg) caption { display: table-caption; }
+  .table-cards:where(.table-cards--lg) thead { display: table-header-group; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+  .table-cards:where(.table-cards--lg) tbody { display: table-row-group; }
+  .table-cards:where(.table-cards--lg) tfoot { display: table-footer-group; }
+  .table-cards:where(.table-cards--lg) tr { display: table-row; padding: 0; border-top: 0; }
+  .table-cards:where(.table-cards--lg) td { display: table-cell; padding: 0.7rem 1.1rem; border-top: 1px solid var(--border-color); overflow-wrap: normal; }
+  .table-cards:where(.table-cards--lg) .table-cards-label { display: none; }
+  .table-cards:where(.table-cards--lg) .table-cards-actions { display: table-cell; text-align: end; white-space: nowrap; }
+  .table-cards:where(.table-cards--lg) .table-cards-actions > :is(button, a, [role="button"]) { vertical-align: middle; }
+  .table-cards:where(.table-cards--lg) .table-cards-actions > :is(button, a, [role="button"]) ~ :is(button, a, [role="button"]) { margin-inline-start: var(--space-sm); }
+  .table-cards:where(.table-cards--lg) .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: auto; min-height: auto; justify-content: normal; }
+  .table-cards--editable:where(.table-cards--lg) tbody td,
+  .table-cards--editable:where(.table-cards--lg) tfoot td { vertical-align: top; padding-block: var(--space-sm); }
+  .table-cards--editable:where(.table-cards--lg) .table-cards-add-row { border-top: 0; }
+  .table-cards--editable:where(.table-cards--lg) .table-cards-add-row > td { border-top: 2px dashed var(--border-hover); }
 }
 
 @media (pointer: coarse) { /* #1051 : cibles 44px aussi en mode tableau (tablette tactile) — même spécificité (0,4,0) que la restauration de TABLE CARDS à 768px, placé APRÈS elle */

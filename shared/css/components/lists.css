@@ -11,7 +11,7 @@
 .tree-leaf { flex-direction: row; align-items: center; gap: 0.4rem; padding: 0.3rem 0.5rem; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.875rem; color: var(--text); transition: background 0.15s; }
 .tree-leaf:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
 .tree-item.selected > .tree-toggle,
-.tree-item.selected.tree-leaf { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-light); }
+.tree-item.selected.tree-leaf { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-tint-fg, var(--accent-light)); }
 .tree-chevron { width: 14px; height: 14px; flex-shrink: 0; color: var(--text-muted); transition: transform 0.22s ease; }
 .tree-branch.open > .tree-toggle .tree-chevron { transform: rotate(0deg); }
 .tree-branch:not(.open) > .tree-toggle .tree-chevron { transform: rotate(-90deg); }
@@ -151,7 +151,7 @@
 .activity-filter-chip.active {
     background: color-mix(in srgb, var(--accent) 10%, transparent);
     border-color: color-mix(in srgb, var(--accent) 35%, transparent);
-    color: var(--accent-light);
+    color: var(--accent-tint-fg, var(--accent-light));
 }
 .activity-item {
     display: flex;
@@ -224,7 +224,7 @@
     padding: 0.1rem 0.5rem;
     border-radius: var(--radius-xs);
     background: color-mix(in srgb, var(--accent) 10%, transparent);
-    color: var(--accent-light);
+    color: var(--accent-tint-fg, var(--accent-light));
     border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
     text-transform: uppercase;
     letter-spacing: 0.05em;

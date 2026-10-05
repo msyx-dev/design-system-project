@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Texte sur fond de statut teinte — sonde #1050</title>
+<!--
+  Fixture de la sonde `visual-tests/status-tint-contrast.spec.ts` (#1050).
+
+  Le texte des badges, alertes et chips semantiques se lit sur une TEINTE translucide
+  (color-mix(in srgb, X N%, transparent) : 8 % alertes, 10 % badges et .alert--kpi, 12 % chips)
+  posee sur le fond de son parent. Tranche t2 : texte ACCENT sur teinte accent -- .tag (8 %, --tag-fg),
+  .chip-accent (12 %, --chip-accent-fg) et .chip-filter.active (25 %, --accent-text-strong, pire teinte
+  de ce token parmi ses usages). Tranche t3 : les 8 autres regles qui posaient --accent-light sur une teinte
+  accent (6 a 14 %) lisent --accent-tint-fg, regle a la pire teinte (14 %) : .dropdown-option.selected,
+  .dropdown-tag (et sa croix .dropdown-tag button), .tree-item.selected.tree-leaf, .activity-filter-chip.active, .activity-tag,
+  .breadcrumbs a:hover (data-hover : survole par le spec avant la mesure), .backlog-filters
+  .btn-filter.active, .version-notes .timeline-content h4 .badge. Le ratio depend donc du parent : la fixture repete toutes les
+  variantes sur les 4 fonds parents de reference (ceux de #981), chacun empile sur --primary :
+    - page          : --primary ;
+    - surface       : --surface sur --primary (carte, demo-box) ;
+    - surface-solid : --surface-solid (modale, popover) ;
+    - primary-light : --primary-light sur --primary (.card-flat).
+
+  Chaque noeud texte porte `data-probe="<variante>[>slot]|<parent>"` ; l'ensemble doit rester egal
+  a PROBES du spec. Aucun degrade, aucune opacite dans la chaine (garde de validite du spec).
+  Pas de nav.js, pas de components.js : seul le CSS du DS est mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  body { margin: 0; }
+  #bench { display: flex; flex-direction: column; gap: 1rem; max-width: 720px; }
+  .fx { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .fx-page, .fx-under { background: var(--primary); }
+  .fx-surface { background: var(--surface); }
+  .fx-surface-solid { background: var(--surface-solid); }
+  .fx-primary-light { background: var(--primary-light); }
+  .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+</style>
+</head>
+<body>
+<main id="bench">
+  <!-- fond parent : page -->
+  <section class="fx fx-page" data-parent="page">
+    <div class="row">
+      <span class="badge badge-primary" data-probe="badge-primary|page">Primaire</span>
+      <span class="badge badge-success" data-probe="badge-success|page">Succes</span>
+      <span class="badge badge-warning" data-probe="badge-warning|page">Attente</span>
+      <span class="badge badge-danger" data-probe="badge-danger|page">Erreur</span>
+      <span class="badge badge-info" data-probe="badge-info|page">Info</span>
+      <span class="badge badge-neutral" data-probe="badge-neutral|page">Clos</span>
+    </div>
+    <div class="row">
+      <span class="chip chip-success" data-probe="chip-success|page">Succes</span>
+      <span class="chip chip-warning" data-probe="chip-warning|page">Attente</span>
+      <span class="chip chip-danger" data-probe="chip-danger|page">Erreur</span>
+      <span class="tag" data-probe="tag|page">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|page">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|page">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|page">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|page">Etiquette <button type="button" aria-label="Retirer" data-probe="dropdown-tag-remove|page">&times;</button></span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|page">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|page">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|page">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|page" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|page">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|page">Nouveau</span></h4></div></div>
+    </div>
+    <div class="alert alert-info" role="note">
+      <span data-probe="alert-info|page">Info : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-info>title|page">Titre info</div>
+        <div class="alert-desc" data-probe="alert-info>desc|page">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-success" role="note">
+      <span data-probe="alert-success|page">Succes : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-success>title|page">Titre succes</div>
+        <div class="alert-desc" data-probe="alert-success>desc|page">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-warning" role="note">
+      <span data-probe="alert-warning|page">Attente : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-warning>title|page">Titre attente</div>
+        <div class="alert-desc" data-probe="alert-warning>desc|page">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-danger" role="note">
+      <span data-probe="alert-danger|page">Erreur : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-danger>title|page">Titre erreur</div>
+        <div class="alert-desc" data-probe="alert-danger>desc|page">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-neutral" role="note">
+      <span data-probe="alert-neutral|page">Clos : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-neutral>title|page">Titre clos</div>
+        <div class="alert-desc" data-probe="alert-neutral>desc|page">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert--kpi alert-info" role="note">
+      <div class="alert-title" data-probe="kpi-info>title|page">Indicateur info</div>
+      <div class="alert-value" data-probe="kpi-info>value|page">42</div>
+    </div>
+    <div class="alert alert--kpi alert-success" role="note">
+      <div class="alert-title" data-probe="kpi-success>title|page">Indicateur succes</div>
+      <div class="alert-value" data-probe="kpi-success>value|page">42</div>
+    </div>
+    <div class="alert alert--kpi alert-warning" role="note">
+      <div class="alert-title" data-probe="kpi-warning>title|page">Indicateur attente</div>
+      <div class="alert-value" data-probe="kpi-warning>value|page">42</div>
+    </div>
+    <div class="alert alert--kpi alert-danger" role="note">
+      <div class="alert-title" data-probe="kpi-danger>title|page">Indicateur erreur</div>
+      <div class="alert-value" data-probe="kpi-danger>value|page">42</div>
+    </div>
+    <div class="alert alert--kpi alert-neutral" role="note">
+      <div class="alert-title" data-probe="kpi-neutral>title|page">Indicateur clos</div>
+      <div class="alert-value" data-probe="kpi-neutral>value|page">42</div>
+    </div>
+  </section>
+  <!-- fond parent : surface -->
+  <div class="fx-under">
+  <section class="fx fx-surface" data-parent="surface">
+    <div class="row">
+      <span class="badge badge-primary" data-probe="badge-primary|surface">Primaire</span>
+      <span class="badge badge-success" data-probe="badge-success|surface">Succes</span>
+      <span class="badge badge-warning" data-probe="badge-warning|surface">Attente</span>
+      <span class="badge badge-danger" data-probe="badge-danger|surface">Erreur</span>
+      <span class="badge badge-info" data-probe="badge-info|surface">Info</span>
+      <span class="badge badge-neutral" data-probe="badge-neutral|surface">Clos</span>
+    </div>
+    <div class="row">
+      <span class="chip chip-success" data-probe="chip-success|surface">Succes</span>
+      <span class="chip chip-warning" data-probe="chip-warning|surface">Attente</span>
+      <span class="chip chip-danger" data-probe="chip-danger|surface">Erreur</span>
+      <span class="tag" data-probe="tag|surface">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|surface">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|surface">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|surface">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|surface">Etiquette <button type="button" aria-label="Retirer" data-probe="dropdown-tag-remove|surface">&times;</button></span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|surface">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|surface">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|surface">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|surface" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|surface">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|surface">Nouveau</span></h4></div></div>
+    </div>
+    <div class="alert alert-info" role="note">
+      <span data-probe="alert-info|surface">Info : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-info>title|surface">Titre info</div>
+        <div class="alert-desc" data-probe="alert-info>desc|surface">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-success" role="note">
+      <span data-probe="alert-success|surface">Succes : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-success>title|surface">Titre succes</div>
+        <div class="alert-desc" data-probe="alert-success>desc|surface">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-warning" role="note">
+      <span data-probe="alert-warning|surface">Attente : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-warning>title|surface">Titre attente</div>
+        <div class="alert-desc" data-probe="alert-warning>desc|surface">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-danger" role="note">
+      <span data-probe="alert-danger|surface">Erreur : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-danger>title|surface">Titre erreur</div>
+        <div class="alert-desc" data-probe="alert-danger>desc|surface">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-neutral" role="note">
+      <span data-probe="alert-neutral|surface">Clos : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-neutral>title|surface">Titre clos</div>
+        <div class="alert-desc" data-probe="alert-neutral>desc|surface">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert--kpi alert-info" role="note">
+      <div class="alert-title" data-probe="kpi-info>title|surface">Indicateur info</div>
+      <div class="alert-value" data-probe="kpi-info>value|surface">42</div>
+    </div>
+    <div class="alert alert--kpi alert-success" role="note">
+      <div class="alert-title" data-probe="kpi-success>title|surface">Indicateur succes</div>
+      <div class="alert-value" data-probe="kpi-success>value|surface">42</div>
+    </div>
+    <div class="alert alert--kpi alert-warning" role="note">
+      <div class="alert-title" data-probe="kpi-warning>title|surface">Indicateur attente</div>
+      <div class="alert-value" data-probe="kpi-warning>value|surface">42</div>
+    </div>
+    <div class="alert alert--kpi alert-danger" role="note">
+      <div class="alert-title" data-probe="kpi-danger>title|surface">Indicateur erreur</div>
+      <div class="alert-value" data-probe="kpi-danger>value|surface">42</div>
+    </div>
+    <div class="alert alert--kpi alert-neutral" role="note">
+      <div class="alert-title" data-probe="kpi-neutral>title|surface">Indicateur clos</div>
+      <div class="alert-value" data-probe="kpi-neutral>value|surface">42</div>
+    </div>
+  </section>
+  </div>
+  <!-- fond parent : surface-solid -->
+  <div class="fx-under">
+  <section class="fx fx-surface-solid" data-parent="surface-solid">
+    <div class="row">
+      <span class="badge badge-primary" data-probe="badge-primary|surface-solid">Primaire</span>
+      <span class="badge badge-success" data-probe="badge-success|surface-solid">Succes</span>
+      <span class="badge badge-warning" data-probe="badge-warning|surface-solid">Attente</span>
+      <span class="badge badge-danger" data-probe="badge-danger|surface-solid">Erreur</span>
+      <span class="badge badge-info" data-probe="badge-info|surface-solid">Info</span>
+      <span class="badge badge-neutral" data-probe="badge-neutral|surface-solid">Clos</span>
+    </div>
+    <div class="row">
+      <span class="chip chip-success" data-probe="chip-success|surface-solid">Succes</span>
+      <span class="chip chip-warning" data-probe="chip-warning|surface-solid">Attente</span>
+      <span class="chip chip-danger" data-probe="chip-danger|surface-solid">Erreur</span>
+      <span class="tag" data-probe="tag|surface-solid">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|surface-solid">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|surface-solid">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|surface-solid">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|surface-solid">Etiquette <button type="button" aria-label="Retirer" data-probe="dropdown-tag-remove|surface-solid">&times;</button></span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|surface-solid">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|surface-solid">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|surface-solid">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|surface-solid" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|surface-solid">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|surface-solid">Nouveau</span></h4></div></div>
+    </div>
+    <div class="alert alert-info" role="note">
+      <span data-probe="alert-info|surface-solid">Info : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-info>title|surface-solid">Titre info</div>
+        <div class="alert-desc" data-probe="alert-info>desc|surface-solid">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-success" role="note">
+      <span data-probe="alert-success|surface-solid">Succes : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-success>title|surface-solid">Titre succes</div>
+        <div class="alert-desc" data-probe="alert-success>desc|surface-solid">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-warning" role="note">
+      <span data-probe="alert-warning|surface-solid">Attente : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-warning>title|surface-solid">Titre attente</div>
+        <div class="alert-desc" data-probe="alert-warning>desc|surface-solid">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-danger" role="note">
+      <span data-probe="alert-danger|surface-solid">Erreur : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-danger>title|surface-solid">Titre erreur</div>
+        <div class="alert-desc" data-probe="alert-danger>desc|surface-solid">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-neutral" role="note">
+      <span data-probe="alert-neutral|surface-solid">Clos : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-neutral>title|surface-solid">Titre clos</div>
+        <div class="alert-desc" data-probe="alert-neutral>desc|surface-solid">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert--kpi alert-info" role="note">
+      <div class="alert-title" data-probe="kpi-info>title|surface-solid">Indicateur info</div>
+      <div class="alert-value" data-probe="kpi-info>value|surface-solid">42</div>
+    </div>
+    <div class="alert alert--kpi alert-success" role="note">
+      <div class="alert-title" data-probe="kpi-success>title|surface-solid">Indicateur succes</div>
+      <div class="alert-value" data-probe="kpi-success>value|surface-solid">42</div>
+    </div>
+    <div class="alert alert--kpi alert-warning" role="note">
+      <div class="alert-title" data-probe="kpi-warning>title|surface-solid">Indicateur attente</div>
+      <div class="alert-value" data-probe="kpi-warning>value|surface-solid">42</div>
+    </div>
+    <div class="alert alert--kpi alert-danger" role="note">
+      <div class="alert-title" data-probe="kpi-danger>title|surface-solid">Indicateur erreur</div>
+      <div class="alert-value" data-probe="kpi-danger>value|surface-solid">42</div>
+    </div>
+    <div class="alert alert--kpi alert-neutral" role="note">
+      <div class="alert-title" data-probe="kpi-neutral>title|surface-solid">Indicateur clos</div>
+      <div class="alert-value" data-probe="kpi-neutral>value|surface-solid">42</div>
+    </div>
+  </section>
+  </div>
+  <!-- fond parent : primary-light -->
+  <div class="fx-under">
+  <section class="fx fx-primary-light" data-parent="primary-light">
+    <div class="row">
+      <span class="badge badge-primary" data-probe="badge-primary|primary-light">Primaire</span>
+      <span class="badge badge-success" data-probe="badge-success|primary-light">Succes</span>
+      <span class="badge badge-warning" data-probe="badge-warning|primary-light">Attente</span>
+      <span class="badge badge-danger" data-probe="badge-danger|primary-light">Erreur</span>
+      <span class="badge badge-info" data-probe="badge-info|primary-light">Info</span>
+      <span class="badge badge-neutral" data-probe="badge-neutral|primary-light">Clos</span>
+    </div>
+    <div class="row">
+      <span class="chip chip-success" data-probe="chip-success|primary-light">Succes</span>
+      <span class="chip chip-warning" data-probe="chip-warning|primary-light">Attente</span>
+      <span class="chip chip-danger" data-probe="chip-danger|primary-light">Erreur</span>
+      <span class="tag" data-probe="tag|primary-light">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|primary-light">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|primary-light">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|primary-light">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|primary-light">Etiquette <button type="button" aria-label="Retirer" data-probe="dropdown-tag-remove|primary-light">&times;</button></span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|primary-light">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|primary-light">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|primary-light">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|primary-light" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|primary-light">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|primary-light">Nouveau</span></h4></div></div>
+    </div>
+    <div class="alert alert-info" role="note">
+      <span data-probe="alert-info|primary-light">Info : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-info>title|primary-light">Titre info</div>
+        <div class="alert-desc" data-probe="alert-info>desc|primary-light">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-success" role="note">
+      <span data-probe="alert-success|primary-light">Succes : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-success>title|primary-light">Titre succes</div>
+        <div class="alert-desc" data-probe="alert-success>desc|primary-light">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-warning" role="note">
+      <span data-probe="alert-warning|primary-light">Attente : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-warning>title|primary-light">Titre attente</div>
+        <div class="alert-desc" data-probe="alert-warning>desc|primary-light">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-danger" role="note">
+      <span data-probe="alert-danger|primary-light">Erreur : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-danger>title|primary-light">Titre erreur</div>
+        <div class="alert-desc" data-probe="alert-danger>desc|primary-light">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert-neutral" role="note">
+      <span data-probe="alert-neutral|primary-light">Clos : texte direct</span>
+      <div class="alert-body">
+        <div class="alert-title" data-probe="alert-neutral>title|primary-light">Titre clos</div>
+        <div class="alert-desc" data-probe="alert-neutral>desc|primary-light">Description de l'alerte.</div>
+      </div>
+    </div>
+    <div class="alert alert--kpi alert-info" role="note">
+      <div class="alert-title" data-probe="kpi-info>title|primary-light">Indicateur info</div>
+      <div class="alert-value" data-probe="kpi-info>value|primary-light">42</div>
+    </div>
+    <div class="alert alert--kpi alert-success" role="note">
+      <div class="alert-title" data-probe="kpi-success>title|primary-light">Indicateur succes</div>
+      <div class="alert-value" data-probe="kpi-success>value|primary-light">42</div>
+    </div>
+    <div class="alert alert--kpi alert-warning" role="note">
+      <div class="alert-title" data-probe="kpi-warning>title|primary-light">Indicateur attente</div>
+      <div class="alert-value" data-probe="kpi-warning>value|primary-light">42</div>
+    </div>
+    <div class="alert alert--kpi alert-danger" role="note">
+      <div class="alert-title" data-probe="kpi-danger>title|primary-light">Indicateur erreur</div>
+      <div class="alert-value" data-probe="kpi-danger>value|primary-light">42</div>
+    </div>
+    <div class="alert alert--kpi alert-neutral" role="note">
+      <div class="alert-title" data-probe="kpi-neutral>title|primary-light">Indicateur clos</div>
+      <div class="alert-value" data-probe="kpi-neutral>value|primary-light">42</div>
+    </div>
+  </section>
+  </div>
+</main>
+</body>
+</html>
