@@ -25,10 +25,18 @@
  * Joué dans UN seul projet (`msyx-dark-mobile`) : ni le thème ni le mode ne changent une
  * police ou une boîte. Chaque cas pose son propre viewport.
  *
- * Preuve par mutation (tranche 1, consignée dans le commit puis dans la PR) :
- *   (a) `.input` retiré du bloc coarse de police de `forms.css` → CA1 rouge (14,4 px) ;
- *   (b) règle `:where(…)` retirée → CA1 rouge sur les champs sans classe (13,3 px) ;
- *   (i) `(pointer: coarse)` → `(min-width: 1px)` dans `forms.css` → CA6 rouge (`.input` à 16 px).
+ * Preuve par mutation (tranche 1, jouée le 2026-10-05, consignée dans le commit puis dans la PR) :
+ *   (a) `.input` retiré du bloc coarse de police de `forms.css` → CA1 rouge (54 champs, 21
+ *       signatures à 14,4 px : `input.input`, `select.input`, `textarea.input`…) ;
+ *   (b) règle `:where(…)` retirée → CA1 rouge (10 champs sans classe à 13,33 px, dans
+ *       `.date-input-wrap` et `.number-input-wrap`) ;
+ *   (i) `(pointer: coarse)` → `(min-width: 1px)` dans `forms.css` → CA6 rouge (`.input` à 16 px
+ *       au bureau).
+ *
+ * Hors portée, signalé à part (annotation du rapport) : les champs dont la police est écrite en
+ * style inline. Au 2026-10-05, 4 démos natives de `composants.html` (« Reset natif » et
+ * « Disabled global », 13,6 px). La CSS du DS ne peut pas les battre sans `!important`, que la
+ * spec interdit : c'est la démo qu'il faut corriger, pas la règle.
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
