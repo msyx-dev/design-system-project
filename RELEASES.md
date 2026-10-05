@@ -1,5 +1,18 @@
 # Releases
 
+## 2.146.0 — 2026-10-05 — Textes lisibles, cibles tactiles et tableaux larges
+
+Release du milestone #54 « Fiabilisation consumers ⑦ », ouvert sur l'audit UX du consommateur tirokado.
+
+- **Contraste en mode clair** : le texte posé sur un fond teinté (badges, alertes, puces, étiquettes, filtres actifs, pastille des notes de version) atteint au moins 4,5:1 dans les 10 combinaisons thème × mode, grâce à des jetons dédiés réglés à la mesure (`--status-*-fg`, `--badge-primary-fg`, `--tag-fg`, `--chip-accent-fg`, `--accent-tint-fg`). Une sonde bloquante le garde (#1050).
+- **Écrans tactiles** : sous pointeur grossier, les champs passent à 16 px (iOS ne zoome plus la page au focus) et les cibles à 44 px : boutons, cases, interrupteurs, croix, contrôles de l'en-tête, pagination. Rien ne change à la souris (#1051).
+- **En-tête entre 641 et 768 px** : il ne déborde plus et son bouton de menu n'est plus écrasé ; le nom affiché à côté du logo revient à partir de 769 px (#1051).
+- **Pagination** : elle passe à la ligne sur téléphone au lieu de sortir de son cadre (#1051).
+- **Tableaux larges** : `.table-cards--lg` (React : `<TableCards breakpoint="lg">`) garde l'affichage en cartes jusqu'à 1024 px. Sans cet opt-in, les tableaux existants ne changent pas (#1052).
+- **Consommateurs** : resynchroniser tout le CSS du DS (`sync.sh`) en même temps que la nouvelle prérelease de `@msyx-dev/react`.
+
+Défauts corrigés à la volée et tracés dans #1053, dont le registre des composants désormais reproductible et contrôlé de façon bloquante.
+
 ## 2.145.5 — 2026-10-05 — Décor de Noël et boutons mieux alignés
 
 Release du milestone #53 « Fiabilisation consumers ⑥ », ouvert sur des retours du consommateur tirokado.
