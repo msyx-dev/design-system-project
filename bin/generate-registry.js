@@ -59,7 +59,12 @@ function scanCssFiles(dir) {
   const results = [];
   if (!fs.existsSync(dir)) return results;
 
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  // Tri explicite par point de code (#1053) : l'ordre de readdirSync est celui du
+  // système de fichiers (ordre de création sur un répertoire ext4 linéaire, ordre
+  // de hachage sur un répertoire indexé), donc il change d'un checkout à l'autre.
+  // Jamais localeCompare ici : il dépend de la locale de la machine.
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+    .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -78,14 +83,20 @@ function scanCssFiles(dir) {
  * @param {string} content
  * @returns {string[]} classes uniques (avec le point)
  */
-function extractClasses(content) {
+function extractClasses(content, { ignoreComments = false } = {}) {
   // Regex : sélecteur de classe standalone au début d'un token de sélecteur
   // Capture .classname qui ne soit pas précédé par un autre token
   const CLASS_RE = /(?:^|[\s,{>;+~(])(\.[a-zA-Z][a-zA-Z0-9_-]+)/gm;
   const found = new Set();
   let match;
+  // ignoreComments (#1053) : une classe CITÉE en commentaire n'est pas déclarée par
+  // le fichier (`.graph-toolbar`, nommé dans l'en-tête de layout.css, rattachait le
+  // composant graph à layout.css). Réservé à l'attribution module[] : la validation
+  // des fantômes garde l'extraction brute, dont dépend au moins une entrée
+  // (heatmap-calendar → `.visible`, cité seulement en commentaire hors sélecteur composé).
+  const code = ignoreComments ? content.replace(/\/\*[\s\S]*?\*\//g, ' ') : content;
 
-  while ((match = CLASS_RE.exec(content)) !== null) {
+  while ((match = CLASS_RE.exec(code)) !== null) {
     const cls = match[1];
     // Exclure les pseudo-classes et modificateurs (:hover, ::before, etc.)
     // et les sélecteurs d'attribut embarqués
@@ -164,6 +175,12 @@ const cssFiles = scanCssFiles(CSS_ROOT).filter(f => {
 
 // Map : groupName → { category, sourceFile, classes[] }
 const groupMap = new Map();
+// Classes de CHAQUE fichier, sous son propre chemin (#1053). groupMap ne peut pas
+// servir de source : deux fichiers peuvent porter le même nom de groupe
+// (`base.css` et `components/_base.css` donnent tous deux « base »), et le groupe
+// fusionné ne garde qu'un seul sourceFile, le premier rencontré. Classes lues hors
+// commentaires : citer une classe ne la déclare pas.
+const fileClasses = [];
 
 for (const cssFile of cssFiles) {
   const content = fs.readFileSync(cssFile, 'utf8');
@@ -173,6 +190,7 @@ for (const cssFile of cssFiles) {
   const cat = categorize(cssFile);
   const gn = groupName(cssFile);
   const relPath = path.relative(ROOT, cssFile).replace(/\\/g, '/');
+  fileClasses.push({ sourceFile: relPath, classes: extractClasses(content, { ignoreComments: true }) });
 
   if (!groupMap.has(gn)) {
     groupMap.set(gn, { category: cat, sourceFile: relPath, classes: [] });
@@ -184,13 +202,16 @@ for (const cssFile of cssFiles) {
 }
 
 // ─── Map inverse classe→fichiers (#506) ───────────────────────────────────────
-// Construite en une passe depuis groupMap.
+// Construite fichier par fichier (#1053), jamais depuis groupMap : depuis que
+// `base.css` déclare une classe (#1039), le groupe « base » fusionnait ses classes
+// avec celles de `components/_base.css` sous un seul chemin, celui que readdir
+// rendait en premier — d'où un module[] qui changeait d'un checkout à l'autre.
 // Map : classe (avec point, ex. '.card') → Set<chemin repo> (ex. Set{'shared/css/components/cards.css'})
 const classToFiles = new Map();
-for (const [, info] of groupMap.entries()) {
-  for (const cls of info.classes) {
+for (const { sourceFile, classes } of fileClasses) {
+  for (const cls of classes) {
     if (!classToFiles.has(cls)) classToFiles.set(cls, new Set());
-    classToFiles.get(cls).add(info.sourceFile);
+    classToFiles.get(cls).add(sourceFile);
   }
 }
 
@@ -980,8 +1001,9 @@ const isIdempotent = stripTimestamp(newJson) === stripTimestamp(previousJson);
 
 // ─── Validation pont module[] (#506) ─────────────────────────────────────────
 // Ensemble de tous les sourceFile connus (pour vérifier que les items de module[] existent)
-const knownSourceFiles = new Set();
-for (const [, info] of groupMap.entries()) knownSourceFiles.add(info.sourceFile);
+// Depuis les fichiers scannés eux-mêmes (#1053), pas depuis groupMap qui n'en garde
+// qu'un par nom de groupe.
+const knownSourceFiles = new Set(fileClasses.map(f => f.sourceFile));
 
 const moduleErrors = [];
 const kindComponentTotal = newComponents.filter(c => c.kind === 'component').length;
@@ -1102,7 +1124,22 @@ if (process.argv.includes('--check')) {
   if (isIdempotent) {
     console.log('Idempotence       : OK (registre à jour)');
   } else {
-    console.warn('⚠ Registre non à jour — lancez `npm run generate-registry` en local pour synchroniser.');
+    // Bloquant depuis #1053 : un warn à rc 0 laissait le registre committé
+    // diverger de sa dérivation sans que la CI le voie.
+    const previousByName = new Map();
+    try {
+      for (const c of (JSON.parse(previousJson).components || [])) previousByName.set(c.name, JSON.stringify(c));
+    } catch (_) { /* registre illisible : seul le message général s'applique */ }
+    const drifted = newComponents
+      .filter(c => previousByName.get(c.name) !== JSON.stringify(c))
+      .map(c => c.name);
+    console.error('\n❌ Registre non à jour (#1053) — la régénération modifierait shared/components-registry.json.');
+    if (drifted.length > 0) {
+      const shown = drifted.slice(0, 20).join(', ');
+      console.error(`   Entrées concernées (${drifted.length}) : ${shown}${drifted.length > 20 ? ', …' : ''}`);
+    }
+    console.error('\nCorrigez : lancez `npm run generate-registry`, relisez le diff du registre (module[], reactExports…) et commitez-le.');
+    process.exit(1);
   }
   // Frontière page↔registre (#511)
   console.log(frontierLine);

@@ -1,7 +1,7 @@
 {
   "version": "2.145.5",
   "generated": {
-    "at": "2026-10-03T11:27:41.881Z",
+    "at": "2026-10-05T11:47:32.451Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -31,7 +31,6 @@
       "react": "ported",
       "module": [
         "shared/css/components/buttons.css",
-        "shared/css/components/forms.css",
         "shared/css/components/graph.css",
         "shared/css/components/tables.css",
         "shared/css/components/_a11y.css",
@@ -218,10 +217,8 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css",
-        "shared/css/components/graph.css",
         "shared/css/components/tables.css",
-        "shared/css/components/_a11y.css",
-        "shared/css/components/_base.css"
+        "shared/css/components/_a11y.css"
       ],
       "reactExports": [
         "Checkbox",
@@ -373,7 +370,6 @@
       "react": "ported",
       "module": [
         "shared/css/components/tables.css",
-        "shared/css/layout.css",
         "shared/css/components/_a11y.css"
       ],
       "reactExports": [
@@ -411,11 +407,9 @@
         "shared/css/components/buttons.css",
         "shared/css/components/forms.css",
         "shared/css/components/graph.css",
-        "shared/css/components/interactive.css",
         "shared/css/components/overlays.css",
         "shared/css/components/tables.css",
         "shared/css/components/theming.css",
-        "shared/css/components/version-notes.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
@@ -484,10 +478,9 @@
       "notes": "Port React (#716, sous-issue 1/3 de #712) — header applicatif composable <SiteHeader> (@msyx-dev/react, alpha.18). 100% présentationnel : compose NotificationBell (#717), UserMenu, VersionNotes, UserFeedbackButton (+Provider si nécessaire) et ThemeSwitcher. Reproduit l'ordre du header vanilla (shared/nav.js buildHeader) et réutilise INTÉGRALEMENT les classes .header-* (layout.css) + .skeleton*/.skeleton-avatar (feedback.css) — ZÉRO CSS nouveau. Identité 3 états : undefined=loading (skeleton avatar), null=anonyme (zone réduite), objet=connecté (UserMenu). Chaque feature opt-out. Coexiste avec PageHeader. jsInit null (composant React, pas d'init de section vanilla).",
       "react": "ported",
       "module": [
+        "shared/css/base.css",
         "shared/css/components/brand.css",
         "shared/css/components/feedback.css",
-        "shared/css/components/navigation.css",
-        "shared/css/components/section-header.css",
         "shared/css/layout.css"
       ],
       "structural": true,
@@ -545,9 +538,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
-        "shared/css/components/forms.css",
-        "shared/css/components/interactive.css",
-        "shared/css/components/pricing.css"
+        "shared/css/components/forms.css"
       ],
       "notes": " Variante NON sémantique .alert-neutral (#923) : un indicateur qui ne signale rien — un compteur à zéro — ne doit pas être peint en couleur d'état, sinon la couleur perd sa valeur de signal ailleurs. Même rôle que .badge-neutral. Défaut inchangé (info). Reportée sur la barre gauche de .alert--kpi.",
       "reactExports": [
@@ -604,8 +595,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
-        "shared/css/components/forms.css",
-        "shared/css/components/interactive.css"
+        "shared/css/components/forms.css"
       ],
       "reactExports": [
         "Alert"
@@ -631,9 +621,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/alerts.css",
-        "shared/css/components/forms.css",
-        "shared/css/components/interactive.css",
-        "shared/css/components/pricing.css"
+        "shared/css/components/forms.css"
       ],
       "reactExports": [
         "Alert"
@@ -673,7 +661,6 @@
       "react": "ported",
       "module": [
         "shared/css/components/navigation.css",
-        "shared/css/utilities.css",
         "shared/css/components/_a11y.css",
         "shared/css/components/_base.css"
       ],
@@ -902,8 +889,7 @@
       "example": "<div class=\"accordion-item open\">\n  <div class=\"accordion-header\">Section 1 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 1.</div>\n</div>\n<div class=\"accordion-item\">\n  <div class=\"accordion-header\">Section 2 <svg class=\"icon icon--sm accordion-arrow\" aria-hidden=\"true\"><use href=\"/shared/icons/sprite.svg#i-chevron-down\"/></svg></div>\n  <div class=\"accordion-body\">Contenu de la section 2.</div>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/lists.css",
-        "shared/css/components/navigation.css"
+        "shared/css/components/lists.css"
       ],
       "reactExports": [
         "Accordion"
@@ -927,8 +913,7 @@
       "example": "<div class=\"stepper\" aria-label=\"Étapes\">\n  <div class=\"step\"><div class=\"step-dot completed\">&#10003;</div><span class=\"step-label\">Compte</span></div>\n  <div class=\"step-line completed\"></div>\n  <div class=\"step\"><div class=\"step-dot active\">2</div><span class=\"step-label\">Profil</span></div>\n  <div class=\"step-line\"></div>\n  <div class=\"step\"><div class=\"step-dot pending\">3</div><span class=\"step-label\">Fin</span></div>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/navigation.css",
-        "shared/css/components/tracker.css"
+        "shared/css/components/navigation.css"
       ],
       "reactExports": [
         "Stepper"
@@ -1291,7 +1276,6 @@
       "reactComponent": "BottomNav",
       "module": [
         "shared/css/components/navigation.css",
-        "shared/css/utilities.css",
         "shared/css/components/_base.css"
       ],
       "reactExports": [
@@ -1336,7 +1320,6 @@
       "example": "<div class=\"segmented\" role=\"radiogroup\" aria-label=\"Vue\">\n  <div class=\"segmented-indicator\" aria-hidden=\"true\"></div>\n  <button class=\"segmented-item active\" type=\"button\" role=\"radio\" aria-checked=\"true\" tabindex=\"0\">Semaine</button>\n  <button class=\"segmented-item\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Mois</button>\n  <button class=\"segmented-item\" type=\"button\" role=\"radio\" aria-checked=\"false\" tabindex=\"-1\">Année</button>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/buttons.css",
         "shared/css/components/navigation.css"
       ],
       "reactExports": [
@@ -1358,7 +1341,6 @@
       "react": "ported",
       "reactComponent": "SegmentedControl",
       "module": [
-        "shared/css/components/buttons.css",
         "shared/css/components/navigation.css"
       ],
       "reactExports": [
@@ -1398,7 +1380,6 @@
       "example": "<div class=\"tag-input-wrap\">\n  <span class=\"tag-item\">Design <button class=\"tag-close\" aria-label=\"Supprimer Design\">&times;</button></span>\n  <span class=\"tag-item\">Frontend <button class=\"tag-close\" aria-label=\"Supprimer Frontend\">&times;</button></span>\n  <input class=\"tag-input-field\" type=\"text\" placeholder=\"Ajouter un tag...\" aria-label=\"Ajouter un tag\">\n</div>\n<span class=\"tag-input-hint\">Enter ou virgule pour ajouter</span>",
       "react": "ported",
       "module": [
-        "shared/css/components/badges.css",
         "shared/css/components/forms.css"
       ],
       "reactExports": [
@@ -1681,7 +1662,6 @@
       "example": "<nav>\n  <a href=\"#section-1\">Section 1</a>\n  <div class=\"sidebar-sublinks\">\n    <a href=\"#sub-1\">Sous-section 1.1</a>\n    <a href=\"#sub-2\">Sous-section 1.2</a>\n  </div>\n  <a href=\"#section-2\">Section 2</a>\n</nav>",
       "react": "n-a",
       "module": [
-        "shared/css/components/navigation.css",
         "shared/css/layout.css"
       ]
     },
@@ -1875,8 +1855,7 @@
       "react": "ported",
       "module": [
         "shared/css/components/forms.css",
-        "shared/css/components/theming.css",
-        "shared/css/layout.css"
+        "shared/css/components/theming.css"
       ],
       "reactExports": [
         "LoginScreen"
@@ -2120,7 +2099,6 @@
       "example": "<div class=\"theme-switcher\">\n  <label class=\"theme-switcher-label\" for=\"theme-select\">&#9775; Theme</label>\n  <select id=\"theme-select\" class=\"theme-switcher-select\" aria-label=\"Theme switcher\">\n    <option value=\"msyx\">MSYX</option>\n    <option value=\"acssi\">ACSSI</option>\n  </select>\n</div>\n<div class=\"mode-toggle\">\n  <button id=\"mode-switch\" class=\"mode-switch\" role=\"switch\" aria-checked=\"false\" aria-label=\"Basculer mode clair/sombre\">\n    <span class=\"mode-switch-track\">\n      <svg class=\"mode-switch-icon mode-switch-icon--sun\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-sun\"></use></svg>\n      <svg class=\"mode-switch-icon mode-switch-icon--moon\" aria-hidden=\"true\" width=\"14\" height=\"14\"><use href=\"/shared/icons/sprite.svg#i-moon\"></use></svg>\n      <span class=\"mode-switch-thumb\"></span>\n    </span>\n  </button>\n</div>",
       "react": "ported",
       "module": [
-        "shared/css/components/theme-toggle.css",
         "shared/css/layout.css",
         "shared/css/components/_a11y.css"
       ],
@@ -2493,8 +2471,7 @@
       "version": "2.73.0",
       "react": "ported",
       "module": [
-        "shared/css/components/data.css",
-        "shared/css/components/heatmap-calendar.css"
+        "shared/css/components/data.css"
       ],
       "reactExports": [
         "RiskMatrix"
@@ -3724,8 +3701,7 @@
       "jsInit": null,
       "react": "n-a",
       "module": [
-        "shared/css/components/buttons.css",
-        "shared/css/components/graph.css"
+        "shared/css/components/buttons.css"
       ]
     },
     {
@@ -3756,7 +3732,6 @@
       "jsInit": null,
       "react": "n-a",
       "module": [
-        "shared/css/components/forms.css",
         "shared/css/components/prose.css"
       ]
     },

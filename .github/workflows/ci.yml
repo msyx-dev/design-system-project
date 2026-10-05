@@ -165,6 +165,10 @@ jobs:
       # valide par --check) : la passe orphelins de check-components.sh en depend (#938).
       - name: Registry reactExports / structural generator tests (#938)
         run: npm run test:registry-react-exports
+      # Idempotence du registre (#1053) : --check bloquant sur un registre derive, et
+      # module[] identique quel que soit l'ordre de readdir (base.css / components/_base.css).
+      - name: Registry idempotence generator tests (#1053)
+        run: npm run test:registry-idempotence
       # Passe orphelins (#938) : moteur (registre synthetique + bout en bout) puis cas A a I sur
       # consommateurs synchronises par le VRAI sync.sh. Bloquants, sans continue-on-error ; le
       # step bloquant « check-components registry lint » (#967), plus haut, ne bouge pas.
