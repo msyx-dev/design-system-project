@@ -26,8 +26,9 @@
  *      `data-probe` ≥ 4,5:1 (BLOQUANT) ; l'ensemble des `data-probe` = PROBES ;
  *   2. showcase — `pages/composants.html#badges` et `pages/feedback.html#alerts` : tout élément
  *      visible porteur de texte direct dans un `.badge-*` / `.alert-*` sémantique ≥ 4,5:1 ;
- *   3. complétude (Node `fs`, joué une fois, dans `msyx-dark-desktop`) : `--badge-primary-fg` est
- *      déclaré en hex littéral à 6 chiffres dans `tokens.css` (`:root` + `[data-mode="light"]`)
+ *   3. complétude (Node `fs`, joué une fois, dans `msyx-dark-desktop`) : `--badge-primary-fg`,
+ *      `--tag-fg` et `--chip-accent-fg` (t2) sont
+ *      déclarés en hex littéral à 6 chiffres dans `tokens.css` (`:root` + `[data-mode="light"]`)
  *      et dans `modes.dark` + `modes.light` de CHAQUE `themes/*.json`.
  *
  * Joué dans les 10 projets desktop de playwright.config.ts (thème/mode lus dans le nom du
@@ -39,6 +40,10 @@
  *   - M1 : ACSSI clair `--status-success-fg` remis à #15803d → test 1 rouge sur acssi-light ;
  *   - M2 : `.badge-primary` remis sur `var(--accent-light)` → rouge sur msyx-light, auchan-light ;
  *   - M3 : `--badge-primary-fg` retiré de themes/noel.json `modes.light` → test 3 rouge.
+ *   t2 (texte accent sur teinte accent : `.tag`, `.chip-accent`, `.chip-filter.active`) :
+ *   - M4 : `.tag` remis sur `var(--accent-light)` → `tag|*` rouge sur msyx-light, auchan-light ;
+ *   - M5 : Auchan clair `--accent-text-strong` remis à #e0001a → `chip-filter-active|*` rouge ;
+ *   - M6 : `--chip-accent-fg` retiré de themes/acssi.json `modes.dark` → test 3 rouge.
  */
 import { test, expect } from "@playwright/test";
 import type { Page, TestInfo } from "@playwright/test";
@@ -57,6 +62,12 @@ const VARIANTS = [
     (v) => `badge-${v}`,
   ),
   ...["success", "warning", "danger"].map((v) => `chip-${v}`),
+  // t2 : texte ACCENT sur teinte accent — `.tag` (8 %, `--tag-fg`), `.chip-accent` (12 %,
+  // `--chip-accent-fg`), `.chip-filter.active` (25 %, `--accent-text-strong` : pire teinte des
+  // usages de ce token, `grep -rn -- '--accent-text-strong' shared`).
+  "tag",
+  "chip-accent",
+  "chip-filter-active",
   ...["info", "success", "warning", "danger", "neutral"].flatMap((v) => [
     `alert-${v}`,
     `alert-${v}>title`,
@@ -364,13 +375,14 @@ test.describe("Texte sur fond de statut teinté — 10 combos (#1050)", () => {
     });
   }
 
-  test("complétude : --badge-primary-fg déclaré en hex littéral dans les 4 couches", async ({}, testInfo) => {
+  test("complétude : tokens dédiés déclarés en hex littéral dans les 4 couches", async ({}, testInfo) => {
     test.skip(
       testInfo.project.name !== "msyx-dark-desktop",
       "contrôle de sources : joué une seule fois",
     );
     const repo = path.resolve(__dirname, "..");
-    const TOKEN = "--badge-primary-fg";
+    // t1 : --badge-primary-fg ; t2 : --tag-fg, --chip-accent-fg (texte accent sur teinte accent).
+    const TOKENS = ["--badge-primary-fg", "--tag-fg", "--chip-accent-fg"];
     const HEX6 = /^#[0-9a-fA-F]{6}$/;
     const missing: string[] = [];
 
@@ -382,11 +394,13 @@ test.describe("Texte sur fond de statut teinté — 10 combos (#1050)", () => {
         .filter((m) => m[1].trim() === selector)
         .map((m) => m[2])
         .join("\n");
-      const decl = bodies.match(new RegExp(`${TOKEN}\\s*:\\s*([^;]+);`));
-      if (!decl || !HEX6.test(decl[1].trim()))
-        missing.push(
-          `shared/css/tokens.css ${selector} : ${TOKEN} ${decl ? `= ${decl[1].trim()} (pas un hex à 6 chiffres)` : "absent"}`,
-        );
+      for (const TOKEN of TOKENS) {
+        const decl = bodies.match(new RegExp(`${TOKEN}\\s*:\\s*([^;]+);`));
+        if (!decl || !HEX6.test(decl[1].trim()))
+          missing.push(
+            `shared/css/tokens.css ${selector} : ${TOKEN} ${decl ? `= ${decl[1].trim()} (pas un hex à 6 chiffres)` : "absent"}`,
+          );
+      }
     }
 
     const themesDir = path.join(repo, "themes");
@@ -401,16 +415,18 @@ test.describe("Texte sur fond de statut teinté — 10 combos (#1050)", () => {
     for (const f of files) {
       const json = JSON.parse(fs.readFileSync(path.join(themesDir, f), "utf8"));
       for (const m of ["dark", "light"]) {
-        const v = json?.modes?.[m]?.[TOKEN];
-        if (typeof v !== "string" || !HEX6.test(v))
-          missing.push(
-            `themes/${f} modes.${m} : ${TOKEN} ${v === undefined ? "absent" : `= ${v} (pas un hex à 6 chiffres)`}`,
-          );
+        for (const TOKEN of TOKENS) {
+          const v = json?.modes?.[m]?.[TOKEN];
+          if (typeof v !== "string" || !HEX6.test(v))
+            missing.push(
+              `themes/${f} modes.${m} : ${TOKEN} ${v === undefined ? "absent" : `= ${v} (pas un hex à 6 chiffres)`}`,
+            );
+        }
       }
     }
     expect(
       missing,
-      `${TOKEN} manquant ou non littéral :\n${missing.join("\n")}`,
+      `token dédié manquant ou non littéral :\n${missing.join("\n")}`,
     ).toEqual([]);
   });
 });

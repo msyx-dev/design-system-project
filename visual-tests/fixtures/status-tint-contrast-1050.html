@@ -9,7 +9,9 @@
 
   Le texte des badges, alertes et chips semantiques se lit sur une TEINTE translucide
   (color-mix(in srgb, X N%, transparent) : 8 % alertes, 10 % badges et .alert--kpi, 12 % chips)
-  posee sur le fond de son parent. Le ratio depend donc du parent : la fixture repete toutes les
+  posee sur le fond de son parent. Tranche t2 : texte ACCENT sur teinte accent -- .tag (8 %, --tag-fg),
+  .chip-accent (12 %, --chip-accent-fg) et .chip-filter.active (25 %, --accent-text-strong, pire teinte
+  de ce token parmi ses usages). Le ratio depend donc du parent : la fixture repete toutes les
   variantes sur les 4 fonds parents de reference (ceux de #981), chacun empile sur --primary :
     - page          : --primary ;
     - surface       : --surface sur --primary (carte, demo-box) ;
@@ -49,6 +51,9 @@
       <span class="chip chip-success" data-probe="chip-success|page">Succes</span>
       <span class="chip chip-warning" data-probe="chip-warning|page">Attente</span>
       <span class="chip chip-danger" data-probe="chip-danger|page">Erreur</span>
+      <span class="tag" data-probe="tag|page">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|page">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|page">Filtre actif</span>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|page">Info : texte direct</span>
@@ -121,6 +126,9 @@
       <span class="chip chip-success" data-probe="chip-success|surface">Succes</span>
       <span class="chip chip-warning" data-probe="chip-warning|surface">Attente</span>
       <span class="chip chip-danger" data-probe="chip-danger|surface">Erreur</span>
+      <span class="tag" data-probe="tag|surface">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|surface">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|surface">Filtre actif</span>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|surface">Info : texte direct</span>
@@ -194,6 +202,9 @@
       <span class="chip chip-success" data-probe="chip-success|surface-solid">Succes</span>
       <span class="chip chip-warning" data-probe="chip-warning|surface-solid">Attente</span>
       <span class="chip chip-danger" data-probe="chip-danger|surface-solid">Erreur</span>
+      <span class="tag" data-probe="tag|surface-solid">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|surface-solid">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|surface-solid">Filtre actif</span>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|surface-solid">Info : texte direct</span>
@@ -267,6 +278,9 @@
       <span class="chip chip-success" data-probe="chip-success|primary-light">Succes</span>
       <span class="chip chip-warning" data-probe="chip-warning|primary-light">Attente</span>
       <span class="chip chip-danger" data-probe="chip-danger|primary-light">Erreur</span>
+      <span class="tag" data-probe="tag|primary-light">Etiquette</span>
+      <span class="chip chip-accent" data-probe="chip-accent|primary-light">Accent</span>
+      <span class="chip chip-filter active" data-probe="chip-filter-active|primary-light">Filtre actif</span>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|primary-light">Info : texte direct</span>
