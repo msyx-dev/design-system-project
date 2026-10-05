@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 4173;
+// PW_PORT : deux worktrees qui jouent Playwright en même temps se disputaient le port fixe
+// (EADDRINUSE, puis tests servis en silence par le serveur du voisin — #1044/#1045). Absente en CI : défaut 4173.
+const PORT = Number(process.env.PW_PORT) || 4173;
 
 // Matrice reduite (#851, 2026-08-28) : le job `visual` (16 projects x 123
 // sections = 1968 captures, workers:1) depassait son timeout-minutes:60 sur
@@ -77,6 +79,8 @@ export default defineConfig({
     "**/notif-panel-viewport-1028.spec.ts",
     "**/scroll-padding-1039.spec.ts",
     "**/festive-top-clearance-1042.spec.ts",
+    "**/table-cards-actions-1044.spec.ts",
+    "**/button-height-parity.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
