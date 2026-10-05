@@ -21,6 +21,9 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .data-grid-sortable[aria-sort="descending"] .data-grid-sort-icon { opacity: 1; color: var(--accent); }
 .data-grid-filter { width: 100%; background: color-mix(in srgb, var(--accent) 4%, transparent); border: 1px solid var(--border-color); border-radius: var(--radius-xs); color: var(--text); padding: 0.3rem 0.5rem; font-size: 0.78rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
 .data-grid-filter:focus-visible { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
+@media (pointer: coarse) { /* #1051 : champ à 16px sous pointeur grossier (zoom iOS au focus), même sélecteur */
+  .data-grid-filter { font-size: var(--input-font-size-touch); }
+}
 .data-grid-body tr td { padding: 0.65rem 0.9rem; border-top: 1px solid var(--border-color); font-size: 0.86rem; color: var(--text); vertical-align: middle; }
 .data-grid-body tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .data-grid-body tr.selected td { background: color-mix(in srgb, var(--accent) 7%, transparent); }
@@ -159,6 +162,10 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
   .table-cards--editable:where(.table-cards--lg) .table-cards-add-row > td { border-top: 2px dashed var(--border-hover); }
 }
 
+@media (pointer: coarse) { /* #1051 : cibles 44px aussi en mode tableau (tablette tactile) — même spécificité (0,4,0) que la restauration de TABLE CARDS à 768px, placé APRÈS elle */
+  .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: var(--touch-target); min-height: var(--touch-target); justify-content: center; }
+}
+
 /* ===== SERVER DATA-GRID — loading state ===== */
 .data-grid-wrap[aria-busy="true"] {
   opacity: 0.6;
@@ -166,11 +173,11 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
   transition: opacity var(--duration-base) var(--ease-standard);
 }
 
-/* Cible tactile pagination scopee server-driven — exception WCAG 2.5.5 (target 44px, pas de token --touch-target) */
+/* Cible tactile pagination scopee server-driven — WCAG 2.5.5 (jeton --touch-target, 44px, #1051) */
 @media (min-width: 1px) {
   .data-grid-pagination .page-btn {
-    min-width: 44px; /* exception: pas de token --touch-target dans ce DS */
-    height: 44px;
+    min-width: var(--touch-target);
+    height: var(--touch-target);
   }
 }
 

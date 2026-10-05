@@ -35,12 +35,18 @@
 .empty-state p { color: var(--text-muted); font-size: 0.88rem; max-width: 350px; margin: 0 auto 1.5rem; line-height: 1.6; }
 
 /* ===== PAGINATION ===== */
-.pagination { display: flex; align-items: center; gap: 0.3rem; }
+/* Passage à la ligne pour tous les pointeurs (#1051) : en ligne unique, un téléphone écrasait
+   « Prev »/« Next » à leur min-width (libellé qui déborde) et la rangée dépassait son parent. */
+.pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
 .page-btn { min-width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: border-color 0.2s var(--ease-standard), color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); font-family: var(--font-sans); }
 .page-btn:hover { border-color: var(--border-hover); color: var(--text); }
 .page-btn.active { background: var(--accent-surface); color: var(--text-on-accent); border-color: var(--accent); }
 .page-btn:disabled { opacity: 0.4; pointer-events: none; }
 .page-btn.nav { padding: 0 0.8rem; }
+/* Pointeur grossier (#1051) : boutons de page agrandis à 44×44 (des boîtes, pas de zone ajoutée). */
+@media (pointer: coarse) {
+  .page-btn { min-width: var(--touch-target); height: var(--touch-target); }
+}
 .page-ellipsis { color: var(--text-dim); font-size: 0.82rem; padding: 0 0.3rem; }
 .pagination-info { font-size: 0.78rem; color: var(--text-muted); margin-left: 1rem; }
 

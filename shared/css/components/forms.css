@@ -45,6 +45,13 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 [data-theme="acssi"] .toggle-slider::before,
 [data-theme="auchan"] .toggle-slider::before,
 [data-theme="noel"] .toggle-slider::before { background: var(--overlay-text); }
+/* Pointeur grossier (#1051) : piste 44×24 inchangée. La zone de 44px de haut est un ::after du
+   <label> (un clic dessus coche la case) ; la marge verticale réserve cette zone dans le flux,
+   sinon deux interrupteurs empilés à 1rem d'écart (centres à 40px) s'amputeraient l'un l'autre. */
+@media (pointer: coarse) {
+  .toggle { margin-block: calc((var(--touch-target) - 24px) / 2); } /* 24px : hauteur de la piste, ci-dessus */
+  .toggle::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+}
 .checkbox { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.88rem; }
 .checkbox input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 .radio { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.88rem; }
@@ -88,6 +95,14 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .dropdown-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
 .dropdown-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent-tint-fg, var(--accent-light)); border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
 .dropdown-tag button { background: none; border: none; color: var(--accent-tint-fg, var(--accent-light)); cursor: pointer; font-size: 0.8rem; padding: 0; line-height: 1; }
+/* Pointeur grossier (#1051) : la croix garde sa taille (≈ 7,5×12,8px), la zone de 44px est un
+   ::after. Elle déborde de la puce d'environ 9px à droite et 11px en haut et en bas : les écarts
+   s'élargissent pour qu'elle ne capte ni la puce voisine ni le déclencheur placé au-dessus. */
+@media (pointer: coarse) {
+  .dropdown-tags { gap: var(--space-lg) var(--space-md); margin-top: var(--space-md); }
+  .dropdown-tag button { position: relative; }
+  .dropdown-tag button::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+}
 
 /* ===== FILE UPLOAD ===== */
 .file-upload { border: 2px dashed var(--border-color); border-radius: var(--radius-card); padding: 2.5rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.3s var(--ease-standard), background-color 0.3s var(--ease-standard); position: relative; }
@@ -104,6 +119,12 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .file-item-size { font-size: 0.72rem; color: var(--text-dim); }
 .file-item-remove { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; padding: 0; transition: color 0.2s; }
 .file-item-remove:hover { color: var(--danger); }
+/* Pointeur grossier (#1051) : croix inchangée (≈ 9×18px), zone de 44px en ::after. Elle tient
+   dans la hauteur de la ligne ; à gauche elle mord sur l'info du fichier, qui n'est pas cliquable. */
+@media (pointer: coarse) {
+  .file-item-remove { position: relative; }
+  .file-item-remove::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+}
 
 /* ===== SLIDER / RANGE ===== */
 .slider-group { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -282,6 +303,12 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 }
 .search-clear:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--text); }
 .search-clear.hidden { display: none; }
+/* Pointeur grossier (#1051) : croix inchangée (28×28), zone de 44px en ::after (le bouton est déjà
+   positionné). Elle touche le bord droit du champ et mord de 4px sur la zone de saisie, que le
+   padding droit de 2.5rem laisse libre : le champ reste cliquable hors de la zone. */
+@media (pointer: coarse) {
+  .search-clear::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+}
 .search-suggestions {
   position: absolute;
   top: calc(100% + 4px);
@@ -312,6 +339,9 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .search-item mark { background: color-mix(in srgb, var(--accent) 25%, transparent); color: inherit; border-radius: 2px; padding: 0 1px; font-style: normal; }
 .search-no-result { padding: 0.5rem 0.85rem; font-size: 0.9rem; color: var(--text-dim); font-style: italic; }
 .search-compact .search-input { height: 34px; font-size: 0.85rem; padding-top: 0; padding-bottom: 0; }
+@media (pointer: coarse) { /* #1051 : le champ compact est la cible, sa boîte passe à 44px (même sélecteur) */
+  .search-compact .search-input { height: var(--touch-target); }
+}
 
 /* ===== OTP INPUT ===== */
 .otp-group {
@@ -412,6 +442,14 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
     border-radius: 50%;
 }
 .tag-close:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 20%, transparent); }
+/* Pointeur grossier (#1051) : croix de 16px inchangée, zone de 44px en ::after. Elle dépasse le
+   tag d'environ 11px en haut et en bas : l'écart entre rangées passe à 24px pour que deux
+   rangées de tags (ou un tag et le champ passé à la ligne) ne se disputent pas le toucher. */
+@media (pointer: coarse) {
+  .tag-input-wrap { row-gap: var(--space-lg); }
+  .tag-close { position: relative; }
+  .tag-close::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+}
 .tag-input-field {
     flex: 1;
     min-width: 100px;
@@ -888,3 +926,18 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .markdown-preview:empty { display: none; }
 .markdown-editor .markdown-preview :where(p, ul, ol):first-child { margin-block-start: 0; }
 .markdown-editor .markdown-preview :where(p, ul, ol):last-child { margin-block-end: 0; }
+
+/* ===== POINTEUR GROSSIER (#1051) — DS-PRINCIPLES §3.4 =====
+   Rien ne change au pointeur fin. Police : on reprend CHAQUE sélecteur qui fixe une police
+   sous 16px (ordre de cascade, spécificité égale) ; :where() couvre les champs restés à la
+   taille par défaut du navigateur, sans battre une classe (un !important réduirait .otp-digit). */
+@media (pointer: coarse) {
+  :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"]), select, textarea) { font-size: var(--input-font-size-touch); }
+  .input, .slider-value, .dropdown-search input, .number-input-field,
+  .number-input-wrap.number-input--compact .number-input-field,
+  .search-input, .search-compact .search-input, .tag-input-field,
+  .login-form input, .login-compact input, .settings-row-input, .settings-row-select,
+  .comment-reply-input, .color-input-value, .markdown-input { font-size: var(--input-font-size-touch); }
+  .input, .dropdown-trigger { min-height: var(--touch-target); }
+  .checkbox, .radio { min-height: var(--touch-target); }
+}

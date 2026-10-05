@@ -107,6 +107,8 @@
     --info-rgb: 6, 182, 212;
     --sidebar-w: 260px;
     --header-h: 56px;
+    --touch-target: 44px;          /* cible tactile minimale sous pointeur grossier (WCAG 2.5.5, #1051) */
+    --input-font-size-touch: 1rem; /* police mini d'un champ sous pointeur grossier : < 16px = zoom iOS au focus (#1051) */
     --rail-w: 260px;            /* largeur deployee de .rail-sidebar (#906) */
     --rail-w-collapsed: 64px;   /* largeur repliee (icones seules) de .rail-sidebar (#906) */
     --drawer-w: 320px;          /* largeur desktop par defaut de .drawer-panel (#912, inchangee) */

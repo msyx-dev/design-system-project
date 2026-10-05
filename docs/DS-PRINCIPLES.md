@@ -194,7 +194,7 @@ Le DS expose une échelle dédiée `--cat-1` à `--cat-8` : elle ne veut rien di
 | Choix exclusif (segmented) | `role="radiogroup"` + items `role="radio"` + `aria-checked` + roving tabindex + ←/→/↑/↓/Home/End |
 | Dialog/Modal | `role="dialog"` + `aria-modal="true"` + focus trap + restore on close |
 | Keyboard | Tout interactif doit être navigable au clavier (Tab, Enter, Esc) |
-| Click target | 44×44px minimum sur mobile (WCAG 2.5.5) — appliqué v2.55.0 sur mode-switch |
+| Click target | 44×44px minimum sous pointeur grossier (`@media (pointer: coarse)`, jeton `--touch-target`, WCAG 2.5.5) — règle complète au §3.4 (#1051) |
 
 ### Anti-patterns concrets
 
@@ -378,6 +378,45 @@ Deux cas, deux règles — ne pas les confondre :
 ```
 Préfixe `--inactive-*` réservé à cette famille. Preuve : mutation M3 (retrait de la garde `tag-input-wrap--disabled` → 6 tests vanilla rouges, `tests/vanilla/tag-input.test.js`) et assertion React `aria-disabled` sur `TagInput`, consignées dans la PR #982.
 
+### 3.4 — Pointeur grossier : champs à 16 px, cibles à 44 px (#1051)
+
+**Règle** : sous `@media (pointer: coarse)`, et seulement là :
+- tout champ de saisie a une police calculée d'au moins 16 px (jeton `--input-font-size-touch`, 1rem) : en dessous, Safari iOS zoome la page au focus ;
+- toute cible interactive offre 44×44 px (jeton `--touch-target`, WCAG 2.5.5) ;
+- au pointeur fin (souris, pavé tactile), **rien ne bouge** : ni boîte, ni police, ni écart.
+
+**Pourquoi le pointeur et pas une largeur** : la taille du doigt ne dépend pas de la fenêtre. Une tablette tactile à 1024 px a besoin de cibles de 44 px ; un ordinateur dont la fenêtre est réduite à 375 px n'en a pas besoin, et sa mise en page n'a pas à changer. `@media (pointer: coarse)` est la seule condition ; on ne la combine qu'avec une borne basse (`(pointer: coarse) and (min-width: 768.02px)`, en-tête au cran bp-md), jamais avec `max-width`.
+
+**Motif — le même sélecteur repris dans un bloc coarse** : la police d'un champ est fixée par la classe de son composant (`.input`, `.search-compact .search-input`, `.data-grid-filter`, `.cmd-input`…). Pour la battre sans `!important`, le bloc coarse reprend **le même sélecteur**, placé après la règle de base (spécificité égale, l'ordre décide), dans le module du composant ou dans le bloc récapitulatif de fin de `forms.css`. Les champs restés à la taille par défaut du navigateur (sans classe) sont couverts par une règle `:where(input:not(…), select, textarea)`, de spécificité nulle : elle ne bat aucune classe.
+- **Jamais de `!important` générique** (`input { font-size: 1rem !important }`) : il écraserait aussi un champ qui fixe volontairement une autre police — le chiffre de `.otp-digit` serait réduit.
+- Une police écrite **en style inline** n'est pas atteignable sans `!important` : c'est la démo ou le consommateur qu'il faut corriger (4 démos natives de `composants.html` sont exclues du contrôle pour cette raison).
+- Nouveau champ dont la police est sous 16 px : ajouter son sélecteur à un bloc coarse ; la spec le mesure sur toutes les pages.
+
+**Boîte agrandie ou zone `::after` — comment choisir** :
+- **Agrandir la boîte** (`min-height`, `min-width` ou `height` à `var(--touch-target)`) quand la boîte est la cible et que sa croissance ne casse pas la composition : boutons (`.btn-*` ; `.btn-sm` et `.btn-xs` aussi en largeur), `.input`, `.dropdown-trigger`, `.checkbox`, `.radio`, `.page-btn`, `.search-compact .search-input`, actions de `.table-cards`, contrôles de l'en-tête. C'est le choix par défaut : rien ne déborde, ce qu'on voit est ce qu'on touche.
+- **Zone `::after`** (carré de 44 px centré sur un hôte positionné : `top: 50%; left: 50%; width` et `height` à `var(--touch-target)`, `transform: translate(-50%, -50%)`) quand la taille visuelle doit rester celle du dessin : croix `.chip-close` (17,6 px), `.tag-close`, `.dropdown-tag button`, `.file-item-remove`, `.search-clear` (28×28), piste du `.toggle` (44×24, zone sur le `<label>`). Exclue si un ancêtre proche porte `overflow: hidden` (la zone serait rognée) : l'avatar de l'en-tête agrandit donc sa boîte.
+- **Une zone `::after` déborde de sa boîte** et peut capter le toucher destiné à un voisin. Elle s'accompagne donc toujours d'un **écart élargi sous pointeur grossier** qui la contient : `row-gap` de `.chip-group:has(.chip-close)` à `--space-5` (20 px), de `.tag-input-wrap` à `--space-lg`, écarts de `.dropdown-tags`, `margin-block` du `.toggle` qui réserve ses 44 px dans le flux. Une zone qui mord sur un élément **non cliquable** est tolérée et écrite en commentaire : l'information de `.file-item`, les 4 px de padding droit de la saisie sous `.search-clear`.
+
+**Risque chez un consommateur** : les écarts élargis sont portés par les conteneurs du DS (`.chip-group`, `.tag-input-wrap`, `.dropdown-tags`). Des puces fermables posées **hors** de `.chip-group`, dans un `flex-wrap` maison, héritent des zones `::after` mais pas de l'écart : deux rangées se recouvrent, et la croix d'une rangée capte la puce de l'autre. Condition à respecter : un `row-gap` d'au moins 20 px entre deux rangées de puces fermables sous pointeur grossier (`.chip-sm` ≈ 24 px de haut, zone de 44 px : 10 px de débord en haut et en bas).
+
+**En-tête** : burger, mode, flocon, cloche, feedback, avatar, `.user-menu-trigger`, sélecteur de thème et badge de version agrandissent leur boîte, et l'en-tête se compacte (`padding-inline: var(--space-sm)`, `gap: var(--space-xs)`) pour faire tenir 7 contrôles (thème Noël) dès 360 px. La compaction dure tant que le burger est affiché ; le bloc bp-md `768.02px` rend l'espacement habituel. Défaut préexistant corrigé avec, **aux deux pointeurs** : entre 641 et 768 px, l'espacement large et le wordmark (à côté d'un pictogramme) faisaient déborder l'en-tête et écrasaient le burger jusqu'à 19 px ; ils attendent désormais `768.02px`. **Limite connue** : à 320 px, l'en-tête Noël à 7 contrôles demande 7 × 44 + 40 = 348 px pour 304 disponibles, et déborde déjà au pointeur fin. Décision de design en attente (#1053, point 8) : masquer un contrôle sous 360 px, ou déplacer le flocon ou le feedback dans le menu utilisateur.
+
+**Pagination** : `.page-btn` passe à 44×44 sous pointeur grossier, et `.pagination` passe à la ligne (`flex-wrap: wrap`) **pour tous les pointeurs** : en ligne unique, un téléphone écrasait « Prev » et « Next » et la rangée dépassait son parent, déjà au pointeur fin.
+
+```css
+/* ❌ Don't — une largeur au lieu du pointeur, un !important générique, une zone sans écart */
+@media (max-width: 768px) { input { font-size: 16px !important; } }
+.mes-puces { display: flex; flex-wrap: wrap; gap: 4px; } /* les zones de .chip-close s'y recouvrent */
+
+/* ✅ Do — le pointeur, le même sélecteur après la règle de base, les jetons, un écart qui contient la zone */
+@media (pointer: coarse) {
+  .search-compact .search-input { height: var(--touch-target); }
+  .mes-puces { row-gap: var(--space-5); }
+}
+```
+
+**Preuve** : `visual-tests/touch-targets-1051.spec.ts` (+ fixture `visual-tests/fixtures/touch-targets-1051.html`), dans un vrai navigateur — un recouvrement ne se prouve jamais en jsdom, qui n'applique aucune mise en page. Émulation tactile `hasTouch` + `isMobile`, et chaque cas vérifie que `(pointer: coarse)` est vrai avant de mesurer (sinon il passerait à vide). Couverture : police des champs sur toutes les pages à 375 px (CA1), hauteurs et largeurs des boîtes (CA2, CA3), balayage `elementFromPoint` des zones `::after` et de leurs voisins (CA4, CA7, CA8), en-tête de 320 à 1024 px aux deux pointeurs (CA5, CA8), pagination au pointeur fin (CA9), dimensions inchangées à 1280 px au pointeur fin (CA6). Mutations (a) à (q), chacune rouge, consignées dans l'en-tête de la spec et dans la PR.
+
 ### Garde-fou
 - Audit `@axe-core/playwright` : 10 pages × 5 thèmes × 2 modes = 100 runs (`visual-tests/a11y.spec.ts`). Le rapport `docs/audit-a11y-<date>.md` et l'export `test-results-a11y/a11y-runs.json` sont joints à l'artefact CI `audit-a11y-report`.
 - **Bloquant**, sur le job `a11y` : `color-contrast` sur MSYX dark + light (`BLOCKING_RULES` × `BLOCKING_COMBOS`), et la complétude du banc (chaque run rapporté, aucun en erreur).
@@ -433,7 +472,8 @@ Tout autre `max-width` (padding, taille de police, gabarit, grille) est un défa
 - `node bin/check-mobile-first.js` est **bloquant** en CI (job `lint`, sans `continue-on-error`). Il parcourt `shared/css/**/*.css` et `shared/styles.css`, et refuse tout `@media` à borne haute de largeur (`max-width`, ou la syntaxe de plage `width < N`, `width <= N`, `N > width`) dont la ligne du `{` ne porte pas la chaîne exacte `exception §4 :` suivie d'une raison. Il sort en liste `fichier:ligne`, exit 1.
 - **Déclarer une exception** = poser `/* exception §4 : <raison> */` sur la ligne qui ouvre le bloc (celle du `{` quand le prélude est coupé sur plusieurs lignes). Un marqueur sans raison, sur la ligne d'avant ou sur la première ligne d'un prélude coupé est refusé.
 - Le garde est en node et non en `grep` : il retire les commentaires en gardant les numéros de ligne, donc ni faux positif (un commentaire multi-lignes qui cite `(max-width: 768px)`), ni faux négatif (un prélude coupé sur deux lignes). Il échoue aussi si un chemin est introuvable, si la portée est vide ou si un commentaire n'est pas fermé (`fail-closed`).
-- Hors portée : `@container`, la propriété `max-width: …;`, et les bornes basses (`min-width`, `width >= N`). Tests : `npm run test:mobile-first` (`tests/regression/check-mobile-first.test.js`, dont la mutation « un `max-width` sans marqueur ajouté à `lists.css` » sur une copie de `shared/css`).
+- Hors portée : `@container`, la propriété `max-width: …;`, et les bornes basses (`min-width`, `width >= N`).
+- `@media (pointer: coarse)` est aussi hors portée : ce n'est pas une borne de largeur (§3.4). On ne le combine qu'avec `min-width` (`(pointer: coarse) and (min-width: 768.02px)`), jamais avec `max-width`. Tests : `npm run test:mobile-first` (`tests/regression/check-mobile-first.test.js`, dont la mutation « un `max-width` sans marqueur ajouté à `lists.css` » sur une copie de `shared/css`).
 - **Ne jamais**, pour le faire passer : poser le marqueur sur un enrichissement (padding, taille, grille) au lieu de le réécrire en mobile-first, ou retirer un fichier de la portée.
 
 ### Anti-patterns concrets

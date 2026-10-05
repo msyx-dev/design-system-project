@@ -91,6 +91,16 @@
 :is(.btn-secondary, .btn-danger, .btn-success, .btn-warning, .btn-outline-danger).btn-sm { padding-block: calc(0.45rem - 1px); }
 :is(.btn-secondary, .btn-danger, .btn-success, .btn-warning, .btn-outline-danger).btn-lg { padding-block: calc(var(--space-md) - 1px); }
 
+/* Pointeur grossier (#1051) : 44px de haut pour toutes les variantes, 44px de large pour les tailles
+   qui peuvent descendre en dessous (libellé court) ; .btn-icon et .split-button__caret ont déjà leur 44px.
+   La parité de #1044 tient : tout passe à 44. justify-content limité à -sm/-xs (un .btn-primary
+   pleine largeur garde son libellé à gauche). */
+@media (pointer: coarse) {
+  .btn-primary, .btn-secondary, .btn-ghost, .btn-danger, .btn-success, .btn-warning, .btn-outline-danger,
+  .btn-sm, .btn-xs, .btn-lg { min-height: var(--touch-target); }
+  .btn-sm, .btn-xs { min-width: var(--touch-target); justify-content: center; }
+}
+
 /* Wrappers d'icône gauche/droite (#376) — émis par @msyx-dev/react Button (leftIcon/rightIcon).
    Le gap entre icône et label est porté par le bouton parent (display:inline-flex; gap). */
 .btn-icon-left, .btn-icon-right { display: inline-flex; align-items: center; flex-shrink: 0; }

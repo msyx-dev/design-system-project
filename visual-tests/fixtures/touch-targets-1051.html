@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cibles tactiles — fixture #1051</title>
+<!--
+  Fixture de `visual-tests/touch-targets-1051.spec.ts` (#1051, tranche t2).
+
+  - Deux `.chip-group` de puces fermables qui passent à la ligne à 375px : un en taille par
+    défaut, un en `.chip-sm` (la plus basse : c'est elle qui dépasse le plus d'une rangée à
+    l'autre). Un groupe par taille : dans un même `.chip-group`, l'étirement flex alignerait
+    une `.chip-sm` sur la hauteur d'une puce par défaut, et la mesure ne porterait plus sur
+    la `.chip-sm`.
+  - Une rangée de `.btn-xs` / `.btn-sm` à libellé court (« OK », « + »…), pour la largeur
+    minimale de 44px sous pointeur grossier.
+  - Tranche t4 (CA7) : un `.tag-input-wrap` et une rangée `.dropdown-tags` qui passent à la
+    ligne, une `.file-list` de trois lignes, et trois `.toggle` empilés comme la démo de
+    `formulaires.html` (colonne, gap de 1rem) : les zones `::after` y sont éprouvées contre
+    leurs voisines.
+  Ni nav.js ni components.js : la mesure ne porte que sur le CSS du DS.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  /* Mise en page propre à la fixture : une colonne étroite, de la marge autour des zones. */
+  .touch-fixture { padding: var(--space-lg) var(--space-md); max-width: 22rem; }
+  .touch-fixture > * + * { margin-block-start: var(--space-lg); }
+  .touch-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-sm); }
+  .touch-toggles { display: flex; flex-direction: column; gap: var(--space-md); }
+  .touch-toggle-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; }
+</style>
+</head>
+<body>
+<main class="touch-fixture">
+  <div class="chip-group" id="chips-defaut">
+    <span class="chip">Design<button type="button" class="chip-close" aria-label="Retirer Design">&times;</button></span>
+    <span class="chip">Produit<button type="button" class="chip-close" aria-label="Retirer Produit">&times;</button></span>
+    <span class="chip">Web<button type="button" class="chip-close" aria-label="Retirer Web">&times;</button></span>
+    <span class="chip">Mobile<button type="button" class="chip-close" aria-label="Retirer Mobile">&times;</button></span>
+    <span class="chip">Accessibilité<button type="button" class="chip-close" aria-label="Retirer Accessibilité">&times;</button></span>
+    <span class="chip">Thèmes<button type="button" class="chip-close" aria-label="Retirer Thèmes">&times;</button></span>
+    <span class="chip">CSS<button type="button" class="chip-close" aria-label="Retirer CSS">&times;</button></span>
+    <span class="chip">Jetons<button type="button" class="chip-close" aria-label="Retirer Jetons">&times;</button></span>
+  </div>
+
+  <div class="chip-group" id="chips-sm">
+    <span class="chip chip-sm">Alpha<button type="button" class="chip-close" aria-label="Retirer Alpha">&times;</button></span>
+    <span class="chip chip-sm">Bêta<button type="button" class="chip-close" aria-label="Retirer Bêta">&times;</button></span>
+    <span class="chip chip-sm">Gamma<button type="button" class="chip-close" aria-label="Retirer Gamma">&times;</button></span>
+    <span class="chip chip-sm">Delta<button type="button" class="chip-close" aria-label="Retirer Delta">&times;</button></span>
+    <span class="chip chip-sm">Epsilon<button type="button" class="chip-close" aria-label="Retirer Epsilon">&times;</button></span>
+    <span class="chip chip-sm">Zêta<button type="button" class="chip-close" aria-label="Retirer Zêta">&times;</button></span>
+    <span class="chip chip-sm">Êta<button type="button" class="chip-close" aria-label="Retirer Êta">&times;</button></span>
+    <span class="chip chip-sm">Thêta<button type="button" class="chip-close" aria-label="Retirer Thêta">&times;</button></span>
+    <span class="chip chip-sm">Iota<button type="button" class="chip-close" aria-label="Retirer Iota">&times;</button></span>
+    <span class="chip chip-sm">Kappa<button type="button" class="chip-close" aria-label="Retirer Kappa">&times;</button></span>
+  </div>
+
+  <div class="touch-row" id="boutons-courts">
+    <button type="button" class="btn-primary btn-xs">OK</button>
+    <button type="button" class="btn-secondary btn-xs" aria-label="Ajouter">+</button>
+    <a href="#" class="btn-ghost btn-xs">Lien</a>
+    <button type="button" class="btn-primary btn-sm">OK</button>
+    <button type="button" class="btn-secondary btn-sm" aria-label="Ajouter">+</button>
+    <button type="button" class="btn-danger btn-sm" aria-label="Retirer">&times;</button>
+    <a href="#" class="btn-secondary btn-outline-danger btn-sm">Non</a>
+  </div>
+
+  <!-- Tranche t4 : les contrôles que la première passe excluait, en situation de voisinage
+       (rangées qui passent à la ligne, listes empilées) pour éprouver les recouvrements. -->
+  <div class="tag-input-wrap" id="tags">
+    <span class="tag-item">Design <button type="button" class="tag-close" aria-label="Supprimer Design">&times;</button></span>
+    <span class="tag-item">Frontend <button type="button" class="tag-close" aria-label="Supprimer Frontend">&times;</button></span>
+    <span class="tag-item">Backend <button type="button" class="tag-close" aria-label="Supprimer Backend">&times;</button></span>
+    <span class="tag-item">Mobile <button type="button" class="tag-close" aria-label="Supprimer Mobile">&times;</button></span>
+    <span class="tag-item">Produit <button type="button" class="tag-close" aria-label="Supprimer Produit">&times;</button></span>
+    <span class="tag-item">Données <button type="button" class="tag-close" aria-label="Supprimer Données">&times;</button></span>
+    <span class="tag-item">Qualité <button type="button" class="tag-close" aria-label="Supprimer Qualité">&times;</button></span>
+    <input class="tag-input-field" type="text" placeholder="Ajouter un tag..." aria-label="Ajouter un tag">
+  </div>
+
+  <div class="dropdown-tags" id="dropdown-tags">
+    <span class="dropdown-tag">TypeScript <button type="button" aria-label="Retirer TypeScript">&times;</button></span>
+    <span class="dropdown-tag">React <button type="button" aria-label="Retirer React">&times;</button></span>
+    <span class="dropdown-tag">Tailwind <button type="button" aria-label="Retirer Tailwind">&times;</button></span>
+    <span class="dropdown-tag">GraphQL <button type="button" aria-label="Retirer GraphQL">&times;</button></span>
+    <span class="dropdown-tag">Prisma <button type="button" aria-label="Retirer Prisma">&times;</button></span>
+    <span class="dropdown-tag">Vue <button type="button" aria-label="Retirer Vue">&times;</button></span>
+    <span class="dropdown-tag">Svelte <button type="button" aria-label="Retirer Svelte">&times;</button></span>
+    <span class="dropdown-tag">Node <button type="button" aria-label="Retirer Node">&times;</button></span>
+  </div>
+
+  <div class="file-list" id="fichiers">
+    <div class="file-item"><div class="file-item-info"><div class="file-item-name">design-system.pdf</div><div class="file-item-size">2.4 Mo</div></div><button type="button" class="file-item-remove" aria-label="Retirer design-system.pdf">&times;</button></div>
+    <div class="file-item"><div class="file-item-info"><div class="file-item-name">capture.png</div><div class="file-item-size">856 Ko</div></div><button type="button" class="file-item-remove" aria-label="Retirer capture.png">&times;</button></div>
+    <div class="file-item"><div class="file-item-info"><div class="file-item-name">notes.txt</div><div class="file-item-size">4 Ko</div></div><button type="button" class="file-item-remove" aria-label="Retirer notes.txt">&times;</button></div>
+  </div>
+
+  <!-- Même empilement que la démo « Toggles » de formulaires.html (colonne, gap de 1rem). -->
+  <div class="touch-toggles" id="toggles">
+    <div class="touch-toggle-row"><span>Mode sombre</span><label class="toggle"><input type="checkbox" checked aria-label="Mode sombre"><span class="toggle-slider"></span></label></div>
+    <div class="touch-toggle-row"><span>Notifications</span><label class="toggle"><input type="checkbox" aria-label="Notifications"><span class="toggle-slider"></span></label></div>
+    <div class="touch-toggle-row"><span>Auto-deploy</span><label class="toggle"><input type="checkbox" checked aria-label="Auto-deploy"><span class="toggle-slider"></span></label></div>
+  </div>
+</main>
+</body>
+</html>

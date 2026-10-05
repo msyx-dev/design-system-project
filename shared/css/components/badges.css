@@ -53,6 +53,15 @@
 .chip-input-item { border-radius: 20px; padding: 0.18rem 0.55rem; background: color-mix(in srgb, var(--accent) 12%, transparent); border-color: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--accent-text-strong); }
 .chip-input-field { flex: 1; min-width: 120px; background: transparent; border: none; outline: none; color: var(--text); font-size: 0.85rem; font-family: var(--font-sans); padding: 0; }
 .chip-input-field::placeholder { color: var(--text-dim); }
+@media (pointer: coarse) { /* #1051 : champ à 16px sous pointeur grossier (zoom iOS au focus), même sélecteur */
+  .chip-input-field { font-size: var(--input-font-size-touch); }
+  /* Croix des puces (section CHIPS, plus haut) : zone de 44px, taille visuelle inchangée (17,6px). */
+  .chip-close { position: relative; }
+  .chip-close::after { content: ''; position: absolute; top: 50%; left: 50%; width: var(--touch-target); height: var(--touch-target); transform: translate(-50%, -50%); }
+  /* .chip-sm ≈ 24px de haut : la zone dépasse de 10px en haut et en bas → 20px entre deux rangées,
+     aucun recouvrement. En largeur, elle dépasse le bord de la puce de 1 à 3,4px, moins que le gap (8px). */
+  .chip-group:has(.chip-close) { row-gap: var(--space-5); }
+}
 
 /* ===== KBD ===== */
 kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 0.4rem; background: var(--surface-solid); border: 1px solid var(--border-color); border-bottom-width: 2px; border-radius: 5px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }

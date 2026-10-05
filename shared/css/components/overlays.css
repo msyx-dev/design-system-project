@@ -336,6 +336,9 @@ dialog.modal-dialog.cmd-palette { --modal-w: var(--cmd-palette-w); transform: no
 .cmd-input-icon { color: var(--text-dim); font-size: 1.1rem; flex-shrink: 0; }
 .cmd-input { flex: 1; background: none; border: none; color: var(--text); font-size: 0.95rem; outline: none; font-family: var(--font-sans); }
 .cmd-input::placeholder { color: var(--text-dim); }
+@media (pointer: coarse) { /* #1051 : champ à 16px sous pointeur grossier (zoom iOS au focus), même sélecteur */
+  .cmd-input { font-size: var(--input-font-size-touch); }
+}
 .cmd-kbd { display: flex; gap: 0.2rem; }
 .cmd-results { max-height: 320px; overflow-y: auto; padding: 0.5rem; }
 .cmd-group-title { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; padding: 0.5rem 0.7rem 0.3rem; }

@@ -59,7 +59,8 @@
    reste masqué ; les maquettes de navigation.html portent `header-logo` (#1022).
    Seuil aligné sur 640px, comme le masquage de `.site-header` (layout.css, #711) :
    l'ancien 639px laissait un écart d'1 px : à 640px pile, le wordmark restait visible hors
-   `.site-header` et masqué dedans (#1022). */
+   `.site-header` et masqué dedans (#1022). Dans `.site-header`, le wordmark accompagné d'un
+   pictogramme attend 768px (#1051, layout.css) : à côté du burger, il faisait déborder l'en-tête. */
 @media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
     .header-logo:has(.header-logo-img) .brand-wordmark,
     .brand-wordmark:not(.header-logo, .header-logo *) {
