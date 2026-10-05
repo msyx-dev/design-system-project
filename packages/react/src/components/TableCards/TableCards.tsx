@@ -141,9 +141,8 @@ function defaultCellValue<T>(row: T, key: string): ReactNode {
  *
  * Sous 768 px (`bp-md`), ou 1024 px (`bp-lg`) avec `breakpoint="lg"`, chaque
  * ligne devient une carte et chaque cellule affiche son libellé ; au-delà,
- * tableau classique. CSS seul, aucun état, aucun
- * tri : le consommateur passe des `rows` déjà triées/filtrées et compose
- * `<Pagination>` à côté si besoin. Pour un tableau triable ou filtrable, utiliser
+ * tableau classique. CSS seul, aucun état, aucun tri : le consommateur passe
+ * des `rows` déjà triées/filtrées et compose `<Pagination>` à côté si besoin. Pour un tableau triable ou filtrable, utiliser
  * `DataGrid` (qui défile horizontalement sur mobile, inchangé).
  *
  * Émet le markup canonique, identique à la démo vanilla :
