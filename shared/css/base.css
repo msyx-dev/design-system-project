@@ -17,8 +17,10 @@
 
 html { scroll-behavior: smooth; overflow-x: clip; /* #530 : filet page — clip ≠ hidden, préserve header fixe + sticky */ }
 /* #1039 : sous l'en-tête fixe, tout défilement vers un élément (focus Maj+Tab, scrollIntoView, ancre #)
-   le pose SOUS l'en-tête, jamais derrière (WCAG 2.4.11). :has() : sans .site-header, aucun décalage. */
-html:has(.site-header) { scroll-padding-top: calc(var(--header-h) + var(--space-md)); }
+   le pose SOUS l'en-tête, jamais derrière (WCAG 2.4.11). :has() : sans .site-header, aucun décalage.
+   #1042 : + la réserve haute des ornements de Noël (festive.css), 0px hors Noël — sinon la cible
+   atterrirait dans la bande des boules, peintes au-dessus du contenu. */
+html:has(.site-header) { scroll-padding-top: calc(var(--header-h) + var(--festive-top-clearance, 0px) + var(--space-md)); }
 
 body {
     font-family: var(--font-sans);

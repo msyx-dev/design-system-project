@@ -105,6 +105,15 @@
        à combiner avec --header-h pour les offsets (scroll-margin-top, padding) du
        contenu qui suit un PageHeader sticky. Estimation overline+titre ; ajuster
        localement si lead/actions/breadcrumb alourdissent le header. */
+    /* Ornements suspendus du decor Noel (#940, #1042) : 3 rangs (index % 3).
+       SOURCE UNIQUE de leur geometrie : nav.js et FestiveDecor.tsx referencent
+       ces tokens, --festive-top-clearance (festive.css) en derive. */
+    --ornament-drop-1: 22px;
+    --ornament-size-1: 20px;
+    --ornament-drop-2: 42px;
+    --ornament-size-2: 26px;
+    --ornament-drop-3: 62px;
+    --ornament-size-3: 32px;
     --bottom-nav-h: 60px;  /* hauteur de .bottom-nav fixe (#567/#568) */
     --content-max: 72ch;   /* mesure typo optimale .page-content (#567) */
     --content-max-wide: 1440px; /* variante .page-content--wide — vues de donnees (#859).

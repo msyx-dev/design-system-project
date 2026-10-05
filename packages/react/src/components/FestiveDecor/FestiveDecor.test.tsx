@@ -80,6 +80,32 @@ describe("FestiveDecor — rendu conditionné au thème Noël", () => {
     expect(new Set(colors).size).toBe(6);
   });
 
+  // #1042 — géométrie des boules = tokens `--ornament-{drop,size}-N` de tokens.css,
+  // source unique d'où dérive aussi la réserve haute `--festive-top-clearance`
+  // (festive.css). jsdom ne prouve aucun recouvrement (règle N1) : la mesure est
+  // dans `visual-tests/festive-top-clearance-1042.spec.ts` (Chromium).
+  it("géométrie des ornements = tokens du rang (#1042) : aucun px ni top en ligne", () => {
+    const tokens = read("../../../../../shared/css/tokens.css");
+    const tiers = [...tokens.matchAll(/--ornament-drop-(\d+)\s*:/g)].length;
+    expect(tiers).toBeGreaterThan(0);
+    const { container } = render(<FestiveDecor />);
+    const balls = [
+      ...container.querySelectorAll<HTMLElement>(".ornaments > .ornament"),
+    ];
+    expect(balls).toHaveLength(7);
+    balls.forEach((el, i) => {
+      const tier = (i % tiers) + 1;
+      expect(el.style.getPropertyValue("--ornament-drop")).toBe(
+        `var(--ornament-drop-${tier})`,
+      );
+      expect(el.style.getPropertyValue("--ornament-size")).toBe(
+        `var(--ornament-size-${tier})`,
+      );
+      expect(el.style.top).toBe("");
+      expect(el.getAttribute("style")).not.toMatch(/\d\s*px/);
+    });
+  });
+
   it("aria-hidden=true sur TOUT le décor, et aucun nœud DOM par flocon", () => {
     const { container } = render(<FestiveDecor />);
     const layers = [...container.children];

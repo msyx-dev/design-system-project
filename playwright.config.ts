@@ -78,6 +78,7 @@ export default defineConfig({
     "**/demo-note.spec.ts",
     "**/notif-panel-viewport-1028.spec.ts",
     "**/scroll-padding-1039.spec.ts",
+    "**/festive-top-clearance-1042.spec.ts",
     "**/table-cards-actions-1044.spec.ts",
     "**/button-height-parity.spec.ts",
   ],

@@ -619,6 +619,19 @@ Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (sk
 
 `<NotificationBell>` (composé par `<SiteHeader>`), et les composants `@msyx-dev/react` en général, rendent leurs icônes **inline** via le primitif interne `Icon` (#713) — **aucun sprite externe à servir** côté consumer. Contrairement au header vanilla (`shared/nav.js`, cf. section « Header avec utilisateur connecte ») qui dépend de `shared/icons/sprite.svg#i-bell`, la version React est autonome : pas de fichier sprite à copier, pas de chemin à adapter.
 
+## Décor festif (thème Noël) — réserves de mise en page (#1005, #1042)
+
+Le décor (`<SiteHeader festive />` / `<FestiveDecor>` en React, `ensureFestiveDecor()` de `ds-nav.js` en vanilla) est en `position: fixed` : il n'occupe aucune place dans le flux et passe **au-dessus** du contenu. En Noël, le DS pose donc deux réserves, que ses gabarits consomment déjà :
+
+| Variable | Posée sur | Consommée par | Hors Noël |
+|---|---|---|---|
+| `--festive-top-clearance` (haut, #1042) — boule la plus basse sous l'en-tête, dérivée des tokens `--ornament-drop-1..3` / `--ornament-size-1..3` (94 px) | `:root[data-theme="noel"]:has(.garland--header)` | `padding-top` de `.main`, `.page-content`, `.content-grid` (`calc(var(--header-h) + …)`) et `scroll-padding-top` de `html:has(.site-header)` | non posée → `0px` |
+| `--festive-clearance` (bas, #1005) — sapin du pied de page | `:root[data-theme="noel"]:has(.festive-character)` | `padding-bottom` des mêmes gabarits | non posée → `0px` |
+
+- **Gabarit maison** (ni `.main`, ni `.page-content`, ni `.content-grid`) : consommez la réserve vous-même, **toujours avec le repli `0px`** — `padding-top: calc(var(--header-h) + var(--festive-top-clearance, 0px));`. Sans repli, la déclaration entière est invalide hors Noël et le `padding-top` retombe à 0, sous l'en-tête.
+- **Ne recalculez jamais la géométrie des boules** : surchargez les tokens `--ornament-*-N` sur `:root` ; la réserve en dérive.
+- **Resynchronisation obligatoire** à partir de la version de `@msyx-dev/react` qui livre #1042 : `<FestiveDecor>` référence les tokens `--ornament-*-N` et ne pose plus de `top`, que lit `festive.css`. Un `tokens.css` ou un `festive.css` d'une version antérieure donne des boules collées sous l'en-tête et une réserve à `0px`. Resynchronisez avec `shared/sync.sh`, vérifiez avec `shared/check-sync.sh`.
+
 ## Tableau en cartes — `.table-cards` (#1007)
 
 Un tableau qui se replie en cartes sur mobile : sous 768 px (`bp-md`) chaque ligne devient une carte et chaque cellule affiche son libellé au-dessus de sa valeur ; au-delà, c'est le tableau classique, identique à un `.table-wrap > table` nu. CSS seul, aucun JS, opt-in (les tableaux sans `.table-cards` ne changent pas).
