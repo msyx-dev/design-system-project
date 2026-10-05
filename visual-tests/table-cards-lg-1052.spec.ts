@@ -17,8 +17,7 @@
  * `.page-content--wide` > `.card.card-static` > `.table-wrap`). Chaque tableau `--lg` a un
  * jumeau identique SANS `--lg` (#t-md6, #t-md4).
  *
- * Cas (critères CA1 à CA5 de la spec ; le CA6, démo réelle de `pages/data.html`, arrive
- * avec la démo) :
+ * Cas (critères CA1 à CA6 de la spec) :
  *  1. 768px, cartes : cellules de #t-lg6 et #t-lg4 en `block`, leurs wraps ne défilent pas,
  *     la page non plus. Témoin du défaut : #wrap-md6 DÉFILE (sinon la fixture ne reproduit rien).
  *  2. Seuil : #t-lg6 et #t-lg4 en `block` à 1023px, en `table-cell` à 1024px ; #t-md6 en
@@ -30,6 +29,10 @@
  *     #t-lg4 montre au moins 12 caractères de sa valeur.
  *  5. Cartes --lg entre 768 et 1023px (900px) : cellules d'actions en `flex`, contrôles
  *     >= 44 x 44px, champs >= 44px de haut.
+ *  6. Démo réelle `pages/data.html#table-cards` (768 et 1280px) : le suivi à 6 colonnes
+ *     (« Suivi détaillé des participants », --lg) est en cartes à 768px et en tableau à
+ *     1280px, son `.table-wrap` ne défile jamais ; « Participants du tirage » (sans --lg)
+ *     reste en `table-cell` à 768px.
  *
  * Joué dans UN seul projet (`msyx-dark-desktop`) : la largeur est posée par le test.
  *
@@ -51,6 +54,7 @@ import { test, expect, type Page } from "@playwright/test";
 
 const PROJECT = "msyx-dark-desktop";
 const FIXTURE = "/visual-tests/fixtures/table-cards-lg-1052.html";
+const DEMO = "/pages/data.html";
 const TOL = 0.5;
 /** Cible tactile minimale (WCAG 2.5.5, DS-PRINCIPLES §3). */
 const TARGET = 44;
@@ -304,4 +308,68 @@ test.describe("table-cards--lg : cartes jusqu'à 1024px (#1052)", () => {
       expect(i.h, `${i.label} : hauteur`).toBeGreaterThanOrEqual(TARGET - TOL);
     }
   });
+
+  for (const width of [768, 1280]) {
+    test(`6. ${width}px : démo pages/data.html, le suivi à 6 colonnes (--lg) ne défile pas`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(DEMO);
+      await page.waitForLoadState("networkidle");
+      const m = await page.evaluate(() => {
+        const measure = (name: string) => {
+          const table = document.querySelector(
+            `#table-cards table[aria-label="${name}"]`,
+          ) as HTMLElement | null;
+          if (!table) return null;
+          const uniq = (els: Element[]) => [
+            ...new Set(els.map((el) => getComputedStyle(el).display)),
+          ];
+          const wrap = table.closest(".table-wrap") as HTMLElement;
+          return {
+            lg: table.classList.contains("table-cards--lg"),
+            count: table.querySelectorAll("td").length,
+            cells: uniq([
+              ...table.querySelectorAll("td:not(.table-cards-actions)"),
+            ]),
+            actions: uniq([...table.querySelectorAll("td.table-cards-actions")]),
+            scroll: wrap.scrollWidth,
+            client: wrap.clientWidth,
+          };
+        };
+        return {
+          lg: measure("Suivi détaillé des participants"),
+          md: measure("Participants du tirage"),
+        };
+      });
+      expect(m.lg, "démo « Suivi détaillé des participants »").not.toBeNull();
+      expect(m.md, "démo « Participants du tirage »").not.toBeNull();
+      const lg = m.lg!;
+      const md = m.md!;
+      expect(lg.lg, "la démo porte .table-cards--lg").toBe(true);
+      expect(lg.count, "6 colonnes x 3 lignes").toBe(18);
+      if (width === 768) {
+        expect(lg.cells, "suivi --lg en cartes à 768px").toEqual(["block"]);
+        expect(lg.actions, "actions du suivi --lg en flex à 768px").toEqual([
+          "flex",
+        ]);
+        // Témoin : le tableau sans --lg de la même section est restauré dès 768px.
+        expect(md.cells, "« Participants du tirage » en tableau à 768px").toEqual([
+          "table-cell",
+        ]);
+      } else {
+        expect(lg.cells, "suivi --lg en tableau à 1280px").toEqual([
+          "table-cell",
+        ]);
+        expect(lg.actions, "actions du suivi --lg à 1280px").toEqual([
+          "table-cell",
+        ]);
+      }
+      expect(
+        lg.scroll,
+        `le .table-wrap du suivi --lg ne défile pas (${lg.scroll} <= ${lg.client})`,
+      ).toBeLessThanOrEqual(lg.client);
+    });
+  }
 });
