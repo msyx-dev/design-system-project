@@ -33,7 +33,8 @@
 - **Antérieur** : milestone #49 (2.142.0 / alpha.60, contraste des boutons, logos, Textarea) ; parité React complète (août) ; d’autres sessions Claude poussent sous le compte gh « Kchigoki » de la machine.
 
 ## Prochaine étape
-- **Backlog DS (2026-10-05, après 2.145.5)** : VIDE. Décisions de Mike sur la rétro M53 (« go préco sur les trois ») :
+- **Sprint suivant PRÊT À LANCER : milestone #54 « Fiabilisation consumers ⑦ »**, créé le 2026-10-05, avec 3 Bugs ouverts par la session tirokado : **#1050** (badges et alertes en mode clair sous 4,5:1 sur fond teinté), **#1051** (contrôles tactiles : champs à 16 px et cibles à 44 px sous `pointer: coarse`) et **#1052** (`TableCards` qui bascule en tableau à 768 px alors que 4 à 6 colonnes ne tiennent pas, proche de #1044). Board #7 en Todo, aucun groom fait. À lancer par `/sprint` dans une nouvelle session : plan → arrêt supervisé 1.
+- **Backlog DS (2026-10-05, après 2.145.5)** : décisions de Mike sur la rétro M53 (« go préco sur les trois ») :
   - A3 : plancher structurel de `ci-wait-budget.sh` = plus long `timeout-minutes` + 300 s (**claude-config#566**, DS 3600 s) ;
   - A5 : réserves festives par `:root:has()` → **attendre** une observation hors machine de test avant de changer (#1045, ligne 7) ;
   - A1 : résolveur du bloc `VERSION_NOTES` → **seulement à la récidive** (règle en mémoire).
