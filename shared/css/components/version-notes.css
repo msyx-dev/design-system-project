@@ -55,6 +55,10 @@
         padding: 0.35rem var(--space-md);
     }
 }
+/* #1051 : sous pointeur grossier, le badge garde sa cible de 44px au-delà de 768px (tablette tactile). */
+@media (pointer: coarse) {
+    .version-badge { min-height: var(--touch-target); }
+}
 
 /* Modale — variante largeur pour accueillir la timeline (reutilisation pure dialog.modal-dialog).
    Depuis #917, la largeur passe par le token `--modal-w` de la modale plutot que par un

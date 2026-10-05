@@ -579,6 +579,10 @@
     outline-offset: 2px;
     border-radius: var(--radius-sm);
 }
+/* #1051 : cible de 44px sous pointeur grossier (avatar 32px + chevron = 56,4×38,4 au repos). */
+@media (pointer: coarse) {
+    .user-menu-trigger { min-height: var(--touch-target); min-width: var(--touch-target); justify-content: center; }
+}
 
 /* Avatar circle 32px — initials ou image */
 .user-menu-avatar {
