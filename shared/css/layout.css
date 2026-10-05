@@ -718,11 +718,20 @@ html.theme-transitioning * {
    l'enrichissement vit dans le `min-width` (complément exact : 640 + 0.02 = 640.02px,
    DS-PRINCIPLES §4). Seuls les 3 masquages restent en `max-width` : leur `display`
    natif au retour ne s'écrit pas sans recopier celui d'un autre composant. */
+@media (min-width: 640.02px) { /* seuil composant : 640px, compaction du header #711 */
+    .site-header { padding: 0 var(--space-lg); gap: var(--space-md); }
+    /* #1028 : au-dessus de 640 px le panneau retrouve son ancrage sous la cloche, aligné à droite
+       de sa zone (300 px, hérités du bloc 480.02px ci-dessus). */
+    .site-header .header-notif-panel { position: absolute; top: calc(100% + var(--space-sm)); right: 0; }
+}
 /* Pointeur grossier (#1051) — cibles de 44px dans l'en-tête de 56px (WCAG 2.5.5). Les boîtes
    elles-mêmes sont agrandies, pas une zone ::after : l'avatar porte `overflow: hidden` (elle y
    serait rognée) et une zone ajoutée chevaucherait la voisine. L'espacement se resserre pour
-   faire tenir 7 contrôles (thème Noël) dès 360px ; placé AVANT le bloc 640.02px, qui rend le
-   padding et le gap habituels au-delà (spécificité égale, ordre). Limite : 320px à 7 contrôles. */
+   faire tenir 7 contrôles (thème Noël) dès 360px. Placé APRÈS le bloc 640.02px (spécificité
+   égale, ordre) : la compaction tient tant que le burger est affiché, car entre 640 et 768px le
+   wordmark, le badge et le sélecteur de thème reviennent (mesure : 52px de débordement à 768px
+   en Noël sans elle). Le bloc 768.02px rend le padding et le gap habituels. Limite : 320px à
+   7 contrôles ; bande 641-716px (Noël) déjà débordante au pointeur fin, hors #1051. */
 @media (pointer: coarse) {
     .site-header { padding-inline: var(--space-sm); gap: var(--space-xs); }
     .site-header .header-user-zone { gap: var(--space-xs); }
@@ -730,12 +739,9 @@ html.theme-transitioning * {
     .site-header .theme-switcher-select { min-height: var(--touch-target); }
     .header-notification, .header-avatar-trigger { width: var(--touch-target); height: var(--touch-target); }
 }
-@media (min-width: 640.02px) { /* seuil composant : 640px, compaction du header #711 */
-    .site-header { padding: 0 var(--space-lg); gap: var(--space-md); }
-    .site-header .header-user-zone { gap: var(--space-sm); } /* = base de .header-user-zone : rend le gap que le bloc tactile resserre */
-    /* #1028 : au-dessus de 640 px le panneau retrouve son ancrage sous la cloche, aligné à droite
-       de sa zone (300 px, hérités du bloc 480.02px ci-dessus). */
-    .site-header .header-notif-panel { position: absolute; top: calc(100% + var(--space-sm)); right: 0; }
+@media (pointer: coarse) and (min-width: 768.02px) { /* bp-md : le burger disparaît, l'espacement habituel revient */
+    .site-header { padding-inline: var(--space-lg); gap: var(--space-md); }
+    .site-header .header-user-zone { gap: var(--space-sm); }
 }
 @media (max-width: 640px) { /* exception §4 : masquage sur une plage, display natif non recopiable */
     .site-header .header-logo:has(.header-logo-img) .brand-wordmark { display: none; }

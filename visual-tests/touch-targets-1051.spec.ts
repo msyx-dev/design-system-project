@@ -612,12 +612,16 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
     verifierEnTete(m, "React noel 375 px");
   });
 
-  test("CA5. Tablette tactile (768/1024 px) : sélecteur de thème et badge sans débordement", async ({
+  test("CA5. Tablette tactile (768/769/1024 px) : sélecteur de thème et badge sans débordement", async ({
     page,
   }) => {
     // Risque nommé en t1 : sous pointeur grossier, `.site-header .theme-switcher-select` passe à
-    // 16 px ; au-delà de 640 px il est affiché et s'élargit. Le badge de version garde 44 px.
-    for (const width of [768, 1024]) {
+    // 16 px ; au-delà de 640 px il est affiché. Mesure t3 (2026-10-05, Noël) : il ne s'élargit que
+    // de 4,8 px (90 → 94,8, `min-width` domine), mais les cibles à 44 px débordaient l'en-tête de
+    // 52 px à 768 px, burger écrasé à 19 px : la compaction tactile tient donc jusqu'à 768 px.
+    // 768 = dernier palier avec burger (le plus serré) ; 769 = espacement rendu, sans burger.
+    // Hors garantie : 641-716 px en Noël, déjà débordant au pointeur fin (burger à 19 px).
+    for (const width of [768, 769, 1024]) {
       await ouvrir(page, "/pages/navigation.html", width, "noel");
       const m = await enTete(page);
       const cas = `noel ${width} px`;
