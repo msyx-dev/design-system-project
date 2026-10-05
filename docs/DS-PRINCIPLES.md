@@ -1128,9 +1128,11 @@ dans un composant :
 
 | Token | Valeur | Pour |
 |---|---|---|
-| `--z-sticky` | 150 | en-têtes collés (`.site-header`, `.section-header--sticky`) |
-| `--z-surface` | 200 | surfaces conteneurs (sidebar, overlay de drawer, panneau de notifs) |
-| `--z-surface-panel` | 201 | le panneau lui-même, au-dessus de son propre overlay |
+| `--z-decor-behind` | -1 | décor opaque peint SOUS tout le contenu, au-dessus du fond de page : sapin festif (`.festive-character`, #1043) |
+| `--z-decor` | 1 | nappes décoratives translucides peintes au-dessus du contenu en flux, en `pointer-events: none` : neige (`.snowfall`), givre (`.frost`) |
+| `--z-sticky` | 150 | chrome collé : `.section-header--sticky`, guirlande et ornements, colonne d'app-shell desktop (`.sidebar`, `.rail-sidebar--fixed`) ; `.site-header` à `--z-sticky` + 1 (voir sous le tableau) |
+| `--z-surface` | 200 | surfaces conteneurs (voile de la barre latérale et du rail mobiles, overlay de drawer, panneau de notifs) |
+| `--z-surface-panel` | 201 | le panneau lui-même, au-dessus de son propre overlay (drawer plein écran, `.sidebar` et `.rail-sidebar--fixed` en panneau mobile) |
 | `--z-nav` | 300 | `.bottom-nav` fixe |
 | `--z-modal` | 1000 | surfaces modales **non natives** (`.cmd-overlay`) |
 | `--z-lightbox` | 1500 | visionneuse plein écran |
@@ -1143,6 +1145,40 @@ s'est retrouvé sous `.drawer-panel--fullscreen` (201) : le menu était peint, m
 le clic atterrissait sur le champ du formulaire situé dessous.
 
 ✅ **Do** — `z-index: var(--z-floating)` pour toute surface ancrée à un déclencheur.
+
+❌ **Don't** — ranger un décor opaque fixe avec un z-index positif : il est peint après
+tout le contenu non positionné, donc par-dessus. Le sapin du thème Noël, en `--z-decor`,
+masquait ainsi les boutons et les textes de la colonne de droite (#1043).
+
+✅ **Do** — `z-index: var(--z-decor-behind)` : le décor passe sous le contenu et reste
+visible sur le fond de page. Contrat consommateur : ce fond reste celui de `<body>`,
+propagé au canevas ; un fond posé sur `<html>`, ou un ancêtre opaque qui forme un
+contexte d'empilement, masque le décor.
+
+**`.site-header` vaut `calc(var(--z-sticky) + 1)`.** L'en-tête forme un contexte
+d'empilement : ses menus (`.header-dropdown`, `.header-notif-panel`, en `--z-floating`)
+sont plafonnés à SA valeur. À égalité avec `--z-sticky`, la guirlande, les ornements,
+`.section-header--sticky` et `.graph-toolbar`, placés plus loin dans le DOM, seraient
+peints par-dessus ces menus. Le +1 le range strictement au-dessus du chrome collé.
+
+**`.sidebar` et `.rail-sidebar--fixed` ont deux rôles selon la largeur.**
+- Colonne fixe d'app-shell (au-delà de 768 px) : `--z-sticky`. Elle ne chevauche ni
+  l'en-tête ni la guirlande, et reste SOUS le voile d'un drawer plein écran
+  (`--z-surface`) : en `--z-surface-panel`, elle serait peinte et cliquable par-dessus
+  ce voile.
+- Panneau hors écran mobile (jusqu'à 768 px) : `--z-surface-panel`, au-dessus de son voile
+  (`--z-surface`), des en-têtes collés et de la guirlande. Le voile couvre aussi l'en-tête :
+  le thème et le mode ne sont plus cliquables tant que le panneau est ouvert.
+
+**Gardes.** `visual-tests/stacking-scale.spec.ts` (navigateur réel) lit CE tableau et
+compare chaque jeton à sa valeur calculée sur `:root`. Une ligne fausse ici, ou une
+redéclaration du jeton plus loin dans `tokens.css`, le fait rougir : jusqu'à #1043, un
+ancien bloc « Z-index scale » servait 100 et 800 là où ce tableau annonçait 150 et 1000.
+Le même spec refuse tout `z-index` littéral ≥ 50 dans `shared/css` (commentaires exclus) ;
+une exception s'inscrit, justifiée, dans `LITERAL_EXCEPTIONS` du spec. Les alias
+historiques `--z-dropdown`, `--z-header`, `--z-overlay`, `--z-cmd` et `--z-max` restent
+publics pour les consommateurs, mais ne font pas partie de l'échelle : aucun composant du
+DS ne les consomme.
 
 ### 12.2 Le conteneur — aucun `z-index` ne peut rien contre le *top layer*
 

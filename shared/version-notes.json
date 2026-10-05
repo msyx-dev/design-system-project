@@ -4,6 +4,14 @@
     "highlights": [
       {
         "type": "correction",
+        "text": "En thème Noël, le sapin passe derrière le contenu : il ne cache plus les boutons ni les textes du côté droit de l'écran, et reste visible là où la page est vide."
+      },
+      {
+        "type": "correction",
+        "text": "Les menus déroulants, les suggestions de recherche et, sur mobile, le panneau de navigation ouvert ne sont plus cachés par un titre resté collé en haut de la page ni par la guirlande de Noël. Tant que ce panneau est ouvert sur mobile, le thème se change après l'avoir refermé."
+      },
+      {
+        "type": "correction",
         "text": "En thème Noël, les boules de la guirlande ne cachent plus le haut de la page : le titre commence juste sous elles, et un lien vers une section ou le focus clavier s'y arrête aussi. Rien ne change dans les autres thèmes."
       },
       {

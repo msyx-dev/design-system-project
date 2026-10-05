@@ -214,7 +214,8 @@ function isActionable(item: RailItem): boolean {
  * connaître.
  *
  * **Géométrie d'app-shell + hors-flux mobile (#906)** : `.rail-sidebar--fixed`
- * passait sous `.site-header` (`top:0` contre le `z-index:150` de l'en-tête)
+ * passait sous `.site-header` (`top:0`, et l'en-tête est peint au-dessus du
+ * rail : `calc(var(--z-sticky) + 1)` depuis #1043, DS-PRINCIPLES §12.1)
  * — corrigé (`top:var(--header-h)`, hauteur réduite d'autant), sans rien
  * changer côté props. Sous 768px, `.rail-sidebar--fixed` bascule hors-écran
  * avec overlay — calque exact de `.sidebar`/`.sidebar-overlay`

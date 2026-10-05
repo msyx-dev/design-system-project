@@ -292,7 +292,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
   border-radius: var(--radius-sm);
   max-height: 220px;
   overflow-y: auto;
-  z-index: 200;
+  z-index: var(--z-floating); /* #1043 : liste ancree au champ */
   list-style: none;
   margin: 0;
   padding: 0.25rem 0;

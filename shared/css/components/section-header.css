@@ -103,8 +103,8 @@
    colonnes, cf. .detail-grid). Nécessite le fix socle #795
    (body{overflow-x:clip}, shared/css/base.css) : sans lui, body devient
    conteneur de défilement et neutralise tout sticky de niveau page.
-   z-index : var(--z-sticky) (100) < var(--z-header) (150) — reste sous
-   .site-header (position:fixed, z-index:150).
+   z-index : var(--z-sticky) (150) — reste sous .site-header
+   (position:fixed, z-index: calc(var(--z-sticky) + 1), #1043).
    Usage : <PageHeader className="section-header--sticky" ... /> (le
    composant React expose déjà `className`, aucune modif de PageHeader.tsx
    nécessaire) ou <section class="section-header section-header--sticky">

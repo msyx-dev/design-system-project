@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sapin de Noel sous le contenu — fixture #1043</title>
+<!--
+  Fixture de `visual-tests/festive-under-content.spec.ts` (#1043).
+
+  Le defaut releve chez tirokado : le sapin de Noel (`.festive-character`, fixe en bas a
+  droite) etait peint PAR-DESSUS le contenu de la colonne de droite — boutons de fin de
+  ligne, derniere colonne d'un tableau — tant que la page n'etait pas defilee au maximum.
+
+  Le contenu est en PLEINE LARGEUR (`.main.main--no-rail`) pour passer sous le sapin aux
+  quatre largeurs testees (768 a 1920 px) : le gabarit `.page-content--wide` n'y passe plus a
+  1920 px (0 chevauchement mesure). Il porte :
+  - 30 lignes en flex `space-between` : un texte libre a gauche, un `button.btn.btn-secondary`
+    a droite ;
+  - une `.card` qui contient un `<table>` dont la derniere colonne porte des boutons.
+
+  Markup = celui d'un consumer : header injecte par nav.js, gabarit et composants DS. Pas de
+  components.js : rien d'autre que le header et le decor festif ne bouge la mise en page.
+  Aucun fond n'est pose sur <html> : c'est le contrat consommateur du sapin (festive.css).
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  .fixture-wrap { padding-inline: var(--space-md); }
+  .fixture-rows { list-style: none; margin: 0; padding: 0; }
+  .fixture-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+</style>
+</head>
+<body>
+<header class="site-header" id="site-header"></header>
+<main class="main main--no-rail" id="gabarit">
+  <div class="fixture-wrap">
+    <h1>Partages en attente</h1>
+    <ul class="fixture-rows" id="rows"></ul>
+    <section class="card">
+      <h2>Liens envoyes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Destinataire</th><th>Envoye le</th><th>Action</th></tr></thead>
+          <tbody id="table-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+<script>
+(function () {
+  // 30 lignes : texte libre a gauche, bouton a droite (motif tirokado).
+  var rows = document.getElementById('rows');
+  for (var i = 1; i <= 30; i++) {
+    var li = document.createElement('li');
+    li.className = 'fixture-row';
+    var label = document.createElement('span');
+    label.textContent = 'Partage n°' + (2000 + i) + ' — en attente de lecture';
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-secondary';
+    btn.textContent = 'Afficher le lien';
+    li.appendChild(label);
+    li.appendChild(btn);
+    rows.appendChild(li);
+  }
+  // Tableau dans une carte : la derniere colonne porte les boutons.
+  var tbody = document.getElementById('table-rows');
+  for (var j = 1; j <= 8; j++) {
+    var tr = document.createElement('tr');
+    var who = document.createElement('td');
+    who.textContent = 'destinataire' + j + '@exemple.fr';
+    var when = document.createElement('td');
+    when.textContent = j + ' decembre';
+    var act = document.createElement('td');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'btn btn-secondary';
+    b.textContent = 'Renvoyer';
+    act.appendChild(b);
+    tr.appendChild(who);
+    tr.appendChild(when);
+    tr.appendChild(act);
+    tbody.appendChild(tr);
+  }
+}());
+</script>
+<script src="/shared/nav.js"></script>
+</body>
+</html>

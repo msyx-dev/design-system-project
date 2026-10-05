@@ -172,7 +172,7 @@
     position: absolute;
     top: calc(100% + var(--space-xs));
     inset-inline-end: 0;
-    z-index: 100;
+    z-index: var(--z-floating); /* #1043 : menu ancre, au-dessus des en-tetes colles */
     min-width: 200px;
     /* Etats ferme/ouvert via .open — heritage surface (.menu) intact */
     opacity: 0;

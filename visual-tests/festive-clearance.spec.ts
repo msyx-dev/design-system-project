@@ -94,6 +94,52 @@ async function openPage(
     .toBe(theme);
 }
 
+/**
+ * Attend que le gabarit ait REELLEMENT recu la reserve que la cascade lui donne (#1045, l. 5).
+ *
+ * Cause mesuree (2026-10-05, Chromium, charge machine 10 a 23 sur 8 coeurs, 9 rouges sur
+ * 120 runs) : apres le `load`, `:root` matche deja `[data-theme="noel"]:has(.festive-character)`
+ * et le gabarit HERITE deja `--festive-clearance` (getPropertyValue la rend), mais son
+ * `padding-bottom` calcule vaut encore 48px, la valeur SANS reserve, et le document est mis en
+ * page avec. La valeur rattrape seule plus tard : de 38 ms a plus de 850 ms observes, donc
+ * bien au-dela de deux frames. Le test defilait et mesurait dans cet intervalle : contenu du bas
+ * mesure sans reserve, ou defilement cale sur l'ancienne hauteur.
+ *
+ * Condition attendue, independante de ce que le test verifie : le `padding-bottom` du gabarit
+ * egale celui d'une sonde NEUVE de memes classes, posee a cote en `display: none` (style
+ * calcule a neuf, aucune incidence sur la mise en page). Si la reserve n'est plus consommee
+ * (mutation M3), sonde et gabarit valent tous deux 48px : l'attente passe tout de suite et ce
+ * sont les assertions de recouvrement qui rougissent, comme avant.
+ * Preuve : `--repeat-each=6 --workers=2` (126 runs, charge 22-23) = 0 rouge, dont 14 runs ou
+ * l'attente a reellement servi (48px ou 84px au lieu de 219, 312 ou 339px). Un delai fixe ou
+ * un double requestAnimationFrame ne suffisent pas : l'ecart dure plusieurs frames.
+ */
+async function waitForSettledPadding(page: Page, root: string) {
+  await expect
+    .poll(
+      () =>
+        page.evaluate((sel) => {
+          const el = document.querySelector(sel) as HTMLElement | null;
+          if (!el || !el.parentElement) return "gabarit introuvable";
+          const probe = document.createElement(el.tagName);
+          probe.className = el.className;
+          probe.style.display = "none";
+          el.parentElement.insertBefore(probe, el);
+          const expected = getComputedStyle(probe).paddingBottom;
+          probe.remove();
+          const actual = getComputedStyle(el).paddingBottom;
+          return actual === expected
+            ? "ok"
+            : `${actual} au lieu de ${expected}`;
+        }, root),
+      {
+        message:
+          "le padding-bottom du gabarit a rattrape la cascade (--festive-clearance via :has())",
+      },
+    )
+    .toBe("ok");
+}
+
 /** Defile au maximum et attend que le document ait fini de grandir (sapin, lazy). */
 async function scrollToBottom(page: Page) {
   await expect
@@ -269,6 +315,7 @@ test.describe("Sapin de Noel — reserve de fin de page (#1005)", () => {
         );
 
         await openPage(page, gabarit.url, "noel", vp);
+        await waitForSettledPadding(page, gabarit.root);
         await scrollToBottom(page);
 
         const m = await measure(page, gabarit.root, TREE);
@@ -320,6 +367,7 @@ test.describe("Sapin de Noel — reserve de fin de page (#1005)", () => {
       );
 
       await openPage(page, "/pages/feedback.html", "noel", vp);
+      await waitForSettledPadding(page, ".main");
       await scrollToBottom(page);
 
       const treeWidth = await page.evaluate(

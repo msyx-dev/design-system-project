@@ -81,6 +81,8 @@ export default defineConfig({
     "**/festive-top-clearance-1042.spec.ts",
     "**/table-cards-actions-1044.spec.ts",
     "**/button-height-parity.spec.ts",
+    "**/stacking-scale.spec.ts",
+    "**/festive-under-content.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
