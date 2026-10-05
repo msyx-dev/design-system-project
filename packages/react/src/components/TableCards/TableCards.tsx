@@ -54,6 +54,14 @@ export interface TableCardsProps<T> {
    */
   editable?: boolean;
   /**
+   * Largeur de fenêtre à partir de laquelle les cartes redeviennent un
+   * tableau : `"md"` = 768 px (défaut), `"lg"` = 1024 px
+   * (`.table-cards--lg`, #1052), pour un tableau qui ne tient pas à 768 px
+   * (4 à 6 colonnes). Modificateur du `<table>`, jamais de `.table-wrap`.
+   * Se combine avec `editable`. @default "md"
+   */
+  breakpoint?: "md" | "lg";
+  /**
    * Rend une ligne du corps à la place du rendu par colonnes : doit renvoyer un
    * `<tr role="row">` de `<TableCardsCell>`, typiquement un composant de ligne
    * qui porte son propre état (un `useActionState` par ligne est impossible dans
@@ -131,10 +139,10 @@ function defaultCellValue<T>(row: T, key: string): ReactNode {
  * TableCards — tableau qui se replie en cartes (`data.html` #table-cards, CSS
  * `components/tables.css` bloc TABLE CARDS, #1007).
  *
- * Sous 768 px (`bp-md`) chaque ligne devient une carte et chaque cellule
- * affiche son libellé ; au-delà, tableau classique. CSS seul, aucun état, aucun
- * tri : le consommateur passe des `rows` déjà triées/filtrées et compose
- * `<Pagination>` à côté si besoin. Pour un tableau triable ou filtrable, utiliser
+ * Sous 768 px (`bp-md`), ou 1024 px (`bp-lg`) avec `breakpoint="lg"`, chaque
+ * ligne devient une carte et chaque cellule affiche son libellé ; au-delà,
+ * tableau classique. CSS seul, aucun état, aucun tri : le consommateur passe
+ * des `rows` déjà triées/filtrées et compose `<Pagination>` à côté si besoin. Pour un tableau triable ou filtrable, utiliser
  * `DataGrid` (qui défile horizontalement sur mobile, inchangé).
  *
  * Émet le markup canonique, identique à la démo vanilla :
@@ -245,14 +253,22 @@ export function TableCards<T>({
   getRowProps,
   footer,
   editable = false,
+  breakpoint = "md",
   renderRow,
 }: TableCardsProps<T>) {
   const rootClasses = ["table-wrap", className].filter(Boolean).join(" ");
   // Classes en chaînes LITTÉRALES (jamais un gabarit `${}`) : le scanner
-  // `extractReactClasses` de generate-registry.js doit voir `table-cards--editable`.
+  // `extractReactClasses` de generate-registry.js doit voir
+  // `table-cards--editable` et `table-cards--lg`. `"md"` n'émet rien de plus
+  // (rendu antérieur à #1052 inchangé).
+  const lg = breakpoint === "lg";
   const tableClasses = editable
-    ? "table-cards table-cards--editable"
-    : "table-cards";
+    ? lg
+      ? "table-cards table-cards--editable table-cards--lg"
+      : "table-cards table-cards--editable"
+    : lg
+      ? "table-cards table-cards--lg"
+      : "table-cards";
   return (
     <div className={rootClasses}>
       <table className={tableClasses} role="table" aria-label={ariaLabel}>

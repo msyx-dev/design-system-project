@@ -649,7 +649,7 @@
 
 <!-- TABLE CARDS -->
 <section id="table-cards">
-    <div class="section-header"><span class="overline">Data</span><h2>Tableau en cartes</h2><p>Sous 768&nbsp;px, chaque ligne devient une carte et chaque cellule affiche son libellé ; au-delà, tableau classique. CSS seul, aucun JS.</p></div>
+    <div class="section-header"><span class="overline">Data</span><h2>Tableau en cartes</h2><p>Sous 768&nbsp;px, chaque ligne devient une carte et chaque cellule affiche son libellé ; au-delà, tableau classique. Avec <code class="code-inline">.table-cards--lg</code>, les cartes restent jusqu'à 1024&nbsp;px, pour un tableau qui ne tient pas à 768&nbsp;px. CSS seul, aucun JS.</p></div>
     <div class="demo-box">
         <span class="demo-label">Suivi des participants</span>
         <div class="table-wrap">
@@ -675,6 +675,40 @@
                         <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>jean-baptiste.de-la-fontaine-dupont@association-des-familles-exemple.fr</td>
                         <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="badge badge-danger badge-xs">Échec d'envoi</span></td>
                         <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Jean-Baptiste de La Fontaine-Dupont">Régénérer le lien</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <span class="demo-label mt-xl">Suivi détaillé, 6 colonnes : cartes jusqu'à 1024&nbsp;px</span>
+        <div class="table-wrap">
+            <table class="table-cards table-cards--lg" role="table" aria-label="Suivi détaillé des participants">
+                <thead role="rowgroup">
+                    <tr role="row"><th scope="col" role="columnheader">Participant</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Envoi</th><th scope="col" role="columnheader">Consultation</th><th scope="col" role="columnheader">Lien</th><th scope="col" role="columnheader">Actions</th></tr>
+                </thead>
+                <tbody role="rowgroup">
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span>Camille Moreau</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>camille.moreau@exemple.fr</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Envoi</span><span class="badge badge-success badge-xs">E-mail envoyé</span></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Consultation</span>Consulté le 04/10/2026</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Camille Moreau">Copier le lien</button></td>
+                        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Relancer Camille Moreau">Relancer</button></td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span>Dominique Lefèvre</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>dominique.lefevre@exemple.fr</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Envoi</span><span class="badge badge-warning badge-xs">Envoi en attente</span></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Consultation</span>Non consulté</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Dominique Lefèvre">Copier le lien</button></td>
+                        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Relancer Dominique Lefèvre">Relancer</button></td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Participant</span>Marie-Hélène de La Tour-Dupin</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>marie-helene.delatour@exemple.fr</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Envoi</span><span class="badge badge-danger badge-xs">Échec d'envoi</span></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Consultation</span>Non consulté</td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Lien</span><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Marie-Hélène de La Tour-Dupin">Copier le lien</button></td>
+                        <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Relancer Marie-Hélène de La Tour-Dupin">Relancer</button></td>
                     </tr>
                 </tbody>
             </table>

@@ -636,6 +636,8 @@ Le décor (`<SiteHeader festive />` / `<FestiveDecor>` en React, `ensureFestiveD
 
 Un tableau qui se replie en cartes sur mobile : sous 768 px (`bp-md`) chaque ligne devient une carte et chaque cellule affiche son libellé au-dessus de sa valeur ; au-delà, c'est le tableau classique, identique à un `.table-wrap > table` nu. CSS seul, aucun JS, opt-in (les tableaux sans `.table-cards` ne changent pas).
 
+**Tableau large : `.table-cards--lg` (#1052).** Le modificateur se pose sur le `<table>` (`class="table-cards table-cards--lg"`, en React `breakpoint="lg"`), jamais sur le `.table-wrap` : les cartes restent jusqu'à 1023 px et le tableau revient dès 1024 px (`bp-lg`) au lieu de 768 px. Il se combine avec `.table-cards--editable` (`<TableCards editable breakpoint="lg">`). Quand le poser : un tableau de 4 colonnes et plus, ou avec des champs de saisie en cellule, qui ne tient pas à 768 px ; le signe mesurable est qu'à 768 px son `.table-wrap` défile (`scrollWidth > clientWidth`) ou qu'un champ y montre moins de 12 caractères. Entre 768 et 1023 px, un tableau `--lg` garde le rendu cartes (libellés, cellule d'actions en `flex`, cibles de 44 px). Sans le modificateur, rien ne change : le seuil par défaut reste 768 px. **Limite connue** : le seuil est la largeur de la fenêtre, pas celle du conteneur. Avec une barre latérale, un tableau `--lg` peut encore défiler entre 1024 et ~1150 px ; il suit alors le contrat de #1044 : le `.table-wrap` défile, aucun contenu n'est perdu et les contrôles restent sur une rangée. Vitrine : `data.html#table-cards` (« Suivi détaillé, 6 colonnes »).
+
 Markup vanilla minimal (module `tables.css`, importé par `components.css` ; absent de `components-core.css`) :
 
 ```html
@@ -657,7 +659,7 @@ Markup vanilla minimal (module `tables.css`, importé par `components.css` ; abs
 Règles à respecter :
 
 - **Le libellé est un nœud `<span class="table-cards-label" aria-hidden="true">`, premier enfant de la cellule**, texte identique à l'en-tête de la colonne. Jamais `td::before { content: attr(data-label) }` : le contenu généré entre dans le nom accessible de la cellule, annoncé deux fois (« Nom, Nom Alice »). L'en-tête `<th scope="col">` reste le canal accessible : le CSS le masque à l'écran en mode cartes (déclarations de `.sr-only`) mais les lecteurs d'écran le lisent.
-- **La cellule d'actions** porte `.table-cards-actions` et n'a pas de libellé. En mode cartes ses boutons gardent une cible tactile d'au moins 44 px. En mode tableau (dès 768 px), ses contrôles restent sur une rangée : `white-space: nowrap`, écart `--space-sm`, centrage vertical (#1044). `nowrap` s'hérite : un texte libre posé dans cette cellule ne revient plus à la ligne dès 768 px, donc n'y mettez que des contrôles. Si le tableau ne tient pas dans son conteneur, le `.table-wrap` défile au lieu d'empiler les boutons. L'erreur de ligne (`.table-cards-error`) reste sur sa propre ligne, après les boutons, et revient à la ligne.
+- **La cellule d'actions** porte `.table-cards-actions` et n'a pas de libellé. En mode cartes ses boutons gardent une cible tactile d'au moins 44 px. En mode tableau (dès 768 px, dès 1024 px avec `.table-cards--lg`), ses contrôles restent sur une rangée : `white-space: nowrap`, écart `--space-sm`, centrage vertical (#1044). `nowrap` s'hérite : un texte libre posé dans cette cellule ne revient plus à la ligne en mode tableau, donc n'y mettez que des contrôles. Si le tableau ne tient pas dans son conteneur, le `.table-wrap` défile au lieu d'empiler les boutons. L'erreur de ligne (`.table-cards-error`) reste sur sa propre ligne, après les boutons, et revient à la ligne.
 - **Rôles ARIA explicites** (`table`, `rowgroup`, `row`, `columnheader`, `cell`) sur tout le markup : certains moteurs perdent la sémantique de tableau quand `display` change.
 - Une ligne de `<tfoot>` devient aussi une carte.
 
@@ -678,6 +680,8 @@ import { TableCards } from "@msyx-dev/react";
   ]}
 />
 ```
+
+Tableau large : ajouter `breakpoint="lg"` (défaut `"md"`), qui émet `table-cards--lg` sur le `<table>`.
 
 Quand préférer `DataGrid` : `.table-cards` n'a ni tri ni filtre ni pagination (en cartes l'en-tête est masqué, les contrôles de tri disparaîtraient) — le consommateur passe des lignes déjà triées et compose `<Pagination>` à côté. Pour un tableau triable ou filtrable, utiliser `.data-grid` / `DataGrid`, qui défile horizontalement sur mobile.
 
