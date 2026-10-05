@@ -1,7 +1,16 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "correction",
+        "text": "Sur tablette et sur ordinateur, les boutons d'une ligne de tableau restent côte à côte, avec leur libellé entier, au lieu de s'empiler ; un tableau trop large pour la page défile."
+      },
+      {
+        "type": "correction",
+        "text": "Deux boutons posés côte à côte ont la même hauteur, qu'ils aient un contour ou non, et qu'il s'agisse d'un lien ou d'un bouton."
+      }
+    ]
   },
   "released": [
     {

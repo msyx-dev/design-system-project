@@ -55,14 +55,14 @@ shared/
       signature.css     #   Brand signature spatiale — gradient underline 2px sous .section-header .overline (v2.42.0)
       brand.css         #   Brand identity — wordmark + mark DS (v2.56.0)
       section-header.css#   .section-header + .overline (titres de section)
-      buttons.css       #   .btn-primary, .btn-secondary, .btn-ghost, .btn-icon, .btn-icon--danger (v2.27.0)
+      buttons.css       #   .btn-primary, .btn-secondary, .btn-ghost, .btn-icon, .btn-icon--danger (v2.27.0) ; tailles .btn-sm/-lg/-xs déclarées après toutes les variantes + parité de hauteur des variantes voisines (line-height normal, bordure retranchée du padding, #1044)
       cards.css         #   .card, hero sections, hub, lazy sections, .card-link (a11y wrapper v2.49.0), .card-muted (WCAG-safe v2.78.0), .card-media/.card-thumb/.card-body (vignette bleed v2.79.0), .card-static (carte conteneur non interactive, sans retour de survol, #1010), .card-title (titre de carte titrée, #1010)
       badges.css        #   .badge, .badge-nav (compact sidebar/nav v2.49.0), .chip, .kbd, .notification-dot, .achievement-badge
       theming.css       #   COLORS (+ .color-grid--compact v2.54.7), TYPOGRAPHY, FOOTER, THEMING, BACKDROP-FILTER FALLBACK, THEME PREVIEW CARDS (.theme-card v2.54.7)
       forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR, PASSWORD TOGGLE, LOGIN / LOGINSCREEN (3 variants Authentik, slots providers, v2.57.0)
       data.css          #   PROGRESS, STATS, CHARTS, PIE, GAUGE, ANIMATED COUNTERS, RISK MATRIX
       avatars.css       #   .avatar, .avatar-img, .avatar-initials
-      tables.css        #   TABLE, TABLE CARDS, TABLE CARDS — SAISIE (#1008), DATA GRID, COMPARISON TABLE
+      tables.css        #   TABLE, TABLE CARDS (cellule d'actions sur une rangée dès 768px, #1044), TABLE CARDS — SAISIE (#1008), DATA GRID, COMPARISON TABLE
       lists.css         #   TREE VIEW, LIST, TIMELINE, ACCORDION, SORTABLE LIST, ACTIVITY FEED
       alerts.css        #   .alert (+ .alert--kpi ex-zone-banner, .alert--cta ex-upgrade-banner #519), .toast (+ .toast-message flex-grow v2.49.0) — alias @deprecated .zone-banner/.upgrade-banner (suppression v3)
       overlays.css      #   TOOLTIP, CONTEXT MENU, ACTION MENU
@@ -170,7 +170,8 @@ Sprite SVG self-hosted Lucide (~50 glyphes) — convention `<svg class="icon"><u
 Filet de regression visuel automatique via Playwright. Detaille dans le README.
 
 - **Outils** : `@playwright/test` + `http-server` (devDeps uniquement). Serveur statique de test = `http-server` (`npx http-server -p PORT -c-1 --silent .`) : sert les fichiers à plat, sans clean-URL ni fallback SPA, et tient la charge concurrente des workers Playwright. `serve` v14 retiré en #286 — son flag `-s`/--single faisait un fallback SPA vers `index.html` (le harness testait `index.html`) et il était instable sous charge. `reuseExistingServer: false` : Playwright démarre toujours un serveur propre (évite de réutiliser un serveur fantôme resté sur le port).
-- **Sélection des tests** : `playwright.config.ts` a un `testMatch` restreint à `visual.spec.ts` + `modal-focus.spec.ts` (#286) — `a11y.spec.ts` a sa config dédiée (`playwright.a11y.config.ts`, script `test:a11y`) et ne tourne PAS sous `test:visual`.
+- **Port du serveur de test** : `PW_PORT` le surcharge (défauts : 4173 pour `playwright.config.ts`, 3001 pour `playwright.a11y.config.ts`). Deux worktrees qui jouent Playwright en même temps se disputaient le port fixe : `EADDRINUSE`, puis des tests servis en silence par le serveur du voisin (#1044). La CI ne la pose pas.
+- **Sélection des tests** : `playwright.config.ts` a un `testMatch` explicite — `visual.spec.ts` + `modal-focus.spec.ts` (#286), puis les gardes de mise en page ajoutées ticket par ticket en fin de liste (ex. `table-cards-actions-1044.spec.ts`, `button-height-parity.spec.ts`) — `a11y.spec.ts` a sa config dédiée (`playwright.a11y.config.ts`, script `test:a11y`) et ne tourne PAS sous `test:visual`.
 - **Perimetre** : capture **par section** depuis #286 (v2.56.1) — 1 baseline par `<section id>` des 9 pages × 12 projets = 1032 baselines (86 sections × 12, voir `visual.spec.ts`). `fullPage` retiré : hauteur non déterministe sur pages longues. Étendu Sprint 22 (#191, v2.38.0), refactor par section S33 (#286, v2.56.1).
 - **Projects Playwright** : 12 (`<theme>-<mode>-<viewport>`, ex: `msyx-dark-desktop`, `acssi-light-mobile`)
 - **Localisation baselines** : `visual-tests/baseline/<theme>-<mode>-<viewport>/<slug>-<section-id>.png` — `visual.spec.ts` passe `${slug}__${sectionId}` à `toHaveScreenshot`, Playwright normalise `__` en `-` sur le disque.
@@ -199,7 +200,7 @@ Infrastructure d'audit d'accessibilité automatisé via axe-core.
 - **Spec** : `visual-tests/a11y.spec.ts` — distinct de `visual.spec.ts`, pas d'impact sur les baselines VR
 - **Matrice** : 10 pages × 5 thèmes × 2 modes = 100 runs (même couverture que VR sans viewport ; `auchan` et `noel` ajoutés en #939 — `auchan` n'y avait jamais été ajouté ; `user-feedback` ajoutée en #976)
 - **Règles** : `wcag2a`, `wcag2aa`, `wcag21aa` (WCAG 2.0 + 2.1 A/AA)
-- **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001, séparé du pipeline VR
+- **Config dédiée** : `playwright.a11y.config.ts` — 1 projet Chromium, port 3001 (surchargeable par `PW_PORT`), séparé du pipeline VR
 - **Périmètre bloquant** (#983) : `BLOCKING_RULES` (`color-contrast`) × `BLOCKING_COMBOS` (MSYX dark + light), constantes de `a11y.spec.ts` — une assertion par run, posée après l'attachement du résultat. Tout le reste (autres règles, autres thèmes, résultats axe `incomplete`) reste en rapport, sans assertion. Une garde de matrice fait échouer la collecte si un combo bloquant n'est plus dans `THEME_COMBOS`
 - **Complétude du banc** (#983) : le reporter renvoie `{ status: "failed" }` si un run manque ou tombe en erreur, quel que soit le thème (`[a11y] banc incomplet`) — un `test.skip` ne passe donc plus en vert
 - **Rapport** : `docs/audit-a11y-<date>.md` (tableau par règle + détail par run, « Runs rapportés N / total ») et export `test-results-a11y/a11y-runs.json` (tableau de `A11yRun`, avec `fg`/`bg`/`ratio` par nœud `color-contrast`) — produits par le **reporter Playwright** `visual-tests/reporters/a11y-report.ts` (processus du runner, insensible aux redémarrages de worker : chaque test attache son résultat, plus de tampon global ni d'`afterAll`, #976). Ne jamais passer `--reporter=…` à la CLI : il remplace les reporters de la config.

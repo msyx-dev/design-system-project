@@ -644,7 +644,7 @@ Markup vanilla minimal (module `tables.css`, importé par `components.css` ; abs
 Règles à respecter :
 
 - **Le libellé est un nœud `<span class="table-cards-label" aria-hidden="true">`, premier enfant de la cellule**, texte identique à l'en-tête de la colonne. Jamais `td::before { content: attr(data-label) }` : le contenu généré entre dans le nom accessible de la cellule, annoncé deux fois (« Nom, Nom Alice »). L'en-tête `<th scope="col">` reste le canal accessible : le CSS le masque à l'écran en mode cartes (déclarations de `.sr-only`) mais les lecteurs d'écran le lisent.
-- **La cellule d'actions** porte `.table-cards-actions` et n'a pas de libellé. En mode cartes ses boutons gardent une cible tactile d'au moins 44 px.
+- **La cellule d'actions** porte `.table-cards-actions` et n'a pas de libellé. En mode cartes ses boutons gardent une cible tactile d'au moins 44 px. En mode tableau (dès 768 px), ses contrôles restent sur une rangée : `white-space: nowrap`, écart `--space-sm`, centrage vertical (#1044). `nowrap` s'hérite : un texte libre posé dans cette cellule ne revient plus à la ligne dès 768 px, donc n'y mettez que des contrôles. Si le tableau ne tient pas dans son conteneur, le `.table-wrap` défile au lieu d'empiler les boutons. L'erreur de ligne (`.table-cards-error`) reste sur sa propre ligne, après les boutons, et revient à la ligne.
 - **Rôles ARIA explicites** (`table`, `rowgroup`, `row`, `columnheader`, `cell`) sur tout le markup : certains moteurs perdent la sémantique de tableau quand `display` change.
 - Une ligne de `<tfoot>` devient aussi une carte.
 
@@ -807,6 +807,8 @@ Trois familles de classes, combinables :
 | Forme (autonome, une seule à la fois) | `.btn-primary`, `.btn-secondary`, `.btn-ghost` | Porte display/padding/radius/typo/transition — base visuelle du bouton |
 | Couleur (modificateur) | `.btn-danger`, `.btn-success`, `.btn-warning`, `.btn-outline-danger` | Change la couleur/le gradient — se combine avec `.btn-primary`/`.btn-secondary`/`.btn-ghost` |
 | Taille (modificateur) | `.btn-sm`, `.btn-xs`, `.btn-lg` | Ajuste padding/font-size/border-radius |
+
+**Hauteur** (#1044) : deux boutons voisins de même taille ont la même hauteur, quels que soient leur élément (`<a>` ou `<button>`) et leur variante, avec ou sans bordure. Les variantes bordées retranchent leur bordure de leur `padding` vertical, et toutes sont en `line-height: normal`. Les classes de taille sont désormais déclarées dans `buttons.css` après toutes les variantes : `.btn-danger.btn-sm` prend bien la petite taille, ce qui n'était pas le cas avant. Un consommateur qui compensait lui-même l'écart (`padding` ou `line-height` forcé sur un `.btn-*`) retire sa surcharge.
 
 Autres classes du même module (`buttons.css`), hors ces trois familles :
 - `.btn-icon` (+ `.btn-icon--danger`) — bouton icône seule, 44×44 minimum

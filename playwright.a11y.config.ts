@@ -7,7 +7,9 @@
 
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 3001;
+// PW_PORT : deux worktrees qui jouent Playwright en même temps se disputaient le port fixe
+// (EADDRINUSE, puis tests servis en silence par le serveur du voisin — #1044/#1045). Absente en CI : défaut 3001.
+const PORT = Number(process.env.PW_PORT) || 3001;
 
 export default defineConfig({
   testDir: "visual-tests",

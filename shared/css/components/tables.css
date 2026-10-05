@@ -58,6 +58,8 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
    Rôles ARIA explicites sur le markup : certains moteurs abandonnent la sémantique de
    tableau quand display change.
    Portée : thead / tbody / tfoot — une ligne de <tfoot> devient aussi une carte.
+   Dès 768 px, la cellule d'actions garde ses contrôles sur une rangée (`nowrap`). Si le
+   tableau ne tient plus, le `.table-wrap` défile (#1044).
    Spécificité : `.table-cards td` (0,1,1) l'emporte sur une classe seule, d'où le
    préfixe `.table-cards` devant chaque élément (0,2,0). */
 .table-cards,
@@ -89,7 +91,11 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
   .table-cards tr { display: table-row; padding: 0; border-top: 0; }
   .table-cards td { display: table-cell; padding: 0.7rem 1.1rem; border-top: 1px solid var(--border-color); overflow-wrap: normal; } /* = td global, ci-dessus : le test « jumeau » (visual-tests/table-cards.spec.ts) garantit l'égalité des boîtes */
   .table-cards .table-cards-label { display: none; }
-  .table-cards .table-cards-actions { display: table-cell; text-align: end; }
+  .table-cards .table-cards-actions { display: table-cell; text-align: end; white-space: nowrap; } /* #1044 : contrôles sur UNE rangée, libellés entiers */
+  /* #1044 : un <td> ne peut pas être flex sans cesser d'être une cellule (mesuré : cellule anonyme qui ne remplit plus la rangée).
+     Rangée = nowrap ; écart = marge, car le JSX n'émet aucun blanc entre deux boutons ; centrage = vertical-align. */
+  .table-cards .table-cards-actions > :is(button, a, [role="button"]) { vertical-align: middle; }
+  .table-cards .table-cards-actions > :is(button, a, [role="button"]) ~ :is(button, a, [role="button"]) { margin-inline-start: var(--space-sm); }
   /* Le tableau reprend la taille native des contrôles (boîtes identiques au tableau sans .table-cards). */
   .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: auto; min-height: auto; justify-content: normal; }
 }
@@ -111,7 +117,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
 .table-cards-error { display: block; width: 0; min-width: 100%; overflow-wrap: anywhere; }
 .table-cards--editable .input-error-msg[hidden],
 .table-cards-error[hidden] { display: none; } /* display:block ci-dessus écraserait [hidden] (piège .input-group[hidden], forms.css) */
-.table-cards-error { margin: 0; font-size: 0.75rem; color: var(--status-error-text); text-align: start; } /* texte hors fond de statut : --status-error-text (DS-PRINCIPLES §3.3, #981) */
+.table-cards-error { margin: 0; font-size: 0.75rem; color: var(--status-error-text); text-align: start; white-space: normal; } /* texte hors fond de statut : --status-error-text (DS-PRINCIPLES §3.3, #981) ; white-space : la cellule d'actions est en nowrap dès 768px (#1044), l'erreur doit revenir à la ligne */
 .table-cards .table-cards-actions > .table-cards-error { flex-basis: 100%; } /* cartes : ligne à part, APRÈS les boutons */
 .table-cards--editable .table-cards-add-row { background: color-mix(in srgb, var(--accent) 4%, transparent); border-top: 2px dashed var(--border-hover); }
 

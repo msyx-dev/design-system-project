@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parité de hauteur des boutons — fixture #1044</title>
+<!--
+  Fixture de `visual-tests/button-height-parity.spec.ts` (#1044, tranche t2).
+
+  Deux contrôles `.btn-*` voisins de même taille doivent avoir la même hauteur, quels que
+  soient leur élément (`<a>` ou `<button>`) et leur variante (avec ou sans bordure).
+  Une rangée par taille (`data-size`) : chaque variante y figure deux fois, en `<a>` puis en
+  `<button>`. Les variantes couvrent les deux familles de bordure de `buttons.css` :
+  - sans bordure déclarée : `.btn-primary`, `.btn-ghost` ;
+  - bordure de 1px : `.btn-secondary`, `.btn-danger`, `.btn-success`, `.btn-warning`,
+    `.btn-outline-danger` (combiné à `.btn-secondary`, comme dans pages/composants.html).
+  `align-items: flex-start` : la rangée n'étire aucun bouton, chacun garde sa hauteur propre.
+  La dernière rangée porte un `.btn-icon`, dont le minimum de 44px ne doit pas bouger.
+  Ni nav.js ni components.js : la mesure ne porte que sur le CSS du DS.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  /* Rangée de mesure, propre à la fixture : aucun étirement vertical. */
+  .parity-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-sm); margin-block-end: var(--space-lg); }
+</style>
+</head>
+<body>
+<main class="page-content">
+  <h1>Parité de hauteur des boutons</h1>
+
+  <div class="parity-row" data-size="base">
+    <a href="#" class="btn-primary">Lien principal</a><button type="button" class="btn-primary">Bouton principal</button>
+    <a href="#" class="btn-ghost">Lien discret</a><button type="button" class="btn-ghost">Bouton discret</button>
+    <a href="#" class="btn-secondary">Lien secondaire</a><button type="button" class="btn-secondary">Bouton secondaire</button>
+    <a href="#" class="btn-danger">Lien danger</a><button type="button" class="btn-danger">Bouton danger</button>
+    <a href="#" class="btn-success">Lien succès</a><button type="button" class="btn-success">Bouton succès</button>
+    <a href="#" class="btn-warning">Lien alerte</a><button type="button" class="btn-warning">Bouton alerte</button>
+    <a href="#" class="btn-secondary btn-outline-danger">Lien contour danger</a><button type="button" class="btn-secondary btn-outline-danger">Bouton contour danger</button>
+  </div>
+
+  <div class="parity-row" data-size="sm">
+    <a href="#" class="btn-primary btn-sm">Lien principal</a><button type="button" class="btn-primary btn-sm">Bouton principal</button>
+    <a href="#" class="btn-ghost btn-sm">Lien discret</a><button type="button" class="btn-ghost btn-sm">Bouton discret</button>
+    <a href="#" class="btn-secondary btn-sm">Lien secondaire</a><button type="button" class="btn-secondary btn-sm">Bouton secondaire</button>
+    <a href="#" class="btn-danger btn-sm">Lien danger</a><button type="button" class="btn-danger btn-sm">Bouton danger</button>
+    <a href="#" class="btn-success btn-sm">Lien succès</a><button type="button" class="btn-success btn-sm">Bouton succès</button>
+    <a href="#" class="btn-warning btn-sm">Lien alerte</a><button type="button" class="btn-warning btn-sm">Bouton alerte</button>
+    <a href="#" class="btn-secondary btn-outline-danger btn-sm">Lien contour danger</a><button type="button" class="btn-secondary btn-outline-danger btn-sm">Bouton contour danger</button>
+  </div>
+
+  <div class="parity-row" data-size="lg">
+    <a href="#" class="btn-primary btn-lg">Lien principal</a><button type="button" class="btn-primary btn-lg">Bouton principal</button>
+    <a href="#" class="btn-ghost btn-lg">Lien discret</a><button type="button" class="btn-ghost btn-lg">Bouton discret</button>
+    <a href="#" class="btn-secondary btn-lg">Lien secondaire</a><button type="button" class="btn-secondary btn-lg">Bouton secondaire</button>
+    <a href="#" class="btn-danger btn-lg">Lien danger</a><button type="button" class="btn-danger btn-lg">Bouton danger</button>
+    <a href="#" class="btn-success btn-lg">Lien succès</a><button type="button" class="btn-success btn-lg">Bouton succès</button>
+    <a href="#" class="btn-warning btn-lg">Lien alerte</a><button type="button" class="btn-warning btn-lg">Bouton alerte</button>
+    <a href="#" class="btn-secondary btn-outline-danger btn-lg">Lien contour danger</a><button type="button" class="btn-secondary btn-outline-danger btn-lg">Bouton contour danger</button>
+  </div>
+
+  <div class="parity-row" data-size="xs">
+    <a href="#" class="btn-primary btn-xs">Lien principal</a><button type="button" class="btn-primary btn-xs">Bouton principal</button>
+    <a href="#" class="btn-ghost btn-xs">Lien discret</a><button type="button" class="btn-ghost btn-xs">Bouton discret</button>
+    <a href="#" class="btn-secondary btn-xs">Lien secondaire</a><button type="button" class="btn-secondary btn-xs">Bouton secondaire</button>
+    <a href="#" class="btn-danger btn-xs">Lien danger</a><button type="button" class="btn-danger btn-xs">Bouton danger</button>
+    <a href="#" class="btn-success btn-xs">Lien succès</a><button type="button" class="btn-success btn-xs">Bouton succès</button>
+    <a href="#" class="btn-warning btn-xs">Lien alerte</a><button type="button" class="btn-warning btn-xs">Bouton alerte</button>
+    <a href="#" class="btn-secondary btn-outline-danger btn-xs">Lien contour danger</a><button type="button" class="btn-secondary btn-outline-danger btn-xs">Bouton contour danger</button>
+  </div>
+
+  <div class="parity-row" data-size="icon">
+    <button type="button" class="btn-icon" aria-label="Plus d'actions">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="3" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="13" cy="8" r="1.5" fill="currentColor"/></svg>
+    </button>
+    <a href="#" class="btn-icon" aria-label="Lien vers plus d'actions">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="3" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="13" cy="8" r="1.5" fill="currentColor"/></svg>
+    </a>
+  </div>
+</main>
+</body>
+</html>
