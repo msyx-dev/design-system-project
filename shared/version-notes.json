@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "nouveaute",
+        "text": "Un tableau large, de quatre colonnes ou plus, peut rester affiché en cartes jusqu'aux écrans de 1024 px de large, au lieu d'apparaître trop serré sur tablette. Les tableaux existants ne changent pas."
+      }
+    ]
   },
   "released": [
     {
