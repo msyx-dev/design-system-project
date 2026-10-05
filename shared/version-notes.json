@@ -1,7 +1,20 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "correction",
+        "text": "Sur téléphone et tablette, toucher un champ ne fait plus zoomer la page, et les boutons, les cases à cocher, les croix des étiquettes et les contrôles de l'en-tête offrent une surface assez grande pour le doigt. Rien ne change à la souris."
+      },
+      {
+        "type": "correction",
+        "text": "Sur une tablette en portrait ou une fenêtre de largeur moyenne, l'en-tête ne déborde plus et le bouton de menu garde sa taille ; le nom affiché à côté du logo revient sur un écran plus large."
+      },
+      {
+        "type": "correction",
+        "text": "Sur téléphone, la pagination passe à la ligne au lieu de sortir de son cadre, et ses boutons « précédent » et « suivant » gardent leur libellé lisible."
+      }
+    ]
   },
   "released": [
     {

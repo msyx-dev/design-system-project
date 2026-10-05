@@ -619,6 +619,18 @@ Tant que le fetch / `getSession()` n'a pas répondu : `identity={undefined}` (sk
 
 `<NotificationBell>` (composé par `<SiteHeader>`), et les composants `@msyx-dev/react` en général, rendent leurs icônes **inline** via le primitif interne `Icon` (#713) — **aucun sprite externe à servir** côté consumer. Contrairement au header vanilla (`shared/nav.js`, cf. section « Header avec utilisateur connecte ») qui dépend de `shared/icons/sprite.svg#i-bell`, la version React est autonome : pas de fichier sprite à copier, pas de chemin à adapter.
 
+## Écran tactile — cibles de 44 px et champs à 16 px (#1051)
+
+Sous `@media (pointer: coarse)` (téléphone, tablette), le DS agrandit ses cibles à 44×44 px (jeton `--touch-target`) et passe ses champs à 16 px au moins (jeton `--input-font-size-touch`) : en dessous, Safari iOS zoome la page dès qu'on touche le champ. **À la souris, rien ne change.** Règle complète : `docs/DS-PRINCIPLES.md` §3.4.
+
+Ce que la resynchronisation (`sync.sh` ; les composants `@msyx-dev/react` lisent la même CSS) change chez vous :
+
+- **Mise en page plus aérée au toucher** : boutons (`.btn-*`, y compris `.btn-sm` et `.btn-xs`, aussi en largeur), `.input`, `.dropdown-trigger`, `.checkbox`, `.radio`, `.page-btn`, `.search-compact` et actions de `.table-cards` grandissent jusqu'à 44 px. Les croix (`.chip-close`, `.tag-close`, `.dropdown-tag button`, `.file-item-remove`, `.search-clear`) et le `.toggle` gardent leur taille visible et reçoivent une zone de 44 px en `::after` ; les rangées de puces, de tags et de `.dropdown-tags` s'espacent pour que ces zones ne se recouvrent pas. Un écran dense peut donc s'allonger sur téléphone et tablette.
+- **Puces fermables hors de `.chip-group`** : si vous les posez dans votre propre conteneur `flex-wrap`, donnez-lui sous pointeur grossier un `row-gap` d'au moins 20 px (`var(--space-5)`), sinon la croix d'une rangée capte le toucher de la puce de l'autre rangée.
+- **Champ dont la police est en style inline** (`style="font-size: …"`) : le DS ne peut pas la battre (pas d'`!important`) ; retirez le style inline, sinon iOS zoomera au focus.
+- **En-tête, entre 641 et 768 px, aux deux pointeurs** : tant que le burger est affiché, le wordmark accompagné d'un pictogramme (`.header-logo-img`) est masqué dans `.site-header`, et l'espacement de l'en-tête reste compact ; ils reviennent dès 769 px. Avant, l'en-tête débordait et écrasait le burger à ces largeurs. Sous pointeur grossier, l'en-tête se resserre davantage, jusqu'à 768 px, pour que ses contrôles de 44 px tiennent dès 360 px. **Limite connue** : en thème Noël à 7 contrôles, l'en-tête déborde encore à 320 px (déjà le cas à la souris).
+- **Pagination, aux deux pointeurs** : `.pagination` passe à la ligne (`flex-wrap: wrap`) quand la place manque, au lieu d'écraser ses boutons « précédent » et « suivant » et de déborder de son parent. Le composant React `<Pagination>` en hérite par la CSS, sans changement d'API.
+
 ## Décor festif (thème Noël) — réserves de mise en page (#1005, #1042)
 
 Le décor (`<SiteHeader festive />` / `<FestiveDecor>` en React, `ensureFestiveDecor()` de `ds-nav.js` en vanilla) est en `position: fixed` : il n'occupe aucune place dans le flux et passe **au-dessus** du contenu. En Noël, le DS pose donc deux réserves, que ses gabarits consomment déjà :
