@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reserve haute du decor de Noel — fixture #1042</title>
+<!--
+  Fixture de `visual-tests/festive-top-clearance-1042.spec.ts` (#1042).
+
+  Un gabarit de page consumer dont le PREMIER enfant est un en-tete de page au
+  markup de `<PageHeader>` (@msyx-dev/react) : `section.section-header` >
+  `.section-header-row` > `.section-header-text` > `.overline` + `h1` + `p.lead`.
+  C'est le motif du defaut releve chez tirokado (« Mes ti●ages ») : au defilement 0,
+  les ornements suspendus sous l'en-tete (`position: fixed`, peints au-dessus du
+  contenu) recouvraient le titre de page.
+
+  L'en-tete de page n'a NI marge NI rembourrage haut (cas le plus defavorable) : seul le
+  `padding-top` du gabarit (`--header-h` + `--festive-top-clearance`) l'ecarte des boules.
+
+  Le gabarit se choisit par `?gabarit=page-content|page-content--wide|content-grid|main`
+  (defaut : page-content), par liste blanche comme la fixture #1005.
+
+  Markup = celui d'un consumer : header injecte par nav.js (qui injecte aussi le decor
+  festif), gabarit DS. Pas de components.js : rien d'autre que le header et le decor
+  ne doit bouger la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  /* Cas le plus defavorable : l'en-tete de page colle au haut du gabarit, sans marge
+     ni rembourrage haut. Sous `.main`, une section recoit sinon le rembourrage de la
+     vitrine (48px), qui absorberait un deficit de reserve sans que la mesure le voie. */
+  #page-header { margin-top: 0; padding-top: 0; }
+</style>
+</head>
+<body>
+<header class="site-header" id="site-header"></header>
+<main id="gabarit" class="page-content">
+  <section class="section-header" id="page-header">
+    <div class="section-header-row">
+      <div class="section-header-text">
+        <span class="overline">Espace joueur</span>
+        <h1>Mes tirages</h1>
+        <p class="lead">Retrouvez ici l'historique de vos tirages et leur resultat.</p>
+      </div>
+    </div>
+  </section>
+  <p>Contenu de la page, sous l'en-tete : il ne sert qu'a donner au gabarit une suite realiste.</p>
+</main>
+<script>
+(function () {
+  // Choix du gabarit : liste blanche, jamais une classe issue de l'URL telle quelle.
+  var CLASSES = {
+    'page-content': 'page-content',
+    'page-content--wide': 'page-content page-content--wide',
+    'content-grid': 'content-grid',
+    'main': 'main'
+  };
+  var choice = new URLSearchParams(location.search).get('gabarit') || 'page-content';
+  document.getElementById('gabarit').className = CLASSES[choice] || CLASSES['page-content'];
+}());
+</script>
+<script src="/shared/nav.js"></script>
+</body>
+</html>

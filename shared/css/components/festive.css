@@ -218,6 +218,14 @@
     transform: translateX(-50%);
 }
 
+/* Le haut d'une boule = la longueur de son fil (#1042) : le `top` ne vit plus en ligne
+   dans nav.js / FestiveDecor.tsx. Scope `.ornaments >` : une `.ornament` isolee garde
+   son `top` d'origine ; la demo de fondation.html pose ses valeurs en ligne et l'emporte.
+   Repli 40px = defaut du primitif, le meme que le fil (::before) et le pivot (transform-origin) :
+   sans --ornament-drop resolu (balisage tiers, tokens.css non resynchronise), la boule reste
+   au bout de son fil au lieu de retomber a `top: auto` sous un fil qui monte dans l'en-tete. */
+.ornaments > .ornament { top: var(--ornament-drop, 40px); }
+
 @keyframes ornamentSwing {
     0%, 100% { rotate: -4deg; }
     50%      { rotate: 4deg; }
@@ -351,6 +359,29 @@
      ET la reserve le lisent ; pose sur `.festive-character` seul, il ne remonte pas. */
 :root[data-theme="noel"]:has(.festive-character) {
     --festive-clearance: calc(var(--character-width, clamp(130px, 15vw, 210px)) * 1.5 + var(--space-lg));
+}
+
+/* ===== RESERVE HAUTE (#1042) =====
+   Pendant de --festive-clearance : les ornements sont `position: fixed` sous l'en-tete et
+   PEINTS AU-DESSUS du contenu (seul le sapin passe dessous, #1043). Sans reserve, au
+   defilement 0, la boule la plus basse (150px mesure) coupait le titre de page.
+   --festive-top-clearance = profondeur du decor SOUS l'en-tete = max des 3 rangs
+   (chute + taille), derivee des tokens de tokens.css, jamais d'un chiffre ici.
+   Les gabarits (layout.css) l'ajoutent a --header-h ; scroll-padding-top (base.css) aussi.
+   - Garde de theme : la guirlande vanilla reste dans le DOM hors Noel (display:none).
+   - `.garland--header` et non `.ornaments` : la demo de fondation.html porte un
+     `.ornaments` dans TOUS les themes.
+   - Independante de `msyx-festive` : le bouton flocon ne coupe que la neige.
+   - Ampoules de la guirlande (91px mesure) moins profondes que les boules : couvertes
+     par la mesure de visual-tests/festive-top-clearance-1042.spec.ts, qui casse sinon.
+   - Un rang ajoute (token --ornament-*-4) doit entrer dans le max() :
+     tests/vanilla/festive.test.js le garde. */
+:root[data-theme="noel"]:has(.garland--header) {
+    --festive-top-clearance: max(
+        calc(var(--ornament-drop-1) + var(--ornament-size-1)),
+        calc(var(--ornament-drop-2) + var(--ornament-size-2)),
+        calc(var(--ornament-drop-3) + var(--ornament-size-3))
+    );
 }
 
 /* Les lumieres du sapin scintillent au meme rythme que la guirlande */

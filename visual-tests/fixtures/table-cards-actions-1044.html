@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cellule d'actions sur une rangée — fixture #1044</title>
+<!--
+  Fixture de `visual-tests/table-cards-actions-1044.spec.ts` (#1044).
+
+  Dès 768px, la cellule d'actions d'un `.table-cards` garde ses contrôles sur UNE rangée
+  (`white-space: nowrap`), séparés par `--space-sm`, centrés verticalement ; l'erreur de
+  ligne revient à la ligne sous les boutons. Chaque ligne du tableau couvre un cas :
+
+  #wrap-rangee > table.table-cards.table-cards--editable#t-rangee (Nom / E-mail / Actions)
+   - #r-blancs : balisage vanilla AVEC blancs entre les balises (<form hidden>, puis
+     « Enregistrer » secondaire et « Retirer » ghost) : l'espace du blanc s'ajoute à la marge.
+   - #r-jsx    : balisage SANS AUCUN blanc entre les éléments, comme le JSX de tirokado
+     (deux <form hidden>, puis deux boutons) : l'écart vient de la seule marge `--space-sm`.
+   - #r-erreur : comme #r-jsx, plus une erreur de ligne `.table-cards-error` de plus de
+     60 caractères : elle doit revenir à la ligne dans la cellule, sous les boutons.
+   - #r-icone  : un `.btn-icon` (SVG inline sans texte, donc sans ligne de base) à côté
+     d'un `.btn-sm` : sans `vertical-align: middle`, les deux ne sont pas centrés.
+
+  #wrap-etroit > table.table-cards#t-etroit (Nom / Actions), borné à 22rem par un style
+  réservé à la fixture : le tableau ne tient pas, il doit DÉFILER dans son `.table-wrap`
+  au lieu d'empiler ses boutons (arbitrage A2 de la spec).
+
+  Cellules en role="cell", libellés en aria-hidden, noms accessibles uniques, comme les
+  fixtures #1007 et #1008. Pas de nav.js ni de components.js : rien d'autre que le CSS
+  du DS ne doit toucher la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<main class="page-content">
+  <h1>Participants du tirage</h1>
+
+  <div class="table-wrap" id="wrap-rangee">
+    <table class="table-cards table-cards--editable" id="t-rangee" role="table" aria-label="Participants à modifier">
+      <thead role="rowgroup">
+        <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Actions</th></tr>
+      </thead>
+      <tbody role="rowgroup">
+        <tr role="row" id="r-blancs">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="f-blancs" name="name" required aria-label="Nom de Alice Martin" value="Alice Martin"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="f-blancs" name="email" type="email" required aria-label="E-mail de Alice Martin" value="alice.martin@exemple.fr"></div></td>
+          <td role="cell" class="table-cards-actions">
+            <form id="f-blancs" hidden><input type="hidden" name="participantId" value="p1"></form>
+            <button type="submit" form="f-blancs" class="btn-secondary btn-sm" aria-label="Enregistrer Alice Martin">Enregistrer</button>
+            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Alice Martin">Retirer</button>
+          </td>
+        </tr>
+        <tr role="row" id="r-jsx">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="f-jsx" name="name" required aria-label="Nom de Bastien Leroy" value="Bastien Leroy"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="f-jsx" name="email" type="email" required aria-label="E-mail de Bastien Leroy" value="bastien.leroy@exemple.fr"></div></td>
+          <td role="cell" class="table-cards-actions"><form id="f-jsx" hidden></form><form id="f-jsx-retirer" hidden></form><button type="submit" form="f-jsx" class="btn-secondary btn-sm" aria-label="Enregistrer Bastien Leroy">Enregistrer</button><button type="submit" form="f-jsx-retirer" class="btn-danger btn-sm" aria-label="Retirer Bastien Leroy">Retirer</button></td>
+        </tr>
+        <tr role="row" id="r-erreur">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="f-erreur" name="name" required aria-label="Nom de Jean-Baptiste Dupont" value="Jean-Baptiste Dupont"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="f-erreur" name="email" type="email" required aria-label="E-mail de Jean-Baptiste Dupont" value="jb.dupont@exemple.fr"></div></td>
+          <td role="cell" class="table-cards-actions"><form id="f-erreur" hidden></form><form id="f-erreur-retirer" hidden></form><button type="submit" form="f-erreur" class="btn-secondary btn-sm" aria-label="Enregistrer Jean-Baptiste Dupont">Enregistrer</button><button type="submit" form="f-erreur-retirer" class="btn-danger btn-sm" aria-label="Retirer Jean-Baptiste Dupont">Retirer</button><p class="table-cards-error" role="alert">Impossible de retirer ce participant : le tirage est clos depuis hier soir et ses résultats ont déjà été envoyés.</p></td>
+        </tr>
+        <tr role="row" id="r-icone">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+            <div class="input-group"><input class="input" form="f-icone" name="name" required aria-label="Nom de Chloé Nguyen" value="Chloé Nguyen"></div></td>
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+            <div class="input-group"><input class="input" form="f-icone" name="email" type="email" required aria-label="E-mail de Chloé Nguyen" value="chloe.nguyen@exemple.fr"></div></td>
+          <td role="cell" class="table-cards-actions"><form id="f-icone" hidden></form><button type="submit" form="f-icone" class="btn-secondary btn-sm" aria-label="Enregistrer Chloé Nguyen">Enregistrer</button><button type="button" class="btn-icon" aria-label="Plus d'actions pour Chloé Nguyen"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap" id="wrap-etroit" style="max-inline-size: 22rem">
+    <table class="table-cards" id="t-etroit" role="table" aria-label="Liens des participants">
+      <thead role="rowgroup">
+        <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">Actions</th></tr>
+      </thead>
+      <tbody role="rowgroup">
+        <tr role="row" id="r-etroit">
+          <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>Jean-Baptiste de La Fontaine-Dupont</td>
+          <td role="cell" class="table-cards-actions"><button type="button" class="btn-secondary btn-sm" aria-label="Régénérer le lien de Jean-Baptiste de La Fontaine-Dupont">Régénérer le lien</button><button type="button" class="btn-secondary btn-sm" aria-label="Copier le lien de Jean-Baptiste de La Fontaine-Dupont">Copier le lien</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

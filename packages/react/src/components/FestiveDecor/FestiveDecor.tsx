@@ -153,16 +153,22 @@ const ORNAMENT_COLORS = [
 /** Position horizontale (%) de chaque ornement. */
 const ORNAMENT_LEFT = [8, 21, 34, 52, 66, 79, 92] as const;
 
+/**
+ * Rangs des ornements (1 à 3) : la géométrie d'un rang = tokens
+ * `--ornament-{drop,size}-N` (tokens.css, #1042), source unique d'où dérive
+ * aussi la réserve haute `--festive-top-clearance` (festive.css). Aucun px
+ * ici ; le `top` d'une boule est posé par `.ornaments > .ornament` (CSS).
+ */
+const ORNAMENT_TIERS = 3;
+
 function ornamentStyle(index: number): CSSProperties {
-  const drop = 22 + (index % 3) * 20;
-  const size = 20 + (index % 3) * 6;
+  const tier = (index % ORNAMENT_TIERS) + 1;
   return {
     "--ornament-color": ORNAMENT_COLORS[index % ORNAMENT_COLORS.length],
     "--i": String(index),
-    "--ornament-drop": `${drop}px`,
-    "--ornament-size": `${size}px`,
+    "--ornament-drop": `var(--ornament-drop-${tier})`,
+    "--ornament-size": `var(--ornament-size-${tier})`,
     left: `${ORNAMENT_LEFT[index]}%`,
-    top: `${drop}px`,
   } as CSSProperties;
 }
 

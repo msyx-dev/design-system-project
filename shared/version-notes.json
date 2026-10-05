@@ -9,6 +9,18 @@
       {
         "type": "correction",
         "text": "Les menus déroulants, les suggestions de recherche et, sur mobile, le panneau de navigation ouvert ne sont plus cachés par un titre resté collé en haut de la page ni par la guirlande de Noël. Tant que ce panneau est ouvert sur mobile, le thème se change après l'avoir refermé."
+      },
+      {
+        "type": "correction",
+        "text": "En thème Noël, les boules de la guirlande ne cachent plus le haut de la page : le titre commence juste sous elles, et un lien vers une section ou le focus clavier s'y arrête aussi. Rien ne change dans les autres thèmes."
+      },
+      {
+        "type": "correction",
+        "text": "Sur tablette et sur ordinateur, les boutons d'une ligne de tableau restent côte à côte, avec leur libellé entier, au lieu de s'empiler ; un tableau trop large pour la page défile."
+      },
+      {
+        "type": "correction",
+        "text": "Deux boutons posés côte à côte ont la même hauteur, qu'ils aient un contour ou non, et qu'il s'agisse d'un lien ou d'un bouton."
       }
     ]
   },

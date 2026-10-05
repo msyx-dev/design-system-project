@@ -17,6 +17,10 @@
  *     (`aria-hidden`), l'en-tete de colonne reste expose, le tableau est nomme.
  *  4. 768 et 1280px : les boites de chaque th/td/caption du tableau `.table-cards` sont
  *     celles de son JUMEAU sans la classe (relativement a l'origine du tableau), a 0,5px.
+ *     Jumeau = tableau nu + contrat de la cellule d'actions (#1044) : le bloc <style> de la
+ *     fixture, limite a #twin, recopie `nowrap`, `vertical-align` et l'ecart `--space-sm`.
+ *     Retirer `nowrap` de `.table-cards-actions` fait donc aussi rougir ce cas (M1 de
+ *     table-cards-actions-1044.spec.ts).
  *  5. Seuil : 767px -> `display: block`, 768px -> `table-cell`.
  *
  * Joue dans UN seul projet (`msyx-dark-desktop`) : la largeur est posee par le test
