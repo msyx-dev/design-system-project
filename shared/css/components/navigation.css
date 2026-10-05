@@ -93,7 +93,7 @@
 .breadcrumbs ol { list-style: none; display: flex; align-items: center; flex-wrap: wrap; gap: 0; padding: 0; margin: 0; }
 .breadcrumbs li { display: flex; align-items: center; font-size: 0.85rem; }
 .breadcrumbs a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; padding: 0.2rem 0.3rem; border-radius: var(--radius-xs); }
-.breadcrumbs a:hover { color: var(--accent-light); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.breadcrumbs a:hover { color: var(--accent-tint-fg, var(--accent-light)); background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .breadcrumbs a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .breadcrumbs [aria-current="page"] { color: var(--text); font-weight: 500; padding: 0.2rem 0.3rem; cursor: default; }
 .breadcrumbs .bc-sep { color: var(--text-dim); padding: 0 0.15rem; display: flex; align-items: center; font-size: 0.8rem; user-select: none; }

@@ -8,6 +8,7 @@
     --accent-surface: #e0cd1e;
     --accent-text: #e0cd1e;
     --accent-text-strong: #f1e039;
+    --accent-tint-fg: #ead92e;
     --avatar-bg-cyan: #38bdf8;
     --avatar-bg-violet: #005a9e;
     --badge-primary-fg: #ead92e;
@@ -130,6 +131,7 @@
     --accent-surface: #00345f;
     --accent-text: #00345f;
     --accent-text-strong: #00457a;
+    --accent-tint-fg: #00457a;
     --avatar-bg-cyan: #38bdf8;
     --avatar-bg-violet: #005a9e;
     --badge-primary-fg: #00457a;
@@ -246,6 +248,7 @@
     --accent-surface: #ff3427;
     --accent-text: #ff3427;
     --accent-text-strong: #ff8a80;
+    --accent-tint-fg: #ff8a80;
     --avatar-bg-cyan: #2dd4e0;
     --avatar-bg-violet: #c968c4;
     --badge-primary-fg: #ff8a80;
@@ -367,6 +370,7 @@
     --accent-surface: #e0001a;
     --accent-text: #e0001a;
     --accent-text-strong: #a30010;
+    --accent-tint-fg: #bb0014;
     --avatar-bg-cyan: #2dd4e0;
     --avatar-bg-violet: #c968c4;
     --badge-primary-fg: #c10015;
@@ -481,6 +485,7 @@
     --accent-surface: #008837;
     --accent-text: #008837;
     --accent-text-strong: #73c69c;
+    --accent-tint-fg: #73c69c;
     --avatar-bg-cyan: #06b6d4;
     --avatar-bg-violet: #7c3aed;
     --badge-primary-fg: #73c69c;
@@ -600,6 +605,7 @@
     --accent-surface: #006e2c;
     --accent-text: #006e2c;
     --accent-text-strong: #006427;
+    --accent-tint-fg: #006e2c;
     --avatar-bg-cyan: #0e7490;
     --avatar-bg-violet: #7c3aed;
     --badge-primary-fg: #006e2c;
@@ -707,6 +713,7 @@
     --accent-surface: #ff4757;
     --accent-text: #ff4757;
     --accent-text-strong: #ff8791;
+    --accent-tint-fg: #ff8791;
     --avatar-bg-cyan: #56d4ff;
     --avatar-bg-violet: #b98cff;
     --badge-primary-fg: #ff8791;
@@ -829,6 +836,7 @@
     --accent-surface: #a80f26;
     --accent-text: #a80f26;
     --accent-text-strong: #9c001f;
+    --accent-tint-fg: #a80f26;
     --avatar-bg-cyan: #56d4ff;
     --avatar-bg-violet: #b98cff;
     --badge-primary-fg: #a80f26;

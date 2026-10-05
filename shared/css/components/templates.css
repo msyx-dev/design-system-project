@@ -58,7 +58,7 @@
 .backlog-filters { display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg); flex-wrap: wrap; }
 .backlog-filters .btn-filter { padding: 0.4rem 0.9rem; font-size: 0.78rem; border-radius: var(--radius-md); background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer; font-family: var(--font-sans); font-weight: 500; transition: color 0.2s var(--ease-standard), border-color 0.2s var(--ease-standard), background-color 0.2s var(--ease-standard); }
 .backlog-filters .btn-filter:hover { color: var(--text); border-color: var(--border-hover); }
-.backlog-filters .btn-filter.active { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-light); border-color: var(--accent); }
+.backlog-filters .btn-filter.active { background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent-tint-fg, var(--accent-light)); border-color: var(--accent); }
 .backlog-item { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md) var(--space-5); border-bottom: 1px solid var(--border-color); transition: background-color 0.2s var(--ease-standard); }
 .backlog-item:last-child { border-bottom: none; }
 .backlog-item:hover { background: color-mix(in srgb, var(--accent) 3%, transparent); }

@@ -72,7 +72,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .dropdown-option { padding: 0.5rem 0.7rem; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; transition: background-color 0.15s var(--ease-standard), color 0.15s var(--ease-standard); display: flex; align-items: center; gap: 0.5rem; }
 .dropdown-option:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--text); }
 .dropdown-option:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; background: color-mix(in srgb, var(--accent) 6%, transparent); }
-.dropdown-option.selected { color: var(--accent-light); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.dropdown-option.selected { color: var(--accent-tint-fg, var(--accent-light)); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .dropdown-option .check { opacity: 0; font-size: 0.8rem; color: var(--accent); }
 .dropdown-option.selected .check { opacity: 1; }
 
@@ -86,7 +86,7 @@ select.input { appearance: none; background-image: var(--chevron-select); backgr
 .dropdown-option.dropdown-create .check { opacity: 1; }
 .dropdown-option.dropdown-create .dropdown-create-query { color: var(--text); font-weight: 600; }
 .dropdown-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
-.dropdown-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent-light); border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
+.dropdown-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--accent-tint-fg, var(--accent-light)); border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
 .dropdown-tag button { background: none; border: none; color: var(--accent-light); cursor: pointer; font-size: 0.8rem; padding: 0; line-height: 1; }
 
 /* ===== FILE UPLOAD ===== */
