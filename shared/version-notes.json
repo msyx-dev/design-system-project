@@ -5,6 +5,10 @@
       {
         "type": "nouveaute",
         "text": "Un tableau large, de quatre colonnes ou plus, peut rester affiché en cartes jusqu'aux écrans de 1024 px de large, au lieu d'apparaître trop serré sur tablette. Les tableaux existants ne changent pas."
+      },
+      {
+        "type": "correction",
+        "text": "En mode clair, le texte des badges, des alertes, des puces, des étiquettes et des filtres actifs se lit mieux sur son fond coloré, dans tous les thèmes ; en thème ACSSI sombre, c'est aussi le cas des alertes d'erreur et d'avertissement. Les couleurs de fond ne changent pas."
       }
     ]
   },

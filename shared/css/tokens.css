@@ -12,6 +12,19 @@
     --accent: #3b82f6;
     --accent-rgb: 59, 130, 246;
     --accent-light: #60a5fa;
+    /* #1050 — texte de .badge-primary : token DEDIE (--accent-light reste partage : liens, .tag, .chip-accent).
+       Hex litteral regle a la mesure (sonde status-tint-contrast.spec.ts), >= 4,6:1 au pire fond
+       (teinte --accent 10 % sur page, surface, surface-solid, primary-light). */
+    --badge-primary-fg: #60a5fa;  /* 5,07:1 au pire fond (= --accent-light, rendu inchange) */
+    /* #1050 t2 — texte ACCENT sur teinte accent : tokens DEDIES regles a la mesure (>= 4,6:1 au pire des
+       4 fonds de reference, 10 combos) ; --accent-light reste partage. Repli cote composant = --accent-light. */
+    --tag-fg: #60a5fa;  /* .tag (teinte 8 %) : 5,22:1 au pire fond (= --accent-light, rendu inchange) */
+    --chip-accent-fg: #60a5fa;  /* .chip-accent (teinte 12 %) : 4,93:1 au pire fond (= --accent-light) */
+    /* #1050 t3 — texte ACCENT sur teinte accent des 8 autres regles (.dropdown-option.selected, .dropdown-tag et sa croix,
+       .tree-item.selected, .activity-filter-chip.active, .activity-tag, .breadcrumbs a:hover,
+       .backlog-filters .btn-filter.active, badge des notes de version) : UN token regle a la PIRE teinte
+       de ses usages (14 %), donc valable de 6 a 14 %. Repli cote composant = --accent-light. */
+    --accent-tint-fg: #60a5fa;  /* 4,81:1 au pire fond, teinte 14 % sur surface-solid (= --accent-light) */
     --accent-glow: rgba(var(--accent-rgb), 0.12);
     /* Accent en texte et aplat accent (#980) : tokens DÉDIÉS, hex littéraux, réglés à la mesure
        (≥ 4,6:1 au pire fond mesuré), teinte de --accent conservée (seul L OKLCh bouge, Δh ≤ 0,5°).
@@ -485,6 +498,10 @@
     --code-function: #2563eb;
     --code-number: #b45309;    /* Fix 3 — 5.02:1 sur #fff WCAG AA (était #d97706 = 3.19 LARGE-only) */
     --accent-light: #2563eb;   /* Fix B — 5.17:1 sur #f8fafc WCAG AA (était #60a5fa = 2.43 KO) */
+    --badge-primary-fg: #1f5ce4;  /* #1050 : 4,64:1 au pire fond teinte (etait --accent-light #2563eb = 4,24) */
+    --tag-fg: #1f5ce4;  /* #1050 t2 : .tag (teinte 8 %) 4,74:1 au pire fond (etait --accent-light = 4,33) */
+    --chip-accent-fg: #1c59e0;  /* #1050 t2 : .chip-accent (teinte 12 %) 4,73:1 au pire fond (etait --accent-light = 4,14) */
+    --accent-tint-fg: #1c59e0;  /* #1050 t3 : teinte 14 % 4,64:1 au pire fond (etait --accent-light = 4,05) */
     --accent-glow: rgba(var(--accent-rgb), 0.08);
     --accent-text: #2269db;         /* 4,62:1 sur #eef4fd, 4,88 sur #f8fafc, 5,06 sur #fefefe ; --accent : 3,33 / 3,52 / 3,65 */
     --accent-text-strong: #114ed5;  /* 4,63:1 sur #c4d6f1, 5,06 sur #cddffc, 5,52 sur #e6e7e8 ; --accent-light : 3,50 / 3,83 / 4,17 */

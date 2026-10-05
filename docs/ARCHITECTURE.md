@@ -192,6 +192,16 @@ Sonde par **échantillonnage des pixels rendus** : axe ne rend qu'un `incomplete
 - **Survol des boutons de connexion** : `.login-submit` et `.login-authentik-btn` utilisent le reflet + l'élévation de `.btn-primary` (plus d'opacité au survol : elle rendait le contraste dépendant du fond de page). `.login-compact button` n'a pas d'état de survol.
 - **Règle complète** : `docs/DS-PRINCIPLES.md` §3.3.
 
+## Contraste du texte sur fond teinté (depuis #1050)
+
+Sonde par **composition calculée** : un texte accent ou statut posé sur une teinte translucide (`color-mix(in srgb, var(--X) N%, transparent)`) a un contraste qui dépend du fond de son parent. axe ne bloque que MSYX ; cette sonde couvre les 10 combos.
+
+- **Spec** : `visual-tests/status-tint-contrast.spec.ts` (+ fixture `visual-tests/fixtures/status-tint-contrast-1050.html`). Listée dans le `testMatch` de `playwright.config.ts`, jouée par `test:visual` dans les 10 projets desktop (les 2 `*-mobile` la sautent). Bloquante : `ENFORCE = true`, `CONTRAST_MIN = 4.5` (cible de réglage 4,6).
+- **Méthode** : couleurs résolues par Chromium (`getComputedStyle`), fond composé en sRGB sur la chaîne d'ancêtres jusqu'au premier fond opaque, ratio WCAG 2.x. Gardes de validité : ni `background-image` ni `opacity` < 1 dans la chaîne, thème et mode appliqués égaux à ceux du projet, ensemble des `data-probe` de la fixture égal à `PROBES` du spec.
+- **Cas** : la fixture répète chaque variante sur les 4 fonds de référence de #981 (`page`, `surface`, `surface-solid`, `primary-light`) : badges, alertes (texte, titre, description), KPI, chips sémantiques, `.tag`, `.chip-accent`, `.chip-filter.active` et les règles « texte accent sur teinte accent » de `forms.css`, `lists.css`, `navigation.css` (`.breadcrumbs a:hover`, survolé avant la mesure), `templates.css` et `version-notes.css`. S'y ajoutent les démos `#badges` (`composants.html`) et `#alerts` (`feedback.html`) du showcase, et un test de complétude (Node `fs`, joué une fois) : les tokens dédiés sont déclarés en hex littéral dans les 4 couches, un manque nomme le fichier, le mode et le token.
+- **Tokens** : `--status-{success,warn,error,info}-fg`, `--badge-primary-fg`, `--tag-fg`, `--chip-accent-fg`, `--accent-tint-fg` et `--accent-text-strong`, réglés à la mesure au pire fond et à la pire teinte de leurs usages ; les composants lisent les quatre tokens créés par #1050 avec repli `var(--token, var(--accent-light))`.
+- **Règle complète** : `docs/DS-PRINCIPLES.md` §3.3, « Texte sur fond teinté ».
+
 ## A11y audit (depuis v2.52.0 — #242)
 
 Infrastructure d'audit d'accessibilité automatisé via axe-core.
