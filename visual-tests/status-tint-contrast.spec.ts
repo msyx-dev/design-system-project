@@ -27,7 +27,7 @@
  *   2. showcase — `pages/composants.html#badges` et `pages/feedback.html#alerts` : tout élément
  *      visible porteur de texte direct dans un `.badge-*` / `.alert-*` sémantique ≥ 4,5:1 ;
  *   3. complétude (Node `fs`, joué une fois, dans `msyx-dark-desktop`) : `--badge-primary-fg`,
- *      `--tag-fg` et `--chip-accent-fg` (t2) sont
+ *      `--tag-fg`, `--chip-accent-fg` (t2) et `--accent-tint-fg` (t3) sont
  *      déclarés en hex littéral à 6 chiffres dans `tokens.css` (`:root` + `[data-mode="light"]`)
  *      et dans `modes.dark` + `modes.light` de CHAQUE `themes/*.json`.
  *
@@ -71,6 +71,16 @@ const VARIANTS = [
   "tag",
   "chip-accent",
   "chip-filter-active",
+  // t3 : les 8 autres règles « texte accent sur teinte accent » (6 à 14 %) lisent
+  // `--accent-tint-fg`, réglé à la pire teinte de ses usages (14 %, badge des notes de version).
+  "dropdown-option-selected", // .dropdown-option.selected (8 %)
+  "dropdown-tag", // .dropdown-tag (8 %)
+  "tree-leaf-selected", // .tree-item.selected.tree-leaf (12 %)
+  "activity-filter-chip-active", // .activity-filter-chip.active (10 %)
+  "activity-tag", // .activity-tag (10 %)
+  "breadcrumbs-link-hover", // .breadcrumbs a:hover (6 %) — `data-hover` : survolé avant la mesure
+  "backlog-filter-active", // .backlog-filters .btn-filter.active (10 %)
+  "version-notes-badge", // .version-notes .timeline-content h4 .badge (14 %)
   ...["info", "success", "warning", "danger", "neutral"].flatMap((v) => [
     `alert-${v}`,
     `alert-${v}>title`,
@@ -127,9 +137,10 @@ async function measure(
   page: Page,
   mode: "fixture" | "showcase",
   root: string,
+  only = "[data-probe]",
 ): Promise<Cell[]> {
   return page.evaluate(
-    ({ mode, root }) => {
+    ({ mode, root, only }) => {
       const parse = (css: string): [number, number, number, number] | null => {
         const legacy = css.match(/^rgba?\(([^)]+)\)$/);
         if (legacy) {
@@ -197,7 +208,7 @@ async function measure(
       };
 
       if (mode === "fixture") {
-        return [...document.querySelectorAll("[data-probe]")].map((el) =>
+        return [...document.querySelectorAll(only)].map((el) =>
           cell(el, el.getAttribute("data-probe")!),
         );
       }
@@ -234,7 +245,7 @@ async function measure(
       }
       return out;
     },
-    { mode, root },
+    { mode, root, only },
   );
 }
 
@@ -348,6 +359,23 @@ test.describe("Texte sur fond de statut teinté — 10 combos (#1050)", () => {
     await assertCombo(page, projectName, theme, mode);
 
     const cells = await measure(page, "fixture", "#bench");
+    // t3 — état de SURVOL (`.breadcrumbs a:hover`) : chaque `[data-hover]` est survolé puis
+    // re-mesuré seul. Garde : le fond composé doit changer au survol, sinon la mesure porterait
+    // sur l'état de repos (texte atténué sans teinte) et passerait pour la mauvaise raison.
+    const hovered = await page
+      .locator("[data-hover]")
+      .evaluateAll((els) => els.map((e) => e.getAttribute("data-probe")!));
+    for (const probe of hovered) {
+      const sel = `[data-probe="${probe}"]`;
+      const i = cells.findIndex((c) => c.probe === probe);
+      const rest = cells[i];
+      await page.locator(sel).hover();
+      const [hot] = await measure(page, "fixture", "#bench", sel);
+      if (rest?.bg && hot.bg && hex(rest.bg) === hex(hot.bg))
+        hot.invalid.push(`survol non appliqué (fond ${hex(hot.bg)} inchangé)`);
+      cells[i] = hot;
+    }
+    await page.mouse.move(0, 0);
     expect(
       cells.map((c) => c.probe).sort(),
       `${projectName}: data-probe de la fixture = PROBES du spec`,
@@ -384,8 +412,14 @@ test.describe("Texte sur fond de statut teinté — 10 combos (#1050)", () => {
       "contrôle de sources : joué une seule fois",
     );
     const repo = path.resolve(__dirname, "..");
-    // t1 : --badge-primary-fg ; t2 : --tag-fg, --chip-accent-fg (texte accent sur teinte accent).
-    const TOKENS = ["--badge-primary-fg", "--tag-fg", "--chip-accent-fg"];
+    // t1 : --badge-primary-fg ; t2 : --tag-fg, --chip-accent-fg (texte accent sur teinte accent) ;
+    // t3 : --accent-tint-fg (les 8 autres règles texte accent sur teinte accent, réglé à 14 %).
+    const TOKENS = [
+      "--badge-primary-fg",
+      "--tag-fg",
+      "--chip-accent-fg",
+      "--accent-tint-fg",
+    ];
     const HEX6 = /^#[0-9a-fA-F]{6}$/;
     const missing: string[] = [];
 

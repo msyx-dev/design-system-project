@@ -11,7 +11,11 @@
   (color-mix(in srgb, X N%, transparent) : 8 % alertes, 10 % badges et .alert--kpi, 12 % chips)
   posee sur le fond de son parent. Tranche t2 : texte ACCENT sur teinte accent -- .tag (8 %, --tag-fg),
   .chip-accent (12 %, --chip-accent-fg) et .chip-filter.active (25 %, --accent-text-strong, pire teinte
-  de ce token parmi ses usages). Le ratio depend donc du parent : la fixture repete toutes les
+  de ce token parmi ses usages). Tranche t3 : les 8 autres regles qui posaient --accent-light sur une teinte
+  accent (6 a 14 %) lisent --accent-tint-fg, regle a la pire teinte (14 %) : .dropdown-option.selected,
+  .dropdown-tag, .tree-item.selected.tree-leaf, .activity-filter-chip.active, .activity-tag,
+  .breadcrumbs a:hover (data-hover : survole par le spec avant la mesure), .backlog-filters
+  .btn-filter.active, .version-notes .timeline-content h4 .badge. Le ratio depend donc du parent : la fixture repete toutes les
   variantes sur les 4 fonds parents de reference (ceux de #981), chacun empile sur --primary :
     - page          : --primary ;
     - surface       : --surface sur --primary (carte, demo-box) ;
@@ -54,6 +58,16 @@
       <span class="tag" data-probe="tag|page">Etiquette</span>
       <span class="chip chip-accent" data-probe="chip-accent|page">Accent</span>
       <span class="chip chip-filter active" data-probe="chip-filter-active|page">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|page">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|page">Etiquette</span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|page">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|page">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|page">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|page" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|page">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|page">Nouveau</span></h4></div></div>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|page">Info : texte direct</span>
@@ -129,6 +143,16 @@
       <span class="tag" data-probe="tag|surface">Etiquette</span>
       <span class="chip chip-accent" data-probe="chip-accent|surface">Accent</span>
       <span class="chip chip-filter active" data-probe="chip-filter-active|surface">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|surface">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|surface">Etiquette</span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|surface">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|surface">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|surface">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|surface" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|surface">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|surface">Nouveau</span></h4></div></div>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|surface">Info : texte direct</span>
@@ -206,6 +230,16 @@
       <span class="chip chip-accent" data-probe="chip-accent|surface-solid">Accent</span>
       <span class="chip chip-filter active" data-probe="chip-filter-active|surface-solid">Filtre actif</span>
     </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|surface-solid">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|surface-solid">Etiquette</span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|surface-solid">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|surface-solid">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|surface-solid">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|surface-solid" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|surface-solid">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|surface-solid">Nouveau</span></h4></div></div>
+    </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|surface-solid">Info : texte direct</span>
       <div class="alert-body">
@@ -281,6 +315,16 @@
       <span class="tag" data-probe="tag|primary-light">Etiquette</span>
       <span class="chip chip-accent" data-probe="chip-accent|primary-light">Accent</span>
       <span class="chip chip-filter active" data-probe="chip-filter-active|primary-light">Filtre actif</span>
+    </div>
+    <div class="row">
+      <div class="dropdown-option selected" data-probe="dropdown-option-selected|primary-light">Option choisie</div>
+      <span class="dropdown-tag" data-probe="dropdown-tag|primary-light">Etiquette</span>
+      <ul class="tree"><li class="tree-item tree-leaf selected" data-probe="tree-leaf-selected|primary-light">Feuille choisie</li></ul>
+      <button type="button" class="activity-filter-chip active" data-probe="activity-filter-chip-active|primary-light">Filtre</button>
+      <span class="activity-tag" data-probe="activity-tag|primary-light">Deploy</span>
+      <nav class="breadcrumbs" aria-label="Fil"><ol><li><a href="#" data-probe="breadcrumbs-link-hover|primary-light" data-hover>Accueil</a></li></ol></nav>
+      <div class="backlog-filters"><button type="button" class="btn-filter active" data-probe="backlog-filter-active|primary-light">Tous</button></div>
+      <div class="version-notes"><div class="timeline-content"><h4><span class="badge" data-probe="version-notes-badge|primary-light">Nouveau</span></h4></div></div>
     </div>
     <div class="alert alert-info" role="note">
       <span data-probe="alert-info|primary-light">Info : texte direct</span>
