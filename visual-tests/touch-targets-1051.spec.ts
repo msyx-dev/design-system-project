@@ -86,7 +86,7 @@
  *       d'une puce capte la puce suivante) ;
  *   (m) marge verticale de `.toggle` retirée ET bloc coarse de la pagination neutralisé → CA7 rouge
  *       (zones des interrupteurs empilés amputées, `.page-btn` à 36 px, `.pagination` qui déborde
- *       à 375 px — débordement déjà présent au pointeur fin, hors #1051).
+ *       à 375 px — débordement aussi présent au pointeur fin, corrigé en tranche 6 : CA9).
  *
  * CA8 (tranche 5) — défauts préexistants trouvés en sprint. En-tête entre 641 et 768 px (burger
  *       affiché, badge et sélecteur de thème revenus), MSYX et Noël, au pointeur fin ET grossier :
@@ -101,6 +101,18 @@
  *   (o) padding/gap larges remis au cran 640.02px → CA8 souris rouge (Noël 641 px React : burger
  *       écrasé ; l'écrasement masque le débordement, d'où l'assertion sur le burger) ;
  *   (p) `::after` de `.search-clear` neutralisé → CA8 croix rouge (6 zones de 28,5×28,5 px).
+ *
+ * CA9 (tranche 6) — `.pagination` passe à la ligne pour tous les pointeurs (le `flex-wrap` n'était
+ *       posé que sous pointeur grossier). Au pointeur fin, à 320, 375 et 1280 px, sur
+ *       `feedback.html` et `data.html` : ni la pagination ni son parent ne débordent, chaque
+ *       `.page-btn` garde sa `min-width` et contient son libellé ; à 1280 px, une seule ligne.
+ *
+ * Preuve par mutation (tranche 6, jouée le 2026-10-05) :
+ *   (q) `flex-wrap: wrap` retiré de la règle de base de `.pagination` → CA9 rouge, 4 cas sur 6
+ *       (320 et 375 px, feedback et data) : « Prev »/« Next » écrasés à 36×36 avec un libellé
+ *       replié sur deux lignes (29×32 px) qui sort de la boîte de contenu ; « Standard » déborde
+ *       (265 > 261 px à 375), « Avec info » dépasse son parent (290 > 261 px), la pagination
+ *       de `data.html` aussi (355 > 259 px). 1280 px reste vert (une ligne).
  *
  * Hors portée, signalé à part (annotation du rapport) : les champs dont la police est écrite en
  * style inline. Au 2026-10-05, 4 démos natives de `composants.html` (« Reset natif » et
@@ -389,10 +401,7 @@ async function monterUserMenu(page: Page) {
     const rond = document.createElement("span");
     rond.className = "user-menu-avatar";
     rond.textContent = "P";
-    const caret = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg",
-    );
+    const caret = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     caret.setAttribute("class", "user-menu-caret");
     caret.setAttribute("viewBox", "0 0 16 16");
     btn.append(rond, caret);
@@ -407,7 +416,9 @@ const BANDE = [641, 700, 740, 767, 768];
 /** Le wordmark de l'en-tête est-il affiché ? */
 async function wordmarkVisible(page: Page) {
   return page.evaluate(() => {
-    const w = document.querySelector<HTMLElement>(".site-header .brand-wordmark");
+    const w = document.querySelector<HTMLElement>(
+      ".site-header .brand-wordmark",
+    );
     return !!w && w.checkVisibility() && w.getBoundingClientRect().width > 0;
   });
 }
@@ -750,7 +761,10 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
           `${cas} : burger affiché`,
         ).toBe(true);
         expect
-          .soft(await wordmarkVisible(page), `${cas} : wordmark reporté à 769 px`)
+          .soft(
+            await wordmarkVisible(page),
+            `${cas} : wordmark reporté à 769 px`,
+          )
           .toBe(false);
         verifierEnTete(m, cas, [
           ...CIBLES_ENTETE,
@@ -764,7 +778,9 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
     page,
   }) => {
     await ouvrir(page, "/pages/formulaires.html", 375);
-    expect((await pointeur(page)).coarse, "émulation tactile active").toBe(true);
+    expect((await pointeur(page)).coarse, "émulation tactile active").toBe(
+      true,
+    );
     const r = await page.evaluate(() => {
       const out = {
         n: 0,
@@ -785,7 +801,8 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
         const b = btn.getBoundingClientRect();
         if (b.width === 0 || !btn.checkVisibility()) continue;
         out.n++;
-        const nom = input.placeholder || input.getAttribute("aria-label") || "?";
+        const nom =
+          input.placeholder || input.getAttribute("aria-label") || "?";
         if (Math.abs(b.width - 28) > 0.5 || Math.abs(b.height - 28) > 0.5)
           out.boites.push(`${nom} ${b.width}×${b.height}`);
         const cx = b.left + b.width / 2;
@@ -811,10 +828,16 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
       return out;
     });
     console.log(`[touch-targets-1051 CA8] ${r.n} croix de recherche mesurées`);
-    expect(r.n, "croix de recherche mesurées (garde)").toBeGreaterThanOrEqual(4);
+    expect(r.n, "croix de recherche mesurées (garde)").toBeGreaterThanOrEqual(
+      4,
+    );
     expect.soft(r.boites, "croix inchangée (28×28)").toEqual([]);
-    expect.soft(r.zones, `zone ≥ ${TARGET} px le long des médianes`).toEqual([]);
-    expect.soft(r.champ, "le champ reste cliquable hors de la zone").toEqual([]);
+    expect
+      .soft(r.zones, `zone ≥ ${TARGET} px le long des médianes`)
+      .toEqual([]);
+    expect
+      .soft(r.champ, "le champ reste cliquable hors de la zone")
+      .toEqual([]);
   });
 
   test("CA7. Seconde passe (375 px) : interrupteurs, croix des tags, fichiers, recherche compacte, filtres et pagination", async ({
@@ -882,7 +905,9 @@ test.describe("Pointeur grossier — champs à 16 px, cibles à 44 px (#1051)", 
             const items = document.querySelectorAll(`#${id} ${item}`);
             if (items.length)
               out.rangees[id] = new Set(
-                [...items].map((c) => Math.round(c.getBoundingClientRect().top)),
+                [...items].map((c) =>
+                  Math.round(c.getBoundingClientRect().top),
+                ),
               ).size;
           }
           for (const sel of zonesSel) {
@@ -1156,10 +1181,120 @@ test.describe("Pointeur fin — rien ne change au bureau (#1051)", () => {
         const cs = getComputedStyle(document.querySelector(".site-header")!);
         return [parseFloat(cs.paddingLeft), parseFloat(cs.columnGap)];
       });
-      expect.soft(s, `${width} px : padding et gap de l'en-tête`).toEqual([pad, gap]);
       expect
-        .soft(await wordmarkVisible(page), `${width} px : wordmark ${wm ? "affiché" : "masqué"}`)
+        .soft(s, `${width} px : padding et gap de l'en-tête`)
+        .toEqual([pad, gap]);
+      expect
+        .soft(
+          await wordmarkVisible(page),
+          `${width} px : wordmark ${wm ? "affiché" : "masqué"}`,
+        )
         .toBe(wm);
+    }
+  });
+
+  test("CA9. Pagination (320, 375, 1280 px, souris) : rangée contenue dans son parent, boutons non écrasés, une ligne au bureau", async ({
+    page,
+  }) => {
+    // Mesure t5 (2026-10-05, avant correctif, souris, 375 px) : « Prev »/« Next » écrasés à
+    // 36 px avec libellé qui déborde (« Standard ») ; « Avec info » dépassait son parent de
+    // 29 px. Le passage à la ligne n'était posé que sous pointeur grossier.
+    const PLANCHER: Record<string, number> = {
+      "/pages/feedback.html": 3,
+      "/pages/data.html": 1,
+    };
+    for (const url of Object.keys(PLANCHER)) {
+      for (const width of [320, 375, 1280]) {
+        await ouvrir(page, url, width);
+        const nom = `${url} ${width} px`;
+        expect(await pointeur(page), `${nom} : pointeur fin`).toEqual({
+          coarse: false,
+          fine: true,
+        });
+        const r = await page.evaluate(() => {
+          const out = {
+            n: 0,
+            boutons: 0,
+            fautes: [] as string[],
+            lignes: [] as number[],
+          };
+          for (const p of document.querySelectorAll<HTMLElement>(
+            ".pagination",
+          )) {
+            const pr = p.getBoundingClientRect();
+            if (pr.width === 0 || !p.checkVisibility()) continue;
+            out.n++;
+            const nomP =
+              p
+                .closest(".demo-box")
+                ?.querySelector(".demo-label")
+                ?.textContent?.trim() ?? p.className;
+            const parent = p.parentElement!;
+            if (parent.scrollWidth > parent.clientWidth)
+              out.fautes.push(
+                `« ${nomP} » : parent ${parent.scrollWidth} > ${parent.clientWidth}px`,
+              );
+            if (p.scrollWidth > p.clientWidth)
+              out.fautes.push(
+                `« ${nomP} » : .pagination ${p.scrollWidth} > ${p.clientWidth}px`,
+              );
+            const tops = new Set<number>();
+            for (const b of p.querySelectorAll<HTMLElement>(".page-btn")) {
+              out.boutons++;
+              const br = b.getBoundingClientRect();
+              const sig = `« ${nomP} » / « ${b.textContent!.trim()} »`;
+              const min = parseFloat(getComputedStyle(b).minWidth);
+              if (br.width < min - 0.01)
+                out.fautes.push(
+                  `${sig} : ${br.width.toFixed(2)}px < min-width ${min}px`,
+                );
+              // Libellé contenu dans la boîte de CONTENU (pas la bordure) : un bouton écrasé à sa
+              // min-width garde son texte dans le padding, mais le replie sur deux lignes qui
+              // débordent en hauteur — d'où le contrôle des deux axes.
+              const cs = getComputedStyle(b);
+              const g =
+                parseFloat(cs.borderLeftWidth) + parseFloat(cs.paddingLeft);
+              const d =
+                parseFloat(cs.borderRightWidth) + parseFloat(cs.paddingRight);
+              const rg = document.createRange();
+              rg.selectNodeContents(b);
+              const t = rg.getBoundingClientRect();
+              if (
+                t.width > 0 &&
+                (t.left < br.left + g - 0.5 ||
+                  t.right > br.right - d + 0.5 ||
+                  t.top < br.top - 0.5 ||
+                  t.bottom > br.bottom + 0.5)
+              )
+                out.fautes.push(
+                  `${sig} : libellé ${t.width.toFixed(2)}×${t.height.toFixed(2)}px hors du bouton ${br.width.toFixed(2)}×${br.height.toFixed(2)}px`,
+                );
+              if (br.left < pr.left - 0.5 || br.right > pr.right + 0.5)
+                out.fautes.push(`${sig} : hors de la rangée`);
+              tops.add(Math.round(br.top));
+            }
+            out.lignes.push(tops.size);
+          }
+          return out;
+        });
+        console.log(
+          `[touch-targets-1051 CA9] ${nom} : ${r.n} paginations, ${r.boutons} boutons, lignes ${JSON.stringify(r.lignes)}`,
+        );
+        expect(
+          r.n,
+          `${nom} : plancher de paginations mesurées`,
+        ).toBeGreaterThanOrEqual(PLANCHER[url]);
+        expect
+          .soft(r.fautes, `${nom} : pagination contenue, boutons non écrasés`)
+          .toEqual([]);
+        if (width === 1280)
+          expect
+            .soft(
+              r.lignes.every((l) => l === 1),
+              `${nom} : chaque pagination tient sur une ligne`,
+            )
+            .toBe(true);
+      }
     }
   });
 });
