@@ -51,10 +51,10 @@
 
 ## Prochaine étape
 - **Backlog DS VIDE** (milestone #54 fermé le 2026-10-05). Aucun sprint en attente.
-- **Propositions d'outillage de la rétro M54, en attente du GO de Mike** (claude-config, ticket à ouvrir sur GO) :
-  - A1 : `CI_NO_CHECKS` ne conclut pas sur une PR de moins de quelques minutes, ou lit `gh run list --branch` avant de conclure ;
-  - A2 : alerte « plus d'un tiers des tranches au-delà de 45 tool_uses », deux sprints de suite (40 %, puis 39 %), sans aucune coupure sur Opus. Choix : découper plus fin (1 SP pour les tranches de mesures multi-largeurs) ou abandonner l'alerte pour les tranches Opus du DS ;
-  - A4 : alerte spec-gate « NEVER-RUN » sur le ticket de traçabilité (récidive #1045 puis #1053). Choix : exemption, ou gabarit de spec posté dès la création.
+- **Rétro M54 : décisions de Mike (2026-10-05, « go préco sur les cinq »)** :
+  - **Tickets d'outillage ouverts** : claude-config#591 (faux `CI_NO_CHECKS` sur une PR fraîche), #592 (label `tracabilite` exempté du spec-gate) et #593 (`coolify-deploy.sh --wait` muet). En attendant, on suit les mémoires `reference-ci-no-checks-pr-fraiche` et `feedback-coolify-deploy-commit-mismatch-faux-positif` (preuve par `docker exec` et `/version`).
+  - **A2, option (a)** : au prochain sprint, une tranche de mesures navigateur sur plusieurs largeurs, pointeurs ou thèmes fait **1 SP au plus** (mémoire `reference-ds-addendum-mandat-dev`). À mesurer : la part des tranches au-delà de 45 tool_uses.
+  - **Worktrees** : tous retirés, branches conservées. Il ne reste que `main`.
 - **Veille (rétro M53)** : A5, réserves festives par `:root:has()` à reprendre seulement sur signalement d'un consommateur ; A1 M53, résolveur du bloc `VERSION_NOTES` seulement à la récidive.
 - **Consommateurs** : tirokado peut passer en **2.146.0** avec la prérelease React **3.0.0-alpha.65**, à deux conditions :
   - resynchroniser **tout** le CSS (`sync.sh` : jetons, `themes.css`, `badges`, `forms`, `buttons`, `tables`, `layout`, `feedback`…) ;

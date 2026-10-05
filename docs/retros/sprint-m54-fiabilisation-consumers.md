@@ -48,10 +48,10 @@
 
 | # | Action | Ticket | État |
 |---|---|---|---|
-| A1 | Réveil CI : `CI_NO_CHECKS` ne conclut pas avant que la PR ait au moins N minutes (mesuré : 105 s sur une PR de release fraîche), ou consulte `gh run list --branch` avant de conclure. Ajustement de pipeline **à proposer à Mike** | claude-config (à ouvrir sur GO) | **Retenue** |
-| A2 | Seuil de 45 tool_uses en ALERTE deux sprints de suite (40 %, puis 39 %), sans aucune coupure observée sur Opus. Proposition à Mike : (a) garder l'alerte et découper plus fin (1 SP max pour toute tranche de mesures d'en-tête ou multi-largeurs), ou (b) abandonner explicitement l'alerte pour les tranches Opus du DS tant qu'aucune coupure n'est observée, et la rouvrir à la première coupure | — | **Écrite** ; décision attendue (action répétée : doit devenir mesurée ou être abandonnée) |
+| A1 | Réveil CI : `CI_NO_CHECKS` ne conclut pas avant que la PR ait au moins N minutes (mesuré : 105 s sur une PR de release fraîche), ou consulte `gh run list --branch` avant de conclure. GO de Mike le 2026-10-05 | [claude-config#591](https://github.com/msyx-dev/claude-config/issues/591) | **Écrite** (ticket ; mémoire `reference-ci-no-checks-pr-fraiche` en attendant) |
+| A2 | Seuil de 45 tool_uses en ALERTE deux sprints de suite (40 %, puis 39 %), sans aucune coupure observée sur Opus. **Décision de Mike (2026-10-05, option a)** : on garde l'alerte et on découpe plus fin. Une tranche de mesures navigateur sur plusieurs largeurs, pointeurs ou thèmes (en-tête, balayages `elementFromPoint`) fait **1 SP au plus**. Raison : Sonnet revient le 6 octobre à 20 h, et c'est sur lui que la coupure vers 50 tool_uses est mesurée | — | **Écrite** (mémoire `reference-ds-addendum-mandat-dev`, section Découpage). À mesurer au prochain sprint : part des tranches au-delà de 45 |
 | A3 | Toute nouvelle spec Playwright est jouée `--repeat-each=10` dans la tranche qui l'écrit, avant le push. CA9 aurait été attrapé : le rouge était déterministe dès que le rendu JS prenait du retard | — | **Écrite** (addendum DS, mémoire `reference-ds-addendum-mandat-dev`) |
-| A4 | Ticket de traçabilité et spec-gate : soit le ticket est reconnu comme exempt (Task « Corrections à la volée — milestone #N »), soit le parent y poste dès sa création un gabarit de spec qui décrit la traçabilité. Récidive 2/2, **à proposer à Mike** | claude-config (à ouvrir sur GO) | **Retenue** |
+| A4 | Ticket de traçabilité et spec-gate : exempter par un label dédié `tracabilite`, sur le modèle de l'exemption `Quick` de `spec-gate-bypass-check.sh`. Écarté : poster une fausse spec pour faire taire le détecteur. Récidive 2/2, GO de Mike le 2026-10-05 | [claude-config#592](https://github.com/msyx-dev/claude-config/issues/592) | **Écrite** (ticket) |
 | A5 | Addendum DS du mandat de dev : sauvegardé tel quel en mémoire pour le prochain sprint. Au #53, il n'était écrit nulle part, et j'ai dû le réécrire ce sprint | — | **Écrite** (mémoire) |
 
 ## Vérification des actions de la rétro précédente (`sprint-m53-fiabilisation-consumers.md`)
@@ -60,6 +60,11 @@
 - A3 plancher de `ci-wait-budget.sh` : ✅ **mesurée**. Borne lue à 3 600 s à chaque armement ; aucun faux `CI_TIMEOUT` sur 10 attentes, dont des VR de 33 à 37 minutes (réarmements `CI_REARM` normaux).
 - A4 `PW_PORT` distinct par agent : ✅ **appliquée**. Ports 4251 à 4256 attribués dans les mandats, aucun faux rouge de port.
 - A5 réserve par `:root:has()` : ⏳ **en veille**. Aucun signalement de consommateur.
+
+## Après la rétro : déploiement et décisions (2026-10-05)
+- **Déploiement préprod réussi, mais outil muet** : la préprod sert 2.146.0, `733d057` (`docker exec` + `/version`), et `validate-preprod.sh design-system` est entièrement vert. En revanche, `coolify-deploy.sh --wait` n'a rien imprimé pendant 25 minutes alors que le déploiement était FINISHED en 2 minutes ; il a été coupé par le `timeout` de l'appelant. Ticket : [claude-config#593](https://github.com/msyx-dev/claude-config/issues/593).
+- **Ménage des worktrees (§4g)** : `recover.sh --prune-worktrees` a dépassé deux fois son délai (3 à 4 min par worktree) avant de traiter 10 worktrees. Il en a gardé 8 par prudence (milestone #50 : branches « jamais poussées sous ce nom » ou encore présentes sur `origin`). Pour chacun, le parent a vérifié par le contenu (lignes ajoutées contre `main`) que tout était livré ou réécrit depuis. Les worktrees ont été retirés, **branches conservées**. Il ne reste aucun worktree.
+- **Décisions de Mike (« go préco sur les cinq »)** : tickets claude-config#591 (A1), #592 (A4) et #593 (déploiement muet) ; A2 option (a) ; ménage des worktrees du #50.
 
 ## Côté consommateur
 - **tirokado** doit, pour profiter du sprint, resynchroniser tout le CSS du DS (`sync.sh`) avec la prérelease `@msyx-dev/react` 3.0.0-alpha.65, et poser `breakpoint="lg"` (`.table-cards--lg`) sur ses tableaux de suivi et de participants. Sans cet opt-in, ces tableaux ne changent pas.
