@@ -46,8 +46,23 @@
  *
  * Joué dans UN seul projet (`msyx-dark-desktop`) : ni le thème ni le mode ne changent une boîte.
  *
- * CA8 — preuves par mutation : voir le message du commit (« comportement neutralisé → N tests
- * rouges ») et la section ci-dessous.
+ * CA8 — preuves par mutation (jouées le 2026-10-06 sur `shared/css/components/tables.css`, fichier
+ * restauré après chacune ; la spec entière, 12 tests, rejouée une fois par mutation) :
+ *  M1 retirer `display: flex` de la cellule compacte → 5 rouges : CA1 et CA2 au pointeur fin et au
+ *     pointeur grossier (la ligne ne gagne rien, le libellé reste au-dessus du champ), et CA7
+ *     tablette (la table --lg à 768 px n'est plus compacte) ;
+ *  M2 déplacer le bloc compact APRÈS le `@media (min-width: 1024px)` → 1 rouge : CA7 (mode
+ *     tableau : à 768 px les cellules de la compacte restent en `flex` au lieu de `table-cell`,
+ *     les restaurations de 768 et 1024 px n'étant plus placées après le bloc) ;
+ *  M5 retirer le `:where()` de la cellule (spécificité (0,1,1) → (0,3,1)) → 1 rouge : CA7, même
+ *     cause : la restauration en (0,1,1) ne bat plus la cellule compacte.
+ * Reportées (plafond de 3 mutations par tranche), NON jouées : M3 (croissance du libellé de 1 à 0)
+ * ferait rougir CA6 — à 320 px « Adresse électronique », seule sur sa ligne, resterait à 88 px,
+ * passerait sur 2 lignes et la ligne serait plus haute que sa jumelle ; M4 (`flex-basis` du champ de
+ * 7,5rem à 0) ferait rougir CA6 — plus de repli, le champ serait écrasé à côté de son libellé à
+ * 320 px au lieu de passer dessous. CA3, CA4 et CA5 restent verts sous M1, M2 et M5, à dessein : ils
+ * gardent des invariants (arbre d'accessibilité, tailles des cibles, cellules hors champ) que ces
+ * trois mutations ne touchent pas.
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -539,6 +554,9 @@ for (const pointeur of ["fin", "grossier"] as const) {
           ).toBeGreaterThan(0);
           const hc = await hauteursLignes(page, paire.c);
           const hn = await hauteursLignes(page, paire.n);
+          console.log(
+            `MESURE CA6 · pointeur ${pointeur} · ${largeur} px · ${paire.c} : hauteurs des lignes, compacte [${hc.map((h) => h.toFixed(2)).join(" ; ")}] px, jumelle [${hn.map((h) => h.toFixed(2)).join(" ; ")}] px`,
+          );
           hc.forEach((h, i) => {
             expect(
               h,
