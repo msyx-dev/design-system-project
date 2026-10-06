@@ -53,7 +53,26 @@
  *
  * Preuve par mutation (tranche t2, jouée le 2026-10-06, 3 des 6 de la spec — comportement
  * neutralisé → N tests rouges ; chaque mutation est restaurée avant commit) :
- * @@MUTATIONS@@
+ *   (b) `z-index` du `::after` retiré (lists.css) → 5 tests rouges : CA1 aux 3 largeurs, CA2 à
+ *       375 px, CA8. L'`.avatar-status` de r3, placé APRÈS le lien, perce la zone : centre de
+ *       l'avatar → `div.avatar.avatar-md` (4 cas : CA1 ×3 et CA8) ; à 375 px, des points de la
+ *       grille tombent aussi sur lui (CA2 : liens rencontrés sur la grille de r3 ≠ `#r3`) ;
+ *   (c) contrôles remontés à `var(--z-stretched-link)` au lieu de `--z-stretched-control` →
+ *       2 tests rouges : CA7 souris et CA7 toucher, sur c2 seulement (la case est AVANT le lien dans
+ *       le DOM : à z-index égal, le `::after`, plus tard, la recouvre — centre de `#ctl-before` →
+ *       `a.list-item-title.list-item-link`, case non atteinte). c1 (bouton APRÈS le lien) reste
+ *       vert : c'est pourquoi la fixture place la case avant ;
+ *   (e) conditionnement `:has()` remplacé par `.list-item { position: relative }` → 1 test rouge :
+ *       CA9 (les 2 rangées de `#rows-plain` passent en `position: relative`).
+ * Reportées, non jouées dans cette tranche (plafond de 3 mutations) : (a) `position: relative`
+ * retirée de la rangée → CA1 et CA2 attendus rouges (le `::after` s'étire sur la fenêtre) ; (d)
+ * `outline` du `::after` retiré → CA4 attendu rouge (Tab et forced-colors) ; (f) `content: ''`
+ * retiré → CA1 attendu rouge. Hors CA11, jouées en tranche t1 : jeton `--z-stretched-link` de 1 à
+ * 5 → `stacking-scale` rouge ; `.list-item-link` retiré de `a:is(…)` dans `_base.css` →
+ * `tests/vanilla/modals.test.js` rouge (par lecture).
+ * Limite : CA10 ne rougit sous aucune des trois mutations jouées. La démo de `data.html` n'a aucun
+ * contenu positionné après son lien et son bouton suit le lien dans le DOM : elle prouve le câblage
+ * de la vitrine (zone présente, bouton atteignable), pas l'ordre d'empilement.
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -708,14 +727,12 @@ test.describe("Rangée-lien — pointeur fin (#1060)", () => {
     );
     expect(lignes, "rangées de #rows-plain (non-vacuité)").toHaveLength(2);
     lignes.forEach((l, i) =>
-      expect
-        .soft(l, `rangée ${i + 1} de #rows-plain`)
-        .toEqual({
-          position: "static",
-          zIndex: "auto",
-          apresTitre: "none",
-          liens: 0,
-        }),
+      expect.soft(l, `rangée ${i + 1} de #rows-plain`).toEqual({
+        position: "static",
+        zIndex: "auto",
+        apresTitre: "none",
+        liens: 0,
+      }),
     );
     const nu = await separateurs(page, "#rows-plain");
     expect.soft(nu[0].largeur, "séparateur de la 1re rangée").toBe("1px");
@@ -765,7 +782,10 @@ test.describe("Rangée-lien — pointeur grossier, 375 px (#1060)", () => {
         ),
       ),
     );
-    expect(cible, "--touch-target lu (non-vacuité)").toBe(44);
+    expect(
+      cible,
+      "--touch-target lu : plancher WCAG 2.5.5 (non-vacuité)",
+    ).toBeGreaterThanOrEqual(44);
     for (const r of RANGEES) {
       const b = await balayer(page, r.rangee, { explicites: r.explicites });
       expect
