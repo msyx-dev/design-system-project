@@ -449,9 +449,9 @@ test.describe("table-cards-editable (#1008)", () => {
         }).length,
       };
     });
-    expect(m.count, "les 2 variantes").toBe(2);
+    expect(m.count, "les 3 démos (#1061 : carte compacte)").toBe(3);
     expect(m.docScrollWidth).toBe(375);
-    expect(m.scroll, "wrappers sans défilement").toEqual([true, true]);
+    expect(m.scroll, "wrappers sans défilement").toEqual([true, true, true]);
     expect(m.btnOut, "boutons dans la fenêtre").toBe(0);
     await checkNames(page, "#table-cards-editable");
     const before = page.url();
@@ -465,4 +465,3 @@ test.describe("table-cards-editable (#1008)", () => {
     expect(page.url(), "un envoi de la vitrine ne navigue pas").toBe(before);
   });
 });
-

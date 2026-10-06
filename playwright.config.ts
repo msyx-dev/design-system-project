@@ -85,6 +85,7 @@ export default defineConfig({
     "**/list-item-link-1060.spec.ts",
     "**/festive-under-content.spec.ts",
     "**/table-cards-lg-1052.spec.ts",
+    "**/table-cards-compact-1061.spec.ts",
     "**/status-tint-contrast.spec.ts",
     "**/touch-targets-1051.spec.ts",
   ],

@@ -715,6 +715,137 @@ describe("TableCards — seuil des cartes (breakpoint, #1052)", () => {
   });
 });
 
+describe("TableCards — carte compacte (compact, #1061)", () => {
+  // Seules la CLASSE et l'absence d'effet sur le markup sont vérifiables ici :
+  // la mise en page d'une cellule de champ (libellé à côté du champ, repli sous
+  // 7,5rem, aucun effet en mode tableau) est mesurée en vrai navigateur par
+  // `visual-tests/table-cards-compact-1061.spec.ts`.
+  const champs: TableCardsColumn<Row>[] = [
+    {
+      key: "name",
+      header: "Nom",
+      render: (row) => (
+        <Input
+          name="name"
+          defaultValue={row.name}
+          aria-label={`Nom de ${row.name}`}
+        />
+      ),
+    },
+    {
+      key: "email",
+      header: "E-mail",
+      render: (row) => (
+        <Input
+          name="email"
+          type="email"
+          defaultValue={row.email}
+          aria-label={`E-mail de ${row.name}`}
+        />
+      ),
+    },
+    columns[2],
+  ];
+
+  it("sans compact, ou avec compact={false} : aucune classe .table-cards--compact", () => {
+    const { container, rerender } = renderTable({ columns: champs });
+    const table = () => container.querySelector("table") as HTMLElement;
+    expect(table()).toHaveAttribute("class", "table-cards");
+    expect(container.querySelector(".table-cards--compact")).toBeNull();
+    rerender(
+      <TableCards
+        columns={champs}
+        rows={rows}
+        getRowKey={getRowKey}
+        compact={false}
+      />,
+    );
+    expect(table()).toHaveAttribute("class", "table-cards");
+    expect(container.querySelector(".table-cards--compact")).toBeNull();
+    // Combiné aux autres modificateurs, compact={false} n'ajoute rien non plus.
+    rerender(
+      <TableCards
+        columns={champs}
+        rows={rows}
+        getRowKey={getRowKey}
+        editable
+        breakpoint="lg"
+        compact={false}
+      />,
+    );
+    expect(table()).toHaveAttribute(
+      "class",
+      "table-cards table-cards--editable table-cards--lg",
+    );
+  });
+
+  it("compact pose .table-cards--compact sur le <table>, jamais sur .table-wrap, sans exiger editable", () => {
+    const { container } = renderTable({
+      columns: champs,
+      compact: true,
+      className: "ma-classe",
+    });
+    const wrap = container.firstElementChild as HTMLElement;
+    const table = wrap.querySelector("table") as HTMLElement;
+    expect(table).toHaveAttribute("class", "table-cards table-cards--compact");
+    expect(wrap).toHaveAttribute("class", "table-wrap ma-classe");
+    expect(wrap).not.toHaveClass("table-cards--compact");
+    expect(container.querySelectorAll(".table-cards--compact")).toHaveLength(1);
+  });
+
+  it('editable + breakpoint="lg" + compact : exactement « table-cards table-cards--editable table-cards--lg table-cards--compact », dans cet ordre', () => {
+    const { container } = renderTable({
+      columns: champs,
+      editable: true,
+      breakpoint: "lg",
+      compact: true,
+    });
+    expect(container.querySelector("table")).toHaveAttribute(
+      "class",
+      "table-cards table-cards--editable table-cards--lg table-cards--compact",
+    );
+    expect(container.firstElementChild).toHaveAttribute("class", "table-wrap");
+  });
+
+  it("le markup des cellules ne change pas : libellé aria-hidden en premier enfant, aria-label du champ intact", () => {
+    const { container, rerender } = renderTable({
+      columns: champs,
+      editable: true,
+    });
+    const table = () => container.querySelector("table") as HTMLElement;
+    const sans = table().innerHTML;
+    rerender(
+      <TableCards
+        columns={champs}
+        rows={rows}
+        getRowKey={getRowKey}
+        aria-label="Participants"
+        editable
+        compact
+      />,
+    );
+    // Garde : la comparaison ci-dessous ne prouve rien si compact n'est pas appliqué.
+    expect(table()).toHaveClass("table-cards--compact");
+    // La classe est portée par le <table> lui-même, hors de son innerHTML : les
+    // cellules, libellés, champs et identifiants générés sont identiques, et le
+    // même <table> est resté monté (useId stable d'un rendu à l'autre).
+    expect(table().innerHTML).toBe(sans);
+    for (const [nom, libelle] of [
+      ["Nom de Alice", "Nom"],
+      ["E-mail de Alice", "E-mail"],
+    ] as const) {
+      const champ = screen.getByRole("textbox", { name: nom });
+      expect(champ).toHaveAttribute("aria-label", nom);
+      const cellule = champ.closest("td") as HTMLElement;
+      const label = cellule.firstElementChild as HTMLElement;
+      expect(label).toHaveClass("table-cards-label");
+      expect(label).toHaveAttribute("aria-hidden", "true");
+      expect(label).toHaveTextContent(libelle);
+      expect(label.nextElementSibling).toHaveClass("input-group");
+    }
+  });
+});
+
 describe("TableCards — accessibilité (axe)", () => {
   it("n'a aucune violation axe (avec caption, actions et footer)", async () => {
     const { container } = render(

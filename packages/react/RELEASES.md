@@ -6,6 +6,11 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+> Mention croisée : le modificateur CSS `.table-cards--compact` (colonne des libellés `--table-cards-label-w`, repli sous 7,5rem, gain mesuré, démo) est décrit dans l'entrée #1061 de `../../CHANGELOG.md`, `[Unreleased]`.
+
+### Added
+- **`<TableCards compact>` : carte de saisie compacte (#1061).** Nouvelle prop `compact?: boolean` (défaut `false`). `true` ajoute `table-cards--compact` au `<table>` (jamais au `.table-wrap`) : en mode cartes, une cellule de champ (`<TableCardsCell label>` dont le premier enfant est un `<Input>` ou un `<Select>`, soit un `.input-group`) met son libellé à côté du champ, et un champ qui n'a plus 7,5rem passe sous son libellé. Les cellules de lecture et d'actions et le mode tableau ne changent pas. Se combine avec `editable` et `breakpoint` (`class="table-cards table-cards--editable table-cards--lg table-cards--compact"`, dans cet ordre). **API additive** : sans la prop, ou avec `compact={false}`, le rendu est identique octet pour octet à la version précédente ; le markup des cellules ne change jamais, seule la classe du `<table>` s'ajoute. Classes en tableau de chaînes littérales, vues par le scanner du registre (`.table-cards--compact` figure dans les `cssClasses` de `table-cards-editable`). 4 tests ajoutés dans `TableCards.test.tsx`. Action consommateur : poser `compact` sur les tableaux de saisie concernés (sans opt-in, rien ne change) et resynchroniser `tables.css` (`shared/sync.sh`) : sans le CSS du DS à jour, la classe n'a aucun effet.
+
 ## v3.0.0-alpha.65 — 2026-10-05 — Textes lisibles, cibles tactiles et tableaux larges
 
 > Mention croisée : le modificateur CSS `.table-cards--lg` (bloc de restauration à 1024 px, démo, limite avec barre latérale) est décrit dans l'entrée #1052 de `../../CHANGELOG.md`, `[Unreleased]`.

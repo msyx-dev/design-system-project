@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte de saisie compacte — fixture #1061</title>
+<!--
+  Fixture de `visual-tests/table-cards-compact-1061.spec.ts` (#1061).
+
+  `.table-cards--compact` met, en mode cartes, le libellé et le champ d'une cellule de CHAMP
+  (libellé immédiatement suivi d'un `.input-group`) sur UNE ligne. Réplique de la ligne de
+  participant de tirokado : `main.page-content.page-content--wide` > `section.card.card-static`
+  > `.table-wrap`. Les jumeaux ne diffèrent que par la classe, l'identifiant du tableau et ceux
+  de ses <form> et de ses champs.
+
+  Six tableaux, trois paires « compacte / jumelle SANS --compact » (la jumelle est le témoin) :
+  #t-c    / #t-n    : saisie (.table-cards--editable), bascule en tableau à 768px (md).
+  #t-lg-c / #t-lg-n : la même saisie avec .table-cards--lg (cartes jusqu'à 1023px).
+  #t-long-c / #t-long-n : libellés longs (« Adresse électronique », « Correspondances ») ; md.
+
+  Colonnes des saisies : Nom et E-mail (CHAMPS), Statut (lecture LIBELLÉE : un texte après le
+  libellé, aucun .input-group), Exclusions (lecture SANS libellé, comme `hideLabel` : aucun
+  <span class="table-cards-label">), Actions (<form hidden>, « Enregistrer », « Retirer »,
+  sans blanc entre les balises). Lignes : r1 « Camille Moreau » ; r2 « Dominique Lefèvre »,
+  E-mail en erreur de champ (.input-error + .input-error-msg) ; une ligne d'ajout dans le
+  <tfoot> (.table-cards-add-row). Libellés longs : Adresse électronique + Correspondances
+  (champs) et Actions, mêmes trois lignes.
+
+  Cellules en role="cell", libellés en aria-hidden, nom accessible du champ = « <libellé> de
+  <personne> » (il COMMENCE par le texte visible du libellé, WCAG 2.5.3), comme les fixtures
+  #1007, #1008, #1044 et #1052. Pas de nav.js ni de components.js : rien d'autre que le CSS du
+  DS ne doit toucher la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+</head>
+<body>
+<main class="page-content page-content--wide">
+  <h1>Participants du tirage</h1>
+  <section class="card card-static">
+    <h2>Saisie compacte (tableau dès 768px)</h2>
+    <div class="table-wrap" id="wrap-c">
+      <table class="table-cards table-cards--editable table-cards--compact" id="t-c" role="table" aria-label="Saisie compacte (tableau dès 768px)">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Statut</th><th scope="col" role="columnheader">Exclusions</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-c-r1-name" form="t-c-r1" name="name" required aria-label="Nom de Camille Moreau" value="Camille Moreau"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-c-r1-email" form="t-c-r1" name="email" type="email" required aria-label="E-mail de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>Confirmé</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Bastien</span><span class="chip">Éva</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-c-r1" hidden></form><form id="t-c-r1-retirer" hidden></form><button type="submit" form="t-c-r1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button><button type="submit" form="t-c-r1-retirer" class="btn-danger btn-sm" aria-label="Retirer Camille Moreau">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-c-r2-name" form="t-c-r2" name="name" required aria-label="Nom de Dominique Lefèvre" value="Dominique Lefèvre"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input input-error" id="t-c-r2-email" form="t-c-r2" name="email" type="email" required aria-label="E-mail de Dominique Lefèvre" aria-invalid="true" aria-describedby="t-c-r2-email-error" value="dominique.lefevre@exemple.fr"><span class="input-error-msg" id="t-c-r2-email-error">Cette adresse est déjà utilisée dans ce tirage.</span></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>À confirmer</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Camille</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-c-r2" hidden></form><form id="t-c-r2-retirer" hidden></form><button type="submit" form="t-c-r2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button><button type="submit" form="t-c-r2-retirer" class="btn-danger btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-c-new-name" form="t-c-new" name="name" required aria-label="Nom du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-c-new-email" form="t-c-new" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="text-muted text-xs">Nouveau</span></td>
+            <td role="cell"><span class="text-muted text-xs">Après l'ajout</span></td>
+            <td role="cell" class="table-cards-actions"><form id="t-c-new" hidden></form><button type="submit" form="t-c-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Saisie jumelle, non compacte (tableau dès 768px)</h2>
+    <div class="table-wrap" id="wrap-n">
+      <table class="table-cards table-cards--editable" id="t-n" role="table" aria-label="Saisie jumelle, non compacte (tableau dès 768px)">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Statut</th><th scope="col" role="columnheader">Exclusions</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-n-r1-name" form="t-n-r1" name="name" required aria-label="Nom de Camille Moreau" value="Camille Moreau"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-n-r1-email" form="t-n-r1" name="email" type="email" required aria-label="E-mail de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>Confirmé</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Bastien</span><span class="chip">Éva</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-n-r1" hidden></form><form id="t-n-r1-retirer" hidden></form><button type="submit" form="t-n-r1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button><button type="submit" form="t-n-r1-retirer" class="btn-danger btn-sm" aria-label="Retirer Camille Moreau">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-n-r2-name" form="t-n-r2" name="name" required aria-label="Nom de Dominique Lefèvre" value="Dominique Lefèvre"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input input-error" id="t-n-r2-email" form="t-n-r2" name="email" type="email" required aria-label="E-mail de Dominique Lefèvre" aria-invalid="true" aria-describedby="t-n-r2-email-error" value="dominique.lefevre@exemple.fr"><span class="input-error-msg" id="t-n-r2-email-error">Cette adresse est déjà utilisée dans ce tirage.</span></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>À confirmer</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Camille</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-n-r2" hidden></form><form id="t-n-r2-retirer" hidden></form><button type="submit" form="t-n-r2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button><button type="submit" form="t-n-r2-retirer" class="btn-danger btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-n-new-name" form="t-n-new" name="name" required aria-label="Nom du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-n-new-email" form="t-n-new" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="text-muted text-xs">Nouveau</span></td>
+            <td role="cell"><span class="text-muted text-xs">Après l'ajout</span></td>
+            <td role="cell" class="table-cards-actions"><form id="t-n-new" hidden></form><button type="submit" form="t-n-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Saisie compacte, cartes jusqu'à 1023px</h2>
+    <div class="table-wrap" id="wrap-lg-c">
+      <table class="table-cards table-cards--editable table-cards--lg table-cards--compact" id="t-lg-c" role="table" aria-label="Saisie compacte, cartes jusqu'à 1023px">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Statut</th><th scope="col" role="columnheader">Exclusions</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-lg-c-r1-name" form="t-lg-c-r1" name="name" required aria-label="Nom de Camille Moreau" value="Camille Moreau"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-lg-c-r1-email" form="t-lg-c-r1" name="email" type="email" required aria-label="E-mail de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>Confirmé</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Bastien</span><span class="chip">Éva</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg-c-r1" hidden></form><form id="t-lg-c-r1-retirer" hidden></form><button type="submit" form="t-lg-c-r1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button><button type="submit" form="t-lg-c-r1-retirer" class="btn-danger btn-sm" aria-label="Retirer Camille Moreau">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-lg-c-r2-name" form="t-lg-c-r2" name="name" required aria-label="Nom de Dominique Lefèvre" value="Dominique Lefèvre"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input input-error" id="t-lg-c-r2-email" form="t-lg-c-r2" name="email" type="email" required aria-label="E-mail de Dominique Lefèvre" aria-invalid="true" aria-describedby="t-lg-c-r2-email-error" value="dominique.lefevre@exemple.fr"><span class="input-error-msg" id="t-lg-c-r2-email-error">Cette adresse est déjà utilisée dans ce tirage.</span></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>À confirmer</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Camille</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg-c-r2" hidden></form><form id="t-lg-c-r2-retirer" hidden></form><button type="submit" form="t-lg-c-r2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button><button type="submit" form="t-lg-c-r2-retirer" class="btn-danger btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-lg-c-new-name" form="t-lg-c-new" name="name" required aria-label="Nom du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-lg-c-new-email" form="t-lg-c-new" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="text-muted text-xs">Nouveau</span></td>
+            <td role="cell"><span class="text-muted text-xs">Après l'ajout</span></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg-c-new" hidden></form><button type="submit" form="t-lg-c-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Saisie jumelle, non compacte, cartes jusqu'à 1023px</h2>
+    <div class="table-wrap" id="wrap-lg-n">
+      <table class="table-cards table-cards--editable table-cards--lg" id="t-lg-n" role="table" aria-label="Saisie jumelle, non compacte, cartes jusqu'à 1023px">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Statut</th><th scope="col" role="columnheader">Exclusions</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-lg-n-r1-name" form="t-lg-n-r1" name="name" required aria-label="Nom de Camille Moreau" value="Camille Moreau"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-lg-n-r1-email" form="t-lg-n-r1" name="email" type="email" required aria-label="E-mail de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>Confirmé</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Bastien</span><span class="chip">Éva</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg-n-r1" hidden></form><form id="t-lg-n-r1-retirer" hidden></form><button type="submit" form="t-lg-n-r1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button><button type="submit" form="t-lg-n-r1-retirer" class="btn-danger btn-sm" aria-label="Retirer Camille Moreau">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-lg-n-r2-name" form="t-lg-n-r2" name="name" required aria-label="Nom de Dominique Lefèvre" value="Dominique Lefèvre"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input input-error" id="t-lg-n-r2-email" form="t-lg-n-r2" name="email" type="email" required aria-label="E-mail de Dominique Lefèvre" aria-invalid="true" aria-describedby="t-lg-n-r2-email-error" value="dominique.lefevre@exemple.fr"><span class="input-error-msg" id="t-lg-n-r2-email-error">Cette adresse est déjà utilisée dans ce tirage.</span></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span>À confirmer</td>
+            <td role="cell"><div class="chip-group"><span class="chip">Camille</span></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg-n-r2" hidden></form><form id="t-lg-n-r2-retirer" hidden></form><button type="submit" form="t-lg-n-r2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button><button type="submit" form="t-lg-n-r2-retirer" class="btn-danger btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span><div class="input-group"><input class="input" id="t-lg-n-new-name" form="t-lg-n-new" name="name" required aria-label="Nom du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span><div class="input-group"><input class="input" id="t-lg-n-new-email" form="t-lg-n-new" name="email" type="email" required aria-label="E-mail du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Statut</span><span class="text-muted text-xs">Nouveau</span></td>
+            <td role="cell"><span class="text-muted text-xs">Après l'ajout</span></td>
+            <td role="cell" class="table-cards-actions"><form id="t-lg-n-new" hidden></form><button type="submit" form="t-lg-n-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Libellés longs, compacte</h2>
+    <div class="table-wrap" id="wrap-long-c">
+      <table class="table-cards table-cards--editable table-cards--compact" id="t-long-c" role="table" aria-label="Libellés longs, compacte">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Adresse électronique</th><th scope="col" role="columnheader">Correspondances</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Adresse électronique</span><div class="input-group"><input class="input" id="t-long-c-r1-adresse" form="t-long-c-r1" name="adresse" type="email" required aria-label="Adresse électronique de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Correspondances</span><div class="input-group"><input class="input" id="t-long-c-r1-corr" form="t-long-c-r1" name="correspondances" required aria-label="Correspondances de Camille Moreau" value="Bastien, Éva"></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-long-c-r1" hidden></form><form id="t-long-c-r1-retirer" hidden></form><button type="submit" form="t-long-c-r1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button><button type="submit" form="t-long-c-r1-retirer" class="btn-danger btn-sm" aria-label="Retirer Camille Moreau">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Adresse électronique</span><div class="input-group"><input class="input" id="t-long-c-r2-adresse" form="t-long-c-r2" name="adresse" type="email" required aria-label="Adresse électronique de Dominique Lefèvre" value="dominique.lefevre@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Correspondances</span><div class="input-group"><input class="input" id="t-long-c-r2-corr" form="t-long-c-r2" name="correspondances" required aria-label="Correspondances de Dominique Lefèvre" value="Camille"></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-long-c-r2" hidden></form><form id="t-long-c-r2-retirer" hidden></form><button type="submit" form="t-long-c-r2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button><button type="submit" form="t-long-c-r2-retirer" class="btn-danger btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Adresse électronique</span><div class="input-group"><input class="input" id="t-long-c-new-adresse" form="t-long-c-new" name="adresse" type="email" required aria-label="Adresse électronique du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Correspondances</span><div class="input-group"><input class="input" id="t-long-c-new-corr" form="t-long-c-new" name="correspondances" required aria-label="Correspondances du nouveau participant"></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-long-c-new" hidden></form><button type="submit" form="t-long-c-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card card-static">
+    <h2>Libellés longs, jumelle non compacte</h2>
+    <div class="table-wrap" id="wrap-long-n">
+      <table class="table-cards table-cards--editable" id="t-long-n" role="table" aria-label="Libellés longs, jumelle non compacte">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Adresse électronique</th><th scope="col" role="columnheader">Correspondances</th><th scope="col" role="columnheader">Actions</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Adresse électronique</span><div class="input-group"><input class="input" id="t-long-n-r1-adresse" form="t-long-n-r1" name="adresse" type="email" required aria-label="Adresse électronique de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Correspondances</span><div class="input-group"><input class="input" id="t-long-n-r1-corr" form="t-long-n-r1" name="correspondances" required aria-label="Correspondances de Camille Moreau" value="Bastien, Éva"></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-long-n-r1" hidden></form><form id="t-long-n-r1-retirer" hidden></form><button type="submit" form="t-long-n-r1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button><button type="submit" form="t-long-n-r1-retirer" class="btn-danger btn-sm" aria-label="Retirer Camille Moreau">Retirer</button></td>
+          </tr>
+          <tr role="row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Adresse électronique</span><div class="input-group"><input class="input" id="t-long-n-r2-adresse" form="t-long-n-r2" name="adresse" type="email" required aria-label="Adresse électronique de Dominique Lefèvre" value="dominique.lefevre@exemple.fr"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Correspondances</span><div class="input-group"><input class="input" id="t-long-n-r2-corr" form="t-long-n-r2" name="correspondances" required aria-label="Correspondances de Dominique Lefèvre" value="Camille"></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-long-n-r2" hidden></form><form id="t-long-n-r2-retirer" hidden></form><button type="submit" form="t-long-n-r2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button><button type="submit" form="t-long-n-r2-retirer" class="btn-danger btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button></td>
+          </tr>
+        </tbody>
+        <tfoot role="rowgroup">
+          <tr role="row" class="table-cards-add-row">
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Adresse électronique</span><div class="input-group"><input class="input" id="t-long-n-new-adresse" form="t-long-n-new" name="adresse" type="email" required aria-label="Adresse électronique du nouveau participant"></div></td>
+            <td role="cell"><span class="table-cards-label" aria-hidden="true">Correspondances</span><div class="input-group"><input class="input" id="t-long-n-new-corr" form="t-long-n-new" name="correspondances" required aria-label="Correspondances du nouveau participant"></div></td>
+            <td role="cell" class="table-cards-actions"><form id="t-long-n-new" hidden></form><button type="submit" form="t-long-n-new" class="btn-primary btn-sm" aria-label="Ajouter le participant">Ajouter</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+</main>
+</body>
+</html>
