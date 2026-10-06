@@ -149,6 +149,8 @@
        document quel que soit le z-index (#934) — la reponse est alors le
        portail, pas l'empilement. */
     --z-decor: 1;            /* nappes decoratives translucides : .snowfall, .frost — peintes AU-DESSUS du contenu en flux (pointer-events: none) (#940) */
+    --z-stretched-link: 1;     /* zone d'un lien etire (::after de .list-item-link) : au-dessus du contenu de sa rangee, positionne ou non (#1060) */
+    --z-stretched-control: 2;  /* controle natif d'une rangee-lien, au-dessus de la zone du lien (#1060) — les deux restent sous --z-sticky */
     --z-decor-behind: -1;    /* decor opaque peint SOUS tout le contenu : .festive-character (#1043) — au-dessus du fond de page (canevas), sous tout texte, controle ou carte */
     --z-sticky: 150;         /* en-tetes colles : .site-header, .section-header--sticky */
     --z-surface: 200;        /* surfaces conteneurs : sidebar, overlay de drawer, panneau de notifs */

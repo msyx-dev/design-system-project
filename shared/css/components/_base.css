@@ -42,7 +42,7 @@ a:hover {
 a:is(
     .btn, .btn-primary, .btn-secondary, .btn-ghost, .btn-danger, .btn-icon, .btn-sm,
     .card, .card-link, .hub-card, .card-media,
-    .list-item, .list-item-title,
+    .list-item, .list-item-title, .list-item-link,
     .rail-item, .sidebar-link, .nav-item, .tab, .bottom-nav-item, .breadcrumb-item,
     .menu-item, .dropdown-option, .cmd-item, .action-menu-item, .header-dropdown-item,
     .badge, .chip, .kanban-card, .access-denied-btn-primary

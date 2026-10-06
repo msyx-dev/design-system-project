@@ -1,7 +1,7 @@
 {
   "version": "2.146.0",
   "generated": {
-    "at": "2026-10-06T18:12:17.031Z",
+    "at": "2026-10-06T18:10:42.407Z",
     "by": "bin/generate-registry.js v1.3"
   },
   "components": [
@@ -2837,6 +2837,7 @@
         ".list-item",
         ".list-item-content",
         ".list-item-desc",
+        ".list-item-link",
         ".list-item-title",
         ".open",
         ".sortable-num",

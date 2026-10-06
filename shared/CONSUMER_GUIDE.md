@@ -631,6 +631,54 @@ Ce que la resynchronisation (`sync.sh` ; les composants `@msyx-dev/react` lisent
 - **En-tête, entre 641 et 768 px, aux deux pointeurs** : tant que le burger est affiché, le wordmark accompagné d'un pictogramme (`.header-logo-img`) est masqué dans `.site-header`, et l'espacement de l'en-tête reste compact ; ils reviennent dès 769 px. Avant, l'en-tête débordait et écrasait le burger à ces largeurs. Sous pointeur grossier, l'en-tête se resserre davantage, jusqu'à 768 px, pour que ses contrôles de 44 px tiennent dès 360 px. **Limite connue** : en thème Noël à 7 contrôles, l'en-tête déborde encore à 320 px (déjà le cas à la souris).
 - **Pagination, aux deux pointeurs** : `.pagination` passe à la ligne (`flex-wrap: wrap`) quand la place manque, au lieu d'écraser ses boutons « précédent » et « suivant » et de déborder de son parent. Le composant React `<Pagination>` en hérite par la CSS, sans changement d'API.
 
+## Liste — rangée cliquable par son lien (#1060)
+
+Dans une liste de navigation (sprints, membres, projets…), le titre d'une rangée est un lien. Sans `.list-item-link`, seul ce titre est cliquable : 23 px de haut pour une rangée d'environ 52 px, sous les 44 px de la §3.4 de `docs/DS-PRINCIPLES.md`. Posée sur le lien, `.list-item-link` étire sa zone sur toute la rangée : un clic, un toucher, un clic du milieu ou un Ctrl+clic **n'importe où** sur la rangée ouvre le lien. C'est le `<a>` natif qui reçoit l'événement, sans JS de clic. Le badge et le reste de la rangée restent **hors** du lien : un lecteur d'écran n'annonce que le titre. CSS seul, opt-in : une `.list-item` sans `.list-item-link` est rendue et se comporte comme avant.
+
+Motif (module `lists.css`, importé par `components.css` ; absent de `components-core.css` : avec `sync.sh --components=<liste>`, ajoutez `lists`) :
+
+```html
+<ul class="list">
+  <li class="list-item">
+    <a class="list-item-title list-item-link" href="/sprints/13">Sprint 13</a>
+    <span class="badge badge-info badge-xxs">En cours</span>
+  </li>
+  <li class="list-item">
+    <div class="list-item-content">
+      <a class="list-item-title list-item-link" href="/serveurs/caddy">Caddy Server</a>
+      <div class="list-item-desc">Reverse proxy &middot; CPU 89%</div>
+    </div>
+    <button class="btn-icon" type="button" aria-label="Actions pour Caddy Server">
+      <svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-settings"/></svg>
+    </button>
+  </li>
+</ul>
+```
+
+En React, aucun composant à importer : la classe se pose sur le lien de votre routeur, `<Link className="list-item-title list-item-link" href="/sprints/13">Sprint 13</Link>` (Next.js ; `to` au lieu de `href` avec React Router).
+
+Ce que le DS fait pour vous :
+
+- **Séparateurs et structure conservés** : `ul > li.list-item` garde ses séparateurs, comme une liste sans lien.
+- **Anneau de focus sur toute la rangée** : Tab sur le lien entoure la rangée entière (contour de 2 px porté par le `::after`, en retrait de 2 px : jamais rogné par un `overflow` ancêtre, jamais sur un voisin) ; le lien lui-même n'a plus d'anneau. Le survol souligne le libellé, en plus du fond de rangée existant.
+- **Contrôles remontés d'office** : tout autre contrôle natif de la rangée (`a[href]`, `button`, `input`, `select`, `textarea`, `label`, `summary`, `[tabindex]`) passe au-dessus de la zone du lien, avant ou après lui dans le DOM, sans classe à poser (`--z-stretched-control` = 2 contre `--z-stretched-link` = 1 pour la zone ; les deux restent sous `--z-sticky`, un en-tête collé passe donc au-dessus d'une rangée-lien au défilement). La règle a une spécificité nulle : la `position` propre d'un composant (`.search-clear`, absolu) l'emporte.
+
+Règles à respecter :
+
+- **Un seul `.list-item-link` par rangée.** Deux zones se recouvrent exactement et la seconde, peinte dessus, capte tous les clics. Un autre lien de la même rangée s'écrit sans la classe : il est remonté d'office comme tout contrôle natif.
+- **Aucun ancêtre positionné entre le lien et la rangée.** La zone s'étire jusqu'au premier ancêtre positionné : un `.list-item-content { position: relative }` (ou un `transform`, un `filter` ou un `contain` posé sur lui) la réduirait à ce bloc. La rangée porte déjà `position: relative`, posée par le DS.
+- **Un élément cliquable non natif doit être rendu focusable** (`tabindex="0"` sur un `<div role="button">`) : seuls les contrôles listés plus haut sont remontés, un `<div onclick>` resterait sous la zone et le clic partirait sur le lien. C'est aussi l'exigence d'accessibilité au clavier (`docs/DS-PRINCIPLES.md`, Section 3).
+- **Pas de sous-liste dans une rangée-lien** : `:has()` regarde tous les descendants, la rangée parente serait traitée à son tour comme une rangée-lien.
+
+Limites :
+
+- **Le texte d'une rangée-lien ne se sélectionne pas à la souris** : la zone du lien le recouvre. C'est la limite d'un lien étiré en CSS pur, acceptée. En contrepartie, le clic du milieu, le Ctrl+clic et « Ouvrir dans un nouvel onglet » fonctionnent partout sur la rangée, ce qu'un JS de clic ne donnerait pas.
+- **Sans support de `:has()`**, les règles de la zone tombent et seul le titre reste cliquable, comme avant : rien ne déborde.
+
+**Place de `a.list-item`.** Une rangée entière qui est elle-même le lien (`a.list-item`) reste valable dans `div.list > a.list-item`. Elle est à **proscrire dans un `li`** (`ul.list > li > a.list-item`) : le `<a>` y est le dernier enfant de son `li`, donc `.list-item:last-child { border-bottom: none }` supprime le séparateur de chaque rangée. Pour une liste `ul > li`, utilisez le motif ci-dessus.
+
+**Resynchronisation, dans la même release** : `tokens.css` (les jetons `--z-stretched-link` et `--z-stretched-control`) **et** les composants (`lists.css`, et `_base.css` pour l'absence de soulignement au repos). Avec un `lists.css` récent et un `tokens.css` antérieur, les deux `z-index` n'ont plus de valeur : la zone ne passe plus au-dessus du contenu positionné placé après le lien (un avatar à pastille de statut…) et un contrôle placé avant le lien dans le DOM devient injoignable. Resynchronisez avec `shared/sync.sh`, vérifiez avec `shared/check-sync.sh`.
+
 ## Décor festif (thème Noël) — réserves de mise en page (#1005, #1042)
 
 Le décor (`<SiteHeader festive />` / `<FestiveDecor>` en React, `ensureFestiveDecor()` de `ds-nav.js` en vanilla) est en `position: fixed` : il n'occupe aucune place dans le flux et passe **au-dessus** du contenu. En Noël, le DS pose donc deux réserves, que ses gabarits consomment déjà :

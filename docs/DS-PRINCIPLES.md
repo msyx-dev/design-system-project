@@ -1182,6 +1182,8 @@ dans un composant :
 |---|---|---|
 | `--z-decor-behind` | -1 | décor opaque peint SOUS tout le contenu, au-dessus du fond de page : sapin festif (`.festive-character`, #1043) |
 | `--z-decor` | 1 | nappes décoratives translucides peintes au-dessus du contenu en flux, en `pointer-events: none` : neige (`.snowfall`), givre (`.frost`) |
+| `--z-stretched-link` | 1 | zone d'un lien étiré (`::after` de `.list-item-link`, #1060), au-dessus du contenu de sa rangée, positionné ou non |
+| `--z-stretched-control` | 2 | contrôle natif d'une rangée-lien (`a[href]`, `button`, `input`, `select`, `textarea`, `label`, `summary`, `[tabindex]`), remonté d'office au-dessus de la zone |
 | `--z-sticky` | 150 | chrome collé : `.section-header--sticky`, guirlande et ornements, colonne d'app-shell desktop (`.sidebar`, `.rail-sidebar--fixed`) ; `.site-header` à `--z-sticky` + 1 (voir sous le tableau) |
 | `--z-surface` | 200 | surfaces conteneurs (voile de la barre latérale et du rail mobiles, overlay de drawer, panneau de notifs) |
 | `--z-surface-panel` | 201 | le panneau lui-même, au-dessus de son propre overlay (drawer plein écran, `.sidebar` et `.rail-sidebar--fixed` en panneau mobile) |
@@ -1206,6 +1208,13 @@ masquait ainsi les boutons et les textes de la colonne de droite (#1043).
 visible sur le fond de page. Contrat consommateur : ce fond reste celui de `<body>`,
 propagé au canevas ; un fond posé sur `<html>`, ou un ancêtre opaque qui forme un
 contexte d'empilement, masque le décor.
+
+❌ **Don't** — un `z-index` littéral, ou rien, pour sortir un 2e contrôle d'une rangée-lien
+(`.list-item-link`, #1060) : il reste sous la zone du lien et le clic part sur le lien.
+
+✅ **Do** — laisser le DS remonter d'office à `--z-stretched-control` tout contrôle natif de
+la rangée ; les deux jetons restent sous `--z-sticky`, de sorte qu'un en-tête collé passe
+au-dessus d'une rangée-lien au défilement.
 
 **`.site-header` vaut `calc(var(--z-sticky) + 1)`.** L'en-tête forme un contexte
 d'empilement : ses menus (`.header-dropdown`, `.header-notif-panel`, en `--z-floating`)
