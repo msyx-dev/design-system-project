@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rangée-lien — fixture #1060</title>
+<!--
+  Fixture de `visual-tests/list-item-link-1060.spec.ts` (#1060, tranche t2).
+
+  - `#rows-link` : trois rangées-lien, structure consommateur (`ul.list > li.list-item`).
+      r1 = `a.list-item-title.list-item-link` + `.badge` (le motif de tirokado#180) ;
+      r2 = `.avatar-status` AVANT le lien, lien + description dans `.list-item-content`, puis `.badge` ;
+      r3 = `a.list-item-link` SEUL (sans `.list-item-title`), puis un `.avatar-status` APRÈS le lien :
+           contenu positionné, non interactif, qui perce une zone sans `z-index`.
+    Titres COURTS exprès : à 375 px un titre sur 2 lignes porte la boîte du lien à 58 % de la
+    hauteur de la rangée, sous le seuil de non-vacuité de 60 % du CA1 (mesuré en tranche t1).
+  - `button#after-list` : voisin hors liste, juste sous `#rows-link` (la zone ne doit pas le couvrir).
+  - `#rows-control` : un SECOND contrôle dans une rangée-lien.
+      c1 = lien, puis `button.btn-icon#ctl-after` (contrôle APRÈS le lien dans le DOM) ;
+      c2 = `input#ctl-before` (case à cocher) AVANT le lien dans le DOM : c'est le cas qui rougit
+           quand le contrôle est au même cran que la zone (à égalité de z-index, le `::after` du
+           lien, plus tard dans le DOM, est peint dessus).
+  - `#rows-plain` : deux `div.list-item` SANS lien, comme la démo actuelle de `data.html#lists` :
+    le témoin de non-régression (aucune position, aucun `::after`, séparateurs inchangés).
+  Ni nav.js ni components.js : la mesure ne porte que sur le CSS du DS. Aucun style de composant
+  n'est redéclaré ici : seule la mise en page de la fixture (colonne étroite) l'est.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  /* Mise en page propre à la fixture : une colonne étroite, de la marge autour des listes. */
+  .link-fixture { padding: var(--space-lg) var(--space-md); max-width: 28rem; }
+  .link-fixture > * + * { margin-block-start: var(--space-lg); }
+</style>
+</head>
+<body>
+<main class="link-fixture">
+  <ul class="list" id="rows-link">
+    <li class="list-item"><a class="list-item-title list-item-link" href="#r1">Sprint 13</a><span class="badge badge-info badge-xxs">En cours</span></li>
+    <li class="list-item"><div class="avatar-status online"><div class="avatar avatar-md avatar-gradient">MS</div></div><div class="list-item-content"><a class="list-item-title list-item-link" href="#r2">Mickael</a><div class="list-item-desc">Owner</div></div><span class="badge badge-success badge-xxs">Admin</span></li>
+    <li class="list-item"><a class="list-item-link" href="#r3">Caddy</a><div class="avatar-status busy"><div class="avatar avatar-md avatar-gradient">CD</div></div></li>
+  </ul>
+
+  <button type="button" class="btn-secondary" id="after-list">Après la liste</button>
+
+  <ul class="list" id="rows-control">
+    <li class="list-item"><a class="list-item-title list-item-link" href="#c1">Déploiement</a><button type="button" class="btn-icon" id="ctl-after" aria-label="Actions pour Déploiement"><svg class="icon" aria-hidden="true"><use href="/shared/icons/sprite.svg#i-settings"/></svg></button></li>
+    <li class="list-item"><input type="checkbox" id="ctl-before" aria-label="Sélectionner Release"><a class="list-item-title list-item-link" href="#c2">Release</a></li>
+  </ul>
+
+  <div class="list" id="rows-plain">
+    <div class="list-item"><div class="list-item-content"><div class="list-item-title">Rangée A</div><div class="list-item-desc">Sans lien</div></div><span class="badge badge-info badge-xxs">Info</span></div>
+    <div class="list-item"><div class="avatar-status online"><div class="avatar avatar-md avatar-gradient">TM</div></div><div class="list-item-content"><div class="list-item-title">Rangée B</div></div><span class="badge badge-warning badge-xxs">Alerte</span></div>
+  </div>
+</main>
+</body>
+</html>
