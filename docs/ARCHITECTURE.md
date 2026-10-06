@@ -62,8 +62,8 @@ shared/
       forms.css         #   INPUTS, DROPDOWN, FILE UPLOAD, SLIDER, NUMBER INPUT, SEARCH, OTP, TAG, FILTER BAR, PASSWORD TOGGLE, LOGIN / LOGINSCREEN (3 variants Authentik, slots providers, v2.57.0)
       data.css          #   PROGRESS, STATS, CHARTS, PIE, GAUGE, ANIMATED COUNTERS, RISK MATRIX
       avatars.css       #   .avatar, .avatar-img, .avatar-initials
-      tables.css        #   TABLE, TABLE CARDS (cellule d'actions sur une rangée dès 768px, #1044), TABLE CARDS — SAISIE (#1008), DATA GRID, COMPARISON TABLE
-      lists.css         #   TREE VIEW, LIST, TIMELINE, ACCORDION, SORTABLE LIST, ACTIVITY FEED
+      tables.css        #   TABLE, TABLE CARDS (cellule d'actions sur une rangée dès 768px, #1044), TABLE CARDS — SAISIE (#1008), TABLE CARDS — CARTE COMPACTE (`.table-cards--compact`, libellé à côté du champ en mode cartes, #1061), DATA GRID, COMPARISON TABLE
+      lists.css         #   TREE VIEW, LIST (rangée cliquable par son lien `.list-item-link`, jetons `--z-stretched-link`/`--z-stretched-control`, #1060), TIMELINE, ACCORDION, SORTABLE LIST, ACTIVITY FEED
       alerts.css        #   .alert (+ .alert--kpi ex-zone-banner, .alert--cta ex-upgrade-banner #519), .toast (+ .toast-message flex-grow v2.49.0) — alias @deprecated .zone-banner/.upgrade-banner (suppression v3)
       overlays.css      #   TOOLTIP, CONTEXT MENU, ACTION MENU
       version-notes.css #   .version-badge/.version-badge--new/.version-badge-dot/.version-notes — badge + pastille (v2.95.0 #614)
