@@ -70,3 +70,13 @@
 - **tirokado** doit resynchroniser le CSS du DS (`shared/sync.sh`) avec la 2.147.0 et passer à `@msyx-dev/react` 3.0.0-alpha.66. Ensuite :
   - **tirokado#180** : `ul.list > li.list-item > a.list-item-title.list-item-link`, suivi du badge. La rangée entière devient la cible, sans composant React à importer (`<Link className="list-item-title list-item-link">`). Un seul lien par rangée, et aucun ancêtre positionné entre le lien et la rangée.
   - **tirokado#191** : `<TableCards editable breakpoint="lg" compact>`. Une cellule de lecture garde son libellé au-dessus de sa valeur, ou passe en `hideLabel` si sa valeur se lit seule. Un libellé de plusieurs mots plus large que 5,5rem passe sur deux lignes : régler `--table-cards-label-w` pour l'éviter.
+
+## Après la rétro : release et déploiement (2026-10-06)
+- **Release par l'outil** : `version-release.sh minor` a ouvert la PR #1065. Sa CI est entièrement verte, VR comprise. Elle est fusionnée par `pipeline-merge.sh` sans `--auto`, puis `--finalize 2.147.0` pose le tag `react-v3.0.0-alpha.66` sur `2083fff`. `@msyx-dev/react` 3.0.0-alpha.66 est publié sur GitHub Packages (`publish-react.yml` vert).
+- **A1 de la rétro #54, mesurée sur une PR fraîche** : le réveil a trouvé les checks de la PR de release sans conclure « aucun check ». La grâce `createdAt` de claude-config#591 tient.
+- **Déploiement préprod, le seul du sprint** :
+  - `coolify-deploy.sh design-system --wait` est FINISHED en 101 s, avec une ligne de progression toutes les 20 s : le correctif de claude-config#593 tient ;
+  - le conteneur sert `@ds-version: 2.147.0` (`docker exec`), et `/version` porte le sha `2083fff`, celui d'`origin/main` ;
+  - `validate-preprod.sh design-system` est entièrement vert : santé, chaîne edge, redirection Authentik, E2E CSS, UserMenu et logout.
+- **Ménage (§4g)** : `recover.sh --prune-worktrees` n'a rien trouvé à retirer. Homepage : `audit-homepage-sync.sh` ne signale aucune entrée manquante.
+- **Session Tirokado prévenue** par message entre sessions. Elle était hors ligne : le message est en file jusqu'à sa reconnexion, sans accusé de lecture.

@@ -3,9 +3,9 @@
 
 > Format borné (skill /memory-update). Détails complets = auto-memory Claude Code (`memory/`) + RELEASES.md/CHANGELOG.md.
 
-## 🎯 SESSION 2026-10-06 (soir) — milestone #55 soldé (DS 2.147.0) — EN COURS (release et déploiement)
+## 🎯 SESSION 2026-10-06 (soir) — milestone #55 soldé et déployé (DS 2.147.0 / react alpha.66) — TERMINÉE
 
-**Le milestone #55 est soldé : #1060 et #1061 sont sur `main` (`c3487af`), le quality-gate du lot a rendu PASS et la rétro est faite. Restent la release 2.147.0 avec react alpha.66, le déploiement préprod et le message à la session Tirokado.** Consigne de Mike, qui est parti se coucher : « go préco (a), enchaîne toute la backlog ». Le backlog DS est vide après #55.
+**Le milestone #55 est soldé, publié et déployé. #1060 et #1061 sont sur `main` ; la release 2.147.0 par l'outil a pris la PR #1065 et le commit `2083fff`, avec le tag `react-v3.0.0-alpha.66` publié sur npm. La préprod sert la 2.147.0 et `validate-preprod.sh` est vert. La session Tirokado est prévenue, mais le message reste en file tant qu'elle est hors ligne.** Consigne de Mike, qui est parti se coucher : « go préco (a), enchaîne toute la backlog ». Le backlog DS est vide après #55.
 
 - **#1060** (PR #1063, 3 SP) : `.list-item-link`. Toute la rangée d'une liste est cliquable par son lien titre (lien étiré en `::after`) ; `ul > li` et les séparateurs sont conservés, et les contrôles natifs de la rangée sont remontés au-dessus de la zone. Deux jetons z, `--z-stretched-link` (1) et `--z-stretched-control` (2), ajoutés à DS-PRINCIPLES §12.1.
 - **#1061** (PR #1062, 5 SP) : `.table-cards--compact` et `<TableCards compact>`. En mode cartes, le libellé passe à côté du champ : 44,84 px gagnés par ligne de deux champs à 375 px, aux pointeurs fin et grossier. Le champ passe sous son libellé quand il n'a plus 7,5rem ; la largeur des libellés se règle par `--table-cards-label-w` (repli à 5,5rem).
@@ -14,18 +14,14 @@
 
 ## 🎯 PROCHAINE SESSION — Plan suggéré
 
-1. **Si cette session a été coupée, vérifier la fin du sprint #55** :
-   - release 2.147.0 publiée, tag `react-v3.0.0-alpha.66` posé ;
-   - préprod servant la 2.147.0 (`docker exec <conteneur> grep @ds-version /srv/shared/css/tokens.css` et `/version`) ;
-   - `validate-preprod.sh design-system` vert ;
-   - session Tirokado prévenue (la 2.147.0 débloque tirokado#180 et #191).
+1. **Sprint #55 entièrement clos** (release, déploiement et validation faits le 2026-10-06 au soir). Si la session Tirokado demande un retour, elle a reçu l'usage de `.list-item-link` et de `<TableCards compact>`. La documentation consommateur est dans `shared/CONSUMER_GUIDE.md`.
 2. **Backlog DS vide** : attendre une demande (tirokado ou un autre consommateur). Le quota se mesure avant tout lancement ([[feedback-quota-mesure-pas-memoire]]).
 3. **À décider par Mike** :
    - A3 de la rétro #55 : hook PreToolUse qui refuse à la session parente un `cd` de premier niveau vers `.claude/worktrees/` (ticket claude-config) ;
    - les deux fragilités du registre consignées dans #1064 : par défaut, on les corrige à la récidive.
 
 ## Contexte courant
-- **2026-10-06 (soir) — Milestone #55 « Fiabilisation consumers ⑧ » SOLDÉ (2/2, 8/8 SP)**. Les deux Features demandées par tirokado ont été déroulées en une soirée (option B : amont l'après-midi, dev après la remise à zéro du quota, mesurée à 0 %). Un lot (`integration/lot-1` → `main` = `c3487af`) : #1061 (PR #1062), puis #1060 (PR #1063). 7 tranches sur Sonnet (45, 32, 37 ; 51, 38, 41, 44), quality-gate PASS du premier coup, traçabilité #1064.
+- **2026-10-06 (soir) — Milestone #55 « Fiabilisation consumers ⑧ » SOLDÉ (2/2, 8/8 SP)**. Les deux Features demandées par tirokado ont été déroulées en une soirée (option B : amont l'après-midi, dev après la remise à zéro du quota, mesurée à 0 %). Un lot (`integration/lot-1` → `main` = `c3487af`) : #1061 (PR #1062), puis #1060 (PR #1063). 7 tranches sur Sonnet (45, 32, 37 ; 51, 38, 41, 44), quality-gate PASS du premier coup, traçabilité #1064. Release **DS 2.147.0 / react alpha.66** par l'outil (PR #1065, `2083fff`, tag `react-v3.0.0-alpha.66` publié). **Préprod déployée et validée** : le conteneur sert `@ds-version: 2.147.0`, `/version` porte le sha `2083fff` et `validate-preprod.sh` est tout OK. `coolify-deploy.sh --wait` a parlé (101 s, #593 tient) ; le réveil n'a pas conclu à tort « aucun check » sur la PR fraîche (#591 tient). Rétro : `docs/retros/sprint-m55-fiabilisation-consumers.md`.
 - **Pièges vécus (M55)** :
   - `gh issue create --milestone` refuse un milestone **fermé**, et `post-merge.sh` ferme le milestone avec sa dernière issue. Créer le ticket de traçabilité AVANT la dernière clôture, ou le rattacher après coup par `gh api -X PATCH repos/<r>/issues/<n> -F milestone=<m>`.
   - Le générateur du registre attribue une classe nouvelle au **premier fichier qui la cite** (`_base.css` avant `lists.css`). Vérifier l'entrée après `generate-registry` et la déplacer à la main si besoin (idempotent, mesuré).
@@ -87,7 +83,7 @@
   - A5 : créer le ticket de traçabilité avant la dernière clôture d'issue.
 - **Rétro M54 : tickets d'outillage livrés le 2026-10-06** : claude-config#591 (grâce `createdAt` du réveil CI), #592 (label `tracabilite`), #593 (`coolify-deploy.sh --wait` muet). Le bloc de réveil CI se relit dans `regles.md` §3d-2b à chaque sprint. A2 (tranche de mesures à 1 SP au plus) mesurée au #55 : 1 tranche sur 7 au-delà de 45 tool_uses.
 - **Veille (rétro M53)** : A5, réserves festives par `:root:has()` à reprendre seulement sur signalement d'un consommateur ; A1 M53, résolveur du bloc `VERSION_NOTES` seulement à la récidive.
-- **Consommateurs** : tirokado attend la **2.147.0** et `@msyx-dev/react` **3.0.0-alpha.66** pour débloquer tirokado#180 (`.list-item-link`) et #191 (`<TableCards editable breakpoint="lg" compact>`). Côté tirokado : resynchroniser le CSS du DS (`sync.sh`) et monter la prérelease React. L'opt-in `breakpoint="lg"` y est déjà posé (`TableauParticipants.tsx:85`, `TableauSuivi.tsx:363`).
+- **Consommateurs** : la **2.147.0** et `@msyx-dev/react` **3.0.0-alpha.66** sont publiées et la session Tirokado est prévenue (message en file, elle était hors ligne). Elles débloquent tirokado#180 (`.list-item-link`) et #191 (`<TableCards editable breakpoint="lg" compact>`). Côté tirokado : resynchroniser le CSS du DS (`sync.sh`) et monter la prérelease React. L'opt-in `breakpoint="lg"` y est déjà posé (`TableauParticipants.tsx:85`, `TableauSuivi.tsx:363`).
 - **Dette** : `CHANGELOG.md` `[Unreleased]` garde des entrées publiées non datées (antérieures à 2.119.1 + alpha.59) ; `version.json` racine figé 2.57.1 (sans effet runtime).
 
 ## Décisions permanentes
