@@ -3,6 +3,31 @@
 
 > Format borné (skill /memory-update). Détails complets = auto-memory Claude Code (`memory/`) + RELEASES.md/CHANGELOG.md.
 
+## 🎯 SESSION 2026-10-05/06 — milestone #54 soldé (DS 2.146.0) + sprint #55 lancé (amont) — EN COURS
+
+**Le milestone #54 est soldé et déployé : DS 2.146.0 / react alpha.65, préprod validée, rétro faite, 5 décisions de Mike appliquées. Le sprint #55 (demandes de tirokado) a son amont terminé ; le dev attend la remise à zéro du quota hebdomadaire et une session neuve (décision de Mike, option B).**
+
+- **#54** : lots 1 et 2 sur `main` ; release PR #1059 (tag `react-v3.0.0-alpha.65`) ; préprod `733d057` validée. Rétro : `docs/retros/sprint-m54-fiabilisation-consumers.md`. Détail dans « Contexte courant » ci-dessous.
+- **Décisions de Mike** :
+  - tickets claude-config#591, #592 et #593, **livrés le 2026-10-06 au matin** par la session claude-config ;
+  - A2 : tranche de mesures multi-largeurs à 1 SP au plus ;
+  - worktrees du #50 retirés après preuve par contenu (branches conservées) ;
+  - point 8 de #1053 (en-tête Noël à 320 px) : limite assumée.
+- **#55** : milestone créé à la demande de la session Tirokado. #1060 (3 SP) et #1061 (5 SP) sont Specced, readiness READY.
+- **Correction de Mike** : le quota se mesure (`get_usage`), jamais d'après la mémoire ([[feedback-quota-mesure-pas-memoire]]).
+
+## 🎯 PROCHAINE SESSION — Plan suggéré
+
+1. **Mesurer le quota d'abord** (`ToolSearch` « usage quota » puis `mcp__ccd_session_mgmt__get_usage`). La limite hebdomadaire tous modèles doit être remise à zéro (18:00Z le 2026-10-06). Si elle dépasse encore environ 90 %, ne rien lancer et le dire à Mike.
+2. **`/sprint` sur le milestone #55 « Fiabilisation consumers ⑧ »**, reprise à l'**étape 6 (exécution)**. Le plan est validé (option B : amont fait, dev après la remise à zéro) et le readiness est READY. Ne pas refaire l'amont : les specs sont postées sur #1060 et #1061, au marqueur `msyx-spec:v1`.
+   - Lot unique `integration/lot-1`, créé sans checkout depuis `main` (`git branch integration/lot-1 origin/main` puis `git push`).
+   - **#1060** : t1 `code+tests` 1 SP (CSS `.list-item-link`, jetons z, démo `#lists`, registre `lists`), t2 `e2e` 1 SP (fixture + `list-item-link-1060.spec.ts`), t3 `docs+pr` 1 SP.
+   - **#1061** : T1 `code+tests` 1 SP (CSS `.table-cards--compact`, démo `#table-cards-editable`, registre `table-cards-editable`), T2 `e2e` 1 SP, T3 React 1 SP (prop `compact`), T4 `docs+pr` 2 SP.
+   - Mandats : §3c intégral + annonce de tranche + addendum DS ([[reference-ds-addendum-mandat-dev]]), un `PW_PORT` distinct par issue.
+   - VR : les deux PR touchent `data.html` (`#table-cards-editable` au-dessus de `#lists`). On fusionne l'une, on recolle l'autre, et on récolte sa VR sur l'arbre final.
+   - Clôture : `bascule-lot.sh` (exige le verdict du quality-gate au SHA du lot).
+3. **Bilan (arrêt supervisé 2)**, puis release **2.147.0** (minor) avec la prérelease React (prop `compact`), le déploiement préprod et la rétro. Prévenir la session Tirokado : elle attend la 2.147.0 pour débloquer tirokado#180 et #191.
+
 ## Contexte courant
 - **2026-10-05 (après-midi) — Milestone #54 « Fiabilisation consumers ⑦ » SOLDÉ (3/3 + #1053, 16/16 SP au board, environ 20 SP de travail livré)**. 3 Bugs tirokado (audit UX), déroulés sur « go plan, option A (subagents Opus, quota Sonnet épuisé), enchaîne ». Deux lots :
   - **Lot 1** (`main` = `a865507`) :
@@ -59,7 +84,7 @@
   - **#1061 Specced, 5 SP** : `.table-cards--compact` / prop React `compact?: boolean`, libellé et champ sur une même ligne (−45 px pour 2 champs), repli automatique à 320 px, `--table-cards-label-w` (repli `5.5rem`). Tranches : T1 1 SP, T2 `e2e` 1 SP, T3 React 1 SP, T4 `docs+pr` 2 SP.
   - **Readiness READY.** Il reste le **dev du lot 1** (`integration/lot-1`) : VR de `data.html` touchée par les deux, donc récolte de la seconde PR sur l'arbre final. Quota après l'amont : hebdomadaire tous modèles à 98 %. Découpage : 1 SP au plus par tranche de mesures multi-largeurs (décision A2).
 - **Rétro M54 : décisions de Mike (2026-10-05, « go préco sur les cinq »)** :
-  - **Tickets d'outillage ouverts** : claude-config#591 (faux `CI_NO_CHECKS` sur une PR fraîche), #592 (label `tracabilite` exempté du spec-gate) et #593 (`coolify-deploy.sh --wait` muet). En attendant, on suit les mémoires `reference-ci-no-checks-pr-fraiche` et `feedback-coolify-deploy-commit-mismatch-faux-positif` (preuve par `docker exec` et `/version`).
+  - **Tickets d'outillage** : claude-config#591 (faux `CI_NO_CHECKS` sur une PR fraîche), #592 (label `tracabilite` exempté du spec-gate) et #593 (`coolify-deploy.sh --wait` muet). **Tous trois livrés le 2026-10-06 au matin** (`1d76cdf`, `17ead78`, `69d6867`). Désormais : poser le label `tracabilite` sur le ticket de traçabilité de chaque milestone ; le bloc de réveil CI se relit dans `regles.md` §3d-2b à chaque sprint (ne pas réutiliser une copie ancienne).
   - **A2, option (a)** : au prochain sprint, une tranche de mesures navigateur sur plusieurs largeurs, pointeurs ou thèmes fait **1 SP au plus** (mémoire `reference-ds-addendum-mandat-dev`). À mesurer : la part des tranches au-delà de 45 tool_uses.
   - **Worktrees** : tous retirés, branches conservées. Il ne reste que `main`.
 - **Veille (rétro M53)** : A5, réserves festives par `:root:has()` à reprendre seulement sur signalement d'un consommateur ; A1 M53, résolveur du bloc `VERSION_NOTES` seulement à la récidive.
