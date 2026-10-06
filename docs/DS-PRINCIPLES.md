@@ -1209,6 +1209,13 @@ visible sur le fond de page. Contrat consommateur : ce fond reste celui de `<bod
 propagé au canevas ; un fond posé sur `<html>`, ou un ancêtre opaque qui forme un
 contexte d'empilement, masque le décor.
 
+❌ **Don't** — un `z-index` littéral, ou rien, pour sortir un 2e contrôle d'une rangée-lien
+(`.list-item-link`, #1060) : il reste sous la zone du lien et le clic part sur le lien.
+
+✅ **Do** — laisser le DS remonter d'office à `--z-stretched-control` tout contrôle natif de
+la rangée ; les deux jetons restent sous `--z-sticky`, de sorte qu'un en-tête collé passe
+au-dessus d'une rangée-lien au défilement.
+
 **`.site-header` vaut `calc(var(--z-sticky) + 1)`.** L'en-tête forme un contexte
 d'empilement : ses menus (`.header-dropdown`, `.header-notif-panel`, en `--z-floating`)
 sont plafonnés à SA valeur. À égalité avec `--z-sticky`, la guirlande, les ornements,

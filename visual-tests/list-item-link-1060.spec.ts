@@ -67,7 +67,9 @@
  * Reportées, non jouées dans cette tranche (plafond de 3 mutations) : (a) `position: relative`
  * retirée de la rangée → CA1 et CA2 attendus rouges (le `::after` s'étire sur la fenêtre) ; (d)
  * `outline` du `::after` retiré → CA4 attendu rouge (Tab et forced-colors) ; (f) `content: ''`
- * retiré → CA1 attendu rouge. Hors CA11, jouées en tranche t1 : jeton `--z-stretched-link` de 1 à
+ * retiré → CA1 attendu rouge. Depuis, (a) a été jouée par le parent du lot : 12 tests rouges sur
+ * 16 (dont les 3 CA2), témoin restauré 16/16 ; (d) et (f) restent établies par lecture. Hors CA11,
+ * jouées en tranche t1 : jeton `--z-stretched-link` de 1 à
  * 5 → `stacking-scale` rouge ; `.list-item-link` retiré de `a:is(…)` dans `_base.css` →
  * `tests/vanilla/modals.test.js` rouge (par lecture).
  * Limite : CA10 ne rougit sous aucune des trois mutations jouées. La démo de `data.html` n'a aucun

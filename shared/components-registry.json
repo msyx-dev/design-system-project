@@ -2532,8 +2532,7 @@
         ".breadcrumb",
         ".breadcrumb-item",
         ".btn",
-        ".nav-item",
-        ".list-item-link"
+        ".nav-item"
       ],
       "jsInit": null,
       "generated": true,
@@ -2837,6 +2836,7 @@
         ".list-item",
         ".list-item-content",
         ".list-item-desc",
+        ".list-item-link",
         ".list-item-title",
         ".open",
         ".sortable-num",

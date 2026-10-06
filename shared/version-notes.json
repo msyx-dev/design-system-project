@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "nouveaute",
+        "text": "Dans une liste, toute la rangée d'un élément s'ouvre désormais d'un clic, et plus seulement son titre. Les listes sans lien ne changent pas."
+      }
+    ]
   },
   "released": [
     {
