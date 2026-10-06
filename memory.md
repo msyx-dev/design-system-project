@@ -50,7 +50,11 @@
 - **Antérieur** : milestone #49 (2.142.0 / alpha.60, contraste des boutons, logos, Textarea) ; parité React complète (août) ; d’autres sessions Claude poussent sous le compte gh « Kchigoki » de la machine.
 
 ## Prochaine étape
-- **Backlog DS VIDE** (milestone #54 fermé le 2026-10-05). Aucun sprint en attente.
+- **Sprint suivant PRÊT À LANCER : milestone #55 « Fiabilisation consumers ⑧ »**, créé le 2026-10-06 à la demande de la session Tirokado (sprint 13 de tirokado). Deux Features ouvertes par cette session le 2026-10-05 au soir, sur le board #7 en Todo, sans groom :
+  - **#1060 (P2)** : rangée `.list-item` cliquable par son lien titre (lien étiré `::after inset: 0`, `ul > li` et séparateurs conservés, nom proposé `list-item-link`). Bloque tirokado#180 : rangée de 23 px de haut à 375 px, seul le titre cliquable. Prémisse vérifiée sur `main` 2.146.0 : aucun motif de rangée-lien, `.card-link` enveloppe une carte et non un `li`.
+  - **#1061 (P3)** : carte de saisie compacte en mode cartes pour `TableCards editable` (libellé visible sans ligne dédiée, 44 px, environ 210 px par ligne à 375 px contre 255). Bloque tirokado#191.
+
+  À lancer par `/sprint` : plan, puis arrêt supervisé 1. Modèle des subagents : Sonnet de nouveau disponible à partir du 6 octobre à 20 h. Découpage : 1 SP au plus par tranche de mesures multi-largeurs (décision A2).
 - **Rétro M54 : décisions de Mike (2026-10-05, « go préco sur les cinq »)** :
   - **Tickets d'outillage ouverts** : claude-config#591 (faux `CI_NO_CHECKS` sur une PR fraîche), #592 (label `tracabilite` exempté du spec-gate) et #593 (`coolify-deploy.sh --wait` muet). En attendant, on suit les mémoires `reference-ci-no-checks-pr-fraiche` et `feedback-coolify-deploy-commit-mismatch-faux-positif` (preuve par `docker exec` et `/version`).
   - **A2, option (a)** : au prochain sprint, une tranche de mesures navigateur sur plusieurs largeurs, pointeurs ou thèmes fait **1 SP au plus** (mémoire `reference-ds-addendum-mandat-dev`). À mesurer : la part des tranches au-delà de 45 tool_uses.
