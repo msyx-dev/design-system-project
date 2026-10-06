@@ -815,7 +815,42 @@
                 </tfoot>
             </table>
         </div>
-        <p class="demo-note">Structure : <code class="code-inline">table.table-cards.table-cards--editable</code>. Un <code class="code-inline">&lt;form&gt;</code> ne peut pas envelopper un <code class="code-inline">&lt;tr&gt;</code> (le parseur HTML le sort du tableau) : la cellule d'actions porte un <code class="code-inline">&lt;form id hidden&gt;</code> vide, et les champs comme le bouton d'envoi s'y rattachent par <code class="code-inline">form="id"</code>. Un champ ne s'appelle jamais <code class="code-inline">id</code>, <code class="code-inline">action</code>, <code class="code-inline">method</code>, <code class="code-inline">submit</code>, <code class="code-inline">reset</code> ni <code class="code-inline">elements</code> : il masquerait la propriété du formulaire.</p>
+        <span class="demo-label mt-xl">Carte compacte : libellé à côté du champ</span>
+        <div class="table-wrap">
+            <table class="table-cards table-cards--editable table-cards--compact" role="table" aria-label="Participants à modifier, carte compacte">
+                <thead role="rowgroup">
+                    <tr role="row"><th scope="col" role="columnheader">Nom</th><th scope="col" role="columnheader">E-mail</th><th scope="col" role="columnheader">Actions</th></tr>
+                </thead>
+                <tbody role="rowgroup">
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group"><input class="input" form="tcc-p1" name="name" required aria-label="Nom de Camille Moreau" value="Camille Moreau"></div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group"><input class="input" form="tcc-p1" name="email" type="email" required aria-label="E-mail de Camille Moreau" value="camille.moreau@exemple.fr"></div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tcc-p1" method="dialog" hidden><input type="hidden" name="participantId" value="p4"></form>
+                            <button type="submit" form="tcc-p1" class="btn-secondary btn-sm" aria-label="Enregistrer Camille Moreau">Enregistrer</button>
+                            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Camille Moreau">Retirer</button>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">Nom</span>
+                            <div class="input-group"><input class="input" form="tcc-p2" name="name" required aria-label="Nom de Dominique Lefèvre" value="Dominique Lefèvre"></div></td>
+                        <td role="cell"><span class="table-cards-label" aria-hidden="true">E-mail</span>
+                            <div class="input-group">
+                                <input class="input input-error" id="tcc-p2-email" form="tcc-p2" name="email" type="email" required aria-label="E-mail de Dominique Lefèvre" aria-invalid="true" aria-describedby="tcc-p2-email-error" value="camille.moreau@exemple.fr">
+                                <span class="input-error-msg" id="tcc-p2-email-error">Cette adresse est déjà utilisée dans ce tirage.</span>
+                            </div></td>
+                        <td role="cell" class="table-cards-actions">
+                            <form id="tcc-p2" method="dialog" hidden><input type="hidden" name="participantId" value="p5"></form>
+                            <button type="submit" form="tcc-p2" class="btn-secondary btn-sm" aria-label="Enregistrer Dominique Lefèvre">Enregistrer</button>
+                            <button type="button" class="btn-ghost btn-sm" aria-label="Retirer Dominique Lefèvre">Retirer</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="demo-note">Structure : <code class="code-inline">table.table-cards.table-cards--editable</code>. Un<code class="code-inline">&lt;form&gt;</code> ne peut pas envelopper un <code class="code-inline">&lt;tr&gt;</code> (le parseur HTML le sort du tableau) : la cellule d'actions porte un <code class="code-inline">&lt;form id hidden&gt;</code> vide, et les champs comme le bouton d'envoi s'y rattachent par <code class="code-inline">form="id"</code>. Un champ ne s'appelle jamais <code class="code-inline">id</code>, <code class="code-inline">action</code>, <code class="code-inline">method</code>, <code class="code-inline">submit</code>, <code class="code-inline">reset</code> ni <code class="code-inline">elements</code> : il masquerait la propriété du formulaire. Carte compacte : <code class="code-inline">.table-cards--compact</code> (React <code class="code-inline">compact</code>) met le libellé d'une cellule de champ à côté du champ en mode cartes ; les cellules de lecture et d'actions ne changent pas ; un champ qui n'a plus 7,5rem passe sous son libellé ; la largeur des libellés se règle par <code class="code-inline">--table-cards-label-w</code> (défaut 5,5rem).</p>
         <p class="demo-note">Nom accessible : <code class="code-inline">aria-label</code> = en-tête de colonne + identité enregistrée de la ligne (« Nom de Alice Martin »), car le libellé visible est en <code class="code-inline">aria-hidden</code>. Une erreur de champ s'affiche sous le champ (<code class="code-inline">.input-error-msg</code> relié par <code class="code-inline">aria-describedby</code>) ; une erreur qui ne concerne aucun champ s'affiche dans la cellule d'actions, après les boutons, avec <code class="code-inline">.table-cards-error</code> (<code class="code-inline">role="alert"</code>). Après un envoi refusé, déplacer le focus sur le premier champ en erreur de la ligne.</p>
         <p class="demo-note-last">Dans cette vitrine, les formulaires sont en <code class="code-inline">method="dialog"</code> : l'envoi ne fait rien. En production, le formulaire porte son <code class="code-inline">action</code> ou un gestionnaire d'envoi. <code class="code-inline">data-validate</code> (<code class="code-inline">initFormValidation</code>) et <code class="code-inline">useFormValidation</code> ne savent pas valider un formulaire de ligne : les champs sont hors du <code class="code-inline">&lt;form&gt;</code>.</p>
     </div>
