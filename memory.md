@@ -16,8 +16,8 @@
 
 1. **Sprint #55 entièrement clos** (release, déploiement et validation faits le 2026-10-06 au soir). Si la session Tirokado demande un retour, elle a reçu l'usage de `.list-item-link` et de `<TableCards compact>`. La documentation consommateur est dans `shared/CONSUMER_GUIDE.md`.
 2. **Backlog DS vide** : attendre une demande (tirokado ou un autre consommateur). Le quota se mesure avant tout lancement ([[feedback-quota-mesure-pas-memoire]]).
-3. **À décider par Mike** :
-   - A3 de la rétro #55 : hook PreToolUse qui refuse à la session parente un `cd` de premier niveau vers `.claude/worktrees/` (ticket claude-config) ;
+3. **Suites de la rétro #55** :
+   - A3 : **faite le 2026-10-07**, claude-config#605 (`hook-block-parent-cd-worktree.py`, prouvé en direct) ;
    - les deux fragilités du registre consignées dans #1064 : par défaut, on les corrige à la récidive.
 
 ## Contexte courant
@@ -78,7 +78,7 @@
 - **Rétro M55 : actions** (`docs/retros/sprint-m55-fiabilisation-consumers.md`) :
   - A1 : aucune mesure « bienvenue » dans une annonce de tranche `code+tests` (mémoire `reference-ds-addendum-mandat-dev`) ;
   - A2 : recollement anticipé et récolte VR unique sur l'arbre final quand deux PR font bouger les mêmes captures (mémoire `reference-vr-soft-harvest-recipe`) ;
-  - A3 : hook contre le `cd` de premier niveau du parent dans un worktree, **à décider par Mike** ;
+  - A3 : hook contre le `cd` de premier niveau du parent dans un worktree. **Mesurée** : claude-config#605, livré et prouvé le 2026-10-07. Le parent ne peut plus entrer dans un worktree au premier niveau ; il passe par `( cd … )` ou `git -C` ;
   - A4 : deux fragilités du registre (#1064), à corriger à la récidive ;
   - A5 : créer le ticket de traçabilité avant la dernière clôture d'issue.
 - **Rétro M54 : tickets d'outillage livrés le 2026-10-06** : claude-config#591 (grâce `createdAt` du réveil CI), #592 (label `tracabilite`), #593 (`coolify-deploy.sh --wait` muet). Le bloc de réveil CI se relit dans `regles.md` §3d-2b à chaque sprint. A2 (tranche de mesures à 1 SP au plus) mesurée au #55 : 1 tranche sur 7 au-delà de 45 tool_uses.
