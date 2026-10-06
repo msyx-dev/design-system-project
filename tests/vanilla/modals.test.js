@@ -285,7 +285,7 @@ describe('Liens de composant -- decoration (#933)', () => {
     const rule = BASE_CSS.slice(BASE_CSS.indexOf('a:is('));
     const block = rule.slice(0, rule.indexOf('}') + 1);
     expect(block).toMatch(/text-decoration:\s*none/);
-    for (const cls of ['.btn-primary', '.card', '.list-item-title', '.rail-item', '.badge']) {
+    for (const cls of ['.btn-primary', '.card', '.list-item-title', '.list-item-link', '.rail-item', '.badge']) {
       expect(block, cls + ' absente de la liste').toContain(cls);
     }
   });

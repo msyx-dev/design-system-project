@@ -31,6 +31,31 @@
 .list-item-title { font-size: 0.9rem; font-weight: 500; }
 .list-item-desc { font-size: 0.78rem; color: var(--text-muted); }
 
+/* ===== LIST — rangée cliquable par son lien (#1060) =====
+   Lien étiré : le ::after de .list-item-link couvre la boîte de rembourrage de sa
+   .list-item. Tout est conditionné par :has() : sans support, ces règles tombent et
+   seul le titre reste cliquable (état antérieur) — jamais de zone qui déborde.
+   Le lien n'a AUCUN ancêtre positionné entre lui et la rangée. */
+.list-item:has(.list-item-link) { position: relative; }
+.list-item:has(.list-item-link) .list-item-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-stretched-link);   /* au-dessus du contenu positionné de la rangée (.avatar-status, .progress-ring) */
+}
+/* Anneau sur toute la rangée, en retrait : jamais rogné par un overflow ancêtre, jamais sur un voisin. */
+.list-item:has(.list-item-link) .list-item-link:focus-visible { outline: none; }
+.list-item:has(.list-item-link) .list-item-link:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* Survol : le fond de rangée existant (.list-item:hover) + le soulignement du libellé,
+   indice de lien qui ne dépend pas de la couleur (WCAG 1.4.1). */
+.list-item-link:hover { text-decoration: underline; }
+/* Doctrine §12.1 : tout autre contrôle natif d'une rangée-lien passe au-dessus de la zone.
+   Spécificité nulle (:where) : la position propre d'un composant (.search-clear absolu…) l'emporte. */
+:where(.list-item:has(.list-item-link) :is(a[href], button, input, select, textarea, label, summary, [tabindex]):not(.list-item-link)) {
+  position: relative;
+  z-index: var(--z-stretched-control);
+}
+
 /* ===== TIMELINE ===== */
 .timeline { position: relative; padding-left: var(--space-xl); list-style: none; margin: 0; }
 .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--accent), color-mix(in srgb, var(--accent) 10%, transparent)); }
