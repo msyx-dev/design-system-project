@@ -62,6 +62,16 @@ export interface TableCardsProps<T> {
    */
   breakpoint?: "md" | "lg";
   /**
+   * Carte compacte (#1061) : ajoute `.table-cards--compact` sur le `<table>`.
+   * En mode cartes, une cellule de champ (`<TableCardsCell label>` dont le
+   * premier enfant est un `<Input>` ou un `<Select>`, soit un `.input-group`)
+   * met son libellé à côté du champ ; un champ qui n'a plus 7,5rem passe sous
+   * son libellé. Cellules de lecture et d'actions inchangées, aucun effet en
+   * mode tableau. Modificateur du `<table>`, jamais de `.table-wrap`. Se
+   * combine avec `editable` et `breakpoint`. @default false
+   */
+  compact?: boolean;
+  /**
    * Rend une ligne du corps à la place du rendu par colonnes : doit renvoyer un
    * `<tr role="row">` de `<TableCardsCell>`, typiquement un composant de ligne
    * qui porte son propre état (un `useActionState` par ligne est impossible dans
@@ -241,6 +251,36 @@ function defaultCellValue<T>(row: T, key: string): ReactNode {
  *   `type="email"`) s'applique, limitée à la ligne.
  * - Ligne d'ajout : `<tr role="row" className="table-cards-add-row">` dans
  *   `footer` (fond teinté et bordure pointillée fournis par le CSS).
+ *
+ * ## Carte compacte (`compact`, #1061)
+ *
+ * En mode cartes, le libellé d'un champ s'empile au-dessus de lui et coûte
+ * environ 22 px par champ ; il est obligatoire (WCAG 3.3.2), donc `hideLabel`
+ * n'est pas une réponse. `compact` ajoute `.table-cards--compact` sur le
+ * `<table>` (jamais sur `.table-wrap`) : une cellule de champ
+ * (`<TableCardsCell label>` dont le premier enfant est un `<Input>` ou un
+ * `<Select>`, soit un `.input-group`) met alors son libellé à côté du champ.
+ *
+ * - **Repli** : un champ qui n'a plus 7,5rem à côté de son libellé (320 px,
+ *   conteneur étroit) passe dessous ; la carte est alors celle de la version non
+ *   compacte, jamais plus haute. La colonne des libellés mesure 5,5rem par
+ *   défaut, réglable par la propriété CSS `--table-cards-label-w`.
+ * - **Inchangés** : cellules de lecture (libellée ou `hideLabel`), cellule
+ *   d'actions, ligne vide et mode tableau (768 px, ou 1024 px avec
+ *   `breakpoint="lg"`). Pour compacter une cellule de lecture dont la valeur
+ *   se lit seule, la passer en `hideLabel`.
+ * - **Accessibilité** : le markup est identique, seule la classe du `<table>`
+ *   s'ajoute. Le libellé reste `aria-hidden` en premier enfant, le nom
+ *   accessible du champ (son `aria-label`) ne change pas.
+ * - **Se combine** avec `editable` et `breakpoint` ; sans champ en cellule, la
+ *   prop n'a aucun effet. Côté feuille de style, resynchroniser `tables.css`
+ *   (`shared/sync.sh`) : une copie antérieure ne contient pas la règle, et la
+ *   classe n'y change rien.
+ *
+ * ```tsx
+ * <TableCards editable breakpoint="lg" compact aria-label="Participants"
+ *   rows={participants} getRowKey={(p) => p.id} columns={…} renderRow={…} />
+ * ```
  */
 export function TableCards<T>({
   columns,
@@ -254,21 +294,25 @@ export function TableCards<T>({
   footer,
   editable = false,
   breakpoint = "md",
+  compact = false,
   renderRow,
 }: TableCardsProps<T>) {
   const rootClasses = ["table-wrap", className].filter(Boolean).join(" ");
-  // Classes en chaînes LITTÉRALES (jamais un gabarit `${}`) : le scanner
-  // `extractReactClasses` de generate-registry.js doit voir
-  // `table-cards--editable` et `table-cards--lg`. `"md"` n'émet rien de plus
-  // (rendu antérieur à #1052 inchangé).
-  const lg = breakpoint === "lg";
-  const tableClasses = editable
-    ? lg
-      ? "table-cards table-cards--editable table-cards--lg"
-      : "table-cards table-cards--editable"
-    : lg
-      ? "table-cards table-cards--lg"
-      : "table-cards";
+  // Classes en chaînes LITTÉRALES, jamais un gabarit `${}` : l'étape 4 du
+  // scanner `extractReactClasses` (bin/lib/extract-react-classes.js) lit les
+  // littéraux de la déclaration de `tableClasses`, jusqu'à son premier
+  // point-virgule, pour voir `table-cards--editable`, `table-cards--lg` et
+  // `table-cards--compact`. Ordre conservé (table-cards, --editable, --lg,
+  // --compact) : sans `compact`, le rendu est identique octet pour octet à
+  // celui d'avant #1061 ; `"md"` n'émet rien de plus (rendu d'avant #1052).
+  const tableClasses = [
+    "table-cards",
+    editable ? "table-cards--editable" : null,
+    breakpoint === "lg" ? "table-cards--lg" : null,
+    compact ? "table-cards--compact" : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
     <div className={rootClasses}>
       <table className={tableClasses} role="table" aria-label={ariaLabel}>

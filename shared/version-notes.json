@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "nouveaute",
+        "text": "Sur téléphone, un tableau de saisie peut afficher chaque libellé à côté de son champ au lieu de l'empiler au-dessus : chaque ligne prend moins de place. Les tableaux existants ne changent pas."
+      }
+    ]
   },
   "released": [
     {
