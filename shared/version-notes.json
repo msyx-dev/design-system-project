@@ -1,18 +1,24 @@
 {
   "model": "dated",
   "next": {
-    "highlights": [
-      {
-        "type": "nouveaute",
-        "text": "Dans une liste, toute la rangée d'un élément s'ouvre désormais d'un clic, et plus seulement son titre. Les listes sans lien ne changent pas."
-      },
-      {
-        "type": "nouveaute",
-        "text": "Sur téléphone, un tableau de saisie peut afficher chaque libellé à côté de son champ au lieu de l'empiler au-dessus : chaque ligne prend moins de place. Les tableaux existants ne changent pas."
-      }
-    ]
+    "highlights": []
   },
   "released": [
+    {
+      "version": "2.147.0",
+      "date": "2026-10-06",
+      "titre": "Rangées de liste cliquables et cartes de saisie compactes",
+      "highlights": [
+        {
+          "type": "nouveaute",
+          "text": "Dans une liste, toute la rangée d'un élément s'ouvre désormais d'un clic, et plus seulement son titre. Les listes sans lien ne changent pas."
+        },
+        {
+          "type": "nouveaute",
+          "text": "Sur téléphone, un tableau de saisie peut afficher chaque libellé à côté de son champ au lieu de l'empiler au-dessus : chaque ligne prend moins de place. Les tableaux existants ne changent pas."
+        }
+      ]
+    },
     {
       "version": "2.146.0",
       "date": "2026-10-05",
