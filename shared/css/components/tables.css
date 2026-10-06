@@ -88,6 +88,25 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 3%, transparent); }
    par la restauration ci-dessous. Contrat : <button> ou lien .btn-* (inline-flex centré). */
 .table-cards .table-cards-actions :is(button, a, [role="button"]):not(.btn-icon) { min-width: 44px; min-height: 44px; justify-content: center; }
 
+/* ===== TABLE CARDS — CARTE COMPACTE (#1061) =====
+   Modificateur .table-cards--compact (sur <table class="table-cards">) : en mode cartes, une
+   cellule de CHAMP (libellé immédiatement suivi d'un .input-group, ce qu'émettent Input/Select)
+   met son libellé et son champ sur UNE ligne. Cellules de lecture, d'actions et ligne vide : inchangées.
+   - Colonne des libellés : --table-cards-label-w (défaut 5.5rem, couvre « Participant », 81 px) ;
+     un mot plus long élargit son libellé, jamais coupé (break-word).
+   - Repli : si le champ n'a plus 7.5rem à côté du libellé, il passe dessous ; le libellé, seul sur
+     sa ligne, reprend toute la largeur (croissance 1 contre 999) : rendu identique à la carte
+     non compacte, jamais plus haut.
+   - Alignement par ligne de base : le libellé suit le texte du champ ; une erreur sous le champ
+     (.input-error-msg, dans .input-group) ne le décale pas.
+   - Mode tableau : rien à restaurer. La cellule a la spécificité de `.table-cards td` (0,1,1) et
+     ce bloc précède les restaurations à 768 et 1024 px, qui la battent par l'ordre. Libellé et
+     champ n'y portent que flex et marge, sans effet hors d'un conteneur flex.
+     NE PAS déplacer ce bloc après les @media de restauration, NE PAS retirer les :where(). */
+.table-cards--compact td:where(:has(> .table-cards-label + .input-group)) { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs) var(--space-sm); }
+.table-cards--compact td:where(:has(> .table-cards-label + .input-group)) > .table-cards-label { flex: 1 0 var(--table-cards-label-w, 5.5rem); margin-bottom: 0; overflow-wrap: break-word; }
+.table-cards--compact td:where(:has(> .table-cards-label + .input-group)) > .input-group { flex: 999 1 7.5rem; min-width: 0; }
+
 @media (min-width: 768px) { /* bp-md (DS-PRINCIPLES §4) */
   .table-cards:where(:not(.table-cards--lg)) { display: table; }
   .table-cards:where(:not(.table-cards--lg)) caption { display: table-caption; }
