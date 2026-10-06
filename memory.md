@@ -60,11 +60,7 @@
   - **A2, option (a)** : au prochain sprint, une tranche de mesures navigateur sur plusieurs largeurs, pointeurs ou thèmes fait **1 SP au plus** (mémoire `reference-ds-addendum-mandat-dev`). À mesurer : la part des tranches au-delà de 45 tool_uses.
   - **Worktrees** : tous retirés, branches conservées. Il ne reste que `main`.
 - **Veille (rétro M53)** : A5, réserves festives par `:root:has()` à reprendre seulement sur signalement d'un consommateur ; A1 M53, résolveur du bloc `VERSION_NOTES` seulement à la récidive.
-- **Consommateurs** : tirokado peut passer en **2.146.0** avec la prérelease React **3.0.0-alpha.65**, à deux conditions :
-  - resynchroniser **tout** le CSS (`sync.sh` : jetons, `themes.css`, `badges`, `forms`, `buttons`, `tables`, `layout`, `feedback`…) ;
-  - poser `breakpoint="lg"` (`.table-cards--lg`) sur ses tableaux de suivi et de participants.
-
-  Effets visibles : texte des badges et alertes plus foncé en clair ; au toucher, champs à 16 px, cibles à 44 px et mise en page plus aérée ; wordmark masqué dans l'en-tête entre 641 et 768 px ; pagination qui passe à la ligne.
+- **Consommateurs** : tirokado est **sur 2.146.0 / alpha.65** (lot 2 de son sprint 13 basculé sur son `main`, d'après sa session du 2026-10-06). L'opt-in `breakpoint="lg"` est posé, vérifié sur son `origin/main` (`TableauParticipants.tsx:85` depuis tirokado#166, `TableauSuivi.tsx:363` depuis tirokado#181) : **rien à relancer de ce côté**. Il attend la **2.147.0** (milestone #55) pour débloquer tirokado#180 et #191.
 - **Dette** : `CHANGELOG.md` `[Unreleased]` garde des entrées publiées non datées (antérieures à 2.119.1 + alpha.59) ; `version.json` racine figé 2.57.1 (sans effet runtime).
 
 ## Décisions permanentes
