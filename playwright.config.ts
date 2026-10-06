@@ -84,6 +84,7 @@ export default defineConfig({
     "**/stacking-scale.spec.ts",
     "**/festive-under-content.spec.ts",
     "**/table-cards-lg-1052.spec.ts",
+    "**/table-cards-compact-1061.spec.ts",
     "**/status-tint-contrast.spec.ts",
     "**/touch-targets-1051.spec.ts",
   ],
