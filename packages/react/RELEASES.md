@@ -6,6 +6,8 @@ Historique des releases du package npm `@msyx-dev/react` (publié sur GitHub Pac
 
 ## [Unreleased]
 
+## v3.0.0-alpha.66 — 2026-10-06 — Rangées de liste cliquables et cartes de saisie compactes
+
 > Mention croisée : le modificateur CSS `.table-cards--compact` (colonne des libellés `--table-cards-label-w`, repli sous 7,5rem, gain mesuré, démo) est décrit dans l'entrée #1061 de `../../CHANGELOG.md`, `[Unreleased]`.
 
 ### Added

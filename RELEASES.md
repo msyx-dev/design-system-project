@@ -1,5 +1,15 @@
 # Releases
 
+## 2.147.0 — 2026-10-06 — Rangées de liste cliquables et cartes de saisie compactes
+
+Release du milestone #55 « Fiabilisation consumers ⑧ », ouvert à la demande du consommateur tirokado.
+
+- **Listes : rangée cliquable par son lien** : avec `.list-item-link` sur le lien titre, toute la rangée d'une liste s'ouvre d'un clic, d'un toucher, d'un clic du milieu ou par « ouvrir dans un nouvel onglet ». L'anneau de focus et le soulignement au survol couvrent toute la rangée. La structure `ul > li` et les séparateurs sont conservés, et un bouton placé dans la rangée reste cliquable. Les listes sans lien ne changent pas (#1060).
+- **Tableaux de saisie : carte compacte** : `.table-cards--compact` (React : `<TableCards compact>`) place chaque libellé à côté de son champ en mode cartes. Sur téléphone, une ligne de deux champs prend environ 45 px de moins. Un champ trop étroit repasse sous son libellé, et la largeur des libellés se règle par `--table-cards-label-w`. Sans cet opt-in, les tableaux existants ne changent pas (#1061).
+- **Consommateurs** : resynchroniser le CSS du DS (`sync.sh`) en même temps que la nouvelle prérelease de `@msyx-dev/react`.
+
+Défauts trouvés en route et tracés dans #1064.
+
 ## 2.146.0 — 2026-10-05 — Textes lisibles, cibles tactiles et tableaux larges
 
 Release du milestone #54 « Fiabilisation consumers ⑦ », ouvert sur l'audit UX du consommateur tirokado.
