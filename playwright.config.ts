@@ -88,6 +88,7 @@ export default defineConfig({
     "**/table-cards-compact-1061.spec.ts",
     "**/status-tint-contrast.spec.ts",
     "**/touch-targets-1051.spec.ts",
+    "**/festive-inline-clearance-1067.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

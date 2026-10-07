@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reserve laterale du sapin de Noel — fixture #1067</title>
+<!--
+  Fixture de `visual-tests/festive-inline-clearance-1067.spec.ts` (#1067).
+
+  Un gabarit de page consumer (`.page-content--wide`, `.content-grid` ou `.page-content`)
+  portant le motif de l'ecran de suivi de tirokado, ou les CARTES (et pas seulement leurs
+  feuilles) passaient sur le sapin de Noel (fixe, hors flux, peint SOUS le contenu, #1043) :
+    - un `h1` ;
+    - une `section.card.card-static` : `h2.card-title` + `.table-wrap > table` de 4 colonnes,
+      la derniere portant un `button.btn.btn-secondary` (le controle de bord droit) ;
+    - puis 30 lignes flex `space-between` (texte a gauche, bouton a droite), assez nombreuses
+      pour que la page soit plus haute que toute fenetre testee (1080px) : le defilement
+      balaie ainsi plusieurs positions du sapin face au contenu.
+
+  Le gabarit se choisit par `?gabarit=page-content--wide|content-grid|page-content`, par
+  liste blanche (defaut : page-content--wide). Markup = celui d'un consumer : header injecte
+  par nav.js (qui pose aussi le decor festif en theme Noel), gabarit DS, composants DS. Pas
+  de components.js, aucun fond pose sur <html> : rien d'autre que le header et le decor ne
+  doit bouger la mise en page pendant la mesure.
+-->
+<link rel="stylesheet" href="/shared/styles.css">
+<script>(function(){var t=localStorage.getItem('msyx-theme');if(t&&t!=='msyx')document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('msyx-mode');if(m&&m!=='dark')document.documentElement.setAttribute('data-mode',m);}());</script>
+<style>
+  .fixture-rows { list-style: none; margin: 0; padding: 0; }
+  .fixture-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+</style>
+</head>
+<body>
+<header class="site-header" id="site-header"></header>
+<main id="gabarit" class="page-content page-content--wide">
+  <h1>Suivi du tirage</h1>
+
+  <section class="card card-static">
+    <h2 class="card-title">Suivi des participants</h2>
+    <div class="table-wrap">
+      <table aria-label="Suivi des participants">
+        <thead>
+          <tr><th scope="col">Participant</th><th scope="col">E-mail</th><th scope="col">Consulté</th><th scope="col">Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Marie-Hélène de La Tour-Dupin</td><td>marie-helene@exemple.test</td><td>Lien consulté le 04/10/2026</td><td><button type="button" class="btn btn-secondary">Régénérer le lien</button></td></tr>
+          <tr><td>Bastien Leroy-Kowalczyk</td><td>bastien@exemple.test</td><td>Lien consulté le 03/10/2026</td><td><button type="button" class="btn btn-secondary">Régénérer le lien</button></td></tr>
+          <tr><td>Awa Diallo</td><td>awa@exemple.test</td><td>Pas encore consulté</td><td><button type="button" class="btn btn-secondary">Relancer</button></td></tr>
+          <tr><td>Camille Martin</td><td>camille@exemple.test</td><td>Pas encore consulté</td><td><button type="button" class="btn btn-secondary">Relancer</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <ul class="fixture-rows" id="rows"></ul>
+</main>
+<script>
+(function () {
+  // Choix du gabarit : liste blanche, jamais une classe issue de l'URL telle quelle.
+  var CLASSES = {
+    'page-content--wide': 'page-content page-content--wide',
+    'content-grid': 'content-grid',
+    'page-content': 'page-content'
+  };
+  var choice = new URLSearchParams(location.search).get('gabarit') || 'page-content--wide';
+  document.getElementById('gabarit').className = CLASSES[choice] || CLASSES['page-content--wide'];
+
+  // 30 lignes (libelle a gauche, bouton a droite) : la page depasse 1080px a toute largeur.
+  var rows = document.getElementById('rows');
+  for (var i = 1; i <= 30; i++) {
+    var li = document.createElement('li');
+    li.className = 'fixture-row';
+    var label = document.createElement('span');
+    label.textContent = 'Commande n°' + (1000 + i);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-secondary';
+    btn.textContent = 'Détails ' + (1000 + i);
+    li.appendChild(label);
+    li.appendChild(btn);
+    rows.appendChild(li);
+  }
+}());
+</script>
+<script src="/shared/nav.js"></script>
+</body>
+</html>
