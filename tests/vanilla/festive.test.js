@@ -320,3 +320,71 @@ describe('reserve haute du decor festif (#1042) -- coherence des sources', () =>
     );
   });
 });
+
+// #1066 -- largeur du sapin : UNE source, `--festive-character-w`, deux clamps ecrits une
+// fois chacun. Le sapin (width) et la reserve basse (--festive-clearance) la lisent. jsdom ne
+// calcule aucune geometrie (regle N1) : ces cas gardent la COHERENCE DES SOURCES ; la largeur
+// rendue est mesuree dans Chromium par visual-tests/festive-clearance.spec.ts (L1 a L4).
+describe('largeur du sapin (#1066) -- une seule source', () => {
+  const festive = () => lireCss('components/festive.css');
+  const compter = (texte, motif) => (texte.match(motif) ?? []).length;
+  /** Corps du bloc dont l'en-tete est `entete`, accolades imbriquees comprises. */
+  const corps = (texte, entete) => {
+    const debut = texte.indexOf(entete);
+    if (debut < 0) return null;
+    let i = texte.indexOf('{', debut);
+    const ouverture = i;
+    for (let profondeur = 0; i < texte.length; i++) {
+      if (texte[i] === '{') profondeur++;
+      if (texte[i] === '}' && --profondeur === 0) return texte.slice(ouverture + 1, i);
+    }
+    return null;
+  };
+
+  it('chaque clamp de largeur n\'est ecrit qu\'une fois dans le module', () => {
+    const css = festive();
+    expect(compter(css, /clamp\(72px, 20vw, 130px\)/g)).toBe(1);
+    expect(compter(css, /clamp\(130px, 15vw, 210px\)/g)).toBe(1);
+  });
+
+  it('--festive-character-w : une fois sur :root (mobile-first), une fois dans bp-md, toutes deux surchargeables', () => {
+    const css = festive();
+    expect(compter(css, /--festive-character-w\s*:/g)).toBe(2);
+    // base : bloc `:root {` de premier niveau (le `^|\n` exclut `:root` imbrique dans un @media)
+    const base = css.match(/(?:^|\n)\s*:root\s*\{\s*--festive-character-w\s*:\s*([^;]*);\s*\}/);
+    expect(base).not.toBeNull();
+    expect(base[1]).toBe('var(--character-width, clamp(72px, 20vw, 130px))');
+    // bp-md : complement exact du `(max-width: 768px)` de layout.css, comme --festive-inset-start
+    const desktop = [...css.matchAll(/@media \(min-width: 768\.02px\)/g)]
+      .map((m) => corps(css.slice(m.index), '@media (min-width: 768.02px)'))
+      .filter((c) => c && /--festive-character-w\s*:/.test(c));
+    expect(desktop).toHaveLength(1);
+    expect(desktop[0]).toMatch(
+      /:root\s*\{\s*--festive-character-w\s*:\s*var\(--character-width, clamp\(130px, 15vw, 210px\)\);\s*\}/
+    );
+  });
+
+  it('.festive-character lit --festive-character-w, sans largeur propre', () => {
+    const regle = corps(festive(), '\n.festive-character {');
+    expect(regle).not.toBeNull();
+    expect(regle).toMatch(/\bwidth:\s*var\(--festive-character-w\);/);
+    // l'offset lateral `right: clamp(8px, 2vw, 32px)` reste legitime (hors perimetre, A7) :
+    // c'est la DECLARATION de largeur qui ne porte ni clamp ni surcharge.
+    expect(regle).not.toMatch(/\bwidth:[^;]*(clamp\(|--character-width)/);
+  });
+
+  it('--festive-clearance = --festive-character-w x 1,5 + --space-lg, declaree une seule fois, garde Noel', () => {
+    const css = festive();
+    const bloc = corps(css, ':root[data-theme="noel"]:has(.festive-character)');
+    expect(bloc).not.toBeNull();
+    expect(bloc).toContain(
+      '--festive-clearance: calc(var(--festive-character-w) * 1.5 + var(--space-lg));'
+    );
+    expect(compter(css, /--festive-clearance\s*:/g)).toBe(1);
+  });
+
+  it('la surcharge --character-width n\'est lue que par la source (deux var(), une par bloc)', () => {
+    expect(compter(festive(), /var\(--character-width/g)).toBe(2);
+  });
+});
+

@@ -679,17 +679,18 @@ Limites :
 
 **Resynchronisation, dans la même release** : `tokens.css` (les jetons `--z-stretched-link` et `--z-stretched-control`) **et** les composants (`lists.css`, et `_base.css` pour l'absence de soulignement au repos). Avec un `lists.css` récent et un `tokens.css` antérieur, les deux `z-index` n'ont plus de valeur : la zone ne passe plus au-dessus du contenu positionné placé après le lien (un avatar à pastille de statut…) et un contrôle placé avant le lien dans le DOM devient injoignable. Resynchronisez avec `shared/sync.sh`, vérifiez avec `shared/check-sync.sh`.
 
-## Décor festif (thème Noël) — réserves de mise en page (#1005, #1042)
+## Décor festif (thème Noël) — réserves de mise en page (#1005, #1042, #1066)
 
 Le décor (`<SiteHeader festive />` / `<FestiveDecor>` en React, `ensureFestiveDecor()` de `ds-nav.js` en vanilla) est en `position: fixed` : il n'occupe aucune place dans le flux et passe **au-dessus** du contenu. En Noël, le DS pose donc deux réserves, que ses gabarits consomment déjà :
 
 | Variable | Posée sur | Consommée par | Hors Noël |
 |---|---|---|---|
 | `--festive-top-clearance` (haut, #1042) — boule la plus basse sous l'en-tête, dérivée des tokens `--ornament-drop-1..3` / `--ornament-size-1..3` (94 px) | `:root[data-theme="noel"]:has(.garland--header)` | `padding-top` de `.main`, `.page-content`, `.content-grid` (`calc(var(--header-h) + …)`) et `scroll-padding-top` de `html:has(.site-header)` | non posée → `0px` |
-| `--festive-clearance` (bas, #1005) — sapin du pied de page | `:root[data-theme="noel"]:has(.festive-character)` | `padding-bottom` des mêmes gabarits | non posée → `0px` |
+| `--festive-clearance` (bas, #1005) — sapin du pied de page : `--festive-character-w` × 1,5 + `--space-lg` (136,5 px à 375 px, 219 px à 768 px, #1066) | `:root[data-theme="noel"]:has(.festive-character)` | `padding-bottom` des mêmes gabarits | non posée → `0px` |
 
 - **Gabarit maison** (ni `.main`, ni `.page-content`, ni `.content-grid`) : consommez la réserve vous-même, **toujours avec le repli `0px`** — `padding-top: calc(var(--header-h) + var(--festive-top-clearance, 0px));`. Sans repli, la déclaration entière est invalide hors Noël et le `padding-top` retombe à 0, sous l'en-tête.
 - **Ne recalculez jamais la géométrie des boules** : surchargez les tokens `--ornament-*-N` sur `:root` ; la réserve en dérive.
+- **Largeur du sapin (#1066)** : `--festive-character-w` est la largeur résolue du sapin, source unique lue par le sapin ET par `--festive-clearance` (de 72 à 130 px sous 768 px, 75 px à 375 px ; de 130 à 210 px au-delà). Pour la régler, posez `--character-width` sur `:root` (ou `html`) : le sapin et la réserve la suivent à toute largeur. Ne posez jamais `--festive-character-w` vous-même, et pas `--character-width` sur `.festive-character` seul (il n'est plus lu). Un gabarit maison dont la réserve dépend du sapin lit `var(--festive-character-w)`, jamais un `clamp` recopié. Resynchronisez `festive.css` (`shared/sync.sh`, `shared/check-sync.sh`) : `tokens.css` n'est pas touché, et aucune version de `@msyx-dev/react` n'est requise.
 - **Resynchronisation obligatoire** à partir de la version de `@msyx-dev/react` qui livre #1042 : `<FestiveDecor>` référence les tokens `--ornament-*-N` et ne pose plus de `top`, que lit `festive.css`. Un `tokens.css` ou un `festive.css` d'une version antérieure donne des boules collées sous l'en-tête et une réserve à `0px`. Resynchronisez avec `shared/sync.sh`, vérifiez avec `shared/check-sync.sh`.
 
 ## Tableau en cartes — `.table-cards` (#1007)

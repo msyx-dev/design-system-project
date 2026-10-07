@@ -323,11 +323,31 @@
    - Un fond pose sur <html> se peint alors sur la boite de <body>, et donc par-dessus le sapin.
    - Un ancetre qui forme un contexte d'empilement avec un fond opaque masque le sapin.
    Garde : visual-tests/festive-under-content.spec.ts. */
+
+/* ===== LARGEUR DU SAPIN — source unique (#1066) =====
+   --festive-character-w = largeur RESOLUE du sapin. Le sapin (width), la reserve basse
+   (--festive-clearance) et toute reserve future qui depend du sapin la lisent ; ses
+   deux clamps ne s'ecrivent qu'ICI.
+   - Mobile-first : 20vw borne a [72px, 130px], 75px a 375px (SVG 75 x 112,5).
+   - bp-md : la valeur d'avant #1066. Continuite : le clamp mobile vaut deja 130px des
+     650px et le clamp bureau vaut 130px jusqu'a 866px, donc aucun saut a 768px.
+   - Surcharge : `--character-width` sur `:root` (ou `html`), lu par le sapin ET la
+     reserve. Ne jamais poser --festive-character-w : elle est resolue a :root, un
+     --character-width pose plus bas (sur `.festive-character`) n'est donc plus lu. */
+:root {
+    --festive-character-w: var(--character-width, clamp(72px, 20vw, 130px));
+}
+@media (min-width: 768.02px) { /* bp-md */
+    :root {
+        --festive-character-w: var(--character-width, clamp(130px, 15vw, 210px));
+    }
+}
+
 .festive-character {
     position: fixed;
     right: clamp(8px, 2vw, 32px);
     bottom: 0;
-    width: var(--character-width, clamp(130px, 15vw, 210px));
+    width: var(--festive-character-w);
     z-index: var(--z-decor-behind);
     pointer-events: none;
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35)); /* allow-hardcoded: ombre portee de l'illustration */
@@ -353,12 +373,12 @@
      le balancement `characterBob` (7px).
    - Garde de theme : le sapin vanilla reste dans le DOM hors Noel (`display: none`),
      React ne le rend qu'en Noel. Hors Noel, rien a degager : la variable n'est pas posee.
-   - Le clamp DOIT rester identique a celui de `.festive-character` (largeur du sapin) :
-     `visual-tests/festive-clearance.spec.ts` le garde.
-   - Un `--character-width` sur-mesure se pose sur `:root` (ou `html`) pour que le sapin
-     ET la reserve le lisent ; pose sur `.festive-character` seul, il ne remonte pas. */
+   - Largeur : --festive-character-w (source unique, section SAPIN). Aucun clamp ici ;
+     tests/vanilla/festive.test.js et visual-tests/festive-clearance.spec.ts le gardent.
+   - Un --character-width sur-mesure se pose sur :root (ou html) : le sapin ET la
+     reserve le lisent. */
 :root[data-theme="noel"]:has(.festive-character) {
-    --festive-clearance: calc(var(--character-width, clamp(130px, 15vw, 210px)) * 1.5 + var(--space-lg));
+    --festive-clearance: calc(var(--festive-character-w) * 1.5 + var(--space-lg));
 }
 
 /* ===== RESERVE HAUTE (#1042) =====

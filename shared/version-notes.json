@@ -1,7 +1,12 @@
 {
   "model": "dated",
   "next": {
-    "highlights": []
+    "highlights": [
+      {
+        "type": "amelioration",
+        "text": "En thème Noël, le sapin en bas d'écran est plus petit sur téléphone (environ 75 px de large au lieu de 130) et laisse plus de place au contenu. Sur tablette et ordinateur, il ne change pas."
+      }
+    ]
   },
   "released": [
     {
