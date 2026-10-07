@@ -26,6 +26,11 @@
  *
  * Preuve par mutation : retirer la consommation de `--festive-clearance` dans
  * layout.css (ou la declaration dans festive.css) rend ces cas rouges.
+ *
+ * #1066 : la largeur du sapin a UNE source, `--festive-character-w` (festive.css) :
+ * 72-130px sous 768px, 130-210px au-dela. Le sapin et la reserve la lisent. La garde de
+ * la reserve joue VIEWPORTS_RESERVE (320 a 1600px) et le `describe` #1066 mesure la
+ * largeur elle-meme (L1 a L4), jamais sa formule.
  */
 import { test, expect, type Page } from "@playwright/test";
 
@@ -34,6 +39,18 @@ const FIXTURE = "/visual-tests/fixtures/festive-clearance-1005.html";
 
 const VIEWPORTS = [
   { width: 375, height: 667 },
+  { width: 768, height: 1024 },
+  { width: 1280, height: 800 },
+  { width: 1600, height: 900 },
+] as const;
+
+// Fenetres de la garde « reserve = hauteur du sapin » (#1066) : 320 = minimum du clamp mobile
+// (72px), 640 = clamp mobile non sature (128px), 767 / 768 = les deux cotes du seuil bp-md.
+const VIEWPORTS_RESERVE = [
+  { width: 320, height: 568 },
+  { width: 375, height: 667 },
+  { width: 640, height: 900 },
+  { width: 767, height: 1024 },
   { width: 768, height: 1024 },
   { width: 1280, height: 800 },
   { width: 1600, height: 900 },
@@ -354,10 +371,10 @@ test.describe("Sapin de Noel — reserve de fin de page (#1005)", () => {
     }
   }
 
-  // Garde du clamp : `--festive-clearance` (festive.css) DOIT suivre la largeur reelle
-  // du sapin. Un clamp divergent entre `.festive-character` et la reserve se verrait ici,
+  // Garde de la source unique (#1066) : `--festive-clearance` lit `--festive-character-w`,
+  // comme le sapin. Une reserve qui ne suivrait plus la largeur reelle du sapin se verrait ici,
   // dans les deux sens (reserve trop courte -> recouvrement ; trop longue -> vide).
-  for (const vp of VIEWPORTS) {
+  for (const vp of VIEWPORTS_RESERVE) {
     test(`.main @${vp.width}x${vp.height} : la reserve = hauteur du sapin (largeur x 1,5) + --space-lg`, async ({
       page,
     }, testInfo) => {
@@ -410,4 +427,131 @@ test.describe("Sapin de Noel — reserve de fin de page (#1005)", () => {
       ).toBe(space2xl);
     }
   });
+});
+
+// #1066 — largeur du sapin : mobile-first, une seule source (`--festive-character-w`).
+// Mesure de la boite rendue du sapin, jamais de la formule : un clamp recopie ailleurs ou un
+// `var(--character-width, …)` oublie dans un des deux blocs se verrait ici, pas en jsdom (N1).
+// Un seul projet (PROJECT) : theme, mode et fenetre sont poses par le test.
+test.describe("Sapin de Noel — largeur mobile-first, source unique (#1066)", () => {
+  const largeurSapin = (page: Page): Promise<number> =>
+    page.evaluate(
+      (sel) => document.querySelector(sel)!.getBoundingClientRect().width,
+      TREE,
+    );
+
+  /** Annote la largeur du sapin et la reserve (px), AVANT l'assertion, sans borne. */
+  async function annoter(
+    page: Page,
+    testInfo: import("@playwright/test").TestInfo,
+    fenetre: number,
+  ) {
+    const largeur = await largeurSapin(page);
+    const reserve = await paddingBottom(page, ".main");
+    testInfo.annotations.push({
+      type: `largeur-1066 ${fenetre}`,
+      description: `sapin=${largeur} reserve=${reserve}`,
+    });
+  }
+
+  test("L1 @375x667 : le sapin mobile fait environ 75px, dans [64, 80]", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== PROJECT,
+      `un seul projet suffit (${PROJECT})`,
+    );
+
+    await openPage(page, "/pages/feedback.html", "noel", {
+      width: 375,
+      height: 667,
+    });
+    await waitForSettledPadding(page, ".main");
+    await annoter(page, testInfo, 375);
+
+    const largeur = await largeurSapin(page);
+    expect(largeur).toBeGreaterThanOrEqual(64);
+    expect(largeur).toBeLessThanOrEqual(80);
+  });
+
+  for (const [width, height, attendu] of [
+    [768, 1024, 130],
+    [1280, 800, 192],
+    [1600, 900, 210],
+  ] as const) {
+    test(`L2 @${width}x${height} : la largeur d'avant #1066 est inchangee (${attendu}px)`, async ({
+      page,
+    }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== PROJECT,
+        `un seul projet suffit (${PROJECT})`,
+      );
+
+      await openPage(page, "/pages/feedback.html", "noel", { width, height });
+      await waitForSettledPadding(page, ".main");
+      await annoter(page, testInfo, width);
+
+      expect(await largeurSapin(page)).toBeCloseTo(attendu, 0);
+    });
+  }
+
+  test("L3 : aucun saut de largeur au seuil bp-md (767 -> 768)", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== PROJECT,
+      `un seul projet suffit (${PROJECT})`,
+    );
+
+    await openPage(page, "/pages/feedback.html", "noel", {
+      width: 767,
+      height: 1024,
+    });
+    await waitForSettledPadding(page, ".main");
+    await annoter(page, testInfo, 767);
+    const avant = await largeurSapin(page);
+
+    await page.setViewportSize({ width: 768, height: 1024 });
+    // Relu apres le changement de fenetre : l'ancienne largeur ne doit pas servir de mesure.
+    await expect
+      .poll(() => page.evaluate(() => window.innerWidth))
+      .toBe(768);
+    await waitForSettledPadding(page, ".main");
+    await annoter(page, testInfo, 768);
+    const apres = await largeurSapin(page);
+
+    expect(Math.abs(avant - apres), `w(767)=${avant} w(768)=${apres}`).toBeLessThanOrEqual(1);
+  });
+
+  for (const vp of [
+    { width: 375, height: 667 },
+    { width: 1280, height: 800 },
+  ] as const) {
+    test(`L4 @${vp.width}x${vp.height} : --character-width sur :root regle le sapin ET la reserve`, async ({
+      page,
+    }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== PROJECT,
+        `un seul projet suffit (${PROJECT})`,
+      );
+
+      await openPage(page, "/pages/feedback.html", "noel", vp);
+      await waitForSettledPadding(page, ".main");
+      await page.evaluate(() =>
+        document.documentElement.style.setProperty("--character-width", "100px"),
+      );
+      const spaceLg = await cssPx(page, "var(--space-lg)");
+
+      // La cascade rattrape en plusieurs frames (cf. waitForSettledPadding) : on relit.
+      // `finally` : l'annotation est ecrite meme si une assertion echoue.
+      try {
+        await expect.poll(() => largeurSapin(page)).toBeCloseTo(100, 0);
+        await expect
+          .poll(() => paddingBottom(page, ".main"))
+          .toBeCloseTo(100 * 1.5 + spaceLg, 0);
+      } finally {
+        await annoter(page, testInfo, vp.width);
+      }
+    });
+  }
 });
