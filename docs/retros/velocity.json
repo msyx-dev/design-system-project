@@ -280,6 +280,17 @@
       "issues_done": 2,
       "issues_failed": 0,
       "issues_skipped": 0
+    },
+    {
+      "number": 56,
+      "title": "Fiabilisation consumers ⑨",
+      "planned_sp": 7,
+      "delivered_sp": 7,
+      "accuracy": 100,
+      "issues_total": 2,
+      "issues_done": 2,
+      "issues_failed": 0,
+      "issues_skipped": 0
     }
   ]
 }

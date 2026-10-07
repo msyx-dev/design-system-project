@@ -3,6 +3,15 @@
 
 > Format borné (skill /memory-update). Détails complets = auto-memory Claude Code (`memory/`) + RELEASES.md/CHANGELOG.md.
 
+## 🎯 SESSION 2026-10-07 (soir) — milestone #56 soldé et déployé (DS 2.148.0), déroulé depuis la session Tirokado — TERMINÉE
+
+**Le milestone #56 « Fiabilisation consumers ⑨ » est soldé, publié et déployé.** Il a été déroulé depuis la session **Tirokado**, sur consigne de Mike (« gère tout depuis cette session »), la session Design System étant hors ligne. Demande : retours de Mike sur la préprod tirokado v0.15.0 (sapin trop grand sur téléphone, contenu large qui passe dessus). Q2 (réserve à partir de 1440 px) et Q3 (≈ 75 px sous 768 px) ont été validées.
+
+- **#1066** (PR #1068, 2 SP) : token unique `--festive-character-w`, lu par le sapin et par `--festive-clearance`. Le sapin fait 75 px sous 768 px (`clamp(72px, 20vw, 130px)`) ; rien ne change au-delà.
+- **#1067** (PR #1069, 5 SP) : `--festive-character-inset` et `--festive-inline-clearance` (Noël, à partir de 1440 px), consommés en `padding-inline-end` par `.page-content--wide` et `.content-grid`. Écart de 16 px avec le sapin ; sortie par `--festive-inline-clearance: 0px` posé sur le gabarit.
+- **Release 2.148.0** : PR #1070, `e48dc10`, `vtag=no`, aucune prérelease React. La préprod est déployée et `validate-preprod.sh` est vert. Consommée par tirokado#215.
+- **Rétro** : `docs/retros/sprint-m56-fiabilisation-consumers.md` (7/7 SP, 0 tranche sur 4 au-delà de 45). Le board n'était pas passé à Done par `post-merge.sh` : réaligné à la main.
+
 ## 🎯 SESSION 2026-10-06 (soir) — milestone #55 soldé et déployé (DS 2.147.0 / react alpha.66) — TERMINÉE
 
 **Le milestone #55 est soldé, publié et déployé. #1060 et #1061 sont sur `main` ; la release 2.147.0 par l'outil a pris la PR #1065 et le commit `2083fff`, avec le tag `react-v3.0.0-alpha.66` publié sur npm. La préprod sert la 2.147.0 et `validate-preprod.sh` est vert. La session Tirokado est prévenue, mais le message reste en file tant qu'elle est hors ligne.** Consigne de Mike, qui est parti se coucher : « go préco (a), enchaîne toute la backlog ». Le backlog DS est vide après #55.
@@ -15,7 +24,7 @@
 ## 🎯 PROCHAINE SESSION — Plan suggéré
 
 1. **Sprint #55 entièrement clos** (release, déploiement et validation faits le 2026-10-06 au soir). Si la session Tirokado demande un retour, elle a reçu l'usage de `.list-item-link` et de `<TableCards compact>`. La documentation consommateur est dans `shared/CONSUMER_GUIDE.md`.
-2. **Backlog DS vide** : attendre une demande (tirokado ou un autre consommateur). Le quota se mesure avant tout lancement ([[feedback-quota-mesure-pas-memoire]]).
+2. **Backlog DS vide** (le milestone #56 a été soldé le 2026-10-07 depuis la session Tirokado) : attendre une demande (tirokado ou un autre consommateur). Le quota se mesure avant tout lancement ([[feedback-quota-mesure-pas-memoire]]).
 3. **Suites de la rétro #55** :
    - A3 : **faite le 2026-10-07**, claude-config#605 (`hook-block-parent-cd-worktree.py`, prouvé en direct) ;
    - les deux fragilités du registre consignées dans #1064 : par défaut, on les corrige à la récidive.
