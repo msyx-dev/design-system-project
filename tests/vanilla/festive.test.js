@@ -321,25 +321,27 @@ describe('reserve haute du decor festif (#1042) -- coherence des sources', () =>
   });
 });
 
+// Lecture de sources CSS partagee par les gardes #1066 et #1067 (sur du CSS sans commentaires).
+const compter = (texte, motif) => (texte.match(motif) ?? []).length;
+/** Corps du bloc dont l'en-tete est `entete`, accolades imbriquees comprises. */
+const corps = (texte, entete) => {
+  const debut = texte.indexOf(entete);
+  if (debut < 0) return null;
+  let i = texte.indexOf('{', debut);
+  const ouverture = i;
+  for (let profondeur = 0; i < texte.length; i++) {
+    if (texte[i] === '{') profondeur++;
+    if (texte[i] === '}' && --profondeur === 0) return texte.slice(ouverture + 1, i);
+  }
+  return null;
+};
+
 // #1066 -- largeur du sapin : UNE source, `--festive-character-w`, deux clamps ecrits une
 // fois chacun. Le sapin (width) et la reserve basse (--festive-clearance) la lisent. jsdom ne
 // calcule aucune geometrie (regle N1) : ces cas gardent la COHERENCE DES SOURCES ; la largeur
 // rendue est mesuree dans Chromium par visual-tests/festive-clearance.spec.ts (L1 a L4).
 describe('largeur du sapin (#1066) -- une seule source', () => {
   const festive = () => lireCss('components/festive.css');
-  const compter = (texte, motif) => (texte.match(motif) ?? []).length;
-  /** Corps du bloc dont l'en-tete est `entete`, accolades imbriquees comprises. */
-  const corps = (texte, entete) => {
-    const debut = texte.indexOf(entete);
-    if (debut < 0) return null;
-    let i = texte.indexOf('{', debut);
-    const ouverture = i;
-    for (let profondeur = 0; i < texte.length; i++) {
-      if (texte[i] === '{') profondeur++;
-      if (texte[i] === '}' && --profondeur === 0) return texte.slice(ouverture + 1, i);
-    }
-    return null;
-  };
 
   it('chaque clamp de largeur n\'est ecrit qu\'une fois dans le module', () => {
     const css = festive();
@@ -368,8 +370,9 @@ describe('largeur du sapin (#1066) -- une seule source', () => {
     const regle = corps(festive(), '\n.festive-character {');
     expect(regle).not.toBeNull();
     expect(regle).toMatch(/\bwidth:\s*var\(--festive-character-w\);/);
-    // l'offset lateral `right: clamp(8px, 2vw, 32px)` reste legitime (hors perimetre, A7) :
-    // c'est la DECLARATION de largeur qui ne porte ni clamp ni surcharge.
+    // l'offset lateral n'est pas la largeur : depuis #1067 il a sa propre source
+    // (--festive-character-inset, gardee plus bas) ; c'est la DECLARATION de largeur
+    // qui ne porte ni clamp ni surcharge.
     expect(regle).not.toMatch(/\bwidth:[^;]*(clamp\(|--character-width)/);
   });
 
@@ -385,6 +388,99 @@ describe('largeur du sapin (#1066) -- une seule source', () => {
 
   it('la surcharge --character-width n\'est lue que par la source (deux var(), une par bloc)', () => {
     expect(compter(festive(), /var\(--character-width/g)).toBe(2);
+  });
+});
+
+// #1067 -- reserve laterale du sapin. Trois choses, chacune ecrite une fois : le decalage du
+// sapin (--festive-character-inset), son empreinte depuis le bord droit (--festive-inline-clearance,
+// festive.css) et sa lecture par deux gabarits (layout.css, PART MANQUANTE seulement). jsdom ne
+// calcule aucune geometrie (regle N1) : ces cas (V1 a V4) gardent la COHERENCE DES SOURCES ; le
+// recouvrement lui-meme est mesure dans Chromium par
+// visual-tests/festive-inline-clearance-1067.spec.ts (LAT1 a LAT8).
+describe('reserve laterale du sapin (#1067) -- coherence des sources', () => {
+  const festive = () => lireCss('components/festive.css');
+  const layout = () => lireCss('layout.css');
+  const GARDE_NOEL =
+    ':root[data-theme="noel"]:has(.festive-character:not(.festive-character--left))';
+  const EMPREINTE =
+    'calc(var(--festive-character-w) + var(--festive-character-inset) + var(--space-md))';
+  const LECTURE = /var\(--festive-inline-clearance, 0px\)/;
+  /** Corps de chaque bloc `@media (min-width: <seuil>)` du texte. */
+  const blocsMedia = (texte, seuil) => {
+    const entete = `@media (min-width: ${seuil})`;
+    return [...texte.matchAll(new RegExp(entete.replace(/[()]/g, '\\$&'), 'g'))]
+      .map((m) => corps(texte.slice(m.index), entete))
+      .filter((c) => c !== null);
+  };
+  /** Chaque regle `selecteurs { corps }` sans accolade imbriquee (un @media englobant n'en est pas une). */
+  const regles = (texte) =>
+    [...texte.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => ({
+      selecteurs: m[1].split(',').map((s) => s.trim()),
+      corps: m[2],
+    }));
+
+  it('V1 : --festive-inline-clearance = largeur + decalage + --space-md, une seule declaration, a 1440px, garde Noel', () => {
+    const css = festive();
+    expect(compter(css, /--festive-inline-clearance\s*:/g)).toBe(1);
+    const portes = blocsMedia(css, '1440px').filter((c) => /--festive-inline-clearance\s*:/.test(c));
+    expect(portes).toHaveLength(1);
+    // la garde exclut la variante gauche : une reserve a droite ne lui servirait a rien
+    const bloc = corps(portes[0], GARDE_NOEL);
+    expect(bloc).not.toBeNull();
+    expect(bloc.trim()).toBe(`--festive-inline-clearance: ${EMPREINTE};`);
+    // aucun chiffre pose a la main : une fois les noms de tokens retires, il n'en reste aucun
+    expect(bloc.replace(/--[a-z-]+/g, '')).not.toMatch(/\d/);
+  });
+
+  it('V2 : le decalage clamp(8px, 2vw, 32px) n\'est ecrit qu\'une fois, lu par le sapin et sa variante gauche', () => {
+    const css = festive();
+    expect(compter(css, /clamp\(8px, 2vw, 32px\)/g)).toBe(1);
+    expect(compter(css, /--festive-character-inset\s*:/g)).toBe(1);
+    // bloc `:root {` de PREMIER niveau : colle a la marge (un `:root` d'@media est indente)
+    const base = css.match(/\n:root\s*\{\s*--festive-character-inset\s*:\s*([^;]*);\s*\}/);
+    expect(base).not.toBeNull();
+    expect(base[1]).toBe('clamp(8px, 2vw, 32px)');
+    expect(corps(css, '\n.festive-character {')).toMatch(
+      /\bright:\s*var\(--festive-character-inset\);/
+    );
+    const gauche = css.match(/\n\.festive-character--left\s*\{([^{}]*)\}/);
+    expect(gauche).not.toBeNull();
+    expect(gauche[1]).toMatch(/\bleft:\s*var\(--festive-character-inset\);/);
+    // plus aucune copie du clamp dans un decalage
+    expect(css).not.toMatch(/\b(?:right|left):\s*clamp\(/);
+  });
+
+  it('V3 : layout.css lit la reserve deux fois (repli 0px), en padding-inline-end de .page-content--wide et .content-grid, dans un bloc 1280px', () => {
+    const css = layout();
+    expect(compter(css, /var\(--festive-inline-clearance/g)).toBe(2);
+    expect(compter(css, new RegExp(LECTURE.source, 'g'))).toBe(2);
+    const blocs1280 = blocsMedia(css, '1280px');
+    expect(blocs1280.length).toBeGreaterThan(0);
+    const plafonds = {
+      '.page-content--wide': 'var(--content-max)',
+      '.content-grid': 'var(--content-grid-max)',
+    };
+    for (const [gabarit, plafond] of Object.entries(plafonds)) {
+      const lectures = blocs1280
+        .map((bloc) => corps(bloc, `${gabarit} {`))
+        .filter((regle) => regle !== null && LECTURE.test(regle));
+      expect(lectures, gabarit).toHaveLength(1);
+      expect(lectures[0], gabarit).toMatch(/\bpadding-inline-end:[^;]*var\(--festive-inline-clearance, 0px\)/);
+      // la marge libre se calcule sur le plafond DU gabarit, en % du bloc conteneur (pas en vw)
+      expect(lectures[0], gabarit).toContain(`(100% - ${plafond}) / 2`);
+    }
+    // la source de l'empreinte reste dans festive.css : layout.css ne sait rien du sapin
+    expect(css).not.toMatch(/--festive-character-w|--festive-character-inset|--character-width/);
+  });
+
+  it('V4 : ni .main ni .page-content nu ne lisent la reserve laterale', () => {
+    const gabarits = regles(layout()).filter((regle) =>
+      regle.selecteurs.some((s) => s === '.main' || s === '.page-content')
+    );
+    // non-vacuite : .page-content a 3 regles (base, 768, 1280), .main au moins une
+    expect(gabarits.filter((r) => r.selecteurs.includes('.page-content'))).toHaveLength(3);
+    expect(gabarits.some((r) => r.selecteurs.includes('.main'))).toBe(true);
+    gabarits.forEach((regle) => expect(regle.corps).not.toMatch(/festive-inline-clearance/));
   });
 });
 

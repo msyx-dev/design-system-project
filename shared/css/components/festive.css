@@ -343,9 +343,17 @@
     }
 }
 
+/* ===== DECALAGE DU SAPIN — source unique (#1067) =====
+   --festive-character-inset = distance resolue entre le sapin et le bord de la fenetre.
+   Le sapin (right), sa variante gauche (left) et la reserve laterale la lisent ; le clamp
+   ne s'ecrit qu'ICI. Valeur en lecture seule, comme --festive-character-w (#1066). */
+:root {
+    --festive-character-inset: clamp(8px, 2vw, 32px);
+}
+
 .festive-character {
     position: fixed;
-    right: clamp(8px, 2vw, 32px);
+    right: var(--festive-character-inset);
     bottom: 0;
     width: var(--festive-character-w);
     z-index: var(--z-decor-behind);
@@ -354,7 +362,7 @@
     animation: characterBob 5.5s ease-in-out infinite;
 }
 
-.festive-character--left { right: auto; left: clamp(8px, 2vw, 32px); }
+.festive-character--left { right: auto; left: var(--festive-character-inset); }
 
 @keyframes characterBob {
     0%, 100% { translate: 0 0; }
@@ -402,6 +410,26 @@
         calc(var(--ornament-drop-2) + var(--ornament-size-2)),
         calc(var(--ornament-drop-3) + var(--ornament-size-3))
     );
+}
+
+/* ===== RESERVE LATERALE (#1067) =====
+   Pendant de --festive-clearance (bas) et de --festive-top-clearance (haut). Sur une vue de
+   donnees (.page-content--wide plafonne a 1440px, .content-grid a 1200px), les cartes passaient
+   sur le sapin (peint SOUS le contenu, #1043) : 190,8px de recouvrement mesure a 1440px.
+   --festive-inline-clearance = EMPREINTE du sapin depuis le bord droit de la fenetre :
+   largeur + decalage + --space-md d'ecart. Les gabarits (layout.css) n'en reservent que la
+   PART MANQUANTE : leur marge libre et leur gouttiere comptent deja.
+   - Seuil composant 1440px (decision du 2026-10-07) : de 1024 a 1439px, le recouvrement
+     residuel est assume, le sapin reste peint sous le contenu.
+   - Garde de theme, comme les deux autres reserves. `.festive-character--left` exclu : une
+     reserve a droite ne lui servirait a rien (aucune reserve a gauche, hors perimetre).
+   - Sortie : `--festive-inline-clearance: 0px` sur le gabarit (ou un ancetre sous :root) ;
+     posee sur `:root` seul, elle perd contre cette garde (specificite 0,4,0).
+   - Garde : visual-tests/festive-inline-clearance-1067.spec.ts. */
+@media (min-width: 1440px) { /* seuil composant : 1440px, reserve laterale du sapin #1067 */
+    :root[data-theme="noel"]:has(.festive-character:not(.festive-character--left)) {
+        --festive-inline-clearance: calc(var(--festive-character-w) + var(--festive-character-inset) + var(--space-md));
+    }
 }
 
 /* Les lumieres du sapin scintillent au meme rythme que la guirlande */

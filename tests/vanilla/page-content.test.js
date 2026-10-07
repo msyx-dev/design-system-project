@@ -48,13 +48,24 @@ describe('.page-content -- largeur par token (#859)', () => {
   });
 
   it('la variante REMAPPE le token au lieu de redeclarer une max-width', () => {
-    const [body] = ruleBodies(LAYOUT_CSS_SOURCE, '.page-content--wide');
+    // 2 corps depuis #1067 : le remap, puis la reserve laterale du sapin (bloc 1280).
+    const bodies = ruleBodies(LAYOUT_CSS_SOURCE, '.page-content--wide');
+    expect(bodies).toHaveLength(2);
+    const [body, reserve] = bodies;
     expect(body).toBeDefined();
     expect(body).toMatch(/--content-max:\s*var\(--content-max-wide\)/);
     // Le point du correctif : centrage, gouttieres et degagement bottom-nav
     // restent CEUX de `.page-content`. Toute propriete reecrite ici serait une
-    // divergence a maintenir en double.
+    // divergence a maintenir en double. SEULE exception, la 2e regle ci-dessous
+    // (#1067) : le remap, lui, ne porte toujours aucun padding.
     expect(body).not.toMatch(/max-width|margin-inline|padding/);
+    // La 2e regle ne porte QUE le padding de fin : la part du sapin de Noel que la
+    // marge libre ne couvre pas. Elle lit la reserve (repli 0px) et --content-max,
+    // jamais la largeur du sapin ni une valeur en dur (festive.test.js, V3).
+    expect(reserve.replace(/\s+/g, ' ').trim()).toMatch(/^padding-inline-end:[^;]+;$/);
+    expect(reserve).toMatch(/var\(--festive-inline-clearance, 0px\)/);
+    expect(reserve).toMatch(/var\(--content-max\)/);
+    expect(reserve).not.toMatch(/max-width|margin-inline|padding-inline-start/);
   });
 
   it("n'introduit aucune media query en max-width (mobile-first)", () => {
