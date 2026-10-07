@@ -180,6 +180,16 @@
     .page-content {
         padding-inline: var(--space-2xl);
     }
+    /* Reserve laterale du sapin de Noel (#1067), festive.css : seule la PART MANQUANTE.
+       100% = largeur du bloc conteneur (un padding se resout sur elle), donc
+       max(0px, (100% - var(--content-max)) / 2) = marge libre a droite de la boite centree,
+       exacte avec ou sans barre de defilement ou barre laterale. Sans reserve (repli 0px :
+       hors Noel, sous 1440px, sortie a 0px), le max() rend la gouttiere : rien ne change.
+       Bloc 1280 : la reserve n'existe qu'a partir de 1440px ; si son seuil descendait sous
+       1280px, il faudrait la meme regle dans le bloc 768. */
+    .page-content--wide {
+        padding-inline-end: max(var(--space-2xl), calc(var(--festive-inline-clearance, 0px) - max(0px, (100% - var(--content-max)) / 2)));
+    }
 }
 
 /* ===== CONTENT GRID — conteneur large pour fils de cartes (#53 mikpulse S6) =====
@@ -205,6 +215,8 @@
 @media (min-width: 1280px) {
     .content-grid {
         padding-inline: var(--space-2xl);
+        /* Reserve laterale du sapin (#1067) : meme formule que .page-content--wide, sur la largeur de .content-grid. */
+        padding-inline-end: max(var(--space-2xl), calc(var(--festive-inline-clearance, 0px) - max(0px, (100% - var(--content-grid-max)) / 2)));
     }
 }
 

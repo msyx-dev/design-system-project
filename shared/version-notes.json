@@ -5,6 +5,10 @@
       {
         "type": "amelioration",
         "text": "En thème Noël, le sapin en bas d'écran est plus petit sur téléphone (environ 75 px de large au lieu de 130) et laisse plus de place au contenu. Sur tablette et ordinateur, il ne change pas."
+      },
+      {
+        "type": "amelioration",
+        "text": "En thème Noël, sur un écran large (1440 px et plus), les pages de données et les fils de cartes ne passent plus sous le sapin : le contenu s'arrête à 16 px de lui. Rien ne change en dessous de 1440 px, ni hors thème Noël."
       }
     ]
   },
